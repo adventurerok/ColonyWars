@@ -5,7 +5,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -38,11 +37,20 @@ public class WarsPlugin extends JavaPlugin {
     public void setupScoreboard(Player player){
         Scoreboard scoreboard = player.getScoreboard();
 
-        Objective playerMoney = scoreboard.registerNewObjective("player_money", "dummy");
-        playerMoney.setDisplayName("Player Money:");
-        playerMoney.setDisplaySlot(DisplaySlot.SIDEBAR);
-        playerMoney.getScore("test").setScore(1);
+        Objective mainObjective = scoreboard.registerNewObjective("main", "dummy");
+        mainObjective.setDisplayName("Stats:");
+        mainObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        mainObjective.getScore("Player Money:").setScore(0);
+        mainObjective.getScore("Team Money:").setScore(0);
 
+    }
+
+    public void updateScoreboard(Player player){
+        PlayerInfo playerInfo = getPlayerInfo(player);
+        Scoreboard scoreboard = player.getScoreboard();
+
+        Objective mainObjective = scoreboard.getObjective("main");
+        mainObjective.getScore("Player Money:").setScore(playerInfo.getPlayerCash());
     }
 
     public void setPlayerInfo(Player player, PlayerInfo playerInfo){

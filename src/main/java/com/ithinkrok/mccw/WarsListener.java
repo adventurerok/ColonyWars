@@ -1,7 +1,6 @@
 package com.ithinkrok.mccw;
 
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,7 +8,6 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scoreboard.Scoreboard;
 
 /**
  * Created by paul on 01/11/15.
@@ -34,6 +32,7 @@ public class WarsListener implements Listener{
         plugin.setupScoreboard(event.getPlayer());
     }
 
+    @EventHandler
     public void onQuit(PlayerQuitEvent event){
         plugin.setPlayerInfo(event.getPlayer(), null);
     }
@@ -44,12 +43,14 @@ public class WarsListener implements Listener{
             PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
 
             playerInfo.addPlayerCash(100);
+            plugin.updateScoreboard(event.getPlayer());
         }
 
         event.setCancelled(true);
         event.getItem().remove();
     }
 
+    @EventHandler
     public void onDropItem(PlayerDropItemEvent event){
         event.setCancelled(true);
     }

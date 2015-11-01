@@ -28,4 +28,8 @@ public class PlayerInfo {
     public int getPlayerCash() {
         return playerCash;
     }
+
+    public void addPlayerCash(int cash){
+        playerCash += cash;
+    }
 }

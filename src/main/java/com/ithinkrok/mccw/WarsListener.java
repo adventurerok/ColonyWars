@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 
 /**
  * Created by paul on 01/11/15.
@@ -22,6 +23,11 @@ public class WarsListener implements Listener{
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         event.getPlayer().setGameMode(GameMode.SPECTATOR);
+    }
+
+    @EventHandler
+    public void onPickupItem(PlayerPickupItemEvent event){
+        event.setCancelled(true);
     }
 
 

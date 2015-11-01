@@ -42,7 +42,7 @@ public class WarsListener implements Listener{
         if(event.getItem().getItemStack().getType() == Material.GOLD_INGOT){
             PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
 
-            playerInfo.addPlayerCash(100);
+            playerInfo.addPlayerCash(100 * event.getItem().getItemStack().getAmount());
             plugin.updateScoreboard(event.getPlayer());
         }
 

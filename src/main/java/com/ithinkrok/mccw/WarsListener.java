@@ -4,6 +4,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
@@ -29,6 +30,10 @@ public class WarsListener implements Listener{
     public void onPickupItem(PlayerPickupItemEvent event){
         event.setCancelled(true);
         event.getItem().remove();
+    }
+
+    public void onDropItem(PlayerDropItemEvent event){
+        event.setCancelled(true);
     }
 
 

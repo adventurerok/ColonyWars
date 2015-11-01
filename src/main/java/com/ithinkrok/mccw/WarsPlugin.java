@@ -16,7 +16,9 @@ public class WarsPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        super.onEnable();
+
+        WarsListener pluginListener = new WarsListener(this);
+        getServer().getPluginManager().registerEvents(pluginListener, this);
     }
 
 }

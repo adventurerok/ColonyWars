@@ -30,7 +30,7 @@
     <build>
         <directory>target</directory>
         <outputDirectory>target/classes</outputDirectory>
-        <finalName>Shop</finalName>
+        <finalName>Colony_Wars</finalName>
         <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
         <defaultGoal>clean package</defaultGoal>
 

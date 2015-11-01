@@ -1,7 +1,7 @@
 package com.ithinkrok.mccw;
 
-import org.bukkit.GameMode;
-import org.bukkit.Material;
+import com.ithinkrok.mccw.util.TreeFeller;
+import org.bukkit.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -11,6 +11,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
+
+import java.util.ArrayList;
 
 /**
  * Created by paul on 01/11/15.
@@ -47,6 +50,8 @@ public class WarsListener implements Listener{
 
             playerInfo.addPlayerCash(100 * event.getItem().getItemStack().getAmount());
             plugin.updateScoreboard(event.getPlayer());
+            event.getPlayer().playSound(event.getItem().getLocation(), Sound.ORB_PICKUP, 1.0f, 0.8f + (plugin
+                    .getRandom().nextFloat()) * 0.4f);
         }
 
         event.setCancelled(true);
@@ -61,8 +66,15 @@ public class WarsListener implements Listener{
                 event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material
                         .GOLD_INGOT, 3));
                 break;
+            case WOOD:
+                event.getBlock().setType(Material.AIR);
+                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material
+                        .GOLD_INGOT, 1));
+                TreeFeller.fellTree(event.getBlock().getLocation());
+                break;
         }
     }
+
 
 
     @EventHandler

@@ -7,6 +7,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.HashMap;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -17,6 +18,7 @@ import java.util.UUID;
 public class WarsPlugin extends JavaPlugin {
 
     private HashMap<UUID, PlayerInfo> playerInfoHashMap = new HashMap<>();
+    private Random random = new Random();
 
     @Override
     public void onDisable() {
@@ -58,4 +60,7 @@ public class WarsPlugin extends JavaPlugin {
         else playerInfoHashMap.put(player.getUniqueId(), playerInfo);
     }
 
+    public Random getRandom() {
+        return random;
+    }
 }

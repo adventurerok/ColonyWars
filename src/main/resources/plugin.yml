@@ -1,0 +1,4 @@
+name: "Colony Wars"
+version: "0.1"
+main: "com.ithinkrok.mccw.WarsPlugin"
+author: "ithinkrok"

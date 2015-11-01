@@ -4,10 +4,13 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockExpEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Created by paul on 01/11/15.
@@ -49,6 +52,18 @@ public class WarsListener implements Listener{
         event.setCancelled(true);
         event.getItem().remove();
     }
+
+    @EventHandler
+    public void onBlockExp(BlockExpEvent event){
+        switch(event.getBlock().getType()) {
+            case GOLD_ORE:
+                event.getBlock().setType(Material.AIR);
+                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material
+                        .GOLD_INGOT, 3));
+                break;
+        }
+    }
+
 
     @EventHandler
     public void onDropItem(PlayerDropItemEvent event){

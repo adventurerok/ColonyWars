@@ -26,7 +26,7 @@ public class TreeFeller {
 
             Block block = pos.getBlock();
             
-            if(block.getType() != Material.WOOD) continue;
+            if(block.getType() != Material.LOG) continue;
             
             block.setType(Material.AIR);
             pos.getWorld().dropItemNaturally(pos, new ItemStack(Material.GOLD_INGOT, 1));
@@ -45,6 +45,7 @@ public class TreeFeller {
         locations.add(new Location(l.getWorld(), l.getX() - 1d, l.getY(), l.getZ() + 1d));
         locations.add(new Location(l.getWorld(), l.getX() - 1d, l.getY(), l.getZ() - 1d));
 
+        locations.add(new Location(l.getWorld(), l.getX(), l.getY() + 1d, l.getZ()));
         locations.add(new Location(l.getWorld(), l.getX() + 1d, l.getY() + 1d, l.getZ()));
         locations.add(new Location(l.getWorld(), l.getX() - 1d, l.getY() + 1d, l.getZ()));
         locations.add(new Location(l.getWorld(), l.getX(), l.getY() + 1d, l.getZ() + 1d));

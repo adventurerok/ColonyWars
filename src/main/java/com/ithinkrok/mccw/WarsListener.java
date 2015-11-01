@@ -60,19 +60,14 @@ public class WarsListener implements Listener{
     }
 
     @EventHandler
-    public void onBlockBreak(BlockBreakEvent event){
-        universalBlockDestroy(event);
-    }
-
-
-    private void universalBlockDestroy(BlockExpEvent event){
+    public void onBlockExp(BlockExpEvent event){
         switch(event.getBlock().getType()) {
             case GOLD_ORE:
                 event.getBlock().setType(Material.AIR);
                 event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material
                         .GOLD_INGOT, 3));
                 break;
-            case WOOD:
+            case LOG:
                 event.getBlock().setType(Material.AIR);
                 event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material
                         .GOLD_INGOT, 1));
@@ -80,7 +75,6 @@ public class WarsListener implements Listener{
                 break;
         }
     }
-
 
 
     @EventHandler

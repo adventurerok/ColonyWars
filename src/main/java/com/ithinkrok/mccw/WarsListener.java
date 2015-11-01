@@ -5,6 +5,7 @@ import org.bukkit.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.block.BlockExpEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -59,7 +60,12 @@ public class WarsListener implements Listener{
     }
 
     @EventHandler
-    public void onBlockExp(BlockExpEvent event){
+    public void onBlockBreak(BlockBreakEvent event){
+        universalBlockDestroy(event);
+    }
+
+
+    private void universalBlockDestroy(BlockExpEvent event){
         switch(event.getBlock().getType()) {
             case GOLD_ORE:
                 event.getBlock().setType(Material.AIR);

@@ -28,6 +28,7 @@ public class WarsListener implements Listener{
     @EventHandler
     public void onPickupItem(PlayerPickupItemEvent event){
         event.setCancelled(true);
+        event.getItem().remove();
     }
 
 

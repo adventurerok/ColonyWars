@@ -2,10 +2,8 @@ package com.ithinkrok.mccw.util;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -20,6 +18,8 @@ public class TreeFeller {
         LinkedList<Location> locations = new LinkedList<>();
 
         addSurrounding(locations, location);
+
+        ArrayList<Location> ingotsToSpawn = new ArrayList<>();
         
         while(locations.size() > 0){
             Location pos = locations.removeFirst();
@@ -29,9 +29,14 @@ public class TreeFeller {
             if(block.getType() != Material.LOG) continue;
             
             block.setType(Material.AIR);
-            pos.getWorld().dropItemNaturally(pos, new ItemStack(Material.GOLD_INGOT, 1));
+            ingotsToSpawn.add(pos);
 
             addSurrounding(locations, pos);
+        }
+
+        for(int i = ingotsToSpawn.size() - 1; i >= 0; --i){
+            Location pos = ingotsToSpawn.get(i);
+            pos.getWorld().dropItemNaturally(pos, new ItemStack(Material.GOLD_INGOT, 1));
         }
     }
 

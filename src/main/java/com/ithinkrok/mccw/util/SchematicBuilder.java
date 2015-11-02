@@ -144,9 +144,6 @@ public class SchematicBuilder {
             int count = 0;
 
             while(index < locations.size()){
-                ++count;
-                if(count > 2) return;
-
                 Location loc = locations.get(index);
 
                 int x = loc.getBlockX() - origin.getBlockX() - offsetX;
@@ -160,6 +157,11 @@ public class SchematicBuilder {
                 Block block = loc.getBlock();
                 block.setTypeId(bId);
                 block.setData(data[blockInd]);
+
+                ++index;
+
+                ++count;
+                if(count > 2) return;
             }
 
             Bukkit.getScheduler().cancelTask(taskId);

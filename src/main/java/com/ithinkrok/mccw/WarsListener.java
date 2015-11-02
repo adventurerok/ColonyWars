@@ -75,7 +75,8 @@ public class WarsListener implements Listener{
     public void onBlockPlace(BlockPlaceEvent event){
         if(event.getBlock().getType() != Material.OBSIDIAN) return;
 
-        SchematicBuilder.pasteSchematic(new File(plugin.getDataFolder(), "mccw_base.schematic"), event.getBlock()
+        SchematicBuilder.buildSchematic(plugin, new File(plugin.getDataFolder(), "mccw_base.schematic"), event
+                .getBlock()
                 .getLocation());
     }
 

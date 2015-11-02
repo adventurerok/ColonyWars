@@ -11,6 +11,8 @@ import java.util.List;
 
 /**
  * Created by paul on 01/11/15.
+ *
+ * Destroys all logs in a tree and drops ingots for them
  */
 public class TreeFeller {
 

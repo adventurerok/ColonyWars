@@ -5,6 +5,8 @@ import org.bukkit.entity.Player;
 
 /**
  * Created by paul on 01/11/15.
+ *
+ * Stores the player's info while they are online
  */
 public class PlayerInfo {
 

@@ -1,12 +1,14 @@
 package com.ithinkrok.mccw;
 
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.mccw.util.SchematicBuilder;
 import com.ithinkrok.mccw.util.TreeFeller;
 import org.bukkit.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExpEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -15,6 +17,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+
+import java.io.File;
 
 /**
  * Created by paul on 01/11/15.
@@ -65,6 +69,14 @@ public class WarsListener implements Listener{
 
         event.setCancelled(true);
         event.getItem().remove();
+    }
+
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event){
+        if(event.getBlock().getType() != Material.OBSIDIAN) return;
+
+        SchematicBuilder.pasteSchematic(new File(plugin.getDataFolder(), "mccw_base.schematic"), event.getBlock()
+                .getLocation());
     }
 
     private void giveCashPerItem(PlayerPickupItemEvent event, int playerCash, int teamCash){

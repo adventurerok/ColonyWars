@@ -1,12 +1,8 @@
 package com.ithinkrok.mccw.util;
 
-import com.flowpowered.nbt.ByteArrayTag;
-import com.flowpowered.nbt.CompoundMap;
-import com.flowpowered.nbt.CompoundTag;
-import com.flowpowered.nbt.ShortTag;
+import com.flowpowered.nbt.*;
 import com.flowpowered.nbt.stream.NBTInputStream;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import java.io.File;
@@ -30,6 +26,10 @@ public class SchematicBuilder {
             short height = ((ShortTag)nbt.get("Height")).getValue();
             short length = ((ShortTag)nbt.get("Length")).getValue();
 
+            int offsetX = ((IntTag)nbt.get("WEOffsetX")).getValue();
+            int offsetY = ((IntTag)nbt.get("WEOffsetY")).getValue();
+            int offsetZ = ((IntTag)nbt.get("WEOffsetZ")).getValue();
+
             byte[] blocks = ((ByteArrayTag)nbt.get("Blocks")).getValue();
             byte[] data = ((ByteArrayTag)nbt.get("Data")).getValue();
 
@@ -40,8 +40,11 @@ public class SchematicBuilder {
                     for(int z = 0; z < length; ++z){
                         int index = width * (y * length + z) + x;
 
-                        Location l = new Location(loc.getWorld(), x + loc.getX(), y + loc.getY(), z + loc.getZ());
+                        Location l = new Location(loc.getWorld(), x + loc.getX() + offsetX, y + loc.getY() + offsetY,
+                                z + loc.getZ() + offsetZ);
+
                         int bId = blocks[index] & 0xFF;
+                        if(bId == 0) continue;
                         Block block = l.getBlock();
 
                         block.setTypeId(bId);

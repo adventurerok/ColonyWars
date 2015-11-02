@@ -1,7 +1,12 @@
 package com.ithinkrok.mccw;
 
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import org.bukkit.Color;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -37,6 +42,38 @@ public class PlayerInfo {
     public void addPlayerCash(int cash){
         playerCash += cash;
         updateScoreboard();
+    }
+
+    public void setTeamColor(TeamColor teamColor) {
+        this.teamColor = teamColor;
+
+        updateTeamArmor();
+    }
+
+    private void updateTeamArmor() {
+        ItemStack helmet = new ItemStack(Material.LEATHER_HELMET, 1);
+        ItemStack chestplate = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
+        ItemStack leggings = new ItemStack(Material.LEATHER_LEGGINGS, 1);
+        ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
+
+        setArmorColor(helmet);
+        setArmorColor(chestplate);
+        setArmorColor(leggings);
+        setArmorColor(boots);
+
+        PlayerInventory inv = player.getInventory();
+
+        inv.setHelmet(helmet);
+        inv.setChestplate(chestplate);
+        inv.setLeggings(leggings);
+        inv.setBoots(boots);
+    }
+
+    private void setArmorColor(ItemStack armor){
+        LeatherArmorMeta meta = (LeatherArmorMeta) armor.getItemMeta();
+
+        meta.setColor(teamColor.armorColor);
+        armor.setItemMeta(meta);
     }
 
     public void setupScoreboard(){

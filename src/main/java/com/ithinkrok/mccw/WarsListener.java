@@ -1,5 +1,6 @@
 package com.ithinkrok.mccw;
 
+import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.util.TreeFeller;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -38,6 +39,8 @@ public class WarsListener implements Listener{
         plugin.setPlayerInfo(event.getPlayer(), playerInfo);
 
         playerInfo.setupScoreboard();
+
+        plugin.setPlayerTeam(event.getPlayer(), TeamColor.RED);
     }
 
     @EventHandler
@@ -47,6 +50,12 @@ public class WarsListener implements Listener{
 
     @EventHandler
     public void onPickupItem(PlayerPickupItemEvent event){
+        if(event.getPlayer().getGameMode() != GameMode.SURVIVAL){
+            event.setCancelled(true);
+            return;
+        }
+
+
         switch(event.getItem().getItemStack().getType()){
             case GOLD_INGOT:
                 giveCashPerItem(event, 100);
@@ -66,6 +75,13 @@ public class WarsListener implements Listener{
         playerInfo.addPlayerCash(cash * event.getItem().getItemStack().getAmount());
         event.getPlayer().playSound(event.getItem().getLocation(), Sound.ORB_PICKUP, 1.0f, 0.8f + (plugin
                 .getRandom().nextFloat()) * 0.4f);
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event){
+        if(event.getPlayer().getGameMode() != GameMode.SURVIVAL){
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler

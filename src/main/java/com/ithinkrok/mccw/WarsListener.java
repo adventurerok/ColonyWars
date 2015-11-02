@@ -9,6 +9,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.block.BlockExpEvent;
+import org.bukkit.event.block.LeavesDecayEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -108,6 +111,16 @@ public class WarsListener implements Listener{
     @EventHandler
     public void onDropItem(PlayerDropItemEvent event){
         event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onLeavesDecay(LeavesDecayEvent event){
+        event.getBlock().setType(Material.AIR);
+    }
+
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event){
+        if(event.getSlotType().equals(InventoryType.SlotType.ARMOR)) event.setCancelled(true);
     }
 
 

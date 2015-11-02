@@ -2,3 +2,8 @@ name: "Colony Wars"
 version: "0.1.1"
 main: "com.ithinkrok.mccw.WarsPlugin"
 author: "ithinkrok"
+commands:
+  transfer:
+    description: "Transfers money from your account to your team's account"
+    aliases: ["t", "tf"]
+    usage: "/transfer [money]"

@@ -45,6 +45,13 @@ public class PlayerInfo {
         updateScoreboard();
     }
 
+    public boolean subtractPlayerCash(int cash){
+        if(cash < playerCash) return false;
+        playerCash -= cash;
+
+        return true;
+    }
+
     public void setTeamColor(TeamColor teamColor) {
         this.teamColor = teamColor;
 
@@ -94,7 +101,7 @@ public class PlayerInfo {
         Objective mainObjective = scoreboard.getObjective("main");
         mainObjective.getScore("Player Money:").setScore(getPlayerCash());
 
-        TeamInfo teamInfo = plugin.getTeamData(teamColor);
+        TeamInfo teamInfo = plugin.getTeamInfo(teamColor);
         mainObjective.getScore("Team Money:").setScore(teamInfo.getTeamCash());
     }
 }

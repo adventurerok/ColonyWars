@@ -74,7 +74,7 @@ public class WarsListener implements Listener{
         event.getPlayer().playSound(event.getItem().getLocation(), Sound.ORB_PICKUP, 1.0f, 0.8f + (plugin
                 .getRandom().nextFloat()) * 0.4f);
 
-        TeamInfo teamInfo = plugin.getTeamData(playerInfo.getTeamColor());
+        TeamInfo teamInfo = plugin.getTeamInfo(playerInfo.getTeamColor());
         teamInfo.addTeamCash(teamCash * event.getItem().getItemStack().getAmount());
     }
 

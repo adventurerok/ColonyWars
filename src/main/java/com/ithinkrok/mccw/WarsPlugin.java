@@ -1,6 +1,8 @@
 package com.ithinkrok.mccw;
 
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -49,7 +51,7 @@ public class WarsPlugin extends JavaPlugin {
         return random;
     }
 
-    public TeamInfo getTeamData(TeamColor teamColor){
+    public TeamInfo getTeamInfo(TeamColor teamColor){
         return teamInfoEnumMap.get(teamColor);
     }
 
@@ -57,10 +59,46 @@ public class WarsPlugin extends JavaPlugin {
         PlayerInfo playerInfo = getPlayerInfo(player);
 
         if(playerInfo.getTeamColor() != null){
-            getTeamData(playerInfo.getTeamColor()).removePlayer(player);
+            getTeamInfo(playerInfo.getTeamColor()).removePlayer(player);
         }
 
         playerInfo.setTeamColor(teamColor);
-        getTeamData(teamColor).addPlayer(player);
+        getTeamInfo(teamColor).addPlayer(player);
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if(!(sender instanceof Player)) {
+            sender.sendMessage("You must be a player to execute Colony Wars commands");
+            return true;
+        }
+
+        Player player = (Player) sender;
+
+        switch(command.getName().toLowerCase()){
+            case "transfer":
+                if(args.length < 1) return false;
+
+                try {
+                    int amount = Integer.parseInt(args[0]);
+
+                    PlayerInfo playerInfo = getPlayerInfo(player);
+                    if(!playerInfo.subtractPlayerCash(amount)){
+                        player.sendMessage("You do not have that amount of money");
+                        return true;
+                    }
+
+                    TeamInfo teamInfo = getTeamInfo(playerInfo.getTeamColor());
+                    teamInfo.addTeamCash(amount);
+
+                    return true;
+                } catch(NumberFormatException e){
+                    return false;
+                }
+
+            default:
+                return false;
+        }
+
     }
 }

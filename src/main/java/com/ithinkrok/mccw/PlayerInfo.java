@@ -2,6 +2,9 @@ package com.ithinkrok.mccw;
 
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
 
 /**
  * Created by paul on 01/11/15.
@@ -33,5 +36,23 @@ public class PlayerInfo {
 
     public void addPlayerCash(int cash){
         playerCash += cash;
+        updateScoreboard();
+    }
+
+    public void setupScoreboard(){
+        Scoreboard scoreboard = player.getScoreboard();
+
+        Objective mainObjective = scoreboard.registerNewObjective("main", "dummy");
+        mainObjective.setDisplayName("Stats:");
+        mainObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        mainObjective.getScore("Player Money:").setScore(0);
+        mainObjective.getScore("Team Money:").setScore(0);
+    }
+
+    private void updateScoreboard(){
+        Scoreboard scoreboard = player.getScoreboard();
+
+        Objective mainObjective = scoreboard.getObjective("main");
+        mainObjective.getScore("Player Money:").setScore(getPlayerCash());
     }
 }

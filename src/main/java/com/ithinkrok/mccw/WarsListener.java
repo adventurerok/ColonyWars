@@ -2,6 +2,7 @@ package com.ithinkrok.mccw;
 
 import com.ithinkrok.mccw.util.TreeFeller;
 import org.bukkit.*;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -36,7 +37,7 @@ public class WarsListener implements Listener{
         PlayerInfo playerInfo = new PlayerInfo(event.getPlayer());
         plugin.setPlayerInfo(event.getPlayer(), playerInfo);
 
-        plugin.setupScoreboard(event.getPlayer());
+        playerInfo.setupScoreboard();
     }
 
     @EventHandler
@@ -46,34 +47,45 @@ public class WarsListener implements Listener{
 
     @EventHandler
     public void onPickupItem(PlayerPickupItemEvent event){
-        if(event.getItem().getItemStack().getType() == Material.GOLD_INGOT){
-            PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
-
-            playerInfo.addPlayerCash(100 * event.getItem().getItemStack().getAmount());
-            plugin.updateScoreboard(event.getPlayer());
-            event.getPlayer().playSound(event.getItem().getLocation(), Sound.ORB_PICKUP, 1.0f, 0.8f + (plugin
-                    .getRandom().nextFloat()) * 0.4f);
+        switch(event.getItem().getItemStack().getType()){
+            case GOLD_INGOT:
+                giveCashPerItem(event, 100);
+                break;
+            case DIAMOND:
+                giveCashPerItem(event, 1000);
+                break;
         }
 
         event.setCancelled(true);
         event.getItem().remove();
     }
 
+    private void giveCashPerItem(PlayerPickupItemEvent event, int cash){
+        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
+
+        playerInfo.addPlayerCash(cash * event.getItem().getItemStack().getAmount());
+        event.getPlayer().playSound(event.getItem().getLocation(), Sound.ORB_PICKUP, 1.0f, 0.8f + (plugin
+                .getRandom().nextFloat()) * 0.4f);
+    }
+
     @EventHandler
     public void onBlockExp(BlockExpEvent event){
         switch(event.getBlock().getType()) {
             case GOLD_ORE:
-                event.getBlock().setType(Material.AIR);
                 event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material
                         .GOLD_INGOT, 3));
                 break;
             case LOG:
-                event.getBlock().setType(Material.AIR);
                 event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material
                         .GOLD_INGOT, 1));
                 TreeFeller.fellTree(event.getBlock().getLocation());
                 break;
+            case DIAMOND_ORE:
+                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material
+                        .DIAMOND, 1));
         }
+
+        event.getBlock().setType(Material.AIR);
     }
 
 

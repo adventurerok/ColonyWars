@@ -99,8 +99,8 @@ public class SchematicBuilder {
                 }
             }
 
-            SchematicBuilderTask task = new SchematicBuilderTask(width, height, length, offsetX, offsetY, offsetZ,
-                    blocks, data, locations);
+            SchematicBuilderTask task = new SchematicBuilderTask(loc, width, height, length, offsetX, offsetY,
+                    offsetZ, blocks, data, locations);
 
             task.schedule(plugin);
 
@@ -119,13 +119,15 @@ public class SchematicBuilder {
         short width, height, length;
         int offsetX, offsetY, offsetZ;
         byte[] blocks, data;
+        Location origin;
 
         int taskId;
 
         List<Location> locations = new ArrayList<>();
 
-        public SchematicBuilderTask(short width, short height, short length, int offsetX, int offsetY,
+        public SchematicBuilderTask(Location origin, short width, short height, short length, int offsetX, int offsetY,
                                     int offsetZ, byte[] blocks, byte[] data, List<Location> locations) {
+            this.origin = origin;
             this.width = width;
             this.height = height;
             this.length = length;
@@ -147,9 +149,9 @@ public class SchematicBuilder {
 
                 Location loc = locations.get(index);
 
-                int x = loc.getBlockX() - offsetX;
-                int y = loc.getBlockY() - offsetY;
-                int z = loc.getBlockZ() - offsetZ;
+                int x = loc.getBlockX() - origin.getBlockX() - offsetX;
+                int y = loc.getBlockY() - origin.getBlockY() - offsetY;
+                int z = loc.getBlockZ() - origin.getBlockZ() - offsetZ;
 
                 int blockInd = width * (y * length + z) + x;
 

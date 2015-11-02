@@ -3,6 +3,7 @@ package com.ithinkrok.mccw.util;
 import com.flowpowered.nbt.*;
 import com.flowpowered.nbt.stream.NBTInputStream;
 import org.bukkit.Bukkit;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.plugin.Plugin;
@@ -11,6 +12,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -99,6 +102,13 @@ public class SchematicBuilder {
                 }
             }
 
+            Collections.sort(locations, (o1, o2) -> {
+                if(o1.getY() != o2.getY()) return Double.compare(o1.getY(), o2.getY());
+                if(o1.getX() != o2.getX()) return Double.compare(o1.getX(), o2.getX());
+
+                return Double.compare(o1.getZ(), o2.getZ());
+            });
+
             SchematicBuilderTask task = new SchematicBuilderTask(loc, width, height, length, offsetX, offsetY,
                     offsetZ, blocks, data, locations);
 
@@ -157,6 +167,8 @@ public class SchematicBuilder {
                 Block block = loc.getBlock();
                 block.setTypeId(bId);
                 block.setData(data[blockInd]);
+
+                loc.getWorld().playEffect(loc, Effect.STEP_SOUND, bId);
 
                 ++index;
 

@@ -3,9 +3,6 @@ package com.ithinkrok.mccw;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -20,7 +17,7 @@ import java.util.UUID;
 public class WarsPlugin extends JavaPlugin {
 
     private HashMap<UUID, PlayerInfo> playerInfoHashMap = new HashMap<>();
-    private EnumMap<TeamColor, TeamData> teamDataEnumMap = new EnumMap<>(TeamColor.class);
+    private EnumMap<TeamColor, TeamInfo> teamInfoEnumMap = new EnumMap<>(TeamColor.class);
     private Random random = new Random();
 
     @Override
@@ -35,7 +32,7 @@ public class WarsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(pluginListener, this);
 
         for(TeamColor c : TeamColor.values()){
-            teamDataEnumMap.put(c, new TeamData(c));
+            teamInfoEnumMap.put(c, new TeamInfo(this, c));
         }
     }
 
@@ -52,8 +49,8 @@ public class WarsPlugin extends JavaPlugin {
         return random;
     }
 
-    public TeamData getTeamData(TeamColor teamColor){
-        return teamDataEnumMap.get(teamColor);
+    public TeamInfo getTeamData(TeamColor teamColor){
+        return teamInfoEnumMap.get(teamColor);
     }
 
     public void setPlayerTeam(Player player, TeamColor teamColor){

@@ -8,12 +8,15 @@ import java.util.ArrayList;
 /**
  * Created by paul on 02/11/15.
  */
-public class TeamData {
+public class TeamInfo {
 
     private TeamColor teamColor;
     private ArrayList<Player> players = new ArrayList<>();
+    private WarsPlugin plugin;
+    private int teamCash;
 
-    public TeamData(TeamColor teamColor) {
+    public TeamInfo(WarsPlugin plugin, TeamColor teamColor) {
+        this.plugin = plugin;
         this.teamColor = teamColor;
     }
 
@@ -33,5 +36,21 @@ public class TeamData {
 
     public boolean hasPlayer(Player player){
         return players.contains(player);
+    }
+
+    public int getTeamCash() {
+        return teamCash;
+    }
+
+    public void addTeamCash(int cash){
+        this.teamCash += cash;
+
+        updatePlayerScoreboards();
+    }
+
+    public void updatePlayerScoreboards(){
+        for(Player p : players){
+            plugin.getPlayerInfo(p).updateScoreboard();
+        }
     }
 }

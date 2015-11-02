@@ -1,7 +1,6 @@
 package com.ithinkrok.mccw;
 
 import com.ithinkrok.mccw.enumeration.TeamColor;
-import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -20,10 +19,12 @@ public class PlayerInfo {
 
     private Player player;
     private TeamColor teamColor;
+    private WarsPlugin plugin;
 
     private int playerCash = 0;
 
-    public PlayerInfo(Player player) {
+    public PlayerInfo(WarsPlugin plugin, Player player) {
+        this.plugin = plugin;
         this.player = player;
     }
 
@@ -87,10 +88,13 @@ public class PlayerInfo {
         mainObjective.getScore("Team Money:").setScore(0);
     }
 
-    private void updateScoreboard(){
+    public void updateScoreboard(){
         Scoreboard scoreboard = player.getScoreboard();
 
         Objective mainObjective = scoreboard.getObjective("main");
         mainObjective.getScore("Player Money:").setScore(getPlayerCash());
+
+        TeamInfo teamInfo = plugin.getTeamData(teamColor);
+        mainObjective.getScore("Team Money:").setScore(teamInfo.getTeamCash());
     }
 }

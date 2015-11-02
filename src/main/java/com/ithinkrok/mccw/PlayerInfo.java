@@ -79,7 +79,8 @@ public class PlayerInfo {
     public void setupScoreboard(){
         Scoreboard scoreboard = player.getScoreboard();
 
-        Objective mainObjective = scoreboard.registerNewObjective("main", "dummy");
+        Objective mainObjective = scoreboard.getObjective("main");
+        if(mainObjective == null) mainObjective = scoreboard.registerNewObjective("main", "dummy");
         mainObjective.setDisplayName("Stats:");
         mainObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
         mainObjective.getScore("Player Money:").setScore(0);

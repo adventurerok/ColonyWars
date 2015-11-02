@@ -46,7 +46,7 @@ public class PlayerInfo {
     }
 
     public boolean subtractPlayerCash(int cash){
-        if(cash < playerCash) return false;
+        if(cash > playerCash) return false;
         playerCash -= cash;
 
         return true;

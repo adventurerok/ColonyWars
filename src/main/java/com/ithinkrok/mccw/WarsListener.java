@@ -75,7 +75,7 @@ public class WarsListener implements Listener{
                 .getRandom().nextFloat()) * 0.4f);
 
         TeamInfo teamInfo = plugin.getTeamData(playerInfo.getTeamColor());
-        teamInfo.addTeamCash(teamCash);
+        teamInfo.addTeamCash(teamCash * event.getItem().getItemStack().getAmount());
     }
 
     @EventHandler

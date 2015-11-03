@@ -116,6 +116,7 @@ public class WarsListener implements Listener{
                         .GOLD_INGOT, 3));
                 break;
             case LOG:
+            case LOG_2:
                 event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material
                         .GOLD_INGOT, 1));
                 TreeFeller.fellTree(event.getBlock().getLocation());

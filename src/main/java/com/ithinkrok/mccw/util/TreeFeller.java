@@ -28,7 +28,7 @@ public class TreeFeller {
 
             Block block = pos.getBlock();
             
-            if(block.getType() != Material.LOG) continue;
+            if(block.getType() != Material.LOG && block.getType() != Material.LOG_2) continue;
             
             block.setType(Material.AIR);
             ingotsToSpawn.add(pos);

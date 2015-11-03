@@ -3,19 +3,20 @@ package com.ithinkrok.mccw;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.util.SchematicBuilder;
 import com.ithinkrok.mccw.util.TreeFeller;
-import org.bukkit.*;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExpEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
@@ -71,15 +72,6 @@ public class WarsListener implements Listener{
         event.getItem().remove();
     }
 
-    @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event){
-        if(event.getBlock().getType() != Material.OBSIDIAN) return;
-
-        SchematicBuilder.buildSchematic(plugin, new File(plugin.getDataFolder(), "mccw_base.schematic"), event
-                .getBlock()
-                .getLocation());
-    }
-
     private void giveCashPerItem(PlayerPickupItemEvent event, int playerCash, int teamCash){
         PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
 
@@ -92,9 +84,27 @@ public class WarsListener implements Listener{
     }
 
     @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event){
+        if(event.getBlock().getType() != Material.OBSIDIAN) return;
+
+        SchematicBuilder.buildSchematic(plugin, new File(plugin.getDataFolder(), "mccw_base.schematic"), event
+                .getBlock()
+                .getLocation());
+    }
+
+    @EventHandler
     public void onBlockBreak(BlockBreakEvent event){
         if(event.getPlayer().getGameMode() != GameMode.SURVIVAL){
             event.setCancelled(true);
+            return;
+        }
+
+        resetDurability(event.getPlayer().getItemInHand());
+    }
+
+    private void resetDurability(ItemStack item){
+        if(item.getDurability() != 0 && item.getType().getMaxDurability() != 0){
+            item.setDurability((short) 0);
         }
     }
 
@@ -118,6 +128,17 @@ public class WarsListener implements Listener{
         event.getBlock().setType(Material.AIR);
     }
 
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent event){
+        resetDurability(event.getPlayer().getItemInHand());
+    }
+
+    @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event){
+        if(event.getDamager() instanceof Player){
+            resetDurability(((Player)event.getDamager()).getItemInHand());
+        }
+    }
 
     @EventHandler
     public void onDropItem(PlayerDropItemEvent event){

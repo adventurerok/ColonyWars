@@ -1,7 +1,8 @@
 name: "Colony Wars"
-version: "0.1.1"
+version: "${project.version}"
 main: "com.ithinkrok.mccw.WarsPlugin"
 author: "ithinkrok"
+depend: ["HologramAPI"]
 commands:
   transfer:
     description: "Transfers money from your account to your team's account"

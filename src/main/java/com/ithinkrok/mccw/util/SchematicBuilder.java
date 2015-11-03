@@ -2,6 +2,8 @@ package com.ithinkrok.mccw.util;
 
 import com.flowpowered.nbt.*;
 import com.flowpowered.nbt.stream.NBTInputStream;
+import de.inventivegames.hologram.Hologram;
+import de.inventivegames.hologram.HologramAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
@@ -11,6 +13,7 @@ import org.bukkit.plugin.Plugin;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -123,6 +126,8 @@ public class SchematicBuilder {
 
     }
 
+    private static final DecimalFormat percentFormat = new DecimalFormat("00%");
+
     private static class SchematicBuilderTask implements Runnable {
 
         int index = 0;
@@ -134,6 +139,8 @@ public class SchematicBuilder {
         int taskId;
 
         List<Location> locations = new ArrayList<>();
+
+        Hologram hologram;
 
         public SchematicBuilderTask(Location origin, short width, short height, short length, int offsetX, int offsetY,
                                     int offsetZ, byte[] blocks, byte[] data, List<Location> locations) {
@@ -147,6 +154,12 @@ public class SchematicBuilder {
             this.blocks = blocks;
             this.data = data;
             this.locations = locations;
+
+            Location holoLoc = origin.clone().add(0, 1, 0);
+
+            hologram = HologramAPI.createHologram(holoLoc, "Building: 0%");
+
+            hologram.spawn();
         }
 
         @Override
@@ -173,10 +186,15 @@ public class SchematicBuilder {
                 ++index;
 
                 ++count;
-                if(count > 2) return;
+                if(count > 2){
+                    hologram.setText("Building: " + percentFormat.format((double)index / (double)locations.size()));
+                    return;
+                }
             }
 
             Bukkit.getScheduler().cancelTask(taskId);
+
+            hologram.despawn();
         }
 
         public void schedule(Plugin plugin){

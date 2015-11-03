@@ -11,10 +11,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockExpEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.LeavesDecayEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -136,7 +133,9 @@ public class WarsListener implements Listener{
     public void onPlayerInteract(PlayerInteractEvent event){
         resetDurability(event.getPlayer().getItemInHand());
 
-        if(event.getClickedBlock().getType() != Material.OBSIDIAN) return;
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getType() != Material.OBSIDIAN) {
+            return;
+        }
 
         Inventory test = Bukkit.createInventory(event.getPlayer(), 9, "Base");
         test.setItem(0, InventoryUtils.setItemNameAndLore(new ItemStack(Material.OBSIDIAN, 1), "Farm", new String[]{

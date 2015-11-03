@@ -155,7 +155,7 @@ public class SchematicBuilder {
             this.data = data;
             this.locations = locations;
 
-            Location holoLoc = origin.clone().add(0, 1, 0);
+            Location holoLoc = origin.clone().add(0.5d, 1.5d, 0.5d);
 
             hologram = HologramAPI.createHologram(holoLoc, "Building: 0%");
 

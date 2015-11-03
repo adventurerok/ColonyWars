@@ -1,8 +1,10 @@
 package com.ithinkrok.mccw;
 
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.mccw.util.InventoryUtils;
 import com.ithinkrok.mccw.util.SchematicBuilder;
 import com.ithinkrok.mccw.util.TreeFeller;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -17,6 +19,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
@@ -132,6 +135,15 @@ public class WarsListener implements Listener{
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event){
         resetDurability(event.getPlayer().getItemInHand());
+
+        if(event.getClickedBlock().getType() != Material.OBSIDIAN) return;
+
+        Inventory test = Bukkit.createInventory(event.getPlayer(), 9, "Base");
+        test.setItem(0, InventoryUtils.setItemNameAndLore(new ItemStack(Material.OBSIDIAN, 1), "Farm", new String[]{
+                "Build a farm!", "Cost: 3000"
+        }));
+
+        event.getPlayer().openInventory(test);
     }
 
     @EventHandler

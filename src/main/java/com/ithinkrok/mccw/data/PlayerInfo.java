@@ -1,11 +1,11 @@
 package com.ithinkrok.mccw.data;
 
 import com.ithinkrok.mccw.WarsPlugin;
-import com.ithinkrok.mccw.data.TeamInfo;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -23,7 +23,8 @@ public class PlayerInfo {
     private Player player;
     private TeamColor teamColor;
     private WarsPlugin plugin;
-    private Location inventoryBlock;
+    private Location shopBlock;
+    private Inventory shopInventory;
 
     private int playerCash = 0;
 
@@ -62,12 +63,20 @@ public class PlayerInfo {
         updateTeamArmor();
     }
 
-    public Location getInventoryBlock() {
-        return inventoryBlock;
+    public Location getShopBlock() {
+        return shopBlock;
     }
 
-    public void setInventoryBlock(Location inventoryBlock) {
-        this.inventoryBlock = inventoryBlock;
+    public void setShopBlock(Location shopBlock) {
+        this.shopBlock = shopBlock;
+    }
+
+    public Inventory getShopInventory() {
+        return shopInventory;
+    }
+
+    public void setShopInventory(Inventory shopInventory) {
+        this.shopInventory = shopInventory;
     }
 
     private void updateTeamArmor() {

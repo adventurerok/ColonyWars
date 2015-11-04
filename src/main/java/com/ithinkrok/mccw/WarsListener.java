@@ -186,7 +186,7 @@ public class WarsListener implements Listener {
             return;
         }
 
-        playerInfo.setInventoryBlock(buildingInfo.getCenterBlock());
+        playerInfo.setShopBlock(buildingInfo.getCenterBlock());
 
         Inventory test = Bukkit.createInventory(event.getPlayer(), 9, buildingInfo.getBuildingName());
         test.setItem(0, InventoryUtils.setItemNameAndLore(new ItemStack(Material.OBSIDIAN, 1), "Farm",
@@ -215,6 +215,14 @@ public class WarsListener implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getSlotType().equals(InventoryType.SlotType.ARMOR)) event.setCancelled(true);
+
+        if(event.getInventory().getType() != InventoryType.PLAYER){
+            PlayerInfo playerInfo = plugin.getPlayerInfo((Player) event.getWhoClicked());
+            playerInfo.setShopInventory(event.getInventory());
+
+            TeamInfo teamInfo = plugin.getTeamInfo(playerInfo.getTeamColor());
+            event.setCancelled(true);
+        }
     }
 
 

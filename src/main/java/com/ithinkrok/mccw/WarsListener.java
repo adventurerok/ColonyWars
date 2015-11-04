@@ -1,6 +1,7 @@
 package com.ithinkrok.mccw;
 
 import com.ithinkrok.mccw.data.PlayerInfo;
+import com.ithinkrok.mccw.data.SchematicData;
 import com.ithinkrok.mccw.data.TeamInfo;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.util.InventoryUtils;
@@ -20,6 +21,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
 
@@ -28,7 +30,7 @@ import java.io.File;
  * <p>
  * Listens for Bukkit events
  */
-public class WarsListener implements Listener{
+public class WarsListener implements Listener {
 
     private WarsPlugin plugin;
 
@@ -49,19 +51,19 @@ public class WarsListener implements Listener{
     }
 
     @EventHandler
-    public void onQuit(PlayerQuitEvent event){
+    public void onQuit(PlayerQuitEvent event) {
         plugin.setPlayerInfo(event.getPlayer(), null);
     }
 
     @EventHandler
-    public void onPickupItem(PlayerPickupItemEvent event){
-        if(event.getPlayer().getGameMode() != GameMode.SURVIVAL){
+    public void onPickupItem(PlayerPickupItemEvent event) {
+        if (event.getPlayer().getGameMode() != GameMode.SURVIVAL) {
             event.setCancelled(true);
             return;
         }
 
 
-        switch(event.getItem().getItemStack().getType()){
+        switch (event.getItem().getItemStack().getType()) {
             case GOLD_INGOT:
                 giveCashPerItem(event, 120, 80);
                 break;
@@ -74,29 +76,36 @@ public class WarsListener implements Listener{
         event.getItem().remove();
     }
 
-    private void giveCashPerItem(PlayerPickupItemEvent event, int playerCash, int teamCash){
+    private void giveCashPerItem(PlayerPickupItemEvent event, int playerCash, int teamCash) {
         PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
 
         playerInfo.addPlayerCash(playerCash * event.getItem().getItemStack().getAmount());
-        event.getPlayer().playSound(event.getItem().getLocation(), Sound.ORB_PICKUP, 1.0f, 0.8f + (plugin
-                .getRandom().nextFloat()) * 0.4f);
+        event.getPlayer().playSound(event.getItem().getLocation(), Sound.ORB_PICKUP, 1.0f,
+                0.8f + (plugin.getRandom().nextFloat()) * 0.4f);
 
         TeamInfo teamInfo = plugin.getTeamInfo(playerInfo.getTeamColor());
         teamInfo.addTeamCash(teamCash * event.getItem().getItemStack().getAmount());
     }
 
     @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event){
-        if(event.getBlock().getType() != Material.OBSIDIAN) return;
+    public void onBlockPlace(BlockPlaceEvent event) {
+        if (event.getBlock().getType() != Material.OBSIDIAN) return;
 
-        SchematicBuilder.buildSchematic(plugin, new File(plugin.getDataFolder(), "mccw_base.schematic"), event
-                .getBlock()
-                .getLocation());
+        ItemMeta meta = event.getItemInHand().getItemMeta();
+        if (!meta.hasDisplayName()) return;
+
+        SchematicData schematicData = plugin.getSchematicData(meta.getDisplayName());
+        if (schematicData == null) return;
+
+        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
+
+        SchematicBuilder
+                .buildSchematic(plugin, schematicData, event.getBlock().getLocation(), playerInfo.getTeamColor());
     }
 
     @EventHandler
-    public void onBlockBreak(BlockBreakEvent event){
-        if(event.getPlayer().getGameMode() != GameMode.SURVIVAL){
+    public void onBlockBreak(BlockBreakEvent event) {
+        if (event.getPlayer().getGameMode() != GameMode.SURVIVAL) {
             event.setCancelled(true);
             return;
         }
@@ -104,69 +113,68 @@ public class WarsListener implements Listener{
         resetDurability(event.getPlayer().getItemInHand());
     }
 
-    private void resetDurability(ItemStack item){
-        if(item.getDurability() != 0 && item.getType().getMaxDurability() != 0){
+    private void resetDurability(ItemStack item) {
+        if (item.getDurability() != 0 && item.getType().getMaxDurability() != 0) {
             item.setDurability((short) 0);
         }
     }
 
     @EventHandler
-    public void onBlockExp(BlockExpEvent event){
-        switch(event.getBlock().getType()) {
+    public void onBlockExp(BlockExpEvent event) {
+        switch (event.getBlock().getType()) {
             case GOLD_ORE:
-                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material
-                        .GOLD_INGOT, 3));
+                event.getBlock().getWorld()
+                        .dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, 3));
                 break;
             case LOG:
             case LOG_2:
-                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material
-                        .GOLD_INGOT, 1));
+                event.getBlock().getWorld()
+                        .dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, 1));
                 TreeFeller.fellTree(event.getBlock().getLocation());
                 break;
             case DIAMOND_ORE:
-                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material
-                        .DIAMOND, 1));
+                event.getBlock().getWorld()
+                        .dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.DIAMOND, 1));
         }
 
         event.getBlock().setType(Material.AIR);
     }
 
     @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent event){
+    public void onPlayerInteract(PlayerInteractEvent event) {
         resetDurability(event.getPlayer().getItemInHand());
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getClickedBlock().getType() != Material.OBSIDIAN) {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getClickedBlock().getType() != Material.OBSIDIAN) {
             return;
         }
 
         Inventory test = Bukkit.createInventory(event.getPlayer(), 9, "Base");
-        test.setItem(0, InventoryUtils.setItemNameAndLore(new ItemStack(Material.OBSIDIAN, 1), "Farm", new String[]{
-                "Build a farm!", "Cost: 3000"
-        }));
+        test.setItem(0, InventoryUtils.setItemNameAndLore(new ItemStack(Material.OBSIDIAN, 1), "Farm",
+                new String[]{"Build a farm!", "Cost: 3000"}));
 
         event.getPlayer().openInventory(test);
     }
 
     @EventHandler
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event){
-        if(event.getDamager() instanceof Player){
-            resetDurability(((Player)event.getDamager()).getItemInHand());
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        if (event.getDamager() instanceof Player) {
+            resetDurability(((Player) event.getDamager()).getItemInHand());
         }
     }
 
     @EventHandler
-    public void onDropItem(PlayerDropItemEvent event){
+    public void onDropItem(PlayerDropItemEvent event) {
         event.setCancelled(true);
     }
 
     @EventHandler
-    public void onLeavesDecay(LeavesDecayEvent event){
+    public void onLeavesDecay(LeavesDecayEvent event) {
         event.getBlock().setType(Material.AIR);
     }
 
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent event){
-        if(event.getSlotType().equals(InventoryType.SlotType.ARMOR)) event.setCancelled(true);
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (event.getSlotType().equals(InventoryType.SlotType.ARMOR)) event.setCancelled(true);
     }
 
 

@@ -1,6 +1,8 @@
 package com.ithinkrok.mccw;
 
+import com.ithinkrok.mccw.data.BuildingInfo;
 import com.ithinkrok.mccw.data.PlayerInfo;
+import com.ithinkrok.mccw.data.SchematicData;
 import com.ithinkrok.mccw.data.TeamInfo;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import org.bukkit.command.Command;
@@ -8,10 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by paul on 01/11/15.
@@ -22,6 +21,8 @@ public class WarsPlugin extends JavaPlugin {
 
     private HashMap<UUID, PlayerInfo> playerInfoHashMap = new HashMap<>();
     private EnumMap<TeamColor, TeamInfo> teamInfoEnumMap = new EnumMap<>(TeamColor.class);
+    private HashMap<String, SchematicData> schematicDataHashMap = new HashMap<>();
+    private List<BuildingInfo> buildings = new ArrayList<>();
     private Random random = new Random();
 
     @Override
@@ -38,6 +39,13 @@ public class WarsPlugin extends JavaPlugin {
         for(TeamColor c : TeamColor.values()){
             teamInfoEnumMap.put(c, new TeamInfo(this, c));
         }
+
+        schematicDataHashMap.put("Base", new SchematicData("Base", "mccw_base.schematic"));
+        schematicDataHashMap.put("Farm", new SchematicData("Farm", "mccw_farm.schematic"));
+    }
+
+    public SchematicData getSchematicData(String buildingName){
+        return schematicDataHashMap.get(buildingName);
     }
 
     public PlayerInfo getPlayerInfo(Player player){

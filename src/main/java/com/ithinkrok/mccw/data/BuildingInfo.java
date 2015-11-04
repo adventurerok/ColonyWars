@@ -9,6 +9,8 @@ import java.util.List;
 
 /**
  * Created by paul on 04/11/15.
+ *
+ * Represents info on a building built during the current game
  */
 public class BuildingInfo {
 

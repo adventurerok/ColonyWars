@@ -54,7 +54,13 @@ public class PlayerInfo {
         if(cash > playerCash) return false;
         playerCash -= cash;
 
+        updateScoreboard();
+
         return true;
+    }
+
+    public boolean hasPlayerCash(int cash){
+        return cash <= playerCash;
     }
 
     public void setTeamColor(TeamColor teamColor) {

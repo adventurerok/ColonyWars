@@ -47,9 +47,18 @@ public class TeamInfo {
     }
 
     public void addTeamCash(int cash){
-        this.teamCash += cash;
+        teamCash += cash;
 
         updatePlayerScoreboards();
+    }
+
+    public boolean subtractTeamCash(int cash){
+        if(cash > teamCash) return false;
+        teamCash -= cash;
+
+        updatePlayerScoreboards();
+
+        return true;
     }
 
     public void updatePlayerScoreboards(){

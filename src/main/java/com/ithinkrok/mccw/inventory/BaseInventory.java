@@ -5,8 +5,10 @@ import com.ithinkrok.mccw.data.TeamInfo;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -18,7 +20,24 @@ public class BaseInventory implements InventoryHandler {
 
     @Override
     public void onInventoryClick(ItemStack item, PlayerInfo playerInfo, TeamInfo teamInfo) {
+        PlayerInventory inv = playerInfo.getPlayer().getInventory();
 
+        switch(item.getItemMeta().getDisplayName()){
+            case "Farm":
+                if(!InventoryUtils.hasTeamCash(3000, teamInfo, playerInfo)){
+                    playerInfo.getPlayer().sendMessage("You don't have that amount of money!");
+                    break;
+                }
+
+                HashMap<Integer, ItemStack> leftOver = inv.addItem(InventoryUtils.createItemWithNameAndLore(Material
+                        .OBSIDIAN, 1, 0, "Farm", "Builds a farm when placed!"));
+
+                if(!leftOver.isEmpty()) break;
+
+                InventoryUtils.payWithTeamCash(3000, teamInfo, playerInfo);
+
+                break;
+        }
     }
 
     @Override

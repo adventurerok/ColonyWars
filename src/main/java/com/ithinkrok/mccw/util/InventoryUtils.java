@@ -23,7 +23,7 @@ public class InventoryUtils {
                                            boolean team){
         ItemStack stack = new ItemStack(mat, amount, (short) damage);
 
-        String teamText = team ? " (Team Cash)" : " (Player Cash)";
+        String teamText = team ? " (Team Money)" : " (Player Money)";
 
         return setItemNameAndLore(stack, name, new String[]{desc, "Cost: " + cost + teamText});
     }

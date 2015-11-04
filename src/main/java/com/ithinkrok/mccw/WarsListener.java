@@ -171,7 +171,24 @@ public class WarsListener implements Listener {
             return;
         }
 
-        Inventory test = Bukkit.createInventory(event.getPlayer(), 9, "Base");
+        BuildingInfo buildingInfo = plugin.getBuildingInfo(event.getClickedBlock().getLocation());
+        if(buildingInfo == null){
+            plugin.getLogger().warning("The player destroyed an obsidian block, but it wasn't a building. Odd");
+            plugin.getLogger().warning("Obsidian location: " + event.getClickedBlock().getLocation());
+            event.getPlayer().sendMessage("That obsidian block doesn't appear to be part of a building");
+            return;
+        }
+
+        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
+
+        if(playerInfo.getTeamColor() != buildingInfo.getTeamColor()){
+            event.getPlayer().sendMessage("That building does not belong to your team. Mine this block to destroy it!");
+            return;
+        }
+
+        playerInfo.setInventoryBlock(buildingInfo.getCenterBlock());
+
+        Inventory test = Bukkit.createInventory(event.getPlayer(), 9, buildingInfo.getBuildingName());
         test.setItem(0, InventoryUtils.setItemNameAndLore(new ItemStack(Material.OBSIDIAN, 1), "Farm",
                 new String[]{"Build a farm!", "Cost: 3000"}));
 

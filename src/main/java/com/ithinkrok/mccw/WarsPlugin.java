@@ -1,5 +1,7 @@
 package com.ithinkrok.mccw;
 
+import com.ithinkrok.mccw.data.PlayerInfo;
+import com.ithinkrok.mccw.data.TeamInfo;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

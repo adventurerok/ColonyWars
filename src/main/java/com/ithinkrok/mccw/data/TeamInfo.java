@@ -1,5 +1,6 @@
-package com.ithinkrok.mccw;
+package com.ithinkrok.mccw.data;
 
+import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import org.bukkit.entity.Player;
 

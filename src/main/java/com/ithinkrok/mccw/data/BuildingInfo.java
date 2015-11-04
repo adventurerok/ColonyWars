@@ -90,7 +90,7 @@ public class BuildingInfo {
 
         for(Location loc : buildingBlocks){
             Block b = loc.getBlock();
-            if(b.getType() == Material.AIR) continue;
+            if(b.getType() == Material.AIR || b.isLiquid()) continue;
 
             Material oldType = b.getType();
             byte oldData = b.getData();
@@ -98,9 +98,9 @@ public class BuildingInfo {
             b.setType(Material.AIR);
 
             FallingBlock block = loc.getWorld().spawnFallingBlock(loc, oldType, oldData);
-            float xv = -1 + (plugin.getRandom().nextFloat() * 2);
-            float yv = 3 + (plugin.getRandom().nextFloat() * 3);
-            float zv = -1 + (plugin.getRandom().nextFloat() * 2);
+            float xv = -0.5f + (plugin.getRandom().nextFloat() * 1);
+            float yv = 1 + (plugin.getRandom().nextFloat() * 1);
+            float zv = -0.5f + (plugin.getRandom().nextFloat() * 1);
 
             block.setVelocity(new Vector(xv, yv, zv));
         }

@@ -36,9 +36,9 @@ public class FarmInventory implements InventoryHandler {
         ItemStack add = null;
 
         switch (item.getType()) {
-            case POTATO:
+            case POTATO_ITEM:
                 cost = rawPotatoCost * item.getAmount();
-                add = new ItemStack(Material.POTATO, item.getAmount());
+                add = new ItemStack(Material.POTATO_ITEM, item.getAmount());
                 break;
             case COOKIE:
                 cost = cookieCost * item.getAmount();
@@ -76,7 +76,7 @@ public class FarmInventory implements InventoryHandler {
     public List<ItemStack> getInventoryContents(PlayerInfo playerInfo, TeamInfo teamInfo) {
         ArrayList<ItemStack> result = new ArrayList<>();
         result.add(InventoryUtils
-                .createShopItem(Material.POTATO, 5, 0, null, "Lovely potatoes!", rawPotatoCost * 5, false));
+                .createShopItem(Material.POTATO_ITEM, 5, 0, null, "Lovely potatoes!", rawPotatoCost * 5, false));
         result.add(
                 InventoryUtils.createShopItem(Material.COOKIE, 10, 0, null, "Nice cookies!", cookieCost * 10, false));
         result.add(InventoryUtils

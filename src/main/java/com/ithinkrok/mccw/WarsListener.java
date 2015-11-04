@@ -189,7 +189,7 @@ public class WarsListener implements Listener {
             return;
         }
 
-        if(!buildingInfo.isFinished()){
+        if (!buildingInfo.isFinished()) {
             event.getPlayer().sendMessage("You must wait until the building has finished construction.");
             return;
         }
@@ -242,10 +242,10 @@ public class WarsListener implements Listener {
 
             InventoryHandler handler = plugin.getInventoryHandler(event.getInventory().getTitle());
 
-            if (handler != null) {
-                handler.onInventoryClick(event.getCurrentItem(), playerInfo, teamInfo);
-                event.setCancelled(true);
-            }
+            if (handler == null) return;
+
+            if (event.getCurrentItem() != null) handler.onInventoryClick(event.getCurrentItem(), playerInfo, teamInfo);
+            event.setCancelled(true);
         }
     }
 

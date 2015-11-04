@@ -4,6 +4,7 @@ import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.util.Vector;
@@ -83,6 +84,10 @@ public class BuildingInfo {
     }
 
     public void explode(){
+        if(centerBlock != null){
+            centerBlock.getWorld().playSound(centerBlock, Sound.EXPLODE, 1.0f, 1.0f);
+        }
+
         for(Location loc : buildingBlocks){
             Block b = loc.getBlock();
             if(b.getType() == Material.AIR) continue;

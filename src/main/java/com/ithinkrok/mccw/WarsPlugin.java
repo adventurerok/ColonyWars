@@ -5,6 +5,7 @@ import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.SchematicData;
 import com.ithinkrok.mccw.data.TeamInfo;
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -25,6 +26,7 @@ public class WarsPlugin extends JavaPlugin {
     private EnumMap<TeamColor, TeamInfo> teamInfoEnumMap = new EnumMap<>(TeamColor.class);
     private HashMap<String, SchematicData> schematicDataHashMap = new HashMap<>();
     private List<BuildingInfo> buildings = new ArrayList<>();
+    private HashMap<Location, BuildingInfo> buildingCentres = new HashMap<>();
     private Random random = new Random();
 
     @Override
@@ -80,6 +82,12 @@ public class WarsPlugin extends JavaPlugin {
 
     public void addBuilding(BuildingInfo buildingInfo){
         buildings.add(buildingInfo);
+
+        if(buildingInfo.getCenterBlock() != null) buildingCentres.put(buildingInfo.getCenterBlock(), buildingInfo);
+    }
+
+    public BuildingInfo getBuildingInfo(Location center){
+        return buildingCentres.get(center);
     }
 
     public boolean canBuild(Vector minBB, Vector maxBB){
@@ -124,5 +132,11 @@ public class WarsPlugin extends JavaPlugin {
                 return false;
         }
 
+    }
+
+    public void removeBuilding(BuildingInfo buildingInfo) {
+        buildings.remove(buildingInfo);
+
+        buildingCentres.remove(buildingInfo.getCenterBlock());
     }
 }

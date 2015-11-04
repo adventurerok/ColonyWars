@@ -3,6 +3,9 @@ package com.ithinkrok.mccw.data;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.util.Vector;
 
 import java.util.List;
@@ -77,5 +80,26 @@ public class BuildingInfo {
                 maxBB.getY() < this.minBB.getY() || minBB.getY() > this.maxBB.getY() ||
                 maxBB.getZ() < this.minBB.getZ() || minBB.getZ() > this.maxBB.getZ();
 
+    }
+
+    public void explode(){
+        for(Location loc : buildingBlocks){
+            Block b = loc.getBlock();
+            if(b.getType() == Material.AIR) continue;
+
+            Material oldType = b.getType();
+            byte oldData = b.getData();
+
+            b.setType(Material.AIR);
+
+            FallingBlock block = loc.getWorld().spawnFallingBlock(loc, oldType, oldData);
+            float xv = -1 + (plugin.getRandom().nextFloat() * 2);
+            float yv = 3 + (plugin.getRandom().nextFloat() * 3);
+            float zv = -1 + (plugin.getRandom().nextFloat() * 2);
+
+            block.setVelocity(new Vector(xv, yv, zv));
+        }
+
+        plugin.removeBuilding(this);
     }
 }

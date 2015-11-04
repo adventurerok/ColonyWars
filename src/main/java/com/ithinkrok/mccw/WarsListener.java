@@ -1,5 +1,6 @@
 package com.ithinkrok.mccw;
 
+import com.ithinkrok.mccw.data.BuildingInfo;
 import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.SchematicData;
 import com.ithinkrok.mccw.data.TeamInfo;
@@ -113,6 +114,17 @@ public class WarsListener implements Listener {
         }
 
         resetDurability(event.getPlayer().getItemInHand());
+
+        if(event.getBlock().getType() != Material.OBSIDIAN) return;
+
+        BuildingInfo buildingInfo = plugin.getBuildingInfo(event.getBlock().getLocation());
+        if(buildingInfo == null){
+            plugin.getLogger().warning("The player destroyed an obsidian block, but it wasn't a building. Odd");
+            plugin.getLogger().warning("Obsidian location: " + event.getBlock().getLocation());
+            return;
+        }
+
+        buildingInfo.explode();
     }
 
     private void resetDurability(ItemStack item) {

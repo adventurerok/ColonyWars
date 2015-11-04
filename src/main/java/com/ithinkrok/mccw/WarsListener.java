@@ -23,8 +23,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.io.File;
-
 /**
  * Created by paul on 01/11/15.
  * <p>
@@ -97,12 +95,14 @@ public class WarsListener implements Listener {
         SchematicData schematicData = plugin.getSchematicData(meta.getDisplayName());
         if (schematicData == null) return;
 
-        event.getBlock().setType(Material.AIR);
 
         PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
 
-        SchematicBuilder
-                .buildSchematic(plugin, schematicData, event.getBlock().getLocation(), playerInfo.getTeamColor());
+        if(!SchematicBuilder
+                .buildSchematic(plugin, schematicData, event.getBlock().getLocation(), playerInfo.getTeamColor())){
+            event.setCancelled(true);
+            event.getPlayer().sendMessage("You cannot build that here!");
+        }
     }
 
     @EventHandler

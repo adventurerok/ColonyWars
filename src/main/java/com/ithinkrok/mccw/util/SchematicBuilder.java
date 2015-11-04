@@ -2,6 +2,8 @@ package com.ithinkrok.mccw.util;
 
 import com.flowpowered.nbt.*;
 import com.flowpowered.nbt.stream.NBTInputStream;
+import com.ithinkrok.mccw.WarsPlugin;
+import com.ithinkrok.mccw.data.BuildingInfo;
 import com.ithinkrok.mccw.data.SchematicData;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import de.inventivegames.hologram.Hologram;
@@ -12,6 +14,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,7 +22,6 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -31,13 +33,13 @@ public class SchematicBuilder {
 
     private static final DecimalFormat percentFormat = new DecimalFormat("00%");
 
-    public static List<Location> pasteSchematic(Plugin plugin, SchematicData schemData, Location loc,
+    public static boolean pasteSchematic(WarsPlugin plugin, SchematicData schemData, Location loc,
                                                 TeamColor teamColor) {
         return doSchematic(plugin, schemData, loc, teamColor, true);
     }
 
-    private static List<Location> doSchematic(Plugin plugin, SchematicData schemData, Location loc, TeamColor teamColor,
-                                              boolean instant) {
+    private static boolean doSchematic(WarsPlugin plugin, SchematicData schemData, Location loc, TeamColor teamColor,
+                                            boolean instant) {
 
         File schemFile = new File(plugin.getDataFolder(), schemData.getSchematicFile());
 
@@ -51,6 +53,11 @@ public class SchematicBuilder {
             int offsetX = ((IntTag) nbt.get("WEOffsetX")).getValue();
             int offsetY = ((IntTag) nbt.get("WEOffsetY")).getValue();
             int offsetZ = ((IntTag) nbt.get("WEOffsetZ")).getValue();
+
+            Vector minBB = new Vector(loc.getX() + offsetX, loc.getY() + offsetY, loc.getZ() + offsetZ);
+            Vector maxBB = new Vector(minBB.getX() + width, minBB.getY() + height, minBB.getZ() + length);
+
+            if(!plugin.canBuild(minBB, maxBB)) return false;
 
             byte[] blocks = ((ByteArrayTag) nbt.get("Blocks")).getValue();
             byte[] data = ((ByteArrayTag) nbt.get("Data")).getValue();
@@ -94,16 +101,21 @@ public class SchematicBuilder {
                 task.run();
             }
 
-            return locations;
+            BuildingInfo result = new BuildingInfo(plugin, schemData.getBuildingName(), teamColor, centerBlock,
+                    locations);
+
+            plugin.addBuilding(result);
+
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
 
-            return new ArrayList<>();
+            return false;
         }
 
     }
 
-    public static List<Location> buildSchematic(Plugin plugin, SchematicData schemData, Location loc,
+    public static boolean buildSchematic(WarsPlugin plugin, SchematicData schemData, Location loc,
                                                 TeamColor teamColor) {
         return doSchematic(plugin, schemData, loc, teamColor, false);
     }
@@ -122,6 +134,8 @@ public class SchematicBuilder {
         List<Location> locations = new ArrayList<>();
         Hologram hologram;
         private int buildSpeed;
+
+        private boolean clearedOrigin = false;
 
         public SchematicBuilderTask(Location origin, Location center, TeamColor teamColor, short width, short height,
                                     short length, int offsetX, int offsetY, int offsetZ, byte[] blocks, byte[] data,
@@ -152,6 +166,11 @@ public class SchematicBuilder {
         @Override
         public void run() {
             int count = 0;
+
+            if(!clearedOrigin){
+                origin.getBlock().setType(Material.AIR);
+                clearedOrigin = true;
+            }
 
             while (index < locations.size()) {
                 Location loc = locations.get(index);

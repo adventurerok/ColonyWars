@@ -97,6 +97,8 @@ public class WarsListener implements Listener {
         SchematicData schematicData = plugin.getSchematicData(meta.getDisplayName());
         if (schematicData == null) return;
 
+        event.getBlock().setType(Material.AIR);
+
         PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
 
         SchematicBuilder

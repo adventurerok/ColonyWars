@@ -31,54 +31,14 @@ public class SchematicBuilder {
 
     private static final DecimalFormat percentFormat = new DecimalFormat("00%");
 
-    public static List<Location> pasteSchematic(File schemFile, Location loc) {
-        try (NBTInputStream in = new NBTInputStream(new FileInputStream(schemFile))) {
-            CompoundMap nbt = ((CompoundTag) in.readTag()).getValue();
-
-            short width = ((ShortTag) nbt.get("Width")).getValue();
-            short height = ((ShortTag) nbt.get("Height")).getValue();
-            short length = ((ShortTag) nbt.get("Length")).getValue();
-
-            int offsetX = ((IntTag) nbt.get("WEOffsetX")).getValue();
-            int offsetY = ((IntTag) nbt.get("WEOffsetY")).getValue();
-            int offsetZ = ((IntTag) nbt.get("WEOffsetZ")).getValue();
-
-            byte[] blocks = ((ByteArrayTag) nbt.get("Blocks")).getValue();
-            byte[] data = ((ByteArrayTag) nbt.get("Data")).getValue();
-
-            List<Location> locations = new ArrayList<>();
-
-            for (int x = 0; x < width; ++x) {
-                for (int y = 0; y < height; ++y) {
-                    for (int z = 0; z < length; ++z) {
-                        int index = width * (y * length + z) + x;
-
-                        Location l = new Location(loc.getWorld(), x + loc.getX() + offsetX, y + loc.getY() + offsetY,
-                                z + loc.getZ() + offsetZ);
-
-                        int bId = blocks[index] & 0xFF;
-                        if (bId == 0) continue;
-                        Block block = l.getBlock();
-
-                        block.setTypeId(bId);
-                        block.setData(data[index]);
-
-                        locations.add(l);
-                    }
-                }
-            }
-
-            return locations;
-        } catch (IOException e) {
-            e.printStackTrace();
-
-            return new ArrayList<>();
-        }
-
+    public static List<Location> pasteSchematic(Plugin plugin, SchematicData schemData, Location loc,
+                                                TeamColor teamColor) {
+        return doSchematic(plugin, schemData, loc, teamColor, true);
     }
 
-    public static List<Location> buildSchematic(Plugin plugin, SchematicData schemData, Location loc,
-                                                TeamColor teamColor) {
+    private static List<Location> doSchematic(Plugin plugin, SchematicData schemData, Location loc, TeamColor teamColor,
+                                              boolean instant) {
+
         File schemFile = new File(plugin.getDataFolder(), schemData.getSchematicFile());
 
         try (NBTInputStream in = new NBTInputStream(new FileInputStream(schemFile))) {
@@ -97,6 +57,8 @@ public class SchematicBuilder {
 
             List<Location> locations = new ArrayList<>();
 
+            Location centerBlock = null;
+
             for (int x = 0; x < width; ++x) {
                 for (int y = 0; y < height; ++y) {
                     for (int z = 0; z < length; ++z) {
@@ -107,6 +69,8 @@ public class SchematicBuilder {
 
                         int bId = blocks[index] & 0xFF;
                         if (bId == 0) continue;
+
+                        if (bId == Material.OBSIDIAN.getId()) centerBlock = l;
 
                         locations.add(l);
                     }
@@ -121,10 +85,14 @@ public class SchematicBuilder {
             });
 
             SchematicBuilderTask task =
-                    new SchematicBuilderTask(loc, teamColor, width, height, length, offsetX, offsetY, offsetZ, blocks,
-                            data, locations);
+                    new SchematicBuilderTask(loc, centerBlock, teamColor, width, height, length, offsetX, offsetY,
+                            offsetZ, blocks, data, instant ? -1 : 2, locations);
 
-            task.schedule(plugin);
+            if (!instant) {
+                task.schedule(plugin);
+            } else {
+                task.run();
+            }
 
             return locations;
         } catch (IOException e) {
@@ -135,6 +103,11 @@ public class SchematicBuilder {
 
     }
 
+    public static List<Location> buildSchematic(Plugin plugin, SchematicData schemData, Location loc,
+                                                TeamColor teamColor) {
+        return doSchematic(plugin, schemData, loc, teamColor, false);
+    }
+
     private static class SchematicBuilderTask implements Runnable {
 
         int index = 0;
@@ -142,18 +115,19 @@ public class SchematicBuilder {
         int offsetX, offsetY, offsetZ;
         byte[] blocks, data;
         Location origin;
+        Location center;
         TeamColor teamColor;
 
         int taskId;
-
         List<Location> locations = new ArrayList<>();
-
         Hologram hologram;
+        private int buildSpeed;
 
-        public SchematicBuilderTask(Location origin, TeamColor teamColor, short width, short height, short length,
-                                    int offsetX, int offsetY, int offsetZ, byte[] blocks, byte[] data,
-                                    List<Location> locations) {
+        public SchematicBuilderTask(Location origin, Location center, TeamColor teamColor, short width, short height,
+                                    short length, int offsetX, int offsetY, int offsetZ, byte[] blocks, byte[] data,
+                                    int buildSpeed, List<Location> locations) {
             this.origin = origin;
+            this.center = center;
             this.teamColor = teamColor;
             this.width = width;
             this.height = height;
@@ -163,9 +137,12 @@ public class SchematicBuilder {
             this.offsetZ = offsetZ;
             this.blocks = blocks;
             this.data = data;
+            this.buildSpeed = buildSpeed;
             this.locations = locations;
 
-            Location holoLoc = origin.clone().add(0.5d, 1.5d, 0.5d);
+            Location holoLoc;
+            if (center != null) holoLoc = center.clone().add(0.5d, 1.5d, 0.5d);
+            else holoLoc = origin.clone().add(0.5d, 1.5d, 0.5d);
 
             hologram = HologramAPI.createHologram(holoLoc, "Building: 0%");
 
@@ -200,7 +177,7 @@ public class SchematicBuilder {
                 ++index;
 
                 ++count;
-                if (count > 2) {
+                if (buildSpeed != -1 && count > buildSpeed) {
                     hologram.setText("Building: " + percentFormat.format((double) index / (double) locations.size()));
                     return;
                 }

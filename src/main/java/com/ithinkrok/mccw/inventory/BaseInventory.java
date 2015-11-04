@@ -35,6 +35,7 @@ public class BaseInventory implements InventoryHandler {
                 if(!leftOver.isEmpty()) break;
 
                 InventoryUtils.payWithTeamCash(3000, teamInfo, playerInfo);
+                InventoryUtils.playBuySound(playerInfo.getPlayer());
 
                 break;
         }

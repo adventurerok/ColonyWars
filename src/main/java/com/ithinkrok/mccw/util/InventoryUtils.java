@@ -3,6 +3,8 @@ package com.ithinkrok.mccw.util;
 import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.TeamInfo;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -56,5 +58,9 @@ public class InventoryUtils {
 
         return !(playerAmount > 0 && !playerInfo.hasPlayerCash(playerAmount));
 
+    }
+
+    public static void playBuySound(Player player){
+        player.playSound(player.getLocation(), Sound.BLAZE_HIT, 1.0f, 1.0f);
     }
 }

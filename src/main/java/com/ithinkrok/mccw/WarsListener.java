@@ -133,7 +133,7 @@ public class WarsListener implements Listener{
     public void onPlayerInteract(PlayerInteractEvent event){
         resetDurability(event.getPlayer().getItemInHand());
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getType() != Material.OBSIDIAN) {
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getClickedBlock().getType() != Material.OBSIDIAN) {
             return;
         }
 

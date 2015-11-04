@@ -5,6 +5,7 @@ import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.SchematicData;
 import com.ithinkrok.mccw.data.TeamInfo;
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import com.ithinkrok.mccw.util.SchematicBuilder;
 import com.ithinkrok.mccw.util.TreeFeller;
@@ -234,9 +235,12 @@ public class WarsListener implements Listener {
 
             TeamInfo teamInfo = plugin.getTeamInfo(playerInfo.getTeamColor());
 
-            plugin.getInventoryHandler(event.getInventory().getTitle())
-                    .onInventoryClick(event.getCurrentItem(), playerInfo, teamInfo);
-            event.setCancelled(true);
+            InventoryHandler handler = plugin.getInventoryHandler(event.getInventory().getTitle());
+
+            if (handler != null) {
+                handler.onInventoryClick(event.getCurrentItem(), playerInfo, teamInfo);
+                event.setCancelled(true);
+            }
         }
     }
 

@@ -89,18 +89,22 @@ public class BuildingInfo {
         }
 
         for(Location loc : buildingBlocks){
+            if(loc.equals(centerBlock)) continue;
+
             Block b = loc.getBlock();
-            if(b.getType() == Material.AIR || b.isLiquid()) continue;
+            if(b.getType() == Material.AIR) continue;
 
             Material oldType = b.getType();
             byte oldData = b.getData();
 
             b.setType(Material.AIR);
 
+            if(!oldType.isSolid()) continue;
+
             FallingBlock block = loc.getWorld().spawnFallingBlock(loc, oldType, oldData);
-            float xv = -0.5f + (plugin.getRandom().nextFloat() * 1);
-            float yv = 1 + (plugin.getRandom().nextFloat() * 1);
-            float zv = -0.5f + (plugin.getRandom().nextFloat() * 1);
+            float xv = -0.3f + (plugin.getRandom().nextFloat() * 0.6f);
+            float yv = (plugin.getRandom().nextFloat() * 0.5f);
+            float zv = -0.3f + (plugin.getRandom().nextFloat() * 0.6f);
 
             block.setVelocity(new Vector(xv, yv, zv));
         }

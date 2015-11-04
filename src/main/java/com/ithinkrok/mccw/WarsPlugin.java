@@ -6,6 +6,7 @@ import com.ithinkrok.mccw.data.SchematicData;
 import com.ithinkrok.mccw.data.TeamInfo;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.inventory.BaseInventory;
+import com.ithinkrok.mccw.inventory.FarmInventory;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -51,6 +52,7 @@ public class WarsPlugin extends JavaPlugin {
         schematicDataHashMap.put("Farm", new SchematicData("Farm", "mccw_farm.schematic"));
 
         buildingInventories.put("Base", new BaseInventory());
+        buildingInventories.put("Farm", new FarmInventory());
     }
 
     public SchematicData getSchematicData(String buildingName){

@@ -17,7 +17,7 @@ public class InventoryUtils {
 
     public static ItemStack setItemNameAndLore(ItemStack item, String name, String... lore) {
         ItemMeta im = item.getItemMeta();
-        im.setDisplayName(name);
+        if(name != null) im.setDisplayName(name);
         im.setLore(Arrays.asList(lore));
         item.setItemMeta(im);
         return item;

@@ -178,7 +178,7 @@ public class WarsListener implements Listener {
         if (buildingInfo == null) {
             plugin.getLogger().warning("The player destroyed an obsidian block, but it wasn't a building. Odd");
             plugin.getLogger().warning("Obsidian location: " + event.getClickedBlock().getLocation());
-            event.getPlayer().sendMessage("That obsidian block doesn't appear to be part of a building");
+            event.getPlayer().sendMessage("That obsidian block doesn't appear to be part of a building.");
             return;
         }
 
@@ -186,6 +186,11 @@ public class WarsListener implements Listener {
 
         if (playerInfo.getTeamColor() != buildingInfo.getTeamColor()) {
             event.getPlayer().sendMessage("That building does not belong to your team. Mine this block to destroy it!");
+            return;
+        }
+
+        if(!buildingInfo.isFinished()){
+            event.getPlayer().sendMessage("You must wait until the building has finished construction.");
             return;
         }
 

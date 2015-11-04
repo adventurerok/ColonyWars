@@ -88,18 +88,18 @@ public class SchematicBuilder {
                 return Double.compare(o1.getZ(), o2.getZ());
             });
 
+            BuildingInfo result = new BuildingInfo(plugin, schemData.getBuildingName(), teamColor, centerBlock,
+                    locations);
+
             SchematicBuilderTask task =
-                    new SchematicBuilderTask(loc, centerBlock, teamColor, width, height, length, offsetX, offsetY,
-                            offsetZ, blocks, data, instant ? -1 : 2, locations);
+                    new SchematicBuilderTask(loc, result, width, height, length, offsetX, offsetY,
+                            offsetZ, blocks, data, instant ? -1 : 2);
 
             if (!instant) {
                 task.schedule(plugin);
             } else {
                 task.run();
             }
-
-            BuildingInfo result = new BuildingInfo(plugin, schemData.getBuildingName(), teamColor, centerBlock,
-                    locations);
 
             plugin.addBuilding(result);
 
@@ -120,26 +120,25 @@ public class SchematicBuilder {
     private static class SchematicBuilderTask implements Runnable {
 
         int index = 0;
-        short width, height, length;
+        private BuildingInfo buildingInfo;
+        short width;
+        short height;
+        short length;
         int offsetX, offsetY, offsetZ;
         byte[] blocks, data;
         Location origin;
-        Location center;
-        TeamColor teamColor;
 
         int taskId;
-        List<Location> locations = new ArrayList<>();
         Hologram hologram;
         private int buildSpeed;
 
         private boolean clearedOrigin = false;
 
-        public SchematicBuilderTask(Location origin, Location center, TeamColor teamColor, short width, short height,
+        public SchematicBuilderTask(Location origin, BuildingInfo buildingInfo, short width, short height,
                                     short length, int offsetX, int offsetY, int offsetZ, byte[] blocks, byte[] data,
-                                    int buildSpeed, List<Location> locations) {
+                                    int buildSpeed) {
             this.origin = origin;
-            this.center = center;
-            this.teamColor = teamColor;
+            this.buildingInfo = buildingInfo;
             this.width = width;
             this.height = height;
             this.length = length;
@@ -149,10 +148,9 @@ public class SchematicBuilder {
             this.blocks = blocks;
             this.data = data;
             this.buildSpeed = buildSpeed;
-            this.locations = locations;
 
             Location holoLoc;
-            if (center != null) holoLoc = center.clone().add(0.5d, 1.5d, 0.5d);
+            if (buildingInfo.getCenterBlock() != null) holoLoc = buildingInfo.getCenterBlock().clone().add(0.5d, 1.5d, 0.5d);
             else holoLoc = origin.clone().add(0.5d, 1.5d, 0.5d);
 
             hologram = HologramAPI.createHologram(holoLoc, "Building: 0%");
@@ -169,6 +167,8 @@ public class SchematicBuilder {
                 clearedOrigin = true;
             }
 
+            List<Location> locations = buildingInfo.getBuildingBlocks();
+
             while (index < locations.size()) {
                 Location loc = locations.get(index);
 
@@ -183,7 +183,7 @@ public class SchematicBuilder {
 
                 Block block = loc.getBlock();
 
-                if (bId == Material.WOOL.getId()) bData = teamColor.dyeColor.getWoolData();
+                if (bId == Material.WOOL.getId()) bData = buildingInfo.getTeamColor().dyeColor.getWoolData();
 
                 block.setTypeId(bId);
                 block.setData(bData);
@@ -203,9 +203,11 @@ public class SchematicBuilder {
 
             hologram.despawn();
 
-            if(center != null){
-                center.getWorld().playSound(center, Sound.LEVEL_UP, 1.0f, 1.0f);
+            if(buildingInfo.getCenterBlock() != null){
+                buildingInfo.getCenterBlock().getWorld().playSound(buildingInfo.getCenterBlock(), Sound.LEVEL_UP, 1.0f, 1.0f);
             }
+
+            buildingInfo.setFinished(true);
         }
 
         public void schedule(Plugin plugin) {

@@ -25,6 +25,7 @@ public class BuildingInfo {
     private Location centerBlock;
     private Vector minBB;
     private Vector maxBB;
+    private boolean finished;
 
     public BuildingInfo(WarsPlugin plugin, String buildingName, TeamColor teamColor, Location centerBlock,
                         List<Location> buildingBlocks) {
@@ -62,6 +63,14 @@ public class BuildingInfo {
 
     public String getBuildingName() {
         return buildingName;
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
     }
 
     public TeamColor getTeamColor() {

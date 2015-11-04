@@ -5,6 +5,8 @@ import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.SchematicData;
 import com.ithinkrok.mccw.data.TeamInfo;
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.mccw.inventory.BaseInventory;
+import com.ithinkrok.mccw.inventory.InventoryHandler;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -27,6 +29,7 @@ public class WarsPlugin extends JavaPlugin {
     private HashMap<String, SchematicData> schematicDataHashMap = new HashMap<>();
     private List<BuildingInfo> buildings = new ArrayList<>();
     private HashMap<Location, BuildingInfo> buildingCentres = new HashMap<>();
+    private HashMap<String, InventoryHandler> buildingInventories = new HashMap<>();
     private Random random = new Random();
 
     @Override
@@ -46,10 +49,16 @@ public class WarsPlugin extends JavaPlugin {
 
         schematicDataHashMap.put("Base", new SchematicData("Base", "mccw_base.schematic"));
         schematicDataHashMap.put("Farm", new SchematicData("Farm", "mccw_farm.schematic"));
+
+        buildingInventories.put("Base", new BaseInventory());
     }
 
     public SchematicData getSchematicData(String buildingName){
         return schematicDataHashMap.get(buildingName);
+    }
+
+    public InventoryHandler getInventoryHandler(String building){
+        return buildingInventories.get(building);
     }
 
     public PlayerInfo getPlayerInfo(Player player){
@@ -82,6 +91,7 @@ public class WarsPlugin extends JavaPlugin {
 
     public void addBuilding(BuildingInfo buildingInfo){
         buildings.add(buildingInfo);
+        getTeamInfo(buildingInfo.getTeamColor()).addBuilding(buildingInfo.getBuildingName());
 
         if(buildingInfo.getCenterBlock() != null) buildingCentres.put(buildingInfo.getCenterBlock(), buildingInfo);
     }
@@ -136,6 +146,7 @@ public class WarsPlugin extends JavaPlugin {
 
     public void removeBuilding(BuildingInfo buildingInfo) {
         buildings.remove(buildingInfo);
+        getTeamInfo(buildingInfo.getTeamColor()).removeBuilding(buildingInfo.getBuildingName());
 
         buildingCentres.remove(buildingInfo.getCenterBlock());
     }

@@ -24,6 +24,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.List;
+
 /**
  * Created by paul on 01/11/15.
  * <p>
@@ -99,8 +101,8 @@ public class WarsListener implements Listener {
 
         PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
 
-        if(!SchematicBuilder
-                .buildSchematic(plugin, schematicData, event.getBlock().getLocation(), playerInfo.getTeamColor())){
+        if (!SchematicBuilder
+                .buildSchematic(plugin, schematicData, event.getBlock().getLocation(), playerInfo.getTeamColor())) {
             event.setCancelled(true);
             event.getPlayer().sendMessage("You cannot build that here!");
         }
@@ -115,10 +117,10 @@ public class WarsListener implements Listener {
 
         resetDurability(event.getPlayer().getItemInHand());
 
-        if(event.getBlock().getType() != Material.OBSIDIAN) return;
+        if (event.getBlock().getType() != Material.OBSIDIAN) return;
 
         BuildingInfo buildingInfo = plugin.getBuildingInfo(event.getBlock().getLocation());
-        if(buildingInfo == null){
+        if (buildingInfo == null) {
             plugin.getLogger().warning("The player destroyed an obsidian block, but it wasn't a building. Odd");
             plugin.getLogger().warning("Obsidian location: " + event.getBlock().getLocation());
             event.getPlayer().sendMessage("That obsidian block doesn't appear to be part of a building");
@@ -127,7 +129,7 @@ public class WarsListener implements Listener {
 
         PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
 
-        if(playerInfo.getTeamColor() == buildingInfo.getTeamColor()){
+        if (playerInfo.getTeamColor() == buildingInfo.getTeamColor()) {
             event.getPlayer().sendMessage("You cannot destroy your own team's buildings!");
             event.setCancelled(true);
             return;
@@ -172,7 +174,7 @@ public class WarsListener implements Listener {
         }
 
         BuildingInfo buildingInfo = plugin.getBuildingInfo(event.getClickedBlock().getLocation());
-        if(buildingInfo == null){
+        if (buildingInfo == null) {
             plugin.getLogger().warning("The player destroyed an obsidian block, but it wasn't a building. Odd");
             plugin.getLogger().warning("Obsidian location: " + event.getClickedBlock().getLocation());
             event.getPlayer().sendMessage("That obsidian block doesn't appear to be part of a building");
@@ -181,18 +183,27 @@ public class WarsListener implements Listener {
 
         PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
 
-        if(playerInfo.getTeamColor() != buildingInfo.getTeamColor()){
+        if (playerInfo.getTeamColor() != buildingInfo.getTeamColor()) {
             event.getPlayer().sendMessage("That building does not belong to your team. Mine this block to destroy it!");
             return;
         }
 
         playerInfo.setShopBlock(buildingInfo.getCenterBlock());
 
-        Inventory test = Bukkit.createInventory(event.getPlayer(), 9, buildingInfo.getBuildingName());
-        test.setItem(0, InventoryUtils.setItemNameAndLore(new ItemStack(Material.OBSIDIAN, 1), "Farm",
-                new String[]{"Build a farm!", "Cost: 3000"}));
+        Inventory shopInv = Bukkit.createInventory(event.getPlayer(), 9, buildingInfo.getBuildingName());
 
-        event.getPlayer().openInventory(test);
+        TeamInfo teamInfo = plugin.getTeamInfo(playerInfo.getTeamColor());
+        List<ItemStack> contents =
+                plugin.getInventoryHandler(buildingInfo.getBuildingName()).getInventoryContents(playerInfo, teamInfo);
+
+        int index = 0;
+
+        for (ItemStack item : contents) {
+            shopInv.setItem(index++, item);
+        }
+
+        event.getPlayer().openInventory(shopInv);
+        playerInfo.setShopInventory(shopInv);
     }
 
     @EventHandler
@@ -216,11 +227,15 @@ public class WarsListener implements Listener {
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getSlotType().equals(InventoryType.SlotType.ARMOR)) event.setCancelled(true);
 
-        if(event.getInventory().getType() != InventoryType.PLAYER){
+        if (event.getInventory().getType() != InventoryType.PLAYER &&
+                event.getSlotType() == InventoryType.SlotType.CONTAINER) {
             PlayerInfo playerInfo = plugin.getPlayerInfo((Player) event.getWhoClicked());
             playerInfo.setShopInventory(event.getInventory());
 
             TeamInfo teamInfo = plugin.getTeamInfo(playerInfo.getTeamColor());
+
+            plugin.getInventoryHandler(event.getInventory().getTitle())
+                    .onInventoryClick(event.getCurrentItem(), playerInfo, teamInfo);
             event.setCancelled(true);
         }
     }

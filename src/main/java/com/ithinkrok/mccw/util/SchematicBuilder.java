@@ -8,10 +8,7 @@ import com.ithinkrok.mccw.data.SchematicData;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import de.inventivegames.hologram.Hologram;
 import de.inventivegames.hologram.HologramAPI;
-import org.bukkit.Bukkit;
-import org.bukkit.Effect;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
@@ -205,6 +202,10 @@ public class SchematicBuilder {
             Bukkit.getScheduler().cancelTask(taskId);
 
             hologram.despawn();
+
+            if(center != null){
+                center.getWorld().playSound(center, Sound.LEVEL_UP, 1.0f, 1.0f);
+            }
         }
 
         public void schedule(Plugin plugin) {

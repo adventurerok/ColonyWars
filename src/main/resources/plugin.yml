@@ -1,4 +1,4 @@
-name: "Colony Wars"
+name: "ColonyWars"
 version: "${project.version}"
 main: "com.ithinkrok.mccw.WarsPlugin"
 author: "ithinkrok"

@@ -259,7 +259,7 @@ public class WarsPlugin extends JavaPlugin {
             int compassIndex = player.getInventory().first(Material.COMPASS);
             ItemStack newCompass = player.getInventory().getItem(compassIndex);
 
-            InventoryUtils.setItemNameAndLore(newCompass, "Player Compass", "oriented at: " + closestName);
+            InventoryUtils.setItemNameAndLore(newCompass, "Player Compass", "Oriented at: " + closestName);
 
             player.getInventory().setItem(compassIndex, newCompass);
         }, 60);

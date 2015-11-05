@@ -9,6 +9,8 @@ import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
 
@@ -43,6 +45,8 @@ public class ScoutClass implements PlayerClassHandler {
                 inv.addItem(new ItemStack(Material.WOOD_SWORD));
                 inv.addItem(InventoryUtils.createItemWithNameAndLore(Material.COMPASS, 1, 0, "Player Compass",
                         "Oriented at: No One"));
+
+                playerInfo.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 2), true);
                 break;
         }
     }

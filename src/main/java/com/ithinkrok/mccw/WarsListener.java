@@ -283,8 +283,6 @@ public class WarsListener implements Listener {
             event.setCancelled(true);
 
             if (event.getCurrentItem() == null) return;
-            InventoryHandler handler = plugin.getInventoryHandler(event.getInventory().getTitle());
-            if (handler == null) return;
 
             PlayerInfo playerInfo = plugin.getPlayerInfo((Player) event.getWhoClicked());
             playerInfo.setShopInventory(event.getInventory());
@@ -297,6 +295,9 @@ public class WarsListener implements Listener {
                     .onInventoryClick(event.getCurrentItem(), event.getInventory().getTitle(), playerInfo, teamInfo);
 
             if (done) return;
+
+            InventoryHandler handler = plugin.getInventoryHandler(event.getInventory().getTitle());
+            if (handler == null) return;
 
             handler.onInventoryClick(event.getCurrentItem(), playerInfo, teamInfo);
         }

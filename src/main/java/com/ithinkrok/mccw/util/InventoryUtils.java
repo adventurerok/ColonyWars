@@ -57,6 +57,18 @@ public class InventoryUtils {
         return item;
     }
 
+    public static boolean checkUpgradeAndTryCharge(PlayerInfo playerInfo, int cost, String upgradeName, int level){
+        if(playerInfo.getUpgradeLevel(upgradeName) >= level){
+            playerInfo.getPlayer().sendMessage("You already have that upgrade");
+            return false;
+        } else if(!playerInfo.subtractPlayerCash(cost)){
+            playerInfo.getPlayer().sendMessage("You don't have that amount of money!");
+            return false;
+        }
+
+        return true;
+    }
+
     public static boolean payWithTeamCash(int amount, TeamInfo teamInfo, PlayerInfo playerInfo){
         int teamAmount = Math.min(teamInfo.getTeamCash(), amount);
         int playerAmount = amount - teamAmount;

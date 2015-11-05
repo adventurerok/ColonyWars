@@ -21,7 +21,7 @@ public class FarmInventory implements InventoryHandler {
     private int rawBeefCost = 6;
     private int bakedPotatoCost = 5;
     private int cookedBeefCost = 10;
-    private int goldenAppleCost = 200;
+    private int goldenAppleCost = 125;
 
     @Override
     public boolean onInventoryClick(ItemStack item, PlayerInfo playerInfo, TeamInfo teamInfo) {

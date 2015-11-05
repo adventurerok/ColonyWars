@@ -62,13 +62,7 @@ public class GeneralClass implements PlayerClassHandler {
                 return false;
         }
 
-        if(!playerInfo.subtractPlayerCash(cost)){
-            playerInfo.getPlayer().sendMessage("You don't have that amount of money!");
-            return true;
-        } else if(playerInfo.getUpgradeLevel("sword") >= upgrade){
-            playerInfo.getPlayer().sendMessage("You already have that upgrade");
-            return true;
-        }
+        if(InventoryUtils.checkUpgradeAndTryCharge(playerInfo, cost, "sword", upgrade)) return true;
 
         PlayerInventory inv = playerInfo.getPlayer().getInventory();
 

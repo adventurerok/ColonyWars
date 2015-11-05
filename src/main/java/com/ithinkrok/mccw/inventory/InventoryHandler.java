@@ -13,6 +13,7 @@ import java.util.List;
  */
 public interface InventoryHandler {
 
-    void onInventoryClick(ItemStack item, PlayerInfo playerInfo, TeamInfo teamInfo);
+    boolean onInventoryClick(ItemStack item, PlayerInfo playerInfo, TeamInfo teamInfo);
     List<ItemStack> getInventoryContents(PlayerInfo playerInfo, TeamInfo teamInfo);
+
 }

@@ -24,12 +24,12 @@ public class FarmInventory implements InventoryHandler {
     private int goldenAppleCost = 200;
 
     @Override
-    public void onInventoryClick(ItemStack item, PlayerInfo playerInfo, TeamInfo teamInfo) {
+    public boolean onInventoryClick(ItemStack item, PlayerInfo playerInfo, TeamInfo teamInfo) {
         PlayerInventory inv = playerInfo.getPlayer().getInventory();
 
         if (inv.firstEmpty() == -1) {
             playerInfo.getPlayer().sendMessage("Please ensure you have one free slot in your inventory.");
-            return;
+            return true;
         }
 
         int cost = 0;
@@ -62,13 +62,17 @@ public class FarmInventory implements InventoryHandler {
                 break;
         }
 
+        if(add == null) return false;
+
         if(!playerInfo.subtractPlayerCash(cost)){
             playerInfo.getPlayer().sendMessage("You don't have that amount of money!");
-            return;
+            return true;
         }
 
         inv.addItem(add);
         InventoryUtils.playBuySound(playerInfo.getPlayer());
+
+        return true;
 
     }
 

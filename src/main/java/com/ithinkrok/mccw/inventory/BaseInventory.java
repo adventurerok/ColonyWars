@@ -22,12 +22,12 @@ public class BaseInventory implements InventoryHandler {
     private int magetowerCost = 4000;
 
     @Override
-    public void onInventoryClick(ItemStack item, PlayerInfo playerInfo, TeamInfo teamInfo) {
+    public boolean onInventoryClick(ItemStack item, PlayerInfo playerInfo, TeamInfo teamInfo) {
         PlayerInventory inv = playerInfo.getPlayer().getInventory();
 
         if (inv.firstEmpty() == -1) {
             playerInfo.getPlayer().sendMessage("Please ensure you have one free slot in your inventory");
-            return;
+            return true;
         }
 
         ItemStack add = null;
@@ -51,17 +51,18 @@ public class BaseInventory implements InventoryHandler {
                 break;
         }
 
-        if (cost == 0 || add == null) return;
+        if (cost == 0 || add == null) return false;
 
         if (!InventoryUtils.hasTeamCash(cost, teamInfo, playerInfo)) {
             playerInfo.getPlayer().sendMessage("You don't have that amount of money!");
-            return;
+            return true;
         }
 
         inv.addItem(add);
 
         InventoryUtils.payWithTeamCash(cost, teamInfo, playerInfo);
         InventoryUtils.playBuySound(playerInfo.getPlayer());
+        return true;
     }
 
     @Override

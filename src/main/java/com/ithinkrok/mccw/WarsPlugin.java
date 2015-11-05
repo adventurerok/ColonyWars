@@ -33,6 +33,12 @@ public class WarsPlugin extends JavaPlugin {
     private HashMap<String, InventoryHandler> buildingInventories = new HashMap<>();
     private Random random = new Random();
 
+    private double maxHealth = 40;
+
+    public double getMaxHealth() {
+        return maxHealth;
+    }
+
     @Override
     public void onDisable() {
         super.onDisable();

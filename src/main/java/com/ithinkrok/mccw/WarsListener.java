@@ -52,6 +52,9 @@ public class WarsListener implements Listener {
         playerInfo.setupScoreboard();
 
         plugin.setPlayerTeam(event.getPlayer(), TeamColor.RED);
+
+        event.getPlayer().setMaxHealth(plugin.getMaxHealth());
+        event.getPlayer().setHealth(plugin.getMaxHealth());
     }
 
     @EventHandler

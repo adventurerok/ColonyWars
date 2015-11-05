@@ -5,6 +5,7 @@ import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,6 +16,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -166,7 +168,8 @@ public class PlayerInfo {
     }
 
     public void setupScoreboard(){
-        Scoreboard scoreboard = player.getScoreboard();
+        Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        player.setScoreboard(scoreboard);
 
         Objective mainObjective = scoreboard.getObjective("main");
         if(mainObjective == null) mainObjective = scoreboard.registerNewObjective("main", "dummy");

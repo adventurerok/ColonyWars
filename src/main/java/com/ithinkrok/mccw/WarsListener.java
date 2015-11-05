@@ -150,7 +150,7 @@ public class WarsListener implements Listener {
     private void resetDurability(Player player) {
         ItemStack item = player.getItemInHand();
 
-        if(item == null) return;
+        if (item == null) return;
         if (item.getDurability() != 0 && item.getType().getMaxDurability() != 0) {
             item.setDurability((short) 0);
             player.setItemInHand(item);
@@ -158,7 +158,7 @@ public class WarsListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onEntityDeath(EntityDeathEvent event){
+    public void onEntityDeath(EntityDeathEvent event) {
         event.setDroppedExp(0);
         event.getDrops().clear();
     }
@@ -185,7 +185,7 @@ public class WarsListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerItemBreak(PlayerItemBreakEvent event){
+    public void onPlayerItemBreak(PlayerItemBreakEvent event) {
         event.getBrokenItem().setDurability((short) 0);
     }
 
@@ -231,7 +231,7 @@ public class WarsListener implements Listener {
         InventoryHandler inventoryHandler = plugin.getInventoryHandler(buildingInfo.getBuildingName());
         List<ItemStack> contents;
 
-        if(inventoryHandler != null) contents = inventoryHandler.getInventoryContents(playerInfo, teamInfo);
+        if (inventoryHandler != null) contents = inventoryHandler.getInventoryContents(playerInfo, teamInfo);
         else contents = new ArrayList<>();
 
         PlayerClassHandler classHandler = plugin.getPlayerClassHandler(playerInfo.getPlayerClass());
@@ -254,11 +254,11 @@ public class WarsListener implements Listener {
         Player damager = (Player) event.getDamager();
         resetDurability(damager);
 
-        if(!(event.getEntity() instanceof Player)) return;
+        if (!(event.getEntity() instanceof Player)) return;
 
         Player entity = (Player) event.getEntity();
 
-        if(plugin.getPlayerInfo(damager).getTeamColor() == plugin.getPlayerInfo(entity).getTeamColor()){
+        if (plugin.getPlayerInfo(damager).getTeamColor() == plugin.getPlayerInfo(entity).getTeamColor()) {
             event.setCancelled(true);
         }
     }
@@ -278,13 +278,13 @@ public class WarsListener implements Listener {
         if (event.getSlotType().equals(InventoryType.SlotType.ARMOR)) event.setCancelled(true);
 
         if (event.getInventory().getType() != InventoryType.PLAYER &&
-                event.getSlotType() == InventoryType.SlotType.CONTAINER) {
-
-            if(event.getCurrentItem() == null) return;
-            InventoryHandler handler = plugin.getInventoryHandler(event.getInventory().getTitle());
-            if (handler == null) return;
+                event.getInventory().getType() != InventoryType.CRAFTING) {
 
             event.setCancelled(true);
+
+            if (event.getCurrentItem() == null) return;
+            InventoryHandler handler = plugin.getInventoryHandler(event.getInventory().getTitle());
+            if (handler == null) return;
 
             PlayerInfo playerInfo = plugin.getPlayerInfo((Player) event.getWhoClicked());
             playerInfo.setShopInventory(event.getInventory());
@@ -293,10 +293,10 @@ public class WarsListener implements Listener {
 
             PlayerClassHandler classHandler = plugin.getPlayerClassHandler(playerInfo.getPlayerClass());
 
-            boolean done = classHandler.onInventoryClick(event.getCurrentItem(), event.getInventory().getTitle(),
-                    playerInfo, teamInfo);
+            boolean done = classHandler
+                    .onInventoryClick(event.getCurrentItem(), event.getInventory().getTitle(), playerInfo, teamInfo);
 
-            if(done) return;
+            if (done) return;
 
             handler.onInventoryClick(event.getCurrentItem(), playerInfo, teamInfo);
         }

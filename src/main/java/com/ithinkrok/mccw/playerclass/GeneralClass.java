@@ -44,14 +44,17 @@ public class GeneralClass implements PlayerClassHandler {
 
         ItemStack sword = new ItemStack(Material.DIAMOND_SWORD);
         int cost;
+        int upgrade;
 
         switch(item.getItemMeta().getDisplayName()){
             case "Sword Upgrade 1":
                 cost = sword1Cost;
+                upgrade = 1;
                 InventoryUtils.enchantItem(sword, Enchantment.DAMAGE_ALL, 1, Enchantment.KNOCKBACK, 5);
                 break;
             case "Sword Upgrade 2":
                 cost = sword2Cost;
+                upgrade = 2;
                 InventoryUtils.enchantItem(sword, Enchantment.DAMAGE_ALL, 2, Enchantment.KNOCKBACK, 5);
                 break;
             default:
@@ -61,11 +64,19 @@ public class GeneralClass implements PlayerClassHandler {
         if(!playerInfo.subtractPlayerCash(cost)){
             playerInfo.getPlayer().sendMessage("You don't have that amount of money!");
             return true;
+        } else if(playerInfo.getUpgradeLevel("sword") >= upgrade){
+            playerInfo.getPlayer().sendMessage("You already have that upgrade");
+            return true;
         }
 
         PlayerInventory inv = playerInfo.getPlayer().getInventory();
 
         inv.setItem(inv.first(Material.DIAMOND_SWORD), sword);
+        playerInfo.setUpgradeLevel("sword", upgrade);
+
+        InventoryUtils.playBuySound(playerInfo.getPlayer());
+
+        playerInfo.recalculateInventory();
 
         return true;
     }

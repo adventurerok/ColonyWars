@@ -46,14 +46,13 @@ public class ScoutClass implements PlayerClassHandler {
                 inv.addItem(InventoryUtils.createItemWithNameAndLore(Material.COMPASS, 1, 0, "Player Compass",
                         "Oriented at: No One"));
 
-                playerInfo.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 2), true);
                 break;
         }
     }
 
     @Override
     public void onGameBegin(PlayerInfo playerInfo, TeamInfo teamInfo) {
-
+        playerInfo.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 2), true);
     }
 
     @Override

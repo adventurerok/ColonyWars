@@ -153,9 +153,8 @@ public class WarsListener implements Listener {
         if(item == null) return;
         if (item.getDurability() != 0 && item.getType().getMaxDurability() != 0) {
             item.setDurability((short) 0);
+            player.setItemInHand(item);
         }
-
-        player.setItemInHand(item);
     }
 
     @EventHandler(ignoreCancelled = true)

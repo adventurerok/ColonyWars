@@ -168,10 +168,43 @@ public class WarsPlugin extends JavaPlugin {
                     return false;
                 }
 
+            case "test":
+                if(args.length < 1) return false;
+
+                return onTestCommand(player, command, args);
+
             default:
                 return false;
         }
 
+    }
+
+    private boolean onTestCommand(Player player, Command command, String[] args) {
+        PlayerInfo playerInfo = getPlayerInfo(player);
+
+        switch(args[0]){
+            case "team":
+                if(args.length < 2) return false;
+
+                TeamColor teamColor = TeamColor.valueOf(args[1].toUpperCase());
+                setPlayerTeam(player, teamColor);
+
+                break;
+            case "class":
+                if(args.length < 2) return false;
+
+                PlayerClass playerClass = PlayerClass.valueOf(args[1].toUpperCase());
+                playerInfo.setPlayerClass(playerClass);
+
+                break;
+            case "money":
+
+                playerInfo.addPlayerCash(10000);
+                getTeamInfo(playerInfo.getTeamColor()).addTeamCash(10000);
+                break;
+        }
+
+        return true;
     }
 
     public void removeBuilding(BuildingInfo buildingInfo) {

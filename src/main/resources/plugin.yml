@@ -3,8 +3,14 @@ version: "${project.version}"
 main: "com.ithinkrok.mccw.WarsPlugin"
 author: "ithinkrok"
 depend: ["HologramAPI"]
+permissions:
+  mccw.test:
+    description: "Allows use of the test command"
+    default: "op"
 commands:
   transfer:
     description: "Transfers money from your account to your team's account"
     aliases: ["t", "tf"]
     usage: "/transfer [money]"
+  test:
+    description: "ColonyWars test command"

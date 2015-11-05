@@ -55,6 +55,7 @@ public class ScoutClass implements PlayerClassHandler {
     @Override
     public void onInteractWorld(PlayerInteractEvent event) {
         ItemStack item = event.getItem();
+        if(item == null) return;
 
         switch(item.getType()){
             case COMPASS:

@@ -280,11 +280,11 @@ public class WarsListener implements Listener {
         if (event.getInventory().getType() != InventoryType.PLAYER &&
                 event.getSlotType() == InventoryType.SlotType.CONTAINER) {
 
-            event.setCancelled(true);
-
             if(event.getCurrentItem() == null) return;
             InventoryHandler handler = plugin.getInventoryHandler(event.getInventory().getTitle());
             if (handler == null) return;
+
+            event.setCancelled(true);
 
             PlayerInfo playerInfo = plugin.getPlayerInfo((Player) event.getWhoClicked());
             playerInfo.setShopInventory(event.getInventory());

@@ -21,6 +21,7 @@ public class BaseInventory implements InventoryHandler {
     private int lumbermillCost = 2000;
     private int blacksmithCost = 4000;
     private int magetowerCost = 4000;
+    private int churchCost = 4000;
 
     @Override
     public boolean onInventoryClick(ItemStack item, PlayerInfo playerInfo, TeamInfo teamInfo) {
@@ -55,6 +56,11 @@ public class BaseInventory implements InventoryHandler {
                 add = InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, "MageTower",
                         "Builds a MageTower when placed!");
                 break;
+            case "Church":
+                cost = churchCost;
+                add = InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, "Church",
+                        "Builds a MageTower when placed!");
+                break;
         }
 
         if (cost == 0 || add == null) return false;
@@ -85,6 +91,8 @@ public class BaseInventory implements InventoryHandler {
                             true));
             result.add(InventoryUtils
                     .createShopItem(Material.LAPIS_ORE, 1, 0, "MageTower", "Build a MageTower!", magetowerCost, true));
+            result.add(InventoryUtils
+                    .createShopItem(Material.LAPIS_ORE, 1, 0, "Church", "Build a church!", churchCost, true));
         }
         return result;
     }

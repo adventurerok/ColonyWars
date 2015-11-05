@@ -46,8 +46,6 @@ public class WarsListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        event.getPlayer().setGameMode(GameMode.SPECTATOR);
-
         PlayerInfo playerInfo = new PlayerInfo(plugin, event.getPlayer());
         plugin.setPlayerInfo(event.getPlayer(), playerInfo);
 

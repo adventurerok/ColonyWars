@@ -31,12 +31,12 @@ public class SchematicBuilder {
     private static final DecimalFormat percentFormat = new DecimalFormat("00%");
 
     public static boolean pasteSchematic(WarsPlugin plugin, SchematicData schemData, Location loc,
-                                                TeamColor teamColor) {
+                                         TeamColor teamColor) {
         return doSchematic(plugin, schemData, loc, teamColor, true);
     }
 
     private static boolean doSchematic(WarsPlugin plugin, SchematicData schemData, Location loc, TeamColor teamColor,
-                                            boolean instant) {
+                                       boolean instant) {
 
         File schemFile = new File(plugin.getDataFolder(), schemData.getSchematicFile());
 
@@ -54,7 +54,7 @@ public class SchematicBuilder {
             Vector minBB = new Vector(loc.getX() + offsetX, loc.getY() + offsetY, loc.getZ() + offsetZ);
             Vector maxBB = new Vector(minBB.getX() + width, minBB.getY() + height, minBB.getZ() + length);
 
-            if(!plugin.canBuild(minBB, maxBB)) return false;
+            if (!plugin.canBuild(minBB, maxBB)) return false;
 
             byte[] blocks = ((ByteArrayTag) nbt.get("Blocks")).getValue();
             byte[] data = ((ByteArrayTag) nbt.get("Data")).getValue();
@@ -88,20 +88,20 @@ public class SchematicBuilder {
                 return Double.compare(o1.getZ(), o2.getZ());
             });
 
-            BuildingInfo result = new BuildingInfo(plugin, schemData.getBuildingName(), teamColor, centerBlock,
-                    locations);
+            BuildingInfo result =
+                    new BuildingInfo(plugin, schemData.getBuildingName(), teamColor, centerBlock, locations);
+
+            plugin.addBuilding(result);
 
             SchematicBuilderTask task =
-                    new SchematicBuilderTask(loc, result, width, height, length, offsetX, offsetY,
-                            offsetZ, blocks, data, instant ? -1 : 2);
+                    new SchematicBuilderTask(plugin, loc, result, width, height, length, offsetX, offsetY, offsetZ,
+                            blocks, data, instant ? -1 : 2);
 
             if (!instant) {
                 task.schedule(plugin);
             } else {
                 task.run();
             }
-
-            plugin.addBuilding(result);
 
             return true;
         } catch (IOException e) {
@@ -113,30 +113,31 @@ public class SchematicBuilder {
     }
 
     public static boolean buildSchematic(WarsPlugin plugin, SchematicData schemData, Location loc,
-                                                TeamColor teamColor) {
+                                         TeamColor teamColor) {
         return doSchematic(plugin, schemData, loc, teamColor, false);
     }
 
     private static class SchematicBuilderTask implements Runnable {
 
         int index = 0;
-        private BuildingInfo buildingInfo;
         short width;
         short height;
         short length;
         int offsetX, offsetY, offsetZ;
         byte[] blocks, data;
         Location origin;
-
         int taskId;
         Hologram hologram;
+        private BuildingInfo buildingInfo;
+        private WarsPlugin plugin;
         private int buildSpeed;
 
         private boolean clearedOrigin = false;
 
-        public SchematicBuilderTask(Location origin, BuildingInfo buildingInfo, short width, short height,
-                                    short length, int offsetX, int offsetY, int offsetZ, byte[] blocks, byte[] data,
-                                    int buildSpeed) {
+        public SchematicBuilderTask(WarsPlugin plugin, Location origin, BuildingInfo buildingInfo, short width,
+                                    short height, short length, int offsetX, int offsetY, int offsetZ, byte[] blocks,
+                                    byte[] data, int buildSpeed) {
+            this.plugin = plugin;
             this.origin = origin;
             this.buildingInfo = buildingInfo;
             this.width = width;
@@ -150,7 +151,8 @@ public class SchematicBuilder {
             this.buildSpeed = buildSpeed;
 
             Location holoLoc;
-            if (buildingInfo.getCenterBlock() != null) holoLoc = buildingInfo.getCenterBlock().clone().add(0.5d, 1.5d, 0.5d);
+            if (buildingInfo.getCenterBlock() != null)
+                holoLoc = buildingInfo.getCenterBlock().clone().add(0.5d, 1.5d, 0.5d);
             else holoLoc = origin.clone().add(0.5d, 1.5d, 0.5d);
 
             hologram = HologramAPI.createHologram(holoLoc, "Building: 0%");
@@ -162,7 +164,7 @@ public class SchematicBuilder {
         public void run() {
             int count = 0;
 
-            if(!clearedOrigin){
+            if (!clearedOrigin) {
                 origin.getBlock().setType(Material.AIR);
                 clearedOrigin = true;
             }
@@ -184,8 +186,8 @@ public class SchematicBuilder {
                 Block block = loc.getBlock();
 
                 if (bId == Material.WOOL.getId()) bData = buildingInfo.getTeamColor().dyeColor.getWoolData();
-                else if(bId == Material.STAINED_CLAY.getId()) bData = buildingInfo.getTeamColor().dyeColor
-                        .getWoolData();
+                else if (bId == Material.STAINED_CLAY.getId())
+                    bData = buildingInfo.getTeamColor().dyeColor.getWoolData();
 
                 block.setTypeId(bId);
                 block.setData(bData);
@@ -205,11 +207,13 @@ public class SchematicBuilder {
 
             hologram.despawn();
 
-            if(buildingInfo.getCenterBlock() != null){
-                buildingInfo.getCenterBlock().getWorld().playSound(buildingInfo.getCenterBlock(), Sound.LEVEL_UP, 1.0f, 1.0f);
+            if (buildingInfo.getCenterBlock() != null) {
+                buildingInfo.getCenterBlock().getWorld()
+                        .playSound(buildingInfo.getCenterBlock(), Sound.LEVEL_UP, 1.0f, 1.0f);
             }
 
             buildingInfo.setFinished(true);
+            plugin.finishBuilding(buildingInfo);
         }
 
         public void schedule(Plugin plugin) {

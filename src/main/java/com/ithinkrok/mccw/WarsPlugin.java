@@ -94,9 +94,15 @@ public class WarsPlugin extends JavaPlugin {
     public void addBuilding(BuildingInfo buildingInfo) {
         buildings.add(buildingInfo);
 
+        if (buildingInfo.getCenterBlock() != null) buildingCentres.put(buildingInfo.getCenterBlock(), buildingInfo);
+    }
+
+    public void finishBuilding(BuildingInfo buildingInfo){
         if (getTeamInfo(buildingInfo.getTeamColor()).getBuildingCount(buildingInfo.getBuildingName()) == 0) {
             for (PlayerInfo info : playerInfoHashMap.values()) {
                 if (info.getTeamColor() != buildingInfo.getTeamColor()) continue;
+
+                info.recalculateInventory();
 
                 PlayerClassHandler playerClassHandler = getPlayerClassHandler(info.getPlayerClass());
                 playerClassHandler
@@ -105,8 +111,6 @@ public class WarsPlugin extends JavaPlugin {
         }
 
         getTeamInfo(buildingInfo.getTeamColor()).addBuilding(buildingInfo.getBuildingName());
-
-        if (buildingInfo.getCenterBlock() != null) buildingCentres.put(buildingInfo.getCenterBlock(), buildingInfo);
     }
 
     public TeamInfo getTeamInfo(TeamColor teamColor) {

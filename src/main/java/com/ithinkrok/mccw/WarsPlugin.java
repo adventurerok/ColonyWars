@@ -179,4 +179,12 @@ public class WarsPlugin extends JavaPlugin {
 
         buildingCentres.remove(buildingInfo.getCenterBlock());
     }
+
+    public void setupPlayers() {
+        for(PlayerInfo info : playerInfoHashMap.values()){
+            PlayerClassHandler classHandler = getPlayerClassHandler(info.getPlayerClass());
+
+            classHandler.onGameBegin(info, getTeamInfo(info.getTeamColor()));
+        }
+    }
 }

@@ -8,7 +8,6 @@ import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
-import com.ithinkrok.mccw.util.InventoryUtils;
 import com.ithinkrok.mccw.util.SchematicBuilder;
 import com.ithinkrok.mccw.util.TreeFeller;
 import org.bukkit.Bukkit;
@@ -60,6 +59,7 @@ public class WarsListener implements Listener {
         //Just for testing
         plugin.setPlayerTeam(event.getPlayer(), TeamColor.RED);
         playerInfo.setPlayerClass(PlayerClass.GENERAL);
+        plugin.setupPlayers();
     }
 
     @EventHandler

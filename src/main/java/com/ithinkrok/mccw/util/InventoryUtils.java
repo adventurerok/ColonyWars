@@ -4,11 +4,13 @@ import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.TeamInfo;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * Created by paul on 03/11/15.
@@ -29,7 +31,15 @@ public class InventoryUtils {
 
         String teamText = team ? " (Team Money)" : " (Player Money)";
 
-        return setItemNameAndLore(stack, name, desc, "Cost: " + cost + teamText);
+        if(desc != null) return setItemNameAndLore(stack, name, desc, "Cost: " + cost + teamText);
+        else return setItemNameAndLore(stack, name, "Cost: " + cost + teamText);
+    }
+
+    public static ItemStack createShopItemWithEnchantments(Material mat, int amount, int damage, String name, String desc, int cost,
+                                                           boolean team, Object...enchantments){
+        ItemStack stack = createShopItem(mat, amount, damage, name, desc, cost, team);
+
+        return enchantItem(stack, enchantments);
     }
 
     public static ItemStack createItemWithNameAndLore(Material mat, int amount,  int damage, String name,
@@ -37,6 +47,14 @@ public class InventoryUtils {
         ItemStack stack = new ItemStack(mat, amount, (short) damage);
 
         return setItemNameAndLore(stack, name, lore);
+    }
+
+    public static ItemStack enchantItem(ItemStack item, Object...enchantments){
+        for(int i = 0; i < enchantments.length; i += 2){
+            item.addEnchantment((Enchantment)enchantments[i], (Integer)enchantments[i + 1]);
+        }
+
+        return item;
     }
 
     public static boolean payWithTeamCash(int amount, TeamInfo teamInfo, PlayerInfo playerInfo){

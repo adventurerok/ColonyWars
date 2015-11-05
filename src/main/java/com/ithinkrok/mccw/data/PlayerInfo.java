@@ -3,6 +3,8 @@ package com.ithinkrok.mccw.data;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.mccw.inventory.InventoryHandler;
+import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,6 +15,10 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by paul on 01/11/15.
@@ -27,6 +33,8 @@ public class PlayerInfo {
     private Location shopBlock;
     private Inventory shopInventory;
     private PlayerClass playerClass;
+
+    private HashMap<String, Integer> upgradeLevels = new HashMap<>();
 
     private int playerCash = 0;
 
@@ -52,6 +60,16 @@ public class PlayerInfo {
         updateScoreboard();
     }
 
+    public int getUpgradeLevel(String upgrade){
+        Integer level = upgradeLevels.get(upgrade);
+
+        return level == null ? 0 : level;
+    }
+
+    public void setUpgradeLevel(String upgrade, int level){
+        upgradeLevels.put(upgrade, level);
+    }
+
     public boolean subtractPlayerCash(int cash){
         if(cash > playerCash) return false;
         playerCash -= cash;
@@ -59,6 +77,32 @@ public class PlayerInfo {
         updateScoreboard();
 
         return true;
+    }
+
+    public void recalculateInventory(){
+        if(shopInventory == null || shopBlock == null) return;
+
+        BuildingInfo buildingInfo = plugin.getBuildingInfo(shopBlock);
+        if(buildingInfo == null) return;
+
+        TeamInfo teamInfo = plugin.getTeamInfo(getTeamColor());
+
+        InventoryHandler inventoryHandler = plugin.getInventoryHandler(buildingInfo.getBuildingName());
+        List<ItemStack> contents;
+
+        if(inventoryHandler != null) contents = inventoryHandler.getInventoryContents(this, teamInfo);
+        else contents = new ArrayList<>();
+
+        PlayerClassHandler classHandler = plugin.getPlayerClassHandler(this.getPlayerClass());
+        classHandler.addExtraInventoryItems(contents, buildingInfo.getBuildingName(), this, teamInfo);
+
+        int index = 0;
+
+        shopInventory.clear();
+
+        for (ItemStack item : contents) {
+            shopInventory.setItem(index++, item);
+        }
     }
 
     public PlayerClass getPlayerClass() {

@@ -1,6 +1,7 @@
 package com.ithinkrok.mccw.data;
 
 import com.ithinkrok.mccw.WarsPlugin;
+import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -25,6 +26,7 @@ public class PlayerInfo {
     private WarsPlugin plugin;
     private Location shopBlock;
     private Inventory shopInventory;
+    private PlayerClass playerClass;
 
     private int playerCash = 0;
 
@@ -57,6 +59,14 @@ public class PlayerInfo {
         updateScoreboard();
 
         return true;
+    }
+
+    public PlayerClass getPlayerClass() {
+        return playerClass;
+    }
+
+    public void setPlayerClass(PlayerClass playerClass) {
+        this.playerClass = playerClass;
     }
 
     public boolean hasPlayerCash(int cash){

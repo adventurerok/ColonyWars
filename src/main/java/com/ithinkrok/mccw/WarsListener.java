@@ -4,6 +4,7 @@ import com.ithinkrok.mccw.data.BuildingInfo;
 import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.SchematicData;
 import com.ithinkrok.mccw.data.TeamInfo;
+import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.util.InventoryUtils;
@@ -51,10 +52,12 @@ public class WarsListener implements Listener {
 
         playerInfo.setupScoreboard();
 
-        plugin.setPlayerTeam(event.getPlayer(), TeamColor.RED);
-
         event.getPlayer().setMaxHealth(plugin.getMaxHealth());
         event.getPlayer().setHealth(plugin.getMaxHealth());
+
+        //Just for testing
+        plugin.setPlayerTeam(event.getPlayer(), TeamColor.RED);
+        playerInfo.setPlayerClass(PlayerClass.GENERAL);
     }
 
     @EventHandler

@@ -4,10 +4,12 @@ import com.ithinkrok.mccw.data.BuildingInfo;
 import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.SchematicData;
 import com.ithinkrok.mccw.data.TeamInfo;
+import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.inventory.BaseInventory;
 import com.ithinkrok.mccw.inventory.FarmInventory;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
+import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -31,6 +33,7 @@ public class WarsPlugin extends JavaPlugin {
     private List<BuildingInfo> buildings = new ArrayList<>();
     private HashMap<Location, BuildingInfo> buildingCentres = new HashMap<>();
     private HashMap<String, InventoryHandler> buildingInventories = new HashMap<>();
+    private EnumMap<PlayerClass, PlayerClassHandler> classHandlerEnumMap = new EnumMap<>(PlayerClass.class);
     private Random random = new Random();
 
     public double getMaxHealth() {
@@ -67,6 +70,10 @@ public class WarsPlugin extends JavaPlugin {
 
     public InventoryHandler getInventoryHandler(String building){
         return buildingInventories.get(building);
+    }
+
+    public PlayerClassHandler getPlayerClassHandler(PlayerClass playerClass){
+        return classHandlerEnumMap.get(playerClass);
     }
 
     public PlayerInfo getPlayerInfo(Player player){

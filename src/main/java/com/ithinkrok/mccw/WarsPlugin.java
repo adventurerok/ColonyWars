@@ -33,10 +33,8 @@ public class WarsPlugin extends JavaPlugin {
     private HashMap<String, InventoryHandler> buildingInventories = new HashMap<>();
     private Random random = new Random();
 
-    private double maxHealth = 40;
-
     public double getMaxHealth() {
-        return maxHealth;
+        return (double) 40;
     }
 
     @Override
@@ -56,6 +54,8 @@ public class WarsPlugin extends JavaPlugin {
 
         schematicDataHashMap.put("Base", new SchematicData("Base", "mccw_base.schematic"));
         schematicDataHashMap.put("Farm", new SchematicData("Farm", "mccw_farm.schematic"));
+        schematicDataHashMap.put("Blacksmith", new SchematicData("Blacksmith", "mccw_blacksmith.schematic"));
+        schematicDataHashMap.put("MageTower", new SchematicData("MageTower", "mccw_magetower.schematic"));
 
         buildingInventories.put("Base", new BaseInventory());
         buildingInventories.put("Farm", new FarmInventory());

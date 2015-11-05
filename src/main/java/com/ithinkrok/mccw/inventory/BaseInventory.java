@@ -44,7 +44,7 @@ public class BaseInventory implements InventoryHandler {
     @Override
     public List<ItemStack> getInventoryContents(PlayerInfo playerInfo, TeamInfo teamInfo) {
         ArrayList<ItemStack> result = new ArrayList<>();
-        result.add(InventoryUtils.createShopItem(Material.OBSIDIAN, 1, 0, "Farm", "Build a farm!", 3000, true));
+        result.add(InventoryUtils.createShopItem(Material.LAPIS_ORE, 1, 0, "Farm", "Build a farm!", 3000, true));
         return result;
     }
 }

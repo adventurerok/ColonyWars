@@ -96,7 +96,7 @@ public class WarsListener implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (event.getBlock().getType() != Material.OBSIDIAN) return;
+        if (event.getBlock().getType() != Material.LAPIS_ORE) return;
 
         ItemMeta meta = event.getItemInHand().getItemMeta();
         if (!meta.hasDisplayName()) return;

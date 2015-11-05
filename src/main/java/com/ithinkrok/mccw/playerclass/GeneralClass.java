@@ -40,7 +40,7 @@ public class GeneralClass implements PlayerClassHandler {
 
     @Override
     public boolean onInventoryClick(ItemStack item, String buildingName, PlayerInfo playerInfo, TeamInfo teamInfo) {
-        if(!item.getItemMeta().hasDisplayName()) return false;
+        if(item.getItemMeta() == null || !item.getItemMeta().hasDisplayName()) return false;
 
         ItemStack sword = new ItemStack(Material.DIAMOND_SWORD);
         int cost;

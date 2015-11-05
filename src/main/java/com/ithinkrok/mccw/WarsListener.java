@@ -15,6 +15,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -109,7 +110,7 @@ public class WarsListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onBlockBreak(BlockBreakEvent event) {
         if (event.getPlayer().getGameMode() != GameMode.SURVIVAL) {
             event.setCancelled(true);
@@ -140,6 +141,7 @@ public class WarsListener implements Listener {
     }
 
     private void resetDurability(ItemStack item) {
+        if(item == null) return;
         if (item.getDurability() != 0 && item.getType().getMaxDurability() != 0) {
             item.setDurability((short) 0);
         }

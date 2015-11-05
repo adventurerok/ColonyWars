@@ -124,7 +124,7 @@ public class WarsListener implements Listener {
             return;
         }
 
-        resetDurability(event.getPlayer().getItemInHand());
+        resetDurability(event.getPlayer());
 
         if (event.getBlock().getType() != Material.OBSIDIAN) return;
 
@@ -147,11 +147,15 @@ public class WarsListener implements Listener {
         buildingInfo.explode();
     }
 
-    private void resetDurability(ItemStack item) {
+    private void resetDurability(Player player) {
+        ItemStack item = player.getItemInHand();
+
         if(item == null) return;
         if (item.getDurability() != 0 && item.getType().getMaxDurability() != 0) {
             item.setDurability((short) 0);
         }
+
+        player.setItemInHand(item);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -182,8 +186,13 @@ public class WarsListener implements Listener {
     }
 
     @EventHandler
+    public void onPlayerItemBreak(PlayerItemBreakEvent event){
+        event.getBrokenItem().setDurability((short) 0);
+    }
+
+    @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        resetDurability(event.getPlayer().getItemInHand());
+        resetDurability(event.getPlayer());
 
         PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
 
@@ -244,7 +253,7 @@ public class WarsListener implements Listener {
         if (!(event.getDamager() instanceof Player)) return;
 
         Player damager = (Player) event.getDamager();
-        resetDurability(damager.getItemInHand());
+        resetDurability(damager);
 
         if(!(event.getEntity() instanceof Player)) return;
 

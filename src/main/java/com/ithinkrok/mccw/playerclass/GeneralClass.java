@@ -62,7 +62,7 @@ public class GeneralClass implements PlayerClassHandler {
                 return false;
         }
 
-        if(InventoryUtils.checkUpgradeAndTryCharge(playerInfo, cost, "sword", upgrade)) return true;
+        if(!InventoryUtils.checkUpgradeAndTryCharge(playerInfo, cost, "sword", upgrade)) return true;
 
         PlayerInventory inv = playerInfo.getPlayer().getInventory();
 

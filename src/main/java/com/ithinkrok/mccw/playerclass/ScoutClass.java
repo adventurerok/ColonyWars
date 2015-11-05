@@ -96,7 +96,7 @@ public class ScoutClass implements PlayerClassHandler {
                 return false;
         }
 
-        if(InventoryUtils.checkUpgradeAndTryCharge(playerInfo, cost, upgradeName, upgrade)) return true;
+        if(!InventoryUtils.checkUpgradeAndTryCharge(playerInfo, cost, upgradeName, upgrade)) return true;
         playerInfo.setUpgradeLevel(upgradeName, upgrade);
 
         ItemStack sword = new ItemStack(Material.WOOD_SWORD);

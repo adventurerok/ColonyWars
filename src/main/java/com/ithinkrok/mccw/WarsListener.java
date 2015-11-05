@@ -147,7 +147,7 @@ public class WarsListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onBlockExp(BlockExpEvent event) {
         switch (event.getBlock().getType()) {
             case GOLD_ORE:

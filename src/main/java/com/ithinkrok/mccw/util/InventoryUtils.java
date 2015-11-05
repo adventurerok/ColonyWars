@@ -51,7 +51,7 @@ public class InventoryUtils {
 
     public static ItemStack enchantItem(ItemStack item, Object...enchantments){
         for(int i = 0; i < enchantments.length; i += 2){
-            item.addEnchantment((Enchantment)enchantments[i], (Integer)enchantments[i + 1]);
+            item.addUnsafeEnchantment((Enchantment)enchantments[i], (Integer)enchantments[i + 1]);
         }
 
         return item;

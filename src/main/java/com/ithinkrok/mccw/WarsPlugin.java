@@ -11,7 +11,9 @@ import com.ithinkrok.mccw.inventory.FarmInventory;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.GeneralClass;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
+import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -201,6 +203,12 @@ public class WarsPlugin extends JavaPlugin {
 
                 playerInfo.addPlayerCash(10000);
                 getTeamInfo(playerInfo.getTeamColor()).addTeamCash(10000);
+                break;
+            case "build":
+                if(args.length < 2) return false;
+
+                player.getInventory().addItem(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 16, 0,
+                        args[1]));
                 break;
         }
 

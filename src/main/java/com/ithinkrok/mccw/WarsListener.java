@@ -7,6 +7,7 @@ import com.ithinkrok.mccw.data.TeamInfo;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
+import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import com.ithinkrok.mccw.util.SchematicBuilder;
 import com.ithinkrok.mccw.util.TreeFeller;
@@ -28,6 +29,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -214,8 +216,15 @@ public class WarsListener implements Listener {
         Inventory shopInv = Bukkit.createInventory(event.getPlayer(), 9, buildingInfo.getBuildingName());
 
         TeamInfo teamInfo = plugin.getTeamInfo(playerInfo.getTeamColor());
-        List<ItemStack> contents =
-                plugin.getInventoryHandler(buildingInfo.getBuildingName()).getInventoryContents(playerInfo, teamInfo);
+
+        InventoryHandler inventoryHandler = plugin.getInventoryHandler(buildingInfo.getBuildingName());
+        List<ItemStack> contents;
+
+        if(inventoryHandler != null) contents = inventoryHandler.getInventoryContents(playerInfo, teamInfo);
+        else contents = new ArrayList<>();
+
+        PlayerClassHandler classHandler = plugin.getPlayerClassHandler(playerInfo.getPlayerClass());
+        classHandler.addExtraInventoryItems(contents, buildingInfo.getBuildingName(), playerInfo, teamInfo);
 
         int index = 0;
 
@@ -250,17 +259,27 @@ public class WarsListener implements Listener {
 
         if (event.getInventory().getType() != InventoryType.PLAYER &&
                 event.getSlotType() == InventoryType.SlotType.CONTAINER) {
+
+            event.setCancelled(true);
+
+            if(event.getCurrentItem() == null) return;
+
             PlayerInfo playerInfo = plugin.getPlayerInfo((Player) event.getWhoClicked());
             playerInfo.setShopInventory(event.getInventory());
 
             TeamInfo teamInfo = plugin.getTeamInfo(playerInfo.getTeamColor());
 
-            InventoryHandler handler = plugin.getInventoryHandler(event.getInventory().getTitle());
+            PlayerClassHandler classHandler = plugin.getPlayerClassHandler(playerInfo.getPlayerClass());
 
+            boolean done = classHandler.onInventoryClick(event.getCurrentItem(), event.getInventory().getTitle(),
+                    playerInfo, teamInfo);
+
+            if(done) return;
+
+            InventoryHandler handler = plugin.getInventoryHandler(event.getInventory().getTitle());
             if (handler == null) return;
 
-            if (event.getCurrentItem() != null) handler.onInventoryClick(event.getCurrentItem(), playerInfo, teamInfo);
-            event.setCancelled(true);
+            handler.onInventoryClick(event.getCurrentItem(), playerInfo, teamInfo);
         }
     }
 

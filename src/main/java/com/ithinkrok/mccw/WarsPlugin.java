@@ -9,6 +9,7 @@ import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.inventory.BaseInventory;
 import com.ithinkrok.mccw.inventory.FarmInventory;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
+import com.ithinkrok.mccw.playerclass.GeneralClass;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -22,7 +23,7 @@ import java.util.*;
 
 /**
  * Created by paul on 01/11/15.
- *
+ * <p>
  * The main plugin class for Colony Wars
  */
 public class WarsPlugin extends JavaPlugin {
@@ -51,7 +52,7 @@ public class WarsPlugin extends JavaPlugin {
         WarsListener pluginListener = new WarsListener(this);
         getServer().getPluginManager().registerEvents(pluginListener, this);
 
-        for(TeamColor c : TeamColor.values()){
+        for (TeamColor c : TeamColor.values()) {
             teamInfoEnumMap.put(c, new TeamInfo(this, c));
         }
 
@@ -62,26 +63,20 @@ public class WarsPlugin extends JavaPlugin {
 
         buildingInventories.put("Base", new BaseInventory());
         buildingInventories.put("Farm", new FarmInventory());
+
+        classHandlerEnumMap.put(PlayerClass.GENERAL, new GeneralClass());
     }
 
-    public SchematicData getSchematicData(String buildingName){
+    public SchematicData getSchematicData(String buildingName) {
         return schematicDataHashMap.get(buildingName);
     }
 
-    public InventoryHandler getInventoryHandler(String building){
+    public InventoryHandler getInventoryHandler(String building) {
         return buildingInventories.get(building);
     }
 
-    public PlayerClassHandler getPlayerClassHandler(PlayerClass playerClass){
-        return classHandlerEnumMap.get(playerClass);
-    }
-
-    public PlayerInfo getPlayerInfo(Player player){
-        return playerInfoHashMap.get(player.getUniqueId());
-    }
-
-    public void setPlayerInfo(Player player, PlayerInfo playerInfo){
-        if(playerInfo == null) playerInfoHashMap.remove(player.getUniqueId());
+    public void setPlayerInfo(Player player, PlayerInfo playerInfo) {
+        if (playerInfo == null) playerInfoHashMap.remove(player.getUniqueId());
         else playerInfoHashMap.put(player.getUniqueId(), playerInfo);
     }
 
@@ -89,14 +84,10 @@ public class WarsPlugin extends JavaPlugin {
         return random;
     }
 
-    public TeamInfo getTeamInfo(TeamColor teamColor){
-        return teamInfoEnumMap.get(teamColor);
-    }
-
-    public void setPlayerTeam(Player player, TeamColor teamColor){
+    public void setPlayerTeam(Player player, TeamColor teamColor) {
         PlayerInfo playerInfo = getPlayerInfo(player);
 
-        if(playerInfo.getTeamColor() != null){
+        if (playerInfo.getTeamColor() != null) {
             getTeamInfo(playerInfo.getTeamColor()).removePlayer(player);
         }
 
@@ -104,20 +95,43 @@ public class WarsPlugin extends JavaPlugin {
         getTeamInfo(teamColor).addPlayer(player);
     }
 
-    public void addBuilding(BuildingInfo buildingInfo){
-        buildings.add(buildingInfo);
-        getTeamInfo(buildingInfo.getTeamColor()).addBuilding(buildingInfo.getBuildingName());
-
-        if(buildingInfo.getCenterBlock() != null) buildingCentres.put(buildingInfo.getCenterBlock(), buildingInfo);
+    public PlayerInfo getPlayerInfo(Player player) {
+        return playerInfoHashMap.get(player.getUniqueId());
     }
 
-    public BuildingInfo getBuildingInfo(Location center){
+    public TeamInfo getTeamInfo(TeamColor teamColor) {
+        return teamInfoEnumMap.get(teamColor);
+    }
+
+    public void addBuilding(BuildingInfo buildingInfo) {
+        buildings.add(buildingInfo);
+
+        if (getTeamInfo(buildingInfo.getTeamColor()).getBuildingCount(buildingInfo.getBuildingName()) == 0) {
+            for (PlayerInfo info : playerInfoHashMap.values()) {
+                if (info.getTeamColor() != buildingInfo.getTeamColor()) continue;
+
+                PlayerClassHandler playerClassHandler = getPlayerClassHandler(info.getPlayerClass());
+                playerClassHandler
+                        .onBuildingBuilt(buildingInfo.getBuildingName(), info, getTeamInfo(info.getTeamColor()));
+            }
+        }
+
+        getTeamInfo(buildingInfo.getTeamColor()).addBuilding(buildingInfo.getBuildingName());
+
+        if (buildingInfo.getCenterBlock() != null) buildingCentres.put(buildingInfo.getCenterBlock(), buildingInfo);
+    }
+
+    public PlayerClassHandler getPlayerClassHandler(PlayerClass playerClass) {
+        return classHandlerEnumMap.get(playerClass);
+    }
+
+    public BuildingInfo getBuildingInfo(Location center) {
         return buildingCentres.get(center);
     }
 
-    public boolean canBuild(Vector minBB, Vector maxBB){
-        for(BuildingInfo building : buildings){
-            if(!building.canBuild(minBB, maxBB)) return false;
+    public boolean canBuild(Vector minBB, Vector maxBB) {
+        for (BuildingInfo building : buildings) {
+            if (!building.canBuild(minBB, maxBB)) return false;
         }
 
         return true;
@@ -125,22 +139,22 @@ public class WarsPlugin extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(!(sender instanceof Player)) {
+        if (!(sender instanceof Player)) {
             sender.sendMessage("You must be a player to execute Colony Wars commands");
             return true;
         }
 
         Player player = (Player) sender;
 
-        switch(command.getName().toLowerCase()){
+        switch (command.getName().toLowerCase()) {
             case "transfer":
-                if(args.length < 1) return false;
+                if (args.length < 1) return false;
 
                 try {
                     int amount = Integer.parseInt(args[0]);
 
                     PlayerInfo playerInfo = getPlayerInfo(player);
-                    if(!playerInfo.subtractPlayerCash(amount)){
+                    if (!playerInfo.subtractPlayerCash(amount)) {
                         player.sendMessage("You do not have that amount of money");
                         return true;
                     }
@@ -149,7 +163,7 @@ public class WarsPlugin extends JavaPlugin {
                     teamInfo.addTeamCash(amount);
 
                     return true;
-                } catch(NumberFormatException e){
+                } catch (NumberFormatException e) {
                     return false;
                 }
 

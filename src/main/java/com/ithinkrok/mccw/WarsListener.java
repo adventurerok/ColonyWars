@@ -106,7 +106,10 @@ public class WarsListener implements Listener {
         if (!meta.hasDisplayName()) return;
 
         SchematicData schematicData = plugin.getSchematicData(meta.getDisplayName());
-        if (schematicData == null) return;
+        if (schematicData == null){
+            event.getPlayer().sendMessage("Unknown building!");
+            return;
+        }
 
 
         PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());

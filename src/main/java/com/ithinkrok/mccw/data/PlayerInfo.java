@@ -95,7 +95,7 @@ public class PlayerInfo {
         InventoryHandler inventoryHandler = plugin.getInventoryHandler(buildingInfo.getBuildingName());
         List<ItemStack> contents;
 
-        if(inventoryHandler != null) contents = inventoryHandler.getInventoryContents(this, teamInfo);
+        if(inventoryHandler != null) contents = inventoryHandler.getInventoryContents(buildingInfo, this, teamInfo);
         else contents = new ArrayList<>();
 
         PlayerClassHandler classHandler = plugin.getPlayerClassHandler(this.getPlayerClass());

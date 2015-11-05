@@ -7,6 +7,7 @@ import com.ithinkrok.mccw.data.TeamInfo;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.inventory.BaseInventory;
+import com.ithinkrok.mccw.inventory.ChurchInventory;
 import com.ithinkrok.mccw.inventory.FarmInventory;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.GeneralClass;
@@ -71,6 +72,7 @@ public class WarsPlugin extends JavaPlugin {
 
         buildingInventories.put("Base", new BaseInventory());
         buildingInventories.put("Farm", new FarmInventory());
+        buildingInventories.put("Church", new ChurchInventory(this));
 
         classHandlerEnumMap.put(PlayerClass.GENERAL, new GeneralClass());
         classHandlerEnumMap.put(PlayerClass.SCOUT, new ScoutClass(this));

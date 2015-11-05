@@ -1,5 +1,6 @@
 package com.ithinkrok.mccw.inventory;
 
+import com.ithinkrok.mccw.data.BuildingInfo;
 import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.TeamInfo;
 import org.bukkit.inventory.ItemStack;
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public interface InventoryHandler {
 
-    boolean onInventoryClick(ItemStack item, PlayerInfo playerInfo, TeamInfo teamInfo);
-    List<ItemStack> getInventoryContents(PlayerInfo playerInfo, TeamInfo teamInfo);
+    boolean onInventoryClick(ItemStack item, BuildingInfo buildingInfo, PlayerInfo playerInfo, TeamInfo teamInfo);
+    List<ItemStack> getInventoryContents(BuildingInfo buildingInfo, PlayerInfo playerInfo, TeamInfo teamInfo);
 
 }

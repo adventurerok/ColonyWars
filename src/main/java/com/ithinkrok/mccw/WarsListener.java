@@ -232,7 +232,8 @@ public class WarsListener implements Listener {
         InventoryHandler inventoryHandler = plugin.getInventoryHandler(buildingInfo.getBuildingName());
         List<ItemStack> contents;
 
-        if (inventoryHandler != null) contents = inventoryHandler.getInventoryContents(playerInfo, teamInfo);
+        if (inventoryHandler != null)
+            contents = inventoryHandler.getInventoryContents(buildingInfo, playerInfo, teamInfo);
         else contents = new ArrayList<>();
 
         PlayerClassHandler classHandler = plugin.getPlayerClassHandler(playerInfo.getPlayerClass());
@@ -300,19 +301,20 @@ public class WarsListener implements Listener {
             InventoryHandler handler = plugin.getInventoryHandler(event.getInventory().getTitle());
             if (handler == null) return;
 
-            handler.onInventoryClick(event.getCurrentItem(), playerInfo, teamInfo);
+            handler.onInventoryClick(event.getCurrentItem(), plugin.getBuildingInfo(playerInfo.getShopBlock()),
+                    playerInfo, teamInfo);
         }
     }
 
     @EventHandler
-    public void onInventoryClose(InventoryCloseEvent event){
-        Player player = (Player)event.getPlayer();
+    public void onInventoryClose(InventoryCloseEvent event) {
+        Player player = (Player) event.getPlayer();
 
         PlayerInfo playerInfo = plugin.getPlayerInfo(player);
 
-        if(playerInfo.getShopInventory() == null || playerInfo.getShopInventory().getTitle() == null) return;
+        if (playerInfo.getShopInventory() == null || playerInfo.getShopInventory().getTitle() == null) return;
 
-        if(playerInfo.getShopInventory().getTitle().equals(event.getInventory().getTitle())){
+        if (playerInfo.getShopInventory().getTitle().equals(event.getInventory().getTitle())) {
             playerInfo.setShopInventory(null);
             playerInfo.setShopBlock(null);
         }

@@ -1,5 +1,6 @@
 package com.ithinkrok.mccw.inventory;
 
+import com.ithinkrok.mccw.data.BuildingInfo;
 import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.TeamInfo;
 import com.ithinkrok.mccw.util.InventoryUtils;
@@ -24,7 +25,7 @@ public class FarmInventory implements InventoryHandler {
     private int goldenAppleCost = 125;
 
     @Override
-    public boolean onInventoryClick(ItemStack item, PlayerInfo playerInfo, TeamInfo teamInfo) {
+    public boolean onInventoryClick(ItemStack item, BuildingInfo buildingInfo, PlayerInfo playerInfo, TeamInfo teamInfo) {
         PlayerInventory inv = playerInfo.getPlayer().getInventory();
 
         if (inv.firstEmpty() == -1) {
@@ -77,7 +78,7 @@ public class FarmInventory implements InventoryHandler {
     }
 
     @Override
-    public List<ItemStack> getInventoryContents(PlayerInfo playerInfo, TeamInfo teamInfo) {
+    public List<ItemStack> getInventoryContents(BuildingInfo buildingInfo, PlayerInfo playerInfo, TeamInfo teamInfo) {
         ArrayList<ItemStack> result = new ArrayList<>();
         result.add(InventoryUtils
                 .createShopItem(Material.POTATO_ITEM, 5, 0, null, "Lovely potatoes!", rawPotatoCost * 5, false));

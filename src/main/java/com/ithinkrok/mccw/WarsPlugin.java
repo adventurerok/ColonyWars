@@ -91,25 +91,6 @@ public class WarsPlugin extends JavaPlugin {
         return random;
     }
 
-    public void setPlayerTeam(Player player, TeamColor teamColor) {
-        PlayerInfo playerInfo = getPlayerInfo(player);
-
-        if (playerInfo.getTeamColor() != null) {
-            getTeamInfo(playerInfo.getTeamColor()).removePlayer(player);
-        }
-
-        playerInfo.setTeamColor(teamColor);
-        getTeamInfo(teamColor).addPlayer(player);
-    }
-
-    public PlayerInfo getPlayerInfo(Player player) {
-        return playerInfoHashMap.get(player.getUniqueId());
-    }
-
-    public TeamInfo getTeamInfo(TeamColor teamColor) {
-        return teamInfoEnumMap.get(teamColor);
-    }
-
     public void addBuilding(BuildingInfo buildingInfo) {
         buildings.add(buildingInfo);
 
@@ -126,6 +107,10 @@ public class WarsPlugin extends JavaPlugin {
         getTeamInfo(buildingInfo.getTeamColor()).addBuilding(buildingInfo.getBuildingName());
 
         if (buildingInfo.getCenterBlock() != null) buildingCentres.put(buildingInfo.getCenterBlock(), buildingInfo);
+    }
+
+    public TeamInfo getTeamInfo(TeamColor teamColor) {
+        return teamInfoEnumMap.get(teamColor);
     }
 
     public PlayerClassHandler getPlayerClassHandler(PlayerClass playerClass) {
@@ -183,19 +168,23 @@ public class WarsPlugin extends JavaPlugin {
 
     }
 
+    public PlayerInfo getPlayerInfo(Player player) {
+        return playerInfoHashMap.get(player.getUniqueId());
+    }
+
     private boolean onTestCommand(Player player, Command command, String[] args) {
         PlayerInfo playerInfo = getPlayerInfo(player);
 
-        switch(args[0]){
+        switch (args[0]) {
             case "team":
-                if(args.length < 2) return false;
+                if (args.length < 2) return false;
 
                 TeamColor teamColor = TeamColor.valueOf(args[1].toUpperCase());
                 setPlayerTeam(player, teamColor);
 
                 break;
             case "class":
-                if(args.length < 2) return false;
+                if (args.length < 2) return false;
 
                 PlayerClass playerClass = PlayerClass.valueOf(args[1].toUpperCase());
                 playerInfo.setPlayerClass(playerClass);
@@ -207,14 +196,25 @@ public class WarsPlugin extends JavaPlugin {
                 getTeamInfo(playerInfo.getTeamColor()).addTeamCash(10000);
                 break;
             case "build":
-                if(args.length < 2) return false;
+                if (args.length < 2) return false;
 
-                player.getInventory().addItem(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 16, 0,
-                        args[1]));
+                player.getInventory()
+                        .addItem(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 16, 0, args[1]));
                 break;
         }
 
         return true;
+    }
+
+    public void setPlayerTeam(Player player, TeamColor teamColor) {
+        PlayerInfo playerInfo = getPlayerInfo(player);
+
+        if (playerInfo.getTeamColor() != null) {
+            getTeamInfo(playerInfo.getTeamColor()).removePlayer(player);
+        }
+
+        playerInfo.setTeamColor(teamColor);
+        getTeamInfo(teamColor).addPlayer(player);
     }
 
     public void removeBuilding(BuildingInfo buildingInfo) {
@@ -225,7 +225,7 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public void setupPlayers() {
-        for(PlayerInfo info : playerInfoHashMap.values()){
+        for (PlayerInfo info : playerInfoHashMap.values()) {
             PlayerClassHandler classHandler = getPlayerClassHandler(info.getPlayerClass());
 
             classHandler.onGameBegin(info, getTeamInfo(info.getTeamColor()));
@@ -240,12 +240,12 @@ public class WarsPlugin extends JavaPlugin {
             double minDist = 99999999999d;
             String closestName = null;
 
-            for(PlayerInfo info : playerInfoHashMap.values()){
-                if(info.getTeamColor() == exclude) continue;
+            for (PlayerInfo info : playerInfoHashMap.values()) {
+                if (info.getTeamColor() == exclude) continue;
 
                 double dist = player.getLocation().distanceSquared(info.getPlayer().getLocation());
 
-                if(dist < minDist){
+                if (dist < minDist) {
                     minDist = dist;
                     closest = info.getPlayer().getLocation();
                     closestName = info.getPlayer().getName();
@@ -253,10 +253,15 @@ public class WarsPlugin extends JavaPlugin {
             }
 
 
-            if(closest != null) player.setCompassTarget(closest);
+            if (closest != null) player.setCompassTarget(closest);
             else closestName = "No One";
 
-            InventoryUtils.setItemNameAndLore(item, "Player Compass", "oriented at: " + closestName);
+            int compassIndex = player.getInventory().first(Material.COMPASS);
+            ItemStack newCompass = player.getInventory().getItem(compassIndex);
+
+            InventoryUtils.setItemNameAndLore(newCompass, "Player Compass", "oriented at: " + closestName);
+
+            player.getInventory().setItem(compassIndex, newCompass);
         }, 60);
     }
 }

@@ -184,6 +184,8 @@ public class SchematicBuilder {
                 Block block = loc.getBlock();
 
                 if (bId == Material.WOOL.getId()) bData = buildingInfo.getTeamColor().dyeColor.getWoolData();
+                else if(bId == Material.STAINED_CLAY.getId()) bData = buildingInfo.getTeamColor().dyeColor
+                        .getWoolData();
 
                 block.setTypeId(bId);
                 block.setData(bData);

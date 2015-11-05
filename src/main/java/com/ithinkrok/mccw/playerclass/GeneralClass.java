@@ -83,16 +83,18 @@ public class GeneralClass implements PlayerClassHandler {
 
     @Override
     public void onBuildingBuilt(String buildingName, PlayerInfo playerInfo, TeamInfo teamInfo) {
+        if(!"Blacksmith".equals(buildingName)) return;
 
-    }
-
-    @Override
-    public void onGameBegin(PlayerInfo playerInfo, TeamInfo teamInfo) {
         PlayerInventory inv = playerInfo.getPlayer().getInventory();
 
         ItemStack sword = new ItemStack(Material.DIAMOND_SWORD);
         InventoryUtils.enchantItem(sword, Enchantment.KNOCKBACK, 5);
 
         inv.addItem(sword);
+    }
+
+    @Override
+    public void onGameBegin(PlayerInfo playerInfo, TeamInfo teamInfo) {
+
     }
 }

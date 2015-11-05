@@ -2,6 +2,7 @@ package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.TeamInfo;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -21,4 +22,6 @@ public interface PlayerClassHandler {
     void onBuildingBuilt(String buildingName, PlayerInfo playerInfo, TeamInfo teamInfo);
 
     void onGameBegin(PlayerInfo playerInfo, TeamInfo teamInfo);
+
+    void onInteractWorld(PlayerInteractEvent event);
 }

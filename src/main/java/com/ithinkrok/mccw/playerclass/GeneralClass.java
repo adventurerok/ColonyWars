@@ -5,6 +5,7 @@ import com.ithinkrok.mccw.data.TeamInfo;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -95,6 +96,11 @@ public class GeneralClass implements PlayerClassHandler {
 
     @Override
     public void onGameBegin(PlayerInfo playerInfo, TeamInfo teamInfo) {
+
+    }
+
+    @Override
+    public void onInteractWorld(PlayerInteractEvent event) {
 
     }
 }

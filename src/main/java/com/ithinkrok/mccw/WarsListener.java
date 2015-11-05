@@ -97,7 +97,7 @@ public class WarsListener implements Listener {
         teamInfo.addTeamCash(teamCash * event.getItem().getItemStack().getAmount());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
         if (event.getBlock().getType() != Material.LAPIS_ORE) return;
 
@@ -185,7 +185,12 @@ public class WarsListener implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         resetDurability(event.getPlayer().getItemInHand());
 
+        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
+
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getClickedBlock().getType() != Material.OBSIDIAN) {
+            PlayerClassHandler classHandler = plugin.getPlayerClassHandler(playerInfo.getPlayerClass());
+
+            classHandler.onInteractWorld(event);
             return;
         }
 
@@ -197,8 +202,6 @@ public class WarsListener implements Listener {
             return;
         }
 
-        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
-
         if (playerInfo.getTeamColor() != buildingInfo.getTeamColor()) {
             event.getPlayer().sendMessage("That building does not belong to your team. Mine this block to destroy it!");
             return;
@@ -208,6 +211,8 @@ public class WarsListener implements Listener {
             event.getPlayer().sendMessage("You must wait until the building has finished construction.");
             return;
         }
+
+        event.setCancelled(true);
 
         playerInfo.setShopBlock(buildingInfo.getCenterBlock());
 

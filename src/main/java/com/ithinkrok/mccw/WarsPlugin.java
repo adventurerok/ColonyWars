@@ -11,12 +11,15 @@ import com.ithinkrok.mccw.inventory.FarmInventory;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.GeneralClass;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
+import com.ithinkrok.mccw.playerclass.ScoutClass;
 import com.ithinkrok.mccw.util.InventoryUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
@@ -68,6 +71,7 @@ public class WarsPlugin extends JavaPlugin {
         buildingInventories.put("Farm", new FarmInventory());
 
         classHandlerEnumMap.put(PlayerClass.GENERAL, new GeneralClass());
+        classHandlerEnumMap.put(PlayerClass.SCOUT, new ScoutClass(this));
     }
 
     public SchematicData getSchematicData(String buildingName) {
@@ -171,9 +175,7 @@ public class WarsPlugin extends JavaPlugin {
                 }
 
             case "test":
-                if(args.length < 1) return false;
-
-                return onTestCommand(player, command, args);
+                return args.length >= 1 && onTestCommand(player, command, args);
 
             default:
                 return false;
@@ -228,5 +230,33 @@ public class WarsPlugin extends JavaPlugin {
 
             classHandler.onGameBegin(info, getTeamInfo(info.getTeamColor()));
         }
+    }
+
+    public void updateScoutCompass(ItemStack item, Player player, TeamColor exclude) {
+        InventoryUtils.setItemNameAndLore(item, "Locating closest player...");
+
+        Bukkit.getScheduler().runTaskLater(this, () -> {
+            Location closest = null;
+            double minDist = 99999999999d;
+            String closestName = null;
+
+            for(PlayerInfo info : playerInfoHashMap.values()){
+                if(info.getTeamColor() == exclude) continue;
+
+                double dist = player.getLocation().distanceSquared(info.getPlayer().getLocation());
+
+                if(dist < minDist){
+                    minDist = dist;
+                    closest = info.getPlayer().getLocation();
+                    closestName = info.getPlayer().getName();
+                }
+            }
+
+
+            if(closest != null) player.setCompassTarget(closest);
+            else closestName = "No One";
+
+            InventoryUtils.setItemNameAndLore(item, "Player Compass", "oriented at: " + closestName);
+        }, 60);
     }
 }

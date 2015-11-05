@@ -18,6 +18,7 @@ import java.util.List;
 public class BaseInventory implements InventoryHandler {
 
     private int farmCost = 3000;
+    private int lumbermillCost = 2000;
     private int blacksmithCost = 4000;
     private int magetowerCost = 4000;
 
@@ -38,6 +39,11 @@ public class BaseInventory implements InventoryHandler {
                 cost = farmCost;
                 add = InventoryUtils
                         .createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, "Farm", "Builds a farm when placed!");
+                break;
+            case "Lumbermill":
+                cost = lumbermillCost;
+                add = InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, "Lumbermill",
+                        "Builds a lumbermill when placed!");
                 break;
             case "Blacksmith":
                 cost = blacksmithCost;
@@ -71,6 +77,9 @@ public class BaseInventory implements InventoryHandler {
         result.add(InventoryUtils.createShopItem(Material.LAPIS_ORE, 1, 0, "Farm", "Build a farm!", farmCost, true));
 
         if (teamInfo.getBuildingCount("Farm") > 0) {
+            result.add(InventoryUtils
+                    .createShopItem(Material.LAPIS_ORE, 1, 0, "Lumbermill", "Build a lumbermill!", lumbermillCost,
+                            true));
             result.add(InventoryUtils
                     .createShopItem(Material.LAPIS_ORE, 1, 0, "Blacksmith", "Build a blacksmith!", blacksmithCost,
                             true));

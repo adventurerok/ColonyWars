@@ -60,6 +60,7 @@ public class WarsPlugin extends JavaPlugin {
         schematicDataHashMap.put("Farm", new SchematicData("Farm", "mccw_farm.schematic"));
         schematicDataHashMap.put("Blacksmith", new SchematicData("Blacksmith", "mccw_blacksmith.schematic"));
         schematicDataHashMap.put("MageTower", new SchematicData("MageTower", "mccw_magetower.schematic"));
+        schematicDataHashMap.put("Lumbermill", new SchematicData("Lumbermill", "mccw_lumbermill.schematic"));
 
         buildingInventories.put("Base", new BaseInventory());
         buildingInventories.put("Farm", new FarmInventory());

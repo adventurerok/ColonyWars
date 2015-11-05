@@ -85,7 +85,10 @@ public class PlayerInfo {
         if(shopInventory == null || shopBlock == null) return;
 
         BuildingInfo buildingInfo = plugin.getBuildingInfo(shopBlock);
-        if(buildingInfo == null) return;
+        if(buildingInfo == null || shopBlock.getBlock().getType() != Material.OBSIDIAN){
+            player.closeInventory();
+            return;
+        }
 
         TeamInfo teamInfo = plugin.getTeamInfo(getTeamColor());
 

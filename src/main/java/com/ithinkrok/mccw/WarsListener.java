@@ -22,6 +22,7 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
@@ -300,6 +301,20 @@ public class WarsListener implements Listener {
             if (handler == null) return;
 
             handler.onInventoryClick(event.getCurrentItem(), playerInfo, teamInfo);
+        }
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event){
+        Player player = (Player)event.getPlayer();
+
+        PlayerInfo playerInfo = plugin.getPlayerInfo(player);
+
+        if(playerInfo.getShopInventory() == null || playerInfo.getShopInventory().getTitle() == null) return;
+
+        if(playerInfo.getShopInventory().getTitle().equals(event.getInventory().getTitle())){
+            playerInfo.setShopInventory(null);
+            playerInfo.setShopBlock(null);
         }
     }
 

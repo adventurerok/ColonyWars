@@ -120,4 +120,15 @@ public class BuildingInfo {
 
         plugin.removeBuilding(this);
     }
+
+    public void remove(){
+        for(Location loc : buildingBlocks){
+            if(loc.equals(centerBlock)) continue;
+
+            Block b = loc.getBlock();
+            b.setType(Material.AIR);
+        }
+
+        plugin.removeBuilding(this);
+    }
 }

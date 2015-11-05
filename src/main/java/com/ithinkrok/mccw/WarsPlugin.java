@@ -228,6 +228,12 @@ public class WarsPlugin extends JavaPlugin {
         getTeamInfo(buildingInfo.getTeamColor()).removeBuilding(buildingInfo.getBuildingName());
 
         buildingCentres.remove(buildingInfo.getCenterBlock());
+
+        for (PlayerInfo info : playerInfoHashMap.values()) {
+            if (info.getTeamColor() != buildingInfo.getTeamColor()) continue;
+
+            info.recalculateInventory();
+        }
     }
 
     public void setupPlayers() {

@@ -236,8 +236,17 @@ public class WarsListener implements Listener {
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (event.getDamager() instanceof Player) {
-            resetDurability(((Player) event.getDamager()).getItemInHand());
+        if (!(event.getDamager() instanceof Player)) return;
+
+        Player damager = (Player) event.getDamager();
+        resetDurability(damager.getItemInHand());
+
+        if(!(event.getEntity() instanceof Player)) return;
+
+        Player entity = (Player) event.getEntity();
+
+        if(plugin.getPlayerInfo(damager).getTeamColor() == plugin.getPlayerInfo(entity).getTeamColor()){
+            event.setCancelled(true);
         }
     }
 

@@ -1,6 +1,7 @@
 package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.WarsPlugin;
+import com.ithinkrok.mccw.data.BuildingInfo;
 import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.TeamInfo;
 import com.ithinkrok.mccw.enumeration.TeamColor;
@@ -31,9 +32,9 @@ public class ScoutClass implements PlayerClassHandler {
     }
 
     @Override
-    public void addExtraInventoryItems(List<ItemStack> inventory, String buildingName, PlayerInfo playerInfo,
-                                       TeamInfo teamInfo) {
-        switch(buildingName){
+    public void addInventoryItems(List<ItemStack> inventory, BuildingInfo buildingInfo, PlayerInfo playerInfo,
+                                  TeamInfo teamInfo) {
+        switch(buildingInfo.getBuildingName()){
             case Buildings.LUMBERMILL:
 
                 switch(playerInfo.getUpgradeLevel("sharpness")){
@@ -65,7 +66,7 @@ public class ScoutClass implements PlayerClassHandler {
     }
 
     @Override
-    public boolean onInventoryClick(ItemStack item, String buildingName, PlayerInfo playerInfo, TeamInfo teamInfo) {
+    public boolean onInventoryClick(ItemStack item, BuildingInfo buildingInfo, PlayerInfo playerInfo, TeamInfo teamInfo) {
         if(item.getItemMeta() == null || !item.getItemMeta().hasDisplayName()) return false;
 
         int cost;

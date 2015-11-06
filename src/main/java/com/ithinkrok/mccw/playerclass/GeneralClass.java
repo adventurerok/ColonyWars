@@ -1,5 +1,6 @@
 package com.ithinkrok.mccw.playerclass;
 
+import com.ithinkrok.mccw.data.BuildingInfo;
 import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.TeamInfo;
 import com.ithinkrok.mccw.strings.Buildings;
@@ -21,9 +22,9 @@ public class GeneralClass implements PlayerClassHandler {
     private int sword2Cost = 1600;
 
     @Override
-    public void addExtraInventoryItems(List<ItemStack> inventory, String buildingName, PlayerInfo playerInfo,
-                                       TeamInfo teamInfo) {
-        if (!Buildings.BLACKSMITH.equals(buildingName)) return;
+    public void addInventoryItems(List<ItemStack> inventory, BuildingInfo buildingInfo, PlayerInfo playerInfo,
+                                  TeamInfo teamInfo) {
+        if (!Buildings.BLACKSMITH.equals(buildingInfo.getBuildingName())) return;
 
         switch (playerInfo.getUpgradeLevel("sword")) {
             case 0:
@@ -41,7 +42,7 @@ public class GeneralClass implements PlayerClassHandler {
     }
 
     @Override
-    public boolean onInventoryClick(ItemStack item, String buildingName, PlayerInfo playerInfo, TeamInfo teamInfo) {
+    public boolean onInventoryClick(ItemStack item, BuildingInfo buildingInfo, PlayerInfo playerInfo, TeamInfo teamInfo) {
         if(item.getItemMeta() == null || !item.getItemMeta().hasDisplayName()) return false;
 
         ItemStack sword = new ItemStack(Material.DIAMOND_SWORD);

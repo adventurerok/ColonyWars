@@ -106,7 +106,7 @@ public class WarsListener implements Listener {
         if (!meta.hasDisplayName()) return;
 
         SchematicData schematicData = plugin.getSchematicData(meta.getDisplayName());
-        if (schematicData == null){
+        if (schematicData == null) {
             event.getPlayer().sendMessage("Unknown building!");
             return;
         }
@@ -233,14 +233,12 @@ public class WarsListener implements Listener {
         TeamInfo teamInfo = plugin.getTeamInfo(playerInfo.getTeamColor());
 
         InventoryHandler inventoryHandler = plugin.getInventoryHandler(buildingInfo.getBuildingName());
-        List<ItemStack> contents;
+        List<ItemStack> contents = new ArrayList<>();
 
-        if (inventoryHandler != null)
-            contents = inventoryHandler.getInventoryContents(buildingInfo, playerInfo, teamInfo);
-        else contents = new ArrayList<>();
+        if (inventoryHandler != null) inventoryHandler.addInventoryItems(contents, buildingInfo, playerInfo, teamInfo);
 
         PlayerClassHandler classHandler = plugin.getPlayerClassHandler(playerInfo.getPlayerClass());
-        classHandler.addExtraInventoryItems(contents, buildingInfo.getBuildingName(), playerInfo, teamInfo);
+        classHandler.addInventoryItems(contents, buildingInfo, playerInfo, teamInfo);
 
         int index = 0;
 
@@ -296,16 +294,17 @@ public class WarsListener implements Listener {
 
             PlayerClassHandler classHandler = plugin.getPlayerClassHandler(playerInfo.getPlayerClass());
 
-            boolean done = classHandler
-                    .onInventoryClick(event.getCurrentItem(), event.getInventory().getTitle(), playerInfo, teamInfo);
+            BuildingInfo buildingInfo = plugin.getBuildingInfo(playerInfo.getShopBlock());
+            if (buildingInfo == null) return;
+
+            boolean done = classHandler.onInventoryClick(event.getCurrentItem(), buildingInfo, playerInfo, teamInfo);
 
             if (done) return;
 
             InventoryHandler handler = plugin.getInventoryHandler(event.getInventory().getTitle());
             if (handler == null) return;
 
-            handler.onInventoryClick(event.getCurrentItem(), plugin.getBuildingInfo(playerInfo.getShopBlock()),
-                    playerInfo, teamInfo);
+            handler.onInventoryClick(event.getCurrentItem(), buildingInfo, playerInfo, teamInfo);
         }
     }
 

@@ -9,8 +9,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by paul on 03/11/15.
@@ -33,6 +35,23 @@ public class InventoryUtils {
 
         if(desc != null) return setItemNameAndLore(stack, name, desc, "Cost: " + cost + teamText);
         else return setItemNameAndLore(stack, name, "Cost: " + cost + teamText);
+    }
+
+    public static ItemStack addPrice(ItemStack item, int cost, boolean team){
+        ItemMeta im = item.getItemMeta();
+
+        String teamText = team ? " (Team Money)" : " (Player Money)";
+
+        List<String> lore;
+        if(im.hasLore()) lore = im.getLore();
+        else lore = new ArrayList<>();
+
+        lore.add("Cost: " + cost + teamText);
+        im.setLore(lore);
+
+        item.setItemMeta(im);
+
+        return item;
     }
 
     public static ItemStack createShopItemWithEnchantments(Material mat, int amount, int damage, String name, String desc, int cost,

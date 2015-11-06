@@ -49,14 +49,14 @@ public class ChurchInventory implements InventoryHandler {
 
                 buildingInfo.remove();
 
-                if (!SchematicBuilder
-                        .buildSchematic(plugin, plugin.getSchematicData(Buildings.CATHEDRAL), buildingInfo.getCenterBlock(),
-                                buildingInfo.getTeamColor())) {
+                if (!SchematicBuilder.buildSchematic(plugin, plugin.getSchematicData(Buildings.CATHEDRAL),
+                        buildingInfo.getCenterBlock(), buildingInfo.getTeamColor())) {
                     playerInfo.getPlayer().sendMessage("We failed to build a cathedral here. Have the block yourself " +
                             "to find a better place!");
 
-                    playerInfo.getPlayer().getInventory().addItem(InventoryUtils.createItemWithNameAndLore(Material
-                            .LAPIS_ORE, 1, 0, Buildings.CATHEDRAL, "Builds a cathedral when placed!"));
+                    playerInfo.getPlayer().getInventory().addItem(InventoryUtils
+                            .createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.CATHEDRAL,
+                                    "Builds a cathedral when placed!"));
                 }
                 return true;
         }
@@ -65,13 +65,12 @@ public class ChurchInventory implements InventoryHandler {
     }
 
     @Override
-    public List<ItemStack> getInventoryContents(BuildingInfo buildingInfo, PlayerInfo playerInfo, TeamInfo teamInfo) {
-        List<ItemStack> result = new ArrayList<>();
+    public void addInventoryItems(List<ItemStack> result, BuildingInfo buildingInfo, PlayerInfo playerInfo,
+                                  TeamInfo teamInfo) {
 
         result.add(InventoryUtils
                 .createShopItem(Material.LAPIS_ORE, 1, 0, Buildings.CATHEDRAL, "Replace this church with a cathedral",
                         cathedralCost, true));
 
-        return result;
     }
 }

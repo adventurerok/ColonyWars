@@ -25,7 +25,8 @@ public class FarmInventory implements InventoryHandler {
     private int goldenAppleCost = 125;
 
     @Override
-    public boolean onInventoryClick(ItemStack item, BuildingInfo buildingInfo, PlayerInfo playerInfo, TeamInfo teamInfo) {
+    public boolean onInventoryClick(ItemStack item, BuildingInfo buildingInfo, PlayerInfo playerInfo,
+                                    TeamInfo teamInfo) {
         PlayerInventory inv = playerInfo.getPlayer().getInventory();
 
         if (inv.firstEmpty() == -1) {
@@ -63,9 +64,9 @@ public class FarmInventory implements InventoryHandler {
                 break;
         }
 
-        if(add == null) return false;
+        if (add == null) return false;
 
-        if(!playerInfo.subtractPlayerCash(cost)){
+        if (!playerInfo.subtractPlayerCash(cost)) {
             playerInfo.getPlayer().sendMessage("You don't have that amount of money!");
             return true;
         }
@@ -78,8 +79,8 @@ public class FarmInventory implements InventoryHandler {
     }
 
     @Override
-    public List<ItemStack> getInventoryContents(BuildingInfo buildingInfo, PlayerInfo playerInfo, TeamInfo teamInfo) {
-        ArrayList<ItemStack> result = new ArrayList<>();
+    public void addInventoryItems(List<ItemStack> result, BuildingInfo buildingInfo, PlayerInfo playerInfo,
+                                  TeamInfo teamInfo) {
         result.add(InventoryUtils
                 .createShopItem(Material.POTATO_ITEM, 5, 0, null, "Lovely potatoes!", rawPotatoCost * 5, false));
         result.add(
@@ -93,6 +94,5 @@ public class FarmInventory implements InventoryHandler {
                 .createShopItem(Material.COOKED_BEEF, 10, 0, null, "Fast food!", cookedBeefCost * 10, false));
         result.add(InventoryUtils
                 .createShopItem(Material.GOLDEN_APPLE, 1, 0, null, "May have side effects!", goldenAppleCost, false));
-        return result;
     }
 }

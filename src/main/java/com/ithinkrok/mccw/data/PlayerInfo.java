@@ -16,7 +16,6 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -93,13 +92,12 @@ public class PlayerInfo {
         TeamInfo teamInfo = plugin.getTeamInfo(getTeamColor());
 
         InventoryHandler inventoryHandler = plugin.getInventoryHandler(buildingInfo.getBuildingName());
-        List<ItemStack> contents;
+        List<ItemStack> contents = new ArrayList<>();
 
-        if(inventoryHandler != null) contents = inventoryHandler.getInventoryContents(buildingInfo, this, teamInfo);
-        else contents = new ArrayList<>();
+        if(inventoryHandler != null) inventoryHandler.addInventoryItems(contents, buildingInfo, this, teamInfo);
 
         PlayerClassHandler classHandler = plugin.getPlayerClassHandler(this.getPlayerClass());
-        classHandler.addExtraInventoryItems(contents, buildingInfo.getBuildingName(), this, teamInfo);
+        classHandler.addInventoryItems(contents, buildingInfo, this, teamInfo);
 
         int index = 0;
 

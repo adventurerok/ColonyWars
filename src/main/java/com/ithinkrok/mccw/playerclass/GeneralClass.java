@@ -99,4 +99,9 @@ public class GeneralClass implements PlayerClassHandler {
     public void onInteractWorld(PlayerInteractEvent event) {
 
     }
+
+    @Override
+    public void onPlayerUpgrade(PlayerInfo playerInfo, String upgradeName, int upgradeLevel) {
+
+    }
 }

@@ -149,4 +149,9 @@ public class ScoutClass implements PlayerClassHandler {
 
 
     }
+
+    @Override
+    public void onPlayerUpgrade(PlayerInfo playerInfo, String upgradeName, int upgradeLevel) {
+
+    }
 }

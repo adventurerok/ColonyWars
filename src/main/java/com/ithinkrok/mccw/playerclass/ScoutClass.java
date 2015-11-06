@@ -4,6 +4,7 @@ import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.TeamInfo;
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -33,7 +34,7 @@ public class ScoutClass implements PlayerClassHandler {
     public void addExtraInventoryItems(List<ItemStack> inventory, String buildingName, PlayerInfo playerInfo,
                                        TeamInfo teamInfo) {
         switch(buildingName){
-            case "Lumbermill":
+            case Buildings.LUMBERMILL:
 
                 switch(playerInfo.getUpgradeLevel("sharpness")){
                     case 0:
@@ -119,7 +120,7 @@ public class ScoutClass implements PlayerClassHandler {
         PlayerInventory inv = playerInfo.getPlayer().getInventory();
 
         switch(buildingName){
-            case "Lumbermill":
+            case Buildings.LUMBERMILL:
                 inv.addItem(new ItemStack(Material.WOOD_SWORD));
                 inv.addItem(InventoryUtils.createItemWithNameAndLore(Material.COMPASS, 1, 0, "Player Compass",
                         "Oriented at: No One"));

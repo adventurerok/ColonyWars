@@ -13,6 +13,7 @@ import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.GeneralClass;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.mccw.playerclass.ScoutClass;
+import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -62,17 +63,18 @@ public class WarsPlugin extends JavaPlugin {
             teamInfoEnumMap.put(c, new TeamInfo(this, c));
         }
 
-        schematicDataHashMap.put("Base", new SchematicData("Base", "mccw_base.schematic"));
-        schematicDataHashMap.put("Farm", new SchematicData("Farm", "mccw_farm.schematic"));
-        schematicDataHashMap.put("Blacksmith", new SchematicData("Blacksmith", "mccw_blacksmith.schematic"));
-        schematicDataHashMap.put("MageTower", new SchematicData("MageTower", "mccw_magetower.schematic"));
-        schematicDataHashMap.put("Lumbermill", new SchematicData("Lumbermill", "mccw_lumbermill.schematic"));
-        schematicDataHashMap.put("Church", new SchematicData("Church", "mccw_church.schematic"));
-        schematicDataHashMap.put("Cathedral", new SchematicData("Cathedral", "mccw_cathedral.schematic"));
+        schematicDataHashMap.put(Buildings.BASE, new SchematicData(Buildings.BASE, "mccw_base.schematic"));
+        schematicDataHashMap.put(Buildings.FARM, new SchematicData(Buildings.FARM, "mccw_farm.schematic"));
+        schematicDataHashMap.put(Buildings.BLACKSMITH, new SchematicData(Buildings.BLACKSMITH, "mccw_blacksmith.schematic"));
+        schematicDataHashMap.put(Buildings.MAGETOWER, new SchematicData(Buildings.MAGETOWER, "mccw_magetower.schematic"));
+        schematicDataHashMap.put(Buildings.LUMBERMILL, new SchematicData(Buildings.LUMBERMILL, "mccw_lumbermill.schematic"));
+        schematicDataHashMap.put(Buildings.CHURCH, new SchematicData(Buildings.CHURCH, "mccw_church.schematic"));
+        schematicDataHashMap.put(Buildings.CATHEDRAL, new SchematicData(Buildings.CATHEDRAL, "mccw_cathedral.schematic"));
+        schematicDataHashMap.put(Buildings.GREENHOUSE, new SchematicData(Buildings.GREENHOUSE, "mccw_greenhouse.schematic"));
 
-        buildingInventories.put("Base", new BaseInventory());
-        buildingInventories.put("Farm", new FarmInventory());
-        buildingInventories.put("Church", new ChurchInventory(this));
+        buildingInventories.put(Buildings.BASE, new BaseInventory());
+        buildingInventories.put(Buildings.FARM, new FarmInventory());
+        buildingInventories.put(Buildings.CHURCH, new ChurchInventory(this));
 
         classHandlerEnumMap.put(PlayerClass.GENERAL, new GeneralClass());
         classHandlerEnumMap.put(PlayerClass.SCOUT, new ScoutClass(this));

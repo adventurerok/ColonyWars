@@ -3,6 +3,7 @@ package com.ithinkrok.mccw.inventory;
 import com.ithinkrok.mccw.data.BuildingInfo;
 import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.TeamInfo;
+import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -37,29 +38,29 @@ public class BaseInventory implements InventoryHandler {
         int cost = 0;
 
         switch (item.getItemMeta().getDisplayName()) {
-            case "Farm":
+            case Buildings.FARM:
                 cost = farmCost;
                 add = InventoryUtils
-                        .createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, "Farm", "Builds a farm when placed!");
+                        .createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.FARM, "Builds a farm when placed!");
                 break;
-            case "Lumbermill":
+            case Buildings.LUMBERMILL:
                 cost = lumbermillCost;
-                add = InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, "Lumbermill",
+                add = InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.LUMBERMILL,
                         "Builds a lumbermill when placed!");
                 break;
-            case "Blacksmith":
+            case Buildings.BLACKSMITH:
                 cost = blacksmithCost;
-                add = InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, "Blacksmith",
+                add = InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.BLACKSMITH,
                         "Builds a blacksmith when placed!");
                 break;
-            case "MageTower":
+            case Buildings.MAGETOWER:
                 cost = magetowerCost;
-                add = InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, "MageTower",
+                add = InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.MAGETOWER,
                         "Builds a MageTower when placed!");
                 break;
-            case "Church":
+            case Buildings.CHURCH:
                 cost = churchCost;
-                add = InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, "Church",
+                add = InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.CHURCH,
                         "Builds a MageTower when placed!");
                 break;
         }
@@ -81,19 +82,19 @@ public class BaseInventory implements InventoryHandler {
     @Override
     public List<ItemStack> getInventoryContents(BuildingInfo buildingInfo, PlayerInfo playerInfo, TeamInfo teamInfo) {
         ArrayList<ItemStack> result = new ArrayList<>();
-        result.add(InventoryUtils.createShopItem(Material.LAPIS_ORE, 1, 0, "Farm", "Build a farm!", farmCost, true));
+        result.add(InventoryUtils.createShopItem(Material.LAPIS_ORE, 1, 0, Buildings.FARM, "Build a farm!", farmCost, true));
 
-        if (teamInfo.getBuildingCount("Farm") > 0) {
+        if (teamInfo.getBuildingCount(Buildings.FARM) > 0) {
             result.add(InventoryUtils
-                    .createShopItem(Material.LAPIS_ORE, 1, 0, "Lumbermill", "Build a lumbermill!", lumbermillCost,
+                    .createShopItem(Material.LAPIS_ORE, 1, 0, Buildings.LUMBERMILL, "Build a lumbermill!", lumbermillCost,
                             true));
             result.add(InventoryUtils
-                    .createShopItem(Material.LAPIS_ORE, 1, 0, "Blacksmith", "Build a blacksmith!", blacksmithCost,
+                    .createShopItem(Material.LAPIS_ORE, 1, 0, Buildings.BLACKSMITH, "Build a blacksmith!", blacksmithCost,
                             true));
             result.add(InventoryUtils
-                    .createShopItem(Material.LAPIS_ORE, 1, 0, "MageTower", "Build a MageTower!", magetowerCost, true));
+                    .createShopItem(Material.LAPIS_ORE, 1, 0, Buildings.MAGETOWER, "Build a MageTower!", magetowerCost, true));
             result.add(InventoryUtils
-                    .createShopItem(Material.LAPIS_ORE, 1, 0, "Church", "Build a church!", churchCost, true));
+                    .createShopItem(Material.LAPIS_ORE, 1, 0, Buildings.CHURCH, "Build a church!", churchCost, true));
         }
         return result;
     }

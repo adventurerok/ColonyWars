@@ -4,6 +4,7 @@ import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.BuildingInfo;
 import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.TeamInfo;
+import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import com.ithinkrok.mccw.util.SchematicBuilder;
 import org.bukkit.Material;
@@ -49,13 +50,13 @@ public class ChurchInventory implements InventoryHandler {
                 buildingInfo.remove();
 
                 if (!SchematicBuilder
-                        .buildSchematic(plugin, plugin.getSchematicData("Cathedral"), buildingInfo.getCenterBlock(),
+                        .buildSchematic(plugin, plugin.getSchematicData(Buildings.CATHEDRAL), buildingInfo.getCenterBlock(),
                                 buildingInfo.getTeamColor())) {
                     playerInfo.getPlayer().sendMessage("We failed to build a cathedral here. Have the block yourself " +
                             "to find a better place!");
 
                     playerInfo.getPlayer().getInventory().addItem(InventoryUtils.createItemWithNameAndLore(Material
-                            .LAPIS_ORE, 1, 0, "Cathedral", "Builds a cathedral when placed!"));
+                            .LAPIS_ORE, 1, 0, Buildings.CATHEDRAL, "Builds a cathedral when placed!"));
                 }
                 return true;
         }
@@ -68,7 +69,7 @@ public class ChurchInventory implements InventoryHandler {
         List<ItemStack> result = new ArrayList<>();
 
         result.add(InventoryUtils
-                .createShopItem(Material.LAPIS_ORE, 1, 0, "Cathedral", "Replace this church with a cathedral",
+                .createShopItem(Material.LAPIS_ORE, 1, 0, Buildings.CATHEDRAL, "Replace this church with a cathedral",
                         cathedralCost, true));
 
         return result;

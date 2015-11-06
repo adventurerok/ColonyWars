@@ -2,6 +2,7 @@ package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.TeamInfo;
+import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -22,7 +23,7 @@ public class GeneralClass implements PlayerClassHandler {
     @Override
     public void addExtraInventoryItems(List<ItemStack> inventory, String buildingName, PlayerInfo playerInfo,
                                        TeamInfo teamInfo) {
-        if (!"Blacksmith".equals(buildingName)) return;
+        if (!Buildings.BLACKSMITH.equals(buildingName)) return;
 
         switch (playerInfo.getUpgradeLevel("sword")) {
             case 0:
@@ -78,7 +79,7 @@ public class GeneralClass implements PlayerClassHandler {
 
     @Override
     public void onBuildingBuilt(String buildingName, PlayerInfo playerInfo, TeamInfo teamInfo) {
-        if(!"Blacksmith".equals(buildingName)) return;
+        if(!Buildings.BLACKSMITH.equals(buildingName)) return;
 
         PlayerInventory inv = playerInfo.getPlayer().getInventory();
 

@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 
 /**
  * Created by paul on 06/11/15.
+ *
+ * A handler for shops that use the buyable system
  */
 public class BuyableInventory implements InventoryHandler {
 

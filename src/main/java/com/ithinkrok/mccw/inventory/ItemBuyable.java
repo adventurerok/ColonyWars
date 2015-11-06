@@ -6,6 +6,8 @@ import java.util.UUID;
 
 /**
  * Created by paul on 06/11/15.
+ *
+ * A buyable item
  */
 public class ItemBuyable extends Buyable {
 

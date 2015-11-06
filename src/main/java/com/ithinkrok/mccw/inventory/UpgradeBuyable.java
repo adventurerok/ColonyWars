@@ -4,6 +4,8 @@ import org.bukkit.inventory.ItemStack;
 
 /**
  * Created by paul on 06/11/15.
+ *
+ * A buyable upgrade
  */
 public class UpgradeBuyable extends Buyable {
 

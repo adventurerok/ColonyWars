@@ -6,6 +6,8 @@ import org.bukkit.inventory.ItemStack;
 
 /**
  * Created by paul on 06/11/15.
+ *
+ * A buyable building block
  */
 public class BuildingBuyable extends ItemBuyable {
 

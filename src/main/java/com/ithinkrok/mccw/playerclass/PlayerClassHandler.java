@@ -17,4 +17,6 @@ public interface PlayerClassHandler extends InventoryHandler {
     void onGameBegin(PlayerInfo playerInfo, TeamInfo teamInfo);
 
     void onInteractWorld(PlayerInteractEvent event);
+
+    void onPlayerUpgrade(PlayerInfo playerInfo, String upgradeName, int upgradeLevel);
 }

@@ -5,6 +5,8 @@ import org.bukkit.inventory.ItemStack;
 
 /**
  * Created by paul on 06/11/15.
+ *
+ * Represents something that may be purchased from a shop
  */
 public abstract class Buyable {
 

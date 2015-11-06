@@ -68,7 +68,12 @@ public class PlayerInfo {
     }
 
     public void setUpgradeLevel(String upgrade, int level){
+        int oldLevel = getUpgradeLevel(upgrade);
+        if(oldLevel == level) return;
+
         upgradeLevels.put(upgrade, level);
+
+        plugin.onPlayerUpgrade(this, upgrade, level);
     }
 
     public boolean subtractPlayerCash(int cash){

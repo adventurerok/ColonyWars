@@ -280,4 +280,10 @@ public class WarsPlugin extends JavaPlugin {
             player.getInventory().setItem(compassIndex, newCompass);
         }, 60);
     }
+
+    public void onPlayerUpgrade(PlayerInfo playerInfo, String upgrade, int level) {
+        PlayerClassHandler classHandler = getPlayerClassHandler(playerInfo.getPlayerClass());
+
+        classHandler.onPlayerUpgrade(playerInfo, upgrade, level);
+    }
 }

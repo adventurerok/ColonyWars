@@ -6,15 +6,17 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Created by paul on 06/11/15.
  */
-public abstract class BuyableItem {
+public abstract class Buyable {
 
-    private int minFreeSlots;
-    private int cost;
-    private boolean team;
+    private final int minFreeSlots;
+    private final int cost;
+    private final boolean team;
     private ItemStack display;
+    private final String buildingName;
 
-    public BuyableItem(ItemStack display, int cost, boolean team, int minFreeSlots) {
+    public Buyable(ItemStack display, String buildingName, int cost, boolean team, int minFreeSlots) {
         this.display = display;
+        this.buildingName = buildingName;
         this.cost = cost;
         this.team = team;
         this.minFreeSlots = minFreeSlots;
@@ -36,6 +38,10 @@ public abstract class BuyableItem {
 
     public int getMinFreeSlots() {
         return minFreeSlots;
+    }
+
+    public String getBuildingName() {
+        return buildingName;
     }
 
     public abstract void onPurchase(ItemPurchaseEvent event);

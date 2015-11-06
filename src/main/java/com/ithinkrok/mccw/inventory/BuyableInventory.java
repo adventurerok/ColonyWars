@@ -17,19 +17,19 @@ import java.util.stream.Collectors;
 /**
  * Created by paul on 06/11/15.
  */
-public class BuyableItemInventory implements InventoryHandler {
+public class BuyableInventory implements InventoryHandler {
 
-    private List<BuyableItem> items = new ArrayList<>();
-    private HashMap<ItemStack, BuyableItem> stackToBuyable = new HashMap<>();
+    private List<Buyable> items = new ArrayList<>();
+    private HashMap<ItemStack, Buyable> stackToBuyable = new HashMap<>();
 
-    public BuyableItemInventory(BuyableItem...items){
+    public BuyableInventory(Buyable...items){
         this(Arrays.asList(items));
     }
 
-    public BuyableItemInventory(List<BuyableItem> items) {
+    public BuyableInventory(List<Buyable> items) {
         this.items = items;
 
-        for(BuyableItem item : items){
+        for(Buyable item : items){
             stackToBuyable.put(item.getDisplayItemStack(), item);
         }
     }
@@ -38,8 +38,9 @@ public class BuyableItemInventory implements InventoryHandler {
     public boolean onInventoryClick(ItemStack item, BuildingInfo buildingInfo, PlayerInfo playerInfo,
                                     TeamInfo teamInfo) {
 
-        BuyableItem i = stackToBuyable.get(item);
+        Buyable i = stackToBuyable.get(item);
         if(i != null){
+            if(!i.getBuildingName().equals(buildingInfo.getBuildingName())) return false;
             tryBuyItem(i, buildingInfo, playerInfo, teamInfo);
 
             return true;
@@ -48,7 +49,7 @@ public class BuyableItemInventory implements InventoryHandler {
         return false;
     }
 
-    private void tryBuyItem(BuyableItem item, BuildingInfo buildingInfo, PlayerInfo playerInfo, TeamInfo teamInfo) {
+    private void tryBuyItem(Buyable item, BuildingInfo buildingInfo, PlayerInfo playerInfo, TeamInfo teamInfo) {
         if(item.buyWithTeamMoney()){
             if (!InventoryUtils.hasTeamCash(item.getCost(), teamInfo, playerInfo)) {
                 playerInfo.getPlayer().sendMessage("You don't have that amount of money!");
@@ -99,6 +100,11 @@ public class BuyableItemInventory implements InventoryHandler {
     @Override
     public void addInventoryItems(List<ItemStack> items, BuildingInfo buildingInfo, PlayerInfo playerInfo,
                                   TeamInfo teamInfo) {
-        items.addAll(this.items.stream().map(BuyableItem::getDisplayItemStack).collect(Collectors.toList()));
+        for(Buyable buyable : this.items){
+            if(!buyable.getBuildingName().equals(buildingInfo.getBuildingName())) continue;
+            if(!buyable.canBuy(new ItemPurchaseEvent(buildingInfo, playerInfo, teamInfo))) continue;
+
+            items.add(buyable.getDisplayItemStack());
+        }
     }
 }

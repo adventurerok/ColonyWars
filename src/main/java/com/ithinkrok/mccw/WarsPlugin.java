@@ -75,7 +75,7 @@ public class WarsPlugin extends JavaPlugin {
 
         buildingInventories.put(Buildings.BASE, new BaseInventory());
         buildingInventories.put(Buildings.FARM, new FarmInventory(getConfig()));
-        buildingInventories.put(Buildings.CHURCH, new ChurchInventory(this));
+        buildingInventories.put(Buildings.CHURCH, new ChurchInventory(this, getConfig()));
 
         classHandlerEnumMap.put(PlayerClass.GENERAL, new GeneralClass());
         classHandlerEnumMap.put(PlayerClass.SCOUT, new ScoutClass(this));

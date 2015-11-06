@@ -13,25 +13,25 @@ import org.bukkit.inventory.PlayerInventory;
 public class ItemPurchaseEvent {
 
     private PlayerInfo playerInfo;
-    private TeamInfo getTeamInfo;
-    private BuildingInfo getBuildingInfo;
+    private TeamInfo teamInfo;
+    private BuildingInfo buildingInfo;
 
-    public ItemPurchaseEvent(BuildingInfo getBuildingInfo, PlayerInfo playerInfo, TeamInfo getTeamInfo) {
-        this.getBuildingInfo = getBuildingInfo;
+    public ItemPurchaseEvent(BuildingInfo buildingInfo, PlayerInfo playerInfo, TeamInfo teamInfo) {
+        this.buildingInfo = buildingInfo;
         this.playerInfo = playerInfo;
-        this.getTeamInfo = getTeamInfo;
+        this.teamInfo = teamInfo;
     }
 
     public PlayerInfo getPlayerInfo() {
         return playerInfo;
     }
 
-    public BuildingInfo getGetBuildingInfo() {
-        return getBuildingInfo;
+    public BuildingInfo getBuildingInfo() {
+        return buildingInfo;
     }
 
-    public TeamInfo getGetTeamInfo() {
-        return getTeamInfo;
+    public TeamInfo getTeamInfo() {
+        return teamInfo;
     }
 
     public Player getPlayer(){

@@ -1,75 +1,54 @@
 package com.ithinkrok.mccw.inventory;
 
 import com.ithinkrok.mccw.WarsPlugin;
-import com.ithinkrok.mccw.data.BuildingInfo;
-import com.ithinkrok.mccw.data.PlayerInfo;
-import com.ithinkrok.mccw.data.TeamInfo;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import com.ithinkrok.mccw.util.SchematicBuilder;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by paul on 05/11/15.
  */
-public class ChurchInventory implements InventoryHandler {
+public class ChurchInventory extends BuyableInventory {
 
-    private int cathedralCost = 8000;
-
-    private WarsPlugin plugin;
-
-    public ChurchInventory(WarsPlugin plugin) {
-        this.plugin = plugin;
+    public ChurchInventory(WarsPlugin plugin, FileConfiguration config) {
+        super(getBuyables(plugin, config));
     }
 
-    @Override
-    public boolean onInventoryClick(ItemStack item, BuildingInfo buildingInfo, PlayerInfo playerInfo,
-                                    TeamInfo teamInfo) {
+    private static List<Buyable> getBuyables(WarsPlugin plugin, FileConfiguration config) {
+        List<Buyable> result = new ArrayList<>();
 
-        if (playerInfo.getPlayer().getInventory().firstEmpty() == -1) {
-            playerInfo.getPlayer().sendMessage("Please ensure you have one free slot in your inventory.");
-            return true;
-        }
+        result.add(new Buyable(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.CATHEDRAL,
+                "Replace this church with a Cathedral"), Buildings.CHURCH,
+                config.getInt("costs.buildings." + Buildings.CATHEDRAL), true, 1) {
 
-        switch (item.getType()) {
-            case LAPIS_ORE:
-                int cost = cathedralCost;
 
-                if (!InventoryUtils.hasTeamCash(cost, teamInfo, playerInfo)) {
-                    playerInfo.getPlayer().sendMessage("You don't have that amount of money!");
-                    return true;
-                }
-
-                InventoryUtils.payWithTeamCash(cost, teamInfo, playerInfo);
-                InventoryUtils.playBuySound(playerInfo.getPlayer());
-
-                buildingInfo.remove();
+            @Override
+            public void onPurchase(ItemPurchaseEvent event) {
+                event.getBuildingInfo().remove();
 
                 if (!SchematicBuilder.buildSchematic(plugin, plugin.getSchematicData(Buildings.CATHEDRAL),
-                        buildingInfo.getCenterBlock(), buildingInfo.getTeamColor())) {
-                    playerInfo.getPlayer().sendMessage("We failed to build a cathedral here. Have the block yourself " +
+                        event.getBuildingInfo().getCenterBlock(), event.getBuildingInfo().getTeamColor())) {
+                    event.getPlayer().sendMessage("We failed to build a cathedral here. Have the block yourself " +
                             "to find a better place!");
 
-                    playerInfo.getPlayer().getInventory().addItem(InventoryUtils
+                    event.getPlayerInventory().addItem(InventoryUtils
                             .createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.CATHEDRAL,
                                     "Builds a cathedral when placed!"));
                 }
+            }
+
+            @Override
+            public boolean canBuy(ItemPurchaseEvent event) {
                 return true;
-        }
+            }
+        });
 
-        return false;
+        return result;
     }
 
-    @Override
-    public void addInventoryItems(List<ItemStack> result, BuildingInfo buildingInfo, PlayerInfo playerInfo,
-                                  TeamInfo teamInfo) {
-
-        result.add(InventoryUtils
-                .createShopItem(Material.LAPIS_ORE, 1, 0, Buildings.CATHEDRAL, "Replace this church with a cathedral",
-                        cathedralCost, true));
-
-    }
 }

@@ -55,6 +55,7 @@ public class WarsPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
 
         WarsListener pluginListener = new WarsListener(this);
         getServer().getPluginManager().registerEvents(pluginListener, this);
@@ -73,7 +74,7 @@ public class WarsPlugin extends JavaPlugin {
         schematicDataHashMap.put(Buildings.GREENHOUSE, new SchematicData(Buildings.GREENHOUSE, "mccw_greenhouse.schematic"));
 
         buildingInventories.put(Buildings.BASE, new BaseInventory());
-        buildingInventories.put(Buildings.FARM, new FarmInventory());
+        buildingInventories.put(Buildings.FARM, new FarmInventory(getConfig()));
         buildingInventories.put(Buildings.CHURCH, new ChurchInventory(this));
 
         classHandlerEnumMap.put(PlayerClass.GENERAL, new GeneralClass());

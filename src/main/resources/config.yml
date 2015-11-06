@@ -1,0 +1,32 @@
+
+costs:
+  buildings:
+    Farm: 2000
+    Lumbermill: 2000
+    Blacksmith: 4000
+    MageTower: 4000
+    Church: 4000
+    Cathedral: 8000
+    Greenhouse: 2000
+  farm:
+    rawPotato: 3
+    cookie: 2
+    rawBeef: 6
+    bakedPotato: 6
+    cookedBeef: 10
+    goldenApple: 125
+  scout:
+    sharpness1: 1350
+    sharpness2: 1600
+  general:
+    sword1: 1350
+    sword2: 1600
+
+amounts:
+  farm:
+    rawPotato: 5
+    cookie: 10
+    rawBeef: 5
+    bakedPotato: 10
+    cookedBeef: 10
+    goldenApple: 1

@@ -95,8 +95,8 @@ public class BuyableInventory implements InventoryHandler {
             InventoryUtils.payWithTeamCash(item.getCost(), teamInfo, playerInfo);
         } else playerInfo.subtractPlayerCash(item.getCost());
 
+        InventoryUtils.playBuySound(playerInfo.getPlayer());
         item.onPurchase(event);
-
     }
 
     @Override

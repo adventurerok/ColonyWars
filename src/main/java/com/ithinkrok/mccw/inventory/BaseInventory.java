@@ -4,12 +4,8 @@ import com.ithinkrok.mccw.data.BuildingInfo;
 import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.TeamInfo;
 import com.ithinkrok.mccw.strings.Buildings;
-import com.ithinkrok.mccw.util.InventoryUtils;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,85 +15,40 @@ import java.util.List;
  */
 public class BaseInventory implements InventoryHandler {
 
-    private int farmCost = 3000;
-    private int lumbermillCost = 2000;
-    private int blacksmithCost = 4000;
-    private int magetowerCost = 4000;
-    private int churchCost = 4000;
+    private InventoryHandler noFarm;
+    private InventoryHandler withFarm;
+
+    public BaseInventory() {
+        int farmCost = 3000;
+
+        noFarm = new BuyableInventory(new BuildingBuyable(Buildings.FARM, Buildings.BASE, farmCost));
+
+        int lumbermillCost = 2000;
+        int blacksmithCost = 4000;
+        int magetowerCost = 4000;
+        int churchCost = 4000;
+        int greenhouseCost = 2000;
+
+        withFarm = new BuyableInventory(new BuildingBuyable(Buildings.FARM, Buildings.BASE, farmCost), new
+                BuildingBuyable(Buildings.LUMBERMILL, Buildings.BASE, lumbermillCost), new BuildingBuyable(Buildings
+                .BLACKSMITH, Buildings.BASE, blacksmithCost), new BuildingBuyable(Buildings.MAGETOWER, Buildings
+                .BASE, magetowerCost), new BuildingBuyable(Buildings.CHURCH, Buildings.BASE, churchCost), new
+                BuildingBuyable(Buildings.GREENHOUSE, Buildings.BASE, greenhouseCost));
+    }
 
     @Override
     public boolean onInventoryClick(ItemStack item, BuildingInfo buildingInfo, PlayerInfo playerInfo,
                                     TeamInfo teamInfo) {
-        PlayerInventory inv = playerInfo.getPlayer().getInventory();
-
-        if (inv.firstEmpty() == -1) {
-            playerInfo.getPlayer().sendMessage("Please ensure you have one free slot in your inventory");
-            return true;
-        }
-
-        ItemStack add = null;
-        int cost = 0;
-
-        switch (item.getItemMeta().getDisplayName()) {
-            case Buildings.FARM:
-                cost = farmCost;
-                add = InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.FARM,
-                        "Builds a farm when placed!");
-                break;
-            case Buildings.LUMBERMILL:
-                cost = lumbermillCost;
-                add = InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.LUMBERMILL,
-                        "Builds a lumbermill when placed!");
-                break;
-            case Buildings.BLACKSMITH:
-                cost = blacksmithCost;
-                add = InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.BLACKSMITH,
-                        "Builds a blacksmith when placed!");
-                break;
-            case Buildings.MAGETOWER:
-                cost = magetowerCost;
-                add = InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.MAGETOWER,
-                        "Builds a MageTower when placed!");
-                break;
-            case Buildings.CHURCH:
-                cost = churchCost;
-                add = InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.CHURCH,
-                        "Builds a MageTower when placed!");
-                break;
-        }
-
-        if (cost == 0 || add == null) return false;
-
-        if (!InventoryUtils.hasTeamCash(cost, teamInfo, playerInfo)) {
-            playerInfo.getPlayer().sendMessage("You don't have that amount of money!");
-            return true;
-        }
-
-        inv.addItem(add);
-
-        InventoryUtils.payWithTeamCash(cost, teamInfo, playerInfo);
-        InventoryUtils.playBuySound(playerInfo.getPlayer());
-        return true;
+        if(teamInfo.getBuildingCount(Buildings.FARM) > 0){
+            return withFarm.onInventoryClick(item, buildingInfo, playerInfo, teamInfo);
+        } else return noFarm.onInventoryClick(item, buildingInfo, playerInfo, teamInfo);
     }
 
     @Override
     public void addInventoryItems(List<ItemStack> result, BuildingInfo buildingInfo, PlayerInfo playerInfo,
                                   TeamInfo teamInfo) {
-        result.add(InventoryUtils
-                .createShopItem(Material.LAPIS_ORE, 1, 0, Buildings.FARM, "Build a farm!", farmCost, true));
-
-        if (teamInfo.getBuildingCount(Buildings.FARM) > 0) {
-            result.add(InventoryUtils
-                    .createShopItem(Material.LAPIS_ORE, 1, 0, Buildings.LUMBERMILL, "Build a lumbermill!",
-                            lumbermillCost, true));
-            result.add(InventoryUtils
-                    .createShopItem(Material.LAPIS_ORE, 1, 0, Buildings.BLACKSMITH, "Build a blacksmith!",
-                            blacksmithCost, true));
-            result.add(InventoryUtils
-                    .createShopItem(Material.LAPIS_ORE, 1, 0, Buildings.MAGETOWER, "Build a MageTower!", magetowerCost,
-                            true));
-            result.add(InventoryUtils
-                    .createShopItem(Material.LAPIS_ORE, 1, 0, Buildings.CHURCH, "Build a church!", churchCost, true));
-        }
+        if(teamInfo.getBuildingCount(Buildings.FARM) > 0){
+            withFarm.addInventoryItems(result, buildingInfo, playerInfo, teamInfo);
+        } else noFarm.addInventoryItems(result, buildingInfo, playerInfo, teamInfo);
     }
 }

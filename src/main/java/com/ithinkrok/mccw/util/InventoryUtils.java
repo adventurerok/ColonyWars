@@ -57,7 +57,7 @@ public class InventoryUtils {
     public static ItemStack createPotion(PotionType type, int level, boolean splash, boolean extended, int amount){
         Potion pot = new Potion(type, level);
         pot.setSplash(splash);
-        pot.setHasExtendedDuration(extended);
+        if(extended) pot.setHasExtendedDuration(true);
 
         return pot.toItemStack(amount);
     }

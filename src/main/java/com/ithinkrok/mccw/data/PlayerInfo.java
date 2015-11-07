@@ -131,7 +131,7 @@ public class PlayerInfo {
 
         TeamInfo teamInfo = plugin.getTeamInfo(getTeamColor());
 
-        InventoryHandler inventoryHandler = plugin.getInventoryHandler(buildingInfo.getBuildingName());
+        InventoryHandler inventoryHandler = plugin.getBuildingInventoryHandler();
         List<ItemStack> contents = new ArrayList<>();
 
         if(inventoryHandler != null) inventoryHandler.addInventoryItems(contents, buildingInfo, this, teamInfo);

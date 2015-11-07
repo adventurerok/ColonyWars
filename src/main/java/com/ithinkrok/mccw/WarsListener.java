@@ -12,7 +12,6 @@ import com.ithinkrok.mccw.util.Facing;
 import com.ithinkrok.mccw.util.SchematicBuilder;
 import com.ithinkrok.mccw.util.TreeFeller;
 import org.bukkit.*;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -234,7 +233,7 @@ public class WarsListener implements Listener {
 
         TeamInfo teamInfo = plugin.getTeamInfo(playerInfo.getTeamColor());
 
-        InventoryHandler inventoryHandler = plugin.getInventoryHandler(buildingInfo.getBuildingName());
+        InventoryHandler inventoryHandler = plugin.getBuildingInventoryHandler();
         List<ItemStack> contents = new ArrayList<>();
 
         if (inventoryHandler != null) inventoryHandler.addInventoryItems(contents, buildingInfo, playerInfo, teamInfo);
@@ -303,7 +302,7 @@ public class WarsListener implements Listener {
 
             if (done) return;
 
-            InventoryHandler handler = plugin.getInventoryHandler(event.getInventory().getTitle());
+            InventoryHandler handler = plugin.getBuildingInventoryHandler();
             if (handler == null) return;
 
             handler.onInventoryClick(event.getCurrentItem(), buildingInfo, playerInfo, teamInfo);

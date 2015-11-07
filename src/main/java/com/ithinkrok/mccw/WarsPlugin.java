@@ -87,7 +87,7 @@ public class WarsPlugin extends JavaPlugin {
         return schematicDataHashMap.get(buildingName);
     }
 
-    public InventoryHandler getInventoryHandler(String building) {
+    public InventoryHandler getBuildingInventoryHandler() {
         return buildingInventoryHandler;
     }
 

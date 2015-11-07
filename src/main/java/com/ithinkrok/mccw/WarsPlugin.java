@@ -6,10 +6,8 @@ import com.ithinkrok.mccw.data.SchematicData;
 import com.ithinkrok.mccw.data.TeamInfo;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
-import com.ithinkrok.mccw.inventory.BaseInventory;
-import com.ithinkrok.mccw.inventory.ChurchInventory;
-import com.ithinkrok.mccw.inventory.FarmInventory;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
+import com.ithinkrok.mccw.inventory.OmniInventory;
 import com.ithinkrok.mccw.playerclass.GeneralClass;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.mccw.playerclass.ScoutClass;
@@ -44,7 +42,9 @@ public class WarsPlugin extends JavaPlugin {
     private HashMap<String, SchematicData> schematicDataHashMap = new HashMap<>();
     private List<BuildingInfo> buildings = new ArrayList<>();
     private HashMap<Location, BuildingInfo> buildingCentres = new HashMap<>();
-    private HashMap<String, InventoryHandler> buildingInventories = new HashMap<>();
+
+    private OmniInventory buildingInventoryHandler;
+
     private EnumMap<PlayerClass, PlayerClassHandler> classHandlerEnumMap = new EnumMap<>(PlayerClass.class);
     private Random random = new Random();
 
@@ -77,9 +77,7 @@ public class WarsPlugin extends JavaPlugin {
         schematicDataHashMap.put(Buildings.CATHEDRAL, new SchematicData(Buildings.CATHEDRAL, getConfig()));
         schematicDataHashMap.put(Buildings.GREENHOUSE, new SchematicData(Buildings.GREENHOUSE, getConfig()));
 
-        buildingInventories.put(Buildings.BASE, new BaseInventory());
-        buildingInventories.put(Buildings.FARM, new FarmInventory(getConfig()));
-        buildingInventories.put(Buildings.CHURCH, new ChurchInventory(this, getConfig()));
+        buildingInventoryHandler = new OmniInventory(this, getConfig());
 
         classHandlerEnumMap.put(PlayerClass.GENERAL, new GeneralClass(getConfig()));
         classHandlerEnumMap.put(PlayerClass.SCOUT, new ScoutClass(this, getConfig()));
@@ -90,7 +88,7 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public InventoryHandler getInventoryHandler(String building) {
-        return buildingInventories.get(building);
+        return buildingInventoryHandler;
     }
 
     public void setPlayerInfo(Player player, PlayerInfo playerInfo) {

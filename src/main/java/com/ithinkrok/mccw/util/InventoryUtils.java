@@ -26,7 +26,7 @@ public class InventoryUtils {
     public static ItemStack addPrice(ItemStack item, int cost, boolean team) {
         ItemMeta im = item.getItemMeta();
 
-        String teamText = ChatColor.GRAY + "(" + ChatColor.GOLD + (team ? " Team Money" : " Player Money") +
+        String teamText = ChatColor.GRAY + " (" + ChatColor.GOLD + (team ? "Team Money" : "Player Money") +
                 ChatColor.GRAY + ")";
 
         List<String> lore;

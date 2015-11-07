@@ -37,7 +37,7 @@ import java.util.*;
 public class WarsPlugin extends JavaPlugin {
 
     public static final String CHAT_PREFIX =
-            ChatColor.GRAY + "[" + ChatColor.DARK_AQUA + "ColonyWars" + ChatColor.GRAY + "]" + ChatColor.YELLOW;
+            ChatColor.GRAY + "[" + ChatColor.DARK_AQUA + "ColonyWars" + ChatColor.GRAY + "] " + ChatColor.YELLOW;
 
     private HashMap<UUID, PlayerInfo> playerInfoHashMap = new HashMap<>();
     private EnumMap<TeamColor, TeamInfo> teamInfoEnumMap = new EnumMap<>(TeamColor.class);

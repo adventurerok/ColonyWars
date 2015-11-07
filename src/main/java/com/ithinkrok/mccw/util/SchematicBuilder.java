@@ -118,7 +118,9 @@ public class SchematicBuilder {
     }
 
     private static class SchematicRotation {
-        byte[] blocks, data;
+        byte[] blocks;
+        byte[] data;
+        private int rotation;
         boolean xzSwap = false;
         boolean xFlip = false;
         boolean zFlip = false;
@@ -135,10 +137,15 @@ public class SchematicBuilder {
             this.offsetZ = offsetZ;
             this.blocks = blocks;
             this.data = data;
+            this.rotation = rotation;
 
             if (rotation == 1 || rotation == 3) xzSwap = true;
             if (rotation == 2 || rotation == 3) xFlip = true;
             if (rotation == 1 || rotation == 2) zFlip = true;
+        }
+
+        public int getRotation() {
+            return rotation;
         }
 
         public int getBlock(int x, int y, int z) {
@@ -262,7 +269,9 @@ public class SchematicBuilder {
                     bData = buildingInfo.getTeamColor().dyeColor.getWoolData();
 
                 block.setTypeId(bId);
-                block.setData(bData);
+
+
+                block.setData(rotateData(Material.getMaterial(bId), schem.getRotation(), bData));
 
                 loc.getWorld().playEffect(loc, Effect.STEP_SOUND, bId);
 
@@ -291,5 +300,32 @@ public class SchematicBuilder {
         public void schedule(Plugin plugin) {
             taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, 1, 1);
         }
+    }
+
+    private static byte rotateData(Material type, int rotation, byte data){
+        switch(type){
+            case ACACIA_STAIRS:
+            case BIRCH_WOOD_STAIRS:
+            case BRICK_STAIRS:
+            case COBBLESTONE_STAIRS:
+            case DARK_OAK_STAIRS:
+            case JUNGLE_WOOD_STAIRS:
+            case NETHER_BRICK_STAIRS:
+            case QUARTZ_STAIRS:
+            case RED_SANDSTONE_STAIRS:
+            case SANDSTONE_STAIRS:
+            case SMOOTH_STAIRS:
+            case SPRUCE_WOOD_STAIRS:
+            case WOOD_STAIRS:
+                return (byte) ((data & 0x4) | Facing.rotateStairs(data & 3, rotation));
+            case LADDER:
+            case CHEST:
+            case TRAPPED_CHEST:
+            case FURNACE:
+                return (byte) Facing.rotateLadderFurnaceChest(data, rotation);
+            default:
+                return data;
+        }
+
     }
 }

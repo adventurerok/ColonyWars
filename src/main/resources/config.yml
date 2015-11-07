@@ -14,11 +14,11 @@ buildings:
     Farm: 0
     Lumbermill: 0
     Blacksmith: 3
-    MageTower: 0
-    Church: 0
+    MageTower: 2
+    Church: 3
     #Cathedral should always be 0 so that it is built in the same rotation as the church
     Cathedral: 0
-    Greenhouse: 0
+    Greenhouse: 3
 
 costs:
   buildings:

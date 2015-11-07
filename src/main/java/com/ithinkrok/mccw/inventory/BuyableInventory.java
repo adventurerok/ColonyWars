@@ -91,6 +91,8 @@ public class BuyableInventory implements InventoryHandler {
             return;
         }
 
+        item.prePurchase(event);
+
         if (item.buyWithTeamMoney()) {
             InventoryUtils.payWithTeamCash(item.getCost(), teamInfo, playerInfo);
         } else playerInfo.subtractPlayerCash(item.getCost());

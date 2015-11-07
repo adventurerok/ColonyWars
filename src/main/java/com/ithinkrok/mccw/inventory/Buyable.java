@@ -48,4 +48,8 @@ public abstract class Buyable {
 
     public abstract void onPurchase(ItemPurchaseEvent event);
     public abstract boolean canBuy(ItemPurchaseEvent event);
+
+    public void prePurchase(ItemPurchaseEvent event){
+
+    }
 }

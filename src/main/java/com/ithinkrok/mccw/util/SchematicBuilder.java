@@ -268,10 +268,7 @@ public class SchematicBuilder {
                 else if (bId == Material.STAINED_CLAY.getId())
                     bData = buildingInfo.getTeamColor().dyeColor.getWoolData();
 
-                block.setTypeId(bId);
-
-
-                block.setData(rotateData(Material.getMaterial(bId), schem.getRotation(), bData));
+                block.setTypeIdAndData(bId, rotateData(Material.getMaterial(bId), schem.getRotation(), bData), false);
 
                 loc.getWorld().playEffect(loc, Effect.STEP_SOUND, bId);
 

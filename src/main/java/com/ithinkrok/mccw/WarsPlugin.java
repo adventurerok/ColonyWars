@@ -64,14 +64,19 @@ public class WarsPlugin extends JavaPlugin {
             teamInfoEnumMap.put(c, new TeamInfo(this, c));
         }
 
-        schematicDataHashMap.put(Buildings.BASE, new SchematicData(Buildings.BASE, "mccw_base.schematic"));
-        schematicDataHashMap.put(Buildings.FARM, new SchematicData(Buildings.FARM, "mccw_farm.schematic"));
-        schematicDataHashMap.put(Buildings.BLACKSMITH, new SchematicData(Buildings.BLACKSMITH, "mccw_blacksmith.schematic"));
-        schematicDataHashMap.put(Buildings.MAGETOWER, new SchematicData(Buildings.MAGETOWER, "mccw_magetower.schematic"));
-        schematicDataHashMap.put(Buildings.LUMBERMILL, new SchematicData(Buildings.LUMBERMILL, "mccw_lumbermill.schematic"));
-        schematicDataHashMap.put(Buildings.CHURCH, new SchematicData(Buildings.CHURCH, "mccw_church.schematic"));
-        schematicDataHashMap.put(Buildings.CATHEDRAL, new SchematicData(Buildings.CATHEDRAL, "mccw_cathedral.schematic"));
-        schematicDataHashMap.put(Buildings.GREENHOUSE, new SchematicData(Buildings.GREENHOUSE, "mccw_greenhouse.schematic"));
+        schematicDataHashMap.put(Buildings.BASE, new SchematicData(Buildings.BASE, "mccw_base.schematic", 0));
+        schematicDataHashMap.put(Buildings.FARM, new SchematicData(Buildings.FARM, "mccw_farm.schematic", 0));
+        schematicDataHashMap
+                .put(Buildings.BLACKSMITH, new SchematicData(Buildings.BLACKSMITH, "mccw_blacksmith.schematic", 3));
+        schematicDataHashMap
+                .put(Buildings.MAGETOWER, new SchematicData(Buildings.MAGETOWER, "mccw_magetower.schematic", 0));
+        schematicDataHashMap
+                .put(Buildings.LUMBERMILL, new SchematicData(Buildings.LUMBERMILL, "mccw_lumbermill.schematic", 0));
+        schematicDataHashMap.put(Buildings.CHURCH, new SchematicData(Buildings.CHURCH, "mccw_church.schematic", 0));
+        schematicDataHashMap
+                .put(Buildings.CATHEDRAL, new SchematicData(Buildings.CATHEDRAL, "mccw_cathedral.schematic", 0));
+        schematicDataHashMap
+                .put(Buildings.GREENHOUSE, new SchematicData(Buildings.GREENHOUSE, "mccw_greenhouse.schematic", 0));
 
         buildingInventories.put(Buildings.BASE, new BaseInventory());
         buildingInventories.put(Buildings.FARM, new FarmInventory(getConfig()));
@@ -104,7 +109,7 @@ public class WarsPlugin extends JavaPlugin {
         if (buildingInfo.getCenterBlock() != null) buildingCentres.put(buildingInfo.getCenterBlock(), buildingInfo);
     }
 
-    public void finishBuilding(BuildingInfo buildingInfo){
+    public void finishBuilding(BuildingInfo buildingInfo) {
         if (getTeamInfo(buildingInfo.getTeamColor()).getBuildingCount(buildingInfo.getBuildingName()) == 0) {
             for (PlayerInfo info : playerInfoHashMap.values()) {
                 if (info.getTeamColor() != buildingInfo.getTeamColor()) continue;

@@ -8,12 +8,14 @@ import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
+import com.ithinkrok.mccw.util.Facing;
 import com.ithinkrok.mccw.util.SchematicBuilder;
 import com.ithinkrok.mccw.util.TreeFeller;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -111,11 +113,12 @@ public class WarsListener implements Listener {
             return;
         }
 
+        int rotation = Facing.getFacing(event.getPlayer().getLocation().getYaw());
 
         PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
 
-        if (!SchematicBuilder
-                .buildSchematic(plugin, schematicData, event.getBlock().getLocation(), playerInfo.getTeamColor())) {
+        if (!SchematicBuilder.buildSchematic(plugin, schematicData, event.getBlock().getLocation(), rotation,
+                playerInfo.getTeamColor())) {
             event.setCancelled(true);
             event.getPlayer().sendMessage("You cannot build that here!");
         }

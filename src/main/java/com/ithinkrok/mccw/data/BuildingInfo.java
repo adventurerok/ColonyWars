@@ -26,13 +26,19 @@ public class BuildingInfo {
     private Vector minBB;
     private Vector maxBB;
     private boolean finished;
+    private int rotation;
 
-    public BuildingInfo(WarsPlugin plugin, String buildingName, TeamColor teamColor, Location centerBlock,
+    public int getRotation() {
+        return rotation;
+    }
+
+    public BuildingInfo(WarsPlugin plugin, String buildingName, TeamColor teamColor, Location centerBlock, int rotation,
                         List<Location> buildingBlocks) {
         this.plugin = plugin;
         this.buildingName = buildingName;
         this.teamColor = teamColor;
         this.centerBlock = centerBlock;
+        this.rotation = rotation;
         this.buildingBlocks = buildingBlocks;
         
         Vector minBB = new Vector(centerBlock.getX(), centerBlock.getY(), centerBlock.getZ());

@@ -30,13 +30,15 @@ public class SchematicBuilder {
 
     private static final DecimalFormat percentFormat = new DecimalFormat("00%");
 
-    public static boolean pasteSchematic(WarsPlugin plugin, SchematicData schemData, Location loc,
+    public static boolean pasteSchematic(WarsPlugin plugin, SchematicData schemData, Location loc, int rotation,
                                          TeamColor teamColor) {
-        return doSchematic(plugin, schemData, loc, teamColor, true);
+        return doSchematic(plugin, schemData, loc, teamColor, rotation, true);
     }
 
     private static boolean doSchematic(WarsPlugin plugin, SchematicData schemData, Location loc, TeamColor teamColor,
-                                       boolean instant) {
+                                       int rotation, boolean instant) {
+
+        rotation = (rotation + schemData.getBaseRotation()) % 4;
 
         File schemFile = new File(plugin.getDataFolder(), schemData.getSchematicFile());
 
@@ -55,7 +57,7 @@ public class SchematicBuilder {
             byte[] data = ((ByteArrayTag) nbt.get("Data")).getValue();
 
             SchematicRotation schem =
-                    new SchematicRotation(width, height, length, offsetX, offsetY, offsetZ, blocks, data, 0);
+                    new SchematicRotation(width, height, length, offsetX, offsetY, offsetZ, blocks, data, rotation);
 
             Vector[] bounds = schem.calcBounds(loc);
 
@@ -89,7 +91,7 @@ public class SchematicBuilder {
             });
 
             BuildingInfo result =
-                    new BuildingInfo(plugin, schemData.getBuildingName(), teamColor, centerBlock, locations);
+                    new BuildingInfo(plugin, schemData.getBuildingName(), teamColor, centerBlock,rotation, locations);
 
             plugin.addBuilding(result);
 
@@ -110,9 +112,9 @@ public class SchematicBuilder {
 
     }
 
-    public static boolean buildSchematic(WarsPlugin plugin, SchematicData schemData, Location loc,
+    public static boolean buildSchematic(WarsPlugin plugin, SchematicData schemData, Location loc, int rotation,
                                          TeamColor teamColor) {
-        return doSchematic(plugin, schemData, loc, teamColor, false);
+        return doSchematic(plugin, schemData, loc, teamColor, rotation, false);
     }
 
     private static class SchematicRotation {

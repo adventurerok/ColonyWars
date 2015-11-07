@@ -36,6 +36,10 @@ costs:
     bakedPotato: 6
     cookedBeef: 10
     goldenApple: 125
+  church:
+    healingPotion32: 1250
+  cathedral:
+    healingPotion32: 500
   scout:
     sharpness1: 1350
     sharpness2: 1600

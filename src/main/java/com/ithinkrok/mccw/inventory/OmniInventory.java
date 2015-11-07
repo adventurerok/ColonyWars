@@ -7,6 +7,8 @@ import com.ithinkrok.mccw.util.SchematicBuilder;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +30,26 @@ public class OmniInventory extends BuyableInventory {
         addBaseItems(result, config);
         addFarmItems(result, config);
         addChurchItems(result, plugin, config);
+        addCathedralItems(result, config);
 
         return result;
+    }
+
+    private static void addBaseItems(List<Buyable> result, FileConfiguration config) {
+        int farmCost = config.getInt("costs.buildings." + Buildings.FARM);
+        int lumbermillCost = config.getInt("costs.buildings." + Buildings.LUMBERMILL);
+        int blacksmithCost = config.getInt("costs.buildings." + Buildings.BLACKSMITH);
+        int magetowerCost = config.getInt("costs.buildings." + Buildings.MAGETOWER);
+        int churchCost = config.getInt("costs.buildings." + Buildings.CHURCH);
+        int greenhouseCost = config.getInt("costs.buildings." + Buildings.GREENHOUSE);
+
+        result.add(new BuildingBuyable(Buildings.FARM, Buildings.BASE, farmCost));
+        result.add(new BuildingBuyableWithFarm(Buildings.LUMBERMILL, Buildings.BASE, lumbermillCost));
+        result.add(new BuildingBuyableWithFarm(Buildings.BLACKSMITH, Buildings.BASE, blacksmithCost));
+        result.add(new BuildingBuyableWithFarm(Buildings.MAGETOWER, Buildings.BASE, magetowerCost));
+        result.add(new BuildingBuyableWithFarm(Buildings.CHURCH, Buildings.BASE, churchCost));
+        result.add(new BuildingBuyableWithFarm(Buildings.GREENHOUSE, Buildings.BASE, greenhouseCost));
+
     }
 
     private static void addFarmItems(List<Buyable> result, FileConfiguration config) {
@@ -86,23 +106,14 @@ public class OmniInventory extends BuyableInventory {
                 return true;
             }
         });
+
+        result.add(new ItemBuyable(InventoryUtils.createPotion(PotionType.INSTANT_HEAL, 1, true, false, 32),
+                Buildings.CHURCH, config.getInt("costs.church.healingPotion32"), true));
     }
 
-    private static void addBaseItems(List<Buyable> result, FileConfiguration config) {
-        int farmCost = config.getInt("costs.buildings." + Buildings.FARM);
-        int lumbermillCost = config.getInt("costs.buildings." + Buildings.LUMBERMILL);
-        int blacksmithCost = config.getInt("costs.buildings." + Buildings.BLACKSMITH);
-        int magetowerCost = config.getInt("costs.buildings." + Buildings.MAGETOWER);
-        int churchCost = config.getInt("costs.buildings." + Buildings.CHURCH);
-        int greenhouseCost = config.getInt("costs.buildings." + Buildings.GREENHOUSE);
-
-        result.add(new BuildingBuyable(Buildings.FARM, Buildings.BASE, farmCost));
-        result.add(new BuildingBuyableWithFarm(Buildings.LUMBERMILL, Buildings.BASE, lumbermillCost));
-        result.add(new BuildingBuyableWithFarm(Buildings.BLACKSMITH, Buildings.BASE, blacksmithCost));
-        result.add(new BuildingBuyableWithFarm(Buildings.MAGETOWER, Buildings.BASE, magetowerCost));
-        result.add(new BuildingBuyableWithFarm(Buildings.CHURCH, Buildings.BASE, churchCost));
-        result.add(new BuildingBuyableWithFarm(Buildings.GREENHOUSE, Buildings.BASE, greenhouseCost));
-
+    private static void addCathedralItems(List<Buyable> result, FileConfiguration config) {
+        result.add(new ItemBuyable(InventoryUtils.createPotion(PotionType.INSTANT_HEAL, 1, true, false, 32),
+                Buildings.CATHEDRAL, config.getInt("costs.cathedral.healingPotion32"), true));
     }
 
     private static class BuildingBuyableWithFarm extends BuildingBuyable {

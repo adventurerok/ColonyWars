@@ -11,6 +11,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,6 +52,14 @@ public class InventoryUtils {
         }
 
         return item;
+    }
+
+    public static ItemStack createPotion(PotionType type, int level, boolean splash, boolean extended, int amount){
+        Potion pot = new Potion(type, level);
+        pot.setSplash(splash);
+        pot.setHasExtendedDuration(extended);
+
+        return pot.toItemStack(amount);
     }
 
     public static ItemStack setItemNameAndLore(ItemStack item, String name, String... lore) {

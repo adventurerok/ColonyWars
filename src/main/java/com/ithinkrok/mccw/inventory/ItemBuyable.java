@@ -17,7 +17,7 @@ public class ItemBuyable extends Buyable {
     private String upgradeToken;
 
     public ItemBuyable(ItemStack display, String buildingName, int cost, boolean allowMultiple) {
-        this(display, display, buildingName, cost, false, allowMultiple);
+        this(display, display.clone(), buildingName, cost, false, allowMultiple);
     }
 
     public ItemBuyable(ItemStack display, ItemStack purchase, String buildingName, int cost, boolean team,

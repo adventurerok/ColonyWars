@@ -42,6 +42,7 @@ costs:
     knockback1: 1350
     knockback2: 1600
     compass: 400
+    regen: 1600
   general:
     sword1: 1350
     sword2: 1600

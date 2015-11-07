@@ -26,13 +26,14 @@ public class InventoryUtils {
     public static ItemStack addPrice(ItemStack item, int cost, boolean team) {
         ItemMeta im = item.getItemMeta();
 
-        String teamText = team ? " (Team Money)" : " (Player Money)";
+        String teamText = ChatColor.GRAY + "(" + ChatColor.GOLD + (team ? " Team Money" : " Player Money") +
+                ChatColor.GRAY + ")";
 
         List<String> lore;
         if (im.hasLore()) lore = im.getLore();
         else lore = new ArrayList<>();
 
-        lore.add("Cost: " + cost + teamText);
+        lore.add(ChatColor.GRAY + "Cost: " + ChatColor.GREEN + "$" + cost + teamText);
         im.setLore(lore);
 
         item.setItemMeta(im);

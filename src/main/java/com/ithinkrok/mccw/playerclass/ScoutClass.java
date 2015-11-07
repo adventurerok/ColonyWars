@@ -44,9 +44,8 @@ public class ScoutClass extends BuyableInventory implements PlayerClassHandler {
                 .createItemWithNameAndLore(Material.COMPASS, 1, 0, "Player Compass",
                         "Locates the closest enemy player"), Buildings.CHURCH, config.getInt("costs.scout.compass"),
                 "compass", 1), new UpgradeBuyable(InventoryUtils
-                .createItemWithNameAndLore(Material.COMPASS, 1, 0, "Player Compass",
-                        "Locates the closest enemy player"), Buildings.CATHEDRAL, config.getInt("costs.scout.compass"),
-                "compass", 1));
+                .createItemWithNameAndLore(Material.CHAINMAIL_HELMET, 1, 0, "Regeneration Ability 2",
+                        "Cooldown: 45 seconds"), Buildings.MAGETOWER, config.getInt("costs.scout.regen"), "regen", 1));
         this.plugin = plugin;
     }
 
@@ -57,8 +56,12 @@ public class ScoutClass extends BuyableInventory implements PlayerClassHandler {
         switch (buildingName) {
             case Buildings.LUMBERMILL:
                 inv.addItem(new ItemStack(Material.WOOD_SWORD));
-
                 break;
+            case Buildings.MAGETOWER:
+                inv.addItem(InventoryUtils
+                        .createItemWithNameAndLore(Material.CHAINMAIL_HELMET, 1, 0, "Regeneration Ability",
+                                "Cooldown: 35 seconds"));
+
         }
     }
 
@@ -76,6 +79,15 @@ public class ScoutClass extends BuyableInventory implements PlayerClassHandler {
             case COMPASS:
                 TeamColor exclude = plugin.getPlayerInfo(event.getPlayer()).getTeamColor();
                 plugin.updateScoutCompass(item, event.getPlayer(), exclude);
+                break;
+            case CHAINMAIL_HELMET:
+                PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
+                if (!playerInfo.startCoolDown("regen", 35 + 10 * playerInfo.getUpgradeLevel("regen"),
+                        "Your regeneration ability has cooled down!")) return;
+
+                event.getPlayer().addPotionEffect(
+                        new PotionEffect(PotionEffectType.REGENERATION, 200, playerInfo.getUpgradeLevel("regen")));
+
                 break;
         }
 
@@ -98,6 +110,12 @@ public class ScoutClass extends BuyableInventory implements PlayerClassHandler {
                 playerInfo.getPlayer().getInventory().addItem(InventoryUtils
                         .createItemWithNameAndLore(Material.COMPASS, 1, 0, "Player Compass", "Oriented at: No One"));
                 break;
+            case "regen":
+                ItemStack regen = InventoryUtils
+                        .createItemWithNameAndLore(Material.CHAINMAIL_HELMET, 1, 0, "Regeneration Ability",
+                                "Cooldown: 45 seconds");
+
+                InventoryUtils.replaceItem(playerInfo.getPlayer().getInventory(), regen);
         }
     }
 }

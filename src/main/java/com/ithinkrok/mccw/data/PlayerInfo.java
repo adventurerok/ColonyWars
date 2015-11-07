@@ -5,10 +5,7 @@ import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -37,6 +34,7 @@ public class PlayerInfo {
     private PlayerClass playerClass;
 
     private HashMap<String, Integer> upgradeLevels = new HashMap<>();
+    private HashMap<String, Boolean> coolingDown = new HashMap<>();
 
     private int playerCash = 0;
 
@@ -75,6 +73,35 @@ public class PlayerInfo {
         upgradeLevels.put(upgrade, level);
 
         plugin.onPlayerUpgrade(this, upgrade, level);
+    }
+
+    public boolean isCoolingDown(String ability){
+        Boolean b = coolingDown.get(ability);
+
+        if(b == null) return false;
+        return b;
+    }
+
+    public boolean startCoolDown(String ability, int seconds, String coolDownMessage){
+        if(isCoolingDown(ability)){
+            message(ChatColor.RED + "Please wait for this ability to cool down!");
+            return false;
+        }
+
+        coolingDown.put(ability, true);
+
+        Bukkit.getScheduler().runTaskLater(plugin, () -> stopCoolDown(ability, coolDownMessage), seconds * 20);
+
+        return true;
+    }
+
+    public void stopCoolDown(String ability, String message){
+        if(!isCoolingDown(ability)) return;
+
+        coolingDown.put(ability, false);
+
+        message(ChatColor.GREEN + message);
+        player.playSound(player.getLocation(), Sound.ZOMBIE_UNFECT, 1.0f, 2.0f);
     }
 
     public boolean subtractPlayerCash(int cash){

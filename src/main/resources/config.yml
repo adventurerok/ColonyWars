@@ -1,4 +1,25 @@
 
+buildings:
+  schematics:
+    Base: "mccw_base.schematic"
+    Farm: "mccw_farm.schematic"
+    Lumbermill: "mccw_lumbermill.schematic"
+    Blacksmith: "mccw_blacksmith.schematic"
+    MageTower: "mccw_magetower.schematic"
+    Church: "mccw_church.schematic"
+    Cathedral: "mccw_cathedral.schematic"
+    Greenhouse: "mccw_greenhouse.schematic"
+  rotations:
+    Base: 0
+    Farm: 0
+    Lumbermill: 0
+    Blacksmith: 3
+    MageTower: 0
+    Church: 0
+    #Cathedral should always be 0 so that it is built in the same rotation as the church
+    Cathedral: 0
+    Greenhouse: 0
+
 costs:
   buildings:
     Farm: 2000

@@ -7,9 +7,8 @@ import com.ithinkrok.mccw.inventory.BuyableInventory;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import org.bukkit.*;
+import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -93,8 +92,16 @@ public class CloakerClass extends BuyableInventory implements PlayerClassHandler
         event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, cloak * 20, 1, false, true), true);
 
         final int finalCooldown = cooldown;
+
+        final int swirlTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+            Location loc = playerInfo.getPlayer().getLocation();
+
+            loc.getWorld().playEffect(loc, Effect.SMOKE, BlockFace.SELF);
+        }, 20, 20);
+
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             plugin.decloak(event.getPlayer());
+            Bukkit.getScheduler().cancelTask(swirlTask);
             playerInfo.message(ChatColor.RED + "Your cloak has run out!");
             playerInfo.startCoolDown("cloak", finalCooldown, "Your cloak has cooled down!");
             event.getPlayer()

@@ -34,7 +34,7 @@ public class ChurchInventory extends BuyableInventory {
                 if (!SchematicBuilder.buildSchematic(plugin, plugin.getSchematicData(Buildings.CATHEDRAL),
                         event.getBuildingInfo().getCenterBlock(), event.getBuildingInfo().getRotation(),
                         event.getBuildingInfo().getTeamColor())) {
-                    event.getPlayer().sendMessage("We failed to build a cathedral here. Have the block yourself " +
+                    event.getPlayerInfo().message("We failed to build a cathedral here. Have the block yourself " +
                             "to find a better place!");
 
                     event.getPlayerInventory().addItem(InventoryUtils

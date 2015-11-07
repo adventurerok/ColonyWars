@@ -2,6 +2,7 @@ package com.ithinkrok.mccw.util;
 
 import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.TeamInfo;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
@@ -17,7 +18,7 @@ import java.util.List;
 
 /**
  * Created by paul on 03/11/15.
- *
+ * <p>
  * Utility class for inventories
  */
 public class InventoryUtils {
@@ -37,24 +38,6 @@ public class InventoryUtils {
         item.setItemMeta(im);
 
         return item;
-    }
-
-    public static ItemStack createShopItemWithEnchantments(Material mat, int amount, int damage, String name,
-                                                           String desc, int cost, boolean team,
-                                                           Object... enchantments) {
-        ItemStack stack = createShopItem(mat, amount, damage, name, desc, cost, team);
-
-        return enchantItem(stack, enchantments);
-    }
-
-    public static ItemStack createShopItem(Material mat, int amount, int damage, String name, String desc, int cost,
-                                           boolean team) {
-        ItemStack stack = new ItemStack(mat, amount, (short) damage);
-
-        String teamText = team ? " (Team Money)" : " (Player Money)";
-
-        if (desc != null) return setItemNameAndLore(stack, name, desc, "Cost: " + cost + teamText);
-        else return setItemNameAndLore(stack, name, "Cost: " + cost + teamText);
     }
 
     public static ItemStack enchantItem(ItemStack item, Object... enchantments) {
@@ -79,7 +62,7 @@ public class InventoryUtils {
     public static ItemStack createItemWithEnchantments(Material mat, int amount, int damage, String name, String desc,
                                                        Object... enchantments) {
         ItemStack stack;
-        if(desc != null) stack = createItemWithNameAndLore(mat, amount, damage, name, desc);
+        if (desc != null) stack = createItemWithNameAndLore(mat, amount, damage, name, desc);
         else stack = createItemWithNameAndLore(mat, amount, damage, name);
 
         return enchantItem(stack, enchantments);
@@ -92,18 +75,6 @@ public class InventoryUtils {
         return setItemNameAndLore(stack, name, lore);
     }
 
-    public static boolean checkUpgradeAndTryCharge(PlayerInfo playerInfo, int cost, String upgradeName, int level) {
-        if (playerInfo.getUpgradeLevel(upgradeName) >= level) {
-            playerInfo.getPlayer().sendMessage("You already have that upgrade");
-            return false;
-        } else if (!playerInfo.subtractPlayerCash(cost)) {
-            playerInfo.getPlayer().sendMessage("You don't have that amount of money!");
-            return false;
-        }
-
-        return true;
-    }
-
     public static boolean payWithTeamCash(int amount, TeamInfo teamInfo, PlayerInfo playerInfo) {
         int teamAmount = Math.min(teamInfo.getTeamCash(), amount);
         int playerAmount = amount - teamAmount;
@@ -112,7 +83,8 @@ public class InventoryUtils {
 
         teamInfo.subtractTeamCash(teamAmount);
 
-        if (playerAmount > 0) playerInfo.getPlayer().sendMessage("Payed " + playerAmount + " using your own money.");
+        if (playerAmount > 0) playerInfo.message("Paid " + ChatColor.RED + "$" + playerAmount +
+                ChatColor.YELLOW + " using your own money as your Team did not have enough!");
 
         return true;
     }

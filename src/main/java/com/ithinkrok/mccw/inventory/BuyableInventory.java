@@ -59,8 +59,7 @@ public class BuyableInventory implements InventoryHandler {
             }
         } else {
             if (!playerInfo.hasPlayerCash(item.getCost())) {
-                playerInfo.getPlayer()
-                        .sendMessage(ChatColor.RED + "You do not have enough money to purchase this item!");
+                playerInfo.message(ChatColor.RED + "You do not have enough money to purchase this item!");
                 return;
             }
         }
@@ -79,8 +78,7 @@ public class BuyableInventory implements InventoryHandler {
             }
 
             if (freeSlots < requiredSlots) {
-                playerInfo.getPlayer().sendMessage(ChatColor.RED + "You do not have enough free slots in your " +
-                        "inventory!");
+                playerInfo.message(ChatColor.RED + "You do not have enough free slots in your inventory!");
                 return;
             }
         }
@@ -88,7 +86,7 @@ public class BuyableInventory implements InventoryHandler {
         ItemPurchaseEvent event = new ItemPurchaseEvent(buildingInfo, playerInfo, teamInfo);
 
         if (!item.canBuy(event)) {
-            playerInfo.getPlayer().sendMessage(ChatColor.RED + "You cannot buy this item!");
+            playerInfo.message(ChatColor.RED + "You cannot buy this item!");
             playerInfo.recalculateInventory();
             return;
         }

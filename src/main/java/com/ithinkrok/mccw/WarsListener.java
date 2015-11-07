@@ -11,10 +11,7 @@ import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.mccw.util.Facing;
 import com.ithinkrok.mccw.util.SchematicBuilder;
 import com.ithinkrok.mccw.util.TreeFeller;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -107,20 +104,21 @@ public class WarsListener implements Listener {
         ItemMeta meta = event.getItemInHand().getItemMeta();
         if (!meta.hasDisplayName()) return;
 
+        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
+
         SchematicData schematicData = plugin.getSchematicData(meta.getDisplayName());
         if (schematicData == null) {
-            event.getPlayer().sendMessage("Unknown building!");
+            playerInfo.message(ChatColor.RED + "Unknown building!");
+            event.setCancelled(true);
             return;
         }
 
         int rotation = Facing.getFacing(event.getPlayer().getLocation().getYaw());
 
-        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
-
         if (!SchematicBuilder.buildSchematic(plugin, schematicData, event.getBlock().getLocation(), rotation,
                 playerInfo.getTeamColor())) {
             event.setCancelled(true);
-            event.getPlayer().sendMessage("You cannot build that here!");
+            playerInfo.message(ChatColor.RED + "You cannot build that here!");
         }
     }
 
@@ -135,18 +133,18 @@ public class WarsListener implements Listener {
 
         if (event.getBlock().getType() != Material.OBSIDIAN) return;
 
+        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
+
         BuildingInfo buildingInfo = plugin.getBuildingInfo(event.getBlock().getLocation());
         if (buildingInfo == null) {
             plugin.getLogger().warning("The player destroyed an obsidian block, but it wasn't a building. Odd");
             plugin.getLogger().warning("Obsidian location: " + event.getBlock().getLocation());
-            event.getPlayer().sendMessage("That obsidian block doesn't appear to be part of a building");
+            playerInfo.message(ChatColor.RED + "That obsidian block does not appear to be part of a building");
             return;
         }
 
-        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
-
         if (playerInfo.getTeamColor() == buildingInfo.getTeamColor()) {
-            event.getPlayer().sendMessage("You cannot destroy your own team's buildings!");
+            playerInfo.message(ChatColor.RED + "You cannot destroy your own team's buildings!");
             event.setCancelled(true);
             return;
         }
@@ -213,17 +211,18 @@ public class WarsListener implements Listener {
         if (buildingInfo == null) {
             plugin.getLogger().warning("The player destroyed an obsidian block, but it wasn't a building. Odd");
             plugin.getLogger().warning("Obsidian location: " + event.getClickedBlock().getLocation());
-            event.getPlayer().sendMessage("That obsidian block doesn't appear to be part of a building.");
+            playerInfo.message(ChatColor.RED + "That obsidian block does not appear to be part of a building.");
             return;
         }
 
         if (playerInfo.getTeamColor() != buildingInfo.getTeamColor()) {
-            event.getPlayer().sendMessage("That building does not belong to your team. Mine this block to destroy it!");
+            playerInfo.message("That building does not belong to your team." + ChatColor.BOLD +
+                    "Mine this block to destroy it!");
             return;
         }
 
         if (!buildingInfo.isFinished()) {
-            event.getPlayer().sendMessage("You must wait until the building has finished construction.");
+            playerInfo.message(ChatColor.RED + "You must wait until the building has finished construction.");
             return;
         }
 

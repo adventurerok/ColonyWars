@@ -8,6 +8,7 @@ import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.inventory.OmniInventory;
+import com.ithinkrok.mccw.playerclass.CloakerClass;
 import com.ithinkrok.mccw.playerclass.GeneralClass;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.mccw.playerclass.ScoutClass;
@@ -81,6 +82,7 @@ public class WarsPlugin extends JavaPlugin {
 
         classHandlerEnumMap.put(PlayerClass.GENERAL, new GeneralClass(getConfig()));
         classHandlerEnumMap.put(PlayerClass.SCOUT, new ScoutClass(this, getConfig()));
+        classHandlerEnumMap.put(PlayerClass.CLOAKER, new CloakerClass(this, getConfig()));
     }
 
     public SchematicData getSchematicData(String buildingName) {
@@ -290,5 +292,21 @@ public class WarsPlugin extends JavaPlugin {
         PlayerClassHandler classHandler = getPlayerClassHandler(playerInfo.getPlayerClass());
 
         classHandler.onPlayerUpgrade(playerInfo, upgrade, level);
+    }
+
+    public void cloak(Player player) {
+        for(PlayerInfo p : playerInfoHashMap.values()){
+            if(p.getPlayer() == player) continue;
+
+            p.getPlayer().hidePlayer(player);
+        }
+    }
+
+    public void decloak(Player player) {
+        for(PlayerInfo p : playerInfoHashMap.values()){
+            if(p.getPlayer() == player) continue;
+
+            p.getPlayer().showPlayer(player);
+        }
     }
 }

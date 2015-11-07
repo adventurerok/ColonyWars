@@ -73,7 +73,7 @@ public class PlayerInfo {
 
     public void setUpgradeLevel(String upgrade, int level){
         int oldLevel = getUpgradeLevel(upgrade);
-        if(oldLevel == level) return;
+        if(oldLevel == level && upgradeLevels.containsKey(upgrade)) return;
 
         upgradeLevels.put(upgrade, level);
 
@@ -105,6 +105,7 @@ public class PlayerInfo {
 
         coolingDown.put(ability, false);
 
+        if(message == null) return;
         message(ChatColor.GREEN + message);
         player.playSound(player.getLocation(), Sound.ZOMBIE_UNFECT, 1.0f, 2.0f);
     }

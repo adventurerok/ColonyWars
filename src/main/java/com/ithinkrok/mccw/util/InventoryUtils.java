@@ -35,7 +35,7 @@ public class InventoryUtils {
         if (im.hasLore()) lore = im.getLore();
         else lore = new ArrayList<>();
 
-        lore.add(ChatColor.GRAY + "Cost: " + ChatColor.GREEN + "$" + cost + teamText);
+        lore.add(ChatColor.GRAY + "Cost: " + ChatColor.DARK_AQUA + "$" + cost + teamText);
         im.setLore(lore);
 
         item.setItemMeta(im);

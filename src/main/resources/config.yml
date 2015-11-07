@@ -50,6 +50,9 @@ costs:
   general:
     sword1: 1350
     sword2: 1600
+  cloaker:
+    cloak1: 1350
+    cloak2: 1600
 
 amounts:
   farm:

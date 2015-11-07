@@ -16,6 +16,7 @@ import com.ithinkrok.mccw.playerclass.ScoutClass;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -34,6 +35,9 @@ import java.util.*;
  * The main plugin class for Colony Wars
  */
 public class WarsPlugin extends JavaPlugin {
+
+    public static final String CHAT_PREFIX =
+            ChatColor.GRAY + "[" + ChatColor.DARK_AQUA + "ColonyWars" + ChatColor.GRAY + "]" + ChatColor.YELLOW;
 
     private HashMap<UUID, PlayerInfo> playerInfoHashMap = new HashMap<>();
     private EnumMap<TeamColor, TeamInfo> teamInfoEnumMap = new EnumMap<>(TeamColor.class);

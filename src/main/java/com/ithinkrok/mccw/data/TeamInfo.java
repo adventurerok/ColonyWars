@@ -2,6 +2,7 @@ package com.ithinkrok.mccw.data;
 
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -22,6 +23,12 @@ public class TeamInfo {
     public TeamInfo(WarsPlugin plugin, TeamColor teamColor) {
         this.plugin = plugin;
         this.teamColor = teamColor;
+    }
+
+    public void message(String message){
+        for(Player p : players){
+            p.sendMessage(WarsPlugin.CHAT_PREFIX + message);
+        }
     }
 
     public TeamColor getTeamColor() {
@@ -57,6 +64,9 @@ public class TeamInfo {
         teamCash -= cash;
 
         updatePlayerScoreboards();
+
+        message(ChatColor.RED + "$" + cash + ChatColor.YELLOW + " were deducted from your Team's Account!");
+        message("Your Team's new Balance is: " + ChatColor.GREEN + "$" + teamCash + "!");
 
         return true;
     }

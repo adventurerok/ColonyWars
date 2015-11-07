@@ -1,5 +1,6 @@
 package com.ithinkrok.mccw.enumeration;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 
@@ -10,16 +11,18 @@ import org.bukkit.DyeColor;
  */
 public enum TeamColor {
 
-    RED(Color.RED, DyeColor.RED),
-    BLUE(Color.fromRGB(100, 100, 255), DyeColor.BLUE),
-    GREEN(Color.fromRGB(0, 200, 0), DyeColor.GREEN),
-    YELLOW(Color.fromRGB(200, 200, 0), DyeColor.YELLOW);
+    RED(Color.RED, DyeColor.RED, ChatColor.RED),
+    BLUE(Color.fromRGB(100, 100, 255), DyeColor.BLUE, ChatColor.BLUE),
+    GREEN(Color.fromRGB(0, 200, 0), DyeColor.GREEN, ChatColor.GREEN),
+    YELLOW(Color.fromRGB(200, 200, 0), DyeColor.YELLOW, ChatColor.YELLOW);
 
     public final Color armorColor;
     public final DyeColor dyeColor;
+    public final ChatColor chatColor;
 
-    TeamColor(Color armorColor, DyeColor dyeColor) {
+    TeamColor(Color armorColor, DyeColor dyeColor, ChatColor chatColor) {
         this.armorColor = armorColor;
         this.dyeColor = dyeColor;
+        this.chatColor = chatColor;
     }
 }

@@ -6,6 +6,7 @@ import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -82,7 +83,14 @@ public class PlayerInfo {
 
         updateScoreboard();
 
+        message(ChatColor.RED + "$" + cash + ChatColor.YELLOW + " were deducted from your Account!");
+        message("Your new Balance is: " + ChatColor.GREEN + "$" + playerCash + "!");
+
         return true;
+    }
+
+    public void message(String message){
+        player.sendMessage(WarsPlugin.CHAT_PREFIX + message);
     }
 
     public void recalculateInventory(){
@@ -179,19 +187,23 @@ public class PlayerInfo {
 
         Objective mainObjective = scoreboard.getObjective("main");
         if(mainObjective == null) mainObjective = scoreboard.registerNewObjective("main", "dummy");
-        mainObjective.setDisplayName("Stats:");
+        mainObjective.setDisplayName("Colony Wars");
         mainObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        mainObjective.getScore("Player Money:").setScore(0);
-        mainObjective.getScore("Team Money:").setScore(0);
+        mainObjective.getScore(ChatColor.YELLOW + "Balance:").setScore(0);
+        mainObjective.getScore(ChatColor.YELLOW + "Team Balance:").setScore(0);
     }
 
     public void updateScoreboard(){
         Scoreboard scoreboard = player.getScoreboard();
 
         Objective mainObjective = scoreboard.getObjective("main");
-        mainObjective.getScore("Player Money:").setScore(getPlayerCash());
+        mainObjective.getScore(ChatColor.YELLOW + "Balance:").setScore(getPlayerCash());
 
         TeamInfo teamInfo = plugin.getTeamInfo(teamColor);
-        mainObjective.getScore("Team Money:").setScore(teamInfo.getTeamCash());
+        mainObjective.getScore(ChatColor.YELLOW + "Team Balance:").setScore(teamInfo.getTeamCash());
+    }
+
+    public String getFormattedName() {
+        return teamColor.chatColor + player.getName() + ChatColor.DARK_AQUA;
     }
 }

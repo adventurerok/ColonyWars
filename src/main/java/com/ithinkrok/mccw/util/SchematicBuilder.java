@@ -51,27 +51,27 @@ public class SchematicBuilder {
             int offsetY = ((IntTag) nbt.get("WEOffsetY")).getValue();
             int offsetZ = ((IntTag) nbt.get("WEOffsetZ")).getValue();
 
-            Vector minBB = new Vector(loc.getX() + offsetX, loc.getY() + offsetY, loc.getZ() + offsetZ);
-            Vector maxBB = new Vector(minBB.getX() + width, minBB.getY() + height, minBB.getZ() + length);
-
-            if (!plugin.canBuild(minBB, maxBB)) return false;
-
             byte[] blocks = ((ByteArrayTag) nbt.get("Blocks")).getValue();
             byte[] data = ((ByteArrayTag) nbt.get("Data")).getValue();
+
+            SchematicRotation schem =
+                    new SchematicRotation(width, height, length, offsetX, offsetY, offsetZ, blocks, data, 0);
+
+            Vector[] bounds = schem.calcBounds(loc);
+
+            if (!plugin.canBuild(bounds[0], bounds[1])) return false;
 
             List<Location> locations = new ArrayList<>();
 
             Location centerBlock = null;
 
-            for (int x = 0; x < width; ++x) {
-                for (int y = 0; y < height; ++y) {
-                    for (int z = 0; z < length; ++z) {
-                        int index = width * (y * length + z) + x;
+            for (int x = 0; x < schem.getWidth(); ++x) {
+                for (int y = 0; y < schem.getHeight(); ++y) {
+                    for (int z = 0; z < schem.getLength(); ++z) {
+                        Location l = new Location(loc.getWorld(), x + loc.getX() + schem.getOffsetX(),
+                                y + loc.getY() + schem.getOffsetY(), z + loc.getZ() + schem.getOffsetZ());
 
-                        Location l = new Location(loc.getWorld(), x + loc.getX() + offsetX, y + loc.getY() + offsetY,
-                                z + loc.getZ() + offsetZ);
-
-                        int bId = blocks[index] & 0xFF;
+                        int bId = schem.getBlock(x, y, z);
                         if (bId == 0) continue;
 
                         if (bId == Material.OBSIDIAN.getId()) centerBlock = l;
@@ -93,9 +93,7 @@ public class SchematicBuilder {
 
             plugin.addBuilding(result);
 
-            SchematicBuilderTask task =
-                    new SchematicBuilderTask(plugin, loc, result, width, height, length, offsetX, offsetY, offsetZ,
-                            blocks, data, instant ? -1 : 2);
+            SchematicBuilderTask task = new SchematicBuilderTask(plugin, loc, result, schem, instant ? -1 : 2);
 
             if (!instant) {
                 task.schedule(plugin);
@@ -117,29 +115,16 @@ public class SchematicBuilder {
         return doSchematic(plugin, schemData, loc, teamColor, false);
     }
 
-    private static class SchematicBuilderTask implements Runnable {
-
-        int index = 0;
-        short width;
-        short height;
-        short length;
-        int offsetX, offsetY, offsetZ;
+    private static class SchematicRotation {
         byte[] blocks, data;
-        Location origin;
-        int taskId;
-        Hologram hologram;
-        private BuildingInfo buildingInfo;
-        private WarsPlugin plugin;
-        private int buildSpeed;
+        boolean xzSwap = false;
+        boolean xFlip = false;
+        boolean zFlip = false;
+        private short width, height, length;
+        private int offsetX, offsetY, offsetZ;
 
-        private boolean clearedOrigin = false;
-
-        public SchematicBuilderTask(WarsPlugin plugin, Location origin, BuildingInfo buildingInfo, short width,
-                                    short height, short length, int offsetX, int offsetY, int offsetZ, byte[] blocks,
-                                    byte[] data, int buildSpeed) {
-            this.plugin = plugin;
-            this.origin = origin;
-            this.buildingInfo = buildingInfo;
+        public SchematicRotation(short width, short height, short length, int offsetX, int offsetY, int offsetZ,
+                                 byte[] blocks, byte[] data, int rotation) {
             this.width = width;
             this.height = height;
             this.length = length;
@@ -148,6 +133,92 @@ public class SchematicBuilder {
             this.offsetZ = offsetZ;
             this.blocks = blocks;
             this.data = data;
+
+            if (rotation == 1 || rotation == 3) xzSwap = true;
+            if (rotation == 2 || rotation == 3) xFlip = true;
+            if (rotation == 1 || rotation == 2) zFlip = true;
+        }
+
+        public int getBlock(int x, int y, int z) {
+            return blocks[calcIndex(x, y, z)] & 0xFF;
+        }
+
+        private int calcIndex(int x, int y, int z) {
+            if (xzSwap) {
+                int i = x;
+                x = z;
+                z = i;
+            }
+
+            if (xFlip) x = width - x - 1;
+            if (zFlip) z = length - z - 1;
+
+            return width * (y * length + z) + x;
+        }
+
+        public byte getData(int x, int y, int z) {
+            return data[calcIndex(x, y, z)];
+        }
+
+        public Vector[] calcBounds(Location loc) {
+            Vector minBB = new Vector(loc.getX() + getOffsetX(), loc.getY() + getOffsetY(), loc.getZ() + getOffsetZ());
+            Vector maxBB =
+                    new Vector(minBB.getX() + getWidth(), minBB.getY() + getHeight(), minBB.getZ() + getLength());
+
+            return new Vector[]{minBB, maxBB};
+        }
+
+        public int getOffsetX() {
+            int base = xzSwap ? offsetZ : offsetX;
+
+            if (xFlip) base = 1 - base - getWidth();
+            return base;
+        }
+
+        public int getOffsetY() {
+            return offsetY;
+        }
+
+        public int getOffsetZ() {
+            int base = xzSwap ? offsetX : offsetZ;
+
+            if (zFlip) base = 1 - base - getLength();
+            return base;
+        }
+
+        public short getWidth() {
+            return xzSwap ? length : width;
+        }
+
+        public short getHeight() {
+            return height;
+        }
+
+        public short getLength() {
+            return xzSwap ? width : length;
+        }
+    }
+
+    private static class SchematicBuilderTask implements Runnable {
+
+        int index = 0;
+
+        Location origin;
+        int taskId;
+        Hologram hologram;
+        private BuildingInfo buildingInfo;
+        private SchematicRotation schem;
+        private WarsPlugin plugin;
+        private int buildSpeed;
+
+        private boolean clearedOrigin = false;
+
+        public SchematicBuilderTask(WarsPlugin plugin, Location origin, BuildingInfo buildingInfo,
+                                    SchematicRotation schem, int buildSpeed) {
+            this.plugin = plugin;
+            this.origin = origin;
+            this.buildingInfo = buildingInfo;
+            this.schem = schem;
             this.buildSpeed = buildSpeed;
 
             Location holoLoc;
@@ -174,14 +245,13 @@ public class SchematicBuilder {
             while (index < locations.size()) {
                 Location loc = locations.get(index);
 
-                int x = loc.getBlockX() - origin.getBlockX() - offsetX;
-                int y = loc.getBlockY() - origin.getBlockY() - offsetY;
-                int z = loc.getBlockZ() - origin.getBlockZ() - offsetZ;
+                int x = loc.getBlockX() - origin.getBlockX() - schem.getOffsetX();
+                int y = loc.getBlockY() - origin.getBlockY() - schem.getOffsetY();
+                int z = loc.getBlockZ() - origin.getBlockZ() - schem.getOffsetZ();
 
-                int blockInd = width * (y * length + z) + x;
 
-                int bId = blocks[blockInd] & 0xFF;
-                byte bData = data[blockInd];
+                int bId = schem.getBlock(x, y, z);
+                byte bData = schem.getData(x, y, z);
 
                 Block block = loc.getBlock();
 

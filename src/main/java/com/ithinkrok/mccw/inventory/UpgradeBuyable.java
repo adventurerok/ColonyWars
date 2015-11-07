@@ -13,7 +13,7 @@ public class UpgradeBuyable extends Buyable {
     private int upgradeLevel;
 
     public UpgradeBuyable(ItemStack display, String buildingName, int cost, String upgradeName, int upgradeLevel) {
-        super(display, buildingName, cost, false, 0);
+        super(display, buildingName, cost, false, 1);
 
         this.upgradeName = upgradeName;
         this.upgradeLevel = upgradeLevel;

@@ -40,7 +40,13 @@ public class ScoutClass extends BuyableInventory implements PlayerClassHandler {
                 "knockback", 1), new UpgradeBuyable(InventoryUtils
                 .createItemWithEnchantments(Material.WOOD_SWORD, 1, 0, "Knockback Upgrade 2", null,
                         Enchantment.KNOCKBACK, 2), Buildings.LUMBERMILL, config.getInt("costs.scout.knockback2"),
-                "knockback", 2));
+                "knockback", 2), new UpgradeBuyable(InventoryUtils
+                .createItemWithNameAndLore(Material.COMPASS, 1, 0, "Player Compass",
+                        "Locates the closest enemy player"), Buildings.CHURCH, config.getInt("costs.scout.compass"),
+                "compass", 1), new UpgradeBuyable(InventoryUtils
+                .createItemWithNameAndLore(Material.COMPASS, 1, 0, "Player Compass",
+                        "Locates the closest enemy player"), Buildings.CATHEDRAL, config.getInt("costs.scout.compass"),
+                "compass", 1));
         this.plugin = plugin;
     }
 
@@ -51,8 +57,6 @@ public class ScoutClass extends BuyableInventory implements PlayerClassHandler {
         switch (buildingName) {
             case Buildings.LUMBERMILL:
                 inv.addItem(new ItemStack(Material.WOOD_SWORD));
-                inv.addItem(InventoryUtils
-                        .createItemWithNameAndLore(Material.COMPASS, 1, 0, "Player Compass", "Oriented at: No One"));
 
                 break;
         }
@@ -89,6 +93,10 @@ public class ScoutClass extends BuyableInventory implements PlayerClassHandler {
 
                 InventoryUtils.replaceItem(playerInfo.getPlayer().getInventory(), sword);
 
+                break;
+            case "compass":
+                playerInfo.getPlayer().getInventory().addItem(InventoryUtils
+                        .createItemWithNameAndLore(Material.COMPASS, 1, 0, "Player Compass", "Oriented at: No One"));
                 break;
         }
     }

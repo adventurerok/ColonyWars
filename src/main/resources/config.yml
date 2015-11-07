@@ -41,6 +41,7 @@ costs:
     sharpness2: 1600
     knockback1: 1350
     knockback2: 1600
+    compass: 400
   general:
     sword1: 1350
     sword2: 1600

@@ -18,7 +18,10 @@ public class TeamInfo {
     private WarsPlugin plugin;
     private int teamCash;
 
+    private int buildingsConstructingNow = 0;
+
     private HashMap<String, Integer> buildingCounts = new HashMap<>();
+    private HashMap<String, Integer> buildingNowCounts = new HashMap<>();
 
     public TeamInfo(WarsPlugin plugin, TeamColor teamColor) {
         this.plugin = plugin;
@@ -59,6 +62,10 @@ public class TeamInfo {
         updatePlayerScoreboards();
     }
 
+    public int getTotalBuildingNowCount() {
+        return buildingsConstructingNow;
+    }
+
     public boolean subtractTeamCash(int cash){
         if(cash > teamCash) return false;
         teamCash -= cash;
@@ -83,8 +90,31 @@ public class TeamInfo {
         return integer == null ? 0 : integer;
     }
 
-    public void addBuilding(String buildingType){
+    public int getBuildingNowCount(String buildingType){
+        Integer integer = buildingNowCounts.get(buildingType);
+
+        return integer == null ? 0 : integer;
+    }
+
+    public HashMap<String, Integer> getBuildingNowCounts() {
+        return buildingNowCounts;
+    }
+
+    public void buildingStarted(String buildingType){
+        buildingsConstructingNow += 1;
+
+        buildingNowCounts.put(buildingType, getBuildingNowCount(buildingType) + 1);
+
+        updatePlayerScoreboards();
+    }
+
+    public void buildingFinished(String buildingType){
+        buildingsConstructingNow -= 1;
+        buildingNowCounts.put(buildingType, getBuildingNowCount(buildingType) - 1);
+
         buildingCounts.put(buildingType, getBuildingCount(buildingType) + 1);
+
+        updatePlayerScoreboards();
     }
 
     public void removeBuilding(String buildingType){

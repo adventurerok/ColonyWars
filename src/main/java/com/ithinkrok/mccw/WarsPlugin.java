@@ -104,6 +104,8 @@ public class WarsPlugin extends JavaPlugin {
         buildings.add(buildingInfo);
 
         if (buildingInfo.getCenterBlock() != null) buildingCentres.put(buildingInfo.getCenterBlock(), buildingInfo);
+
+        getTeamInfo(buildingInfo.getTeamColor()).buildingStarted(buildingInfo.getBuildingName());
     }
 
     public void finishBuilding(BuildingInfo buildingInfo) {
@@ -119,7 +121,7 @@ public class WarsPlugin extends JavaPlugin {
             }
         }
 
-        getTeamInfo(buildingInfo.getTeamColor()).addBuilding(buildingInfo.getBuildingName());
+        getTeamInfo(buildingInfo.getTeamColor()).buildingFinished(buildingInfo.getBuildingName());
     }
 
     public TeamInfo getTeamInfo(TeamColor teamColor) {

@@ -18,6 +18,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by paul on 01/11/15.
@@ -218,16 +219,29 @@ public class PlayerInfo {
         mainObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
         mainObjective.getScore(ChatColor.YELLOW + "Balance:").setScore(0);
         mainObjective.getScore(ChatColor.YELLOW + "Team Balance:").setScore(0);
+
+        mainObjective.getScore(ChatColor.GOLD + "Building Now:").setScore(0);
     }
 
     public void updateScoreboard(){
-        Scoreboard scoreboard = player.getScoreboard();
+        Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        player.setScoreboard(scoreboard);
 
         Objective mainObjective = scoreboard.getObjective("main");
+        if(mainObjective == null) mainObjective = scoreboard.registerNewObjective("main", "dummy");
         mainObjective.getScore(ChatColor.YELLOW + "Balance:").setScore(getPlayerCash());
 
         TeamInfo teamInfo = plugin.getTeamInfo(teamColor);
         mainObjective.getScore(ChatColor.YELLOW + "Team Balance:").setScore(teamInfo.getTeamCash());
+
+        mainObjective.getScore(ChatColor.GOLD + "Building Now:").setScore(teamInfo.getTotalBuildingNowCount());
+
+        HashMap<String, Integer> buildingNow = teamInfo.getBuildingNowCounts();
+
+        for(Map.Entry<String, Integer> entry : buildingNow.entrySet()){
+            mainObjective.getScore(ChatColor.GREEN + entry.getKey() + ":").setScore(entry.getValue());
+        }
+
     }
 
     public String getFormattedName() {

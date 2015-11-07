@@ -23,10 +23,11 @@ public class BuildingBuyable extends ItemBuyable {
     }
 
     @Override
-    public void onPurchase(ItemPurchaseEvent event) {
-        super.onPurchase(event);
-
+    public boolean canBuy(ItemPurchaseEvent event) {
         event.getTeamInfo()
                 .message(event.getPlayerInfo().getFormattedName() + " purchased " + ChatColor.WHITE + buildingName);
+
+        return super.canBuy(event);
     }
+
 }

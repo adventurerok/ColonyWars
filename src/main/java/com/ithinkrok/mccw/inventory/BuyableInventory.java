@@ -4,6 +4,7 @@ import com.ithinkrok.mccw.data.BuildingInfo;
 import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.TeamInfo;
 import com.ithinkrok.mccw.util.InventoryUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -15,7 +16,7 @@ import java.util.List;
 
 /**
  * Created by paul on 06/11/15.
- *
+ * <p>
  * A handler for shops that use the buyable system
  */
 public class BuyableInventory implements InventoryHandler {
@@ -23,14 +24,14 @@ public class BuyableInventory implements InventoryHandler {
     private List<Buyable> items = new ArrayList<>();
     private HashMap<ItemStack, Buyable> stackToBuyable = new HashMap<>();
 
-    public BuyableInventory(Buyable...items){
+    public BuyableInventory(Buyable... items) {
         this(Arrays.asList(items));
     }
 
     public BuyableInventory(List<Buyable> items) {
         this.items = items;
 
-        for(Buyable item : items){
+        for (Buyable item : items) {
             stackToBuyable.put(item.getDisplayItemStack(), item);
         }
     }
@@ -40,8 +41,8 @@ public class BuyableInventory implements InventoryHandler {
                                     TeamInfo teamInfo) {
 
         Buyable i = stackToBuyable.get(item);
-        if(i != null){
-            if(!i.getBuildingName().equals(buildingInfo.getBuildingName())) return false;
+        if (i != null) {
+            if (!i.getBuildingName().equals(buildingInfo.getBuildingName())) return false;
             tryBuyItem(i, buildingInfo, playerInfo, teamInfo);
 
             return true;
@@ -51,46 +52,48 @@ public class BuyableInventory implements InventoryHandler {
     }
 
     private void tryBuyItem(Buyable item, BuildingInfo buildingInfo, PlayerInfo playerInfo, TeamInfo teamInfo) {
-        if(item.buyWithTeamMoney()){
+        if (item.buyWithTeamMoney()) {
             if (!InventoryUtils.hasTeamCash(item.getCost(), teamInfo, playerInfo)) {
-                playerInfo.getPlayer().sendMessage("You don't have that amount of money!");
+                playerInfo.message(ChatColor.RED + "Your Team and you do not have enough money to purchase this item!");
                 return;
             }
         } else {
-            if(!playerInfo.hasPlayerCash(item.getCost())){
-                playerInfo.getPlayer().sendMessage("You don't have that amount of money!");
+            if (!playerInfo.hasPlayerCash(item.getCost())) {
+                playerInfo.getPlayer()
+                        .sendMessage(ChatColor.RED + "You do not have enough money to purchase this item!");
                 return;
             }
         }
 
         int requiredSlots = item.getMinFreeSlots();
 
-        if(requiredSlots > 0) {
+        if (requiredSlots > 0) {
             PlayerInventory inventory = playerInfo.getPlayer().getInventory();
             int freeSlots = 0;
 
-            for(int i = 0; i < inventory.getSize(); ++i){
+            for (int i = 0; i < inventory.getSize(); ++i) {
                 ItemStack slot = inventory.getItem(i);
 
-                if(slot != null && slot.getType() != Material.AIR) continue;
+                if (slot != null && slot.getType() != Material.AIR) continue;
                 ++freeSlots;
             }
 
-            if(freeSlots < requiredSlots) {
-                playerInfo.getPlayer().sendMessage("You don't have enough free slots in your inventory!");
+            if (freeSlots < requiredSlots) {
+                playerInfo.getPlayer().sendMessage(ChatColor.RED + "You do not have enough free slots in your " +
+                        "inventory!");
                 return;
             }
         }
 
         ItemPurchaseEvent event = new ItemPurchaseEvent(buildingInfo, playerInfo, teamInfo);
 
-        if(!item.canBuy(event)) {
-            playerInfo.getPlayer().sendMessage("You cannot buy this item.");
+        if (!item.canBuy(event)) {
+            playerInfo.getPlayer().sendMessage(ChatColor.RED + "You cannot buy this item!");
             playerInfo.recalculateInventory();
             return;
         }
 
-        if(item.buyWithTeamMoney()){
+        if (item.buyWithTeamMoney()) {
             InventoryUtils.payWithTeamCash(item.getCost(), teamInfo, playerInfo);
         } else playerInfo.subtractPlayerCash(item.getCost());
 
@@ -101,9 +104,9 @@ public class BuyableInventory implements InventoryHandler {
     @Override
     public void addInventoryItems(List<ItemStack> items, BuildingInfo buildingInfo, PlayerInfo playerInfo,
                                   TeamInfo teamInfo) {
-        for(Buyable buyable : this.items){
-            if(!buyable.getBuildingName().equals(buildingInfo.getBuildingName())) continue;
-            if(!buyable.canBuy(new ItemPurchaseEvent(buildingInfo, playerInfo, teamInfo))) continue;
+        for (Buyable buyable : this.items) {
+            if (!buyable.getBuildingName().equals(buildingInfo.getBuildingName())) continue;
+            if (!buyable.canBuy(new ItemPurchaseEvent(buildingInfo, playerInfo, teamInfo))) continue;
 
             items.add(buyable.getDisplayItemStack());
         }

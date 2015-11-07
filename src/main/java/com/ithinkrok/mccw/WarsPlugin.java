@@ -78,7 +78,7 @@ public class WarsPlugin extends JavaPlugin {
         buildingInventories.put(Buildings.CHURCH, new ChurchInventory(this, getConfig()));
 
         classHandlerEnumMap.put(PlayerClass.GENERAL, new GeneralClass(getConfig()));
-        classHandlerEnumMap.put(PlayerClass.SCOUT, new ScoutClass(this));
+        classHandlerEnumMap.put(PlayerClass.SCOUT, new ScoutClass(this, getConfig()));
     }
 
     public SchematicData getSchematicData(String buildingName) {

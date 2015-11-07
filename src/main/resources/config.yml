@@ -39,6 +39,8 @@ costs:
   scout:
     sharpness1: 1350
     sharpness2: 1600
+    knockback1: 1350
+    knockback2: 1600
   general:
     sword1: 1350
     sword2: 1600

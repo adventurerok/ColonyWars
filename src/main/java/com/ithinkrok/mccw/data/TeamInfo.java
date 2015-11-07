@@ -110,7 +110,10 @@ public class TeamInfo {
 
     public void buildingFinished(String buildingType){
         buildingsConstructingNow -= 1;
-        buildingNowCounts.put(buildingType, getBuildingNowCount(buildingType) - 1);
+
+        int buildingNowOfType = getBuildingNowCount(buildingType) - 1;
+        if(buildingNowOfType > 0) buildingNowCounts.put(buildingType, buildingNowOfType);
+        else buildingNowCounts.remove(buildingType);
 
         buildingCounts.put(buildingType, getBuildingCount(buildingType) + 1);
 

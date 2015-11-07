@@ -37,6 +37,10 @@ public class PlayerInfo {
     private HashMap<String, Integer> upgradeLevels = new HashMap<>();
     private HashMap<String, Boolean> coolingDown = new HashMap<>();
 
+    private List<String> oldBuildingNows = new ArrayList<>();
+
+    private int obj = 0;
+
     private int playerCash = 0;
 
     public PlayerInfo(WarsPlugin plugin, Player player) {
@@ -224,11 +228,10 @@ public class PlayerInfo {
     }
 
     public void updateScoreboard(){
-        Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        player.setScoreboard(scoreboard);
+        Scoreboard scoreboard = player.getScoreboard();
 
         Objective mainObjective = scoreboard.getObjective("main");
-        if(mainObjective == null) mainObjective = scoreboard.registerNewObjective("main", "dummy");
+
         mainObjective.getScore(ChatColor.YELLOW + "Balance:").setScore(getPlayerCash());
 
         TeamInfo teamInfo = plugin.getTeamInfo(teamColor);
@@ -238,9 +241,19 @@ public class PlayerInfo {
 
         HashMap<String, Integer> buildingNow = teamInfo.getBuildingNowCounts();
 
+        for(String s : oldBuildingNows){
+            if(buildingNow.containsKey(s)) continue;
+            mainObjective.getScoreboard().resetScores(ChatColor.GREEN + s + ":");
+        }
+
+        oldBuildingNows.clear();
+
         for(Map.Entry<String, Integer> entry : buildingNow.entrySet()){
             mainObjective.getScore(ChatColor.GREEN + entry.getKey() + ":").setScore(entry.getValue());
+            oldBuildingNows.add(entry.getKey());
         }
+
+        player.setScoreboard(scoreboard);
 
     }
 

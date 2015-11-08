@@ -43,6 +43,16 @@ public class PlayerInfo {
 
     private int playerCash = 0;
 
+    private boolean inGame = false;
+
+    public boolean isInGame() {
+        return inGame;
+    }
+
+    public void setInGame(boolean inGame) {
+        this.inGame = inGame;
+    }
+
     public PlayerInfo(WarsPlugin plugin, Player player) {
         this.plugin = plugin;
         this.player = player;

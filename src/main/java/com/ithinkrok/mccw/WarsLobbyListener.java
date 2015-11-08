@@ -3,6 +3,7 @@ package com.ithinkrok.mccw;
 import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -41,6 +42,8 @@ public class WarsLobbyListener implements Listener {
         playerInfo.message(ChatColor.GREEN + "Choose a team or class or you will be assigned one automatically");
 
         playerInfo.message(ChatColor.GREEN + "Canyon is the only map so there is no map voting!");
+
+        playerInfo.getPlayer().setGameMode(GameMode.ADVENTURE);
     }
 
     @EventHandler

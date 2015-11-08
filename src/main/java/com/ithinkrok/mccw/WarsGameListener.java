@@ -65,6 +65,12 @@ public class WarsGameListener implements Listener {
             return;
         }
 
+        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
+
+        if (!playerInfo.isInGame()) {
+            event.setCancelled(true);
+            return;
+        }
 
         switch (event.getItem().getItemStack().getType()) {
             case GOLD_INGOT:
@@ -92,12 +98,17 @@ public class WarsGameListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
+        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
+
+        if(!playerInfo.isInGame()){
+            event.setCancelled(true);
+            return;
+        }
+
         if (event.getBlock().getType() != Material.LAPIS_ORE) return;
 
         ItemMeta meta = event.getItemInHand().getItemMeta();
         if (!meta.hasDisplayName()) return;
-
-        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
 
         SchematicData schematicData = plugin.getSchematicData(meta.getDisplayName());
         if (schematicData == null) {
@@ -117,7 +128,9 @@ public class WarsGameListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onBlockBreak(BlockBreakEvent event) {
-        if (event.getPlayer().getGameMode() != GameMode.SURVIVAL) {
+        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
+
+        if (!playerInfo.isInGame()) {
             event.setCancelled(true);
             return;
         }
@@ -125,8 +138,6 @@ public class WarsGameListener implements Listener {
         resetDurability(event.getPlayer());
 
         if (event.getBlock().getType() != Material.OBSIDIAN) return;
-
-        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
 
         BuildingInfo buildingInfo = plugin.getBuildingInfo(event.getBlock().getLocation());
         if (buildingInfo == null) {
@@ -189,9 +200,14 @@ public class WarsGameListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        resetDurability(event.getPlayer());
-
         PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
+
+        if(!playerInfo.isInGame()){
+            event.setCancelled(true);
+            return;
+        }
+
+        resetDurability(event.getPlayer());
 
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getClickedBlock().getType() != Material.OBSIDIAN) {
             PlayerClassHandler classHandler = plugin.getPlayerClassHandler(playerInfo.getPlayerClass());
@@ -251,13 +267,21 @@ public class WarsGameListener implements Listener {
         if (!(event.getDamager() instanceof Player)) return;
 
         Player damager = (Player) event.getDamager();
+
+        PlayerInfo damagerInfo = plugin.getPlayerInfo(damager);
+
+        if(!damagerInfo.isInGame()){
+            event.setCancelled(true);
+            return;
+        }
+
         resetDurability(damager);
 
         if (!(event.getEntity() instanceof Player)) return;
 
         Player entity = (Player) event.getEntity();
 
-        if (plugin.getPlayerInfo(damager).getTeamColor() == plugin.getPlayerInfo(entity).getTeamColor()) {
+        if (damagerInfo.getTeamColor() == plugin.getPlayerInfo(entity).getTeamColor()) {
             event.setCancelled(true);
         }
     }

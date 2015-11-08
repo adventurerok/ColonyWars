@@ -28,6 +28,8 @@ public class WarsBaseListener implements Listener {
         plugin.setPlayerInfo(event.getPlayer(), playerInfo);
 
         playerInfo.message(ChatColor.GREEN + "Welcome to Colony Wars!");
+
+        playerInfo.getPlayer().getInventory().clear();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

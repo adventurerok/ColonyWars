@@ -35,11 +35,11 @@ import java.util.List;
  * <p>
  * Listens for Bukkit events
  */
-public class WarsListener implements Listener {
+public class WarsGameListener extends WarsBaseListener {
 
     private WarsPlugin plugin;
 
-    public WarsListener(WarsPlugin plugin) {
+    public WarsGameListener(WarsPlugin plugin) {
         this.plugin = plugin;
     }
 

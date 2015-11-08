@@ -31,9 +31,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
@@ -54,6 +51,9 @@ public class WarsPlugin extends JavaPlugin {
     private List<BuildingInfo> buildings = new ArrayList<>();
     private HashMap<Location, BuildingInfo> buildingCentres = new HashMap<>();
 
+    private boolean inGame = false;
+    private boolean inShowdown = false;
+
     private OmniInventory buildingInventoryHandler;
 
     private EnumMap<PlayerClass, PlayerClassHandler> classHandlerEnumMap = new EnumMap<>(PlayerClass.class);
@@ -70,6 +70,22 @@ public class WarsPlugin extends JavaPlugin {
         super.onDisable();
     }
 
+    public boolean isInGame() {
+        return inGame;
+    }
+
+    public boolean isInShowdown() {
+        return inShowdown;
+    }
+
+    public void setInGame(boolean inGame) {
+        this.inGame = inGame;
+    }
+
+    public void setInShowdown(boolean inShowdown) {
+        this.inShowdown = inShowdown;
+    }
+
     @Override
     public void onEnable() {
         saveDefaultConfig();
@@ -77,7 +93,7 @@ public class WarsPlugin extends JavaPlugin {
         protocolManager = ProtocolLibrary.getProtocolManager();
         InvisiblePlayerAttacker.enablePlayerAttacker(this, protocolManager);
 
-        WarsListener pluginListener = new WarsListener(this);
+        WarsGameListener pluginListener = new WarsGameListener(this);
         getServer().getPluginManager().registerEvents(pluginListener, this);
 
         for (TeamColor c : TeamColor.values()) {

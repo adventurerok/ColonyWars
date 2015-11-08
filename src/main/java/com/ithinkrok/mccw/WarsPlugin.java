@@ -142,7 +142,21 @@ public class WarsPlugin extends JavaPlugin {
                 p.getPlayer().setLevel(countDown);
             }
 
-            if (countDown == 0) {
+
+            if (countDown == 120) {
+                messageAll(ChatColor.GREEN + "Game starting in " + ChatColor.DARK_AQUA + "2" + ChatColor.GREEN +
+                        " minutes");
+            }
+            if (countDown == 60) {
+                messageAll(ChatColor.GREEN + "Game starting in " + ChatColor.DARK_AQUA + "1" + ChatColor.GREEN +
+                        " minute");
+            } else if (countDown == 30) {
+                messageAll(ChatColor.GREEN + "Game starting in " + ChatColor.DARK_AQUA + "30" + ChatColor.GREEN +
+                        " seconds");
+            } else if (countDown == 10) {
+                messageAll(ChatColor.GREEN + "Game starting in " + ChatColor.DARK_AQUA + "10" + ChatColor.GREEN +
+                        " seconds");
+            } else if (countDown == 0) {
                 getServer().getScheduler().cancelTask(countDownTask);
                 if (playerInfoHashMap.size() > 5) {
                     startGame();
@@ -150,7 +164,11 @@ public class WarsPlugin extends JavaPlugin {
                     messageAll(ChatColor.RED + "You need at least 6 players to start a Colony Wars game.");
                     startLobbyCountdown();
                 }
+            } else if (countDown < 6) {
+                messageAll(ChatColor.DARK_AQUA.toString() + countDown + ChatColor.GREEN + "!");
             }
+
+
         }, 20, 20);
     }
 

@@ -142,11 +142,11 @@ public class WarsLobbyListener implements Listener {
                     String teamName = item.substring(0, item.length() - 5).toUpperCase();
                     TeamColor teamColor = TeamColor.valueOf(teamName);
 
-                    String chatTeamName =
-                            teamColor.chatColor + item.substring(0, item.length() - 5) + ChatColor.YELLOW + " Team";
+                    String chatTeamName = teamColor.chatColor + item.substring(0, item.length() - 5);
 
                     if (teamColor == playerInfo.getTeamColor()) {
-                        playerInfo.message("You are already in the " + chatTeamName);
+                        playerInfo.message(ChatColor.RED + "You are already in the " + chatTeamName + ChatColor.RED +
+                                " Team");
                         break;
                     }
 
@@ -154,13 +154,15 @@ public class WarsLobbyListener implements Listener {
                     int teamSize = plugin.getTeamInfo(teamColor).getPlayerCount();
 
                     if (teamSize - 1 > playerCount / 4) {
-                        playerInfo.message("The " + chatTeamName + " is full. Please try another team.");
+                        playerInfo.message(ChatColor.RED + "The " + chatTeamName + ChatColor.RED + " Team" +
+                                " is full. Please try another team.");
                         break;
                     }
 
                     plugin.setPlayerTeam(playerInfo.getPlayer(), teamColor);
 
-                    playerInfo.message("You will be in the " + chatTeamName + " in the next game!");
+                    playerInfo.message(ChatColor.GOLD + "You will be in the " +
+                            chatTeamName + ChatColor.GOLD + " Team in the next game!");
 
                     playerInfo.getPlayer().closeInventory();
                     break;
@@ -170,7 +172,8 @@ public class WarsLobbyListener implements Listener {
 
                     playerInfo.setPlayerClass(playerClass);
 
-                    playerInfo.message("You will be a " + className + " in the next game!");
+                    playerInfo.message(ChatColor.GOLD + "You will be a " + ChatColor.DARK_AQUA + item +
+                            ChatColor.GOLD + " in the next game!");
 
                     playerInfo.getPlayer().closeInventory();
                     break;

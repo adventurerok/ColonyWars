@@ -27,6 +27,7 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
@@ -61,6 +62,8 @@ public class WarsPlugin extends JavaPlugin {
 
     private ProtocolManager protocolManager;
 
+    private Listener currentListener;
+
     public double getMaxHealth() {
         return (double) 40;
     }
@@ -93,8 +96,12 @@ public class WarsPlugin extends JavaPlugin {
         protocolManager = ProtocolLibrary.getProtocolManager();
         InvisiblePlayerAttacker.enablePlayerAttacker(this, protocolManager);
 
-        WarsGameListener pluginListener = new WarsGameListener(this);
-        getServer().getPluginManager().registerEvents(pluginListener, this);
+        //WarsGameListener pluginListener = new WarsGameListener(this);
+        //getServer().getPluginManager().registerEvents(pluginListener, this);
+
+        currentListener = new WarsLobbyListener(this);
+        getServer().getPluginManager().registerEvents(new WarsBaseListener(this), this);
+        getServer().getPluginManager().registerEvents(currentListener, this);
 
         for (TeamColor c : TeamColor.values()) {
             teamInfoEnumMap.put(c, new TeamInfo(this, c));

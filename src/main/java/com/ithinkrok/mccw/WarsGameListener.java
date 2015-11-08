@@ -33,9 +33,9 @@ import java.util.List;
 /**
  * Created by paul on 01/11/15.
  * <p>
- * Listens for Bukkit events
+ * Listens for Bukkit events while the game is in progress
  */
-public class WarsGameListener extends WarsBaseListener {
+public class WarsGameListener implements Listener {
 
     private WarsPlugin plugin;
 
@@ -45,8 +45,7 @@ public class WarsGameListener extends WarsBaseListener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        PlayerInfo playerInfo = new PlayerInfo(plugin, event.getPlayer());
-        plugin.setPlayerInfo(event.getPlayer(), playerInfo);
+        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
 
         playerInfo.setupScoreboard();
 
@@ -54,14 +53,9 @@ public class WarsGameListener extends WarsBaseListener {
         event.getPlayer().setHealth(plugin.getMaxHealth());
 
         //Just for testing
-        plugin.setPlayerTeam(event.getPlayer(), TeamColor.RED);
-        playerInfo.setPlayerClass(PlayerClass.GENERAL);
-        plugin.setupPlayers();
-    }
-
-    @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
-        plugin.setPlayerInfo(event.getPlayer(), null);
+//        plugin.setPlayerTeam(event.getPlayer(), TeamColor.RED);
+//        playerInfo.setPlayerClass(PlayerClass.GENERAL);
+//        plugin.setupPlayers();
     }
 
     @EventHandler
@@ -266,11 +260,6 @@ public class WarsGameListener extends WarsBaseListener {
         if (plugin.getPlayerInfo(damager).getTeamColor() == plugin.getPlayerInfo(entity).getTeamColor()) {
             event.setCancelled(true);
         }
-    }
-
-    @EventHandler
-    public void onDropItem(PlayerDropItemEvent event) {
-        event.setCancelled(true);
     }
 
     @EventHandler

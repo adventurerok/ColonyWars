@@ -142,22 +142,27 @@ public class WarsLobbyListener implements Listener {
                     String teamName = item.substring(0, item.length() - 5).toUpperCase();
                     TeamColor teamColor = TeamColor.valueOf(teamName);
 
-                    if(teamColor == playerInfo.getTeamColor()){
-                        playerInfo.message("You are already in the " + item);
+                    String chatTeamName =
+                            teamColor.chatColor + item.substring(0, item.length() - 5) + ChatColor.YELLOW + " Team";
+
+                    if (teamColor == playerInfo.getTeamColor()) {
+                        playerInfo.message("You are already in the " + chatTeamName);
                         break;
                     }
 
                     int playerCount = plugin.getPlayerCount();
                     int teamSize = plugin.getTeamInfo(teamColor).getPlayerCount();
 
-                    if(teamSize - 1 > playerCount / 4) {
-                        playerInfo.message("The " + item + " is full. Please try another team.");
+                    if (teamSize - 1 > playerCount / 4) {
+                        playerInfo.message("The " + chatTeamName + " is full. Please try another team.");
                         break;
                     }
 
                     plugin.setPlayerTeam(playerInfo.getPlayer(), teamColor);
 
-                    playerInfo.message("You will be in the " + item + " in the next game!");
+                    playerInfo.message("You will be in the " + chatTeamName + " in the next game!");
+
+                    playerInfo.getPlayer().closeInventory();
                     break;
                 case "Class Chooser":
                     String className = item.toUpperCase();
@@ -166,8 +171,11 @@ public class WarsLobbyListener implements Listener {
                     playerInfo.setPlayerClass(playerClass);
 
                     playerInfo.message("You will be a " + className + " in the next game!");
+
+                    playerInfo.getPlayer().closeInventory();
                     break;
             }
-        } catch (IllegalArgumentException ignored){}
+        } catch (IllegalArgumentException ignored) {
+        }
     }
 }

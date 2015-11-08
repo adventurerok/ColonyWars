@@ -1,5 +1,6 @@
 package com.ithinkrok.mccw.playerclass;
 
+import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.TeamInfo;
@@ -96,8 +97,7 @@ public class CloakerClass extends BuyableInventory implements PlayerClassHandler
         final int swirlTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             Location loc = playerInfo.getPlayer().getLocation();
 
-            //loc.getWorld().playEffect(loc, Effect.SMOKE, BlockFace.SELF);
-            plugin.sendPlayersParticle(playerInfo.getPlayer(), loc, 13, 1);
+            plugin.sendPlayersParticle(playerInfo.getPlayer(), loc, EnumWrappers.Particle.SPELL, 1);
         }, 20, 20);
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> {

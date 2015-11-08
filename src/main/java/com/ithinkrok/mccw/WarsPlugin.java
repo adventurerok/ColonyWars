@@ -1,7 +1,10 @@
 package com.ithinkrok.mccw;
 
+import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.ithinkrok.mccw.data.BuildingInfo;
 import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.SchematicData;
@@ -110,35 +113,19 @@ public class WarsPlugin extends JavaPlugin {
         else playerInfoHashMap.put(player.getUniqueId(), playerInfo);
     }
 
-    public void sendPlayersParticle(Player exclude, Location loc, int particleId, int particleCount) {
-        int packetId = 42;
-
-        ByteArrayOutputStream packetOut = new ByteArrayOutputStream();
-        DataOutputStream dataOut = new DataOutputStream(packetOut);
-
-        try {
-            dataOut.writeInt(particleId);
-            dataOut.writeBoolean(false);
-            dataOut.writeFloat((float) loc.getX());
-            dataOut.writeFloat((float) loc.getY());
-            dataOut.writeFloat((float) loc.getZ());
-            dataOut.writeFloat(0); //Red
-            dataOut.writeFloat(0.8f); //Green
-            dataOut.writeFloat(0); //Blue
-            dataOut.writeFloat(0);
-            dataOut.writeInt(particleCount);
-        } catch (IOException e) {
-            //Impossible
-            e.printStackTrace();
-            return;
-        }
-
-        byte[] packet = packetOut.toByteArray();
+    public void sendPlayersParticle(Player exclude, Location loc, EnumWrappers.Particle particle, int particleCount) {
+        PacketContainer packet = protocolManager.createPacket(PacketType.Play.Server.WORLD_PARTICLES);
+        packet.getParticles().write(0, particle);
+        packet.getIntegers().write(0, particleCount);
+        packet.getBooleans().write(0, false);
+        packet.getFloat().write(0, (float) loc.getX()).write(1, (float) loc.getY()).write(2, (float) loc.getZ())
+                .write(3, 0f).write(4, 0f).write(5, 0f).write(6, 0f);
+        packet.getIntegerArrays().write(0, new int[0]);
 
         try {
             for (PlayerInfo playerInfo : playerInfoHashMap.values()) {
                 if (playerInfo.getPlayer() == exclude) continue;
-                protocolManager.sendWirePacket(playerInfo.getPlayer(), packetId, packet);
+                protocolManager.sendServerPacket(playerInfo.getPlayer(), packet);
             }
         } catch (InvocationTargetException e) {
             getLogger().warning("Failed to send particle packet");

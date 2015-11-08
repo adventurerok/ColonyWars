@@ -1,5 +1,6 @@
 package com.ithinkrok.mccw.util;
 
+import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.Packets;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.ConnectionSide;
@@ -21,59 +22,61 @@ public class InvisiblePlayerAttacker {
 
     public static void enablePlayerAttacker(Plugin plugin, ProtocolManager protocolManager) {
 
-        protocolManager.getAsynchronousManager().registerAsyncHandler(
-                new PacketAdapter(plugin, ConnectionSide.CLIENT_SIDE, Packets.Server.ARM_ANIMATION) {
 
-                    @Override
-                    public void onPacketReceiving(PacketEvent event) {
-                        final int ATTACK_REACH = 4;
+        protocolManager.getAsynchronousManager().registerAsyncHandler(new PacketAdapter(
+                new PacketAdapter.AdapterParameteters().plugin(plugin).clientSide()
+                        .types(PacketType.Play.Client.ARM_ANIMATION)) {
 
-                        Player observer = event.getPlayer();
-                        Location observerPos = observer.getEyeLocation();
-                        Vector3D observerDir = new Vector3D(observerPos.getDirection());
+            @Override
+            public void onPacketReceiving(PacketEvent event) {
+                final int ATTACK_REACH = 4;
 
-                        Vector3D observerStart = new Vector3D(observerPos);
-                        Vector3D observerEnd = observerStart.add(observerDir.multiply(ATTACK_REACH));
+                Player observer = event.getPlayer();
+                Location observerPos = observer.getEyeLocation();
+                Vector3D observerDir = new Vector3D(observerPos.getDirection());
 
-                        Player hit = null;
+                Vector3D observerStart = new Vector3D(observerPos);
+                Vector3D observerEnd = observerStart.add(observerDir.multiply(ATTACK_REACH));
 
-                        // Get nearby entities
-                        for (Player target : protocolManager.getEntityTrackers(observer)) {
-                            // No need to simulate an attack if the player is already visible
-                            if (!observer.canSee(target)) {
-                                // Bounding box of the given player
-                                Vector3D targetPos = new Vector3D(target.getLocation());
-                                Vector3D minimum = targetPos.add(-0.5, 0, -0.5);
-                                Vector3D maximum = targetPos.add(0.5, 1.67, 0.5);
+                Player hit = null;
 
-                                if (hasIntersection(observerStart, observerEnd, minimum, maximum)) {
-                                    if (hit == null || hit.getLocation().distanceSquared(observerPos) >
-                                            target.getLocation().distanceSquared(observerPos)) {
-                                        hit = target;
-                                    }
-                                }
-                            }
-                        }
+                // Get nearby entities
+                for (Player target : protocolManager.getEntityTrackers(observer)) {
+                    // No need to simulate an attack if the player is already visible
+                    if (!observer.canSee(target)) {
+                        // Bounding box of the given player
+                        Vector3D targetPos = new Vector3D(target.getLocation());
+                        Vector3D minimum = targetPos.add(-0.5, 0, -0.5);
+                        Vector3D maximum = targetPos.add(0.5, 1.67, 0.5);
 
-                        // Simulate a hit against the closest player
-                        if (hit != null) {
-                            PacketContainer useEntity = protocolManager.createPacket(Packets.Client.USE_ENTITY, false);
-                            useEntity.getIntegers().
-                                    write(0, hit.getEntityId());
-
-                            useEntity.getEntityUseActions().write(0, EnumWrappers.EntityUseAction.ATTACK);
-
-
-                            try {
-                                protocolManager.recieveClientPacket(event.getPlayer(), useEntity);
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                        if (hasIntersection(observerStart, observerEnd, minimum, maximum)) {
+                            if (hit == null || hit.getLocation().distanceSquared(observerPos) >
+                                    target.getLocation().distanceSquared(observerPos)) {
+                                hit = target;
                             }
                         }
                     }
+                }
 
-                    // Get entity trackers is not thread safe
-                }).syncStart();
+                // Simulate a hit against the closest player
+                if (hit != null) {
+                    PacketContainer useEntity = new PacketContainer(PacketType.Play.Client.USE_ENTITY);
+                    useEntity.getIntegers().
+                            write(0, hit.getEntityId());
+
+                    useEntity.getEntityUseActions().write(0, EnumWrappers.EntityUseAction.ATTACK);
+
+
+                    try {
+                        protocolManager.recieveClientPacket(event.getPlayer(), useEntity);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            // Get entity trackers is not thread safe
+        }).syncStart();
     }
 
     private static boolean hasIntersection(Vector3D p1, Vector3D p2, Vector3D min, Vector3D max) {

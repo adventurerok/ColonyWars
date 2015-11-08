@@ -1,4 +1,51 @@
 
+maps:
+  canyon:
+    folder: "canyon"
+    center:
+      x: -178
+      y: 95
+      z: 183
+    showdown-size:
+      x: 30
+      z: 30
+    red:
+      base:
+        x: -363
+        y: 94
+        z: -3
+      spawn:
+        x: -362
+        y: 94
+        z: -2
+    blue:
+      base:
+        x: 9
+        y: 94
+        z: -2
+      spawn:
+        x: 8
+        y: 94
+        z: -1
+    green:
+      base:
+        x: 8
+        y: 94
+        z: 370
+      spawn:
+        x: 7
+        y: 64
+        z: 369
+    yellow:
+      base:
+        x: -364
+        y: 94
+        z: 369
+      spawn:
+        x: -363
+        y: 94
+        z: 368
+
 buildings:
   schematics:
     Base: "mccw_base.schematic"

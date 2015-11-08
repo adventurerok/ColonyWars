@@ -253,6 +253,7 @@ public class WarsListener implements Listener {
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        plugin.getLogger().info("DMG");
         if (!(event.getDamager() instanceof Player)) return;
 
         Player damager = (Player) event.getDamager();

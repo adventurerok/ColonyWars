@@ -11,6 +11,7 @@ import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -58,6 +59,7 @@ public class CloakerClass extends BuyableInventory implements PlayerClassHandler
 
     @Override
     public void onInteractWorld(PlayerInteractEvent event) {
+        if(event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if (event.getItem() == null || event.getItem().getType() != Material.IRON_LEGGINGS) return;
 
         PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());

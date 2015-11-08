@@ -64,6 +64,9 @@ public class WarsPlugin extends JavaPlugin {
 
     private Listener currentListener;
 
+    private int countDown = 0;
+    private int countDownTask = 0;
+
     public double getMaxHealth() {
         return (double) 40;
     }
@@ -77,12 +80,12 @@ public class WarsPlugin extends JavaPlugin {
         return inGame;
     }
 
-    public boolean isInShowdown() {
-        return inShowdown;
-    }
-
     public void setInGame(boolean inGame) {
         this.inGame = inGame;
+    }
+
+    public boolean isInShowdown() {
+        return inShowdown;
     }
 
     public void setInShowdown(boolean inShowdown) {
@@ -121,7 +124,46 @@ public class WarsPlugin extends JavaPlugin {
         classHandlerEnumMap.put(PlayerClass.GENERAL, new GeneralClass(getConfig()));
         classHandlerEnumMap.put(PlayerClass.SCOUT, new ScoutClass(this, getConfig()));
         classHandlerEnumMap.put(PlayerClass.CLOAKER, new CloakerClass(this, getConfig()));
+
+        startLobbyCountdown();
     }
+
+    private void startLobbyCountdown() {
+        countDown = 300;
+
+        messageAll(ChatColor.GREEN + "Starting count down to game from " + countDown);
+        messageAll(ChatColor.GREEN + "If there are not enough players when the countdown ends, the countdown will " +
+                "start again.");
+
+        countDownTask = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
+            --countDown;
+
+            for (PlayerInfo p : playerInfoHashMap.values()) {
+                p.getPlayer().setLevel(countDown);
+            }
+
+            if (countDown == 0) {
+                getServer().getScheduler().cancelTask(countDownTask);
+                if (playerInfoHashMap.size() > 5) {
+                    startGame();
+                } else {
+                    messageAll(ChatColor.RED + "You need at least 6 players to start a Colony Wars game.");
+                    startLobbyCountdown();
+                }
+            }
+        }, 20, 20);
+    }
+
+    public void startGame() {
+
+    }
+
+    public void messageAll(String message) {
+        for (PlayerInfo p : playerInfoHashMap.values()) {
+            p.message(message);
+        }
+    }
+
 
     public SchematicData getSchematicData(String buildingName) {
         return schematicDataHashMap.get(buildingName);

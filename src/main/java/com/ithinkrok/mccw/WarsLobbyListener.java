@@ -1,6 +1,7 @@
 package com.ithinkrok.mccw;
 
 import com.ithinkrok.mccw.data.PlayerInfo;
+import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Bukkit;
@@ -125,5 +126,48 @@ public class WarsLobbyListener implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         event.setCancelled(true);
+
+        if (event.getInventory().getTitle() == null) return;
+        if (event.getCurrentItem() == null || !event.getCurrentItem().hasItemMeta() ||
+                !event.getCurrentItem().getItemMeta().hasDisplayName()) return;
+
+        String item = event.getCurrentItem().getItemMeta().getDisplayName();
+
+        PlayerInfo playerInfo = plugin.getPlayerInfo((Player) event.getWhoClicked());
+
+        try {
+
+            switch (event.getInventory().getTitle()) {
+                case "Team Chooser":
+                    String teamName = item.substring(0, item.length() - 5).toUpperCase();
+                    TeamColor teamColor = TeamColor.valueOf(teamName);
+
+                    if(teamColor == playerInfo.getTeamColor()){
+                        playerInfo.message("You are already in the " + item);
+                        break;
+                    }
+
+                    int playerCount = plugin.getPlayerCount();
+                    int teamSize = plugin.getTeamInfo(teamColor).getPlayerCount();
+
+                    if(teamSize - 1 > playerCount / 4) {
+                        playerInfo.message("The " + item + " is full. Please try another team.");
+                        break;
+                    }
+
+                    plugin.setPlayerTeam(playerInfo.getPlayer(), teamColor);
+
+                    playerInfo.message("You will be in the " + item + " in the next game!");
+                    break;
+                case "Class Chooser":
+                    String className = item.toUpperCase();
+                    PlayerClass playerClass = PlayerClass.valueOf(className);
+
+                    playerInfo.setPlayerClass(playerClass);
+
+                    playerInfo.message("You will be a " + className + " in the next game!");
+                    break;
+            }
+        } catch (IllegalArgumentException ignored){}
     }
 }

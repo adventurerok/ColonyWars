@@ -123,4 +123,8 @@ public class TeamInfo {
     public void removeBuilding(String buildingType){
         buildingCounts.put(buildingType, Math.max(getBuildingCount(buildingType) - 1, 0));
     }
+
+    public int getPlayerCount() {
+        return players.size();
+    }
 }

@@ -367,4 +367,8 @@ public class WarsPlugin extends JavaPlugin {
             p.getPlayer().showPlayer(player);
         }
     }
+
+    public int getPlayerCount() {
+        return playerInfoHashMap.size();
+    }
 }

@@ -1,5 +1,7 @@
 package com.ithinkrok.mccw;
 
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import com.ithinkrok.mccw.data.BuildingInfo;
 import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.SchematicData;
@@ -14,6 +16,7 @@ import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.mccw.playerclass.ScoutClass;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
+import com.ithinkrok.mccw.util.InvisiblePlayerAttacker;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -25,6 +28,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 
@@ -49,6 +56,8 @@ public class WarsPlugin extends JavaPlugin {
     private EnumMap<PlayerClass, PlayerClassHandler> classHandlerEnumMap = new EnumMap<>(PlayerClass.class);
     private Random random = new Random();
 
+    private ProtocolManager protocolManager;
+
     public double getMaxHealth() {
         return (double) 40;
     }
@@ -61,6 +70,9 @@ public class WarsPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
+
+        protocolManager = ProtocolLibrary.getProtocolManager();
+        InvisiblePlayerAttacker.enablePlayerAttacker(this, protocolManager);
 
         WarsListener pluginListener = new WarsListener(this);
         getServer().getPluginManager().registerEvents(pluginListener, this);
@@ -98,6 +110,42 @@ public class WarsPlugin extends JavaPlugin {
         else playerInfoHashMap.put(player.getUniqueId(), playerInfo);
     }
 
+    public void sendPlayersParticle(Player exclude, Location loc, int particleId, int particleCount) {
+        int packetId = 42;
+
+        ByteArrayOutputStream packetOut = new ByteArrayOutputStream();
+        DataOutputStream dataOut = new DataOutputStream(packetOut);
+
+        try {
+            dataOut.writeInt(particleId);
+            dataOut.writeBoolean(false);
+            dataOut.writeFloat((float) loc.getX());
+            dataOut.writeFloat((float) loc.getY());
+            dataOut.writeFloat((float) loc.getZ());
+            dataOut.writeFloat(0); //Red
+            dataOut.writeFloat(0.8f); //Green
+            dataOut.writeFloat(0); //Blue
+            dataOut.writeFloat(0);
+            dataOut.writeInt(particleCount);
+        } catch (IOException e) {
+            //Impossible
+            e.printStackTrace();
+            return;
+        }
+
+        byte[] packet = packetOut.toByteArray();
+
+        try {
+            for (PlayerInfo playerInfo : playerInfoHashMap.values()) {
+                if (playerInfo.getPlayer() == exclude) continue;
+                protocolManager.sendWirePacket(playerInfo.getPlayer(), packetId, packet);
+            }
+        } catch (InvocationTargetException e) {
+            getLogger().warning("Failed to send particle packet");
+            e.printStackTrace();
+        }
+    }
+
     public Random getRandom() {
         return random;
     }
@@ -108,6 +156,10 @@ public class WarsPlugin extends JavaPlugin {
         if (buildingInfo.getCenterBlock() != null) buildingCentres.put(buildingInfo.getCenterBlock(), buildingInfo);
 
         getTeamInfo(buildingInfo.getTeamColor()).buildingStarted(buildingInfo.getBuildingName());
+    }
+
+    public TeamInfo getTeamInfo(TeamColor teamColor) {
+        return teamInfoEnumMap.get(teamColor);
     }
 
     public void finishBuilding(BuildingInfo buildingInfo) {
@@ -124,10 +176,6 @@ public class WarsPlugin extends JavaPlugin {
         }
 
         getTeamInfo(buildingInfo.getTeamColor()).buildingFinished(buildingInfo.getBuildingName());
-    }
-
-    public TeamInfo getTeamInfo(TeamColor teamColor) {
-        return teamInfoEnumMap.get(teamColor);
     }
 
     public PlayerClassHandler getPlayerClassHandler(PlayerClass playerClass) {
@@ -295,16 +343,16 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public void cloak(Player player) {
-        for(PlayerInfo p : playerInfoHashMap.values()){
-            if(p.getPlayer() == player) continue;
+        for (PlayerInfo p : playerInfoHashMap.values()) {
+            if (p.getPlayer() == player) continue;
 
             p.getPlayer().hidePlayer(player);
         }
     }
 
     public void decloak(Player player) {
-        for(PlayerInfo p : playerInfoHashMap.values()){
-            if(p.getPlayer() == player) continue;
+        for (PlayerInfo p : playerInfoHashMap.values()) {
+            if (p.getPlayer() == player) continue;
 
             p.getPlayer().showPlayer(player);
         }

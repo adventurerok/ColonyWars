@@ -96,7 +96,8 @@ public class CloakerClass extends BuyableInventory implements PlayerClassHandler
         final int swirlTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             Location loc = playerInfo.getPlayer().getLocation();
 
-            loc.getWorld().playEffect(loc, Effect.SMOKE, BlockFace.SELF);
+            //loc.getWorld().playEffect(loc, Effect.SMOKE, BlockFace.SELF);
+            plugin.sendPlayersParticle(playerInfo.getPlayer(), loc, 13, 1);
         }, 20, 20);
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> {

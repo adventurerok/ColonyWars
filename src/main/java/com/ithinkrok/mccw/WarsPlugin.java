@@ -129,7 +129,7 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     private void startLobbyCountdown() {
-        countDown = 300;
+        countDown = 180;
 
         messageAll(ChatColor.GREEN + "Starting count down to game from " + countDown);
         messageAll(ChatColor.GREEN + "If there are not enough players when the countdown ends, the countdown will " +

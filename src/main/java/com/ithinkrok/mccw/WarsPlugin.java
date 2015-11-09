@@ -9,6 +9,7 @@ import com.ithinkrok.mccw.data.BuildingInfo;
 import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.SchematicData;
 import com.ithinkrok.mccw.data.TeamInfo;
+import com.ithinkrok.mccw.enumeration.CountdownType;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
@@ -29,8 +30,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
@@ -56,8 +57,20 @@ public class WarsPlugin extends JavaPlugin {
     private List<BuildingInfo> buildings = new ArrayList<>();
     private HashMap<Location, BuildingInfo> buildingCentres = new HashMap<>();
 
+    /**
+     * Is there a game currently in progress
+     */
     private boolean inGame = false;
+
+    /**
+     * Are we currently in a showdown
+     */
     private boolean inShowdown = false;
+
+    /**
+     * Has the game been won already
+     */
+    private boolean inAftermath = false;
 
     private OmniInventory buildingInventoryHandler;
 
@@ -70,6 +83,7 @@ public class WarsPlugin extends JavaPlugin {
 
     private int countDown = 0;
     private int countDownTask = 0;
+    private CountdownType countdownType;
 
     private String map = "canyon";
 
@@ -135,11 +149,85 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public void startLobbyCountdown() {
-        countDown = 180;
-
-        messageAll(ChatColor.GREEN + "Starting count down to game from " + countDown);
+        messageAll(ChatColor.GREEN + "Starting count down to game from " + 180);
         messageAll(ChatColor.GREEN + "If there are not enough players when the countdown ends, the countdown will " +
                 "start again.");
+
+        startCountdown(180, CountdownType.GAME_START,
+                ChatColor.GREEN + "Game starting in " + ChatColor.DARK_AQUA + "%s" + ChatColor.GREEN +
+                        " minutes!",
+                ChatColor.GREEN + "Game starting in " + ChatColor.DARK_AQUA + "%s" + ChatColor.GREEN +
+                        " seconds!", () -> {
+                    if (playerInfoHashMap.size() > 5) {
+                        startGame();
+                    } else {
+                        messageAll(ChatColor.RED + "You need at least 6 players to start a Colony Wars game.");
+                        startLobbyCountdown();
+                    }
+                });
+    }
+
+    public void startEndCountdown(){
+        messageAll(ChatColor.GREEN + "You will be teleported back to the lobby in 15 seconds!");
+
+        startCountdown(15, CountdownType.GAME_END,
+                ChatColor.GREEN + "Game ending in " + ChatColor.DARK_AQUA + "%s" + ChatColor.GREEN +
+                        " minutes!",
+                ChatColor.GREEN + "Game ending in " + ChatColor.DARK_AQUA + "%s" + ChatColor.GREEN +
+                        " seconds!", this::endGame);
+    }
+
+    public void endGame() {
+        for(PlayerInfo playerInfo : playerInfoHashMap.values()){
+             playerJoinLobby(playerInfo.getPlayer());
+        }
+
+        for(PlayerInfo playerInfo : playerInfoHashMap.values()){
+            decloak(playerInfo.getPlayer());
+        }
+
+        Bukkit.unloadWorld("playing", false);
+
+        setInGame(false);
+        setInAftermath(false);
+        setInShowdown(false);
+
+        startLobbyCountdown();
+    }
+
+    public void playerJoinLobby(Player player){
+        PlayerInfo playerInfo = getPlayerInfo(player);
+
+        playerInfo.setInGame(false);
+        playerInfo.getPlayer().setGameMode(GameMode.ADVENTURE);
+        playerInfo.getPlayer().setMaxHealth(20);
+        playerInfo.getPlayer().setHealth(20);
+        playerInfo.getPlayer().setFoodLevel(20);
+        playerInfo.getPlayer().setSaturation(20);
+
+        setPlayerTeam(player, null);
+
+        PlayerInventory inv = player.getInventory();
+
+        inv.clear();
+
+        inv.addItem(InventoryUtils
+                .createItemWithNameAndLore(Material.LEATHER_HELMET, 1, 0, "Team Chooser", "Choose your team"));
+
+        inv.addItem(InventoryUtils
+                .createItemWithNameAndLore(Material.WOOD_SWORD, 1, 0, "Class Chooser", "Choose your class"));
+
+        playerInfo.message(ChatColor.GREEN + "Choose a team or class or you will be assigned one automatically");
+
+        playerInfo.message(ChatColor.GREEN + "Canyon is the only map so there is no map voting!");
+
+        playerInfo.getPlayer().teleport(Bukkit.getWorld("world").getSpawnLocation());
+    }
+
+    private void startCountdown(int countdown, CountdownType countdownType, String minutesWarning,
+                                String secondsWarning, Runnable finished) {
+        this.countDown = countdown;
+        this.countdownType = countdownType;
 
         countDownTask = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
             --countDown;
@@ -148,41 +236,18 @@ public class WarsPlugin extends JavaPlugin {
                 p.getPlayer().setLevel(countDown);
             }
 
-
-            if (countDown == 120) {
-                messageAll(ChatColor.GREEN + "Game starting in " + ChatColor.DARK_AQUA + "2" + ChatColor.GREEN +
-                        " minutes!");
-            }
-            if (countDown == 60) {
-                messageAll(ChatColor.GREEN + "Game starting in " + ChatColor.DARK_AQUA + "1" + ChatColor.GREEN +
-                        " minute!");
-            } else if (countDown == 30) {
-                messageAll(ChatColor.GREEN + "Game starting in " + ChatColor.DARK_AQUA + "30" + ChatColor.GREEN +
-                        " seconds!");
-            } else if (countDown == 10) {
-                messageAll(ChatColor.GREEN + "Game starting in " + ChatColor.DARK_AQUA + "10" + ChatColor.GREEN +
-                        " seconds!");
-            } else if (countDown == 0) {
+            if (countDown == 120) messageAll(String.format(minutesWarning, "2"));
+            else if (countDown == 60) messageAll(String.format(minutesWarning, "1"));
+            else if (countDown == 30) messageAll(String.format(secondsWarning, "30"));
+            else if (countDown == 10) messageAll(String.format(secondsWarning, "10"));
+            else if (countDown == 0) {
                 getServer().getScheduler().cancelTask(countDownTask);
                 countDownTask = 0;
-                if (playerInfoHashMap.size() > 5) {
-                    startGame();
-                } else {
-                    messageAll(ChatColor.RED + "You need at least 6 players to start a Colony Wars game.");
-                    startLobbyCountdown();
-                }
-            } else if (countDown < 6) {
-                messageAll(ChatColor.DARK_AQUA.toString() + countDown + ChatColor.GREEN + "!");
-            }
+                finished.run();
+            } else if (countDown < 6) messageAll(ChatColor.DARK_AQUA.toString() + countDown + ChatColor.GREEN + "!");
 
 
         }, 20, 20);
-    }
-
-    public void messageAll(String message) {
-        for (PlayerInfo p : playerInfoHashMap.values()) {
-            p.message(message);
-        }
     }
 
     public InventoryHandler getBuildingInventoryHandler() {
@@ -452,7 +517,7 @@ public class WarsPlugin extends JavaPlugin {
 
             SchematicBuilder.pasteSchematic(this, getSchematicData(Buildings.BASE), build, 0, team);
 
-            if(getTeamInfo(team).getPlayerCount() == 0){
+            if (getTeamInfo(team).getPlayerCount() == 0) {
                 getTeamInfo(team).eliminate();
             }
         }
@@ -482,6 +547,18 @@ public class WarsPlugin extends JavaPlugin {
         return PlayerClass.values()[random.nextInt(PlayerClass.values().length)];
     }
 
+    public Location getMapSpawn(TeamColor team) {
+        World world = getServer().getWorld("playing");
+        FileConfiguration config = getConfig();
+
+        String base;
+        if (team == null) base = "maps." + map + ".center";
+        else base = "maps." + map + "." + team.toString().toLowerCase() + ".spawn";
+
+        return new Location(world, config.getDouble(base + ".x"), config.getDouble(base + ".y"),
+                config.getDouble(base + ".z"));
+    }
+
     public void decloak(Player player) {
         getPlayerInfo(player).setCloaked(false);
 
@@ -494,18 +571,6 @@ public class WarsPlugin extends JavaPlugin {
 
     public SchematicData getSchematicData(String buildingName) {
         return schematicDataHashMap.get(buildingName);
-    }
-
-    public Location getMapSpawn(TeamColor team) {
-        World world = getServer().getWorld("playing");
-        FileConfiguration config = getConfig();
-
-        String base;
-        if (team == null) base = "maps." + map + ".center";
-        else base = "maps." + map + "." + team.toString().toLowerCase() + ".spawn";
-
-        return new Location(world, config.getDouble(base + ".x"), config.getDouble(base + ".y"),
-                config.getDouble(base + ".z"));
     }
 
     public void removeBuilding(BuildingInfo buildingInfo) {
@@ -572,5 +637,45 @@ public class WarsPlugin extends JavaPlugin {
 
     public int getPlayerCount() {
         return playerInfoHashMap.size();
+    }
+
+    public void checkVictory() {
+        if (isInAftermath()) return;
+        Set<TeamColor> teamsInGame = new HashSet<>();
+
+        for (PlayerInfo info : playerInfoHashMap.values()) {
+            if (!info.isInGame()) continue;
+
+            teamsInGame.add(info.getTeamColor());
+        }
+
+        if (teamsInGame.size() == 0) {
+            messageAll(ChatColor.GOLD + "Oh dear. Everyone is dead!");
+            setInAftermath(true);
+            startEndCountdown();
+            return;
+        } else if (teamsInGame.size() > 1) return;
+
+        TeamColor winner = teamsInGame.iterator().next();
+
+        messageAll(ChatColor.GOLD + "The " + winner.name + ChatColor.GOLD + " Team has won the game!");
+
+        setInAftermath(true);
+
+        startEndCountdown();
+    }
+
+    public boolean isInAftermath() {
+        return inAftermath;
+    }
+
+    public void setInAftermath(boolean inAftermath) {
+        this.inAftermath = inAftermath;
+    }
+
+    public void messageAll(String message) {
+        for (PlayerInfo p : playerInfoHashMap.values()) {
+            p.message(message);
+        }
     }
 }

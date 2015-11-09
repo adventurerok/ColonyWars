@@ -306,6 +306,7 @@ public class WarsGameListener implements Listener {
     }
 
     public void playerDeath(Player died, Player killer) {
+        if(plugin.isInAftermath()) return;
         PlayerInfo diedInfo = plugin.getPlayerInfo(died);
 
         if(!diedInfo.isInGame()){
@@ -354,6 +355,8 @@ public class WarsGameListener implements Listener {
 
             setSpectator(died);
         }
+
+        plugin.checkVictory();
     }
     public void setSpectator(Player died){
         plugin.setPlayerTeam(died, null);

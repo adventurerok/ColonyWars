@@ -56,6 +56,14 @@ public class PlayerInfo {
     public void setInGame(boolean inGame) {
         this.inGame = inGame;
 
+        if(!inGame){
+            upgradeLevels.clear();
+            coolingDown.clear();
+            playerClass = null;
+            shopInventory = null;
+            shopBlock = null;
+        }
+
         updateScoreboard();
     }
 

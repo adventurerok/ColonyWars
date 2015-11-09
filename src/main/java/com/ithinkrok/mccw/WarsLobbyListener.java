@@ -6,7 +6,6 @@ import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,7 +19,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.PlayerInventory;
 
 /**
  * Created by paul on 08/11/15.
@@ -37,27 +35,7 @@ public class WarsLobbyListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        PlayerInventory inv = event.getPlayer().getInventory();
-
-        inv.addItem(InventoryUtils
-                .createItemWithNameAndLore(Material.LEATHER_HELMET, 1, 0, "Team Chooser", "Choose your team"));
-
-        inv.addItem(InventoryUtils
-                .createItemWithNameAndLore(Material.WOOD_SWORD, 1, 0, "Class Chooser", "Choose your class"));
-
-        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
-
-        playerInfo.message(ChatColor.GREEN + "Choose a team or class or you will be assigned one automatically");
-
-        playerInfo.message(ChatColor.GREEN + "Canyon is the only map so there is no map voting!");
-
-        playerInfo.getPlayer().setGameMode(GameMode.ADVENTURE);
-        playerInfo.getPlayer().setMaxHealth(20);
-        playerInfo.getPlayer().setHealth(20);
-        playerInfo.getPlayer().setFoodLevel(20);
-        playerInfo.getPlayer().setSaturation(20);
-
-        playerInfo.getPlayer().teleport(Bukkit.getWorld("world").getSpawnLocation());
+        plugin.playerJoinLobby(event.getPlayer());
     }
 
     @EventHandler

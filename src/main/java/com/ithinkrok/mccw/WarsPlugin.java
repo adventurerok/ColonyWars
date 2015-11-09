@@ -423,6 +423,8 @@ public class WarsPlugin extends JavaPlugin {
             info.getPlayer().setSaturation(5);
             info.getPlayer().setFoodLevel(20);
 
+            info.setInGame(true);
+
             info.getPlayer().getInventory().clear();
             info.updateTeamArmor();
             info.getPlayer().getInventory().addItem(new ItemStack(Material.DIAMOND_PICKAXE));
@@ -433,7 +435,7 @@ public class WarsPlugin extends JavaPlugin {
             classHandler.onGameBegin(info, getTeamInfo(info.getTeamColor()));
 
             info.message(ChatColor.GOLD + "You are playing on the " + info.getTeamColor().name + ChatColor.GOLD +
-                    "Team");
+                    " Team");
 
             info.message(ChatColor.GOLD + "You are playing as the class " + ChatColor.DARK_AQUA +
                     info.getPlayerClass().name);

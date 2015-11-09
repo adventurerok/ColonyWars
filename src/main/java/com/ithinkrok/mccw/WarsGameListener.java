@@ -324,6 +324,10 @@ public class WarsGameListener implements Listener {
             diedTeam.setRespawnChance(diedTeam.getRespawnChance() - 15);
             diedTeam.respawnPlayer(died);
 
+            died.setHealth(40);
+            died.setSaturation(5);
+            died.setFoodLevel(20);
+
             diedTeam.message(
                     ChatColor.GOLD + "Your revival chance is now " + ChatColor.DARK_AQUA + diedTeam.getRespawnChance());
         } else {
@@ -343,6 +347,8 @@ public class WarsGameListener implements Listener {
             setSpectator(died);
         }
     }
+
+
 
     public void setSpectator(Player died){
         plugin.setPlayerTeam(died, null);

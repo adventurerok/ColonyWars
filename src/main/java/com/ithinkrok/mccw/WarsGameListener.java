@@ -330,10 +330,10 @@ public class WarsGameListener implements Listener {
             plugin.messageAll(diedInfo.getFormattedName() + ChatColor.GOLD + " did not respawn!");
             plugin.setPlayerTeam(died, null);
 
-            plugin.messageAll(ChatColor.GOLD + "The " + diedInfo.getTeamColor().name + ChatColor.GOLD +
+            plugin.messageAll(ChatColor.GOLD + "The " + diedTeam.getTeamColor().name + ChatColor.GOLD +
                     " has lost a player!");
             plugin.messageAll(ChatColor.GOLD + "There are now " + ChatColor.DARK_AQUA + diedTeam.getPlayerCount() +
-                    ChatColor.GOLD + " players left on the " + diedInfo.getTeamColor().name + ChatColor.GOLD + " Team");
+                    ChatColor.GOLD + " players left on the " + diedTeam.getTeamColor().name + ChatColor.GOLD + " Team");
 
             if (diedTeam.getPlayerCount() == 0) {
                 plugin.messageAll(ChatColor.GOLD + "The " + diedTeam.getTeamColor().name + ChatColor.GOLD +

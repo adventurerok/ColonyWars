@@ -307,6 +307,15 @@ public class WarsGameListener implements Listener {
 
     public void playerDeath(Player died, Player killer) {
         PlayerInfo diedInfo = plugin.getPlayerInfo(died);
+
+        if(!diedInfo.isInGame()){
+            died.setMaxHealth(20);
+            died.setHealth(20);
+
+            died.teleport(plugin.getMapSpawn(null));
+            return;
+        }
+
         PlayerInfo killerInfo = killer == null ? null : plugin.getPlayerInfo(killer);
         if (killerInfo != null) {
             plugin.messageAll(ChatColor.GOLD + diedInfo.getFormattedName() + ChatColor.GOLD +
@@ -347,9 +356,6 @@ public class WarsGameListener implements Listener {
             setSpectator(died);
         }
     }
-
-
-
     public void setSpectator(Player died){
         plugin.setPlayerTeam(died, null);
         plugin.getPlayerInfo(died).setInGame(false);

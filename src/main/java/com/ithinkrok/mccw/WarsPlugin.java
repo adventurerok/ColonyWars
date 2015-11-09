@@ -368,7 +368,7 @@ public class WarsPlugin extends JavaPlugin {
         }
 
         playerInfo.setTeamColor(teamColor);
-        if(teamColor != null) getTeamInfo(teamColor).addPlayer(player);
+        if (teamColor != null) getTeamInfo(teamColor).addPlayer(player);
     }
 
     public void stopCountdown() {
@@ -399,9 +399,6 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public void setupPlayers() {
-        World world = getServer().getWorld("playing");
-        FileConfiguration config = getConfig();
-
         for (PlayerInfo info : playerInfoHashMap.values()) {
 
             if (info.getTeamColor() == null) {
@@ -412,10 +409,7 @@ public class WarsPlugin extends JavaPlugin {
                 info.setPlayerClass(assignPlayerClass());
             }
 
-            String base = "maps." + map + "." + info.getTeamColor().toString().toLowerCase() + ".spawn";
-
-            info.getPlayer().teleport(new Location(world, config.getDouble(base + ".x"), config.getDouble(base + ".y"),
-                    config.getDouble(base + ".z")), PlayerTeleportEvent.TeleportCause.PLUGIN);
+            info.getPlayer().teleport(getMapSpawn(info.getTeamColor()));
 
             info.getPlayer().setGameMode(GameMode.SURVIVAL);
             info.getPlayer().setMaxHealth(40);
@@ -441,7 +435,7 @@ public class WarsPlugin extends JavaPlugin {
                     info.getPlayerClass().name);
         }
 
-        for(PlayerInfo info : playerInfoHashMap.values()){
+        for (PlayerInfo info : playerInfoHashMap.values()) {
             decloak(info.getPlayer());
         }
     }
@@ -484,8 +478,30 @@ public class WarsPlugin extends JavaPlugin {
         return PlayerClass.values()[random.nextInt(PlayerClass.values().length)];
     }
 
+    public void decloak(Player player) {
+        getPlayerInfo(player).setCloaked(false);
+
+        for (PlayerInfo p : playerInfoHashMap.values()) {
+            if (p.getPlayer() == player) continue;
+
+            p.getPlayer().showPlayer(player);
+        }
+    }
+
     public SchematicData getSchematicData(String buildingName) {
         return schematicDataHashMap.get(buildingName);
+    }
+
+    public Location getMapSpawn(TeamColor team) {
+        World world = getServer().getWorld("playing");
+        FileConfiguration config = getConfig();
+
+        String base;
+        if (team == null) base = "maps." + map + ".center";
+        else base = "maps." + map + "." + team.toString().toLowerCase() + ".spawn";
+
+        return new Location(world, config.getDouble(base + ".x"), config.getDouble(base + ".y"),
+                config.getDouble(base + ".z"));
     }
 
     public void removeBuilding(BuildingInfo buildingInfo) {
@@ -547,16 +563,6 @@ public class WarsPlugin extends JavaPlugin {
             if (p.getPlayer() == player) continue;
 
             p.getPlayer().hidePlayer(player);
-        }
-    }
-
-    public void decloak(Player player) {
-        getPlayerInfo(player).setCloaked(false);
-
-        for (PlayerInfo p : playerInfoHashMap.values()) {
-            if (p.getPlayer() == player) continue;
-
-            p.getPlayer().showPlayer(player);
         }
     }
 

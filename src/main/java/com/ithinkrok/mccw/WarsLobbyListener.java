@@ -52,6 +52,8 @@ public class WarsLobbyListener implements Listener {
         playerInfo.message(ChatColor.GREEN + "Canyon is the only map so there is no map voting!");
 
         playerInfo.getPlayer().setGameMode(GameMode.ADVENTURE);
+
+        playerInfo.getPlayer().teleport(Bukkit.getWorld("world").getSpawnLocation());
     }
 
     @EventHandler

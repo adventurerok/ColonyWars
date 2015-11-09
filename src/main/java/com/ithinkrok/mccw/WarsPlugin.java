@@ -149,10 +149,6 @@ public class WarsPlugin extends JavaPlugin {
         startLobbyCountdown();
 
 
-        /*
-        TODO invisible players bug for modded 1.8.0 clients (like my test ones)
-         */
-
     }
 
     public void startLobbyCountdown() {

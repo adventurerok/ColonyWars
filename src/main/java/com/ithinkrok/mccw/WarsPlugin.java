@@ -417,6 +417,8 @@ public class WarsPlugin extends JavaPlugin {
             info.getPlayer().teleport(new Location(world, config.getDouble(base + ".x"), config.getDouble(base + ".y"),
                     config.getDouble(base + ".z")), PlayerTeleportEvent.TeleportCause.PLUGIN);
 
+            info.setupScoreboard();
+
             PlayerClassHandler classHandler = getPlayerClassHandler(info.getPlayerClass());
             classHandler.onGameBegin(info, getTeamInfo(info.getTeamColor()));
 

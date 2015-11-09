@@ -349,8 +349,7 @@ public class WarsGameListener implements Listener {
                     ChatColor.GOLD + " players left on the " + diedTeam.getTeamColor().name + ChatColor.GOLD + " Team");
 
             if (diedTeam.getPlayerCount() == 0) {
-                plugin.messageAll(ChatColor.GOLD + "The " + diedTeam.getTeamColor().name + ChatColor.GOLD +
-                        " Team was eliminated!");
+                diedTeam.eliminate();
             }
 
             setSpectator(died);
@@ -364,6 +363,8 @@ public class WarsGameListener implements Listener {
         died.setMaxHealth(20);
         died.setHealth(20);
         died.getInventory().clear();
+
+        died.getActivePotionEffects().clear();
     }
 
     @EventHandler

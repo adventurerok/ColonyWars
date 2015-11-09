@@ -451,6 +451,10 @@ public class WarsPlugin extends JavaPlugin {
                     config.getInt(base + ".z"));
 
             SchematicBuilder.pasteSchematic(this, getSchematicData(Buildings.BASE), build, 0, team);
+
+            if(getTeamInfo(team).getPlayerCount() == 0){
+                getTeamInfo(team).eliminate();
+            }
         }
     }
 

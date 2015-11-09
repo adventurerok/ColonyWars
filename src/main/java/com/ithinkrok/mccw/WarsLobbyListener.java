@@ -52,6 +52,10 @@ public class WarsLobbyListener implements Listener {
         playerInfo.message(ChatColor.GREEN + "Canyon is the only map so there is no map voting!");
 
         playerInfo.getPlayer().setGameMode(GameMode.ADVENTURE);
+        playerInfo.getPlayer().setMaxHealth(20);
+        playerInfo.getPlayer().setHealth(20);
+        playerInfo.getPlayer().setFoodLevel(20);
+        playerInfo.getPlayer().setSaturation(20);
 
         playerInfo.getPlayer().teleport(Bukkit.getWorld("world").getSpawnLocation());
     }

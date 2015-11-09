@@ -28,6 +28,7 @@ public class TeamInfo {
     private HashMap<String, Integer> buildingNowCounts = new HashMap<>();
 
     private List<Location> churchLocations = new ArrayList<>();
+    private Location baseLocation;
     private int respawnChance;
 
     public TeamInfo(WarsPlugin plugin, TeamColor teamColor) {
@@ -143,6 +144,9 @@ public class TeamInfo {
                 respawnChance = Math.max(respawnChance, 75);
                 churchLocations.add(building.getCenterBlock());
                 break;
+            case Buildings.BASE:
+                baseLocation = building.getCenterBlock();
+                break;
         }
 
         updatePlayerScoreboards();
@@ -167,5 +171,15 @@ public class TeamInfo {
         Location loc = churchLocations.get(plugin.getRandom().nextInt(churchLocations.size()));
 
         died.teleport(loc, PlayerTeleportEvent.TeleportCause.PLUGIN);
+    }
+
+    public void eliminate() {
+        plugin.messageAll(ChatColor.GOLD + "The " + getTeamColor().name + ChatColor.GOLD +
+                " Team was eliminated!");
+
+        if(baseLocation != null){
+            plugin.getBuildingInfo(baseLocation).explode();
+            baseLocation = null;
+        }
     }
 }

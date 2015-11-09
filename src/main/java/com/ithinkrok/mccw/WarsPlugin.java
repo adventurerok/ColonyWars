@@ -33,6 +33,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
 import java.io.IOException;
@@ -186,13 +187,29 @@ public class WarsPlugin extends JavaPlugin {
             decloak(playerInfo.getPlayer());
         }
 
+        for (TeamColor c : TeamColor.values()) {
+            teamInfoEnumMap.put(c, new TeamInfo(this, c));
+        }
+
         Bukkit.unloadWorld("playing", false);
+
+        HandlerList.unregisterAll(currentListener);
+        currentListener = new WarsLobbyListener(this);
+        getServer().getPluginManager().registerEvents(currentListener, this);
 
         setInGame(false);
         setInAftermath(false);
         setInShowdown(false);
 
         startLobbyCountdown();
+    }
+
+    public void removePotionEffects(Player player){
+        List<PotionEffect> effects = new ArrayList<>(player.getActivePotionEffects());
+
+        for(PotionEffect effect : effects){
+            player.removePotionEffect(effect.getType());
+        }
     }
 
     public void playerJoinLobby(Player player){
@@ -204,6 +221,10 @@ public class WarsPlugin extends JavaPlugin {
         playerInfo.getPlayer().setHealth(20);
         playerInfo.getPlayer().setFoodLevel(20);
         playerInfo.getPlayer().setSaturation(20);
+
+        playerInfo.getPlayer().getActivePotionEffects().clear();
+
+        removePotionEffects(player);
 
         setPlayerTeam(player, null);
 
@@ -481,6 +502,8 @@ public class WarsPlugin extends JavaPlugin {
             info.getPlayer().setHealth(40);
             info.getPlayer().setSaturation(5);
             info.getPlayer().setFoodLevel(20);
+
+            removePotionEffects(info.getPlayer());
 
             info.setInGame(true);
 

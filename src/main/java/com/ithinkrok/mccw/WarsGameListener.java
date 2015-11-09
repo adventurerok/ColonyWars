@@ -367,7 +367,7 @@ public class WarsGameListener implements Listener {
         died.setHealth(20);
         died.getInventory().clear();
 
-        died.getActivePotionEffects().clear();
+        plugin.removePotionEffects(died);
     }
 
     @EventHandler

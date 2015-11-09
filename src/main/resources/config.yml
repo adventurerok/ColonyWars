@@ -87,6 +87,8 @@ costs:
     healingPotion32: 1250
   cathedral:
     healingPotion32: 500
+  greenhouse:
+    axe: 1600
   scout:
     sharpness1: 1350
     sharpness2: 1600

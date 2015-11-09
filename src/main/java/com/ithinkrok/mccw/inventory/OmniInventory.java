@@ -30,6 +30,7 @@ public class OmniInventory extends BuyableInventory {
         addFarmItems(result, config);
         addChurchItems(result, plugin, config);
         addCathedralItems(result, config);
+        addGreenhouseItems(result, config);
 
         return result;
     }
@@ -113,6 +114,13 @@ public class OmniInventory extends BuyableInventory {
     private static void addCathedralItems(List<Buyable> result, FileConfiguration config) {
         result.add(new ItemBuyable(InventoryUtils.createPotion(PotionType.INSTANT_HEAL, 1, true, false, 32),
                 Buildings.CATHEDRAL, config.getInt("costs.cathedral.healingPotion32"), true));
+    }
+
+    private static void addGreenhouseItems(List<Buyable> result, FileConfiguration config) {
+        int axeCost = config.getInt("costs.greenhouse.axe");
+
+        result.add(new ItemBuyable(InventoryUtils.createItemWithNameAndLore(Material.STONE_AXE, 1, 0, "The Mighty Axe"),
+                Buildings.GREENHOUSE, axeCost, false));
     }
 
     private static class BuildingBuyableWithFarm extends BuildingBuyable {

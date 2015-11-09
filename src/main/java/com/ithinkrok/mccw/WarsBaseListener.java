@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -39,6 +40,13 @@ public class WarsBaseListener implements Listener {
 
     @EventHandler
     public void onDropItem(PlayerDropItemEvent event) {
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onCreatureSpawn(CreatureSpawnEvent event){
+        if(event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) return;
+
         event.setCancelled(true);
     }
 

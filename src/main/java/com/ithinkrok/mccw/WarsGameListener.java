@@ -16,6 +16,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -54,9 +55,9 @@ public class WarsGameListener implements Listener {
         event.getPlayer().setHealth(plugin.getMaxHealth());
 
         //Just for testing
-//        plugin.setPlayerTeam(event.getPlayer(), TeamColor.RED);
-//        playerInfo.setPlayerClass(PlayerClass.GENERAL);
-//        plugin.setupPlayers();
+        //        plugin.setPlayerTeam(event.getPlayer(), TeamColor.RED);
+        //        playerInfo.setPlayerClass(PlayerClass.GENERAL);
+        //        plugin.setupPlayers();
     }
 
     @EventHandler
@@ -101,7 +102,7 @@ public class WarsGameListener implements Listener {
     public void onBlockPlace(BlockPlaceEvent event) {
         PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
 
-        if(!playerInfo.isInGame()){
+        if (!playerInfo.isInGame()) {
             event.setCancelled(true);
             return;
         }
@@ -203,7 +204,7 @@ public class WarsGameListener implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
 
-        if(!playerInfo.isInGame()){
+        if (!playerInfo.isInGame()) {
             event.setCancelled(true);
             return;
         }
@@ -264,14 +265,13 @@ public class WarsGameListener implements Listener {
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        plugin.getLogger().info("DMG");
         if (!(event.getDamager() instanceof Player)) return;
 
         Player damager = (Player) event.getDamager();
 
         PlayerInfo damagerInfo = plugin.getPlayerInfo(damager);
 
-        if(!damagerInfo.isInGame()){
+        if (!damagerInfo.isInGame()) {
             event.setCancelled(true);
             return;
         }
@@ -280,11 +280,78 @@ public class WarsGameListener implements Listener {
 
         if (!(event.getEntity() instanceof Player)) return;
 
-        Player entity = (Player) event.getEntity();
+        Player target = (Player) event.getEntity();
 
-        if (damagerInfo.getTeamColor() == plugin.getPlayerInfo(entity).getTeamColor()) {
+        if (damagerInfo.getTeamColor() == plugin.getPlayerInfo(target).getTeamColor()) {
             event.setCancelled(true);
+            return;
         }
+
+        if (target.getHealth() - event.getDamage() < 1) {
+            event.setCancelled(true);
+            playerDeath(target, damager);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onEntityDamaged(EntityDamageEvent event){
+        if (!(event.getEntity() instanceof Player)) return;
+
+        Player target = (Player) event.getEntity();
+
+        if (target.getHealth() - event.getDamage() < 1) {
+            event.setCancelled(true);
+            playerDeath(target, null);
+        }
+    }
+
+    public void playerDeath(Player died, Player killer) {
+        PlayerInfo diedInfo = plugin.getPlayerInfo(died);
+        PlayerInfo killerInfo = killer == null ? null : plugin.getPlayerInfo(killer);
+        if (killerInfo != null) {
+            plugin.messageAll(ChatColor.GOLD + diedInfo.getFormattedName() + ChatColor.GOLD +
+                    " was killed by " + killerInfo.getFormattedName());
+        } else {
+            plugin.messageAll(ChatColor.GOLD + diedInfo.getFormattedName() + ChatColor.GOLD + " died!");
+        }
+
+        TeamInfo diedTeam = plugin.getTeamInfo(diedInfo.getTeamColor());
+        boolean respawn = plugin.getRandom().nextFloat() < (diedTeam.getRespawnChance() / 100f);
+
+        if (respawn) {
+            plugin.messageAll(diedInfo.getFormattedName() + ChatColor.GOLD + " has respawned!");
+
+            diedTeam.setRespawnChance(diedTeam.getRespawnChance() - 15);
+            diedTeam.respawnPlayer(died);
+
+            diedTeam.message(
+                    ChatColor.GOLD + "Your revival chance is now " + ChatColor.DARK_AQUA + diedTeam.getRespawnChance());
+        } else {
+            plugin.messageAll(diedInfo.getFormattedName() + ChatColor.GOLD + " did not respawn!");
+            plugin.setPlayerTeam(died, null);
+
+            plugin.messageAll(ChatColor.GOLD + "The " + diedInfo.getTeamColor().name + ChatColor.GOLD +
+                    " has lost a player!");
+            plugin.messageAll(ChatColor.GOLD + "There are now " + ChatColor.DARK_AQUA + diedTeam.getPlayerCount() +
+                    ChatColor.GOLD + " players left on the " + diedInfo.getTeamColor().name + ChatColor.GOLD + " Team");
+
+            if (diedTeam.getPlayerCount() == 0) {
+                plugin.messageAll(ChatColor.GOLD + "The " + diedTeam.getTeamColor().name + ChatColor.GOLD +
+                        " Team was eliminated!");
+            }
+
+            setSpectator(died);
+        }
+    }
+
+    public void setSpectator(Player died){
+        plugin.setPlayerTeam(died, null);
+        plugin.getPlayerInfo(died).setInGame(false);
+        plugin.cloak(died);
+        died.setGameMode(GameMode.CREATIVE);
+        died.setMaxHealth(20);
+        died.setHealth(20);
+        died.getInventory().clear();
     }
 
     @EventHandler

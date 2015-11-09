@@ -243,7 +243,7 @@ public class WarsPlugin extends JavaPlugin {
             }
         }
 
-        getTeamInfo(buildingInfo.getTeamColor()).buildingFinished(buildingInfo.getBuildingName());
+        getTeamInfo(buildingInfo.getTeamColor()).buildingFinished(buildingInfo);
     }
 
     public PlayerClassHandler getPlayerClassHandler(PlayerClass playerClass) {
@@ -368,7 +368,7 @@ public class WarsPlugin extends JavaPlugin {
         }
 
         playerInfo.setTeamColor(teamColor);
-        getTeamInfo(teamColor).addPlayer(player);
+        if(teamColor != null) getTeamInfo(teamColor).addPlayer(player);
     }
 
     public void stopCountdown() {
@@ -486,7 +486,7 @@ public class WarsPlugin extends JavaPlugin {
 
     public void removeBuilding(BuildingInfo buildingInfo) {
         buildings.remove(buildingInfo);
-        getTeamInfo(buildingInfo.getTeamColor()).removeBuilding(buildingInfo.getBuildingName());
+        getTeamInfo(buildingInfo.getTeamColor()).removeBuilding(buildingInfo);
 
         buildingCentres.remove(buildingInfo.getCenterBlock());
 

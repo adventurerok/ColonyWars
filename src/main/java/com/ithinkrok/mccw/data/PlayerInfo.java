@@ -179,7 +179,9 @@ public class PlayerInfo {
     public void setTeamColor(TeamColor teamColor) {
         this.teamColor = teamColor;
 
-        updateTeamArmor();
+        player.setPlayerListName(getFormattedName());
+
+        if(teamColor != null) updateTeamArmor();
     }
 
     public Location getShopBlock() {
@@ -264,11 +266,17 @@ public class PlayerInfo {
             oldBuildingNows.add(entry.getKey());
         }
 
+        if(teamInfo.getRespawnChance() > 0){
+            mainObjective.getScore(ChatColor.AQUA + "Revival Rate:").setScore(teamInfo.getRespawnChance());
+        }
+
         player.setScoreboard(scoreboard);
 
     }
 
     public String getFormattedName() {
+        if(teamColor == null) return player.getName();
+
         return teamColor.chatColor + player.getName() + ChatColor.DARK_AQUA;
     }
 }

@@ -2,11 +2,15 @@ package com.ithinkrok.mccw.data;
 
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.mccw.strings.Buildings;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by paul on 02/11/15.
@@ -22,6 +26,9 @@ public class TeamInfo {
 
     private HashMap<String, Integer> buildingCounts = new HashMap<>();
     private HashMap<String, Integer> buildingNowCounts = new HashMap<>();
+
+    private List<Location> churchLocations = new ArrayList<>();
+    private int respawnChance;
 
     public TeamInfo(WarsPlugin plugin, TeamColor teamColor) {
         this.plugin = plugin;
@@ -60,6 +67,14 @@ public class TeamInfo {
         teamCash += cash;
 
         updatePlayerScoreboards();
+    }
+
+    public int getRespawnChance() {
+        return respawnChance;
+    }
+
+    public void setRespawnChance(int respawnChance) {
+        this.respawnChance = respawnChance;
     }
 
     public int getTotalBuildingNowCount() {
@@ -108,23 +123,47 @@ public class TeamInfo {
         updatePlayerScoreboards();
     }
 
-    public void buildingFinished(String buildingType){
+    public void buildingFinished(BuildingInfo building){
         buildingsConstructingNow -= 1;
 
-        int buildingNowOfType = getBuildingNowCount(buildingType) - 1;
-        if(buildingNowOfType > 0) buildingNowCounts.put(buildingType, buildingNowOfType);
-        else buildingNowCounts.remove(buildingType);
+        int buildingNowOfType = getBuildingNowCount(building.getBuildingName()) - 1;
+        if(buildingNowOfType > 0) buildingNowCounts.put(building.getBuildingName(), buildingNowOfType);
+        else buildingNowCounts.remove(building.getBuildingName());
 
-        buildingCounts.put(buildingType, getBuildingCount(buildingType) + 1);
+        buildingCounts.put(building.getBuildingName(), getBuildingCount(building.getBuildingName()) + 1);
+
+        switch(building.getBuildingName()){
+            case Buildings.CHURCH:
+                respawnChance = Math.max(respawnChance, 30);
+                churchLocations.add(building.getCenterBlock());
+                break;
+            case Buildings.CATHEDRAL:
+                respawnChance = Math.max(respawnChance, 75);
+                churchLocations.add(building.getCenterBlock());
+                break;
+        }
 
         updatePlayerScoreboards();
     }
 
-    public void removeBuilding(String buildingType){
-        buildingCounts.put(buildingType, Math.max(getBuildingCount(buildingType) - 1, 0));
+    public void removeBuilding(BuildingInfo building){
+        buildingCounts.put(building.getBuildingName(), Math.max(getBuildingCount(building.getBuildingName()) - 1, 0));
+
+        switch(building.getBuildingName()){
+            case Buildings.CHURCH:
+            case Buildings.CATHEDRAL:
+                churchLocations.remove(building.getCenterBlock());
+                break;
+        }
     }
 
     public int getPlayerCount() {
         return players.size();
+    }
+
+    public void respawnPlayer(Player died) {
+        Location loc = churchLocations.get(plugin.getRandom().nextInt(churchLocations.size()));
+
+        died.teleport(loc, PlayerTeleportEvent.TeleportCause.PLUGIN);
     }
 }

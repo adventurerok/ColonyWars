@@ -18,21 +18,25 @@ import com.ithinkrok.mccw.playerclass.GeneralClass;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.mccw.playerclass.ScoutClass;
 import com.ithinkrok.mccw.strings.Buildings;
+import com.ithinkrok.mccw.util.DirectoryUtils;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import com.ithinkrok.mccw.util.InvisiblePlayerAttacker;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import com.ithinkrok.mccw.util.SchematicBuilder;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Paths;
 import java.util.*;
 
 
@@ -66,6 +70,8 @@ public class WarsPlugin extends JavaPlugin {
 
     private int countDown = 0;
     private int countDownTask = 0;
+
+    private String map = "canyon";
 
     public double getMaxHealth() {
         return (double) 40;
@@ -128,7 +134,7 @@ public class WarsPlugin extends JavaPlugin {
         startLobbyCountdown();
     }
 
-    private void startLobbyCountdown() {
+    public void startLobbyCountdown() {
         countDown = 180;
 
         messageAll(ChatColor.GREEN + "Starting count down to game from " + countDown);
@@ -145,19 +151,20 @@ public class WarsPlugin extends JavaPlugin {
 
             if (countDown == 120) {
                 messageAll(ChatColor.GREEN + "Game starting in " + ChatColor.DARK_AQUA + "2" + ChatColor.GREEN +
-                        " minutes");
+                        " minutes!");
             }
             if (countDown == 60) {
                 messageAll(ChatColor.GREEN + "Game starting in " + ChatColor.DARK_AQUA + "1" + ChatColor.GREEN +
-                        " minute");
+                        " minute!");
             } else if (countDown == 30) {
                 messageAll(ChatColor.GREEN + "Game starting in " + ChatColor.DARK_AQUA + "30" + ChatColor.GREEN +
-                        " seconds");
+                        " seconds!");
             } else if (countDown == 10) {
                 messageAll(ChatColor.GREEN + "Game starting in " + ChatColor.DARK_AQUA + "10" + ChatColor.GREEN +
-                        " seconds");
+                        " seconds!");
             } else if (countDown == 0) {
                 getServer().getScheduler().cancelTask(countDownTask);
+                countDownTask = 0;
                 if (playerInfoHashMap.size() > 5) {
                     startGame();
                 } else {
@@ -172,19 +179,10 @@ public class WarsPlugin extends JavaPlugin {
         }, 20, 20);
     }
 
-    public void startGame() {
-
-    }
-
     public void messageAll(String message) {
         for (PlayerInfo p : playerInfoHashMap.values()) {
             p.message(message);
         }
-    }
-
-
-    public SchematicData getSchematicData(String buildingName) {
-        return schematicDataHashMap.get(buildingName);
     }
 
     public InventoryHandler getBuildingInventoryHandler() {
@@ -282,12 +280,17 @@ public class WarsPlugin extends JavaPlugin {
 
                     PlayerInfo playerInfo = getPlayerInfo(player);
                     if (!playerInfo.subtractPlayerCash(amount)) {
-                        player.sendMessage("You do not have that amount of money");
+                        playerInfo.message(ChatColor.RED + "You do not have that amount of money");
                         return true;
                     }
 
                     TeamInfo teamInfo = getTeamInfo(playerInfo.getTeamColor());
                     teamInfo.addTeamCash(amount);
+
+                    teamInfo.message(playerInfo.getFormattedName() + " transferred " + ChatColor.GREEN + "$" + amount +
+                            ChatColor.YELLOW + " to your team's account!");
+                    teamInfo.message("Your Team's new Balance is: " + ChatColor.GREEN + "$" + teamInfo.getTeamCash() +
+                            ChatColor.YELLOW + "!");
 
                     return true;
                 } catch (NumberFormatException e) {
@@ -317,6 +320,8 @@ public class WarsPlugin extends JavaPlugin {
                 TeamColor teamColor = TeamColor.valueOf(args[1].toUpperCase());
                 setPlayerTeam(player, teamColor);
 
+                playerInfo.message("You were changed to team " + teamColor);
+
                 break;
             case "class":
                 if (args.length < 2) return false;
@@ -324,18 +329,32 @@ public class WarsPlugin extends JavaPlugin {
                 PlayerClass playerClass = PlayerClass.valueOf(args[1].toUpperCase());
                 playerInfo.setPlayerClass(playerClass);
 
+                playerInfo.message("You were changed to class " + playerClass);
+
                 break;
             case "money":
 
                 playerInfo.addPlayerCash(10000);
                 getTeamInfo(playerInfo.getTeamColor()).addTeamCash(10000);
+
+                playerInfo.message("10000 added to both you and your team's balance");
                 break;
             case "build":
                 if (args.length < 2) return false;
 
                 player.getInventory()
                         .addItem(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 16, 0, args[1]));
+
+                playerInfo.message("Added 16 " + args[1] + " build blocks to your inventory");
                 break;
+            case "start_game":
+                playerInfo.message("Attempting to start a new game!");
+
+                stopCountdown();
+                startGame();
+
+                break;
+
         }
 
         return true;
@@ -352,6 +371,105 @@ public class WarsPlugin extends JavaPlugin {
         getTeamInfo(teamColor).addPlayer(player);
     }
 
+    public void stopCountdown() {
+        if (countDownTask == 0) return;
+
+        getServer().getScheduler().cancelTask(countDownTask);
+        countDownTask = 0;
+
+        for (PlayerInfo p : playerInfoHashMap.values()) {
+            p.getPlayer().setLevel(0);
+        }
+    }
+
+    public void startGame() {
+        try {
+            DirectoryUtils.copy(Paths.get("./canyon/"), Paths.get("./playing/"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Bukkit.createWorld(new WorldCreator("playing"));
+
+        HandlerList.unregisterAll(currentListener);
+        currentListener = new WarsGameListener(this);
+        getServer().getPluginManager().registerEvents(currentListener, this);
+        setupPlayers();
+        setupBases();
+    }
+
+    public void setupPlayers() {
+        World world = getServer().getWorld("playing");
+        FileConfiguration config = getConfig();
+
+        for (PlayerInfo info : playerInfoHashMap.values()) {
+
+            if (info.getTeamColor() == null) {
+                setPlayerTeam(info.getPlayer(), assignPlayerTeam());
+            }
+
+            if (info.getPlayerClass() == null) {
+                info.setPlayerClass(assignPlayerClass());
+            }
+
+            String base = "maps." + map + "." + info.getTeamColor().toString().toLowerCase() + ".spawn";
+
+            info.getPlayer().teleport(new Location(world, config.getDouble(base + ".x"), config.getDouble(base + ".y"),
+                    config.getDouble(base + ".z")), PlayerTeleportEvent.TeleportCause.PLUGIN);
+
+            PlayerClassHandler classHandler = getPlayerClassHandler(info.getPlayerClass());
+            classHandler.onGameBegin(info, getTeamInfo(info.getTeamColor()));
+
+            info.message(ChatColor.GOLD + "You are playing on the " + info.getTeamColor().name + ChatColor.GOLD +
+                    "Team");
+
+            info.message(ChatColor.GOLD + "You are playing as the class " + ChatColor.DARK_AQUA +
+                    info.getPlayerClass().name);
+        }
+    }
+
+    public void setupBases() {
+        World world = getServer().getWorld("playing");
+        FileConfiguration config = getConfig();
+
+        for (TeamColor team : TeamColor.values()) {
+            String base = "maps." + map + "." + team.toString().toLowerCase() + ".base";
+
+            Location build = new Location(world, config.getInt(base + ".x"), config.getInt(base + ".y"),
+                    config.getInt(base + ".z"));
+
+            SchematicBuilder.pasteSchematic(this, getSchematicData(Buildings.BASE), build, 0, team);
+        }
+    }
+
+    public TeamColor assignPlayerTeam() {
+        ArrayList<TeamColor> smallest = new ArrayList<>();
+        int leastCount = Integer.MAX_VALUE;
+
+        for (TeamColor team : TeamColor.values()) {
+            TeamInfo info = getTeamInfo(team);
+            if (info.getPlayerCount() < leastCount) {
+                leastCount = info.getPlayerCount();
+
+                smallest.clear();
+            }
+
+            if (info.getPlayerCount() == leastCount) {
+                smallest.add(team);
+            }
+        }
+
+        return smallest.get(random.nextInt(smallest.size()));
+    }
+
+    public PlayerClass assignPlayerClass() {
+        return PlayerClass.values()[random.nextInt(PlayerClass.values().length)];
+    }
+
+    public SchematicData getSchematicData(String buildingName) {
+        return schematicDataHashMap.get(buildingName);
+    }
+
     public void removeBuilding(BuildingInfo buildingInfo) {
         buildings.remove(buildingInfo);
         getTeamInfo(buildingInfo.getTeamColor()).removeBuilding(buildingInfo.getBuildingName());
@@ -362,14 +480,6 @@ public class WarsPlugin extends JavaPlugin {
             if (info.getTeamColor() != buildingInfo.getTeamColor()) continue;
 
             info.recalculateInventory();
-        }
-    }
-
-    public void setupPlayers() {
-        for (PlayerInfo info : playerInfoHashMap.values()) {
-            PlayerClassHandler classHandler = getPlayerClassHandler(info.getPlayerClass());
-
-            classHandler.onGameBegin(info, getTeamInfo(info.getTeamColor()));
         }
     }
 

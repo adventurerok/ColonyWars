@@ -73,7 +73,7 @@ public class TeamInfo {
         updatePlayerScoreboards();
 
         message(ChatColor.RED + "$" + cash + ChatColor.YELLOW + " were deducted from your Team's Account!");
-        message("Your Team's new Balance is: " + ChatColor.GREEN + "$" + teamCash + "!");
+        message("Your Team's new Balance is: " + ChatColor.GREEN + "$" + teamCash + ChatColor.YELLOW + "!");
 
         return true;
     }

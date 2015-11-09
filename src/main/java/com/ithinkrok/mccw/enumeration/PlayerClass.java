@@ -5,8 +5,13 @@ package com.ithinkrok.mccw.enumeration;
  */
 public enum PlayerClass {
 
-    CLOAKER,
-    SCOUT,
-    GENERAL,
-    PEASANT
+    CLOAKER("Cloaker"),
+    SCOUT("Scout"),
+    GENERAL("General");
+
+    public final String name;
+
+    PlayerClass(String name) {
+        this.name = name;
+    }
 }

@@ -49,7 +49,7 @@ public class WarsGameListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
 
-        playerInfo.setupScoreboard();
+        playerInfo.updateScoreboard();
 
         event.getPlayer().setMaxHealth(plugin.getMaxHealth());
         event.getPlayer().setHealth(plugin.getMaxHealth());

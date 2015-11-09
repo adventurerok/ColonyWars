@@ -429,7 +429,7 @@ public class WarsPlugin extends JavaPlugin {
             info.updateTeamArmor();
             info.getPlayer().getInventory().addItem(new ItemStack(Material.DIAMOND_PICKAXE));
 
-            info.setupScoreboard();
+            info.updateScoreboard();
 
             PlayerClassHandler classHandler = getPlayerClassHandler(info.getPlayerClass());
             classHandler.onGameBegin(info, getTeamInfo(info.getTeamColor()));
@@ -439,6 +439,10 @@ public class WarsPlugin extends JavaPlugin {
 
             info.message(ChatColor.GOLD + "You are playing as the class " + ChatColor.DARK_AQUA +
                     info.getPlayerClass().name);
+        }
+
+        for(PlayerInfo info : playerInfoHashMap.values()){
+            decloak(info.getPlayer());
         }
     }
 
@@ -537,6 +541,8 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public void cloak(Player player) {
+        getPlayerInfo(player).setCloaked(true);
+
         for (PlayerInfo p : playerInfoHashMap.values()) {
             if (p.getPlayer() == player) continue;
 
@@ -545,6 +551,8 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public void decloak(Player player) {
+        getPlayerInfo(player).setCloaked(false);
+
         for (PlayerInfo p : playerInfoHashMap.values()) {
             if (p.getPlayer() == player) continue;
 

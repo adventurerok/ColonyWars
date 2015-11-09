@@ -75,6 +75,8 @@ public class TeamInfo {
 
     public void setRespawnChance(int respawnChance) {
         this.respawnChance = respawnChance;
+
+        updatePlayerScoreboards();
     }
 
     public int getTotalBuildingNowCount() {

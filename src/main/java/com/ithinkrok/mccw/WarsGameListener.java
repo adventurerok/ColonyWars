@@ -6,6 +6,7 @@ import com.ithinkrok.mccw.data.SchematicData;
 import com.ithinkrok.mccw.data.TeamInfo;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
+import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.Facing;
 import com.ithinkrok.mccw.util.SchematicBuilder;
 import com.ithinkrok.mccw.util.TreeFeller;
@@ -152,6 +153,11 @@ public class WarsGameListener implements Listener {
         if (playerInfo.getTeamColor() == buildingInfo.getTeamColor()) {
             playerInfo.message(ChatColor.RED + "You cannot destroy your own team's buildings!");
             event.setCancelled(true);
+            return;
+        }
+
+        if(Buildings.BASE.equals(buildingInfo.getBuildingName())){
+            playerInfo.message(ChatColor.RED + "You cannot destroy other team's bases!");
             return;
         }
 

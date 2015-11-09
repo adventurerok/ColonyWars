@@ -147,6 +147,12 @@ public class WarsPlugin extends JavaPlugin {
         classHandlerEnumMap.put(PlayerClass.CLOAKER, new CloakerClass(this, getConfig()));
 
         startLobbyCountdown();
+
+
+        /*
+        TODO invisible players bug for modded 1.8.0 clients (like my test ones)
+         */
+
     }
 
     public void startLobbyCountdown() {

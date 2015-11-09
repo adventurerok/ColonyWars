@@ -171,6 +171,8 @@ public class TeamInfo {
         Location loc = churchLocations.get(plugin.getRandom().nextInt(churchLocations.size()));
 
         died.teleport(loc, PlayerTeleportEvent.TeleportCause.PLUGIN);
+
+        plugin.decloak(died);
     }
 
     public void eliminate() {

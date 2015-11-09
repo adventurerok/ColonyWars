@@ -198,7 +198,7 @@ public class PlayerInfo {
         this.shopInventory = shopInventory;
     }
 
-    private void updateTeamArmor() {
+    public void updateTeamArmor() {
         ItemStack helmet = new ItemStack(Material.LEATHER_HELMET, 1);
         ItemStack chestplate = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
         ItemStack leggings = new ItemStack(Material.LEATHER_LEGGINGS, 1);

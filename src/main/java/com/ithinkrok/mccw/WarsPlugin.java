@@ -417,6 +417,16 @@ public class WarsPlugin extends JavaPlugin {
             info.getPlayer().teleport(new Location(world, config.getDouble(base + ".x"), config.getDouble(base + ".y"),
                     config.getDouble(base + ".z")), PlayerTeleportEvent.TeleportCause.PLUGIN);
 
+            info.getPlayer().setGameMode(GameMode.SURVIVAL);
+            info.getPlayer().setMaxHealth(40);
+            info.getPlayer().setHealth(40);
+            info.getPlayer().setSaturation(5);
+            info.getPlayer().setFoodLevel(20);
+
+            info.getPlayer().getInventory().clear();
+            info.updateTeamArmor();
+            info.getPlayer().getInventory().addItem(new ItemStack(Material.DIAMOND_PICKAXE));
+
             info.setupScoreboard();
 
             PlayerClassHandler classHandler = getPlayerClassHandler(info.getPlayerClass());

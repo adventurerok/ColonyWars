@@ -12,6 +12,7 @@ import com.ithinkrok.mccw.util.Facing;
 import com.ithinkrok.mccw.util.SchematicBuilder;
 import com.ithinkrok.mccw.util.TreeFeller;
 import org.bukkit.*;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -20,6 +21,7 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -317,10 +319,25 @@ public class WarsGameListener implements Listener {
     }
 
     @EventHandler
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player)) return;
+    public void onEntityShootBow(EntityShootBowEvent event){
+        if(!(event.getEntity() instanceof Player)) return;
 
-        Player damager = (Player) event.getDamager();
+        resetDurability((Player) event.getEntity());
+    }
+
+    @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        Player damager;
+        if (!(event.getDamager() instanceof Player)){
+            if(event.getDamager() instanceof Arrow){
+                Arrow arrow = (Arrow) event.getDamager();
+
+                if(!(arrow.getShooter() instanceof Player)) return;
+                damager = (Player) arrow.getShooter();
+            } else return;
+        } else {
+            damager = (Player) event.getDamager();
+        }
 
         PlayerInfo damagerInfo = plugin.getPlayerInfo(damager);
 

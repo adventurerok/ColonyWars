@@ -102,6 +102,13 @@ costs:
   cloaker:
     cloak1: 1350
     cloak2: 1600
+  archer:
+    sword1: 1350
+    sword2: 1600
+    bow1: 1350
+    bow2: 1600
+    arrows1: 1350
+    arrows2: 1600
 
 amounts:
   farm:

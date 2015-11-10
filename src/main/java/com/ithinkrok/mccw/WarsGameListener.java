@@ -55,10 +55,11 @@ public class WarsGameListener implements Listener {
             return;
         }
 
-        if (playerInfo.isInGame()) {
+        if (playerInfo.isInGame() && playerInfo.getTeamColor() != null) {
             String playerClass = playerInfo.getPlayerClass().toString();
-            event.setFormat(ChatColor.DARK_BLUE + "<" + ChatColor.DARK_GRAY + "[" + ChatColor.GRAY + playerClass +
-                    ChatColor.DARK_GRAY + "] %s" + ChatColor.DARK_BLUE + "> " + ChatColor.WHITE + "%s");
+            String teamColor = playerInfo.getTeamColor().chatColor.toString();
+            event.setFormat(teamColor + "<" + ChatColor.DARK_GRAY + "[" + ChatColor.GRAY + playerClass +
+                    ChatColor.DARK_GRAY + "] %s" + teamColor + "> " + ChatColor.WHITE + "%s");
         } else {
             event.setFormat(
                     ChatColor.LIGHT_PURPLE + "<" + ChatColor.GRAY + ChatColor.LIGHT_PURPLE + "> " + ChatColor.WHITE +

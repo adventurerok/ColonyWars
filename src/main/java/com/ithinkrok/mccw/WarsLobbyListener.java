@@ -16,10 +16,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 
 /**
@@ -108,6 +105,12 @@ public class WarsLobbyListener implements Listener {
                 "Can go invisible for short periods of time"));
 
         player.openInventory(shopInv);
+    }
+
+    @EventHandler
+    public void onPlayerChat(AsyncPlayerChatEvent event){
+        event.setFormat(ChatColor.DARK_GRAY + "<" + ChatColor.WHITE + "%s" + ChatColor.DARK_GRAY + "> " + ChatColor
+                .WHITE + "%s");
     }
 
     @EventHandler

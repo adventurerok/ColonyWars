@@ -4,6 +4,7 @@ import com.ithinkrok.mccw.data.BuildingInfo;
 import com.ithinkrok.mccw.data.PlayerInfo;
 import com.ithinkrok.mccw.data.SchematicData;
 import com.ithinkrok.mccw.data.TeamInfo;
+import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.mccw.strings.Buildings;
@@ -41,6 +42,29 @@ public class WarsGameListener implements Listener {
 
     public WarsGameListener(WarsPlugin plugin) {
         this.plugin = plugin;
+    }
+
+    @EventHandler
+    public void onPlayerChat(AsyncPlayerChatEvent event) {
+        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
+        if (playerInfo == null) {
+            event.setCancelled(true);
+            return;
+        }
+
+        if (playerInfo.isInGame()) {
+            String playerClass = playerInfo.getPlayerClass().toString();
+            event.setFormat(ChatColor.DARK_BLUE + "<" + ChatColor.DARK_GRAY + "[" + ChatColor.GRAY + playerClass +
+                    ChatColor.DARK_GRAY + "] %s" + ChatColor.DARK_BLUE + "> " + ChatColor.WHITE + "%s");
+        } else {
+            event.setFormat(
+                    ChatColor.LIGHT_PURPLE + "<" + ChatColor.GRAY + ChatColor.LIGHT_PURPLE + "> " + ChatColor.WHITE +
+                            "%s");
+        }
+
+        plugin.getPlayers().stream()
+                .filter(other -> other.getTeamColor() != playerInfo.getTeamColor() && playerInfo.getTeamColor() != null)
+                .forEach(other -> event.getRecipients().remove(other.getPlayer()));
     }
 
     @EventHandler

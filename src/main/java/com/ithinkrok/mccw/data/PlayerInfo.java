@@ -246,6 +246,7 @@ public class PlayerInfo {
         this.teamColor = teamColor;
 
         player.setPlayerListName(getFormattedName());
+        player.setDisplayName(getFormattedName());
 
         if (teamColor != null) updateTeamArmor();
     }
@@ -253,7 +254,7 @@ public class PlayerInfo {
     public String getFormattedName() {
         if (teamColor == null) return player.getName();
 
-        return teamColor.chatColor + player.getName() + ChatColor.DARK_AQUA;
+        return teamColor.chatColor + player.getName();
     }
 
     public void updateTeamArmor() {

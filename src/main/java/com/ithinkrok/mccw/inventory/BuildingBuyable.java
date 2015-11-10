@@ -29,7 +29,8 @@ public class BuildingBuyable extends ItemBuyable {
 
     @Override
     public void prePurchase(ItemPurchaseEvent event) {
-        event.getTeamInfo()
-                .message(event.getPlayerInfo().getFormattedName() + " purchased " + ChatColor.WHITE + buildingName);
+        event.getTeamInfo().message(
+                event.getPlayerInfo().getFormattedName() + ChatColor.DARK_AQUA + " purchased " + ChatColor.WHITE +
+                        buildingName);
     }
 }

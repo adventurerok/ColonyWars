@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -52,7 +53,7 @@ public class WarsPlugin extends JavaPlugin {
     public static final String CHAT_PREFIX =
             ChatColor.GRAY + "[" + ChatColor.DARK_AQUA + "ColonyWars" + ChatColor.GRAY + "] " + ChatColor.YELLOW;
 
-    private HashMap<UUID, PlayerInfo> playerInfoHashMap = new HashMap<>();
+    private ConcurrentHashMap<UUID, PlayerInfo> playerInfoHashMap = new ConcurrentHashMap<>();
     private EnumMap<TeamColor, TeamInfo> teamInfoEnumMap = new EnumMap<>(TeamColor.class);
     private HashMap<String, SchematicData> schematicDataHashMap = new HashMap<>();
     private List<BuildingInfo> buildings = new ArrayList<>();
@@ -87,10 +88,6 @@ public class WarsPlugin extends JavaPlugin {
     private CountdownType countdownType;
 
     private String map = "canyon";
-
-    public double getMaxHealth() {
-        return (double) 40;
-    }
 
     @Override
     public void onDisable() {
@@ -170,22 +167,12 @@ public class WarsPlugin extends JavaPlugin {
                 });
     }
 
-    public void startEndCountdown(){
-        messageAll(ChatColor.GREEN + "You will be teleported back to the lobby in 15 seconds!");
-
-        startCountdown(15, CountdownType.GAME_END,
-                ChatColor.GREEN + "Game ending in " + ChatColor.DARK_AQUA + "%s" + ChatColor.GREEN +
-                        " minutes!",
-                ChatColor.GREEN + "Game ending in " + ChatColor.DARK_AQUA + "%s" + ChatColor.GREEN +
-                        " seconds!", this::endGame);
-    }
-
     public void endGame() {
-        for(PlayerInfo playerInfo : playerInfoHashMap.values()){
-             playerJoinLobby(playerInfo.getPlayer());
+        for (PlayerInfo playerInfo : playerInfoHashMap.values()) {
+            playerJoinLobby(playerInfo.getPlayer());
         }
 
-        for(PlayerInfo playerInfo : playerInfoHashMap.values()){
+        for (PlayerInfo playerInfo : playerInfoHashMap.values()) {
             decloak(playerInfo.getPlayer());
         }
 
@@ -206,15 +193,7 @@ public class WarsPlugin extends JavaPlugin {
         startLobbyCountdown();
     }
 
-    public void removePotionEffects(Player player){
-        List<PotionEffect> effects = new ArrayList<>(player.getActivePotionEffects());
-
-        for(PotionEffect effect : effects){
-            player.removePotionEffect(effect.getType());
-        }
-    }
-
-    public void playerJoinLobby(Player player){
+    public void playerJoinLobby(Player player) {
         PlayerInfo playerInfo = getPlayerInfo(player);
 
         playerInfo.setInGame(false);
@@ -245,32 +224,6 @@ public class WarsPlugin extends JavaPlugin {
         playerInfo.message(ChatColor.GREEN + "Canyon is the only map so there is no map voting!");
 
         playerInfo.getPlayer().teleport(Bukkit.getWorld("world").getSpawnLocation());
-    }
-
-    private void startCountdown(int countdown, CountdownType countdownType, String minutesWarning,
-                                String secondsWarning, Runnable finished) {
-        this.countDown = countdown;
-        this.countdownType = countdownType;
-
-        countDownTask = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
-            --countDown;
-
-            for (PlayerInfo p : playerInfoHashMap.values()) {
-                p.getPlayer().setLevel(countDown);
-            }
-
-            if (countDown == 120) messageAll(String.format(minutesWarning, "2"));
-            else if (countDown == 60) messageAll(String.format(minutesWarning, "1"));
-            else if (countDown == 30) messageAll(String.format(secondsWarning, "30"));
-            else if (countDown == 10) messageAll(String.format(secondsWarning, "10"));
-            else if (countDown == 0) {
-                getServer().getScheduler().cancelTask(countDownTask);
-                countDownTask = 0;
-                finished.run();
-            } else if (countDown < 6) messageAll(ChatColor.DARK_AQUA.toString() + countDown + ChatColor.GREEN + "!");
-
-
-        }, 20, 20);
     }
 
     public InventoryHandler getBuildingInventoryHandler() {
@@ -375,7 +328,8 @@ public class WarsPlugin extends JavaPlugin {
                     TeamInfo teamInfo = getTeamInfo(playerInfo.getTeamColor());
                     teamInfo.addTeamCash(amount);
 
-                    teamInfo.message(playerInfo.getFormattedName() + " transferred " + ChatColor.GREEN + "$" + amount +
+                    teamInfo.message(playerInfo.getFormattedName() + ChatColor.DARK_AQUA + " transferred " +
+                            ChatColor.GREEN + "$" + amount +
                             ChatColor.YELLOW + " to your team's account!");
                     teamInfo.message("Your Team's new Balance is: " + ChatColor.GREEN + "$" + teamInfo.getTeamCash() +
                             ChatColor.YELLOW + "!");
@@ -468,6 +422,10 @@ public class WarsPlugin extends JavaPlugin {
         for (PlayerInfo p : playerInfoHashMap.values()) {
             p.getPlayer().setLevel(0);
         }
+    }
+
+    public Collection<PlayerInfo> getPlayers(){
+        return playerInfoHashMap.values();
     }
 
     public void startGame() {
@@ -582,6 +540,18 @@ public class WarsPlugin extends JavaPlugin {
 
         return new Location(world, config.getDouble(base + ".x"), config.getDouble(base + ".y"),
                 config.getDouble(base + ".z"));
+    }
+
+    public double getMaxHealth() {
+        return (double) 40;
+    }
+
+    public void removePotionEffects(Player player) {
+        List<PotionEffect> effects = new ArrayList<>(player.getActivePotionEffects());
+
+        for (PotionEffect effect : effects) {
+            player.removePotionEffect(effect.getType());
+        }
     }
 
     public void decloak(Player player) {
@@ -702,5 +672,41 @@ public class WarsPlugin extends JavaPlugin {
         for (PlayerInfo p : playerInfoHashMap.values()) {
             p.message(message);
         }
+    }
+
+    public void startEndCountdown() {
+        messageAll(ChatColor.GREEN + "You will be teleported back to the lobby in 15 seconds!");
+
+        startCountdown(15, CountdownType.GAME_END,
+                ChatColor.GREEN + "Game ending in " + ChatColor.DARK_AQUA + "%s" + ChatColor.GREEN +
+                        " minutes!",
+                ChatColor.GREEN + "Game ending in " + ChatColor.DARK_AQUA + "%s" + ChatColor.GREEN +
+                        " seconds!", this::endGame);
+    }
+
+    private void startCountdown(int countdown, CountdownType countdownType, String minutesWarning,
+                                String secondsWarning, Runnable finished) {
+        this.countDown = countdown;
+        this.countdownType = countdownType;
+
+        countDownTask = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
+            --countDown;
+
+            for (PlayerInfo p : playerInfoHashMap.values()) {
+                p.getPlayer().setLevel(countDown);
+            }
+
+            if (countDown == 120) messageAll(String.format(minutesWarning, "2"));
+            else if (countDown == 60) messageAll(String.format(minutesWarning, "1"));
+            else if (countDown == 30) messageAll(String.format(secondsWarning, "30"));
+            else if (countDown == 10) messageAll(String.format(secondsWarning, "10"));
+            else if (countDown == 0) {
+                getServer().getScheduler().cancelTask(countDownTask);
+                countDownTask = 0;
+                finished.run();
+            } else if (countDown < 6) messageAll(ChatColor.DARK_AQUA.toString() + countDown + ChatColor.GREEN + "!");
+
+
+        }, 20, 20);
     }
 }

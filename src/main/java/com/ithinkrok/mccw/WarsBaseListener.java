@@ -9,6 +9,8 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.weather.ThunderChangeEvent;
+import org.bukkit.event.weather.WeatherChangeEvent;
 
 /**
  * Created by paul on 08/11/15.
@@ -47,6 +49,16 @@ public class WarsBaseListener implements Listener {
     public void onCreatureSpawn(CreatureSpawnEvent event){
         if(event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) return;
 
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onWeatherChange(WeatherChangeEvent event){
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onThunderChange(ThunderChangeEvent event){
         event.setCancelled(true);
     }
 

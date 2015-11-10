@@ -668,7 +668,10 @@ public class WarsPlugin extends JavaPlugin {
             setInAftermath(true);
             startEndCountdown();
             return;
-        } else if (teamsInGame.size() > 1) return;
+        } else if (teamsInGame.size() > 1) {
+            checkShowdownStart(teamsInGame.size());
+            return;
+        }
 
         TeamColor winner = teamsInGame.iterator().next();
 
@@ -677,6 +680,23 @@ public class WarsPlugin extends JavaPlugin {
         setInAftermath(true);
 
         startEndCountdown();
+    }
+
+    public void checkShowdownStart(int teamsInGame) {
+        if(isInShowdown() || countdownType == CountdownType.SHOWDOWN_START) return;
+        if(teamsInGame > 2 && getPlayersInGame() > 4) return;
+
+        startShowdownCountdown();
+    }
+
+    public int getPlayersInGame(){
+        int count = 0;
+
+        for(TeamInfo teamInfo : teamInfoEnumMap.values()) {
+            count += teamInfo.getPlayerCount();
+        }
+
+        return count;
     }
 
     public boolean isInAftermath() {
@@ -737,6 +757,8 @@ public class WarsPlugin extends JavaPlugin {
         }
 
         setInShowdown(true);
+
+        messageAll(ChatColor.BOLD.toString() + ChatColor.GOLD + "Showdown starts NOW!");
     }
 
     public boolean isInShowdownBounds(Location loc){
@@ -767,6 +789,7 @@ public class WarsPlugin extends JavaPlugin {
                 getServer().getScheduler().cancelTask(countDownTask);
                 countDownTask = 0;
                 finished.run();
+                this.countdownType = null;
             } else if (countDown < 6) messageAll(ChatColor.DARK_AQUA.toString() + countDown + ChatColor.GREEN + "!");
 
 

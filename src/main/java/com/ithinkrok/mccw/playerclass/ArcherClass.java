@@ -63,6 +63,7 @@ public class ArcherClass extends BuyableInventory implements PlayerClassHandler 
 
         inv.addItem(new ItemStack(Material.BOW));
         inv.addItem(new ItemStack(Material.WOOD_SWORD));
+        inv.addItem(new ItemStack(Material.ARROW, 32));
     }
 
     @Override

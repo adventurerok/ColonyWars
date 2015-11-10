@@ -771,6 +771,11 @@ public class WarsPlugin extends JavaPlugin {
 
     private void startCountdown(int countdown, CountdownType countdownType, String minutesWarning,
                                 String secondsWarning, Runnable finished) {
+        if(this.countDownTask != 0){
+            getServer().getScheduler().cancelTask(countDownTask);
+            this.countDownTask = 0;
+        }
+
         this.countDown = countdown;
         this.countdownType = countdownType;
 

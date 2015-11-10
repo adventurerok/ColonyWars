@@ -34,6 +34,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
@@ -761,9 +762,14 @@ public class WarsPlugin extends JavaPlugin {
                     Location loc = getTeamInfo(winningTeam).getRandomPlayer().getLocation();
                     Firework firework = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
 
+                    Color color = Color.fromRGB(random.nextInt(255), random.nextInt(255), random.nextInt(255));
+                    Color fade = Color.fromRGB(random.nextInt(255), random.nextInt(255), random.nextInt(255));
+
                     firework.setVelocity(new Vector(0, 3, 0));
-                    firework.getFireworkMeta()
-                            .addEffect(FireworkEffect.builder().with(FireworkEffect.Type.BURST).trail(true).build());
+                    FireworkMeta meta = firework.getFireworkMeta();
+                    meta.addEffect(FireworkEffect.builder().with(FireworkEffect.Type.BURST).trail(true).withColor(color)
+                            .withFade(fade).build());
+                    firework.setFireworkMeta(meta);
                 });
     }
 

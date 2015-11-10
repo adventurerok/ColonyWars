@@ -31,6 +31,10 @@ public class TeamInfo {
     private Location baseLocation;
     private int respawnChance;
 
+    public Location getBaseLocation() {
+        return baseLocation;
+    }
+
     public TeamInfo(WarsPlugin plugin, TeamColor teamColor) {
         this.plugin = plugin;
         this.teamColor = teamColor;

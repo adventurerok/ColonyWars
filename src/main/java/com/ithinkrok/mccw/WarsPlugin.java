@@ -420,6 +420,15 @@ public class WarsPlugin extends JavaPlugin {
                 stopCountdown();
                 startShowdown();
                 break;
+            case "base_location":
+                TeamInfo teamInfo = getTeamInfo(playerInfo.getTeamColor());
+                if(teamInfo == null){
+                    playerInfo.message("Your team is null");
+                    break;
+                }
+
+                playerInfo.message("Base location: " + teamInfo.getBaseLocation());
+                break;
 
         }
 

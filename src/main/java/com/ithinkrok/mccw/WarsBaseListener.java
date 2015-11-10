@@ -16,7 +16,7 @@ import org.bukkit.event.weather.WeatherChangeEvent;
 
 /**
  * Created by paul on 08/11/15.
- *
+ * <p>
  * Base listener for ColonyWars. Listens both during the game and in the lobby
  */
 public class WarsBaseListener implements Listener {
@@ -28,7 +28,7 @@ public class WarsBaseListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerJoin(PlayerJoinEvent event){
+    public void onPlayerJoin(PlayerJoinEvent event) {
         PlayerInfo playerInfo = new PlayerInfo(plugin, event.getPlayer());
         plugin.setPlayerInfo(event.getPlayer(), playerInfo);
 
@@ -48,29 +48,30 @@ public class WarsBaseListener implements Listener {
     }
 
     @EventHandler
-    public void onCreatureSpawn(CreatureSpawnEvent event){
-        if(event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) return;
+    public void onCreatureSpawn(CreatureSpawnEvent event) {
+        if (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) return;
 
         event.setCancelled(true);
     }
 
     @EventHandler
-    public void onWeatherChange(WeatherChangeEvent event){
-        if(event.toWeatherState()) event.setCancelled(true);
+    public void onWeatherChange(WeatherChangeEvent event) {
+        if (event.toWeatherState()) event.setCancelled(true);
     }
 
     @EventHandler
-    public void onThunderChange(ThunderChangeEvent event){
-        if(event.toThunderState()) event.setCancelled(true);
+    public void onThunderChange(ThunderChangeEvent event) {
+        if (event.toThunderState()) event.setCancelled(true);
     }
 
     @EventHandler
-    public void onPlayerCommand(PlayerCommandPreprocessEvent event){
+    public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
         String cmd = event.getMessage().substring(1).split(" ")[0].toLowerCase();
 
-        switch(cmd){
+        switch (cmd) {
             case "kill":
-            case "me":
+                event.setCancelled(true);
+                break;
         }
     }
 

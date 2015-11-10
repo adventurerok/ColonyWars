@@ -184,4 +184,8 @@ public class TeamInfo {
             baseLocation = null;
         }
     }
+
+    public Player getRandomPlayer() {
+        return players.get(plugin.getRandom().nextInt(players.size()));
+    }
 }

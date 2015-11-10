@@ -27,6 +27,8 @@ import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -92,6 +94,11 @@ public class WarsPlugin extends JavaPlugin {
     private Location showdownCenter;
 
     private String map = "canyon";
+    private TeamColor winningTeam;
+
+    public TeamColor getWinningTeam() {
+        return winningTeam;
+    }
 
     @Override
     public void onDisable() {
@@ -176,7 +183,7 @@ public class WarsPlugin extends JavaPlugin {
                         messageAll(ChatColor.RED + "You need at least 6 players to start a Colony Wars game.");
                         startLobbyCountdown();
                     }
-                });
+                }, null);
     }
 
     public void endGame() {
@@ -442,10 +449,6 @@ public class WarsPlugin extends JavaPlugin {
         }
     }
 
-    public Collection<PlayerInfo> getPlayers(){
-        return playerInfoHashMap.values();
-    }
-
     public void startGame() {
         try {
             DirectoryUtils.copy(Paths.get("./canyon/"), Paths.get("./playing/"));
@@ -460,6 +463,34 @@ public class WarsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(currentListener, this);
         setupPlayers();
         setupBases();
+    }
+
+    public void startShowdown() {
+        FileConfiguration config = getConfig();
+        String base = "maps." + map + ".showdown-size";
+        int x = config.getInt(base + ".x");
+        int z = config.getInt(base + ".z");
+
+        showdownRadiusX = x;
+        showdownRadiusZ = z;
+        showdownCenter = getMapSpawn(null);
+
+        for (PlayerInfo playerInfo : getPlayers()) {
+            int offsetX = (-x / 2) + random.nextInt(x);
+            int offsetZ = (-z / 2) + random.nextInt(z);
+            int offsetY = 1;
+
+            Location teleport = getMapSpawn(null);
+            teleport.setX(teleport.getX() + offsetX);
+            teleport.setY(teleport.getY() + offsetY);
+            teleport.setZ(teleport.getZ() + offsetZ);
+
+            playerInfo.getPlayer().teleport(teleport);
+        }
+
+        setInShowdown(true);
+
+        messageAll(ChatColor.BOLD.toString() + ChatColor.GOLD + "Showdown starts NOW!");
     }
 
     public void setupPlayers() {
@@ -524,6 +555,28 @@ public class WarsPlugin extends JavaPlugin {
         }
     }
 
+    public Location getMapSpawn(TeamColor team) {
+        World world = getServer().getWorld("playing");
+        FileConfiguration config = getConfig();
+
+        String base;
+        if (team == null) base = "maps." + map + ".center";
+        else base = "maps." + map + "." + team.toString().toLowerCase() + ".spawn";
+
+        return new Location(world, config.getDouble(base + ".x"), config.getDouble(base + ".y"),
+                config.getDouble(base + ".z"));
+    }
+
+    public Collection<PlayerInfo> getPlayers() {
+        return playerInfoHashMap.values();
+    }
+
+    public void messageAll(String message) {
+        for (PlayerInfo p : playerInfoHashMap.values()) {
+            p.message(message);
+        }
+    }
+
     public TeamColor assignPlayerTeam() {
         ArrayList<TeamColor> smallest = new ArrayList<>();
         int leastCount = Integer.MAX_VALUE;
@@ -546,18 +599,6 @@ public class WarsPlugin extends JavaPlugin {
 
     public PlayerClass assignPlayerClass() {
         return PlayerClass.values()[random.nextInt(PlayerClass.values().length)];
-    }
-
-    public Location getMapSpawn(TeamColor team) {
-        World world = getServer().getWorld("playing");
-        FileConfiguration config = getConfig();
-
-        String base;
-        if (team == null) base = "maps." + map + ".center";
-        else base = "maps." + map + "." + team.toString().toLowerCase() + ".spawn";
-
-        return new Location(world, config.getDouble(base + ".x"), config.getDouble(base + ".y"),
-                config.getDouble(base + ".z"));
     }
 
     public double getMaxHealth() {
@@ -658,7 +699,7 @@ public class WarsPlugin extends JavaPlugin {
 
         for (PlayerInfo info : playerInfoHashMap.values()) {
             if (!info.isInGame()) continue;
-            if(info.getTeamColor() == null) continue;
+            if (info.getTeamColor() == null) continue;
 
             teamsInGame.add(info.getTeamColor());
         }
@@ -674,6 +715,7 @@ public class WarsPlugin extends JavaPlugin {
         }
 
         TeamColor winner = teamsInGame.iterator().next();
+        this.winningTeam = winner;
 
         messageAll(ChatColor.GOLD + "The " + winner.name + ChatColor.GOLD + " Team has won the game!");
 
@@ -683,16 +725,16 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public void checkShowdownStart(int teamsInGame) {
-        if(isInShowdown() || countdownType == CountdownType.SHOWDOWN_START) return;
-        if(teamsInGame > 2 && getPlayersInGame() > 4) return;
+        if (isInShowdown() || countdownType == CountdownType.SHOWDOWN_START) return;
+        if (teamsInGame > 2 && getPlayersInGame() > 4) return;
 
         startShowdownCountdown();
     }
 
-    public int getPlayersInGame(){
+    public int getPlayersInGame() {
         int count = 0;
 
-        for(TeamInfo teamInfo : teamInfoEnumMap.values()) {
+        for (TeamInfo teamInfo : teamInfoEnumMap.values()) {
             count += teamInfo.getPlayerCount();
         }
 
@@ -707,12 +749,6 @@ public class WarsPlugin extends JavaPlugin {
         this.inAftermath = inAftermath;
     }
 
-    public void messageAll(String message) {
-        for (PlayerInfo p : playerInfoHashMap.values()) {
-            p.message(message);
-        }
-    }
-
     public void startEndCountdown() {
         messageAll(ChatColor.GREEN + "Teleporting back to the lobby in 15 seconds!");
 
@@ -720,7 +756,15 @@ public class WarsPlugin extends JavaPlugin {
                 ChatColor.GREEN + "Game ending in " + ChatColor.DARK_AQUA + "%s" + ChatColor.GREEN +
                         " minutes!",
                 ChatColor.GREEN + "Game ending in " + ChatColor.DARK_AQUA + "%s" + ChatColor.GREEN +
-                        " seconds!", this::endGame);
+                        " seconds!", this::endGame, () -> {
+                    if (countDown < 10) return;
+                    Location loc = getTeamInfo(winningTeam).getRandomPlayer().getLocation();
+                    Firework firework = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
+
+                    firework.setVelocity(new Vector(0, 3, 0));
+                    firework.getFireworkMeta()
+                            .addEffect(FireworkEffect.builder().with(FireworkEffect.Type.BURST).trail(true).build());
+                });
     }
 
     public void startShowdownCountdown() {
@@ -730,38 +774,10 @@ public class WarsPlugin extends JavaPlugin {
                 ChatColor.GREEN + "Showdown starting in " + ChatColor.DARK_AQUA + "%s" + ChatColor.GREEN +
                         " minutes!",
                 ChatColor.GREEN + "Showdown starting in " + ChatColor.DARK_AQUA + "%s" + ChatColor.GREEN +
-                        " seconds!", this::startShowdown);
+                        " seconds!", this::startShowdown, null);
     }
 
-    public void startShowdown() {
-        FileConfiguration config = getConfig();
-        String base = "maps." + map + ".showdown-size";
-        int x = config.getInt(base + ".x");
-        int z = config.getInt(base + ".z");
-
-        showdownRadiusX = x;
-        showdownRadiusZ = z;
-        showdownCenter = getMapSpawn(null);
-
-        for(PlayerInfo playerInfo : getPlayers()){
-            int offsetX = (-x/2) + random.nextInt(x);
-            int offsetZ = (-z/2) + random.nextInt(z);
-            int offsetY = 1;
-
-            Location teleport = getMapSpawn(null);
-            teleport.setX(teleport.getX() + offsetX);
-            teleport.setY(teleport.getY() + offsetY);
-            teleport.setZ(teleport.getZ() + offsetZ);
-
-            playerInfo.getPlayer().teleport(teleport);
-        }
-
-        setInShowdown(true);
-
-        messageAll(ChatColor.BOLD.toString() + ChatColor.GOLD + "Showdown starts NOW!");
-    }
-
-    public boolean isInShowdownBounds(Location loc){
+    public boolean isInShowdownBounds(Location loc) {
         double xd = Math.abs(loc.getX() - showdownCenter.getX());
         double zd = Math.abs(loc.getZ() - showdownCenter.getZ());
 
@@ -770,8 +786,8 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     private void startCountdown(int countdown, CountdownType countdownType, String minutesWarning,
-                                String secondsWarning, Runnable finished) {
-        if(this.countDownTask != 0){
+                                String secondsWarning, Runnable finished, Runnable during) {
+        if (this.countDownTask != 0) {
             getServer().getScheduler().cancelTask(countDownTask);
             this.countDownTask = 0;
         }
@@ -785,6 +801,8 @@ public class WarsPlugin extends JavaPlugin {
             for (PlayerInfo p : playerInfoHashMap.values()) {
                 p.getPlayer().setLevel(countDown);
             }
+
+            if (during != null) during.run();
 
             if (countDown == 120) messageAll(String.format(minutesWarning, "2"));
             else if (countDown == 60) messageAll(String.format(minutesWarning, "1"));

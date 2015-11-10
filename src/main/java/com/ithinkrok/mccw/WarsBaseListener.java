@@ -2,10 +2,12 @@ package com.ithinkrok.mccw;
 
 import com.ithinkrok.mccw.data.PlayerInfo;
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -26,7 +28,7 @@ public class WarsBaseListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onJoin(PlayerJoinEvent event){
+    public void onPlayerJoin(PlayerJoinEvent event){
         PlayerInfo playerInfo = new PlayerInfo(plugin, event.getPlayer());
         plugin.setPlayerInfo(event.getPlayer(), playerInfo);
 
@@ -36,7 +38,7 @@ public class WarsBaseListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onQuit(PlayerQuitEvent event) {
+    public void onPlayerQuit(PlayerQuitEvent event) {
         plugin.setPlayerInfo(event.getPlayer(), null);
     }
 
@@ -60,6 +62,16 @@ public class WarsBaseListener implements Listener {
     @EventHandler
     public void onThunderChange(ThunderChangeEvent event){
         if(event.toThunderState()) event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onPlayerCommand(PlayerCommandPreprocessEvent event){
+        String cmd = event.getMessage().substring(1).split(" ")[0].toLowerCase();
+
+        switch(cmd){
+            case "kill":
+            case "me":
+        }
     }
 
 }

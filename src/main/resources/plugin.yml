@@ -15,3 +15,4 @@ commands:
   test:
     description: "ColonyWars test command"
     usage: "/test <test> [test arguments...]"
+    permission: "mccw.test"

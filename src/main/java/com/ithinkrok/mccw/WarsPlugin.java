@@ -219,8 +219,8 @@ public class WarsPlugin extends JavaPlugin {
 
         playerInfo.setInGame(false);
         playerInfo.getPlayer().setGameMode(GameMode.ADVENTURE);
-        playerInfo.getPlayer().setMaxHealth(20);
-        playerInfo.getPlayer().setHealth(20);
+        playerInfo.getPlayer().setMaxHealth(getMaxHealth());
+        playerInfo.getPlayer().setHealth(getMaxHealth());
         playerInfo.getPlayer().setFoodLevel(20);
         playerInfo.getPlayer().setSaturation(20);
 
@@ -500,8 +500,8 @@ public class WarsPlugin extends JavaPlugin {
             info.getPlayer().teleport(getMapSpawn(info.getTeamColor()));
 
             info.getPlayer().setGameMode(GameMode.SURVIVAL);
-            info.getPlayer().setMaxHealth(40);
-            info.getPlayer().setHealth(40);
+            info.getPlayer().setMaxHealth(getMaxHealth());
+            info.getPlayer().setHealth(getMaxHealth());
             info.getPlayer().setSaturation(5);
             info.getPlayer().setFoodLevel(20);
 

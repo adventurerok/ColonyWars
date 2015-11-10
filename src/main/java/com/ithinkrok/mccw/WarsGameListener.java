@@ -44,7 +44,7 @@ public class WarsGameListener implements Listener {
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
+    public void onPlayerJoin(PlayerJoinEvent event) {
         PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
 
         setSpectator(playerInfo.getPlayer());
@@ -52,10 +52,21 @@ public class WarsGameListener implements Listener {
 
         playerInfo.updateScoreboard();
 
-        //Just for testing
-        //        plugin.setPlayerTeam(event.getPlayer(), TeamColor.RED);
-        //        playerInfo.setPlayerClass(PlayerClass.GENERAL);
-        //        plugin.setupPlayers();
+        playerInfo.message(ChatColor.RED + "There is already a game in progress!");
+        playerInfo.message(ChatColor.GOLD + "You will have to wait for the current game to finish before you can " +
+                "play!");
+    }
+
+    public void setSpectator(Player died) {
+        plugin.setPlayerTeam(died, null);
+        plugin.getPlayerInfo(died).setInGame(false);
+        plugin.cloak(died);
+        died.setGameMode(GameMode.CREATIVE);
+        died.setMaxHealth(plugin.getMaxHealth());
+        died.setHealth(plugin.getMaxHealth());
+        died.getInventory().clear();
+
+        plugin.removePotionEffects(died);
     }
 
     @EventHandler
@@ -153,7 +164,7 @@ public class WarsGameListener implements Listener {
             return;
         }
 
-        if(Buildings.BASE.equals(buildingInfo.getBuildingName())){
+        if (Buildings.BASE.equals(buildingInfo.getBuildingName())) {
             playerInfo.message(ChatColor.RED + "You cannot destroy other team's bases!");
             return;
         }
@@ -296,34 +307,13 @@ public class WarsGameListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onEntityDamaged(EntityDamageEvent event){
-        if (!(event.getEntity() instanceof Player)) return;
-
-        Player target = (Player) event.getEntity();
-
-        if (target.getHealth() - event.getDamage() < 1) {
-            event.setCancelled(true);
-            playerDeath(target, null);
-        }
-    }
-    
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event){
-        PlayerInfo diedInfo = plugin.getPlayerInfo(event.getPlayer());
-        TeamInfo diedTeam = plugin.getTeamInfo(diedInfo.getTeamColor());
-        if(diedTeam == null) return;
-        
-        teamPlayerDied(diedInfo, diedTeam);
-    }
-
     public void playerDeath(Player died, Player killer) {
-        if(plugin.isInAftermath()) return;
+        if (plugin.isInAftermath()) return;
         PlayerInfo diedInfo = plugin.getPlayerInfo(died);
 
-        if(!diedInfo.isInGame()){
-            died.setMaxHealth(20);
-            died.setHealth(20);
+        if (!diedInfo.isInGame()) {
+            died.setMaxHealth(plugin.getMaxHealth());
+            died.setHealth(plugin.getMaxHealth());
 
             died.teleport(plugin.getMapSpawn(null));
             return;
@@ -359,7 +349,7 @@ public class WarsGameListener implements Listener {
             setSpectator(died);
         }
     }
-    
+
     public void teamPlayerDied(PlayerInfo diedInfo, TeamInfo diedTeam) {
         plugin.setPlayerTeam(diedInfo.getPlayer(), null);
 
@@ -369,22 +359,31 @@ public class WarsGameListener implements Listener {
                 ChatColor.GOLD + " players left on the " + diedTeam.getTeamColor().name + ChatColor.GOLD + " Team");
 
         if (diedTeam.getPlayerCount() == 0) {
-          diedTeam.eliminate();
+            diedTeam.eliminate();
         }
 
         plugin.checkVictory();
     }
-    
-    public void setSpectator(Player died){
-        plugin.setPlayerTeam(died, null);
-        plugin.getPlayerInfo(died).setInGame(false);
-        plugin.cloak(died);
-        died.setGameMode(GameMode.CREATIVE);
-        died.setMaxHealth(20);
-        died.setHealth(20);
-        died.getInventory().clear();
 
-        plugin.removePotionEffects(died);
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onEntityDamaged(EntityDamageEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
+
+        Player target = (Player) event.getEntity();
+
+        if (target.getHealth() - event.getDamage() < 1) {
+            event.setCancelled(true);
+            playerDeath(target, null);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        PlayerInfo diedInfo = plugin.getPlayerInfo(event.getPlayer());
+        TeamInfo diedTeam = plugin.getTeamInfo(diedInfo.getTeamColor());
+        if (diedTeam == null) return;
+
+        teamPlayerDied(diedInfo, diedTeam);
     }
 
     @EventHandler

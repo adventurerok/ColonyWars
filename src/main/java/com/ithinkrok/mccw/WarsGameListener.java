@@ -50,10 +50,10 @@ public class WarsGameListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
 
-        playerInfo.updateScoreboard();
+        setSpectator(playerInfo.getPlayer());
+        playerInfo.getPlayer().teleport(plugin.getMapSpawn(null));
 
-        event.getPlayer().setMaxHealth(plugin.getMaxHealth());
-        event.getPlayer().setHealth(plugin.getMaxHealth());
+        playerInfo.updateScoreboard();
 
         //Just for testing
         //        plugin.setPlayerTeam(event.getPlayer(), TeamColor.RED);
@@ -310,6 +310,15 @@ public class WarsGameListener implements Listener {
             playerDeath(target, null);
         }
     }
+    
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event){
+        PlayerInfo diedInfo = plugin.getPlayerInfo(event.getPlayer());
+        TeamInfo diedTeam = plugin.getTeamInfo(diedInfo.getTeamColor());
+        if(diedTeam == null) return;
+        
+        teamPlayerDied(diedInfo, diedTeam);
+    }
 
     public void playerDeath(Player died, Player killer) {
         if(plugin.isInAftermath()) return;
@@ -348,22 +357,27 @@ public class WarsGameListener implements Listener {
                     ChatColor.GOLD + "Your revival chance is now " + ChatColor.DARK_AQUA + diedTeam.getRespawnChance());
         } else {
             plugin.messageAll(diedInfo.getFormattedName() + ChatColor.GOLD + " did not respawn!");
-            plugin.setPlayerTeam(died, null);
-
-            plugin.messageAll(ChatColor.GOLD + "The " + diedTeam.getTeamColor().name + ChatColor.GOLD +
-                    " has lost a player!");
-            plugin.messageAll(ChatColor.GOLD + "There are now " + ChatColor.DARK_AQUA + diedTeam.getPlayerCount() +
-                    ChatColor.GOLD + " players left on the " + diedTeam.getTeamColor().name + ChatColor.GOLD + " Team");
-
-            if (diedTeam.getPlayerCount() == 0) {
-                diedTeam.eliminate();
-            }
+            teamPlayerDied(diedInfo, diedTeam);
 
             setSpectator(died);
         }
 
         plugin.checkVictory();
     }
+    
+    public void teamPlayerDied(PlayerInfo diedInfo, TeamInfo diedTeam) {
+        plugin.setPlayerTeam(diedInfo.getPlayer(), null);
+
+        plugin.messageAll(ChatColor.GOLD + "The " + diedTeam.getTeamColor().name + ChatColor.GOLD +
+                " has lost a player!");
+        plugin.messageAll(ChatColor.GOLD + "There are now " + ChatColor.DARK_AQUA + diedTeam.getPlayerCount() +
+                ChatColor.GOLD + " players left on the " + diedTeam.getTeamColor().name + ChatColor.GOLD + " Team");
+
+        if (diedTeam.getPlayerCount() == 0) {
+          diedTeam.eliminate();
+        }
+    }
+    
     public void setSpectator(Player died){
         plugin.setPlayerTeam(died, null);
         plugin.getPlayerInfo(died).setInGame(false);

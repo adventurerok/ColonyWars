@@ -138,7 +138,7 @@ public class WarsLobbyListener implements Listener {
                     int playerCount = plugin.getPlayerCount();
                     int teamSize = plugin.getTeamInfo(teamColor).getPlayerCount();
 
-                    if (teamSize - 1 > playerCount / 4) {
+                    if (teamSize >= (playerCount + 3) / 4) {
                         playerInfo.message(ChatColor.RED + "The " + chatTeamName + ChatColor.RED + " Team" +
                                 " is full. Please try another team.");
                         break;

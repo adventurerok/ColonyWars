@@ -358,8 +358,6 @@ public class WarsGameListener implements Listener {
 
             setSpectator(died);
         }
-
-        plugin.checkVictory();
     }
     
     public void teamPlayerDied(PlayerInfo diedInfo, TeamInfo diedTeam) {
@@ -373,6 +371,8 @@ public class WarsGameListener implements Listener {
         if (diedTeam.getPlayerCount() == 0) {
           diedTeam.eliminate();
         }
+
+        plugin.checkVictory();
     }
     
     public void setSpectator(Player died){

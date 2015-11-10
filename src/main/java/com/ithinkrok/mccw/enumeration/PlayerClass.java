@@ -7,7 +7,8 @@ public enum PlayerClass {
 
     CLOAKER("Cloaker"),
     SCOUT("Scout"),
-    GENERAL("General");
+    GENERAL("General"),
+    ARCHER("Archer");
 
     public final String name;
 

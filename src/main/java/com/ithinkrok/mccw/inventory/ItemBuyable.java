@@ -11,10 +11,10 @@ import java.util.UUID;
  */
 public class ItemBuyable extends Buyable {
 
-    private ItemStack purchase;
-    private boolean allowMultiple;
+    protected ItemStack purchase;
+    protected boolean allowMultiple;
 
-    private String upgradeToken;
+    protected String upgradeToken;
 
     public ItemBuyable(ItemStack display, String buildingName, int cost, boolean allowMultiple) {
         this(display, display.clone(), buildingName, cost, false, allowMultiple);

@@ -101,6 +101,9 @@ public class WarsLobbyListener implements Listener {
         shopInv.addItem(InventoryUtils
                 .createItemWithNameAndLore(Material.COMPASS, 1, 0, "Scout", "Runs fast and has a player locator"));
 
+        shopInv.addItem(InventoryUtils
+                .createItemWithNameAndLore(Material.BOW, 1, 0, "Archer", "Fights with a bow!"));
+
         shopInv.addItem(InventoryUtils.createItemWithNameAndLore(Material.IRON_LEGGINGS, 1, 0, "Cloaker",
                 "Can go invisible for short periods of time"));
 

@@ -14,10 +14,7 @@ import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.inventory.OmniInventory;
-import com.ithinkrok.mccw.playerclass.CloakerClass;
-import com.ithinkrok.mccw.playerclass.GeneralClass;
-import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
-import com.ithinkrok.mccw.playerclass.ScoutClass;
+import com.ithinkrok.mccw.playerclass.*;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.DirectoryUtils;
 import com.ithinkrok.mccw.util.InventoryUtils;
@@ -162,6 +159,7 @@ public class WarsPlugin extends JavaPlugin {
         classHandlerEnumMap.put(PlayerClass.GENERAL, new GeneralClass(getConfig()));
         classHandlerEnumMap.put(PlayerClass.SCOUT, new ScoutClass(this, getConfig()));
         classHandlerEnumMap.put(PlayerClass.CLOAKER, new CloakerClass(this, getConfig()));
+        classHandlerEnumMap.put(PlayerClass.ARCHER, new ArcherClass(getConfig()));
 
         startLobbyCountdown();
 

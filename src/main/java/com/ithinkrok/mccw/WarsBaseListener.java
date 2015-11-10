@@ -54,12 +54,12 @@ public class WarsBaseListener implements Listener {
 
     @EventHandler
     public void onWeatherChange(WeatherChangeEvent event){
-        event.setCancelled(true);
+        if(event.toWeatherState()) event.setCancelled(true);
     }
 
     @EventHandler
     public void onThunderChange(ThunderChangeEvent event){
-        event.setCancelled(true);
+        if(event.toThunderState()) event.setCancelled(true);
     }
 
 }

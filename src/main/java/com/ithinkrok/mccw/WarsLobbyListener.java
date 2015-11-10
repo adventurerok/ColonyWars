@@ -1,6 +1,7 @@
 package com.ithinkrok.mccw;
 
 import com.ithinkrok.mccw.data.PlayerInfo;
+import com.ithinkrok.mccw.data.TeamInfo;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.util.InventoryUtils;
@@ -18,6 +19,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 
 /**
@@ -165,6 +167,11 @@ public class WarsLobbyListener implements Listener {
             }
         } catch (IllegalArgumentException ignored) {
         }
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event){
+        plugin.setPlayerTeam(event.getPlayer(), null);
     }
 
     @EventHandler

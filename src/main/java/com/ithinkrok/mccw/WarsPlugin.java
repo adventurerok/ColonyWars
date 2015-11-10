@@ -558,15 +558,6 @@ public class WarsPlugin extends JavaPlugin {
             Location build = new Location(world, config.getInt(base + ".x"), config.getInt(base + ".y"),
                     config.getInt(base + ".z"));
 
-            //Chunk loading unnecessary (I think)
-//            for (int x = -1; x <= 1; ++x) {
-//                for (int z = -1; z <= 1; ++z) {
-//                    Chunk chunk =
-//                            build.getWorld().getChunkAt((build.getBlockX() >> 4) + x, (build.getBlockZ() >> 4) + z);
-//
-//                    if(!chunk.isLoaded()) chunk.load();
-//                }
-//            }
 
             SchematicBuilder.pasteSchematic(this, getSchematicData(Buildings.BASE), build, 0, team);
 

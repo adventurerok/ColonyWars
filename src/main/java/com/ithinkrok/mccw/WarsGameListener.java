@@ -14,6 +14,7 @@ import com.ithinkrok.mccw.util.TreeFeller;
 import org.bukkit.*;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -329,8 +330,8 @@ public class WarsGameListener implements Listener {
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Player damager;
         if (!(event.getDamager() instanceof Player)){
-            if(event.getDamager() instanceof Arrow){
-                Arrow arrow = (Arrow) event.getDamager();
+            if(event.getDamager() instanceof Projectile){
+                Projectile arrow = (Projectile) event.getDamager();
 
                 if(!(arrow.getShooter() instanceof Player)) return;
                 damager = (Player) arrow.getShooter();

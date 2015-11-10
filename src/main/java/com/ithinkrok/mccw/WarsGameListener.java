@@ -302,6 +302,21 @@ public class WarsGameListener implements Listener {
     }
 
     @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        if (!plugin.isInShowdown()) return;
+        if (event.getPlayer().getAllowFlight()) return;
+
+        if (!plugin.isInShowdownBounds(event.getTo())) {
+            if (!plugin.isInShowdownBounds(event.getFrom())) {
+                event.getPlayer().teleport(plugin.getMapSpawn(null));
+                plugin.messageAll(event.getPlayer().getDisplayName() + ChatColor.GOLD + " was teleported back to the " +
+                        "center!");
+            }
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Player)) return;
 
@@ -352,7 +367,8 @@ public class WarsGameListener implements Listener {
         }
 
         TeamInfo diedTeam = plugin.getTeamInfo(diedInfo.getTeamColor());
-        boolean respawn = plugin.getRandom().nextFloat() < (diedTeam.getRespawnChance() / 100f);
+        boolean respawn =
+                !plugin.isInShowdown() && plugin.getRandom().nextFloat() < (diedTeam.getRespawnChance() / 100f);
 
         if (respawn) {
             plugin.messageAll(diedInfo.getFormattedName() + ChatColor.GOLD + " has respawned!");

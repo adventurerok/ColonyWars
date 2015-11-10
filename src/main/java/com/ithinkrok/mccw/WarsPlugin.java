@@ -87,6 +87,10 @@ public class WarsPlugin extends JavaPlugin {
     private int countDownTask = 0;
     private CountdownType countdownType;
 
+    private int showdownRadiusX;
+    private int showdownRadiusZ;
+    private Location showdownCenter;
+
     private String map = "canyon";
 
     @Override
@@ -108,6 +112,14 @@ public class WarsPlugin extends JavaPlugin {
 
     public void setInShowdown(boolean inShowdown) {
         this.inShowdown = inShowdown;
+    }
+
+    public int getShowdownRadiusX() {
+        return showdownRadiusX;
+    }
+
+    public int getShowdownRadiusZ() {
+        return showdownRadiusZ;
     }
 
     @Override
@@ -396,6 +408,12 @@ public class WarsPlugin extends JavaPlugin {
                 startGame();
 
                 break;
+            case "start_showdown":
+                playerInfo.message("Attempting to start showdown");
+
+                stopCountdown();
+                startShowdown();
+                break;
 
         }
 
@@ -676,13 +694,57 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public void startEndCountdown() {
-        messageAll(ChatColor.GREEN + "You will be teleported back to the lobby in 15 seconds!");
+        messageAll(ChatColor.GREEN + "Teleporting back to the lobby in 15 seconds!");
 
         startCountdown(15, CountdownType.GAME_END,
                 ChatColor.GREEN + "Game ending in " + ChatColor.DARK_AQUA + "%s" + ChatColor.GREEN +
                         " minutes!",
                 ChatColor.GREEN + "Game ending in " + ChatColor.DARK_AQUA + "%s" + ChatColor.GREEN +
                         " seconds!", this::endGame);
+    }
+
+    public void startShowdownCountdown() {
+        messageAll(ChatColor.GREEN + "Showdown starting in 30 seconds!");
+
+        startCountdown(30, CountdownType.SHOWDOWN_START,
+                ChatColor.GREEN + "Showdown starting in " + ChatColor.DARK_AQUA + "%s" + ChatColor.GREEN +
+                        " minutes!",
+                ChatColor.GREEN + "Showdown starting in " + ChatColor.DARK_AQUA + "%s" + ChatColor.GREEN +
+                        " seconds!", this::startShowdown);
+    }
+
+    public void startShowdown() {
+        FileConfiguration config = getConfig();
+        String base = "maps." + map + ".showdown-size";
+        int x = config.getInt(base + ".x");
+        int z = config.getInt(base + ".z");
+
+        showdownRadiusX = x;
+        showdownRadiusZ = z;
+        showdownCenter = getMapSpawn(null);
+
+        for(PlayerInfo playerInfo : getPlayers()){
+            int offsetX = (-x/2) + random.nextInt(x);
+            int offsetZ = (-z/2) + random.nextInt(z);
+            int offsetY = 1;
+
+            Location teleport = getMapSpawn(null);
+            teleport.setX(teleport.getX() + offsetX);
+            teleport.setY(teleport.getY() + offsetY);
+            teleport.setZ(teleport.getZ() + offsetZ);
+
+            playerInfo.getPlayer().teleport(teleport);
+        }
+
+        setInShowdown(true);
+    }
+
+    public boolean isInShowdownBounds(Location loc){
+        double xd = Math.abs(loc.getX() - showdownCenter.getX());
+        double zd = Math.abs(loc.getZ() - showdownCenter.getZ());
+
+        return !(xd > showdownRadiusX || zd > showdownRadiusZ);
+
     }
 
     private void startCountdown(int countdown, CountdownType countdownType, String minutesWarning,

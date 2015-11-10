@@ -765,7 +765,7 @@ public class WarsPlugin extends JavaPlugin {
                     Color color = Color.fromRGB(random.nextInt(255), random.nextInt(255), random.nextInt(255));
                     Color fade = Color.fromRGB(random.nextInt(255), random.nextInt(255), random.nextInt(255));
 
-                    firework.setVelocity(new Vector(0, 3, 0));
+                    firework.setVelocity(new Vector(0, 0.5f, 0));
                     FireworkMeta meta = firework.getFireworkMeta();
                     meta.addEffect(FireworkEffect.builder().with(FireworkEffect.Type.BURST).trail(true).withColor(color)
                             .withFade(fade).build());

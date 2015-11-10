@@ -640,6 +640,7 @@ public class WarsPlugin extends JavaPlugin {
 
         for (PlayerInfo info : playerInfoHashMap.values()) {
             if (!info.isInGame()) continue;
+            if(info.getTeamColor() == null) continue;
 
             teamsInGame.add(info.getTeamColor());
         }

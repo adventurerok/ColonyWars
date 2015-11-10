@@ -37,7 +37,6 @@ public class SchematicBuilder {
 
     private static boolean doSchematic(WarsPlugin plugin, SchematicData schemData, Location loc, TeamColor teamColor,
                                        int rotation, boolean instant) {
-
         rotation = (rotation + schemData.getBaseRotation()) % 4;
 
         File schemFile = new File(plugin.getDataFolder(), schemData.getSchematicFile());
@@ -94,7 +93,6 @@ public class SchematicBuilder {
                     new BuildingInfo(plugin, schemData.getBuildingName(), teamColor, centerBlock,rotation, locations);
 
             plugin.addBuilding(result);
-
             SchematicBuilderTask task = new SchematicBuilderTask(plugin, loc, result, schem, instant ? -1 : 2);
 
             if (!instant) {

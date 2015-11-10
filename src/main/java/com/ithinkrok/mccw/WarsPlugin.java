@@ -198,6 +198,9 @@ public class WarsPlugin extends JavaPlugin {
             teamInfoEnumMap.put(c, new TeamInfo(this, c));
         }
 
+        buildingCentres.clear();
+        buildings.clear();
+
         Bukkit.unloadWorld("playing", false);
 
         HandlerList.unregisterAll(currentListener);
@@ -555,20 +558,22 @@ public class WarsPlugin extends JavaPlugin {
             Location build = new Location(world, config.getInt(base + ".x"), config.getInt(base + ".y"),
                     config.getInt(base + ".z"));
 
-            for (int x = -1; x <= 1; ++x) {
-                for (int z = -1; z <= 1; ++z) {
-                    Chunk chunk =
-                            build.getWorld().getChunkAt((build.getBlockX() >> 4) + x, (build.getBlockZ() >> 4) + z);
-
-                    if(!chunk.isLoaded()) chunk.load();
-                }
-            }
+            //Chunk loading unnecessary (I think)
+//            for (int x = -1; x <= 1; ++x) {
+//                for (int z = -1; z <= 1; ++z) {
+//                    Chunk chunk =
+//                            build.getWorld().getChunkAt((build.getBlockX() >> 4) + x, (build.getBlockZ() >> 4) + z);
+//
+//                    if(!chunk.isLoaded()) chunk.load();
+//                }
+//            }
 
             SchematicBuilder.pasteSchematic(this, getSchematicData(Buildings.BASE), build, 0, team);
 
             if (getTeamInfo(team).getPlayerCount() == 0) {
                 getTeamInfo(team).eliminate();
             }
+
         }
     }
 

@@ -72,13 +72,12 @@ public class WarsGameListener implements Listener {
             event.setFormat(teamColor + "<" + ChatColor.DARK_GRAY + "[" + ChatColor.GRAY + playerClass +
                     ChatColor.DARK_GRAY + "] %s" + teamColor + "> " + ChatColor.WHITE + "%s");
         } else {
-            event.setFormat(
-                    ChatColor.LIGHT_PURPLE + "<" + ChatColor.GRAY + ChatColor.LIGHT_PURPLE + "> " + ChatColor.WHITE +
-                            "%s");
+            event.setFormat(ChatColor.LIGHT_PURPLE + "<" + ChatColor.GRAY + "%s" + ChatColor.LIGHT_PURPLE + "> " +
+                    ChatColor.WHITE + "%s");
         }
 
         plugin.getPlayers().stream()
-                .filter(other -> other.getTeamColor() != playerInfo.getTeamColor() && playerInfo.getTeamColor() != null)
+                .filter(other -> other.getTeamColor() != playerInfo.getTeamColor())
                 .forEach(other -> event.getRecipients().remove(other.getPlayer()));
     }
 

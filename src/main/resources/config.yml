@@ -118,3 +118,8 @@ amounts:
     bakedPotato: 10
     cookedBeef: 10
     goldenApple: 1
+
+locale:
+  team-already-member: "§cYou are already in the %s §Team"
+  team-full: "§cThe %s §cTeam is full. Try another"
+  team-joined: "§6You will be in the %s §6Team in the next game!"

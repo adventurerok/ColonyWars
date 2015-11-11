@@ -653,6 +653,11 @@ public class WarsPlugin extends JavaPlugin {
         }
     }
 
+
+    public String getLocale(String name, Object...params){
+        return String.format(getConfig().getString("locale." + name), params);
+    }
+
     public void updateScoutCompass(ItemStack item, Player player, TeamColor exclude) {
         InventoryUtils.setItemNameAndLore(item, "Locating closest player...");
 

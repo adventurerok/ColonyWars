@@ -135,11 +135,8 @@ public class WarsLobbyListener implements Listener {
                     String teamName = item.substring(0, item.length() - 5).toUpperCase();
                     TeamColor teamColor = TeamColor.valueOf(teamName);
 
-                    String chatTeamName = teamColor.chatColor + item.substring(0, item.length() - 5);
-
                     if (teamColor == playerInfo.getTeamColor()) {
-                        playerInfo.message(ChatColor.RED + "You are already in the " + chatTeamName + ChatColor.RED +
-                                " Team");
+                        playerInfo.message(plugin.getLocale("team-already-member", teamColor.name));
                         break;
                     }
 
@@ -147,15 +144,13 @@ public class WarsLobbyListener implements Listener {
                     int teamSize = plugin.getTeamInfo(teamColor).getPlayerCount();
 
                     if (teamSize >= (playerCount + 3) / 4) {
-                        playerInfo.message(ChatColor.RED + "The " + chatTeamName + ChatColor.RED + " Team" +
-                                " is full. Please try another team.");
+                        playerInfo.message(plugin.getLocale("team-full", teamColor.name));
                         break;
                     }
 
                     plugin.setPlayerTeam(playerInfo.getPlayer(), teamColor);
 
-                    playerInfo.message(ChatColor.GOLD + "You will be in the " +
-                            chatTeamName + ChatColor.GOLD + " Team in the next game!");
+                    playerInfo.message(plugin.getLocale("team-joined", teamColor.name));
 
                     playerInfo.getPlayer().closeInventory();
                     break;

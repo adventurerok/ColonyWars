@@ -105,7 +105,7 @@ public class CloakerClass extends BuyableInventory implements PlayerClassHandler
         }, 20, 20);
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            plugin.decloak(event.getPlayer());
+            if(playerInfo.isInGame()) plugin.decloak(event.getPlayer());
             Bukkit.getScheduler().cancelTask(swirlTask);
             playerInfo.message(ChatColor.RED + "Your cloak has run out!");
             playerInfo.startCoolDown("cloak", finalCooldown, "Your cloak has cooled down!");

@@ -144,3 +144,5 @@ locale:
   end-minute-warning: "§e§lGame ending in§c§l %s minutes!"
   end-seconds-warning: "§e§lGame ending in§c§l %s seconds!"
   end-final-warning: "§e§lGame ending in§c§l %s seconds!"
+  player-join-game: "§e%s §7joined the server §8[§7%s§8/§7%s§8]"
+  player-quit-game: "§e%s §7left the server §8[§7%s§8/§7%s§8]"

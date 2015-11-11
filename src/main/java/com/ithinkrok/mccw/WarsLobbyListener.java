@@ -33,8 +33,13 @@ public class WarsLobbyListener implements Listener {
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
+    public void onPlayerJoin(PlayerJoinEvent event) {
         plugin.playerJoinLobby(event.getPlayer());
+
+        String name = event.getPlayer().getName();
+        String online = Integer.toString(plugin.getPlayerCount());
+        String max = Integer.toString(plugin.getServer().getMaxPlayers());
+        event.setJoinMessage(plugin.getLocale("player-join-game", name, online, max));
     }
 
     @EventHandler
@@ -160,6 +165,11 @@ public class WarsLobbyListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         plugin.setPlayerTeam(event.getPlayer(), null);
+
+        String name = event.getPlayer().getName();
+        String online = Integer.toString(plugin.getPlayerCount() - 1);
+        String max = Integer.toString(plugin.getServer().getMaxPlayers());
+        event.setQuitMessage(plugin.getLocale("player-quit-game", name, online, max));
     }
 
     @EventHandler

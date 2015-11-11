@@ -107,8 +107,10 @@ public class WarsLobbyListener implements Listener {
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
+        ChatColor playerColor = event.getPlayer().isOp() ? ChatColor.DARK_RED : ChatColor.YELLOW;
+
         event.setFormat(
-                ChatColor.DARK_GRAY + "<" + ChatColor.WHITE + "%s" + ChatColor.DARK_GRAY + "> " + ChatColor.WHITE +
+                ChatColor.DARK_GRAY + "<" + playerColor + "%s" + ChatColor.DARK_GRAY + "> " + ChatColor.WHITE +
                         "%s");
     }
 

@@ -211,38 +211,44 @@ public class WarsPlugin extends JavaPlugin {
         startLobbyCountdown();
     }
 
-    public void setupSpectatorInventory(Player player){
+    public void setupSpectatorInventory(Player player) {
         PlayerInventory inv = player.getInventory();
         inv.clear();
 
         int slot = 9;
-        for(PlayerInfo info : playerInfoHashMap.values()){
-            if(!info.isInGame() || info.getTeamColor() == null) continue;
+        for (PlayerInfo info : playerInfoHashMap.values()) {
+            if (!info.isInGame() || info.getTeamColor() == null) continue;
 
             ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+            InventoryUtils.setItemNameAndLore(head, info.getFormattedName(),
+                    getLocale("spectate-player", info.getFormattedName()));
+
+
             SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
 
             skullMeta.setOwner(info.getPlayer().getName());
-            skullMeta.setDisplayName(info.getFormattedName());
-
             head.setItemMeta(skullMeta);
 
             inv.setItem(slot++, head);
         }
     }
 
-    public void handleSpectatorInventory(InventoryClickEvent event){
+    public String getLocale(String name, Object... params) {
+        return String.format(getConfig().getString("locale." + name), params);
+    }
+
+    public void handleSpectatorInventory(InventoryClickEvent event) {
         event.setCancelled(true);
 
         HumanEntity clicker = event.getWhoClicked();
 
         ItemStack clicked = event.getCurrentItem();
-        if(clicked == null || clicked.getType() != Material.SKULL_ITEM) return;
+        if (clicked == null || clicked.getType() != Material.SKULL_ITEM) return;
 
-        String owner = ((SkullMeta)clicked.getItemMeta()).getOwner();
+        String owner = ((SkullMeta) clicked.getItemMeta()).getOwner();
 
-        for(PlayerInfo info : playerInfoHashMap.values()){
-            if(!info.getPlayer().getName().equals(owner)) continue;
+        for (PlayerInfo info : playerInfoHashMap.values()) {
+            if (!info.getPlayer().getName().equals(owner)) continue;
 
             clicker.teleport(info.getPlayer().getLocation());
             return;
@@ -689,10 +695,6 @@ public class WarsPlugin extends JavaPlugin {
         }
     }
 
-    public String getLocale(String name, Object... params) {
-        return String.format(getConfig().getString("locale." + name), params);
-    }
-
     public void updateScoutCompass(ItemStack item, Player player, TeamColor exclude) {
         InventoryUtils.setItemNameAndLore(item, "Locating closest player...");
 
@@ -812,7 +814,7 @@ public class WarsPlugin extends JavaPlugin {
         startCountdown(15, CountdownType.GAME_END, this::endGame, () -> {
             if (countDown < 10) return;
             Player randomPlayer = getTeamInfo(winningTeam).getRandomPlayer();
-            if(randomPlayer == null) return;
+            if (randomPlayer == null) return;
             Location loc = randomPlayer.getLocation();
             Firework firework = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
 

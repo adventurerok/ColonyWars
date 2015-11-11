@@ -167,15 +167,13 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public void startLobbyCountdown() {
-        messageAll(ChatColor.GREEN + "Starting count down to game from " + 180);
-        messageAll(ChatColor.GREEN + "If there are not enough players when the countdown ends, the countdown will " +
-                "start again.");
+        messageAll(getLocale("start-minute-warning", "3"));
 
         startCountdown(180, CountdownType.GAME_START, () -> {
             if (playerInfoHashMap.size() > 5) {
                 startGame();
             } else {
-                messageAll(ChatColor.RED + "You need at least 6 players to start a Colony Wars game.");
+                messageAll(getLocale("not-enough-players"));
                 startLobbyCountdown();
             }
         }, null);

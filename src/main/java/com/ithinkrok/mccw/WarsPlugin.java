@@ -365,10 +365,6 @@ public class WarsPlugin extends JavaPlugin {
 
     }
 
-    public PlayerInfo getPlayerInfo(Player player) {
-        return playerInfoHashMap.get(player.getUniqueId());
-    }
-
     private boolean onTestCommand(Player player, Command command, String[] args) {
         PlayerInfo playerInfo = getPlayerInfo(player);
 
@@ -651,7 +647,6 @@ public class WarsPlugin extends JavaPlugin {
         }
     }
 
-
     public String getLocale(String name, Object... params) {
         return String.format(getConfig().getString("locale." + name), params);
     }
@@ -705,6 +700,10 @@ public class WarsPlugin extends JavaPlugin {
         }
     }
 
+    public PlayerInfo getPlayerInfo(Player player) {
+        return playerInfoHashMap.get(player.getUniqueId());
+    }
+
     public int getPlayerCount() {
         return playerInfoHashMap.size();
     }
@@ -726,7 +725,7 @@ public class WarsPlugin extends JavaPlugin {
             startEndCountdown();
             return;
         } else if (teamsInGame.size() > 1) {
-            if(checkShowdown) checkShowdownStart(teamsInGame.size());
+            if (checkShowdown) checkShowdownStart(teamsInGame.size());
             return;
         }
 
@@ -799,13 +798,13 @@ public class WarsPlugin extends JavaPlugin {
 
     }
 
-    private void startCountdown(int countdown, CountdownType countdownType, Runnable finished, Runnable during) {
+    private void startCountdown(int countdownFrom, CountdownType countdownType, Runnable finished, Runnable during) {
         if (this.countDownTask != 0) {
             getServer().getScheduler().cancelTask(countDownTask);
             this.countDownTask = 0;
         }
 
-        this.countDown = countdown;
+        this.countDown = countdownFrom;
         this.countdownType = countdownType;
 
         countDownTask = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
@@ -827,7 +826,7 @@ public class WarsPlugin extends JavaPlugin {
                 finished.run();
                 this.countdownType = null;
             } else if (countDown < 6) {
-                messageAll(getLocale(countdownType.name + "-final-warning", Integer.toString(countdown)));
+                messageAll(getLocale(countdownType.name + "-final-warning", Integer.toString(countDown)));
             }
 
 

@@ -215,7 +215,7 @@ public class WarsPlugin extends JavaPlugin {
         PlayerInventory inv = player.getInventory();
         inv.clear();
 
-        int slot = 10;
+        int slot = 19;
         for(PlayerInfo info : playerInfoHashMap.values()){
             if(!info.isInGame() || info.getTeamColor() == null) continue;
 

@@ -133,8 +133,11 @@ public class WarsLobbyListener implements Listener {
         try {
 
             if (plugin.getLocale("team-chooser").equals(event.getInventory().getTitle())) {
-                String teamName = item.substring(0, item.length() - 5).toUpperCase();
-                TeamColor teamColor = TeamColor.valueOf(teamName);
+                TeamColor teamColor = TeamColor.fromWoolColor(event.getCurrentItem().getDurability());
+                if(teamColor == null){
+                    playerInfo.message("Null team. This is impossible error");
+                    return;
+                }
 
                 if (teamColor == playerInfo.getTeamColor()) {
                     playerInfo.message(plugin.getLocale("team-already-member", teamColor.name));

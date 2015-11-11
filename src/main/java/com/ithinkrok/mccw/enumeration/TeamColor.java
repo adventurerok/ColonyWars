@@ -27,4 +27,12 @@ public enum TeamColor {
         this.dyeColor = dyeColor;
         this.chatColor = chatColor;
     }
+
+    public static TeamColor fromWoolColor(short woolColor) {
+        for(TeamColor c : values()){
+            if(c.dyeColor.getWoolData() == woolColor) return c;
+        }
+
+        return null;
+    }
 }

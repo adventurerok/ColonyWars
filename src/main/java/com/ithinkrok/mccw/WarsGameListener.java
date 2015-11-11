@@ -105,6 +105,7 @@ public class WarsGameListener implements Listener {
         died.setHealth(plugin.getMaxHealth());
 
         plugin.setupSpectatorInventory(died);
+        plugin.getPlayerInfo(died).clearArmor();
 
         plugin.removePotionEffects(died);
     }

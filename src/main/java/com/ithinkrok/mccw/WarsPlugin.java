@@ -259,6 +259,7 @@ public class WarsPlugin extends JavaPlugin {
         playerInfo.getPlayer().setFoodLevel(20);
         playerInfo.getPlayer().setSaturation(20);
         playerInfo.getPlayer().setAllowFlight(false);
+        playerInfo.clearArmor();
 
         playerInfo.getPlayer().getActivePotionEffects().clear();
 

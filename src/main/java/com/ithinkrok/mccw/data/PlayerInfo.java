@@ -249,12 +249,22 @@ public class PlayerInfo {
         player.setDisplayName(getFormattedName());
 
         if (teamColor != null) updateTeamArmor();
+        else clearArmor();
     }
 
     public String getFormattedName() {
         if (teamColor == null) return player.getName();
 
         return teamColor.chatColor + player.getName();
+    }
+
+    public void clearArmor(){
+        PlayerInventory inv = player.getInventory();
+
+        inv.setHelmet(null);
+        inv.setChestplate(null);
+        inv.setLeggings(null);
+        inv.setBoots(null);
     }
 
     public void updateTeamArmor() {

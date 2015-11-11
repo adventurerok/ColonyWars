@@ -36,7 +36,7 @@ public class WarsLobbyListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         plugin.playerJoinLobby(event.getPlayer());
 
-        String name = event.getPlayer().getName();
+        String name = getPlayerNameColor(event.getPlayer()) + event.getPlayer().getName();
         String online = Integer.toString(plugin.getPlayerCount());
         String max = Integer.toString(plugin.getServer().getMaxPlayers());
         event.setJoinMessage(plugin.getLocale("player-join-game", name, online, max));
@@ -107,11 +107,15 @@ public class WarsLobbyListener implements Listener {
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        ChatColor playerColor = event.getPlayer().isOp() ? ChatColor.DARK_RED : ChatColor.YELLOW;
+        ChatColor playerColor = getPlayerNameColor(event.getPlayer());
 
         event.setFormat(
                 ChatColor.DARK_GRAY + "<" + playerColor + "%s" + ChatColor.DARK_GRAY + "> " + ChatColor.WHITE +
                         "%s");
+    }
+
+    private ChatColor getPlayerNameColor(Player player){
+        return player.isOp() ? ChatColor.DARK_RED : ChatColor.YELLOW;
     }
 
     @EventHandler
@@ -168,7 +172,7 @@ public class WarsLobbyListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         plugin.setPlayerTeam(event.getPlayer(), null);
 
-        String name = event.getPlayer().getName();
+        String name = getPlayerNameColor(event.getPlayer()) + event.getPlayer().getName();
         String online = Integer.toString(plugin.getPlayerCount() - 1);
         String max = Integer.toString(plugin.getServer().getMaxPlayers());
         event.setQuitMessage(plugin.getLocale("player-quit-game", name, online, max));

@@ -77,7 +77,7 @@ public class WarsGameListener implements Listener {
         }
 
         plugin.getPlayers().stream()
-                .filter(other -> other.getTeamColor() != playerInfo.getTeamColor())
+                .filter(other -> other.getTeamColor() != playerInfo.getTeamColor() && !other.getPlayer().isOp())
                 .forEach(other -> event.getRecipients().remove(other.getPlayer()));
     }
 

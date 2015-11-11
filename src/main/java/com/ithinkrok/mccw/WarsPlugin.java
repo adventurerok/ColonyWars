@@ -219,7 +219,7 @@ public class WarsPlugin extends JavaPlugin {
         for(PlayerInfo info : playerInfoHashMap.values()){
             if(!info.isInGame() || info.getTeamColor() == null) continue;
 
-            ItemStack head = new ItemStack(Material.SKULL_ITEM);
+            ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
             SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
 
             skullMeta.setOwner(info.getPlayer().getName());

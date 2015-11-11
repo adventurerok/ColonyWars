@@ -171,18 +171,14 @@ public class WarsPlugin extends JavaPlugin {
         messageAll(ChatColor.GREEN + "If there are not enough players when the countdown ends, the countdown will " +
                 "start again.");
 
-        startCountdown(180, CountdownType.GAME_START,
-                ChatColor.GREEN + "Game starting in " + ChatColor.DARK_AQUA + "%s" + ChatColor.GREEN +
-                        " minutes!",
-                ChatColor.GREEN + "Game starting in " + ChatColor.DARK_AQUA + "%s" + ChatColor.GREEN +
-                        " seconds!", () -> {
-                    if (playerInfoHashMap.size() > 5) {
-                        startGame();
-                    } else {
-                        messageAll(ChatColor.RED + "You need at least 6 players to start a Colony Wars game.");
-                        startLobbyCountdown();
-                    }
-                }, null);
+        startCountdown(180, CountdownType.GAME_START, () -> {
+            if (playerInfoHashMap.size() > 5) {
+                startGame();
+            } else {
+                messageAll(ChatColor.RED + "You need at least 6 players to start a Colony Wars game.");
+                startLobbyCountdown();
+            }
+        }, null);
     }
 
     public void endGame() {
@@ -770,34 +766,27 @@ public class WarsPlugin extends JavaPlugin {
     public void startEndCountdown() {
         messageAll(ChatColor.GREEN + "Teleporting back to the lobby in 15 seconds!");
 
-        startCountdown(15, CountdownType.GAME_END,
-                ChatColor.GREEN + "Game ending in " + ChatColor.DARK_AQUA + "%s" + ChatColor.GREEN +
-                        " minutes!",
-                ChatColor.GREEN + "Game ending in " + ChatColor.DARK_AQUA + "%s" + ChatColor.GREEN +
-                        " seconds!", this::endGame, () -> {
-                    if (countDown < 10) return;
-                    Location loc = getTeamInfo(winningTeam).getRandomPlayer().getLocation();
-                    Firework firework = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
+        startCountdown(15, CountdownType.GAME_END, this::endGame, () -> {
+            if (countDown < 10) return;
+            Location loc = getTeamInfo(winningTeam).getRandomPlayer().getLocation();
+            Firework firework = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
 
-                    Color color = Color.fromRGB(random.nextInt(255), random.nextInt(255), random.nextInt(255));
-                    Color fade = Color.fromRGB(random.nextInt(255), random.nextInt(255), random.nextInt(255));
+            Color color = Color.fromRGB(random.nextInt(255), random.nextInt(255), random.nextInt(255));
+            Color fade = Color.fromRGB(random.nextInt(255), random.nextInt(255), random.nextInt(255));
 
-                    firework.setVelocity(new Vector(0, 0.5f, 0));
-                    FireworkMeta meta = firework.getFireworkMeta();
-                    meta.addEffect(FireworkEffect.builder().with(FireworkEffect.Type.BURST).trail(true).withColor(color)
-                            .withFade(fade).build());
-                    firework.setFireworkMeta(meta);
-                });
+            firework.setVelocity(new Vector(0, 0.5f, 0));
+            FireworkMeta meta = firework.getFireworkMeta();
+            meta.addEffect(
+                    FireworkEffect.builder().with(FireworkEffect.Type.BURST).trail(true).withColor(color).withFade(fade)
+                            .build());
+            firework.setFireworkMeta(meta);
+        });
     }
 
     public void startShowdownCountdown() {
         messageAll(ChatColor.GREEN + "Showdown starting in 30 seconds!");
 
-        startCountdown(30, CountdownType.SHOWDOWN_START,
-                ChatColor.GREEN + "Showdown starting in " + ChatColor.DARK_AQUA + "%s" + ChatColor.GREEN +
-                        " minutes!",
-                ChatColor.GREEN + "Showdown starting in " + ChatColor.DARK_AQUA + "%s" + ChatColor.GREEN +
-                        " seconds!", this::startShowdown, null);
+        startCountdown(30, CountdownType.SHOWDOWN_START, this::startShowdown, null);
     }
 
     public boolean isInShowdownBounds(Location loc) {
@@ -808,8 +797,7 @@ public class WarsPlugin extends JavaPlugin {
 
     }
 
-    private void startCountdown(int countdown, CountdownType countdownType, String minutesWarning,
-                                String secondsWarning, Runnable finished, Runnable during) {
+    private void startCountdown(int countdown, CountdownType countdownType, Runnable finished, Runnable during) {
         if (this.countDownTask != 0) {
             getServer().getScheduler().cancelTask(countDownTask);
             this.countDownTask = 0;
@@ -827,16 +815,18 @@ public class WarsPlugin extends JavaPlugin {
 
             if (during != null) during.run();
 
-            if (countDown == 120) messageAll(String.format(minutesWarning, "2"));
-            else if (countDown == 60) messageAll(String.format(minutesWarning, "1"));
-            else if (countDown == 30) messageAll(String.format(secondsWarning, "30"));
-            else if (countDown == 10) messageAll(String.format(secondsWarning, "10"));
+            if (countDown == 120) messageAll(getLocale(countdownType.name + "-minute-warning", "2"));
+            else if (countDown == 60) messageAll(getLocale(countdownType.name + "-minute-warning", "1"));
+            else if (countDown == 30) messageAll(getLocale(countdownType.name + "-seconds-warning", "30"));
+            else if (countDown == 10) messageAll(getLocale(countdownType.name + "-seconds-warning", "10"));
             else if (countDown == 0) {
                 getServer().getScheduler().cancelTask(countDownTask);
                 countDownTask = 0;
                 finished.run();
                 this.countdownType = null;
-            } else if (countDown < 6) messageAll(ChatColor.DARK_AQUA.toString() + countDown + ChatColor.GREEN + "!");
+            } else if (countDown < 6) {
+                messageAll(getLocale(countdownType.name + "-final-warning", Integer.toString(countdown)));
+            }
 
 
         }, 20, 20);

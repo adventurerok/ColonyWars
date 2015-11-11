@@ -91,9 +91,9 @@ public class WarsGameListener implements Listener {
 
         playerInfo.updateScoreboard();
 
-        playerInfo.message(ChatColor.RED + "There is already a game in progress!");
-        playerInfo.message(ChatColor.GOLD + "You will have to wait for the current game to finish before you can " +
-                "play!");
+        playerInfo.message(plugin.getLocale("game-in-progress"));
+        playerInfo.message(plugin.getLocale("game-wait-next"));
+        playerInfo.message(plugin.getLocale("spectate-heads"));
     }
 
     public void setSpectator(Player died) {

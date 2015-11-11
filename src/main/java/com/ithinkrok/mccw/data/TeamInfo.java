@@ -190,6 +190,7 @@ public class TeamInfo {
     }
 
     public Player getRandomPlayer() {
+        if(players.isEmpty()) return null;
         return players.get(plugin.getRandom().nextInt(players.size()));
     }
 }

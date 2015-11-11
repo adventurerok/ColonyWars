@@ -810,7 +810,9 @@ public class WarsPlugin extends JavaPlugin {
 
         startCountdown(15, CountdownType.GAME_END, this::endGame, () -> {
             if (countDown < 10) return;
-            Location loc = getTeamInfo(winningTeam).getRandomPlayer().getLocation();
+            Player randomPlayer = getTeamInfo(winningTeam).getRandomPlayer();
+            if(randomPlayer == null) return;
+            Location loc = randomPlayer.getLocation();
             Firework firework = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
 
             Color color = Color.fromRGB(random.nextInt(255), random.nextInt(255), random.nextInt(255));

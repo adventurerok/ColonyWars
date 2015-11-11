@@ -147,3 +147,6 @@ locale:
   player-join-game: "%s §7joined the server §8[§7%s§8/§7%s§8]"
   player-quit-game: "%s §7left the server §8[§7%s§8/§7%s§8]"
   not-enough-players: "§7Not enough Players Online for Game to start!"
+  game-in-progress: "§4There is already a game in progress!"
+  game-wait-next: "§6You can play when the current game ends"
+  spectate-heads: "§6Choose a player to spectate from your inventory"

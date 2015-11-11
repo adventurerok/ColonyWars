@@ -99,10 +99,11 @@ public class WarsGameListener implements Listener {
         plugin.setPlayerTeam(died, null);
         plugin.getPlayerInfo(died).setInGame(false);
         plugin.cloak(died);
-        died.setGameMode(GameMode.CREATIVE);
+        died.setAllowFlight(true);
         died.setMaxHealth(plugin.getMaxHealth());
         died.setHealth(plugin.getMaxHealth());
-        died.getInventory().clear();
+
+        plugin.setupSpectatorInventory(died);
 
         plugin.removePotionEffects(died);
     }
@@ -432,6 +433,12 @@ public class WarsGameListener implements Listener {
         }
 
         plugin.checkVictory(true);
+
+        for(PlayerInfo info : plugin.getPlayers()){
+            if(info.isInGame() && info.getTeamColor() != null) return;
+
+            plugin.setupSpectatorInventory(info.getPlayer());
+        }
     }
 
     @EventHandler
@@ -493,6 +500,12 @@ public class WarsGameListener implements Listener {
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getSlotType().equals(InventoryType.SlotType.ARMOR)) event.setCancelled(true);
 
+        PlayerInfo playerInfo = plugin.getPlayerInfo((Player) event.getWhoClicked());
+        if(!playerInfo.isInGame() || playerInfo.getTeamColor() == null){
+            plugin.handleSpectatorInventory(event);
+            return;
+        }
+
         if (event.getInventory().getType() != InventoryType.PLAYER &&
                 event.getInventory().getType() != InventoryType.CRAFTING) {
 
@@ -500,7 +513,7 @@ public class WarsGameListener implements Listener {
 
             if (event.getCurrentItem() == null) return;
 
-            PlayerInfo playerInfo = plugin.getPlayerInfo((Player) event.getWhoClicked());
+
             playerInfo.setShopInventory(event.getInventory());
 
             TeamInfo teamInfo = plugin.getTeamInfo(playerInfo.getTeamColor());
@@ -520,6 +533,8 @@ public class WarsGameListener implements Listener {
             handler.onInventoryClick(event.getCurrentItem(), buildingInfo, playerInfo, teamInfo);
         }
     }
+
+
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {

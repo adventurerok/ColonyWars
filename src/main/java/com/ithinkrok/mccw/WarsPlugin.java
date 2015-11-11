@@ -26,12 +26,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
@@ -208,6 +211,44 @@ public class WarsPlugin extends JavaPlugin {
         startLobbyCountdown();
     }
 
+    public void setupSpectatorInventory(Player player){
+        PlayerInventory inv = player.getInventory();
+        inv.clear();
+
+        int slot = 10;
+        for(PlayerInfo info : playerInfoHashMap.values()){
+            if(!info.isInGame() || info.getTeamColor() == null) continue;
+
+            ItemStack head = new ItemStack(Material.SKULL_ITEM);
+            SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
+
+            skullMeta.setOwner(info.getPlayer().getName());
+            skullMeta.setDisplayName(info.getFormattedName());
+
+            head.setItemMeta(skullMeta);
+
+            inv.setItem(slot++, head);
+        }
+    }
+
+    public void handleSpectatorInventory(InventoryClickEvent event){
+        event.setCancelled(true);
+
+        HumanEntity clicker = event.getWhoClicked();
+
+        ItemStack clicked = event.getCurrentItem();
+        if(clicked == null || clicked.getType() != Material.SKULL_ITEM) return;
+
+        String owner = ((SkullMeta)clicked.getItemMeta()).getOwner();
+
+        for(PlayerInfo info : playerInfoHashMap.values()){
+            if(!info.getPlayer().getName().equals(owner)) continue;
+
+            clicker.teleport(info.getPlayer().getLocation());
+            return;
+        }
+    }
+
     public void playerJoinLobby(Player player) {
         PlayerInfo playerInfo = getPlayerInfo(player);
 
@@ -217,6 +258,7 @@ public class WarsPlugin extends JavaPlugin {
         playerInfo.getPlayer().setHealth(getMaxHealth());
         playerInfo.getPlayer().setFoodLevel(20);
         playerInfo.getPlayer().setSaturation(20);
+        playerInfo.getPlayer().setAllowFlight(false);
 
         playerInfo.getPlayer().getActivePotionEffects().clear();
 
@@ -514,6 +556,7 @@ public class WarsPlugin extends JavaPlugin {
             info.getPlayer().setHealth(getMaxHealth());
             info.getPlayer().setSaturation(5);
             info.getPlayer().setFoodLevel(20);
+            info.getPlayer().setAllowFlight(false);
 
             removePotionEffects(info.getPlayer());
 

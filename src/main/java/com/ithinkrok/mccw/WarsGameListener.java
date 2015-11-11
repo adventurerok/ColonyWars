@@ -421,7 +421,7 @@ public class WarsGameListener implements Listener {
             diedTeam.eliminate();
         }
 
-        plugin.checkVictory();
+        plugin.checkVictory(true);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

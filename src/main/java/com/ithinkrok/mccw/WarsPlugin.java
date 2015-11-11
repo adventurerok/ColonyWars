@@ -470,6 +470,8 @@ public class WarsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(currentListener, this);
         setupPlayers();
         setupBases();
+
+        checkVictory(false);
     }
 
     public void startShowdown() {
@@ -707,7 +709,7 @@ public class WarsPlugin extends JavaPlugin {
         return playerInfoHashMap.size();
     }
 
-    public void checkVictory() {
+    public void checkVictory(boolean checkShowdown) {
         if (isInAftermath()) return;
         Set<TeamColor> teamsInGame = new HashSet<>();
 
@@ -724,7 +726,7 @@ public class WarsPlugin extends JavaPlugin {
             startEndCountdown();
             return;
         } else if (teamsInGame.size() > 1) {
-            checkShowdownStart(teamsInGame.size());
+            if(checkShowdown) checkShowdownStart(teamsInGame.size());
             return;
         }
 

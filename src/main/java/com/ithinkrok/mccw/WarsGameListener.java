@@ -13,16 +13,14 @@ import com.ithinkrok.mccw.util.SchematicBuilder;
 import com.ithinkrok.mccw.util.TreeFeller;
 import org.bukkit.*;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -30,8 +28,12 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -40,6 +42,15 @@ import java.util.List;
  * Listens for Bukkit events while the game is in progress
  */
 public class WarsGameListener implements Listener {
+
+    private static HashMap<PotionEffectType, Boolean> GOOD_POTIONS = new HashMap<>();
+
+    static {
+        GOOD_POTIONS.put(PotionEffectType.HEAL, true);
+        GOOD_POTIONS.put(PotionEffectType.HARM, false);
+
+        //Add more potions if required
+    }
 
     private WarsPlugin plugin;
 
@@ -321,8 +332,8 @@ public class WarsGameListener implements Listener {
     }
 
     @EventHandler
-    public void onEntityShootBow(EntityShootBowEvent event){
-        if(!(event.getEntity() instanceof Player)) return;
+    public void onEntityShootBow(EntityShootBowEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
 
         resetDurability((Player) event.getEntity());
     }
@@ -330,11 +341,11 @@ public class WarsGameListener implements Listener {
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Player damager;
-        if (!(event.getDamager() instanceof Player)){
-            if(event.getDamager() instanceof Projectile){
+        if (!(event.getDamager() instanceof Player)) {
+            if (event.getDamager() instanceof Projectile) {
                 Projectile arrow = (Projectile) event.getDamager();
 
-                if(!(arrow.getShooter() instanceof Player)) return;
+                if (!(arrow.getShooter() instanceof Player)) return;
                 damager = (Player) arrow.getShooter();
             } else return;
         } else {
@@ -422,6 +433,35 @@ public class WarsGameListener implements Listener {
         }
 
         plugin.checkVictory(true);
+    }
+
+    @EventHandler
+    public void onPotionSplash(PotionSplashEvent event) {
+        ProjectileSource projectileSource = event.getEntity().getShooter();
+
+        if (!(projectileSource instanceof Player)) return;
+        Player shooter = (Player) projectileSource;
+        PlayerInfo shooterInfo = plugin.getPlayerInfo(shooter);
+
+        if (!shooterInfo.isInGame() || shooterInfo.getTeamColor() == null) {
+            event.setCancelled(true);
+            return;
+        }
+
+        //If NPE then add potion to GOOD_POTIONS
+        boolean good = GOOD_POTIONS.get(event.getPotion().getEffects().iterator().next().getType());
+
+        for (LivingEntity ent : event.getAffectedEntities()) {
+            if (!(ent instanceof Player)) continue;
+
+            Player player = (Player) ent;
+            PlayerInfo playerInfo = plugin.getPlayerInfo(player);
+
+            if (!playerInfo.isInGame() || playerInfo.getTeamColor() == null ||
+                    (playerInfo.getTeamColor() == shooterInfo.getTeamColor()) != good) {
+                event.setIntensity(ent, 0);
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

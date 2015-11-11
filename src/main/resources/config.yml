@@ -120,6 +120,18 @@ amounts:
     goldenApple: 1
 
 locale:
-  team-already-member: "§cYou are already in the %s §Team"
+  class-chooser: "Class Chooser"
+  general-desc: "Fights with a diamond sword"
+  scout-desc: "Runs fast and has a player locator"
+  archer-desc: "Fights with a bow!"
+  cloaker-desc: "Can go invisible for short periods of time"
+  team-chooser: "Team Chooser"
+  team-desc: "%s Team"
+  team-already-member: "§cYou are already in the %s §cTeam"
   team-full: "§cThe %s §cTeam is full. Try another"
   team-joined: "§6You will be in the %s §6Team in the next game!"
+  class-selected: "§6You will be a %s §6in the next game!"
+  team-chooser-desc: "Choose your team"
+  class-chooser-desc: "Choose your class"
+  choose-team-class: "§2Choose your team/class or it is chosen randomly"
+  map-info: "§2Canyon is the only map so there is no map voting"

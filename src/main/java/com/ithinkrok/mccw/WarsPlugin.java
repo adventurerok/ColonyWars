@@ -234,15 +234,15 @@ public class WarsPlugin extends JavaPlugin {
 
         inv.clear();
 
-        inv.addItem(InventoryUtils
-                .createItemWithNameAndLore(Material.LEATHER_HELMET, 1, 0, "Team Chooser", "Choose your team"));
+        inv.addItem(InventoryUtils.createItemWithNameAndLore(Material.LEATHER_HELMET, 1, 0, getLocale("team-chooser"),
+                getLocale("team-chooser-desc")));
 
-        inv.addItem(InventoryUtils
-                .createItemWithNameAndLore(Material.WOOD_SWORD, 1, 0, "Class Chooser", "Choose your class"));
+        inv.addItem(InventoryUtils.createItemWithNameAndLore(Material.WOOD_SWORD, 1, 0, getLocale("class-chooser"),
+                getLocale("class-chooser-desc")));
 
-        playerInfo.message(ChatColor.GREEN + "Choose a team or class or you will be assigned one automatically");
+        playerInfo.message(getLocale("choose-team-class"));
 
-        playerInfo.message(ChatColor.GREEN + "Canyon is the only map so there is no map voting!");
+        playerInfo.message(getLocale("map-info"));
 
         playerInfo.getPlayer().teleport(Bukkit.getWorld("world").getSpawnLocation());
     }
@@ -425,7 +425,7 @@ public class WarsPlugin extends JavaPlugin {
                 break;
             case "base_location":
                 TeamInfo teamInfo = getTeamInfo(playerInfo.getTeamColor());
-                if(teamInfo == null){
+                if (teamInfo == null) {
                     playerInfo.message("Your team is null");
                     break;
                 }
@@ -654,7 +654,7 @@ public class WarsPlugin extends JavaPlugin {
     }
 
 
-    public String getLocale(String name, Object...params){
+    public String getLocale(String name, Object... params) {
         return String.format(getConfig().getString("locale." + name), params);
     }
 

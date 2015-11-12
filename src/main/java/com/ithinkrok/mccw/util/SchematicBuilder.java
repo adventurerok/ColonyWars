@@ -10,6 +10,7 @@ import de.inventivegames.hologram.Hologram;
 import de.inventivegames.hologram.HologramAPI;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -66,6 +68,8 @@ public class SchematicBuilder {
 
             Location centerBlock = null;
 
+            HashMap<Location, BlockState> oldBlocks = new HashMap<>();
+
             for (int x = 0; x < schem.getWidth(); ++x) {
                 for (int y = 0; y < schem.getHeight(); ++y) {
                     for (int z = 0; z < schem.getLength(); ++z) {
@@ -78,6 +82,8 @@ public class SchematicBuilder {
                         if (bId == Material.OBSIDIAN.getId()) centerBlock = l;
 
                         locations.add(l);
+
+                        oldBlocks.put(l, l.getBlock().getState());
                     }
                 }
             }
@@ -90,7 +96,8 @@ public class SchematicBuilder {
             });
 
             BuildingInfo result =
-                    new BuildingInfo(plugin, schemData.getBuildingName(), teamColor, centerBlock,rotation, locations);
+                    new BuildingInfo(plugin, schemData.getBuildingName(), teamColor, centerBlock,rotation, locations,
+                            oldBlocks);
 
             plugin.addBuilding(result);
             SchematicBuilderTask task = new SchematicBuilderTask(plugin, loc, result, schem, instant ? -1 : 2);

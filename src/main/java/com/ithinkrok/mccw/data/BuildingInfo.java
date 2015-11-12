@@ -6,10 +6,13 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.util.Vector;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by paul on 04/11/15.
@@ -22,6 +25,7 @@ public class BuildingInfo {
     private TeamColor teamColor;
     private WarsPlugin plugin;
     private List<Location> buildingBlocks;
+    private Map<Location, BlockState> oldBlocks;
     private Location centerBlock;
     private Vector minBB;
     private Vector maxBB;
@@ -33,14 +37,15 @@ public class BuildingInfo {
     }
 
     public BuildingInfo(WarsPlugin plugin, String buildingName, TeamColor teamColor, Location centerBlock, int rotation,
-                        List<Location> buildingBlocks) {
+                        List<Location> buildingBlocks, Map<Location, BlockState> oldBlocks) {
         this.plugin = plugin;
         this.buildingName = buildingName;
         this.teamColor = teamColor;
         this.centerBlock = centerBlock;
         this.rotation = rotation;
         this.buildingBlocks = buildingBlocks;
-        
+        this.oldBlocks = oldBlocks;
+
         Vector minBB = new Vector(centerBlock.getX(), centerBlock.getY(), centerBlock.getZ());
         Vector maxBB = new Vector(centerBlock.getX(), centerBlock.getY(), centerBlock.getZ());
         
@@ -131,8 +136,7 @@ public class BuildingInfo {
         for(Location loc : buildingBlocks){
             if(loc.equals(centerBlock)) continue;
 
-            Block b = loc.getBlock();
-            b.setType(Material.AIR);
+            oldBlocks.get(loc).update(true, false);
         }
 
         plugin.removeBuilding(this);

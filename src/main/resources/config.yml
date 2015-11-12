@@ -109,6 +109,13 @@ costs:
     bow2: 1600
     arrows1: 1350
     arrows2: 1600
+  mage:
+    lightning1: 1350
+    lightning2: 1600
+    ender1: 1350
+    ender2: 1600
+    healing: 1350
+    harming: 400
 
 amounts:
   farm:
@@ -125,6 +132,7 @@ locale:
   scout-desc: "Runs fast and has a player locator"
   archer-desc: "Fights with a bow!"
   cloaker-desc: "Can go invisible for short periods of time"
+  mage-desc: "Can strike lightning and use harming potions"
   team-chooser: "Team Chooser"
   team-desc: "%s Team"
   team-already-member: "§cYou are already in the %s §cTeam"
@@ -156,3 +164,5 @@ locale:
   obsidian-not-building: "§cThat obsidian block does not appear to be a shop."
   building-not-yours: "§eThat building does not belong to your team. §lMine this block to destroy it!"
   building-not-finished: "§cPlease wait until the construction has finished."
+  ender-wand-cooldown: "§cThe ender wand is cooling down."
+  lightning-wand-cooldown: "§cThe lightning wand is cooling down."

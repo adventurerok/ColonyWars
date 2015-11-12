@@ -12,7 +12,8 @@ public enum PlayerClass {
     CLOAKER("Cloaker", Material.IRON_LEGGINGS),
     SCOUT("Scout", Material.COMPASS),
     GENERAL("General", Material.DIAMOND_SWORD),
-    ARCHER("Archer", Material.BOW);
+    ARCHER("Archer", Material.BOW),
+    MAGE("Mage", Material.DIAMOND_LEGGINGS);
 
     public final String name;
     public final Material chooser;

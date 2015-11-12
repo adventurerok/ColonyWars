@@ -134,6 +134,11 @@ costs:
     ender2: 1600
     healing: 1350
     harming: 400
+  peasant:
+    sharpness1: 1350
+    sharpness2: 1600
+    knockback1: 1350
+    knockback2: 1600
 
 amounts:
   farm:
@@ -151,6 +156,7 @@ locale:
   archer-desc: "Fights with a bow!"
   cloaker-desc: "Can go invisible for short periods of time"
   mage-desc: "Can strike lightning and use harming potions"
+  peasant-desc: "Has an enchanted iron axe to get money faster"
   team-chooser: "Team Chooser"
   team-desc: "%s Team"
   team-already-member: "§cYou are already in the %s §cTeam"

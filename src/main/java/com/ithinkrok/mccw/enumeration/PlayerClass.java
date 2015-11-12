@@ -13,7 +13,8 @@ public enum PlayerClass {
     SCOUT("Scout", Material.COMPASS),
     GENERAL("General", Material.DIAMOND_SWORD),
     ARCHER("Archer", Material.BOW),
-    MAGE("Mage", Material.DIAMOND_LEGGINGS);
+    MAGE("Mage", Material.DIAMOND_LEGGINGS),
+    PEASANT("Peasant", Material.IRON_AXE);
 
     public final String name;
     public final Material chooser;

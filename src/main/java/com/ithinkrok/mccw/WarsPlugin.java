@@ -170,6 +170,7 @@ public class WarsPlugin extends JavaPlugin {
         classHandlerEnumMap.put(PlayerClass.CLOAKER, new CloakerClass(this, getConfig()));
         classHandlerEnumMap.put(PlayerClass.ARCHER, new ArcherClass(getConfig()));
         classHandlerEnumMap.put(PlayerClass.MAGE, new MageClass(this, getConfig()));
+        classHandlerEnumMap.put(PlayerClass.PEASANT, new PeasantClass(getConfig()));
 
         startLobbyCountdown();
 

@@ -302,12 +302,11 @@ public class SchematicBuilder {
 
                 block.setTypeIdAndData(bId, rotateData(Material.getMaterial(bId), schem.getRotation(), bData), false);
 
-                loc.getWorld().playEffect(loc, Effect.STEP_SOUND, bId);
-
                 ++index;
 
                 ++count;
                 if (buildSpeed != -1 && count > buildSpeed) {
+                    loc.getWorld().playEffect(loc, Effect.STEP_SOUND, bId);
                     hologram.setText("Building: " + percentFormat.format((double) index / (double) locations.size()));
                     return;
                 }
@@ -324,6 +323,8 @@ public class SchematicBuilder {
 
             buildingInfo.setFinished(true);
             plugin.finishBuilding(buildingInfo);
+
+            buildingInfo = null;
         }
 
         public void schedule(Plugin plugin) {

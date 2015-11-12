@@ -31,8 +31,17 @@ public class OmniInventory extends BuyableInventory {
         addChurchItems(result, plugin, config);
         addCathedralItems(result, config);
         addGreenhouseItems(result, config);
+        addBlacksmithItems(result, config);
 
         return result;
+    }
+
+    private static void addBlacksmithItems(List<Buyable> result, FileConfiguration config) {
+        int scoutTowerCost = config.getInt("costs.buildings." + Buildings.SCOUTTOWER);
+        int wallCost = config.getInt("costs.buildings." + Buildings.WALL);
+
+        result.add(new BuildingBuyable(Buildings.SCOUTTOWER, Buildings.BLACKSMITH, scoutTowerCost));
+        result.add(new BuildingBuyable(Buildings.WALL, Buildings.BLACKSMITH, wallCost, 16));
     }
 
     private static void addBaseItems(List<Buyable> result, FileConfiguration config) {

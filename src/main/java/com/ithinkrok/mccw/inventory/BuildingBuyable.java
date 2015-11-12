@@ -14,11 +14,15 @@ public class BuildingBuyable extends ItemBuyable {
 
     private String buildingName;
 
-    public BuildingBuyable(String buildingName, String purchaseFromBuilding, int cost) {
-        super(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, buildingName, "Build a " +
+    public BuildingBuyable(String buildingName, String purchaseFromBuilding, int cost){
+        this(buildingName, purchaseFromBuilding, cost, 1);
+    }
+
+    public BuildingBuyable(String buildingName, String purchaseFromBuilding, int cost, int amount) {
+        super(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, amount, 0, buildingName, "Build a " +
                         buildingName + "!"),
-                InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, buildingName, "Builds a " +
-                        buildingName + " when placed!"), purchaseFromBuilding, cost, true, true);
+                InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, amount, 0, buildingName, "Builds a " +
+                        buildingName + " when placed!"), purchaseFromBuilding, cost * amount, true, true);
         this.buildingName = buildingName;
     }
 

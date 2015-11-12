@@ -290,8 +290,6 @@ public class WarsGameListener implements Listener {
 
         playerInfo.setShopBlock(buildingInfo.getCenterBlock());
 
-        Inventory shopInv = Bukkit.createInventory(event.getPlayer(), 9, buildingInfo.getBuildingName());
-
         TeamInfo teamInfo = plugin.getTeamInfo(playerInfo.getTeamColor());
 
         InventoryHandler inventoryHandler = plugin.getBuildingInventoryHandler();
@@ -303,6 +301,9 @@ public class WarsGameListener implements Listener {
         classHandler.addInventoryItems(contents, buildingInfo, playerInfo, teamInfo);
 
         int index = 0;
+        int slots = (int) (9 * Math.ceil((contents.size() + 2) / 9));
+
+        Inventory shopInv = Bukkit.createInventory(event.getPlayer(), slots, buildingInfo.getBuildingName());
 
         for (ItemStack item : contents) {
             shopInv.setItem(index++, item);

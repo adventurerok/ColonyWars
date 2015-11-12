@@ -88,6 +88,12 @@ costs:
     Church: 4000
     Cathedral: 8000
     Greenhouse: 2000
+    Wall: 100
+    Landmine: 500
+    ScoutTower: 2000
+    CannonTower: 2000
+    WirelessBuffer: 2500
+    TimerBuffer: 2500
   farm:
     rawPotato: 3
     cookie: 2

@@ -160,6 +160,8 @@ public class WarsPlugin extends JavaPlugin {
         schematicDataHashMap.put(Buildings.CANNONTOWER, new SchematicData(Buildings.CANNONTOWER, getConfig()));
         schematicDataHashMap.put(Buildings.WALL, new SchematicData(Buildings.WALL, getConfig()));
         schematicDataHashMap.put(Buildings.LANDMINE, new SchematicData(Buildings.LANDMINE, getConfig()));
+        schematicDataHashMap.put(Buildings.WIRELESSBUFFER, new SchematicData(Buildings.WIRELESSBUFFER, getConfig()));
+        schematicDataHashMap.put(Buildings.TIMERBUFFER, new SchematicData(Buildings.TIMERBUFFER, getConfig()));
 
         buildingInventoryHandler = new OmniInventory(this, getConfig());
 

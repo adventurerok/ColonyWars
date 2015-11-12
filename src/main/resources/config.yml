@@ -60,6 +60,8 @@ buildings:
     CannonTower: "mccw_cannontower.schematic"
     Wall: "mccw_wall.schematic"
     Landmine: "mccw_mine.schematic"
+    WirelessBuffer: "mccw_rodtrap.schematic"
+    TimerBuffer: "mccw_timetrap.schematic"
   rotations:
     Base: 0
     Farm: 0
@@ -74,6 +76,8 @@ buildings:
     CannonTower: 2
     Wall: 0
     Landmine: 0
+    WirelessBuffer: 0
+    TimerBuffer: 0
 
 costs:
   buildings:

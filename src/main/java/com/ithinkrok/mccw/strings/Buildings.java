@@ -19,4 +19,6 @@ public class Buildings {
     public static final String CANNONTOWER = "CannonTower";
     public static final String WALL = "Wall";
     public static final String LANDMINE = "Landmine";
+    public static final String WIRELESSBUFFER = "WirelessBuffer";
+    public static final String TIMERBUFFER = "TimerBuffer";
 }

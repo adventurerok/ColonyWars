@@ -93,6 +93,8 @@ public class WarsPlugin extends JavaPlugin {
     private int showdownRadiusX;
     private int showdownRadiusZ;
     private Location showdownCenter;
+    private Vector showdownMinVector;
+    private Vector showdownMaxVector;
 
     private String map = "canyon";
     private TeamColor winningTeam;
@@ -215,6 +217,9 @@ public class WarsPlugin extends JavaPlugin {
         buildings.forEach(BuildingInfo::clearHolograms);
 
         buildings.clear();
+
+        showdownCenter = null;
+        winningTeam = null;
 
         Bukkit.unloadWorld("playing", false);
 
@@ -386,7 +391,8 @@ public class WarsPlugin extends JavaPlugin {
             if (!building.canBuild(minBB, maxBB)) return false;
         }
 
-        return true;
+        return showdownMaxVector.getX() < minBB.getX() || showdownMinVector.getX() > maxBB.getX()
+                || showdownMaxVector.getZ() < minBB.getZ() || showdownMinVector.getZ() > maxBB.getZ();
     }
 
     @Override
@@ -534,6 +540,17 @@ public class WarsPlugin extends JavaPlugin {
         currentListener = new WarsGameListener(this);
         getServer().getPluginManager().registerEvents(currentListener, this);
         setupPlayers();
+
+        FileConfiguration config = getConfig();
+        String base = "maps." + map + ".showdown-size";
+        int x = config.getInt(base + ".x");
+        int z = config.getInt(base + ".z");
+        showdownRadiusX = x;
+        showdownRadiusZ = z;
+        showdownCenter = getMapSpawn(null);
+        showdownMinVector = showdownCenter.toVector().add(new Vector(-showdownRadiusX - 5, 0, -showdownRadiusZ - 5));
+        showdownMaxVector = showdownCenter.toVector().add(new Vector(showdownRadiusX + 5, 0, showdownRadiusZ + 5));
+
         setupBases();
 
         checkVictory(false);

@@ -140,5 +140,6 @@ public class BuildingInfo {
         }
 
         plugin.removeBuilding(this);
+        if(centerBlock != null) oldBlocks.get(centerBlock).update(true, false);
     }
 }

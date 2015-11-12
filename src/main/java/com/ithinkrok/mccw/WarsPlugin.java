@@ -195,7 +195,9 @@ public class WarsPlugin extends JavaPlugin {
     public void preEndGame(){
         buildingCentres.clear();
 
-        for(BuildingInfo info : buildings){
+        List<BuildingInfo> oldBuildings = new ArrayList<>(buildings);
+
+        for(BuildingInfo info : oldBuildings){
             info.clearHolograms();
             info.remove();
         }

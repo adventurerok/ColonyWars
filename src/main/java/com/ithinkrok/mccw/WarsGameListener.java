@@ -301,7 +301,7 @@ public class WarsGameListener implements Listener {
         classHandler.addInventoryItems(contents, buildingInfo, playerInfo, teamInfo);
 
         int index = 0;
-        int slots = (int) (9 * Math.ceil((contents.size() + 2) / 9));
+        int slots = 9 * ((contents.size() + 9) / 9);
 
         Inventory shopInv = Bukkit.createInventory(event.getPlayer(), slots, buildingInfo.getBuildingName());
 

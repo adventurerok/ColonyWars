@@ -70,8 +70,8 @@ buildings:
     #Cathedral should always be 0 so that it is built in the same rotation as the church
     Cathedral: 0
     Greenhouse: 3
-    ScoutTower: 0
-    CannonTower: 0
+    ScoutTower: 2
+    CannonTower: 2
     Wall: 0
     Landmine: 0
 

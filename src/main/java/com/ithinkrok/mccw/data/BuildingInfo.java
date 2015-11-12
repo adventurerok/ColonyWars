@@ -50,6 +50,8 @@ public class BuildingInfo {
         this.buildingBlocks = buildingBlocks;
         this.oldBlocks = oldBlocks;
 
+        if(centerBlock == null) centerBlock = buildingBlocks.get(0);
+
         Vector minBB = new Vector(centerBlock.getX(), centerBlock.getY(), centerBlock.getZ());
         Vector maxBB = new Vector(centerBlock.getX(), centerBlock.getY(), centerBlock.getZ());
         

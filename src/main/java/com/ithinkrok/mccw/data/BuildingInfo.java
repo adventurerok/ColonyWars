@@ -2,6 +2,8 @@ package com.ithinkrok.mccw.data;
 
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import de.inventivegames.hologram.Hologram;
+import de.inventivegames.hologram.HologramAPI;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -10,6 +12,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +34,7 @@ public class BuildingInfo {
     private Vector maxBB;
     private boolean finished;
     private int rotation;
+    private List<Hologram> holograms = new ArrayList<>();
 
     public int getRotation() {
         return rotation;
@@ -82,6 +86,19 @@ public class BuildingInfo {
 
     public void setFinished(boolean finished) {
         this.finished = finished;
+
+        if(finished && centerBlock != null){
+            Location holo1 = centerBlock.clone().add(0.5d, 1.7d, 0.5d);
+            Hologram hologram1 = HologramAPI.createHologram(holo1, plugin.getLocale("building-shop", buildingName));
+            hologram1.spawn();
+
+            Location holo2 = centerBlock.clone().add(0.5d, 1.4d, 0.5d);
+            Hologram hologram2 = HologramAPI.createHologram(holo2, plugin.getLocale("click-to-open"));
+            hologram2.spawn();
+
+            holograms.add(hologram1);
+            holograms.add(hologram2);
+        }
     }
 
     public TeamColor getTeamColor() {
@@ -101,6 +118,12 @@ public class BuildingInfo {
                 maxBB.getY() < this.minBB.getY() || minBB.getY() > this.maxBB.getY() ||
                 maxBB.getZ() < this.minBB.getZ() || minBB.getZ() > this.maxBB.getZ();
 
+    }
+
+    public void clearHolograms(){
+        holograms.stream().filter(Hologram::isSpawned).forEach(Hologram::despawn);
+
+        holograms.clear();
     }
 
     public void explode(){

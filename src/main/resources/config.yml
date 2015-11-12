@@ -151,3 +151,5 @@ locale:
   game-wait-next: "§6You can play when the current game ends"
   spectate-heads: "§6Choose a player to spectate from your inventory"
   spectate-player: "§dSpectate %s"
+  building-shop: "§a%s Shop"
+  click-to-open: "§f§oClick to Open"

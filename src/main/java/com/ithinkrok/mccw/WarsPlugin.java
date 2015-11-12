@@ -196,6 +196,9 @@ public class WarsPlugin extends JavaPlugin {
         }
 
         buildingCentres.clear();
+
+        buildings.forEach(BuildingInfo::clearHolograms);
+
         buildings.clear();
 
         Bukkit.unloadWorld("playing", false);
@@ -693,6 +696,8 @@ public class WarsPlugin extends JavaPlugin {
 
             info.recalculateInventory();
         }
+
+        buildingInfo.clearHolograms();
     }
 
     public void updateScoutCompass(ItemStack item, Player player, TeamColor exclude) {

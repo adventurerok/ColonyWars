@@ -10,6 +10,7 @@ import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EnderPearl;
@@ -51,10 +52,10 @@ public class MageClass extends BuyableInventory implements PlayerClassHandler {
                                 "Cooldown: 15 seconds"), Buildings.MAGETOWER, config.getInt("costs.mage.ender2"),
                         "ender", 2), new UpgradeBuyable(InventoryUtils
                         .createItemWithNameAndLore(Material.DIAMOND_LEGGINGS, 1, 0, "Lightning Wand Upgrade 1",
-                                "Cooldown: 20 seconds"), Buildings.MAGETOWER, config.getInt("costs.mage.lighting1"),
+                                "Cooldown: 20 seconds"), Buildings.MAGETOWER, config.getInt("costs.mage.lightning1"),
                         "lightning", 1), new UpgradeBuyable(InventoryUtils
                         .createItemWithNameAndLore(Material.DIAMOND_LEGGINGS, 1, 0, "Lightning Wand Upgrade 2",
-                                "Cooldown: 10 seconds"), Buildings.MAGETOWER, config.getInt("costs.mage.lighting2"),
+                                "Cooldown: 10 seconds"), Buildings.MAGETOWER, config.getInt("costs.mage.lightning2"),
                         "lightning", 2));
         this.plugin = plugin;
     }
@@ -92,6 +93,7 @@ public class MageClass extends BuyableInventory implements PlayerClassHandler {
                 if (!playerInfo.startCoolDown("ender", 45 - 15 * playerInfo.getUpgradeLevel("ender"),
                         plugin.getLocale("ender-wand-cooldown"))) break;
                 event.getPlayer().launchProjectile(EnderPearl.class);
+                event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.SHOOT_ARROW, 1.0f, 1.0f);
                 break;
             case DIAMOND_LEGGINGS:
                 if (!playerInfo.startCoolDown("lightning", 45 - 15 * playerInfo.getUpgradeLevel("lightning"),
@@ -111,14 +113,14 @@ public class MageClass extends BuyableInventory implements PlayerClassHandler {
                 int enderCooldown = 45 - 15 * upgradeLevel;
                 ItemStack enderWand = InventoryUtils
                         .createItemWithNameAndLore(Material.DIAMOND_CHESTPLATE, 1, 0, "Ender Wand",
-                                "Cooldown: " + enderCooldown);
+                                "Cooldown: " + enderCooldown + " seconds");
                 InventoryUtils.replaceItem(playerInfo.getPlayer().getInventory(), enderWand);
                 break;
             case "lightning":
                 int lightningCooldown = 30 - 10 * upgradeLevel;
                 ItemStack lightningWand = InventoryUtils
                         .createItemWithNameAndLore(Material.DIAMOND_LEGGINGS, 1, 0, "Lightning Wand",
-                                "Cooldown: " + lightningCooldown);
+                                "Cooldown: " + lightningCooldown + " seconds");
                 InventoryUtils.replaceItem(playerInfo.getPlayer().getInventory(), lightningWand);
                 break;
         }

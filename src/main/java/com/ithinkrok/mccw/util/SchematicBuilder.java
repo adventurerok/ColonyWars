@@ -70,6 +70,8 @@ public class SchematicBuilder {
 
             HashMap<Location, BlockState> oldBlocks = new HashMap<>();
 
+            BlockState oldState;
+
             for (int x = 0; x < schem.getWidth(); ++x) {
                 for (int y = 0; y < schem.getHeight(); ++y) {
                     for (int z = 0; z < schem.getLength(); ++z) {
@@ -83,7 +85,10 @@ public class SchematicBuilder {
 
                         locations.add(l);
 
-                        oldBlocks.put(l, l.getBlock().getState());
+                        oldState = l.getBlock().getState();
+                        if(bId == Material.LAPIS_BLOCK.getId()) oldState.setType(Material.AIR);
+
+                        oldBlocks.put(l, oldState);
                     }
                 }
             }

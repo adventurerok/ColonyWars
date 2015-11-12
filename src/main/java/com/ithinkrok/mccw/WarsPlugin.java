@@ -204,7 +204,6 @@ public class WarsPlugin extends JavaPlugin {
     public void endGame() {
         for (PlayerInfo playerInfo : playerInfoHashMap.values()) {
             decloak(playerInfo.getPlayer());
-            playerInfo.reset();
         }
 
         for (TeamColor c : TeamColor.values()) {

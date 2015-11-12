@@ -190,13 +190,21 @@ public class WarsPlugin extends JavaPlugin {
         }, null);
     }
 
-    public void endGame() {
-        for (PlayerInfo playerInfo : playerInfoHashMap.values()) {
-            playerJoinLobby(playerInfo.getPlayer());
+    public void preEndGame(){
+        buildingCentres.clear();
+
+        for(BuildingInfo info : buildings){
+            info.clearHolograms();
+            info.remove();
         }
 
+        buildings.clear();
+    }
+
+    public void endGame() {
         for (PlayerInfo playerInfo : playerInfoHashMap.values()) {
             decloak(playerInfo.getPlayer());
+            playerInfo.reset();
         }
 
         for (TeamColor c : TeamColor.values()) {
@@ -218,6 +226,10 @@ public class WarsPlugin extends JavaPlugin {
         setInGame(false);
         setInAftermath(false);
         setInShowdown(false);
+
+        for (PlayerInfo playerInfo : playerInfoHashMap.values()) {
+            playerJoinLobby(playerInfo.getPlayer());
+        }
 
         startLobbyCountdown();
     }
@@ -845,6 +857,8 @@ public class WarsPlugin extends JavaPlugin {
                             .build());
             firework.setFireworkMeta(meta);
         });
+
+        preEndGame();
     }
 
     public void startShowdownCountdown() {

@@ -95,7 +95,8 @@ public class WarsGameListener implements Listener {
         plugin.setPlayerTeam(died, null);
         plugin.getPlayerInfo(died).setInGame(false);
         plugin.cloak(died);
-        died.setAllowFlight(true);
+        //died.setAllowFlight(true);
+        died.setGameMode(GameMode.SPECTATOR);
         died.setMaxHealth(plugin.getMaxHealth());
         died.setHealth(plugin.getMaxHealth());
 

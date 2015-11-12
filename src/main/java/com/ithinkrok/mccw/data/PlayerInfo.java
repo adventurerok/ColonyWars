@@ -59,9 +59,12 @@ public class PlayerInfo {
         if(!inGame){
             upgradeLevels.clear();
             coolingDown.clear();
+            oldBuildingNows.clear();
             playerClass = null;
             shopInventory = null;
             shopBlock = null;
+            playerCash = 0;
+            oldBuildingNows.clear();
         }
 
         updateScoreboard();

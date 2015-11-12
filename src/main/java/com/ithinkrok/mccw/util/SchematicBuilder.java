@@ -86,7 +86,7 @@ public class SchematicBuilder {
                         locations.add(l);
 
                         oldState = l.getBlock().getState();
-                        if(bId == Material.LAPIS_BLOCK.getId()) oldState.setType(Material.AIR);
+                        if(bId == Material.LAPIS_ORE.getId()) oldState.setType(Material.AIR);
 
                         oldBlocks.put(l, oldState);
                     }

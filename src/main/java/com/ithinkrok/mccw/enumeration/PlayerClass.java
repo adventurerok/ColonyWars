@@ -1,5 +1,7 @@
 package com.ithinkrok.mccw.enumeration;
 
+import org.bukkit.Material;
+
 /**
  * Created by paul on 05/11/15.
  *
@@ -7,14 +9,24 @@ package com.ithinkrok.mccw.enumeration;
  */
 public enum PlayerClass {
 
-    CLOAKER("Cloaker"),
-    SCOUT("Scout"),
-    GENERAL("General"),
-    ARCHER("Archer");
+    CLOAKER("Cloaker", Material.IRON_LEGGINGS),
+    SCOUT("Scout", Material.COMPASS),
+    GENERAL("General", Material.DIAMOND_SWORD),
+    ARCHER("Archer", Material.BOW);
 
     public final String name;
+    public final Material chooser;
 
-    PlayerClass(String name) {
+    PlayerClass(String name, Material chooser) {
         this.name = name;
+        this.chooser = chooser;
+    }
+
+    public static PlayerClass fromChooserMaterial(Material mat){
+        for(PlayerClass playerClass : values()){
+            if(playerClass.chooser == mat) return playerClass;
+        }
+
+        return null;
     }
 }

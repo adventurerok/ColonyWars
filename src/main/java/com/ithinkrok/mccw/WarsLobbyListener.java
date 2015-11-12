@@ -90,17 +90,11 @@ public class WarsLobbyListener implements Listener {
     private void showClassChooser(Player player) {
         Inventory shopInv = Bukkit.createInventory(player, 9, plugin.getLocale("class-chooser"));
 
-        shopInv.addItem(InventoryUtils
-                .createItemWithNameAndLore(Material.DIAMOND_SWORD, 1, 0, "General", plugin.getLocale("general-desc")));
-
-        shopInv.addItem(InventoryUtils
-                .createItemWithNameAndLore(Material.COMPASS, 1, 0, "Scout", plugin.getLocale("scout-desc")));
-
-        shopInv.addItem(InventoryUtils
-                .createItemWithNameAndLore(Material.BOW, 1, 0, "Archer", plugin.getLocale("archer-desc")));
-
-        shopInv.addItem(InventoryUtils
-                .createItemWithNameAndLore(Material.IRON_LEGGINGS, 1, 0, "Cloaker", plugin.getLocale("cloaker-desc")));
+        for(PlayerClass playerClass : PlayerClass.values()){
+            shopInv.addItem(InventoryUtils
+                    .createItemWithNameAndLore(playerClass.chooser, 1, 0, playerClass.name, plugin.getLocale
+                            (playerClass.toString().toLowerCase() + "-desc")));
+        }
 
         player.openInventory(shopInv);
     }
@@ -158,8 +152,11 @@ public class WarsLobbyListener implements Listener {
 
                 playerInfo.getPlayer().closeInventory();
             } else if (plugin.getLocale("class-chooser").equals(event.getInventory().getTitle())) {
-                String className = item.toUpperCase();
-                PlayerClass playerClass = PlayerClass.valueOf(className);
+                PlayerClass playerClass = PlayerClass.fromChooserMaterial(event.getCurrentItem().getType());
+                if(playerClass == null){
+                    playerInfo.message("Null class. This is impossible error");
+                    return;
+                }
 
                 playerInfo.setPlayerClass(playerClass);
 

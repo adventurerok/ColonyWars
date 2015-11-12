@@ -8,16 +8,17 @@ import com.ithinkrok.mccw.inventory.ItemBuyable;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EnderPearl;
+import org.bukkit.entity.LightningStrike;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionType;
 
 import java.util.HashSet;
@@ -101,7 +102,10 @@ public class MageClass extends BuyableInventory implements PlayerClassHandler {
                 Block target = event.getPlayer().getTargetBlock(SEE_THROUGH, 200);
 
                 if (target == null) break;
-                event.getPlayer().getLocation().getWorld().strikeLightning(target.getLocation());
+                LightningStrike strike =
+                        event.getPlayer().getLocation().getWorld().strikeLightning(target.getLocation());
+
+                strike.setMetadata("striker", new FixedMetadataValue(plugin, event.getPlayer().getUniqueId()));
                 break;
         }
     }

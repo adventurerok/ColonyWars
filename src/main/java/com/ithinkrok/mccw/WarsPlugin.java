@@ -754,6 +754,10 @@ public class WarsPlugin extends JavaPlugin {
         return playerInfoHashMap.get(player.getUniqueId());
     }
 
+    public PlayerInfo getPlayerInfo(UUID uniqueId){
+        return playerInfoHashMap.get(uniqueId);
+    }
+
     public int getPlayerCount() {
         return playerInfoHashMap.size();
     }

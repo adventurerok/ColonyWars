@@ -12,10 +12,7 @@ import com.ithinkrok.mccw.util.Facing;
 import com.ithinkrok.mccw.util.SchematicBuilder;
 import com.ithinkrok.mccw.util.TreeFeller;
 import org.bukkit.*;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -29,13 +26,11 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by paul on 01/11/15.
@@ -339,19 +334,31 @@ public class WarsGameListener implements Listener {
         resetDurability((Player) event.getEntity());
     }
 
-    @EventHandler
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        Player damager;
+    public Player getDamager(EntityDamageByEntityEvent event){
+
         if (!(event.getDamager() instanceof Player)) {
             if (event.getDamager() instanceof Projectile) {
                 Projectile arrow = (Projectile) event.getDamager();
 
-                if (!(arrow.getShooter() instanceof Player)) return;
-                damager = (Player) arrow.getShooter();
-            } else return;
+                if (!(arrow.getShooter() instanceof Player)) return null;
+                return (Player) arrow.getShooter();
+            } else if(event.getDamager() instanceof LightningStrike){
+                List<MetadataValue> values = event.getDamager().getMetadata("striker");
+                if(values == null || values.isEmpty()) return null;
+
+                PlayerInfo playerInfo = plugin.getPlayerInfo((UUID) values.get(0).value());
+                if(playerInfo == null) return null;
+                return playerInfo.getPlayer();
+            } else return null;
         } else {
-            damager = (Player) event.getDamager();
+            return (Player) event.getDamager();
         }
+    }
+
+    @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        Player damager = getDamager(event);
+        if(damager == null) return;
 
         PlayerInfo damagerInfo = plugin.getPlayerInfo(damager);
 

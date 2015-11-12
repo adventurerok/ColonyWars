@@ -96,7 +96,7 @@ public class SchematicBuilder {
             });
 
             BuildingInfo result =
-                    new BuildingInfo(plugin, schemData.getBuildingName(), teamColor, centerBlock,rotation, locations,
+                    new BuildingInfo(plugin, schemData.getBuildingName(), teamColor, centerBlock, rotation, locations,
                             oldBlocks);
 
             plugin.addBuilding(result);
@@ -122,13 +122,40 @@ public class SchematicBuilder {
         return doSchematic(plugin, schemData, loc, teamColor, rotation, false);
     }
 
+    private static byte rotateData(Material type, int rotation, byte data) {
+        switch (type) {
+            case ACACIA_STAIRS:
+            case BIRCH_WOOD_STAIRS:
+            case BRICK_STAIRS:
+            case COBBLESTONE_STAIRS:
+            case DARK_OAK_STAIRS:
+            case JUNGLE_WOOD_STAIRS:
+            case NETHER_BRICK_STAIRS:
+            case QUARTZ_STAIRS:
+            case RED_SANDSTONE_STAIRS:
+            case SANDSTONE_STAIRS:
+            case SMOOTH_STAIRS:
+            case SPRUCE_WOOD_STAIRS:
+            case WOOD_STAIRS:
+                return (byte) ((data & 0x4) | Facing.rotateStairs(data & 3, rotation));
+            case LADDER:
+            case CHEST:
+            case TRAPPED_CHEST:
+            case FURNACE:
+                return (byte) Facing.rotateLadderFurnaceChest(data, rotation);
+            default:
+                return data;
+        }
+
+    }
+
     private static class SchematicRotation {
         byte[] blocks;
         byte[] data;
-        private int rotation;
         boolean xzSwap = false;
         boolean xFlip = false;
         boolean zFlip = false;
+        private int rotation;
         private short width, height, length;
         private int offsetX, offsetY, offsetZ;
 
@@ -176,8 +203,8 @@ public class SchematicBuilder {
 
         public Vector[] calcBounds(Location loc) {
             Vector minBB = new Vector(loc.getX() + getOffsetX(), loc.getY() + getOffsetY(), loc.getZ() + getOffsetZ());
-            Vector maxBB =
-                    new Vector(minBB.getX() + getWidth(), minBB.getY() + getHeight(), minBB.getZ() + getLength());
+            Vector maxBB = new Vector(minBB.getX() + getWidth() - 1, minBB.getY() + getHeight() - 1,
+                    minBB.getZ() + getLength() - 1);
 
             return new Vector[]{minBB, maxBB};
         }
@@ -302,32 +329,5 @@ public class SchematicBuilder {
         public void schedule(Plugin plugin) {
             taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, 1, 1);
         }
-    }
-
-    private static byte rotateData(Material type, int rotation, byte data){
-        switch(type){
-            case ACACIA_STAIRS:
-            case BIRCH_WOOD_STAIRS:
-            case BRICK_STAIRS:
-            case COBBLESTONE_STAIRS:
-            case DARK_OAK_STAIRS:
-            case JUNGLE_WOOD_STAIRS:
-            case NETHER_BRICK_STAIRS:
-            case QUARTZ_STAIRS:
-            case RED_SANDSTONE_STAIRS:
-            case SANDSTONE_STAIRS:
-            case SMOOTH_STAIRS:
-            case SPRUCE_WOOD_STAIRS:
-            case WOOD_STAIRS:
-                return (byte) ((data & 0x4) | Facing.rotateStairs(data & 3, rotation));
-            case LADDER:
-            case CHEST:
-            case TRAPPED_CHEST:
-            case FURNACE:
-                return (byte) Facing.rotateLadderFurnaceChest(data, rotation);
-            default:
-                return data;
-        }
-
     }
 }

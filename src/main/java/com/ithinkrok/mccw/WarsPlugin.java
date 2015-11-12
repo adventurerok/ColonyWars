@@ -221,11 +221,13 @@ public class WarsPlugin extends JavaPlugin {
         showdownCenter = null;
         winningTeam = null;
 
-        Bukkit.unloadWorld("playing", false);
-
         HandlerList.unregisterAll(currentListener);
         currentListener = new WarsLobbyListener(this);
         getServer().getPluginManager().registerEvents(currentListener, this);
+
+        Bukkit.unloadWorld("playing", false);
+
+        System.gc();
 
         setInGame(false);
         setInAftermath(false);
@@ -638,6 +640,7 @@ public class WarsPlugin extends JavaPlugin {
 
             Location build = new Location(world, config.getInt(base + ".x"), config.getInt(base + ".y"),
                     config.getInt(base + ".z"));
+
 
 
             SchematicBuilder.pasteSchematic(this, getSchematicData(Buildings.BASE), build, 0, team);

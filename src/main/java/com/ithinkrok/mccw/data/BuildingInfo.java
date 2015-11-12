@@ -90,11 +90,11 @@ public class BuildingInfo {
         this.finished = finished;
 
         if(finished && centerBlock != null){
-            Location holo1 = centerBlock.clone().add(0.5d, 1.7d, 0.5d);
+            Location holo1 = centerBlock.clone().add(0.5d, 2.2d, 0.5d);
             Hologram hologram1 = HologramAPI.createHologram(holo1, plugin.getLocale("building-shop", buildingName));
             hologram1.spawn();
 
-            Location holo2 = centerBlock.clone().add(0.5d, 1.4d, 0.5d);
+            Location holo2 = centerBlock.clone().add(0.5d, 1.9d, 0.5d);
             Hologram hologram2 = HologramAPI.createHologram(holo2, plugin.getLocale("click-to-open"));
             hologram2.spawn();
 

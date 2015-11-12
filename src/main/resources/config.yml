@@ -153,3 +153,6 @@ locale:
   spectate-player: "§dSpectate %s"
   building-shop: "§a%s Shop"
   click-to-open: "§f§oClick to Open"
+  obsidian-not-building: "§cThat obsidian block does not appear to be a shop."
+  building-not-yours: "§eThat building does not belong to your team. §lMine this block to destroy it!"
+  building-not-finished: "§cPlease wait until the construction has finished."

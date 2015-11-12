@@ -205,6 +205,10 @@ public class WarsPlugin extends JavaPlugin {
 
     public void endGame() {
         for (PlayerInfo playerInfo : playerInfoHashMap.values()) {
+            playerJoinLobby(playerInfo.getPlayer());
+        }
+
+        for (PlayerInfo playerInfo : playerInfoHashMap.values()) {
             decloak(playerInfo.getPlayer());
         }
 
@@ -226,6 +230,13 @@ public class WarsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(currentListener, this);
 
         Bukkit.unloadWorld("playing", false);
+
+        try {
+            DirectoryUtils.delete(Paths.get("./playing/"));
+        } catch (IOException e) {
+            getLogger().info("Failed to unload old world");
+            e.printStackTrace();
+        }
 
         System.gc();
 

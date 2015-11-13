@@ -22,7 +22,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -189,9 +188,7 @@ public class WarsPlugin extends JavaPlugin {
             playerJoinLobby(user.getPlayer());
         }
 
-        for (User user : playerInfoHashMap.values()) {
-            decloak(user.getPlayer());
-        }
+        playerInfoHashMap.values().forEach(User::decloak);
 
         for (TeamColor c : TeamColor.values()) {
             teamInfoEnumMap.put(c, new Team(this, c));
@@ -376,7 +373,7 @@ public class WarsPlugin extends JavaPlugin {
                 }
 
             case "test":
-                return args.length >= 1 && onTestCommand(player, command, args);
+                return args.length >= 1 && onTestCommand(player, args);
 
             default:
                 return false;
@@ -384,7 +381,7 @@ public class WarsPlugin extends JavaPlugin {
 
     }
 
-    private boolean onTestCommand(Player player, Command command, String[] args) {
+    private boolean onTestCommand(Player player, String[] args) {
         User user = getUser(player);
 
         switch (args[0]) {
@@ -565,7 +562,7 @@ public class WarsPlugin extends JavaPlugin {
         }
 
         for (User info : playerInfoHashMap.values()) {
-            decloak(info.getPlayer());
+            info.decloak();
         }
     }
 
@@ -635,16 +632,6 @@ public class WarsPlugin extends JavaPlugin {
         return (double) 40;
     }
 
-    public void decloak(Player player) {
-        getUser(player).setCloaked(false);
-
-        for (User p : playerInfoHashMap.values()) {
-            if (p.getPlayer() == player) continue;
-
-            p.getPlayer().showPlayer(player);
-        }
-    }
-
     public Schematic getSchematicData(String buildingName) {
         return schematicDataHashMap.get(buildingName);
     }
@@ -703,15 +690,6 @@ public class WarsPlugin extends JavaPlugin {
         classHandler.onPlayerUpgrade(event);
     }
 
-    public void cloak(Player player) {
-        getUser(player).setCloaked(true);
-
-        for (User p : playerInfoHashMap.values()) {
-            if (p.getPlayer() == player) continue;
-
-            p.getPlayer().hidePlayer(player);
-        }
-    }
 
     public User getUser(Player player) {
         return playerInfoHashMap.get(player.getUniqueId());

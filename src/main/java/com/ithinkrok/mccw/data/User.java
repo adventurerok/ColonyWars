@@ -1,5 +1,6 @@
 package com.ithinkrok.mccw.data;
 
+import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
@@ -76,8 +77,28 @@ public class User {
         return cloaked;
     }
 
-    public void setCloaked(boolean cloaked) {
+    private void setCloaked(boolean cloaked) {
         this.cloaked = cloaked;
+    }
+
+    public void cloak(){
+        setCloaked(true);
+
+        for(User u : plugin.getUsers()){
+            if(this == u) continue;
+
+            u.getPlayer().hidePlayer(player);
+        }
+    }
+
+    public void decloak(){
+        setCloaked(false);
+
+        for(User u : plugin.getUsers()){
+            if(this == u) continue;
+
+            u.getPlayer().showPlayer(player);
+        }
     }
 
     public void updateScoreboard() {
@@ -301,7 +322,7 @@ public class User {
     public void setSpectator() {
         if(isInGame()) throw new RuntimeException("You cannot be a spectator when you are already in a game");
 
-        plugin.cloak(player);
+        cloak();
 
         player.setGameMode(GameMode.SPECTATOR);
         clearArmor();
@@ -354,6 +375,10 @@ public class User {
         if (teamColor == null) return player.getName();
 
         return teamColor.chatColor + player.getName();
+    }
+
+    public void giveOffParticle(EnumWrappers.Particle particle, int count){
+        plugin.sendPlayersParticle(player, player.getLocation(), particle, count);
     }
 
     public void clearArmor(){

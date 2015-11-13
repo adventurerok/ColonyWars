@@ -13,6 +13,7 @@ import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.inventory.OmniInventory;
 import com.ithinkrok.mccw.inventory.SpectatorInventory;
+import com.ithinkrok.mccw.listener.CommandListener;
 import com.ithinkrok.mccw.listener.WarsBaseListener;
 import com.ithinkrok.mccw.listener.WarsGameListener;
 import com.ithinkrok.mccw.listener.WarsLobbyListener;
@@ -82,6 +83,7 @@ public class WarsPlugin extends JavaPlugin {
     private ProtocolManager protocolManager;
 
     private Listener currentListener;
+    private CommandListener commandListener;
 
     private int countDown = 0;
     private int countDownTask = 0;
@@ -123,6 +125,8 @@ public class WarsPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        commandListener = new CommandListener(this);
+
         saveDefaultConfig();
 
         protocolManager = ProtocolLibrary.getProtocolManager();
@@ -341,112 +345,7 @@ public class WarsPlugin extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("You must be a player to execute Colony Wars commands");
-            return true;
-        }
-
-        Player player = (Player) sender;
-
-        switch (command.getName().toLowerCase()) {
-            case "transfer":
-                if (args.length < 1) return false;
-
-                try {
-                    int amount = Integer.parseInt(args[0]);
-
-                    User user = getUser(player);
-                    if (!user.subtractPlayerCash(amount)) {
-                        user.message(ChatColor.RED + "You do not have that amount of money");
-                        return true;
-                    }
-
-                    Team team = getTeam(user.getTeamColor());
-                    team.addTeamCash(amount);
-
-                    team.message(user.getFormattedName() + ChatColor.DARK_AQUA + " transferred " +
-                            ChatColor.GREEN + "$" + amount +
-                            ChatColor.YELLOW + " to your team's account!");
-                    team.message("Your Team's new Balance is: " + ChatColor.GREEN + "$" + team.getTeamCash() +
-                            ChatColor.YELLOW + "!");
-
-                    return true;
-                } catch (NumberFormatException e) {
-                    return false;
-                }
-
-            case "test":
-                return args.length >= 1 && onTestCommand(player, args);
-
-            default:
-                return false;
-        }
-
-    }
-
-    private boolean onTestCommand(Player player, String[] args) {
-        User user = getUser(player);
-
-        switch (args[0]) {
-            case "team":
-                if (args.length < 2) return false;
-
-                TeamColor teamColor = TeamColor.valueOf(args[1].toUpperCase());
-                setPlayerTeam(player, teamColor);
-
-                user.message("You were changed to team " + teamColor);
-
-                break;
-            case "class":
-                if (args.length < 2) return false;
-
-                PlayerClass playerClass = PlayerClass.valueOf(args[1].toUpperCase());
-                user.setPlayerClass(playerClass);
-
-                user.message("You were changed to class " + playerClass);
-
-                break;
-            case "money":
-
-                user.addPlayerCash(10000);
-                getTeam(user.getTeamColor()).addTeamCash(10000);
-
-                user.message("10000 added to both you and your team's balance");
-                break;
-            case "build":
-                if (args.length < 2) return false;
-
-                player.getInventory()
-                        .addItem(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 16, 0, args[1]));
-
-                user.message("Added 16 " + args[1] + " build blocks to your inventory");
-                break;
-            case "start_game":
-                user.message("Attempting to start a new game!");
-
-                stopCountdown();
-                startGame();
-
-                break;
-            case "start_showdown":
-                user.message("Attempting to start showdown");
-
-                stopCountdown();
-                startShowdown();
-                break;
-            case "base_location":
-                Team team = getTeam(user.getTeamColor());
-                if (team == null) {
-                    user.message("Your team is null");
-                    break;
-                }
-
-                user.message("Base location: " + team.getBaseLocation());
-                break;
-
-        }
-
-        return true;
+        return commandListener.onCommand(sender, command, label, args);
     }
 
     public void setPlayerTeam(Player player, TeamColor teamColor) {

@@ -60,9 +60,9 @@ public class SchematicBuilder {
             SchematicRotation schem =
                     new SchematicRotation(width, height, length, offsetX, offsetY, offsetZ, blocks, data, rotation);
 
-            Vector[] bounds = schem.calcBounds(loc);
+            BoundingBox bounds = schem.calcBounds(loc);
 
-            if (!plugin.canBuild(bounds[0], bounds[1])) return false;
+            if (!plugin.canBuild(bounds)) return false;
 
             List<Location> locations = new ArrayList<>();
 
@@ -206,12 +206,12 @@ public class SchematicBuilder {
             return data[calcIndex(x, y, z)];
         }
 
-        public Vector[] calcBounds(Location loc) {
+        public BoundingBox calcBounds(Location loc) {
             Vector minBB = new Vector(loc.getX() + getOffsetX(), loc.getY() + getOffsetY(), loc.getZ() + getOffsetZ());
             Vector maxBB = new Vector(minBB.getX() + getWidth() - 1, minBB.getY() + getHeight() - 1,
                     minBB.getZ() + getLength() - 1);
 
-            return new Vector[]{minBB, maxBB};
+            return new BoundingBox(minBB, maxBB);
         }
 
         public int getOffsetX() {

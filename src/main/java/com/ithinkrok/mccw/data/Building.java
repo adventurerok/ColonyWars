@@ -2,6 +2,7 @@ package com.ithinkrok.mccw.data;
 
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.mccw.util.BoundingBox;
 import de.inventivegames.hologram.Hologram;
 import de.inventivegames.hologram.HologramAPI;
 import org.bukkit.Location;
@@ -29,8 +30,7 @@ public class Building {
     private List<Location> buildingBlocks;
     private Map<Location, BlockState> oldBlocks;
     private Location centerBlock;
-    private Vector minBB;
-    private Vector maxBB;
+    private BoundingBox bounds;
     private boolean finished;
     private int rotation;
     private List<Hologram> holograms = new ArrayList<>();
@@ -65,16 +65,11 @@ public class Building {
             else if(l.getZ() > maxBB.getZ()) maxBB.setZ(l.getZ());
         }
 
-        this.minBB = minBB;
-        this.maxBB = maxBB;
+        this.bounds = new BoundingBox(minBB, maxBB);
     }
 
-    public Vector getMinBB() {
-        return minBB;
-    }
-
-    public Vector getMaxBB() {
-        return maxBB;
+    public BoundingBox getBounds() {
+        return bounds;
     }
 
     public String getBuildingName() {
@@ -114,10 +109,8 @@ public class Building {
         return centerBlock;
     }
 
-    public boolean canBuild(Vector minBB, Vector maxBB) {
-        return maxBB.getX() < this.minBB.getX() || minBB.getX() > this.maxBB.getX() ||
-                maxBB.getY() < this.minBB.getY() || minBB.getY() > this.maxBB.getY() ||
-                maxBB.getZ() < this.minBB.getZ() || minBB.getZ() > this.maxBB.getZ();
+    public boolean canBuild(BoundingBox other) {
+        return !bounds.intercepts(other);
 
     }
 

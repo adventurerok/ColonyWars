@@ -17,10 +17,7 @@ import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.inventory.OmniInventory;
 import com.ithinkrok.mccw.playerclass.*;
 import com.ithinkrok.mccw.strings.Buildings;
-import com.ithinkrok.mccw.util.DirectoryUtils;
-import com.ithinkrok.mccw.util.InventoryUtils;
-import com.ithinkrok.mccw.util.InvisiblePlayerAttacker;
-import com.ithinkrok.mccw.util.SchematicBuilder;
+import com.ithinkrok.mccw.util.*;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -94,8 +91,7 @@ public class WarsPlugin extends JavaPlugin {
     private int showdownRadiusX;
     private int showdownRadiusZ;
     private Location showdownCenter;
-    private Vector showdownMinVector;
-    private Vector showdownMaxVector;
+    private BoundingBox showdownBounds;
 
     private String map = "canyon";
     private TeamColor winningTeam;
@@ -402,13 +398,12 @@ public class WarsPlugin extends JavaPlugin {
         return buildingCentres.get(center);
     }
 
-    public boolean canBuild(Vector minBB, Vector maxBB) {
+    public boolean canBuild(BoundingBox bounds) {
         for (Building building : buildings) {
-            if (!building.canBuild(minBB, maxBB)) return false;
+            if (!building.canBuild(bounds)) return false;
         }
 
-        return showdownMaxVector.getX() < minBB.getX() || showdownMinVector.getX() > maxBB.getX()
-                || showdownMaxVector.getZ() < minBB.getZ() || showdownMinVector.getZ() > maxBB.getZ();
+        return !bounds.interceptsXZ(showdownBounds);
     }
 
     @Override
@@ -564,8 +559,10 @@ public class WarsPlugin extends JavaPlugin {
         showdownRadiusX = x;
         showdownRadiusZ = z;
         showdownCenter = getMapSpawn(null);
-        showdownMinVector = showdownCenter.toVector().add(new Vector(-showdownRadiusX - 5, 0, -showdownRadiusZ - 5));
-        showdownMaxVector = showdownCenter.toVector().add(new Vector(showdownRadiusX + 5, 0, showdownRadiusZ + 5));
+        Vector showdownMin = showdownCenter.toVector().add(new Vector(-showdownRadiusX - 5, 0, -showdownRadiusZ - 5));
+        Vector showdownMax = showdownCenter.toVector().add(new Vector(showdownRadiusX + 5, 0, showdownRadiusZ + 5));
+
+        showdownBounds = new BoundingBox(showdownMin, showdownMax);
 
         setupBases();
 

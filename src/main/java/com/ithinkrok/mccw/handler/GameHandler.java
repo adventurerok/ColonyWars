@@ -330,7 +330,7 @@ public class GameHandler {
             int offsetZ = (-z / 2) + random.nextInt(z);
             int offsetY = 1;
 
-            Location teleport = showdownArena.getCenter();
+            Location teleport = showdownArena.getCenter().clone();
             teleport.setX(teleport.getX() + offsetX);
             teleport.setY(teleport.getY() + offsetY);
             teleport.setZ(teleport.getZ() + offsetZ);

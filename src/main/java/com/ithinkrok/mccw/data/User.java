@@ -173,7 +173,7 @@ public class User {
 
         upgradeLevels.put(upgrade, level);
 
-        plugin.onPlayerUpgrade(new UserUpgradeEvent(this, upgrade, level));
+        plugin.getGameHandler().onPlayerUpgrade(new UserUpgradeEvent(this, upgrade, level));
     }
 
     public int getUpgradeLevel(String upgrade) {
@@ -235,7 +235,7 @@ public class User {
     public void openShopInventory(Location shopBlock){
         this.shopBlock = shopBlock;
 
-        Building building = plugin.getBuildingInfo(shopBlock);
+        Building building = plugin.getGameHandler().getBuildingInfo(shopBlock);
         if (building == null || shopBlock.getBlock().getType() != Material.OBSIDIAN) {
             message(plugin.getLocale("obsidian-not-building"));
             return;
@@ -259,7 +259,7 @@ public class User {
     public void redoShopInventory() {
         if (shopBlock == null) return;
 
-        Building building = plugin.getBuildingInfo(shopBlock);
+        Building building = plugin.getGameHandler().getBuildingInfo(shopBlock);
         if (building == null || shopBlock.getBlock().getType() != Material.OBSIDIAN) {
             if(shopInventory != null) player.closeInventory();
             return;
@@ -295,9 +295,9 @@ public class User {
             team.eliminate();
         }
 
-        plugin.checkVictory(true);
+        plugin.getGameHandler().checkVictory(true);
 
-        plugin.updateSpectatorInventories();
+        plugin.getGameHandler().updateSpectatorInventories();
 
         setSpectator();
     }
@@ -327,7 +327,7 @@ public class User {
         player.setGameMode(GameMode.SPECTATOR);
         clearArmor();
 
-        plugin.setupSpectatorInventory(player);
+        plugin.getGameHandler().setupSpectatorInventory(player);
 
         updateScoreboard();
     }

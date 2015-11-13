@@ -85,7 +85,7 @@ public class ScoutClass extends BuyableInventory implements PlayerClassHandler {
         switch (item.getType()) {
             case COMPASS:
                 TeamColor exclude = event.getUserClicked().getTeamColor();
-                plugin.updateScoutCompass(item, event.getPlayer(), exclude);
+                plugin.getGameHandler().updateScoutCompass(item, event.getPlayer(), exclude);
                 break;
             case CHAINMAIL_HELMET:
                 User user = event.getUserClicked();

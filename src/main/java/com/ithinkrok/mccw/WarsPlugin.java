@@ -10,6 +10,8 @@ import com.ithinkrok.mccw.enumeration.CountdownType;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.event.UserUpgradeEvent;
+import com.ithinkrok.mccw.handler.CountdownHandler;
+import com.ithinkrok.mccw.handler.GameHandler;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.inventory.OmniInventory;
 import com.ithinkrok.mccw.inventory.SpectatorInventory;
@@ -53,23 +55,12 @@ public class WarsPlugin extends JavaPlugin {
     private ConcurrentHashMap<UUID, User> playerInfoHashMap = new ConcurrentHashMap<>();
     private EnumMap<TeamColor, Team> teamInfoEnumMap = new EnumMap<>(TeamColor.class);
     private HashMap<String, Schematic> schematicDataHashMap = new HashMap<>();
-    private List<Building> buildings = new ArrayList<>();
-    private HashMap<Location, Building> buildingCentres = new HashMap<>();
+
 
     /**
      * Is there a game currently in progress
      */
     private boolean inGame = false;
-
-    /**
-     * Are we currently in a showdown
-     */
-    private boolean inShowdown = false;
-
-    /**
-     * Has the game been won already
-     */
-    private boolean inAftermath = false;
 
     private OmniInventory buildingInventoryHandler;
     private SpectatorInventory spectatorInventoryHandler;
@@ -83,15 +74,8 @@ public class WarsPlugin extends JavaPlugin {
     private CommandListener commandListener;
 
     private CountdownHandler countdownHandler;
+    private GameHandler gameHandler;
 
-    private ShowdownArena showdownArena;
-
-    private String map = "canyon";
-    private TeamColor winningTeam;
-
-    public TeamColor getWinningTeam() {
-        return winningTeam;
-    }
 
     @Override
     public void onDisable() {
@@ -106,16 +90,16 @@ public class WarsPlugin extends JavaPlugin {
         this.inGame = inGame;
     }
 
-    public boolean isInShowdown() {
-        return inShowdown;
+    public void changeListener(Listener newListener){
+        HandlerList.unregisterAll(currentListener);
+        currentListener = newListener;
+        getServer().getPluginManager().registerEvents(currentListener, this);
     }
 
-    public void setInShowdown(boolean inShowdown) {
-        this.inShowdown = inShowdown;
-    }
-
-    public ShowdownArena getShowdownArena() {
-        return showdownArena;
+    public void resetTeams(){
+        for(TeamColor c : TeamColor.values()){
+            teamInfoEnumMap.put(c, new Team(this, c));
+        }
     }
 
     @Override
@@ -169,55 +153,6 @@ public class WarsPlugin extends JavaPlugin {
 
     }
 
-    public void preEndGame() {
-        buildings.forEach(Building::clearHolograms);
-    }
-
-    public void endGame() {
-        for (User user : playerInfoHashMap.values()) {
-            playerJoinLobby(user.getPlayer());
-        }
-
-        playerInfoHashMap.values().forEach(User::decloak);
-
-        for (TeamColor c : TeamColor.values()) {
-            teamInfoEnumMap.put(c, new Team(this, c));
-        }
-
-        buildingCentres.clear();
-
-        buildings.forEach(Building::clearHolograms);
-
-        buildings.clear();
-
-        showdownArena = null;
-        winningTeam = null;
-
-        HandlerList.unregisterAll(currentListener);
-        currentListener = new WarsLobbyListener(this);
-        getServer().getPluginManager().registerEvents(currentListener, this);
-
-        Bukkit.unloadWorld("playing", false);
-
-        try {
-            DirectoryUtils.delete(Paths.get("./playing/"));
-        } catch (IOException e) {
-            getLogger().info("Failed to unload old world");
-            e.printStackTrace();
-        }
-
-        System.gc();
-
-        setInGame(false);
-        setInAftermath(false);
-        setInShowdown(false);
-
-        for (User user : playerInfoHashMap.values()) {
-            playerJoinLobby(user.getPlayer());
-        }
-
-        countdownHandler.startLobbyCountdown();
-    }
 
     public String getLocale(String name, Object... params) {
         return String.format(getConfig().getString("locale." + name), params);
@@ -283,184 +218,47 @@ public class WarsPlugin extends JavaPlugin {
         return random;
     }
 
-    public void addBuilding(Building building) {
-        buildings.add(building);
-
-        if (building.getCenterBlock() != null) buildingCentres.put(building.getCenterBlock(), building);
-
-        getTeam(building.getTeamColor()).buildingStarted(building.getBuildingName());
-    }
-
     public Team getTeam(TeamColor teamColor) {
         return teamInfoEnumMap.get(teamColor);
     }
 
-    public void finishBuilding(Building building) {
-        if (getTeam(building.getTeamColor()).getBuildingCount(building.getBuildingName()) == 0) {
-            for (User info : playerInfoHashMap.values()) {
-                if (info.getTeamColor() != building.getTeamColor()) continue;
 
-                info.redoShopInventory();
-
-                PlayerClassHandler playerClassHandler = getPlayerClassHandler(info.getPlayerClass());
-                playerClassHandler.onBuildingBuilt(building.getBuildingName(), info, getTeam(info.getTeamColor()));
-            }
-        }
-
-        getTeam(building.getTeamColor()).buildingFinished(building);
-    }
 
     public PlayerClassHandler getPlayerClassHandler(PlayerClass playerClass) {
         return classHandlerEnumMap.get(playerClass);
     }
 
-    public Building getBuildingInfo(Location center) {
-        return buildingCentres.get(center);
-    }
-
-    public boolean canBuild(BoundingBox bounds) {
-        for (Building building : buildings) {
-            if (!building.canBuild(bounds)) return false;
-        }
-
-        return !bounds.interceptsXZ(showdownArena.getBounds());
-    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         return commandListener.onCommand(sender, command, label, args);
     }
 
-    public void startGame() {
-        try {
-            DirectoryUtils.copy(Paths.get("./canyon/"), Paths.get("./playing/"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        Bukkit.createWorld(new WorldCreator("playing"));
 
-        HandlerList.unregisterAll(currentListener);
-        currentListener = new WarsGameListener(this);
-        getServer().getPluginManager().registerEvents(currentListener, this);
-        setupPlayers();
-
-        calculateShowdownArena();
-
-        setupBases();
-
-        checkVictory(false);
-    }
-
-    private void calculateShowdownArena() {
-        FileConfiguration config = getConfig();
-        String base = "maps." + map + ".showdown-size";
-        int radiusX = config.getInt(base + ".x");
-        int radiusZ = config.getInt(base + ".z");
-
-        Location center = getMapSpawn(null);
-        Vector showdownMin = center.toVector().add(new Vector(-radiusX - 5, 0, -radiusZ - 5));
-        Vector showdownMax = center.toVector().add(new Vector(radiusX + 5, 0, radiusZ + 5));
-
-        BoundingBox bounds = new BoundingBox(showdownMin, showdownMax);
-
-        showdownArena = new ShowdownArena(radiusX, radiusZ, center, bounds);
-    }
-
-    public void startShowdown() {
-        int x = showdownArena.getRadiusX();
-        int z = showdownArena.getRadiusZ();
-
-        for (User user : getUsers()) {
-            int offsetX = (-x / 2) + random.nextInt(x);
-            int offsetZ = (-z / 2) + random.nextInt(z);
-            int offsetY = 1;
-
-            Location teleport = getMapSpawn(null);
-            teleport.setX(teleport.getX() + offsetX);
-            teleport.setY(teleport.getY() + offsetY);
-            teleport.setZ(teleport.getZ() + offsetZ);
-
-            user.getPlayer().teleport(teleport);
-        }
-
-        setInShowdown(true);
-
-        messageAll(ChatColor.BOLD.toString() + ChatColor.GOLD + "Showdown starts NOW!");
-    }
 
     public CountdownHandler getCountdownHandler() {
         return countdownHandler;
     }
 
-    public void setupPlayers() {
-        for (User info : getUsers()) {
-
-            if (info.getTeamColor() == null) {
-                info.setTeamColor(assignPlayerTeam());
-            }
-
-            if (info.getPlayerClass() == null) {
-                info.setPlayerClass(assignPlayerClass());
-            }
-
-            info.getPlayer().teleport(getMapSpawn(info.getTeamColor()));
-
-            info.getPlayer().setGameMode(GameMode.SURVIVAL);
-
-            info.resetPlayerStats(true);
-
-            info.setInGame(true);
-
-            info.getPlayer().getInventory().clear();
-            info.updateTeamArmor();
-            info.getPlayer().getInventory().addItem(new ItemStack(Material.DIAMOND_PICKAXE));
-
-            info.updateScoreboard();
-
-            PlayerClassHandler classHandler = getPlayerClassHandler(info.getPlayerClass());
-            classHandler.onGameBegin(info, getTeam(info.getTeamColor()));
-
-            info.message(ChatColor.GOLD + "You are playing on the " + info.getTeamColor().name + ChatColor.GOLD +
-                    " Team");
-
-            info.message(ChatColor.GOLD + "You are playing as the class " + ChatColor.DARK_AQUA +
-                    info.getPlayerClass().name);
-        }
-
-        playerInfoHashMap.values().forEach(User::decloak);
+    public GameHandler getGameHandler() {
+        return gameHandler;
     }
 
-    public void setupBases() {
-        World world = getServer().getWorld("playing");
-        FileConfiguration config = getConfig();
+    public void startGame(){
+        setInGame(true);
 
-        for (TeamColor team : TeamColor.values()) {
-            String base = "maps." + map + "." + team.toString().toLowerCase() + ".base";
+        gameHandler = new GameHandler(this);
 
-            Location build = new Location(world, config.getInt(base + ".x"), config.getInt(base + ".y"),
-                    config.getInt(base + ".z"));
-
-
-            SchematicBuilder.pasteSchematic(this, getSchematicData(Buildings.BASE), build, 0, team);
-
-            if (getTeam(team).getPlayerCount() == 0) {
-                getTeam(team).eliminate();
-            }
-
-        }
+        gameHandler.startGame();
     }
 
-    public Location getMapSpawn(TeamColor team) {
-        World world = getServer().getWorld("playing");
-        FileConfiguration config = getConfig();
+    public void endGame(){
+        gameHandler.endGame();
 
-        String base;
-        if (team == null) base = "maps." + map + ".center";
-        else base = "maps." + map + "." + team.toString().toLowerCase() + ".spawn";
+        gameHandler = null;
 
-        return new Location(world, config.getDouble(base + ".x"), config.getDouble(base + ".y"),
-                config.getDouble(base + ".z"));
+        setInGame(false);
     }
 
     public void messageAll(String message) {
@@ -469,29 +267,6 @@ public class WarsPlugin extends JavaPlugin {
         }
     }
 
-    public TeamColor assignPlayerTeam() {
-        ArrayList<TeamColor> smallest = new ArrayList<>();
-        int leastCount = Integer.MAX_VALUE;
-
-        for (TeamColor team : TeamColor.values()) {
-            Team info = getTeam(team);
-            if (info.getPlayerCount() < leastCount) {
-                leastCount = info.getPlayerCount();
-
-                smallest.clear();
-            }
-
-            if (info.getPlayerCount() == leastCount) {
-                smallest.add(team);
-            }
-        }
-
-        return smallest.get(random.nextInt(smallest.size()));
-    }
-
-    public PlayerClass assignPlayerClass() {
-        return PlayerClass.values()[random.nextInt(PlayerClass.values().length)];
-    }
 
     public double getMaxHealth() {
         return (double) 40;
@@ -499,60 +274,6 @@ public class WarsPlugin extends JavaPlugin {
 
     public Schematic getSchematicData(String buildingName) {
         return schematicDataHashMap.get(buildingName);
-    }
-
-    public void removeBuilding(Building building) {
-        buildings.remove(building);
-        getTeam(building.getTeamColor()).removeBuilding(building);
-
-        buildingCentres.remove(building.getCenterBlock());
-
-        for (User info : playerInfoHashMap.values()) {
-            if (info.getTeamColor() != building.getTeamColor()) continue;
-
-            info.redoShopInventory();
-        }
-
-        building.clearHolograms();
-    }
-
-    public void updateScoutCompass(ItemStack item, Player player, TeamColor exclude) {
-        InventoryUtils.setItemNameAndLore(item, "Locating closest player...");
-
-        Bukkit.getScheduler().runTaskLater(this, () -> {
-            Location closest = null;
-            double minDist = 99999999999d;
-            String closestName = null;
-
-            for (User info : playerInfoHashMap.values()) {
-                if (info.getTeamColor() == exclude) continue;
-
-                double dist = player.getLocation().distanceSquared(info.getPlayer().getLocation());
-
-                if (dist < minDist) {
-                    minDist = dist;
-                    closest = info.getPlayer().getLocation();
-                    closestName = info.getPlayer().getName();
-                }
-            }
-
-
-            if (closest != null) player.setCompassTarget(closest);
-            else closestName = "No One";
-
-            int compassIndex = player.getInventory().first(Material.COMPASS);
-            ItemStack newCompass = player.getInventory().getItem(compassIndex);
-
-            InventoryUtils.setItemNameAndLore(newCompass, "Player Compass", "Oriented at: " + closestName);
-
-            player.getInventory().setItem(compassIndex, newCompass);
-        }, 60);
-    }
-
-    public void onPlayerUpgrade(UserUpgradeEvent event) {
-        PlayerClassHandler classHandler = getPlayerClassHandler(event.getUser().getPlayerClass());
-
-        classHandler.onPlayerUpgrade(event);
     }
 
 
@@ -568,44 +289,6 @@ public class WarsPlugin extends JavaPlugin {
         return playerInfoHashMap.size();
     }
 
-    public void checkVictory(boolean checkShowdown) {
-        if (isInAftermath()) return;
-        Set<TeamColor> teamsInGame = new HashSet<>();
-
-        for (User info : playerInfoHashMap.values()) {
-            if (!info.isInGame()) continue;
-            if (info.getTeamColor() == null) continue;
-
-            teamsInGame.add(info.getTeamColor());
-        }
-
-        if (teamsInGame.size() == 0) {
-            messageAll(ChatColor.GOLD + "Oh dear. Everyone is dead!");
-            setInAftermath(true);
-            countdownHandler.startEndCountdown();
-            return;
-        } else if (teamsInGame.size() > 1) {
-            if (checkShowdown) checkShowdownStart(teamsInGame.size());
-            return;
-        }
-
-        TeamColor winner = teamsInGame.iterator().next();
-        this.winningTeam = winner;
-
-        messageAll(ChatColor.GOLD + "The " + winner.name + ChatColor.GOLD + " Team has won the game!");
-
-        setInAftermath(true);
-
-        countdownHandler.startEndCountdown();
-    }
-
-    public void checkShowdownStart(int teamsInGame) {
-        if (isInShowdown() || countdownHandler.getCountdownType() == CountdownType.SHOWDOWN_START) return;
-        if (teamsInGame > 2 && getPlayersInGame() > 4) return;
-
-        countdownHandler.startShowdownCountdown();
-    }
-
     public int getPlayersInGame() {
         int count = 0;
 
@@ -616,45 +299,13 @@ public class WarsPlugin extends JavaPlugin {
         return count;
     }
 
-    public boolean isInAftermath() {
-        return inAftermath;
-    }
-
-    public void setInAftermath(boolean inAftermath) {
-        this.inAftermath = inAftermath;
-    }
-
-
-    public void updateSpectatorInventories() {
-        for (User info : getUsers()) {
-            if (info.isInGame() && info.getTeamColor() != null) return;
-
-            setupSpectatorInventory(info.getPlayer());
-        }
+    public SpectatorInventory getSpectatorInventoryHandler() {
+        return spectatorInventoryHandler;
     }
 
     public Collection<User> getUsers() {
         return playerInfoHashMap.values();
     }
 
-    public void setupSpectatorInventory(Player player) {
-        PlayerInventory inv = player.getInventory();
-        inv.clear();
 
-        int slot = 9;
-
-        List<ItemStack> items = new ArrayList<>();
-        spectatorInventoryHandler.addInventoryItems(items, null, getUser(player), null);
-
-        for (ItemStack item : items) {
-            inv.setItem(slot++, item);
-        }
-    }
-
-    public void handleSpectatorInventory(InventoryClickEvent event) {
-        event.setCancelled(true);
-
-        spectatorInventoryHandler
-                .onInventoryClick(event.getCurrentItem(), null, getUser((Player) event.getWhoClicked()), null);
-    }
 }

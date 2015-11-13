@@ -144,7 +144,7 @@ public class WarsLobbyListener implements Listener {
                     return;
                 }
 
-                plugin.setPlayerTeam(user.getPlayer(), teamColor);
+                user.setTeamColor(teamColor);
 
                 user.message(plugin.getLocale("team-joined", teamColor.name));
 
@@ -168,7 +168,7 @@ public class WarsLobbyListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        plugin.setPlayerTeam(event.getPlayer(), null);
+        plugin.getUser(event.getPlayer()).setTeamColor(null);
 
         String name = getPlayerNameColor(event.getPlayer()) + event.getPlayer().getName();
         String online = Integer.toString(plugin.getPlayerCount() - 1);

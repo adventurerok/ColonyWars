@@ -178,7 +178,7 @@ public class Team {
 
         died.teleport(loc, PlayerTeleportEvent.TeleportCause.PLUGIN);
 
-        plugin.decloak(died);
+        plugin.getUser(died).decloak();
     }
 
     public void eliminate() {

@@ -283,7 +283,7 @@ public class User {
         if(!isInGame()) return;
 
         Team team = getTeam();
-        plugin.setPlayerTeam(player, null);
+        setTeamColor(null);
         setInGame(false);
 
         plugin.messageAll(ChatColor.GOLD + "The " + team.getTeamColor().name + ChatColor.GOLD +
@@ -362,7 +362,15 @@ public class User {
     }
 
     public void setTeamColor(TeamColor teamColor) {
+        if(this.teamColor != null){
+            getTeam().removePlayer(player);
+        }
+
         this.teamColor = teamColor;
+
+        if(this.teamColor != null){
+            getTeam().addPlayer(player);
+        }
 
         player.setPlayerListName(getFormattedName());
         player.setDisplayName(getFormattedName());

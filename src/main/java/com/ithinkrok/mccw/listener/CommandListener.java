@@ -79,7 +79,7 @@ public class CommandListener implements CommandExecutor {
                 if (args.length < 2) return false;
 
                 TeamColor teamColor = TeamColor.valueOf(args[1].toUpperCase());
-                plugin.setPlayerTeam(player, teamColor);
+                user.setTeamColor(teamColor);
 
                 user.message("You were changed to team " + teamColor);
 
@@ -111,14 +111,14 @@ public class CommandListener implements CommandExecutor {
             case "start_game":
                 user.message("Attempting to start a new game!");
 
-                plugin.stopCountdown();
+                plugin.getCountdownHandler().stopCountdown();
                 plugin.startGame();
 
                 break;
             case "start_showdown":
                 user.message("Attempting to start showdown");
 
-                plugin.stopCountdown();
+                plugin.getCountdownHandler().stopCountdown();
                 plugin.startShowdown();
                 break;
             case "base_location":

@@ -231,7 +231,7 @@ public class WarsPlugin extends JavaPlugin {
         user.resetPlayerStats(true);
         user.clearArmor();
 
-        setPlayerTeam(player, null);
+        user.setTeamColor(null);
 
         PlayerInventory inv = player.getInventory();
 
@@ -331,18 +331,6 @@ public class WarsPlugin extends JavaPlugin {
         return commandListener.onCommand(sender, command, label, args);
     }
 
-    public void setPlayerTeam(Player player, TeamColor teamColor) {
-        User user = getUser(player);
-
-        if (user.getTeamColor() != null) {
-            getTeam(user.getTeamColor()).removePlayer(player);
-        }
-
-        user.setTeamColor(teamColor);
-        if (teamColor != null) getTeam(teamColor).addPlayer(player);
-    }
-
-
     public void startGame() {
         try {
             DirectoryUtils.copy(Paths.get("./canyon/"), Paths.get("./playing/"));
@@ -401,11 +389,15 @@ public class WarsPlugin extends JavaPlugin {
         messageAll(ChatColor.BOLD.toString() + ChatColor.GOLD + "Showdown starts NOW!");
     }
 
+    public CountdownHandler getCountdownHandler() {
+        return countdownHandler;
+    }
+
     public void setupPlayers() {
         for (User info : getUsers()) {
 
             if (info.getTeamColor() == null) {
-                setPlayerTeam(info.getPlayer(), assignPlayerTeam());
+                info.setTeamColor(assignPlayerTeam());
             }
 
             if (info.getPlayerClass() == null) {

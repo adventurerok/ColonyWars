@@ -186,26 +186,6 @@ public class WarsPlugin extends JavaPlugin {
         else playerInfoHashMap.put(player.getUniqueId(), user);
     }
 
-    public void sendPlayersParticle(Player exclude, Location loc, EnumWrappers.Particle particle, int particleCount) {
-        PacketContainer packet = protocolManager.createPacket(PacketType.Play.Server.WORLD_PARTICLES);
-        packet.getParticles().write(0, particle);
-        packet.getIntegers().write(0, particleCount);
-        packet.getBooleans().write(0, false);
-        packet.getFloat().write(0, (float) loc.getX()).write(1, (float) loc.getY()).write(2, (float) loc.getZ())
-                .write(3, 0f).write(4, 0f).write(5, 0f).write(6, 0f);
-        packet.getIntegerArrays().write(0, new int[0]);
-
-        try {
-            for (User user : playerInfoHashMap.values()) {
-                if (user.getPlayer() == exclude) continue;
-                protocolManager.sendServerPacket(user.getPlayer(), packet);
-            }
-        } catch (InvocationTargetException e) {
-            getLogger().warning("Failed to send particle packet");
-            e.printStackTrace();
-        }
-    }
-
     public Random getRandom() {
         return random;
     }

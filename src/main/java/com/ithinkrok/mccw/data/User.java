@@ -392,11 +392,6 @@ public class User {
 
         return teamColor.chatColor + player.getName();
     }
-
-    public void giveOffParticle(EnumWrappers.Particle particle, int count){
-        plugin.sendPlayersParticle(player, player.getLocation(), particle, count);
-    }
-
     public void clearArmor(){
         PlayerInventory inv = player.getInventory();
 

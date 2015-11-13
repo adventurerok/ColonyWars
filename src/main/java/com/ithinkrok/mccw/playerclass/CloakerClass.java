@@ -12,6 +12,7 @@ import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.block.Action;
@@ -61,7 +62,7 @@ public class CloakerClass extends BuyableInventory implements PlayerClassHandler
 
     @Override
     public void onInteractWorld(UserInteractEvent event) {
-        if(event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if (event.getItem() == null || event.getItem().getType() != Material.IRON_LEGGINGS) return;
 
         User user = event.getUserClicked();
@@ -98,13 +99,12 @@ public class CloakerClass extends BuyableInventory implements PlayerClassHandler
 
         final int finalCooldown = cooldown;
 
-        final int swirlTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
-
-            user.giveOffParticle(EnumWrappers.Particle.SPELL, 1);
-        }, 20, 20);
+        final int swirlTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin,
+                () -> user.getPlayer().getLocation().getWorld()
+                        .playEffect(user.getPlayer().getLocation(), Effect.POTION_SWIRL, 0), 20, 20);
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            if(user.isInGame()) user.decloak();
+            if (user.isInGame()) user.decloak();
             Bukkit.getScheduler().cancelTask(swirlTask);
             user.message(ChatColor.RED + "Your cloak has run out!");
             user.startCoolDown("cloak", finalCooldown, "Your cloak has cooled down!");

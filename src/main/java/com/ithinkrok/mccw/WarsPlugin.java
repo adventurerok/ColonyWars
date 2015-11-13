@@ -183,7 +183,7 @@ public class WarsPlugin extends JavaPlugin {
         messageAll(getLocale("start-minute-warning", "3"));
 
         startCountdown(180, CountdownType.GAME_START, () -> {
-            if (playerInfoHashMap.size() > 5) {
+            if (playerInfoHashMap.size() > 3) {
                 startGame();
             } else {
                 messageAll(getLocale("not-enough-players"));

@@ -24,15 +24,12 @@ import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
@@ -85,9 +82,7 @@ public class WarsPlugin extends JavaPlugin {
     private Listener currentListener;
     private CommandListener commandListener;
 
-    private int countDown = 0;
-    private int countDownTask = 0;
-    private CountdownType countdownType;
+    private CountdownHandler countdownHandler;
 
     private ShowdownArena showdownArena;
 
@@ -168,22 +163,10 @@ public class WarsPlugin extends JavaPlugin {
         classHandlerEnumMap.put(PlayerClass.MAGE, new MageClass(this, getConfig()));
         classHandlerEnumMap.put(PlayerClass.PEASANT, new PeasantClass(getConfig()));
 
-        startLobbyCountdown();
+        countdownHandler = new CountdownHandler(this);
+        countdownHandler.startLobbyCountdown();
 
 
-    }
-
-    public void startLobbyCountdown() {
-        messageAll(getLocale("start-minute-warning", "3"));
-
-        startCountdown(180, CountdownType.GAME_START, () -> {
-            if (playerInfoHashMap.size() > 3) {
-                startGame();
-            } else {
-                messageAll(getLocale("not-enough-players"));
-                startLobbyCountdown();
-            }
-        }, null);
     }
 
     public void preEndGame() {
@@ -233,7 +216,7 @@ public class WarsPlugin extends JavaPlugin {
             playerJoinLobby(user.getPlayer());
         }
 
-        startLobbyCountdown();
+        countdownHandler.startLobbyCountdown();
     }
 
     public String getLocale(String name, Object... params) {
@@ -359,16 +342,6 @@ public class WarsPlugin extends JavaPlugin {
         if (teamColor != null) getTeam(teamColor).addPlayer(player);
     }
 
-    public void stopCountdown() {
-        if (countDownTask == 0) return;
-
-        getServer().getScheduler().cancelTask(countDownTask);
-        countDownTask = 0;
-
-        for (User p : playerInfoHashMap.values()) {
-            p.getPlayer().setLevel(0);
-        }
-    }
 
     public void startGame() {
         try {
@@ -429,7 +402,7 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public void setupPlayers() {
-        for (User info : playerInfoHashMap.values()) {
+        for (User info : getUsers()) {
 
             if (info.getTeamColor() == null) {
                 setPlayerTeam(info.getPlayer(), assignPlayerTeam());
@@ -463,9 +436,7 @@ public class WarsPlugin extends JavaPlugin {
                     info.getPlayerClass().name);
         }
 
-        for (User info : playerInfoHashMap.values()) {
-            info.decloak();
-        }
+        playerInfoHashMap.values().forEach(User::decloak);
     }
 
     public void setupBases() {
@@ -619,7 +590,7 @@ public class WarsPlugin extends JavaPlugin {
         if (teamsInGame.size() == 0) {
             messageAll(ChatColor.GOLD + "Oh dear. Everyone is dead!");
             setInAftermath(true);
-            startEndCountdown();
+            countdownHandler.startEndCountdown();
             return;
         } else if (teamsInGame.size() > 1) {
             if (checkShowdown) checkShowdownStart(teamsInGame.size());
@@ -633,14 +604,14 @@ public class WarsPlugin extends JavaPlugin {
 
         setInAftermath(true);
 
-        startEndCountdown();
+        countdownHandler.startEndCountdown();
     }
 
     public void checkShowdownStart(int teamsInGame) {
-        if (isInShowdown() || countdownType == CountdownType.SHOWDOWN_START) return;
+        if (isInShowdown() || countdownHandler.getCountdownType() == CountdownType.SHOWDOWN_START) return;
         if (teamsInGame > 2 && getPlayersInGame() > 4) return;
 
-        startShowdownCountdown();
+        countdownHandler.startShowdownCountdown();
     }
 
     public int getPlayersInGame() {
@@ -661,70 +632,6 @@ public class WarsPlugin extends JavaPlugin {
         this.inAftermath = inAftermath;
     }
 
-    public void startEndCountdown() {
-        messageAll(ChatColor.GREEN + "Teleporting back to the lobby in 15 seconds!");
-
-        startCountdown(15, CountdownType.GAME_END, this::endGame, () -> {
-            if (countDown < 10) return;
-            Player randomPlayer = getTeam(winningTeam).getRandomPlayer();
-            if (randomPlayer == null) return;
-            Location loc = randomPlayer.getLocation();
-            Firework firework = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
-
-            Color color = Color.fromRGB(random.nextInt(255), random.nextInt(255), random.nextInt(255));
-            Color fade = Color.fromRGB(random.nextInt(255), random.nextInt(255), random.nextInt(255));
-
-            firework.setVelocity(new Vector(0, 0.5f, 0));
-            FireworkMeta meta = firework.getFireworkMeta();
-            meta.addEffect(
-                    FireworkEffect.builder().with(FireworkEffect.Type.BURST).trail(true).withColor(color).withFade(fade)
-                            .build());
-            firework.setFireworkMeta(meta);
-        });
-
-        preEndGame();
-    }
-
-    public void startShowdownCountdown() {
-        messageAll(ChatColor.GREEN + "Showdown starting in 30 seconds!");
-
-        startCountdown(30, CountdownType.SHOWDOWN_START, this::startShowdown, null);
-    }
-
-    private void startCountdown(int countdownFrom, CountdownType countdownType, Runnable finished, Runnable during) {
-        if (this.countDownTask != 0) {
-            getServer().getScheduler().cancelTask(countDownTask);
-            this.countDownTask = 0;
-        }
-
-        this.countDown = countdownFrom;
-        this.countdownType = countdownType;
-
-        countDownTask = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
-            --countDown;
-
-            for (User p : playerInfoHashMap.values()) {
-                p.getPlayer().setLevel(countDown);
-            }
-
-            if (during != null) during.run();
-
-            if (countDown == 120) messageAll(getLocale(countdownType.name + "-minute-warning", "2"));
-            else if (countDown == 60) messageAll(getLocale(countdownType.name + "-minute-warning", "1"));
-            else if (countDown == 30) messageAll(getLocale(countdownType.name + "-seconds-warning", "30"));
-            else if (countDown == 10) messageAll(getLocale(countdownType.name + "-seconds-warning", "10"));
-            else if (countDown == 0) {
-                getServer().getScheduler().cancelTask(countDownTask);
-                countDownTask = 0;
-                finished.run();
-                this.countdownType = null;
-            } else if (countDown < 6) {
-                messageAll(getLocale(countdownType.name + "-final-warning", Integer.toString(countDown)));
-            }
-
-
-        }, 20, 20);
-    }
 
     public void updateSpectatorInventories() {
         for (User info : getUsers()) {

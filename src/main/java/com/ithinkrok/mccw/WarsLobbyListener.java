@@ -119,8 +119,6 @@ public class WarsLobbyListener implements Listener {
         if (event.getCurrentItem() == null || !event.getCurrentItem().hasItemMeta() ||
                 !event.getCurrentItem().getItemMeta().hasDisplayName()) return;
 
-        String item = event.getCurrentItem().getItemMeta().getDisplayName();
-
         User user = plugin.getUser((Player) event.getWhoClicked());
 
         try {

@@ -98,7 +98,7 @@ public class User {
 
             mainObjective.getScore(ChatColor.YELLOW + "Balance:").setScore(getPlayerCash());
 
-            Team team = plugin.getTeam(teamColor);
+            Team team = getTeam();
             mainObjective.getScore(ChatColor.YELLOW + "Team Balance:").setScore(team.getTeamCash());
 
             mainObjective.getScore(ChatColor.GOLD + "Building Now:").setScore(team.getTotalBuildingNowCount());
@@ -270,6 +270,10 @@ public class User {
         return teamColor;
     }
 
+    public Team getTeam(){
+        return plugin.getTeam(teamColor);
+    }
+
     public PlayerClass getPlayerClass() {
         return playerClass;
     }
@@ -341,16 +345,13 @@ public class User {
         return shopBlock;
     }
 
-    public void setShopBlock(Location shopBlock) {
-        this.shopBlock = shopBlock;
-    }
-
     public Inventory getShopInventory() {
         return shopInventory;
     }
 
-    public void setShopInventory(Inventory shopInventory) {
-        this.shopInventory = shopInventory;
+    public void shopInventoryClosed(){
+        shopInventory = null;
+        shopBlock = null;
     }
 
 }

@@ -145,7 +145,7 @@ public class WarsGameListener implements Listener {
         event.getPlayer().playSound(event.getItem().getLocation(), Sound.ORB_PICKUP, 1.0f,
                 0.8f + (plugin.getRandom().nextFloat()) * 0.4f);
 
-        Team team = plugin.getTeam(user.getTeamColor());
+        Team team = user.getTeam();
         team.addTeamCash(teamCash * event.getItem().getItemStack().getAmount());
     }
 
@@ -373,7 +373,7 @@ public class WarsGameListener implements Listener {
             plugin.messageAll(ChatColor.GOLD + diedInfo.getFormattedName() + ChatColor.GOLD + " died!");
         }
 
-        Team diedTeam = plugin.getTeam(diedInfo.getTeamColor());
+        Team diedTeam = diedInfo.getTeam();
         boolean respawn =
                 !plugin.isInShowdown() && plugin.getRandom().nextFloat() < (diedTeam.getRespawnChance() / 100f);
 
@@ -462,7 +462,7 @@ public class WarsGameListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         User diedInfo = plugin.getUser(event.getPlayer());
-        Team diedTeam = plugin.getTeam(diedInfo.getTeamColor());
+        Team diedTeam = diedInfo.getTeam();
         if (diedTeam == null) return;
 
         teamPlayerDied(diedInfo, diedTeam);
@@ -490,10 +490,7 @@ public class WarsGameListener implements Listener {
 
             if (event.getCurrentItem() == null) return;
 
-
-            user.setShopInventory(event.getInventory());
-
-            Team team = plugin.getTeam(user.getTeamColor());
+            Team team = user.getTeam();
 
             PlayerClassHandler classHandler = plugin.getPlayerClassHandler(user.getPlayerClass());
 
@@ -522,8 +519,7 @@ public class WarsGameListener implements Listener {
         if (user.getShopInventory() == null || user.getShopInventory().getTitle() == null) return;
 
         if (user.getShopInventory().getTitle().equals(event.getInventory().getTitle())) {
-            user.setShopInventory(null);
-            user.setShopBlock(null);
+            user.shopInventoryClosed();
         }
     }
 

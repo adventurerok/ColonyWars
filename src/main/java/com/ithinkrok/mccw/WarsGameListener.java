@@ -275,48 +275,10 @@ public class WarsGameListener implements Listener {
         }
 
         Building building = plugin.getBuildingInfo(event.getClickedBlock().getLocation());
-        if (building == null) {
-            plugin.getLogger().warning("The player destroyed an obsidian block, but it wasn't a building. Odd");
-            plugin.getLogger().warning("Obsidian location: " + event.getClickedBlock().getLocation());
-            user.message(plugin.getLocale("obsidian-not-building"));
-            return;
-        }
-
-        if (user.getTeamColor() != building.getTeamColor()) {
-            user.message(plugin.getLocale("building-not-yours"));
-            return;
-        }
-
-        if (!building.isFinished()) {
-            user.message(plugin.getLocale("building-not-finished"));
-            return;
-        }
 
         event.setCancelled(true);
 
-        user.setShopBlock(building.getCenterBlock());
-
-        Team team = plugin.getTeam(user.getTeamColor());
-
-        InventoryHandler inventoryHandler = plugin.getBuildingInventoryHandler();
-        List<ItemStack> contents = new ArrayList<>();
-
-        if (inventoryHandler != null) inventoryHandler.addInventoryItems(contents, building, user, team);
-
-        PlayerClassHandler classHandler = plugin.getPlayerClassHandler(user.getPlayerClass());
-        classHandler.addInventoryItems(contents, building, user, team);
-
-        int index = 0;
-        int slots = 9 * ((contents.size() + 9) / 9);
-
-        Inventory shopInv = Bukkit.createInventory(event.getPlayer(), slots, building.getBuildingName());
-
-        for (ItemStack item : contents) {
-            shopInv.setItem(index++, item);
-        }
-
-        event.getPlayer().openInventory(shopInv);
-        user.setShopInventory(shopInv);
+        user.openShopInventory(building.getCenterBlock());
     }
 
     @EventHandler

@@ -47,6 +47,6 @@ public class ItemPurchaseEvent {
     }
 
     public void recalculateInventory(){
-        user.recalculateInventory();
+        user.redoShopInventory();
     }
 }

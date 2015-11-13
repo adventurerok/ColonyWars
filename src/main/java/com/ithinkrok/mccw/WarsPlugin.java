@@ -383,7 +383,7 @@ public class WarsPlugin extends JavaPlugin {
             for (User info : playerInfoHashMap.values()) {
                 if (info.getTeamColor() != building.getTeamColor()) continue;
 
-                info.recalculateInventory();
+                info.redoShopInventory();
 
                 PlayerClassHandler playerClassHandler = getPlayerClassHandler(info.getPlayerClass());
                 playerClassHandler
@@ -747,7 +747,7 @@ public class WarsPlugin extends JavaPlugin {
         for (User info : playerInfoHashMap.values()) {
             if (info.getTeamColor() != building.getTeamColor()) continue;
 
-            info.recalculateInventory();
+            info.redoShopInventory();
         }
 
         building.clearHolograms();

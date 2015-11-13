@@ -206,15 +206,54 @@ public class User {
         return true;
     }
 
-    public void recalculateInventory() {
-        if (shopInventory == null || shopBlock == null) return;
+    public void openShopInventory(Location shopBlock){
+        this.shopBlock = shopBlock;
 
         Building building = plugin.getBuildingInfo(shopBlock);
         if (building == null || shopBlock.getBlock().getType() != Material.OBSIDIAN) {
-            player.closeInventory();
+            message(plugin.getLocale("obsidian-not-building"));
             return;
         }
 
+        if(getTeamColor() != building.getTeamColor()){
+            message(plugin.getLocale("building-not-yours"));
+            return;
+        }
+
+        if(!building.isFinished()){
+            message(plugin.getLocale("building-not-finished"));
+            return;
+        }
+
+        redoShopInventory();
+
+        player.openInventory(this.shopInventory);
+    }
+
+    public void redoShopInventory() {
+        if (shopBlock == null) return;
+
+        Building building = plugin.getBuildingInfo(shopBlock);
+        if (building == null || shopBlock.getBlock().getType() != Material.OBSIDIAN) {
+            if(shopInventory != null) player.closeInventory();
+            return;
+        }
+
+        List<ItemStack> contents = calculateInventoryContents(building);
+
+        int index = 0;
+        if(shopInventory != null) shopInventory.clear();
+        else {
+            int slots = 9 * ((contents.size() + 9) / 9);
+            shopInventory = Bukkit.createInventory(player, slots, building.getBuildingName());
+        }
+
+        for (ItemStack item : contents) {
+            shopInventory.setItem(index++, item);
+        }
+    }
+
+    private List<ItemStack> calculateInventoryContents(Building building) {
         Team team = plugin.getTeam(getTeamColor());
 
         InventoryHandler inventoryHandler = plugin.getBuildingInventoryHandler();
@@ -224,14 +263,7 @@ public class User {
 
         PlayerClassHandler classHandler = plugin.getPlayerClassHandler(this.getPlayerClass());
         classHandler.addInventoryItems(contents, building, this, team);
-
-        int index = 0;
-
-        shopInventory.clear();
-
-        for (ItemStack item : contents) {
-            shopInventory.setItem(index++, item);
-        }
+        return contents;
     }
 
     public TeamColor getTeamColor() {
@@ -272,6 +304,10 @@ public class User {
     }
 
     public void updateTeamArmor() {
+        if(teamColor == null){
+            clearArmor();
+            return;
+        }
         ItemStack helmet = new ItemStack(Material.LEATHER_HELMET, 1);
         ItemStack chestplate = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
         ItemStack leggings = new ItemStack(Material.LEATHER_LEGGINGS, 1);

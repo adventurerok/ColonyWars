@@ -88,7 +88,7 @@ public class BuyableInventory implements InventoryHandler {
 
         if (!item.canBuy(event)) {
             user.message(ChatColor.RED + "You cannot buy this item!");
-            user.recalculateInventory();
+            user.redoShopInventory();
             return;
         }
 

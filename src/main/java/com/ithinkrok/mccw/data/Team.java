@@ -186,7 +186,7 @@ public class Team {
                 " Team was eliminated!");
 
         if(baseLocation != null){
-            plugin.getBuildingInfo(baseLocation).explode();
+            plugin.getGameHandler().getBuildingInfo(baseLocation).explode();
             baseLocation = null;
         }
     }

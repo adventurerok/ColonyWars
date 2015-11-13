@@ -1,4 +1,4 @@
-package com.ithinkrok.mccw.util;
+package com.ithinkrok.mccw.handler;
 
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.User;
@@ -79,7 +79,7 @@ public class CountdownHandler {
 
         startCountdown(15, CountdownType.GAME_END, plugin::endGame, () -> {
             if (countDown < 10) return;
-            Player randomPlayer = plugin.getTeam(plugin.getWinningTeam()).getRandomPlayer();
+            Player randomPlayer = plugin.getTeam(plugin.getGameHandler().getWinningTeam()).getRandomPlayer();
             if (randomPlayer == null) return;
             Location loc = randomPlayer.getLocation();
             Firework firework = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
@@ -95,13 +95,13 @@ public class CountdownHandler {
             firework.setFireworkMeta(meta);
         });
 
-        plugin.preEndGame();
+        plugin.getGameHandler().preEndGame();
     }
 
     public void startShowdownCountdown() {
         plugin.messageAll(ChatColor.GREEN + "Showdown starting in 30 seconds!");
 
-        startCountdown(30, CountdownType.SHOWDOWN_START, plugin::startShowdown, null);
+        startCountdown(30, CountdownType.SHOWDOWN_START, plugin.getGameHandler()::startShowdown, null);
     }
 
     public void startLobbyCountdown() {

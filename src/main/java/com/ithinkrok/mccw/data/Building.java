@@ -146,7 +146,7 @@ public class Building {
             block.setVelocity(new Vector(xv, yv, zv));
         }
 
-        plugin.removeBuilding(this);
+        plugin.getGameHandler().removeBuilding(this);
     }
 
     public void remove(){
@@ -156,7 +156,7 @@ public class Building {
             oldBlocks.get(loc).update(true, false);
         }
 
-        plugin.removeBuilding(this);
+        plugin.getGameHandler().removeBuilding(this);
         if(centerBlock != null) oldBlocks.get(centerBlock).update(true, false);
     }
 }

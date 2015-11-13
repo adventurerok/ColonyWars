@@ -6,6 +6,7 @@ import com.ithinkrok.mccw.data.Schematic;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.event.UserInteractEvent;
+import com.ithinkrok.mccw.handler.GameHandler;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.mccw.strings.Buildings;
@@ -53,9 +54,11 @@ public class WarsGameListener implements Listener {
     }
 
     private WarsPlugin plugin;
+    private GameHandler game;
 
     public WarsGameListener(WarsPlugin plugin) {
         this.plugin = plugin;
+        this.game = plugin.getGameHandler();
     }
 
     @EventHandler
@@ -86,7 +89,7 @@ public class WarsGameListener implements Listener {
         User user = plugin.getUser(event.getPlayer());
 
         user.setSpectator();
-        user.getPlayer().teleport(plugin.getMapSpawn(null));
+        user.getPlayer().teleport(game.getMapSpawn(null));
 
         user.message(plugin.getLocale("game-in-progress"));
         user.message(plugin.getLocale("game-wait-next"));
@@ -175,7 +178,7 @@ public class WarsGameListener implements Listener {
 
         if (event.getBlock().getType() != Material.OBSIDIAN) return;
 
-        Building building = plugin.getBuildingInfo(event.getBlock().getLocation());
+        Building building = game.getBuildingInfo(event.getBlock().getLocation());
         if (building == null) {
             plugin.getLogger().warning("The player destroyed an obsidian block, but it wasn't a building. Odd");
             plugin.getLogger().warning("Obsidian location: " + event.getBlock().getLocation());
@@ -257,7 +260,7 @@ public class WarsGameListener implements Listener {
             return;
         }
 
-        Building building = plugin.getBuildingInfo(event.getClickedBlock().getLocation());
+        Building building = game.getBuildingInfo(event.getClickedBlock().getLocation());
 
         event.setCancelled(true);
 
@@ -266,12 +269,12 @@ public class WarsGameListener implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (!plugin.isInShowdown()) return;
+        if (!game.isInShowdown()) return;
         if (event.getPlayer().getAllowFlight()) return;
 
-        if (!plugin.getShowdownArena().isInBounds(event.getTo())) {
-            if (!plugin.getShowdownArena().isInBounds(event.getFrom())) {
-                event.getPlayer().teleport(plugin.getMapSpawn(null));
+        if (!game.getShowdownArena().isInBounds(event.getTo())) {
+            if (!game.getShowdownArena().isInBounds(event.getFrom())) {
+                event.getPlayer().teleport(game.getMapSpawn(null));
                 plugin.messageAll(event.getPlayer().getDisplayName() + ChatColor.GOLD + " was teleported back to the " +
                         "center!");
             }
@@ -337,13 +340,13 @@ public class WarsGameListener implements Listener {
     }
 
     public void playerDeath(Player died, Player killer) {
-        if (plugin.isInAftermath()) return;
+        if (game.isInAftermath()) return;
         User diedInfo = plugin.getUser(died);
 
         if (!diedInfo.isInGame()) {
             diedInfo.resetPlayerStats(true);
 
-            died.teleport(plugin.getMapSpawn(null));
+            died.teleport(game.getMapSpawn(null));
             return;
         }
 
@@ -357,7 +360,7 @@ public class WarsGameListener implements Listener {
 
         Team diedTeam = diedInfo.getTeam();
         boolean respawn =
-                !plugin.isInShowdown() && plugin.getRandom().nextFloat() < (diedTeam.getRespawnChance() / 100f);
+                !game.isInShowdown() && plugin.getRandom().nextFloat() < (diedTeam.getRespawnChance() / 100f);
 
         if (respawn) {
             plugin.messageAll(diedInfo.getFormattedName() + ChatColor.GOLD + " has respawned!");
@@ -438,7 +441,7 @@ public class WarsGameListener implements Listener {
 
         User user = plugin.getUser((Player) event.getWhoClicked());
         if(!user.isInGame() || user.getTeamColor() == null){
-            plugin.handleSpectatorInventory(event);
+            game.handleSpectatorInventory(event);
             return;
         }
 
@@ -453,7 +456,7 @@ public class WarsGameListener implements Listener {
 
             PlayerClassHandler classHandler = plugin.getPlayerClassHandler(user.getPlayerClass());
 
-            Building building = plugin.getBuildingInfo(user.getShopBlock());
+            Building building = game.getBuildingInfo(user.getShopBlock());
             if (building == null) return;
 
             boolean done = classHandler.onInventoryClick(event.getCurrentItem(), building, user, team);

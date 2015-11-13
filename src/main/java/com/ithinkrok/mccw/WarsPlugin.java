@@ -12,6 +12,7 @@ import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.inventory.OmniInventory;
+import com.ithinkrok.mccw.inventory.SpectatorInventory;
 import com.ithinkrok.mccw.playerclass.*;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.*;
@@ -29,9 +30,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
 import java.io.IOException;
@@ -73,6 +72,7 @@ public class WarsPlugin extends JavaPlugin {
     private boolean inAftermath = false;
 
     private OmniInventory buildingInventoryHandler;
+    private SpectatorInventory spectatorInventoryHandler;
 
     private EnumMap<PlayerClass, PlayerClassHandler> classHandlerEnumMap = new EnumMap<>(PlayerClass.class);
     private Random random = new Random();
@@ -153,6 +153,7 @@ public class WarsPlugin extends JavaPlugin {
         schematicDataHashMap.put(Buildings.TIMERBUFFER, new Schematic(Buildings.TIMERBUFFER, getConfig()));
 
         buildingInventoryHandler = new OmniInventory(this, getConfig());
+        spectatorInventoryHandler = new SpectatorInventory(this);
 
         classHandlerEnumMap.put(PlayerClass.GENERAL, new GeneralClass(getConfig()));
         classHandlerEnumMap.put(PlayerClass.SCOUT, new ScoutClass(this, getConfig()));
@@ -179,7 +180,7 @@ public class WarsPlugin extends JavaPlugin {
         }, null);
     }
 
-    public void preEndGame(){
+    public void preEndGame() {
         buildings.forEach(Building::clearHolograms);
     }
 
@@ -231,48 +232,8 @@ public class WarsPlugin extends JavaPlugin {
         startLobbyCountdown();
     }
 
-    public void setupSpectatorInventory(Player player) {
-        PlayerInventory inv = player.getInventory();
-        inv.clear();
-
-        int slot = 9;
-        for (User info : playerInfoHashMap.values()) {
-            if (!info.isInGame() || info.getTeamColor() == null) continue;
-
-            ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-            InventoryUtils.setItemNameAndLore(head, info.getFormattedName(),
-                    getLocale("spectate-player", info.getFormattedName()));
-
-
-            SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
-
-            skullMeta.setOwner(info.getPlayer().getName());
-            head.setItemMeta(skullMeta);
-
-            inv.setItem(slot++, head);
-        }
-    }
-
     public String getLocale(String name, Object... params) {
         return String.format(getConfig().getString("locale." + name), params);
-    }
-
-    public void handleSpectatorInventory(InventoryClickEvent event) {
-        event.setCancelled(true);
-
-        HumanEntity clicker = event.getWhoClicked();
-
-        ItemStack clicked = event.getCurrentItem();
-        if (clicked == null || clicked.getType() != Material.SKULL_ITEM) return;
-
-        String owner = ((SkullMeta) clicked.getItemMeta()).getOwner();
-
-        for (User info : playerInfoHashMap.values()) {
-            if (!info.getPlayer().getName().equals(owner)) continue;
-
-            clicker.teleport(info.getPlayer().getLocation());
-            return;
-        }
     }
 
     public void playerJoinLobby(Player player) {
@@ -355,8 +316,7 @@ public class WarsPlugin extends JavaPlugin {
                 info.redoShopInventory();
 
                 PlayerClassHandler playerClassHandler = getPlayerClassHandler(info.getPlayerClass());
-                playerClassHandler
-                        .onBuildingBuilt(building.getBuildingName(), info, getTeam(info.getTeamColor()));
+                playerClassHandler.onBuildingBuilt(building.getBuildingName(), info, getTeam(info.getTeamColor()));
             }
         }
 
@@ -551,7 +511,7 @@ public class WarsPlugin extends JavaPlugin {
         int x = showdownArena.getRadiusX();
         int z = showdownArena.getRadiusZ();
 
-        for (User user : getPlayers()) {
+        for (User user : getUsers()) {
             int offsetX = (-x / 2) + random.nextInt(x);
             int offsetZ = (-z / 2) + random.nextInt(z);
             int offsetY = 1;
@@ -620,7 +580,6 @@ public class WarsPlugin extends JavaPlugin {
                     config.getInt(base + ".z"));
 
 
-
             SchematicBuilder.pasteSchematic(this, getSchematicData(Buildings.BASE), build, 0, team);
 
             if (getTeam(team).getPlayerCount() == 0) {
@@ -640,10 +599,6 @@ public class WarsPlugin extends JavaPlugin {
 
         return new Location(world, config.getDouble(base + ".x"), config.getDouble(base + ".y"),
                 config.getDouble(base + ".z"));
-    }
-
-    public Collection<User> getPlayers() {
-        return playerInfoHashMap.values();
     }
 
     public void messageAll(String message) {
@@ -762,7 +717,7 @@ public class WarsPlugin extends JavaPlugin {
         return playerInfoHashMap.get(player.getUniqueId());
     }
 
-    public User getUser(UUID uniqueId){
+    public User getUser(UUID uniqueId) {
         return playerInfoHashMap.get(uniqueId);
     }
 
@@ -892,10 +847,35 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public void updateSpectatorInventories() {
-        for(User info : getPlayers()){
-            if(info.isInGame() && info.getTeamColor() != null) return;
+        for (User info : getUsers()) {
+            if (info.isInGame() && info.getTeamColor() != null) return;
 
             setupSpectatorInventory(info.getPlayer());
         }
+    }
+
+    public Collection<User> getUsers() {
+        return playerInfoHashMap.values();
+    }
+
+    public void setupSpectatorInventory(Player player) {
+        PlayerInventory inv = player.getInventory();
+        inv.clear();
+
+        int slot = 9;
+
+        List<ItemStack> items = new ArrayList<>();
+        spectatorInventoryHandler.addInventoryItems(items, null, getUser(player), null);
+
+        for (ItemStack item : items) {
+            inv.setItem(slot++, item);
+        }
+    }
+
+    public void handleSpectatorInventory(InventoryClickEvent event) {
+        event.setCancelled(true);
+
+        spectatorInventoryHandler
+                .onInventoryClick(event.getCurrentItem(), null, getUser((Player) event.getWhoClicked()), null);
     }
 }

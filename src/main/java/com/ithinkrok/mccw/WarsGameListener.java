@@ -25,14 +25,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -77,7 +75,7 @@ public class WarsGameListener implements Listener {
                     ChatColor.WHITE + "%s");
         }
 
-        plugin.getPlayers().stream()
+        plugin.getUsers().stream()
                 .filter(other -> other.getTeamColor() != user.getTeamColor() && !other.getPlayer().isOp())
                 .forEach(other -> event.getRecipients().remove(other.getPlayer()));
     }

@@ -14,6 +14,8 @@ import java.util.List;
 
 /**
  * Created by paul on 02/11/15.
+ *
+ * Handles Team data
  */
 public class Team {
 

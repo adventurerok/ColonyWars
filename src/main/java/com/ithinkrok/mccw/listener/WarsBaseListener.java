@@ -1,5 +1,6 @@
-package com.ithinkrok.mccw;
+package com.ithinkrok.mccw.listener;
 
+import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.User;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;

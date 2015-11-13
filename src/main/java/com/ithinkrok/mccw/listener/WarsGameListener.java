@@ -1,5 +1,6 @@
-package com.ithinkrok.mccw;
+package com.ithinkrok.mccw.listener;
 
+import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.Building;
 import com.ithinkrok.mccw.data.Schematic;
 import com.ithinkrok.mccw.data.Team;

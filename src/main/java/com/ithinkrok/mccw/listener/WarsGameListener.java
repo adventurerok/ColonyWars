@@ -107,6 +107,11 @@ public class WarsGameListener implements Listener {
         }
     }
 
+    @EventHandler
+    public void onBlockExplode(BlockExplodeEvent event){
+
+    }
+
 
     @EventHandler
     public void onPickupItem(PlayerPickupItemEvent event) {

@@ -154,6 +154,7 @@ public class WarsPlugin extends JavaPlugin {
 
         user.setInGame(false);
         user.getPlayer().setGameMode(GameMode.ADVENTURE);
+        user.unsetSpectator();
         user.resetPlayerStats(true);
         user.clearArmor();
 

@@ -324,12 +324,20 @@ public class User {
 
         cloak();
 
-        player.setGameMode(GameMode.SPECTATOR);
+        player.setAllowFlight(true);
+        player.spigot().setCollidesWithEntities(false);
         clearArmor();
 
         plugin.getGameInstance().setupSpectatorInventory(player);
 
         updateScoreboard();
+    }
+
+    public void unsetSpectator(){
+        player.setAllowFlight(false);
+        player.spigot().setCollidesWithEntities(true);
+
+        decloak();
     }
 
     private List<ItemStack> calculateInventoryContents(Building building) {

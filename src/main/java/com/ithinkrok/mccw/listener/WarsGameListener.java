@@ -96,6 +96,17 @@ public class WarsGameListener implements Listener {
         user.message(plugin.getLocale("spectate-heads"));
     }
 
+    @EventHandler
+    public void onItemSpawn(ItemSpawnEvent event){
+        switch(event.getEntity().getItemStack().getType()){
+            case GOLD_INGOT:
+            case DIAMOND:
+                return;
+            default:
+                event.setCancelled(true);
+        }
+    }
+
 
     @EventHandler
     public void onPickupItem(PlayerPickupItemEvent event) {

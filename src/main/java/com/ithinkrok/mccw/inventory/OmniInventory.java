@@ -40,9 +40,11 @@ public class OmniInventory extends BuyableInventory {
     private static void addBlacksmithItems(List<Buyable> result, FileConfiguration config) {
         int scoutTowerCost = config.getInt("costs.buildings." + Buildings.SCOUTTOWER);
         int wallCost = config.getInt("costs.buildings." + Buildings.WALL);
+        int mineCost = config.getInt("costs.buildings." + Buildings.LANDMINE);
 
         result.add(new BuildingBuyable(Buildings.SCOUTTOWER, Buildings.BLACKSMITH, scoutTowerCost));
         result.add(new BuildingBuyable(Buildings.WALL, Buildings.BLACKSMITH, wallCost, 16));
+        result.add(new BuildingBuyable(Buildings.LANDMINE, Buildings.BLACKSMITH, mineCost));
     }
 
     private static void addBaseItems(List<Buyable> result, FileConfiguration config) {

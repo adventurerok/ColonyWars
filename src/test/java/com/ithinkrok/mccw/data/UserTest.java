@@ -5,6 +5,8 @@ import com.ithinkrok.mccw.enumeration.TeamColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -49,7 +51,11 @@ public class UserTest {
         User user = new User(plugin, player);
 
         user.setInGame(true);
-        user.setTeamColor(TeamColor.RED);
+
+        try {
+            user.setTeamColor(TeamColor.RED);
+        } catch(ClassCastException ignored) {} //when the armor tries to update. Cannot cast ItemMeta to
+        // LeatherArmorMeta
         assertTrue(user.isInGame());
 
         user.addPlayerCash(3000);

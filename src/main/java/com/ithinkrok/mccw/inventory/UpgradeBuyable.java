@@ -1,5 +1,6 @@
 package com.ithinkrok.mccw.inventory;
 
+import com.ithinkrok.mccw.event.ItemPurchaseEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -21,13 +22,13 @@ public class UpgradeBuyable extends Buyable {
 
     @Override
     public void onPurchase(ItemPurchaseEvent event) {
-        event.getPlayerInfo().setUpgradeLevel(upgradeName, upgradeLevel);
+        event.getUser().setUpgradeLevel(upgradeName, upgradeLevel);
 
         event.recalculateInventory();
     }
 
     @Override
     public boolean canBuy(ItemPurchaseEvent event) {
-        return event.getPlayerInfo().getUpgradeLevel(upgradeName) + 1 == upgradeLevel;
+        return event.getUser().getUpgradeLevel(upgradeName) + 1 == upgradeLevel;
     }
 }

@@ -1,9 +1,11 @@
 package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.WarsPlugin;
-import com.ithinkrok.mccw.data.PlayerInfo;
-import com.ithinkrok.mccw.data.TeamInfo;
+import com.ithinkrok.mccw.data.Team;
+import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.mccw.event.UserInteractEvent;
+import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.strings.Buildings;
@@ -54,8 +56,8 @@ public class ScoutClass extends BuyableInventory implements PlayerClassHandler {
     }
 
     @Override
-    public void onBuildingBuilt(String buildingName, PlayerInfo playerInfo, TeamInfo teamInfo) {
-        PlayerInventory inv = playerInfo.getPlayer().getInventory();
+    public void onBuildingBuilt(String buildingName, User user, Team team) {
+        PlayerInventory inv = user.getPlayer().getInventory();
 
         switch (buildingName) {
             case Buildings.LUMBERMILL:
@@ -70,28 +72,28 @@ public class ScoutClass extends BuyableInventory implements PlayerClassHandler {
     }
 
     @Override
-    public void onGameBegin(PlayerInfo playerInfo, TeamInfo teamInfo) {
-        playerInfo.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1), true);
+    public void onGameBegin(User user, Team team) {
+        user.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1), true);
     }
 
     @Override
-    public void onInteractWorld(PlayerInteractEvent event) {
+    public void onInteractWorld(UserInteractEvent event) {
         if(event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         ItemStack item = event.getItem();
         if (item == null) return;
 
         switch (item.getType()) {
             case COMPASS:
-                TeamColor exclude = plugin.getPlayerInfo(event.getPlayer()).getTeamColor();
+                TeamColor exclude = event.getUserClicked().getTeamColor();
                 plugin.updateScoutCompass(item, event.getPlayer(), exclude);
                 break;
             case CHAINMAIL_HELMET:
-                PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
-                if (!playerInfo.startCoolDown("regen", 35 + 10 * playerInfo.getUpgradeLevel("regen"),
+                User user = event.getUserClicked();
+                if (!user.startCoolDown("regen", 35 + 10 * user.getUpgradeLevel("regen"),
                         "Your regeneration ability has cooled down!")) return;
 
                 event.getPlayer().addPotionEffect(
-                        new PotionEffect(PotionEffectType.REGENERATION, 200, playerInfo.getUpgradeLevel("regen")));
+                        new PotionEffect(PotionEffectType.REGENERATION, 200, user.getUpgradeLevel("regen")));
 
                 break;
         }
@@ -100,19 +102,19 @@ public class ScoutClass extends BuyableInventory implements PlayerClassHandler {
     }
 
     @Override
-    public void onPlayerUpgrade(PlayerInfo playerInfo, String upgradeName, int upgradeLevel) {
-        switch (upgradeName) {
+    public void onPlayerUpgrade(UserUpgradeEvent event) {
+        switch (event.getUpgradeName()) {
             case "sharpness":
             case "knockback":
                 ItemStack sword = new ItemStack(Material.WOOD_SWORD);
-                InventoryUtils.enchantItem(sword, Enchantment.DAMAGE_ALL, playerInfo.getUpgradeLevel("sharpness"),
-                        Enchantment.KNOCKBACK, playerInfo.getUpgradeLevel("knockback"));
+                InventoryUtils.enchantItem(sword, Enchantment.DAMAGE_ALL, event.getUser().getUpgradeLevel("sharpness"),
+                        Enchantment.KNOCKBACK, event.getUser().getUpgradeLevel("knockback"));
 
-                InventoryUtils.replaceItem(playerInfo.getPlayer().getInventory(), sword);
+                InventoryUtils.replaceItem(event.getUserInventory(), sword);
 
                 break;
             case "compass":
-                playerInfo.getPlayer().getInventory().addItem(InventoryUtils
+                event.getUserInventory().addItem(InventoryUtils
                         .createItemWithNameAndLore(Material.COMPASS, 1, 0, "Player Compass", "Oriented at: No One"));
                 break;
             case "regen":
@@ -120,7 +122,7 @@ public class ScoutClass extends BuyableInventory implements PlayerClassHandler {
                         .createItemWithNameAndLore(Material.CHAINMAIL_HELMET, 1, 0, "Regeneration Ability",
                                 "Cooldown: 45 seconds");
 
-                InventoryUtils.replaceItem(playerInfo.getPlayer().getInventory(), regen);
+                InventoryUtils.replaceItem(event.getUserInventory(), regen);
         }
     }
 }

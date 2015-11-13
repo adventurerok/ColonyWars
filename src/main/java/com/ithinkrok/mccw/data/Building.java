@@ -13,7 +13,6 @@ import org.bukkit.entity.FallingBlock;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +21,7 @@ import java.util.Map;
  *
  * Represents info on a building built during the current game
  */
-public class BuildingInfo {
+public class Building {
 
     private String buildingName;
     private TeamColor teamColor;
@@ -40,8 +39,8 @@ public class BuildingInfo {
         return rotation;
     }
 
-    public BuildingInfo(WarsPlugin plugin, String buildingName, TeamColor teamColor, Location centerBlock, int rotation,
-                        List<Location> buildingBlocks, Map<Location, BlockState> oldBlocks) {
+    public Building(WarsPlugin plugin, String buildingName, TeamColor teamColor, Location centerBlock, int rotation,
+                    List<Location> buildingBlocks, Map<Location, BlockState> oldBlocks) {
         this.plugin = plugin;
         this.buildingName = buildingName;
         this.teamColor = teamColor;

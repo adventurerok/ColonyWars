@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by paul on 02/11/15.
  */
-public class TeamInfo {
+public class Team {
 
     private TeamColor teamColor;
     private ArrayList<Player> players = new ArrayList<>();
@@ -35,7 +35,7 @@ public class TeamInfo {
         return baseLocation;
     }
 
-    public TeamInfo(WarsPlugin plugin, TeamColor teamColor) {
+    public Team(WarsPlugin plugin, TeamColor teamColor) {
         this.plugin = plugin;
         this.teamColor = teamColor;
     }
@@ -102,7 +102,7 @@ public class TeamInfo {
 
     public void updatePlayerScoreboards(){
         for(Player p : players){
-            plugin.getPlayerInfo(p).updateScoreboard();
+            plugin.getUser(p).updateScoreboard();
         }
     }
 
@@ -130,7 +130,7 @@ public class TeamInfo {
         updatePlayerScoreboards();
     }
 
-    public void buildingFinished(BuildingInfo building){
+    public void buildingFinished(Building building){
         buildingsConstructingNow -= 1;
 
         int buildingNowOfType = getBuildingNowCount(building.getBuildingName()) - 1;
@@ -156,7 +156,7 @@ public class TeamInfo {
         updatePlayerScoreboards();
     }
 
-    public void removeBuilding(BuildingInfo building){
+    public void removeBuilding(Building building){
         buildingCounts.put(building.getBuildingName(), Math.max(getBuildingCount(building.getBuildingName()) - 1, 0));
 
         switch(building.getBuildingName()){

@@ -1,6 +1,7 @@
 package com.ithinkrok.mccw.inventory;
 
 import com.ithinkrok.mccw.WarsPlugin;
+import com.ithinkrok.mccw.event.ItemPurchaseEvent;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import com.ithinkrok.mccw.util.SchematicBuilder;
@@ -96,12 +97,12 @@ public class OmniInventory extends BuyableInventory {
 
             @Override
             public void onPurchase(ItemPurchaseEvent event) {
-                event.getBuildingInfo().remove();
+                event.getBuilding().remove();
 
                 if (!SchematicBuilder.buildSchematic(plugin, plugin.getSchematicData(Buildings.CATHEDRAL),
-                        event.getBuildingInfo().getCenterBlock(), event.getBuildingInfo().getRotation(),
-                        event.getBuildingInfo().getTeamColor())) {
-                    event.getPlayerInfo().message("We failed to build a cathedral here. Have the block yourself " +
+                        event.getBuilding().getCenterBlock(), event.getBuilding().getRotation(),
+                        event.getBuilding().getTeamColor())) {
+                    event.getUser().message("We failed to build a cathedral here. Have the block yourself " +
                             "to find a better place!");
 
                     event.getPlayerInventory().addItem(InventoryUtils
@@ -140,7 +141,7 @@ public class OmniInventory extends BuyableInventory {
 
         @Override
         public boolean canBuy(ItemPurchaseEvent event) {
-            return super.canBuy(event) && event.getTeamInfo().getBuildingCount(Buildings.FARM) > 0;
+            return super.canBuy(event) && event.getTeam().getBuildingCount(Buildings.FARM) > 0;
         }
     }
 }

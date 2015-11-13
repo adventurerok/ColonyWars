@@ -1,17 +1,18 @@
 package com.ithinkrok.mccw.playerclass;
 
-import com.ithinkrok.mccw.data.PlayerInfo;
-import com.ithinkrok.mccw.data.TeamInfo;
+import com.ithinkrok.mccw.data.Team;
+import com.ithinkrok.mccw.data.User;
+import com.ithinkrok.mccw.event.ItemPurchaseEvent;
+import com.ithinkrok.mccw.event.UserInteractEvent;
+import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
 import com.ithinkrok.mccw.inventory.ItemBuyable;
-import com.ithinkrok.mccw.inventory.ItemPurchaseEvent;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -49,17 +50,17 @@ public class ArcherClass extends BuyableInventory implements PlayerClassHandler 
 
                     @Override
                     public boolean canBuy(ItemPurchaseEvent event) {
-                        return super.canBuy(event) && event.getPlayerInfo().getUpgradeLevel("arrows") > 0;
+                        return super.canBuy(event) && event.getUser().getUpgradeLevel("arrows") > 0;
                     }
                 });
     }
 
 
     @Override
-    public void onBuildingBuilt(String buildingName, PlayerInfo playerInfo, TeamInfo teamInfo) {
+    public void onBuildingBuilt(String buildingName, User user, Team team) {
         if (!Buildings.LUMBERMILL.equals(buildingName)) return;
 
-        PlayerInventory inv = playerInfo.getPlayer().getInventory();
+        PlayerInventory inv = user.getPlayer().getInventory();
 
         inv.addItem(new ItemStack(Material.BOW));
         inv.addItem(new ItemStack(Material.WOOD_SWORD));
@@ -67,33 +68,33 @@ public class ArcherClass extends BuyableInventory implements PlayerClassHandler 
     }
 
     @Override
-    public void onGameBegin(PlayerInfo playerInfo, TeamInfo teamInfo) {
+    public void onGameBegin(User user, Team team) {
 
     }
 
     @Override
-    public void onInteractWorld(PlayerInteractEvent event) {
+    public void onInteractWorld(UserInteractEvent event) {
 
     }
 
     @Override
-    public void onPlayerUpgrade(PlayerInfo playerInfo, String upgradeName, int upgradeLevel) {
-        switch (upgradeName) {
+    public void onPlayerUpgrade(UserUpgradeEvent event) {
+        switch (event.getUpgradeName()) {
             case "bow":
-                int power = upgradeLevel == 2 ? 3 : 1;
+                int power = event.getUpgradeLevel() == 2 ? 3 : 1;
                 ItemStack bow = new ItemStack(Material.BOW);
-                InventoryUtils
-                        .enchantItem(bow, Enchantment.ARROW_KNOCKBACK, upgradeLevel, Enchantment.ARROW_DAMAGE, power);
-                InventoryUtils.replaceItem(playerInfo.getPlayer().getInventory(), bow);
+                InventoryUtils.enchantItem(bow, Enchantment.ARROW_KNOCKBACK, event.getUpgradeLevel(),
+                        Enchantment.ARROW_DAMAGE, power);
+                InventoryUtils.replaceItem(event.getUserInventory(), bow);
                 break;
             case "sword":
                 ItemStack sword = new ItemStack(Material.WOOD_SWORD);
-                InventoryUtils
-                        .enchantItem(sword, Enchantment.DAMAGE_ALL, upgradeLevel, Enchantment.KNOCKBACK, upgradeLevel);
-                InventoryUtils.replaceItem(playerInfo.getPlayer().getInventory(), sword);
+                InventoryUtils.enchantItem(sword, Enchantment.DAMAGE_ALL, event.getUser(), Enchantment.KNOCKBACK,
+                        event.getUpgradeLevel());
+                InventoryUtils.replaceItem(event.getUserInventory(), sword);
                 break;
             case "arrows":
-                playerInfo.getPlayer().getInventory().addItem(new ItemStack(Material.ARROW, 64));
+                event.getUserInventory().addItem(new ItemStack(Material.ARROW, 64));
                 break;
         }
     }

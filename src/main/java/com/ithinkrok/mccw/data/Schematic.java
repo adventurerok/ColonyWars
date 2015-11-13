@@ -7,18 +7,18 @@ import org.bukkit.configuration.file.FileConfiguration;
  * <p>
  * Stores schematic data for buildings
  */
-public class SchematicData {
+public class Schematic {
 
     private String schematicFile;
     private String buildingName;
     private int baseRotation;
 
-    public SchematicData(String buildingName, FileConfiguration config) {
+    public Schematic(String buildingName, FileConfiguration config) {
         this(buildingName, config.getString("buildings.schematics." + buildingName),
                 config.getInt("buildings.rotations." + buildingName));
     }
 
-    public SchematicData(String buildingName, String schematicFile, int baseRotation) {
+    public Schematic(String buildingName, String schematicFile, int baseRotation) {
         this.buildingName = buildingName;
         this.schematicFile = schematicFile;
         this.baseRotation = baseRotation;

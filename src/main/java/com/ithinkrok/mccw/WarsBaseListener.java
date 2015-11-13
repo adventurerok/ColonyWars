@@ -1,8 +1,7 @@
 package com.ithinkrok.mccw;
 
-import com.ithinkrok.mccw.data.PlayerInfo;
+import com.ithinkrok.mccw.data.User;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -29,12 +28,12 @@ public class WarsBaseListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        PlayerInfo playerInfo = new PlayerInfo(plugin, event.getPlayer());
-        plugin.setPlayerInfo(event.getPlayer(), playerInfo);
+        User user = new User(plugin, event.getPlayer());
+        plugin.setPlayerInfo(event.getPlayer(), user);
 
-        playerInfo.message(ChatColor.GREEN + "Welcome to Colony Wars!");
+        user.message(ChatColor.GREEN + "Welcome to Colony Wars!");
 
-        playerInfo.getPlayer().getInventory().clear();
+        user.getPlayer().getInventory().clear();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

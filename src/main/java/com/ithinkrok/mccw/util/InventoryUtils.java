@@ -1,7 +1,7 @@
 package com.ithinkrok.mccw.util;
 
-import com.ithinkrok.mccw.data.PlayerInfo;
-import com.ithinkrok.mccw.data.TeamInfo;
+import com.ithinkrok.mccw.data.Team;
+import com.ithinkrok.mccw.data.User;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -85,25 +85,25 @@ public class InventoryUtils {
         return setItemNameAndLore(stack, name, lore);
     }
 
-    public static boolean payWithTeamCash(int amount, TeamInfo teamInfo, PlayerInfo playerInfo) {
-        int teamAmount = Math.min(teamInfo.getTeamCash(), amount);
+    public static boolean payWithTeamCash(int amount, Team team, User user) {
+        int teamAmount = Math.min(team.getTeamCash(), amount);
         int playerAmount = amount - teamAmount;
 
-        if (playerAmount > 0 && !playerInfo.subtractPlayerCash(playerAmount)) return false;
+        if (playerAmount > 0 && !user.subtractPlayerCash(playerAmount)) return false;
 
-        teamInfo.subtractTeamCash(teamAmount);
+        team.subtractTeamCash(teamAmount);
 
-        if (playerAmount > 0) playerInfo.message("Paid " + ChatColor.RED + "$" + playerAmount +
+        if (playerAmount > 0) user.message("Paid " + ChatColor.RED + "$" + playerAmount +
                 ChatColor.YELLOW + " using your own money as your Team did not have enough!");
 
         return true;
     }
 
-    public static boolean hasTeamCash(int amount, TeamInfo teamInfo, PlayerInfo playerInfo) {
-        int teamAmount = Math.min(teamInfo.getTeamCash(), amount);
+    public static boolean hasTeamCash(int amount, Team team, User user) {
+        int teamAmount = Math.min(team.getTeamCash(), amount);
         int playerAmount = amount - teamAmount;
 
-        return !(playerAmount > 0 && !playerInfo.hasPlayerCash(playerAmount));
+        return !(playerAmount > 0 && !user.hasPlayerCash(playerAmount));
 
     }
 

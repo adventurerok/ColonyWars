@@ -1,10 +1,10 @@
 package com.ithinkrok.mccw;
 
-import com.ithinkrok.mccw.data.BuildingInfo;
-import com.ithinkrok.mccw.data.PlayerInfo;
-import com.ithinkrok.mccw.data.SchematicData;
-import com.ithinkrok.mccw.data.TeamInfo;
-import com.ithinkrok.mccw.enumeration.PlayerClass;
+import com.ithinkrok.mccw.data.Building;
+import com.ithinkrok.mccw.data.Schematic;
+import com.ithinkrok.mccw.data.Team;
+import com.ithinkrok.mccw.data.User;
+import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.mccw.strings.Buildings;
@@ -12,7 +12,10 @@ import com.ithinkrok.mccw.util.Facing;
 import com.ithinkrok.mccw.util.SchematicBuilder;
 import com.ithinkrok.mccw.util.TreeFeller;
 import org.bukkit.*;
-import org.bukkit.entity.*;
+import org.bukkit.entity.LightningStrike;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -20,7 +23,6 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
@@ -30,7 +32,10 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by paul on 01/11/15.
@@ -56,15 +61,15 @@ public class WarsGameListener implements Listener {
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
-        if (playerInfo == null) {
+        User user = plugin.getUser(event.getPlayer());
+        if (user == null) {
             event.setCancelled(true);
             return;
         }
 
-        if (playerInfo.isInGame() && playerInfo.getTeamColor() != null) {
-            String playerClass = playerInfo.getPlayerClass().toString();
-            String teamColor = playerInfo.getTeamColor().chatColor.toString();
+        if (user.isInGame() && user.getTeamColor() != null) {
+            String playerClass = user.getPlayerClass().toString();
+            String teamColor = user.getTeamColor().chatColor.toString();
             event.setFormat(teamColor + "<" + ChatColor.DARK_GRAY + "[" + ChatColor.GRAY + playerClass +
                     ChatColor.DARK_GRAY + "] %s" + teamColor + "> " + ChatColor.WHITE + "%s");
         } else {
@@ -73,27 +78,27 @@ public class WarsGameListener implements Listener {
         }
 
         plugin.getPlayers().stream()
-                .filter(other -> other.getTeamColor() != playerInfo.getTeamColor() && !other.getPlayer().isOp())
+                .filter(other -> other.getTeamColor() != user.getTeamColor() && !other.getPlayer().isOp())
                 .forEach(other -> event.getRecipients().remove(other.getPlayer()));
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
+        User user = plugin.getUser(event.getPlayer());
 
-        setSpectator(playerInfo.getPlayer());
-        playerInfo.getPlayer().teleport(plugin.getMapSpawn(null));
+        setSpectator(user.getPlayer());
+        user.getPlayer().teleport(plugin.getMapSpawn(null));
 
-        playerInfo.updateScoreboard();
+        user.updateScoreboard();
 
-        playerInfo.message(plugin.getLocale("game-in-progress"));
-        playerInfo.message(plugin.getLocale("game-wait-next"));
-        playerInfo.message(plugin.getLocale("spectate-heads"));
+        user.message(plugin.getLocale("game-in-progress"));
+        user.message(plugin.getLocale("game-wait-next"));
+        user.message(plugin.getLocale("spectate-heads"));
     }
 
     public void setSpectator(Player died) {
         plugin.setPlayerTeam(died, null);
-        plugin.getPlayerInfo(died).setInGame(false);
+        plugin.getUser(died).setInGame(false);
         plugin.cloak(died);
         //died.setAllowFlight(true);
         died.setGameMode(GameMode.SPECTATOR);
@@ -101,7 +106,7 @@ public class WarsGameListener implements Listener {
         died.setHealth(plugin.getMaxHealth());
 
         plugin.setupSpectatorInventory(died);
-        plugin.getPlayerInfo(died).clearArmor();
+        plugin.getUser(died).clearArmor();
 
         plugin.removePotionEffects(died);
     }
@@ -113,9 +118,9 @@ public class WarsGameListener implements Listener {
             return;
         }
 
-        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
+        User user = plugin.getUser(event.getPlayer());
 
-        if (!playerInfo.isInGame()) {
+        if (!user.isInGame()) {
             event.setCancelled(true);
             return;
         }
@@ -134,21 +139,21 @@ public class WarsGameListener implements Listener {
     }
 
     private void giveCashPerItem(PlayerPickupItemEvent event, int playerCash, int teamCash) {
-        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
+        User user = plugin.getUser(event.getPlayer());
 
-        playerInfo.addPlayerCash(playerCash * event.getItem().getItemStack().getAmount());
+        user.addPlayerCash(playerCash * event.getItem().getItemStack().getAmount());
         event.getPlayer().playSound(event.getItem().getLocation(), Sound.ORB_PICKUP, 1.0f,
                 0.8f + (plugin.getRandom().nextFloat()) * 0.4f);
 
-        TeamInfo teamInfo = plugin.getTeamInfo(playerInfo.getTeamColor());
-        teamInfo.addTeamCash(teamCash * event.getItem().getItemStack().getAmount());
+        Team team = plugin.getTeam(user.getTeamColor());
+        team.addTeamCash(teamCash * event.getItem().getItemStack().getAmount());
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
-        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
+        User user = plugin.getUser(event.getPlayer());
 
-        if (!playerInfo.isInGame()) {
+        if (!user.isInGame()) {
             event.setCancelled(true);
             return;
         }
@@ -158,27 +163,27 @@ public class WarsGameListener implements Listener {
         ItemMeta meta = event.getItemInHand().getItemMeta();
         if (!meta.hasDisplayName()) return;
 
-        SchematicData schematicData = plugin.getSchematicData(meta.getDisplayName());
-        if (schematicData == null) {
-            playerInfo.message(ChatColor.RED + "Unknown building!");
+        Schematic schematic = plugin.getSchematicData(meta.getDisplayName());
+        if (schematic == null) {
+            user.message(ChatColor.RED + "Unknown building!");
             event.setCancelled(true);
             return;
         }
 
         int rotation = Facing.getFacing(event.getPlayer().getLocation().getYaw());
 
-        if (!SchematicBuilder.buildSchematic(plugin, schematicData, event.getBlock().getLocation(), rotation,
-                playerInfo.getTeamColor())) {
+        if (!SchematicBuilder.buildSchematic(plugin, schematic, event.getBlock().getLocation(), rotation,
+                user.getTeamColor())) {
             event.setCancelled(true);
-            playerInfo.message(ChatColor.RED + "You cannot build that here!");
+            user.message(ChatColor.RED + "You cannot build that here!");
         }
     }
 
     @EventHandler(priority = EventPriority.LOW)
     public void onBlockBreak(BlockBreakEvent event) {
-        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
+        User user = plugin.getUser(event.getPlayer());
 
-        if (!playerInfo.isInGame()) {
+        if (!user.isInGame()) {
             event.setCancelled(true);
             return;
         }
@@ -187,26 +192,26 @@ public class WarsGameListener implements Listener {
 
         if (event.getBlock().getType() != Material.OBSIDIAN) return;
 
-        BuildingInfo buildingInfo = plugin.getBuildingInfo(event.getBlock().getLocation());
-        if (buildingInfo == null) {
+        Building building = plugin.getBuildingInfo(event.getBlock().getLocation());
+        if (building == null) {
             plugin.getLogger().warning("The player destroyed an obsidian block, but it wasn't a building. Odd");
             plugin.getLogger().warning("Obsidian location: " + event.getBlock().getLocation());
-            playerInfo.message(ChatColor.RED + "That obsidian block does not appear to be part of a building");
+            user.message(ChatColor.RED + "That obsidian block does not appear to be part of a building");
             return;
         }
 
-        if (playerInfo.getTeamColor() == buildingInfo.getTeamColor()) {
-            playerInfo.message(ChatColor.RED + "You cannot destroy your own team's buildings!");
+        if (user.getTeamColor() == building.getTeamColor()) {
+            user.message(ChatColor.RED + "You cannot destroy your own team's buildings!");
             event.setCancelled(true);
             return;
         }
 
-        if (Buildings.BASE.equals(buildingInfo.getBuildingName())) {
-            playerInfo.message(ChatColor.RED + "You cannot destroy other team's bases!");
+        if (Buildings.BASE.equals(building.getBuildingName())) {
+            user.message(ChatColor.RED + "You cannot destroy other team's bases!");
             return;
         }
 
-        buildingInfo.explode();
+        building.explode();
     }
 
     private void resetDurability(Player player) {
@@ -253,9 +258,9 @@ public class WarsGameListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
+        User user = plugin.getUser(event.getPlayer());
 
-        if (!playerInfo.isInGame()) {
+        if (!user.isInGame()) {
             event.setCancelled(true);
             return;
         }
@@ -263,55 +268,55 @@ public class WarsGameListener implements Listener {
         resetDurability(event.getPlayer());
 
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getClickedBlock().getType() != Material.OBSIDIAN) {
-            PlayerClassHandler classHandler = plugin.getPlayerClassHandler(playerInfo.getPlayerClass());
+            PlayerClassHandler classHandler = plugin.getPlayerClassHandler(user.getPlayerClass());
 
-            classHandler.onInteractWorld(event);
+            classHandler.onInteractWorld(new UserInteractEvent(user, event));
             return;
         }
 
-        BuildingInfo buildingInfo = plugin.getBuildingInfo(event.getClickedBlock().getLocation());
-        if (buildingInfo == null) {
+        Building building = plugin.getBuildingInfo(event.getClickedBlock().getLocation());
+        if (building == null) {
             plugin.getLogger().warning("The player destroyed an obsidian block, but it wasn't a building. Odd");
             plugin.getLogger().warning("Obsidian location: " + event.getClickedBlock().getLocation());
-            playerInfo.message(plugin.getLocale("obsidian-not-building"));
+            user.message(plugin.getLocale("obsidian-not-building"));
             return;
         }
 
-        if (playerInfo.getTeamColor() != buildingInfo.getTeamColor()) {
-            playerInfo.message(plugin.getLocale("building-not-yours"));
+        if (user.getTeamColor() != building.getTeamColor()) {
+            user.message(plugin.getLocale("building-not-yours"));
             return;
         }
 
-        if (!buildingInfo.isFinished()) {
-            playerInfo.message(plugin.getLocale("building-not-finished"));
+        if (!building.isFinished()) {
+            user.message(plugin.getLocale("building-not-finished"));
             return;
         }
 
         event.setCancelled(true);
 
-        playerInfo.setShopBlock(buildingInfo.getCenterBlock());
+        user.setShopBlock(building.getCenterBlock());
 
-        TeamInfo teamInfo = plugin.getTeamInfo(playerInfo.getTeamColor());
+        Team team = plugin.getTeam(user.getTeamColor());
 
         InventoryHandler inventoryHandler = plugin.getBuildingInventoryHandler();
         List<ItemStack> contents = new ArrayList<>();
 
-        if (inventoryHandler != null) inventoryHandler.addInventoryItems(contents, buildingInfo, playerInfo, teamInfo);
+        if (inventoryHandler != null) inventoryHandler.addInventoryItems(contents, building, user, team);
 
-        PlayerClassHandler classHandler = plugin.getPlayerClassHandler(playerInfo.getPlayerClass());
-        classHandler.addInventoryItems(contents, buildingInfo, playerInfo, teamInfo);
+        PlayerClassHandler classHandler = plugin.getPlayerClassHandler(user.getPlayerClass());
+        classHandler.addInventoryItems(contents, building, user, team);
 
         int index = 0;
         int slots = 9 * ((contents.size() + 9) / 9);
 
-        Inventory shopInv = Bukkit.createInventory(event.getPlayer(), slots, buildingInfo.getBuildingName());
+        Inventory shopInv = Bukkit.createInventory(event.getPlayer(), slots, building.getBuildingName());
 
         for (ItemStack item : contents) {
             shopInv.setItem(index++, item);
         }
 
         event.getPlayer().openInventory(shopInv);
-        playerInfo.setShopInventory(shopInv);
+        user.setShopInventory(shopInv);
     }
 
     @EventHandler
@@ -348,9 +353,9 @@ public class WarsGameListener implements Listener {
                 List<MetadataValue> values = event.getDamager().getMetadata("striker");
                 if(values == null || values.isEmpty()) return null;
 
-                PlayerInfo playerInfo = plugin.getPlayerInfo((UUID) values.get(0).value());
-                if(playerInfo == null) return null;
-                return playerInfo.getPlayer();
+                User user = plugin.getUser((UUID) values.get(0).value());
+                if(user == null) return null;
+                return user.getPlayer();
             } else return null;
         } else {
             return (Player) event.getDamager();
@@ -362,7 +367,7 @@ public class WarsGameListener implements Listener {
         Player damager = getDamager(event);
         if(damager == null) return;
 
-        PlayerInfo damagerInfo = plugin.getPlayerInfo(damager);
+        User damagerInfo = plugin.getUser(damager);
 
         if (!damagerInfo.isInGame()) {
             event.setCancelled(true);
@@ -375,7 +380,7 @@ public class WarsGameListener implements Listener {
 
         Player target = (Player) event.getEntity();
 
-        if (damagerInfo.getTeamColor() == plugin.getPlayerInfo(target).getTeamColor()) {
+        if (damagerInfo.getTeamColor() == plugin.getUser(target).getTeamColor()) {
             event.setCancelled(true);
             return;
         }
@@ -388,7 +393,7 @@ public class WarsGameListener implements Listener {
 
     public void playerDeath(Player died, Player killer) {
         if (plugin.isInAftermath()) return;
-        PlayerInfo diedInfo = plugin.getPlayerInfo(died);
+        User diedInfo = plugin.getUser(died);
 
         if (!diedInfo.isInGame()) {
             died.setMaxHealth(plugin.getMaxHealth());
@@ -398,7 +403,7 @@ public class WarsGameListener implements Listener {
             return;
         }
 
-        PlayerInfo killerInfo = killer == null ? null : plugin.getPlayerInfo(killer);
+        User killerInfo = killer == null ? null : plugin.getUser(killer);
         if (killerInfo != null) {
             plugin.messageAll(ChatColor.GOLD + diedInfo.getFormattedName() + ChatColor.GOLD +
                     " was killed by " + killerInfo.getFormattedName());
@@ -406,7 +411,7 @@ public class WarsGameListener implements Listener {
             plugin.messageAll(ChatColor.GOLD + diedInfo.getFormattedName() + ChatColor.GOLD + " died!");
         }
 
-        TeamInfo diedTeam = plugin.getTeamInfo(diedInfo.getTeamColor());
+        Team diedTeam = plugin.getTeam(diedInfo.getTeamColor());
         boolean respawn =
                 !plugin.isInShowdown() && plugin.getRandom().nextFloat() < (diedTeam.getRespawnChance() / 100f);
 
@@ -430,7 +435,7 @@ public class WarsGameListener implements Listener {
         }
     }
 
-    public void teamPlayerDied(PlayerInfo diedInfo, TeamInfo diedTeam) {
+    public void teamPlayerDied(User diedInfo, Team diedTeam) {
         plugin.setPlayerTeam(diedInfo.getPlayer(), null);
 
         plugin.messageAll(ChatColor.GOLD + "The " + diedTeam.getTeamColor().name + ChatColor.GOLD +
@@ -444,7 +449,7 @@ public class WarsGameListener implements Listener {
 
         plugin.checkVictory(true);
 
-        for(PlayerInfo info : plugin.getPlayers()){
+        for(User info : plugin.getPlayers()){
             if(info.isInGame() && info.getTeamColor() != null) return;
 
             plugin.setupSpectatorInventory(info.getPlayer());
@@ -457,7 +462,7 @@ public class WarsGameListener implements Listener {
 
         if (!(projectileSource instanceof Player)) return;
         Player shooter = (Player) projectileSource;
-        PlayerInfo shooterInfo = plugin.getPlayerInfo(shooter);
+        User shooterInfo = plugin.getUser(shooter);
 
         if (!shooterInfo.isInGame() || shooterInfo.getTeamColor() == null) {
             event.setCancelled(true);
@@ -471,10 +476,10 @@ public class WarsGameListener implements Listener {
             if (!(ent instanceof Player)) continue;
 
             Player player = (Player) ent;
-            PlayerInfo playerInfo = plugin.getPlayerInfo(player);
+            User user = plugin.getUser(player);
 
-            if (!playerInfo.isInGame() || playerInfo.getTeamColor() == null ||
-                    (playerInfo.getTeamColor() == shooterInfo.getTeamColor()) != good) {
+            if (!user.isInGame() || user.getTeamColor() == null ||
+                    (user.getTeamColor() == shooterInfo.getTeamColor()) != good) {
                 event.setIntensity(ent, 0);
             }
         }
@@ -494,8 +499,8 @@ public class WarsGameListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        PlayerInfo diedInfo = plugin.getPlayerInfo(event.getPlayer());
-        TeamInfo diedTeam = plugin.getTeamInfo(diedInfo.getTeamColor());
+        User diedInfo = plugin.getUser(event.getPlayer());
+        Team diedTeam = plugin.getTeam(diedInfo.getTeamColor());
         if (diedTeam == null) return;
 
         teamPlayerDied(diedInfo, diedTeam);
@@ -510,8 +515,8 @@ public class WarsGameListener implements Listener {
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getSlotType().equals(InventoryType.SlotType.ARMOR)) event.setCancelled(true);
 
-        PlayerInfo playerInfo = plugin.getPlayerInfo((Player) event.getWhoClicked());
-        if(!playerInfo.isInGame() || playerInfo.getTeamColor() == null){
+        User user = plugin.getUser((Player) event.getWhoClicked());
+        if(!user.isInGame() || user.getTeamColor() == null){
             plugin.handleSpectatorInventory(event);
             return;
         }
@@ -524,23 +529,23 @@ public class WarsGameListener implements Listener {
             if (event.getCurrentItem() == null) return;
 
 
-            playerInfo.setShopInventory(event.getInventory());
+            user.setShopInventory(event.getInventory());
 
-            TeamInfo teamInfo = plugin.getTeamInfo(playerInfo.getTeamColor());
+            Team team = plugin.getTeam(user.getTeamColor());
 
-            PlayerClassHandler classHandler = plugin.getPlayerClassHandler(playerInfo.getPlayerClass());
+            PlayerClassHandler classHandler = plugin.getPlayerClassHandler(user.getPlayerClass());
 
-            BuildingInfo buildingInfo = plugin.getBuildingInfo(playerInfo.getShopBlock());
-            if (buildingInfo == null) return;
+            Building building = plugin.getBuildingInfo(user.getShopBlock());
+            if (building == null) return;
 
-            boolean done = classHandler.onInventoryClick(event.getCurrentItem(), buildingInfo, playerInfo, teamInfo);
+            boolean done = classHandler.onInventoryClick(event.getCurrentItem(), building, user, team);
 
             if (done) return;
 
             InventoryHandler handler = plugin.getBuildingInventoryHandler();
             if (handler == null) return;
 
-            handler.onInventoryClick(event.getCurrentItem(), buildingInfo, playerInfo, teamInfo);
+            handler.onInventoryClick(event.getCurrentItem(), building, user, team);
         }
     }
 
@@ -550,13 +555,13 @@ public class WarsGameListener implements Listener {
     public void onInventoryClose(InventoryCloseEvent event) {
         Player player = (Player) event.getPlayer();
 
-        PlayerInfo playerInfo = plugin.getPlayerInfo(player);
+        User user = plugin.getUser(player);
 
-        if (playerInfo.getShopInventory() == null || playerInfo.getShopInventory().getTitle() == null) return;
+        if (user.getShopInventory() == null || user.getShopInventory().getTitle() == null) return;
 
-        if (playerInfo.getShopInventory().getTitle().equals(event.getInventory().getTitle())) {
-            playerInfo.setShopInventory(null);
-            playerInfo.setShopBlock(null);
+        if (user.getShopInventory().getTitle().equals(event.getInventory().getTitle())) {
+            user.setShopInventory(null);
+            user.setShopBlock(null);
         }
     }
 

@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.mockito.Mockito.*;
@@ -15,11 +16,13 @@ import static org.junit.Assert.*;
  *
  * Tests the PlayerInfo class
  */
-public class PlayerInfoTest {
+public class UserTest {
 
-    @Before
-    public void setUp() throws Exception {
-        Bukkit.setServer(mock(Server.class, RETURNS_DEEP_STUBS));
+    @BeforeClass
+    public static void setUp() throws Exception {
+        try{
+            Bukkit.setServer(mock(Server.class, RETURNS_DEEP_STUBS));
+        } catch (UnsupportedOperationException ignored){}
 
     }
 
@@ -27,9 +30,9 @@ public class PlayerInfoTest {
     public void testClearArmor() throws Exception {
         Player player = mock(Player.class, RETURNS_DEEP_STUBS);
 
-        PlayerInfo playerInfo = new PlayerInfo(null, player);
+        User user = new User(null, player);
 
-        playerInfo.clearArmor();
+        user.clearArmor();
 
         verify(player.getInventory(), times(1)).setHelmet(null);
         verify(player.getInventory(), times(1)).setChestplate(null);
@@ -42,18 +45,18 @@ public class PlayerInfoTest {
         WarsPlugin plugin = mock(WarsPlugin.class, RETURNS_DEEP_STUBS);
         Player player = mock(Player.class, RETURNS_DEEP_STUBS);
 
-        PlayerInfo playerInfo = new PlayerInfo(plugin, player);
+        User user = new User(plugin, player);
 
-        playerInfo.setInGame(true);
-        assertTrue(playerInfo.isInGame());
+        user.setInGame(true);
+        assertTrue(user.isInGame());
 
-        playerInfo.addPlayerCash(3000);
-        playerInfo.setUpgradeLevel("test", 3);
+        user.addPlayerCash(3000);
+        user.setUpgradeLevel("test", 3);
 
-        playerInfo.setInGame(false);
+        user.setInGame(false);
 
-        assertEquals(playerInfo.getPlayerCash(), 0);
-        assertEquals(playerInfo.getUpgradeLevel("test"), 0);
-        assertFalse(playerInfo.isInGame());
+        assertEquals(user.getPlayerCash(), 0);
+        assertEquals(user.getUpgradeLevel("test"), 0);
+        assertFalse(user.isInGame());
     }
 }

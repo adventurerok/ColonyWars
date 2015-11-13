@@ -1,7 +1,9 @@
 package com.ithinkrok.mccw.playerclass;
 
-import com.ithinkrok.mccw.data.PlayerInfo;
-import com.ithinkrok.mccw.data.TeamInfo;
+import com.ithinkrok.mccw.data.Team;
+import com.ithinkrok.mccw.data.User;
+import com.ithinkrok.mccw.event.UserInteractEvent;
+import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.strings.Buildings;
@@ -9,7 +11,6 @@ import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -36,33 +37,35 @@ public class PeasantClass extends BuyableInventory implements PlayerClassHandler
     }
 
     @Override
-    public void onBuildingBuilt(String buildingName, PlayerInfo playerInfo, TeamInfo teamInfo) {
+    public void onBuildingBuilt(String buildingName, User user, Team team) {
         if(!Buildings.LUMBERMILL.equals(buildingName)) return;
 
-        playerInfo.getPlayer().getInventory().addItem(new ItemStack(Material.WOOD_SWORD));
+        user.getPlayer().getInventory().addItem(new ItemStack(Material.WOOD_SWORD));
     }
 
     @Override
-    public void onGameBegin(PlayerInfo playerInfo, TeamInfo teamInfo) {
-        playerInfo.getPlayer().getInventory().addItem(InventoryUtils.createItemWithEnchantments(Material.IRON_AXE,
+    public void onGameBegin(User user, Team team) {
+        user.getPlayer().getInventory().addItem(InventoryUtils.createItemWithEnchantments(Material.IRON_AXE,
                 1, 0, "Peasant Axe", "Better than a usual axe!", Enchantment.DIG_SPEED, 2));
     }
 
     @Override
-    public void onInteractWorld(PlayerInteractEvent event) {
+    public void onInteractWorld(UserInteractEvent event) {
 
     }
 
     @Override
-    public void onPlayerUpgrade(PlayerInfo playerInfo, String upgradeName, int upgradeLevel) {
-        switch (upgradeName) {
+    public void onPlayerUpgrade(UserUpgradeEvent event) {
+        User user = event.getUser();
+
+        switch (event.getUpgradeName()) {
             case "sharpness":
             case "knockback":
                 ItemStack sword = new ItemStack(Material.WOOD_SWORD);
-                InventoryUtils.enchantItem(sword, Enchantment.DAMAGE_ALL, playerInfo.getUpgradeLevel("sharpness"),
-                        Enchantment.KNOCKBACK, playerInfo.getUpgradeLevel("knockback"));
+                InventoryUtils.enchantItem(sword, Enchantment.DAMAGE_ALL, user.getUpgradeLevel("sharpness"),
+                        Enchantment.KNOCKBACK, user.getUpgradeLevel("knockback"));
 
-                InventoryUtils.replaceItem(playerInfo.getPlayer().getInventory(), sword);
+                InventoryUtils.replaceItem(event.getUserInventory(), sword);
 
                 break;
         }

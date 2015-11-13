@@ -2,8 +2,10 @@ package com.ithinkrok.mccw.playerclass;
 
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.ithinkrok.mccw.WarsPlugin;
-import com.ithinkrok.mccw.data.PlayerInfo;
-import com.ithinkrok.mccw.data.TeamInfo;
+import com.ithinkrok.mccw.data.Team;
+import com.ithinkrok.mccw.data.User;
+import com.ithinkrok.mccw.event.UserInteractEvent;
+import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.strings.Buildings;
@@ -14,7 +16,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -41,10 +42,10 @@ public class CloakerClass extends BuyableInventory implements PlayerClassHandler
     }
 
     @Override
-    public void onBuildingBuilt(String buildingName, PlayerInfo playerInfo, TeamInfo teamInfo) {
+    public void onBuildingBuilt(String buildingName, User user, Team team) {
         switch (buildingName) {
             case Buildings.MAGETOWER:
-                playerInfo.getPlayer().getInventory().addItem(InventoryUtils
+                user.getPlayer().getInventory().addItem(InventoryUtils
                         .createItemWithNameAndLore(Material.IRON_LEGGINGS, 1, 0, "Cloak", "Cooldown: 25 seconds",
                                 "Invisibility: 10 seconds"));
                 break;
@@ -52,34 +53,34 @@ public class CloakerClass extends BuyableInventory implements PlayerClassHandler
     }
 
     @Override
-    public void onGameBegin(PlayerInfo playerInfo, TeamInfo teamInfo) {
-        playerInfo.getPlayer()
+    public void onGameBegin(User user, Team team) {
+        user.getPlayer()
                 .addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0, false, false), false);
-        playerInfo.getPlayer()
+        user.getPlayer()
                 .addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 3, false, false), false);
     }
 
     @Override
-    public void onInteractWorld(PlayerInteractEvent event) {
+    public void onInteractWorld(UserInteractEvent event) {
         if(event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if (event.getItem() == null || event.getItem().getType() != Material.IRON_LEGGINGS) return;
 
-        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
+        User user = event.getUserClicked();
 
-        if (playerInfo.isCoolingDown("cloaking")) {
-            playerInfo.message(ChatColor.RED + "You are already cloaked!");
+        if (user.isCoolingDown("cloaking")) {
+            user.message(ChatColor.RED + "You are already cloaked!");
             return;
         }
 
-        if (playerInfo.isCoolingDown("cloak")) {
-            playerInfo.message(ChatColor.RED + "Please wait for the cloak to cool down!");
+        if (user.isCoolingDown("cloak")) {
+            user.message(ChatColor.RED + "Please wait for the cloak to cool down!");
             return;
         }
 
         int cloak = 10;
         int cooldown = 25;
 
-        switch (playerInfo.getUpgradeLevel("cloak")) {
+        switch (user.getUpgradeLevel("cloak")) {
             case 1:
                 cloak = 15;
                 cooldown = 35;
@@ -90,7 +91,7 @@ public class CloakerClass extends BuyableInventory implements PlayerClassHandler
                 break;
         }
 
-        playerInfo.startCoolDown("cloaking", cloak, null);
+        user.startCoolDown("cloaking", cloak, null);
 
         plugin.cloak(event.getPlayer());
 
@@ -99,16 +100,16 @@ public class CloakerClass extends BuyableInventory implements PlayerClassHandler
         final int finalCooldown = cooldown;
 
         final int swirlTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
-            Location loc = playerInfo.getPlayer().getLocation();
+            Location loc = user.getPlayer().getLocation();
 
-            plugin.sendPlayersParticle(playerInfo.getPlayer(), loc, EnumWrappers.Particle.SPELL, 1);
+            plugin.sendPlayersParticle(user.getPlayer(), loc, EnumWrappers.Particle.SPELL, 1);
         }, 20, 20);
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            if(playerInfo.isInGame()) plugin.decloak(event.getPlayer());
+            if(user.isInGame()) plugin.decloak(event.getPlayer());
             Bukkit.getScheduler().cancelTask(swirlTask);
-            playerInfo.message(ChatColor.RED + "Your cloak has run out!");
-            playerInfo.startCoolDown("cloak", finalCooldown, "Your cloak has cooled down!");
+            user.message(ChatColor.RED + "Your cloak has run out!");
+            user.startCoolDown("cloak", finalCooldown, "Your cloak has cooled down!");
             event.getPlayer()
                     .addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0, false, false),
                             true);
@@ -116,12 +117,12 @@ public class CloakerClass extends BuyableInventory implements PlayerClassHandler
     }
 
     @Override
-    public void onPlayerUpgrade(PlayerInfo playerInfo, String upgradeName, int upgradeLevel) {
-        switch (upgradeName) {
+    public void onPlayerUpgrade(UserUpgradeEvent event) {
+        switch (event.getUpgradeName()) {
             case "cloak":
                 int cooldown = 35;
                 int invisibility = 15;
-                if (upgradeLevel == 2) {
+                if (event.getUpgradeLevel() == 2) {
                     cooldown = 45;
                     invisibility = 25;
                 }
@@ -129,7 +130,7 @@ public class CloakerClass extends BuyableInventory implements PlayerClassHandler
                 ItemStack cloak = InventoryUtils.createItemWithNameAndLore(Material.IRON_LEGGINGS, 1, 0, "Cloak",
                         "Cooldown: " + cooldown + " seconds", "Invisibility: " + invisibility + " seconds");
 
-                InventoryUtils.replaceItem(playerInfo.getPlayer().getInventory(), cloak);
+                InventoryUtils.replaceItem(event.getUserInventory(), cloak);
                 break;
         }
     }

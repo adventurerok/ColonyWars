@@ -1,7 +1,6 @@
 package com.ithinkrok.mccw;
 
-import com.ithinkrok.mccw.data.PlayerInfo;
-import com.ithinkrok.mccw.data.TeamInfo;
+import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.util.InventoryUtils;
@@ -122,47 +121,47 @@ public class WarsLobbyListener implements Listener {
 
         String item = event.getCurrentItem().getItemMeta().getDisplayName();
 
-        PlayerInfo playerInfo = plugin.getPlayerInfo((Player) event.getWhoClicked());
+        User user = plugin.getUser((Player) event.getWhoClicked());
 
         try {
 
             if (plugin.getLocale("team-chooser").equals(event.getInventory().getTitle())) {
                 TeamColor teamColor = TeamColor.fromWoolColor(event.getCurrentItem().getDurability());
                 if(teamColor == null){
-                    playerInfo.message("Null team. This is impossible error");
+                    user.message("Null team. This is impossible error");
                     return;
                 }
 
-                if (teamColor == playerInfo.getTeamColor()) {
-                    playerInfo.message(plugin.getLocale("team-already-member", teamColor.name));
+                if (teamColor == user.getTeamColor()) {
+                    user.message(plugin.getLocale("team-already-member", teamColor.name));
                     return;
                 }
 
                 int playerCount = plugin.getPlayerCount();
-                int teamSize = plugin.getTeamInfo(teamColor).getPlayerCount();
+                int teamSize = plugin.getTeam(teamColor).getPlayerCount();
 
                 if (teamSize >= (playerCount + 3) / 4) {
-                    playerInfo.message(plugin.getLocale("team-full", teamColor.name));
+                    user.message(plugin.getLocale("team-full", teamColor.name));
                     return;
                 }
 
-                plugin.setPlayerTeam(playerInfo.getPlayer(), teamColor);
+                plugin.setPlayerTeam(user.getPlayer(), teamColor);
 
-                playerInfo.message(plugin.getLocale("team-joined", teamColor.name));
+                user.message(plugin.getLocale("team-joined", teamColor.name));
 
-                playerInfo.getPlayer().closeInventory();
+                user.getPlayer().closeInventory();
             } else if (plugin.getLocale("class-chooser").equals(event.getInventory().getTitle())) {
                 PlayerClass playerClass = PlayerClass.fromChooserMaterial(event.getCurrentItem().getType());
                 if(playerClass == null){
-                    playerInfo.message("Null class. This is impossible error");
+                    user.message("Null class. This is impossible error");
                     return;
                 }
 
-                playerInfo.setPlayerClass(playerClass);
+                user.setPlayerClass(playerClass);
 
-                playerInfo.message(plugin.getLocale("class-selected", playerClass.name));
+                user.message(plugin.getLocale("class-selected", playerClass.name));
 
-                playerInfo.getPlayer().closeInventory();
+                user.getPlayer().closeInventory();
             }
         } catch (IllegalArgumentException ignored) {
         }

@@ -3,6 +3,7 @@ package com.ithinkrok.mccw.data;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import org.bukkit.*;
@@ -25,7 +26,7 @@ import java.util.Map;
  * <p>
  * Stores the player's info while they are online
  */
-public class PlayerInfo {
+public class User {
 
     private Player player;
     private TeamColor teamColor;
@@ -44,7 +45,7 @@ public class PlayerInfo {
 
     private boolean inGame = false;
 
-    public PlayerInfo(WarsPlugin plugin, Player player) {
+    public User(WarsPlugin plugin, Player player) {
         this.plugin = plugin;
         this.player = player;
     }
@@ -97,12 +98,12 @@ public class PlayerInfo {
 
             mainObjective.getScore(ChatColor.YELLOW + "Balance:").setScore(getPlayerCash());
 
-            TeamInfo teamInfo = plugin.getTeamInfo(teamColor);
-            mainObjective.getScore(ChatColor.YELLOW + "Team Balance:").setScore(teamInfo.getTeamCash());
+            Team team = plugin.getTeam(teamColor);
+            mainObjective.getScore(ChatColor.YELLOW + "Team Balance:").setScore(team.getTeamCash());
 
-            mainObjective.getScore(ChatColor.GOLD + "Building Now:").setScore(teamInfo.getTotalBuildingNowCount());
+            mainObjective.getScore(ChatColor.GOLD + "Building Now:").setScore(team.getTotalBuildingNowCount());
 
-            HashMap<String, Integer> buildingNow = teamInfo.getBuildingNowCounts();
+            HashMap<String, Integer> buildingNow = team.getBuildingNowCounts();
 
             for (String s : oldBuildingNows) {
                 if (buildingNow.containsKey(s)) continue;
@@ -116,8 +117,8 @@ public class PlayerInfo {
                 oldBuildingNows.add(entry.getKey());
             }
 
-            if (teamInfo.getRespawnChance() > 0) {
-                mainObjective.getScore(ChatColor.AQUA + "Revival Rate:").setScore(teamInfo.getRespawnChance());
+            if (team.getRespawnChance() > 0) {
+                mainObjective.getScore(ChatColor.AQUA + "Revival Rate:").setScore(team.getRespawnChance());
             }
 
         } else {
@@ -150,7 +151,7 @@ public class PlayerInfo {
 
         upgradeLevels.put(upgrade, level);
 
-        plugin.onPlayerUpgrade(this, upgrade, level);
+        plugin.onPlayerUpgrade(new UserUpgradeEvent(this, upgrade, level));
     }
 
     public int getUpgradeLevel(String upgrade) {
@@ -208,21 +209,21 @@ public class PlayerInfo {
     public void recalculateInventory() {
         if (shopInventory == null || shopBlock == null) return;
 
-        BuildingInfo buildingInfo = plugin.getBuildingInfo(shopBlock);
-        if (buildingInfo == null || shopBlock.getBlock().getType() != Material.OBSIDIAN) {
+        Building building = plugin.getBuildingInfo(shopBlock);
+        if (building == null || shopBlock.getBlock().getType() != Material.OBSIDIAN) {
             player.closeInventory();
             return;
         }
 
-        TeamInfo teamInfo = plugin.getTeamInfo(getTeamColor());
+        Team team = plugin.getTeam(getTeamColor());
 
         InventoryHandler inventoryHandler = plugin.getBuildingInventoryHandler();
         List<ItemStack> contents = new ArrayList<>();
 
-        if (inventoryHandler != null) inventoryHandler.addInventoryItems(contents, buildingInfo, this, teamInfo);
+        if (inventoryHandler != null) inventoryHandler.addInventoryItems(contents, building, this, team);
 
         PlayerClassHandler classHandler = plugin.getPlayerClassHandler(this.getPlayerClass());
-        classHandler.addInventoryItems(contents, buildingInfo, this, teamInfo);
+        classHandler.addInventoryItems(contents, building, this, team);
 
         int index = 0;
 

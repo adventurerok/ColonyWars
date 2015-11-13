@@ -1,5 +1,6 @@
 package com.ithinkrok.mccw.inventory;
 
+import com.ithinkrok.mccw.event.ItemPurchaseEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
@@ -34,12 +35,12 @@ public class ItemBuyable extends Buyable {
     public void onPurchase(ItemPurchaseEvent event) {
         event.getPlayerInventory().addItem(purchase.clone());
 
-        int newLevel = event.getPlayerInfo().getUpgradeLevel(upgradeToken) + 1;
-        event.getPlayerInfo().setUpgradeLevel(upgradeToken, newLevel);
+        int newLevel = event.getUser().getUpgradeLevel(upgradeToken) + 1;
+        event.getUser().setUpgradeLevel(upgradeToken, newLevel);
     }
 
     @Override
     public boolean canBuy(ItemPurchaseEvent event) {
-        return allowMultiple || event.getPlayerInfo().getUpgradeLevel(upgradeToken) == 0;
+        return allowMultiple || event.getUser().getUpgradeLevel(upgradeToken) == 0;
     }
 }

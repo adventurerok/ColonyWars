@@ -1,8 +1,10 @@
 package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.WarsPlugin;
-import com.ithinkrok.mccw.data.PlayerInfo;
-import com.ithinkrok.mccw.data.TeamInfo;
+import com.ithinkrok.mccw.data.Team;
+import com.ithinkrok.mccw.data.User;
+import com.ithinkrok.mccw.event.UserInteractEvent;
+import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
 import com.ithinkrok.mccw.inventory.ItemBuyable;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
@@ -15,7 +17,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.LightningStrike;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -63,10 +64,10 @@ public class MageClass extends BuyableInventory implements PlayerClassHandler {
 
 
     @Override
-    public void onBuildingBuilt(String buildingName, PlayerInfo playerInfo, TeamInfo teamInfo) {
+    public void onBuildingBuilt(String buildingName, User user, Team team) {
         if (!Buildings.MAGETOWER.equals(buildingName)) return;
 
-        PlayerInventory inv = playerInfo.getPlayer().getInventory();
+        PlayerInventory inv = user.getPlayer().getInventory();
 
         inv.addItem(InventoryUtils
                 .createItemWithNameAndLore(Material.DIAMOND_LEGGINGS, 1, 0, "Lightning Wand", "Cooldown: 30 seconds"));
@@ -77,27 +78,27 @@ public class MageClass extends BuyableInventory implements PlayerClassHandler {
     }
 
     @Override
-    public void onGameBegin(PlayerInfo playerInfo, TeamInfo teamInfo) {
+    public void onGameBegin(User user, Team team) {
 
     }
 
     @Override
-    public void onInteractWorld(PlayerInteractEvent event) {
+    public void onInteractWorld(UserInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         ItemStack item = event.getItem();
         if (item == null) return;
 
-        PlayerInfo playerInfo = plugin.getPlayerInfo(event.getPlayer());
+        User user = event.getUserClicked();
 
         switch (item.getType()) {
             case DIAMOND_CHESTPLATE:
-                if (!playerInfo.startCoolDown("ender", 45 - 15 * playerInfo.getUpgradeLevel("ender"),
+                if (!user.startCoolDown("ender", 45 - 15 * user.getUpgradeLevel("ender"),
                         plugin.getLocale("ender-wand-cooldown"))) break;
                 event.getPlayer().launchProjectile(EnderPearl.class);
                 event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.SHOOT_ARROW, 1.0f, 1.0f);
                 break;
             case DIAMOND_LEGGINGS:
-                if (!playerInfo.startCoolDown("lightning", 45 - 15 * playerInfo.getUpgradeLevel("lightning"),
+                if (!user.startCoolDown("lightning", 45 - 15 * user.getUpgradeLevel("lightning"),
                         plugin.getLocale("lightning-wand-cooldown"))) break;
                 Block target = event.getPlayer().getTargetBlock(SEE_THROUGH, 200);
 
@@ -111,21 +112,21 @@ public class MageClass extends BuyableInventory implements PlayerClassHandler {
     }
 
     @Override
-    public void onPlayerUpgrade(PlayerInfo playerInfo, String upgradeName, int upgradeLevel) {
-        switch (upgradeName) {
+    public void onPlayerUpgrade(UserUpgradeEvent event) {
+        switch (event.getUpgradeName()) {
             case "ender":
-                int enderCooldown = 45 - 15 * upgradeLevel;
+                int enderCooldown = 45 - 15 * event.getUpgradeLevel();
                 ItemStack enderWand = InventoryUtils
                         .createItemWithNameAndLore(Material.DIAMOND_CHESTPLATE, 1, 0, "Ender Wand",
                                 "Cooldown: " + enderCooldown + " seconds");
-                InventoryUtils.replaceItem(playerInfo.getPlayer().getInventory(), enderWand);
+                InventoryUtils.replaceItem(event.getUserInventory(), enderWand);
                 break;
             case "lightning":
-                int lightningCooldown = 30 - 10 * upgradeLevel;
+                int lightningCooldown = 30 - 10 * event.getUpgradeLevel();
                 ItemStack lightningWand = InventoryUtils
                         .createItemWithNameAndLore(Material.DIAMOND_LEGGINGS, 1, 0, "Lightning Wand",
                                 "Cooldown: " + lightningCooldown + " seconds");
-                InventoryUtils.replaceItem(playerInfo.getPlayer().getInventory(), lightningWand);
+                InventoryUtils.replaceItem(event.getUserInventory(), lightningWand);
                 break;
         }
     }

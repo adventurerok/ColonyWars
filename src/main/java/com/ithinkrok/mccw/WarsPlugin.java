@@ -5,13 +5,14 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
-import com.ithinkrok.mccw.data.BuildingInfo;
-import com.ithinkrok.mccw.data.PlayerInfo;
-import com.ithinkrok.mccw.data.SchematicData;
-import com.ithinkrok.mccw.data.TeamInfo;
+import com.ithinkrok.mccw.data.Building;
+import com.ithinkrok.mccw.data.Schematic;
+import com.ithinkrok.mccw.data.Team;
+import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.enumeration.CountdownType;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.inventory.OmniInventory;
 import com.ithinkrok.mccw.playerclass.*;
@@ -56,11 +57,11 @@ public class WarsPlugin extends JavaPlugin {
     public static final String CHAT_PREFIX =
             ChatColor.GRAY + "[" + ChatColor.DARK_AQUA + "ColonyWars" + ChatColor.GRAY + "] " + ChatColor.YELLOW;
 
-    private ConcurrentHashMap<UUID, PlayerInfo> playerInfoHashMap = new ConcurrentHashMap<>();
-    private EnumMap<TeamColor, TeamInfo> teamInfoEnumMap = new EnumMap<>(TeamColor.class);
-    private HashMap<String, SchematicData> schematicDataHashMap = new HashMap<>();
-    private List<BuildingInfo> buildings = new ArrayList<>();
-    private HashMap<Location, BuildingInfo> buildingCentres = new HashMap<>();
+    private ConcurrentHashMap<UUID, User> playerInfoHashMap = new ConcurrentHashMap<>();
+    private EnumMap<TeamColor, Team> teamInfoEnumMap = new EnumMap<>(TeamColor.class);
+    private HashMap<String, Schematic> schematicDataHashMap = new HashMap<>();
+    private List<Building> buildings = new ArrayList<>();
+    private HashMap<Location, Building> buildingCentres = new HashMap<>();
 
     /**
      * Is there a game currently in progress
@@ -147,23 +148,23 @@ public class WarsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(currentListener, this);
 
         for (TeamColor c : TeamColor.values()) {
-            teamInfoEnumMap.put(c, new TeamInfo(this, c));
+            teamInfoEnumMap.put(c, new Team(this, c));
         }
 
-        schematicDataHashMap.put(Buildings.BASE, new SchematicData(Buildings.BASE, getConfig()));
-        schematicDataHashMap.put(Buildings.FARM, new SchematicData(Buildings.FARM, getConfig()));
-        schematicDataHashMap.put(Buildings.BLACKSMITH, new SchematicData(Buildings.BLACKSMITH, getConfig()));
-        schematicDataHashMap.put(Buildings.MAGETOWER, new SchematicData(Buildings.MAGETOWER, getConfig()));
-        schematicDataHashMap.put(Buildings.LUMBERMILL, new SchematicData(Buildings.LUMBERMILL, getConfig()));
-        schematicDataHashMap.put(Buildings.CHURCH, new SchematicData(Buildings.CHURCH, getConfig()));
-        schematicDataHashMap.put(Buildings.CATHEDRAL, new SchematicData(Buildings.CATHEDRAL, getConfig()));
-        schematicDataHashMap.put(Buildings.GREENHOUSE, new SchematicData(Buildings.GREENHOUSE, getConfig()));
-        schematicDataHashMap.put(Buildings.SCOUTTOWER, new SchematicData(Buildings.SCOUTTOWER, getConfig()));
-        schematicDataHashMap.put(Buildings.CANNONTOWER, new SchematicData(Buildings.CANNONTOWER, getConfig()));
-        schematicDataHashMap.put(Buildings.WALL, new SchematicData(Buildings.WALL, getConfig()));
-        schematicDataHashMap.put(Buildings.LANDMINE, new SchematicData(Buildings.LANDMINE, getConfig()));
-        schematicDataHashMap.put(Buildings.WIRELESSBUFFER, new SchematicData(Buildings.WIRELESSBUFFER, getConfig()));
-        schematicDataHashMap.put(Buildings.TIMERBUFFER, new SchematicData(Buildings.TIMERBUFFER, getConfig()));
+        schematicDataHashMap.put(Buildings.BASE, new Schematic(Buildings.BASE, getConfig()));
+        schematicDataHashMap.put(Buildings.FARM, new Schematic(Buildings.FARM, getConfig()));
+        schematicDataHashMap.put(Buildings.BLACKSMITH, new Schematic(Buildings.BLACKSMITH, getConfig()));
+        schematicDataHashMap.put(Buildings.MAGETOWER, new Schematic(Buildings.MAGETOWER, getConfig()));
+        schematicDataHashMap.put(Buildings.LUMBERMILL, new Schematic(Buildings.LUMBERMILL, getConfig()));
+        schematicDataHashMap.put(Buildings.CHURCH, new Schematic(Buildings.CHURCH, getConfig()));
+        schematicDataHashMap.put(Buildings.CATHEDRAL, new Schematic(Buildings.CATHEDRAL, getConfig()));
+        schematicDataHashMap.put(Buildings.GREENHOUSE, new Schematic(Buildings.GREENHOUSE, getConfig()));
+        schematicDataHashMap.put(Buildings.SCOUTTOWER, new Schematic(Buildings.SCOUTTOWER, getConfig()));
+        schematicDataHashMap.put(Buildings.CANNONTOWER, new Schematic(Buildings.CANNONTOWER, getConfig()));
+        schematicDataHashMap.put(Buildings.WALL, new Schematic(Buildings.WALL, getConfig()));
+        schematicDataHashMap.put(Buildings.LANDMINE, new Schematic(Buildings.LANDMINE, getConfig()));
+        schematicDataHashMap.put(Buildings.WIRELESSBUFFER, new Schematic(Buildings.WIRELESSBUFFER, getConfig()));
+        schematicDataHashMap.put(Buildings.TIMERBUFFER, new Schematic(Buildings.TIMERBUFFER, getConfig()));
 
         buildingInventoryHandler = new OmniInventory(this, getConfig());
 
@@ -195,9 +196,9 @@ public class WarsPlugin extends JavaPlugin {
     public void preEndGame(){
         buildingCentres.clear();
 
-        List<BuildingInfo> oldBuildings = new ArrayList<>(buildings);
+        List<Building> oldBuildings = new ArrayList<>(buildings);
 
-        for(BuildingInfo info : oldBuildings){
+        for(Building info : oldBuildings){
             info.clearHolograms();
             info.remove();
         }
@@ -206,21 +207,21 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public void endGame() {
-        for (PlayerInfo playerInfo : playerInfoHashMap.values()) {
-            playerJoinLobby(playerInfo.getPlayer());
+        for (User user : playerInfoHashMap.values()) {
+            playerJoinLobby(user.getPlayer());
         }
 
-        for (PlayerInfo playerInfo : playerInfoHashMap.values()) {
-            decloak(playerInfo.getPlayer());
+        for (User user : playerInfoHashMap.values()) {
+            decloak(user.getPlayer());
         }
 
         for (TeamColor c : TeamColor.values()) {
-            teamInfoEnumMap.put(c, new TeamInfo(this, c));
+            teamInfoEnumMap.put(c, new Team(this, c));
         }
 
         buildingCentres.clear();
 
-        buildings.forEach(BuildingInfo::clearHolograms);
+        buildings.forEach(Building::clearHolograms);
 
         buildings.clear();
 
@@ -246,8 +247,8 @@ public class WarsPlugin extends JavaPlugin {
         setInAftermath(false);
         setInShowdown(false);
 
-        for (PlayerInfo playerInfo : playerInfoHashMap.values()) {
-            playerJoinLobby(playerInfo.getPlayer());
+        for (User user : playerInfoHashMap.values()) {
+            playerJoinLobby(user.getPlayer());
         }
 
         startLobbyCountdown();
@@ -258,7 +259,7 @@ public class WarsPlugin extends JavaPlugin {
         inv.clear();
 
         int slot = 9;
-        for (PlayerInfo info : playerInfoHashMap.values()) {
+        for (User info : playerInfoHashMap.values()) {
             if (!info.isInGame() || info.getTeamColor() == null) continue;
 
             ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
@@ -289,7 +290,7 @@ public class WarsPlugin extends JavaPlugin {
 
         String owner = ((SkullMeta) clicked.getItemMeta()).getOwner();
 
-        for (PlayerInfo info : playerInfoHashMap.values()) {
+        for (User info : playerInfoHashMap.values()) {
             if (!info.getPlayer().getName().equals(owner)) continue;
 
             clicker.teleport(info.getPlayer().getLocation());
@@ -298,18 +299,18 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public void playerJoinLobby(Player player) {
-        PlayerInfo playerInfo = getPlayerInfo(player);
+        User user = getUser(player);
 
-        playerInfo.setInGame(false);
-        playerInfo.getPlayer().setGameMode(GameMode.ADVENTURE);
-        playerInfo.getPlayer().setMaxHealth(getMaxHealth());
-        playerInfo.getPlayer().setHealth(getMaxHealth());
-        playerInfo.getPlayer().setFoodLevel(20);
-        playerInfo.getPlayer().setSaturation(20);
-        playerInfo.getPlayer().setAllowFlight(false);
-        playerInfo.clearArmor();
+        user.setInGame(false);
+        user.getPlayer().setGameMode(GameMode.ADVENTURE);
+        user.getPlayer().setMaxHealth(getMaxHealth());
+        user.getPlayer().setHealth(getMaxHealth());
+        user.getPlayer().setFoodLevel(20);
+        user.getPlayer().setSaturation(20);
+        user.getPlayer().setAllowFlight(false);
+        user.clearArmor();
 
-        playerInfo.getPlayer().getActivePotionEffects().clear();
+        user.getPlayer().getActivePotionEffects().clear();
 
         removePotionEffects(player);
 
@@ -325,20 +326,20 @@ public class WarsPlugin extends JavaPlugin {
         inv.addItem(InventoryUtils.createItemWithNameAndLore(Material.WOOD_SWORD, 1, 0, getLocale("class-chooser"),
                 getLocale("class-chooser-desc")));
 
-        playerInfo.message(getLocale("choose-team-class"));
+        user.message(getLocale("choose-team-class"));
 
-        playerInfo.message(getLocale("map-info"));
+        user.message(getLocale("map-info"));
 
-        playerInfo.getPlayer().teleport(Bukkit.getWorld("world").getSpawnLocation());
+        user.getPlayer().teleport(Bukkit.getWorld("world").getSpawnLocation());
     }
 
     public InventoryHandler getBuildingInventoryHandler() {
         return buildingInventoryHandler;
     }
 
-    public void setPlayerInfo(Player player, PlayerInfo playerInfo) {
-        if (playerInfo == null) playerInfoHashMap.remove(player.getUniqueId());
-        else playerInfoHashMap.put(player.getUniqueId(), playerInfo);
+    public void setPlayerInfo(Player player, User user) {
+        if (user == null) playerInfoHashMap.remove(player.getUniqueId());
+        else playerInfoHashMap.put(player.getUniqueId(), user);
     }
 
     public void sendPlayersParticle(Player exclude, Location loc, EnumWrappers.Particle particle, int particleCount) {
@@ -351,9 +352,9 @@ public class WarsPlugin extends JavaPlugin {
         packet.getIntegerArrays().write(0, new int[0]);
 
         try {
-            for (PlayerInfo playerInfo : playerInfoHashMap.values()) {
-                if (playerInfo.getPlayer() == exclude) continue;
-                protocolManager.sendServerPacket(playerInfo.getPlayer(), packet);
+            for (User user : playerInfoHashMap.values()) {
+                if (user.getPlayer() == exclude) continue;
+                protocolManager.sendServerPacket(user.getPlayer(), packet);
             }
         } catch (InvocationTargetException e) {
             getLogger().warning("Failed to send particle packet");
@@ -365,44 +366,44 @@ public class WarsPlugin extends JavaPlugin {
         return random;
     }
 
-    public void addBuilding(BuildingInfo buildingInfo) {
-        buildings.add(buildingInfo);
+    public void addBuilding(Building building) {
+        buildings.add(building);
 
-        if (buildingInfo.getCenterBlock() != null) buildingCentres.put(buildingInfo.getCenterBlock(), buildingInfo);
+        if (building.getCenterBlock() != null) buildingCentres.put(building.getCenterBlock(), building);
 
-        getTeamInfo(buildingInfo.getTeamColor()).buildingStarted(buildingInfo.getBuildingName());
+        getTeam(building.getTeamColor()).buildingStarted(building.getBuildingName());
     }
 
-    public TeamInfo getTeamInfo(TeamColor teamColor) {
+    public Team getTeam(TeamColor teamColor) {
         return teamInfoEnumMap.get(teamColor);
     }
 
-    public void finishBuilding(BuildingInfo buildingInfo) {
-        if (getTeamInfo(buildingInfo.getTeamColor()).getBuildingCount(buildingInfo.getBuildingName()) == 0) {
-            for (PlayerInfo info : playerInfoHashMap.values()) {
-                if (info.getTeamColor() != buildingInfo.getTeamColor()) continue;
+    public void finishBuilding(Building building) {
+        if (getTeam(building.getTeamColor()).getBuildingCount(building.getBuildingName()) == 0) {
+            for (User info : playerInfoHashMap.values()) {
+                if (info.getTeamColor() != building.getTeamColor()) continue;
 
                 info.recalculateInventory();
 
                 PlayerClassHandler playerClassHandler = getPlayerClassHandler(info.getPlayerClass());
                 playerClassHandler
-                        .onBuildingBuilt(buildingInfo.getBuildingName(), info, getTeamInfo(info.getTeamColor()));
+                        .onBuildingBuilt(building.getBuildingName(), info, getTeam(info.getTeamColor()));
             }
         }
 
-        getTeamInfo(buildingInfo.getTeamColor()).buildingFinished(buildingInfo);
+        getTeam(building.getTeamColor()).buildingFinished(building);
     }
 
     public PlayerClassHandler getPlayerClassHandler(PlayerClass playerClass) {
         return classHandlerEnumMap.get(playerClass);
     }
 
-    public BuildingInfo getBuildingInfo(Location center) {
+    public Building getBuildingInfo(Location center) {
         return buildingCentres.get(center);
     }
 
     public boolean canBuild(Vector minBB, Vector maxBB) {
-        for (BuildingInfo building : buildings) {
+        for (Building building : buildings) {
             if (!building.canBuild(minBB, maxBB)) return false;
         }
 
@@ -426,19 +427,19 @@ public class WarsPlugin extends JavaPlugin {
                 try {
                     int amount = Integer.parseInt(args[0]);
 
-                    PlayerInfo playerInfo = getPlayerInfo(player);
-                    if (!playerInfo.subtractPlayerCash(amount)) {
-                        playerInfo.message(ChatColor.RED + "You do not have that amount of money");
+                    User user = getUser(player);
+                    if (!user.subtractPlayerCash(amount)) {
+                        user.message(ChatColor.RED + "You do not have that amount of money");
                         return true;
                     }
 
-                    TeamInfo teamInfo = getTeamInfo(playerInfo.getTeamColor());
-                    teamInfo.addTeamCash(amount);
+                    Team team = getTeam(user.getTeamColor());
+                    team.addTeamCash(amount);
 
-                    teamInfo.message(playerInfo.getFormattedName() + ChatColor.DARK_AQUA + " transferred " +
+                    team.message(user.getFormattedName() + ChatColor.DARK_AQUA + " transferred " +
                             ChatColor.GREEN + "$" + amount +
                             ChatColor.YELLOW + " to your team's account!");
-                    teamInfo.message("Your Team's new Balance is: " + ChatColor.GREEN + "$" + teamInfo.getTeamCash() +
+                    team.message("Your Team's new Balance is: " + ChatColor.GREEN + "$" + team.getTeamCash() +
                             ChatColor.YELLOW + "!");
 
                     return true;
@@ -456,7 +457,7 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     private boolean onTestCommand(Player player, Command command, String[] args) {
-        PlayerInfo playerInfo = getPlayerInfo(player);
+        User user = getUser(player);
 
         switch (args[0]) {
             case "team":
@@ -465,24 +466,24 @@ public class WarsPlugin extends JavaPlugin {
                 TeamColor teamColor = TeamColor.valueOf(args[1].toUpperCase());
                 setPlayerTeam(player, teamColor);
 
-                playerInfo.message("You were changed to team " + teamColor);
+                user.message("You were changed to team " + teamColor);
 
                 break;
             case "class":
                 if (args.length < 2) return false;
 
                 PlayerClass playerClass = PlayerClass.valueOf(args[1].toUpperCase());
-                playerInfo.setPlayerClass(playerClass);
+                user.setPlayerClass(playerClass);
 
-                playerInfo.message("You were changed to class " + playerClass);
+                user.message("You were changed to class " + playerClass);
 
                 break;
             case "money":
 
-                playerInfo.addPlayerCash(10000);
-                getTeamInfo(playerInfo.getTeamColor()).addTeamCash(10000);
+                user.addPlayerCash(10000);
+                getTeam(user.getTeamColor()).addTeamCash(10000);
 
-                playerInfo.message("10000 added to both you and your team's balance");
+                user.message("10000 added to both you and your team's balance");
                 break;
             case "build":
                 if (args.length < 2) return false;
@@ -490,29 +491,29 @@ public class WarsPlugin extends JavaPlugin {
                 player.getInventory()
                         .addItem(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 16, 0, args[1]));
 
-                playerInfo.message("Added 16 " + args[1] + " build blocks to your inventory");
+                user.message("Added 16 " + args[1] + " build blocks to your inventory");
                 break;
             case "start_game":
-                playerInfo.message("Attempting to start a new game!");
+                user.message("Attempting to start a new game!");
 
                 stopCountdown();
                 startGame();
 
                 break;
             case "start_showdown":
-                playerInfo.message("Attempting to start showdown");
+                user.message("Attempting to start showdown");
 
                 stopCountdown();
                 startShowdown();
                 break;
             case "base_location":
-                TeamInfo teamInfo = getTeamInfo(playerInfo.getTeamColor());
-                if (teamInfo == null) {
-                    playerInfo.message("Your team is null");
+                Team team = getTeam(user.getTeamColor());
+                if (team == null) {
+                    user.message("Your team is null");
                     break;
                 }
 
-                playerInfo.message("Base location: " + teamInfo.getBaseLocation());
+                user.message("Base location: " + team.getBaseLocation());
                 break;
 
         }
@@ -521,14 +522,14 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public void setPlayerTeam(Player player, TeamColor teamColor) {
-        PlayerInfo playerInfo = getPlayerInfo(player);
+        User user = getUser(player);
 
-        if (playerInfo.getTeamColor() != null) {
-            getTeamInfo(playerInfo.getTeamColor()).removePlayer(player);
+        if (user.getTeamColor() != null) {
+            getTeam(user.getTeamColor()).removePlayer(player);
         }
 
-        playerInfo.setTeamColor(teamColor);
-        if (teamColor != null) getTeamInfo(teamColor).addPlayer(player);
+        user.setTeamColor(teamColor);
+        if (teamColor != null) getTeam(teamColor).addPlayer(player);
     }
 
     public void stopCountdown() {
@@ -537,7 +538,7 @@ public class WarsPlugin extends JavaPlugin {
         getServer().getScheduler().cancelTask(countDownTask);
         countDownTask = 0;
 
-        for (PlayerInfo p : playerInfoHashMap.values()) {
+        for (User p : playerInfoHashMap.values()) {
             p.getPlayer().setLevel(0);
         }
     }
@@ -581,7 +582,7 @@ public class WarsPlugin extends JavaPlugin {
         showdownRadiusZ = z;
         showdownCenter = getMapSpawn(null);
 
-        for (PlayerInfo playerInfo : getPlayers()) {
+        for (User user : getPlayers()) {
             int offsetX = (-x / 2) + random.nextInt(x);
             int offsetZ = (-z / 2) + random.nextInt(z);
             int offsetY = 1;
@@ -591,7 +592,7 @@ public class WarsPlugin extends JavaPlugin {
             teleport.setY(teleport.getY() + offsetY);
             teleport.setZ(teleport.getZ() + offsetZ);
 
-            playerInfo.getPlayer().teleport(teleport);
+            user.getPlayer().teleport(teleport);
         }
 
         setInShowdown(true);
@@ -600,7 +601,7 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public void setupPlayers() {
-        for (PlayerInfo info : playerInfoHashMap.values()) {
+        for (User info : playerInfoHashMap.values()) {
 
             if (info.getTeamColor() == null) {
                 setPlayerTeam(info.getPlayer(), assignPlayerTeam());
@@ -630,7 +631,7 @@ public class WarsPlugin extends JavaPlugin {
             info.updateScoreboard();
 
             PlayerClassHandler classHandler = getPlayerClassHandler(info.getPlayerClass());
-            classHandler.onGameBegin(info, getTeamInfo(info.getTeamColor()));
+            classHandler.onGameBegin(info, getTeam(info.getTeamColor()));
 
             info.message(ChatColor.GOLD + "You are playing on the " + info.getTeamColor().name + ChatColor.GOLD +
                     " Team");
@@ -639,7 +640,7 @@ public class WarsPlugin extends JavaPlugin {
                     info.getPlayerClass().name);
         }
 
-        for (PlayerInfo info : playerInfoHashMap.values()) {
+        for (User info : playerInfoHashMap.values()) {
             decloak(info.getPlayer());
         }
     }
@@ -658,8 +659,8 @@ public class WarsPlugin extends JavaPlugin {
 
             SchematicBuilder.pasteSchematic(this, getSchematicData(Buildings.BASE), build, 0, team);
 
-            if (getTeamInfo(team).getPlayerCount() == 0) {
-                getTeamInfo(team).eliminate();
+            if (getTeam(team).getPlayerCount() == 0) {
+                getTeam(team).eliminate();
             }
 
         }
@@ -677,12 +678,12 @@ public class WarsPlugin extends JavaPlugin {
                 config.getDouble(base + ".z"));
     }
 
-    public Collection<PlayerInfo> getPlayers() {
+    public Collection<User> getPlayers() {
         return playerInfoHashMap.values();
     }
 
     public void messageAll(String message) {
-        for (PlayerInfo p : playerInfoHashMap.values()) {
+        for (User p : playerInfoHashMap.values()) {
             p.message(message);
         }
     }
@@ -692,7 +693,7 @@ public class WarsPlugin extends JavaPlugin {
         int leastCount = Integer.MAX_VALUE;
 
         for (TeamColor team : TeamColor.values()) {
-            TeamInfo info = getTeamInfo(team);
+            Team info = getTeam(team);
             if (info.getPlayerCount() < leastCount) {
                 leastCount = info.getPlayerCount();
 
@@ -724,32 +725,32 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public void decloak(Player player) {
-        getPlayerInfo(player).setCloaked(false);
+        getUser(player).setCloaked(false);
 
-        for (PlayerInfo p : playerInfoHashMap.values()) {
+        for (User p : playerInfoHashMap.values()) {
             if (p.getPlayer() == player) continue;
 
             p.getPlayer().showPlayer(player);
         }
     }
 
-    public SchematicData getSchematicData(String buildingName) {
+    public Schematic getSchematicData(String buildingName) {
         return schematicDataHashMap.get(buildingName);
     }
 
-    public void removeBuilding(BuildingInfo buildingInfo) {
-        buildings.remove(buildingInfo);
-        getTeamInfo(buildingInfo.getTeamColor()).removeBuilding(buildingInfo);
+    public void removeBuilding(Building building) {
+        buildings.remove(building);
+        getTeam(building.getTeamColor()).removeBuilding(building);
 
-        buildingCentres.remove(buildingInfo.getCenterBlock());
+        buildingCentres.remove(building.getCenterBlock());
 
-        for (PlayerInfo info : playerInfoHashMap.values()) {
-            if (info.getTeamColor() != buildingInfo.getTeamColor()) continue;
+        for (User info : playerInfoHashMap.values()) {
+            if (info.getTeamColor() != building.getTeamColor()) continue;
 
             info.recalculateInventory();
         }
 
-        buildingInfo.clearHolograms();
+        building.clearHolograms();
     }
 
     public void updateScoutCompass(ItemStack item, Player player, TeamColor exclude) {
@@ -760,7 +761,7 @@ public class WarsPlugin extends JavaPlugin {
             double minDist = 99999999999d;
             String closestName = null;
 
-            for (PlayerInfo info : playerInfoHashMap.values()) {
+            for (User info : playerInfoHashMap.values()) {
                 if (info.getTeamColor() == exclude) continue;
 
                 double dist = player.getLocation().distanceSquared(info.getPlayer().getLocation());
@@ -785,27 +786,27 @@ public class WarsPlugin extends JavaPlugin {
         }, 60);
     }
 
-    public void onPlayerUpgrade(PlayerInfo playerInfo, String upgrade, int level) {
-        PlayerClassHandler classHandler = getPlayerClassHandler(playerInfo.getPlayerClass());
+    public void onPlayerUpgrade(UserUpgradeEvent event) {
+        PlayerClassHandler classHandler = getPlayerClassHandler(event.getUser().getPlayerClass());
 
-        classHandler.onPlayerUpgrade(playerInfo, upgrade, level);
+        classHandler.onPlayerUpgrade(event);
     }
 
     public void cloak(Player player) {
-        getPlayerInfo(player).setCloaked(true);
+        getUser(player).setCloaked(true);
 
-        for (PlayerInfo p : playerInfoHashMap.values()) {
+        for (User p : playerInfoHashMap.values()) {
             if (p.getPlayer() == player) continue;
 
             p.getPlayer().hidePlayer(player);
         }
     }
 
-    public PlayerInfo getPlayerInfo(Player player) {
+    public User getUser(Player player) {
         return playerInfoHashMap.get(player.getUniqueId());
     }
 
-    public PlayerInfo getPlayerInfo(UUID uniqueId){
+    public User getUser(UUID uniqueId){
         return playerInfoHashMap.get(uniqueId);
     }
 
@@ -817,7 +818,7 @@ public class WarsPlugin extends JavaPlugin {
         if (isInAftermath()) return;
         Set<TeamColor> teamsInGame = new HashSet<>();
 
-        for (PlayerInfo info : playerInfoHashMap.values()) {
+        for (User info : playerInfoHashMap.values()) {
             if (!info.isInGame()) continue;
             if (info.getTeamColor() == null) continue;
 
@@ -854,8 +855,8 @@ public class WarsPlugin extends JavaPlugin {
     public int getPlayersInGame() {
         int count = 0;
 
-        for (TeamInfo teamInfo : teamInfoEnumMap.values()) {
-            count += teamInfo.getPlayerCount();
+        for (Team team : teamInfoEnumMap.values()) {
+            count += team.getPlayerCount();
         }
 
         return count;
@@ -874,7 +875,7 @@ public class WarsPlugin extends JavaPlugin {
 
         startCountdown(15, CountdownType.GAME_END, this::endGame, () -> {
             if (countDown < 10) return;
-            Player randomPlayer = getTeamInfo(winningTeam).getRandomPlayer();
+            Player randomPlayer = getTeam(winningTeam).getRandomPlayer();
             if (randomPlayer == null) return;
             Location loc = randomPlayer.getLocation();
             Firework firework = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
@@ -919,7 +920,7 @@ public class WarsPlugin extends JavaPlugin {
         countDownTask = getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
             --countDown;
 
-            for (PlayerInfo p : playerInfoHashMap.values()) {
+            for (User p : playerInfoHashMap.values()) {
                 p.getPlayer().setLevel(countDown);
             }
 

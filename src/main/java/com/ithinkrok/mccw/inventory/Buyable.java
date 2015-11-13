@@ -1,5 +1,6 @@
 package com.ithinkrok.mccw.inventory;
 
+import com.ithinkrok.mccw.event.ItemPurchaseEvent;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.inventory.ItemStack;
 

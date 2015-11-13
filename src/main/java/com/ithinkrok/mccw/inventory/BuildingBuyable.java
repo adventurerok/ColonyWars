@@ -1,5 +1,6 @@
 package com.ithinkrok.mccw.inventory;
 
+import com.ithinkrok.mccw.event.ItemPurchaseEvent;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -33,8 +34,8 @@ public class BuildingBuyable extends ItemBuyable {
 
     @Override
     public void prePurchase(ItemPurchaseEvent event) {
-        event.getTeamInfo().message(
-                event.getPlayerInfo().getFormattedName() + ChatColor.DARK_AQUA + " purchased " + ChatColor.WHITE +
+        event.getTeam().message(
+                event.getUser().getFormattedName() + ChatColor.DARK_AQUA + " purchased " + ChatColor.WHITE +
                         buildingName);
     }
 }

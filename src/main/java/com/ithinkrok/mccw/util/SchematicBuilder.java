@@ -3,8 +3,8 @@ package com.ithinkrok.mccw.util;
 import com.flowpowered.nbt.*;
 import com.flowpowered.nbt.stream.NBTInputStream;
 import com.ithinkrok.mccw.WarsPlugin;
-import com.ithinkrok.mccw.data.BuildingInfo;
-import com.ithinkrok.mccw.data.SchematicData;
+import com.ithinkrok.mccw.data.Building;
+import com.ithinkrok.mccw.data.Schematic;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import de.inventivegames.hologram.Hologram;
 import de.inventivegames.hologram.HologramAPI;
@@ -32,12 +32,12 @@ public class SchematicBuilder {
 
     private static final DecimalFormat percentFormat = new DecimalFormat("00%");
 
-    public static boolean pasteSchematic(WarsPlugin plugin, SchematicData schemData, Location loc, int rotation,
+    public static boolean pasteSchematic(WarsPlugin plugin, Schematic schemData, Location loc, int rotation,
                                          TeamColor teamColor) {
         return doSchematic(plugin, schemData, loc, teamColor, rotation, true);
     }
 
-    private static boolean doSchematic(WarsPlugin plugin, SchematicData schemData, Location loc, TeamColor teamColor,
+    private static boolean doSchematic(WarsPlugin plugin, Schematic schemData, Location loc, TeamColor teamColor,
                                        int rotation, boolean instant) {
         rotation = (rotation + schemData.getBaseRotation()) % 4;
 
@@ -100,8 +100,8 @@ public class SchematicBuilder {
                 return Double.compare(o1.getZ(), o2.getZ());
             });
 
-            BuildingInfo result =
-                    new BuildingInfo(plugin, schemData.getBuildingName(), teamColor, centerBlock, rotation, locations,
+            Building result =
+                    new Building(plugin, schemData.getBuildingName(), teamColor, centerBlock, rotation, locations,
                             oldBlocks);
 
             plugin.addBuilding(result);
@@ -122,7 +122,7 @@ public class SchematicBuilder {
 
     }
 
-    public static boolean buildSchematic(WarsPlugin plugin, SchematicData schemData, Location loc, int rotation,
+    public static boolean buildSchematic(WarsPlugin plugin, Schematic schemData, Location loc, int rotation,
                                          TeamColor teamColor) {
         return doSchematic(plugin, schemData, loc, teamColor, rotation, false);
     }
@@ -252,24 +252,24 @@ public class SchematicBuilder {
         Location origin;
         int taskId;
         Hologram hologram;
-        private BuildingInfo buildingInfo;
+        private Building building;
         private SchematicRotation schem;
         private WarsPlugin plugin;
         private int buildSpeed;
 
         private boolean clearedOrigin = false;
 
-        public SchematicBuilderTask(WarsPlugin plugin, Location origin, BuildingInfo buildingInfo,
+        public SchematicBuilderTask(WarsPlugin plugin, Location origin, Building building,
                                     SchematicRotation schem, int buildSpeed) {
             this.plugin = plugin;
             this.origin = origin;
-            this.buildingInfo = buildingInfo;
+            this.building = building;
             this.schem = schem;
             this.buildSpeed = buildSpeed;
 
             Location holoLoc;
-            if (buildingInfo.getCenterBlock() != null)
-                holoLoc = buildingInfo.getCenterBlock().clone().add(0.5d, 1.5d, 0.5d);
+            if (building.getCenterBlock() != null)
+                holoLoc = building.getCenterBlock().clone().add(0.5d, 1.5d, 0.5d);
             else holoLoc = origin.clone().add(0.5d, 1.5d, 0.5d);
 
             hologram = HologramAPI.createHologram(holoLoc, "Building: 0%");
@@ -286,7 +286,7 @@ public class SchematicBuilder {
                 clearedOrigin = true;
             }
 
-            List<Location> locations = buildingInfo.getBuildingBlocks();
+            List<Location> locations = building.getBuildingBlocks();
 
             while (index < locations.size()) {
                 Location loc = locations.get(index);
@@ -301,9 +301,9 @@ public class SchematicBuilder {
 
                 Block block = loc.getBlock();
 
-                if (bId == Material.WOOL.getId()) bData = buildingInfo.getTeamColor().dyeColor.getWoolData();
+                if (bId == Material.WOOL.getId()) bData = building.getTeamColor().dyeColor.getWoolData();
                 else if (bId == Material.STAINED_CLAY.getId())
-                    bData = buildingInfo.getTeamColor().dyeColor.getWoolData();
+                    bData = building.getTeamColor().dyeColor.getWoolData();
 
                 block.setTypeIdAndData(bId, rotateData(Material.getMaterial(bId), schem.getRotation(), bData), false);
 
@@ -321,15 +321,15 @@ public class SchematicBuilder {
 
             hologram.despawn();
 
-            if (buildingInfo.getCenterBlock() != null) {
-                buildingInfo.getCenterBlock().getWorld()
-                        .playSound(buildingInfo.getCenterBlock(), Sound.LEVEL_UP, 1.0f, 1.0f);
+            if (building.getCenterBlock() != null) {
+                building.getCenterBlock().getWorld()
+                        .playSound(building.getCenterBlock(), Sound.LEVEL_UP, 1.0f, 1.0f);
             }
 
-            buildingInfo.setFinished(true);
-            plugin.finishBuilding(buildingInfo);
+            building.setFinished(true);
+            plugin.finishBuilding(building);
 
-            buildingInfo = null;
+            building = null;
         }
 
         public void schedule(Plugin plugin) {

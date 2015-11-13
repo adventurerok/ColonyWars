@@ -1,8 +1,9 @@
 package com.ithinkrok.mccw.inventory;
 
-import com.ithinkrok.mccw.data.BuildingInfo;
-import com.ithinkrok.mccw.data.PlayerInfo;
-import com.ithinkrok.mccw.data.TeamInfo;
+import com.ithinkrok.mccw.data.Building;
+import com.ithinkrok.mccw.data.Team;
+import com.ithinkrok.mccw.data.User;
+import com.ithinkrok.mccw.event.ItemPurchaseEvent;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -37,13 +38,13 @@ public class BuyableInventory implements InventoryHandler {
     }
 
     @Override
-    public boolean onInventoryClick(ItemStack item, BuildingInfo buildingInfo, PlayerInfo playerInfo,
-                                    TeamInfo teamInfo) {
+    public boolean onInventoryClick(ItemStack item, Building building, User user,
+                                    Team team) {
 
         Buyable i = stackToBuyable.get(item);
         if (i != null) {
-            if (!i.getBuildingName().equals(buildingInfo.getBuildingName())) return false;
-            tryBuyItem(i, buildingInfo, playerInfo, teamInfo);
+            if (!i.getBuildingName().equals(building.getBuildingName())) return false;
+            tryBuyItem(i, building, user, team);
 
             return true;
         }
@@ -51,15 +52,15 @@ public class BuyableInventory implements InventoryHandler {
         return false;
     }
 
-    private void tryBuyItem(Buyable item, BuildingInfo buildingInfo, PlayerInfo playerInfo, TeamInfo teamInfo) {
+    private void tryBuyItem(Buyable item, Building building, User user, Team team) {
         if (item.buyWithTeamMoney()) {
-            if (!InventoryUtils.hasTeamCash(item.getCost(), teamInfo, playerInfo)) {
-                playerInfo.message(ChatColor.RED + "Your Team and you do not have enough money to purchase this item!");
+            if (!InventoryUtils.hasTeamCash(item.getCost(), team, user)) {
+                user.message(ChatColor.RED + "Your Team and you do not have enough money to purchase this item!");
                 return;
             }
         } else {
-            if (!playerInfo.hasPlayerCash(item.getCost())) {
-                playerInfo.message(ChatColor.RED + "You do not have enough money to purchase this item!");
+            if (!user.hasPlayerCash(item.getCost())) {
+                user.message(ChatColor.RED + "You do not have enough money to purchase this item!");
                 return;
             }
         }
@@ -67,7 +68,7 @@ public class BuyableInventory implements InventoryHandler {
         int requiredSlots = item.getMinFreeSlots();
 
         if (requiredSlots > 0) {
-            PlayerInventory inventory = playerInfo.getPlayer().getInventory();
+            PlayerInventory inventory = user.getPlayer().getInventory();
             int freeSlots = 0;
 
             for (int i = 0; i < inventory.getSize(); ++i) {
@@ -78,35 +79,35 @@ public class BuyableInventory implements InventoryHandler {
             }
 
             if (freeSlots < requiredSlots) {
-                playerInfo.message(ChatColor.RED + "You do not have enough free slots in your inventory!");
+                user.message(ChatColor.RED + "You do not have enough free slots in your inventory!");
                 return;
             }
         }
 
-        ItemPurchaseEvent event = new ItemPurchaseEvent(buildingInfo, playerInfo, teamInfo);
+        ItemPurchaseEvent event = new ItemPurchaseEvent(building, user, team);
 
         if (!item.canBuy(event)) {
-            playerInfo.message(ChatColor.RED + "You cannot buy this item!");
-            playerInfo.recalculateInventory();
+            user.message(ChatColor.RED + "You cannot buy this item!");
+            user.recalculateInventory();
             return;
         }
 
         item.prePurchase(event);
 
         if (item.buyWithTeamMoney()) {
-            InventoryUtils.payWithTeamCash(item.getCost(), teamInfo, playerInfo);
-        } else playerInfo.subtractPlayerCash(item.getCost());
+            InventoryUtils.payWithTeamCash(item.getCost(), team, user);
+        } else user.subtractPlayerCash(item.getCost());
 
-        InventoryUtils.playBuySound(playerInfo.getPlayer());
+        InventoryUtils.playBuySound(user.getPlayer());
         item.onPurchase(event);
     }
 
     @Override
-    public void addInventoryItems(List<ItemStack> items, BuildingInfo buildingInfo, PlayerInfo playerInfo,
-                                  TeamInfo teamInfo) {
+    public void addInventoryItems(List<ItemStack> items, Building building, User user,
+                                  Team team) {
         for (Buyable buyable : this.items) {
-            if (!buyable.getBuildingName().equals(buildingInfo.getBuildingName())) continue;
-            if (!buyable.canBuy(new ItemPurchaseEvent(buildingInfo, playerInfo, teamInfo))) continue;
+            if (!buyable.getBuildingName().equals(building.getBuildingName())) continue;
+            if (!buyable.canBuy(new ItemPurchaseEvent(building, user, team))) continue;
 
             items.add(buyable.getDisplayItemStack());
         }

@@ -1,6 +1,7 @@
 package com.ithinkrok.mccw.data;
 
 import com.ithinkrok.mccw.WarsPlugin;
+import com.ithinkrok.mccw.enumeration.TeamColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -48,6 +49,7 @@ public class UserTest {
         User user = new User(plugin, player);
 
         user.setInGame(true);
+        user.setTeamColor(TeamColor.RED);
         assertTrue(user.isInGame());
 
         user.addPlayerCash(3000);

@@ -86,30 +86,14 @@ public class WarsGameListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         User user = plugin.getUser(event.getPlayer());
 
-        setSpectator(user.getPlayer());
+        user.setSpectator();
         user.getPlayer().teleport(plugin.getMapSpawn(null));
-
-        user.updateScoreboard();
 
         user.message(plugin.getLocale("game-in-progress"));
         user.message(plugin.getLocale("game-wait-next"));
         user.message(plugin.getLocale("spectate-heads"));
     }
 
-    public void setSpectator(Player died) {
-        plugin.setPlayerTeam(died, null);
-        plugin.getUser(died).setInGame(false);
-        plugin.cloak(died);
-        //died.setAllowFlight(true);
-        died.setGameMode(GameMode.SPECTATOR);
-        died.setMaxHealth(plugin.getMaxHealth());
-        died.setHealth(plugin.getMaxHealth());
-
-        plugin.setupSpectatorInventory(died);
-        plugin.getUser(died).clearArmor();
-
-        plugin.removePotionEffects(died);
-    }
 
     @EventHandler
     public void onPickupItem(PlayerPickupItemEvent event) {
@@ -358,8 +342,7 @@ public class WarsGameListener implements Listener {
         User diedInfo = plugin.getUser(died);
 
         if (!diedInfo.isInGame()) {
-            died.setMaxHealth(plugin.getMaxHealth());
-            died.setHealth(plugin.getMaxHealth());
+            diedInfo.resetPlayerStats(true);
 
             died.teleport(plugin.getMapSpawn(null));
             return;
@@ -383,40 +366,17 @@ public class WarsGameListener implements Listener {
             diedTeam.setRespawnChance(diedTeam.getRespawnChance() - 15);
             diedTeam.respawnPlayer(died);
 
-            died.setHealth(40);
-            died.setSaturation(5);
-            died.setFoodLevel(20);
+            diedInfo.resetPlayerStats(false);
 
             diedTeam.message(
                     ChatColor.GOLD + "Your revival chance is now " + ChatColor.DARK_AQUA + diedTeam.getRespawnChance());
         } else {
             plugin.messageAll(diedInfo.getFormattedName() + ChatColor.GOLD + " did not respawn!");
-            teamPlayerDied(diedInfo, diedTeam);
-
-            setSpectator(died);
+            diedInfo.removeFromGame();
+            diedInfo.setSpectator();
         }
     }
 
-    public void teamPlayerDied(User diedInfo, Team diedTeam) {
-        plugin.setPlayerTeam(diedInfo.getPlayer(), null);
-
-        plugin.messageAll(ChatColor.GOLD + "The " + diedTeam.getTeamColor().name + ChatColor.GOLD +
-                " has lost a player!");
-        plugin.messageAll(ChatColor.GOLD + "There are now " + ChatColor.DARK_AQUA + diedTeam.getPlayerCount() +
-                ChatColor.GOLD + " players left on the " + diedTeam.getTeamColor().name + ChatColor.GOLD + " Team");
-
-        if (diedTeam.getPlayerCount() == 0) {
-            diedTeam.eliminate();
-        }
-
-        plugin.checkVictory(true);
-
-        for(User info : plugin.getPlayers()){
-            if(info.isInGame() && info.getTeamColor() != null) return;
-
-            plugin.setupSpectatorInventory(info.getPlayer());
-        }
-    }
 
     @EventHandler
     public void onPotionSplash(PotionSplashEvent event) {
@@ -465,7 +425,7 @@ public class WarsGameListener implements Listener {
         Team diedTeam = diedInfo.getTeam();
         if (diedTeam == null) return;
 
-        teamPlayerDied(diedInfo, diedTeam);
+        diedInfo.removeFromGame();
     }
 
     @EventHandler

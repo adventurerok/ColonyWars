@@ -299,16 +299,8 @@ public class WarsPlugin extends JavaPlugin {
 
         user.setInGame(false);
         user.getPlayer().setGameMode(GameMode.ADVENTURE);
-        user.getPlayer().setMaxHealth(getMaxHealth());
-        user.getPlayer().setHealth(getMaxHealth());
-        user.getPlayer().setFoodLevel(20);
-        user.getPlayer().setSaturation(20);
-        user.getPlayer().setAllowFlight(false);
+        user.resetPlayerStats(true);
         user.clearArmor();
-
-        user.getPlayer().getActivePotionEffects().clear();
-
-        removePotionEffects(player);
 
         setPlayerTeam(player, null);
 
@@ -611,13 +603,8 @@ public class WarsPlugin extends JavaPlugin {
             info.getPlayer().teleport(getMapSpawn(info.getTeamColor()));
 
             info.getPlayer().setGameMode(GameMode.SURVIVAL);
-            info.getPlayer().setMaxHealth(getMaxHealth());
-            info.getPlayer().setHealth(getMaxHealth());
-            info.getPlayer().setSaturation(5);
-            info.getPlayer().setFoodLevel(20);
-            info.getPlayer().setAllowFlight(false);
 
-            removePotionEffects(info.getPlayer());
+            info.resetPlayerStats(true);
 
             info.setInGame(true);
 
@@ -711,14 +698,6 @@ public class WarsPlugin extends JavaPlugin {
 
     public double getMaxHealth() {
         return (double) 40;
-    }
-
-    public void removePotionEffects(Player player) {
-        List<PotionEffect> effects = new ArrayList<>(player.getActivePotionEffects());
-
-        for (PotionEffect effect : effects) {
-            player.removePotionEffect(effect.getType());
-        }
     }
 
     public void decloak(Player player) {
@@ -938,5 +917,13 @@ public class WarsPlugin extends JavaPlugin {
 
 
         }, 20, 20);
+    }
+
+    public void updateSpectatorInventories() {
+        for(User info : getPlayers()){
+            if(info.isInGame() && info.getTeamColor() != null) return;
+
+            setupSpectatorInventory(info.getPlayer());
+        }
     }
 }

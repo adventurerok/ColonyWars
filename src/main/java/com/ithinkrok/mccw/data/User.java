@@ -12,6 +12,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -51,7 +52,7 @@ public class User {
     }
 
     public boolean isInGame() {
-        return inGame;
+        return inGame && teamColor != null;
     }
 
     public void setInGame(boolean inGame) {
@@ -184,6 +185,10 @@ public class User {
         player.sendMessage(WarsPlugin.CHAT_PREFIX + message);
     }
 
+    public void messageLocale(String locale, Object...objects){
+        message(plugin.getLocale(locale, objects));
+    }
+
     public void stopCoolDown(String ability, String message) {
         if (!isCoolingDown(ability)) return;
 
@@ -251,6 +256,59 @@ public class User {
         for (ItemStack item : contents) {
             shopInventory.setItem(index++, item);
         }
+    }
+
+    public void removeFromGame(){
+        if(!isInGame()) return;
+
+        Team team = getTeam();
+        plugin.setPlayerTeam(player, null);
+        setInGame(false);
+
+        plugin.messageAll(ChatColor.GOLD + "The " + team.getTeamColor().name + ChatColor.GOLD +
+                " has lost a player!");
+        plugin.messageAll(ChatColor.GOLD + "There are now " + ChatColor.DARK_AQUA + team.getPlayerCount() +
+                ChatColor.GOLD + " players left on the " + team.getTeamColor().name + ChatColor.GOLD + " Team");
+
+        if(team.getPlayerCount() == 0){
+            team.eliminate();
+        }
+
+        plugin.checkVictory(true);
+
+        plugin.updateSpectatorInventories();
+
+        setSpectator();
+    }
+
+    public void resetPlayerStats(boolean removePotionEffects){
+        player.setMaxHealth(plugin.getMaxHealth());
+        player.setHealth(plugin.getMaxHealth());
+        player.setFoodLevel(20);
+        player.setSaturation(5);
+
+        if(removePotionEffects) removePotionEffects();
+    }
+
+    public void removePotionEffects(){
+        List<PotionEffect> effects = new ArrayList<>(player.getActivePotionEffects());
+
+        for (PotionEffect effect : effects) {
+            player.removePotionEffect(effect.getType());
+        }
+    }
+
+    public void setSpectator() {
+        if(isInGame()) throw new RuntimeException("You cannot be a spectator when you are already in a game");
+
+        plugin.cloak(player);
+
+        player.setGameMode(GameMode.SPECTATOR);
+        clearArmor();
+
+        plugin.setupSpectatorInventory(player);
+
+        updateScoreboard();
     }
 
     private List<ItemStack> calculateInventoryContents(Building building) {

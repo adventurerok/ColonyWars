@@ -119,7 +119,7 @@ public class CommandListener implements CommandExecutor {
                 user.message("Attempting to start showdown");
 
                 plugin.getCountdownHandler().stopCountdown();
-                plugin.getGameHandler().startShowdown();
+                plugin.getGameInstance().startShowdown();
                 break;
             case "base_location":
                 Team team = user.getTeam();

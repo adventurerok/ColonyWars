@@ -6,18 +6,15 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.ithinkrok.mccw.data.*;
-import com.ithinkrok.mccw.enumeration.CountdownType;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
-import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.handler.CountdownHandler;
-import com.ithinkrok.mccw.handler.GameHandler;
+import com.ithinkrok.mccw.handler.GameInstance;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.inventory.OmniInventory;
 import com.ithinkrok.mccw.inventory.SpectatorInventory;
 import com.ithinkrok.mccw.listener.CommandListener;
 import com.ithinkrok.mccw.listener.WarsBaseListener;
-import com.ithinkrok.mccw.listener.WarsGameListener;
 import com.ithinkrok.mccw.listener.WarsLobbyListener;
 import com.ithinkrok.mccw.playerclass.*;
 import com.ithinkrok.mccw.strings.Buildings;
@@ -25,19 +22,13 @@ import com.ithinkrok.mccw.util.*;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.Vector;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -74,7 +65,7 @@ public class WarsPlugin extends JavaPlugin {
     private CommandListener commandListener;
 
     private CountdownHandler countdownHandler;
-    private GameHandler gameHandler;
+    private GameInstance gameInstance;
 
 
     @Override
@@ -241,22 +232,22 @@ public class WarsPlugin extends JavaPlugin {
         return countdownHandler;
     }
 
-    public GameHandler getGameHandler() {
-        return gameHandler;
+    public GameInstance getGameInstance() {
+        return gameInstance;
     }
 
     public void startGame(){
         setInGame(true);
 
-        gameHandler = new GameHandler(this);
+        gameInstance = new GameInstance(this);
 
-        gameHandler.startGame();
+        gameInstance.startGame();
     }
 
     public void endGame(){
-        gameHandler.endGame();
+        gameInstance.endGame();
 
-        gameHandler = null;
+        gameInstance = null;
 
         setInGame(false);
     }

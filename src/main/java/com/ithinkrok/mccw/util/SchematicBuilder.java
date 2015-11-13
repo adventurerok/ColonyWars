@@ -62,7 +62,7 @@ public class SchematicBuilder {
 
             BoundingBox bounds = schem.calcBounds(loc);
 
-            if (!plugin.getGameHandler().canBuild(bounds)) return false;
+            if (!plugin.getGameInstance().canBuild(bounds)) return false;
 
             List<Location> locations = new ArrayList<>();
 
@@ -104,7 +104,7 @@ public class SchematicBuilder {
                     new Building(plugin, schemData.getBuildingName(), teamColor, centerBlock, rotation, locations,
                             oldBlocks);
 
-            plugin.getGameHandler().addBuilding(result);
+            plugin.getGameInstance().addBuilding(result);
             SchematicBuilderTask task = new SchematicBuilderTask(plugin, loc, result, schem, instant ? -1 : 2);
 
             if (!instant) {
@@ -327,7 +327,7 @@ public class SchematicBuilder {
             }
 
             building.setFinished(true);
-            plugin.getGameHandler().finishBuilding(building);
+            plugin.getGameInstance().finishBuilding(building);
 
             building = null;
         }

@@ -14,7 +14,6 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
@@ -85,7 +84,7 @@ public class ScoutClass extends BuyableInventory implements PlayerClassHandler {
         switch (item.getType()) {
             case COMPASS:
                 TeamColor exclude = event.getUserClicked().getTeamColor();
-                plugin.getGameHandler().updateScoutCompass(item, event.getPlayer(), exclude);
+                plugin.getGameInstance().updateScoutCompass(item, event.getPlayer(), exclude);
                 break;
             case CHAINMAIL_HELMET:
                 User user = event.getUserClicked();

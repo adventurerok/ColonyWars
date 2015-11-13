@@ -34,7 +34,7 @@ import java.util.*;
  *
  * Handles the game itself
  */
-public class GameHandler {
+public class GameInstance {
 
     private String map = "canyon";
     private TeamColor winningTeam;
@@ -48,7 +48,7 @@ public class GameHandler {
     private List<Building> buildings = new ArrayList<>();
     private HashMap<Location, Building> buildingCentres = new HashMap<>();
 
-    public GameHandler(WarsPlugin plugin) {
+    public GameInstance(WarsPlugin plugin) {
         this.plugin = plugin;
         this.countdownHandler = plugin.getCountdownHandler();
     }

@@ -6,7 +6,7 @@ import com.ithinkrok.mccw.data.Schematic;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.event.UserInteractEvent;
-import com.ithinkrok.mccw.handler.GameHandler;
+import com.ithinkrok.mccw.handler.GameInstance;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.mccw.strings.Buildings;
@@ -54,11 +54,11 @@ public class WarsGameListener implements Listener {
     }
 
     private WarsPlugin plugin;
-    private GameHandler game;
+    private GameInstance game;
 
     public WarsGameListener(WarsPlugin plugin) {
         this.plugin = plugin;
-        this.game = plugin.getGameHandler();
+        this.game = plugin.getGameInstance();
     }
 
     @EventHandler

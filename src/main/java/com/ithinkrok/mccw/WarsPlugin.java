@@ -5,10 +5,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
-import com.ithinkrok.mccw.data.Building;
-import com.ithinkrok.mccw.data.Schematic;
-import com.ithinkrok.mccw.data.Team;
-import com.ithinkrok.mccw.data.User;
+import com.ithinkrok.mccw.data.*;
 import com.ithinkrok.mccw.enumeration.CountdownType;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
@@ -88,10 +85,7 @@ public class WarsPlugin extends JavaPlugin {
     private int countDownTask = 0;
     private CountdownType countdownType;
 
-    private int showdownRadiusX;
-    private int showdownRadiusZ;
-    private Location showdownCenter;
-    private BoundingBox showdownBounds;
+    private ShowdownArena showdownArena;
 
     private String map = "canyon";
     private TeamColor winningTeam;
@@ -121,12 +115,8 @@ public class WarsPlugin extends JavaPlugin {
         this.inShowdown = inShowdown;
     }
 
-    public int getShowdownRadiusX() {
-        return showdownRadiusX;
-    }
-
-    public int getShowdownRadiusZ() {
-        return showdownRadiusZ;
+    public ShowdownArena getShowdownArena() {
+        return showdownArena;
     }
 
     @Override
@@ -212,7 +202,7 @@ public class WarsPlugin extends JavaPlugin {
 
         buildings.clear();
 
-        showdownCenter = null;
+        showdownArena = null;
         winningTeam = null;
 
         HandlerList.unregisterAll(currentListener);
@@ -386,7 +376,7 @@ public class WarsPlugin extends JavaPlugin {
             if (!building.canBuild(bounds)) return false;
         }
 
-        return !bounds.interceptsXZ(showdownBounds);
+        return !bounds.interceptsXZ(showdownArena.getBounds());
     }
 
     @Override
@@ -535,32 +525,31 @@ public class WarsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(currentListener, this);
         setupPlayers();
 
-        FileConfiguration config = getConfig();
-        String base = "maps." + map + ".showdown-size";
-        int x = config.getInt(base + ".x");
-        int z = config.getInt(base + ".z");
-        showdownRadiusX = x;
-        showdownRadiusZ = z;
-        showdownCenter = getMapSpawn(null);
-        Vector showdownMin = showdownCenter.toVector().add(new Vector(-showdownRadiusX - 5, 0, -showdownRadiusZ - 5));
-        Vector showdownMax = showdownCenter.toVector().add(new Vector(showdownRadiusX + 5, 0, showdownRadiusZ + 5));
-
-        showdownBounds = new BoundingBox(showdownMin, showdownMax);
+        calculateShowdownArena();
 
         setupBases();
 
         checkVictory(false);
     }
 
-    public void startShowdown() {
+    private void calculateShowdownArena() {
         FileConfiguration config = getConfig();
         String base = "maps." + map + ".showdown-size";
-        int x = config.getInt(base + ".x");
-        int z = config.getInt(base + ".z");
+        int radiusX = config.getInt(base + ".x");
+        int radiusZ = config.getInt(base + ".z");
 
-        showdownRadiusX = x;
-        showdownRadiusZ = z;
-        showdownCenter = getMapSpawn(null);
+        Location center = getMapSpawn(null);
+        Vector showdownMin = center.toVector().add(new Vector(-radiusX - 5, 0, -radiusZ - 5));
+        Vector showdownMax = center.toVector().add(new Vector(radiusX + 5, 0, radiusZ + 5));
+
+        BoundingBox bounds = new BoundingBox(showdownMin, showdownMax);
+
+        showdownArena = new ShowdownArena(radiusX, radiusZ, center, bounds);
+    }
+
+    public void startShowdown() {
+        int x = showdownArena.getRadiusX();
+        int z = showdownArena.getRadiusZ();
 
         for (User user : getPlayers()) {
             int offsetX = (-x / 2) + random.nextInt(x);
@@ -865,14 +854,6 @@ public class WarsPlugin extends JavaPlugin {
         messageAll(ChatColor.GREEN + "Showdown starting in 30 seconds!");
 
         startCountdown(30, CountdownType.SHOWDOWN_START, this::startShowdown, null);
-    }
-
-    public boolean isInShowdownBounds(Location loc) {
-        double xd = Math.abs(loc.getX() - showdownCenter.getX());
-        double zd = Math.abs(loc.getZ() - showdownCenter.getZ());
-
-        return !(xd > showdownRadiusX || zd > showdownRadiusZ);
-
     }
 
     private void startCountdown(int countdownFrom, CountdownType countdownType, Runnable finished, Runnable during) {

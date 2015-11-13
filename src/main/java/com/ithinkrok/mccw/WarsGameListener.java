@@ -270,8 +270,8 @@ public class WarsGameListener implements Listener {
         if (!plugin.isInShowdown()) return;
         if (event.getPlayer().getAllowFlight()) return;
 
-        if (!plugin.isInShowdownBounds(event.getTo())) {
-            if (!plugin.isInShowdownBounds(event.getFrom())) {
+        if (!plugin.getShowdownArena().isInBounds(event.getTo())) {
+            if (!plugin.getShowdownArena().isInBounds(event.getFrom())) {
                 event.getPlayer().teleport(plugin.getMapSpawn(null));
                 plugin.messageAll(event.getPlayer().getDisplayName() + ChatColor.GOLD + " was teleported back to the " +
                         "center!");

@@ -362,6 +362,14 @@ public class GameInstance {
         building.clearHolograms();
     }
 
+    public boolean isInBuilding(Location loc){
+        for(Building building : buildings){
+            if(building.getBounds().containsLocation(loc)) return true;
+        }
+
+        return false;
+    }
+
     public void updateScoutCompass(ItemStack item, Player player, TeamColor exclude) {
         InventoryUtils.setItemNameAndLore(item, "Locating closest player...");
 

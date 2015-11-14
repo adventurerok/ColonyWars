@@ -238,9 +238,10 @@ public class WarsGameListener implements Listener {
                 break;
             case LOG:
             case LOG_2:
+                if (game.isInBuilding(event.getBlock().getLocation())) break;
                 event.getBlock().getWorld()
                         .dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, 1));
-                TreeFeller.fellTree(event.getBlock().getLocation());
+                TreeFeller.fellTree(game, event.getBlock().getLocation());
                 break;
             case DIAMOND_ORE:
                 event.getBlock().getWorld()
@@ -269,7 +270,7 @@ public class WarsGameListener implements Listener {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getClickedBlock().getType() != Material.OBSIDIAN) {
             PlayerClassHandler classHandler = plugin.getPlayerClassHandler(user.getPlayerClass());
 
-            if(classHandler.onInteractWorld(new UserInteractEvent(user, event))) event.setCancelled(true);
+            if (classHandler.onInteractWorld(new UserInteractEvent(user, event))) event.setCancelled(true);
             return;
         }
 
@@ -346,7 +347,7 @@ public class WarsGameListener implements Listener {
 
                 if (!(arrow.getShooter() instanceof Player)) return null;
                 return (Player) arrow.getShooter();
-            } else{
+            } else {
                 List<MetadataValue> values = event.getDamager().getMetadata("striker");
                 if (values == null || values.isEmpty()) return null;
 
@@ -385,7 +386,7 @@ public class WarsGameListener implements Listener {
 
         User killerInfo = killer == null ? null : plugin.getUser(killer);
         if (killerInfo != null) {
-            if(intentionally) plugin.messageAll(plugin.getLocale("player-killed-player", diedInfo.getFormattedName(),
+            if (intentionally) plugin.messageAll(plugin.getLocale("player-killed-player", diedInfo.getFormattedName(),
                     killerInfo.getFormattedName()));
             else plugin.messageAll(plugin.getLocale("player-died-last-attacker", diedInfo.getFormattedName(),
                     killerInfo.getFormattedName()));

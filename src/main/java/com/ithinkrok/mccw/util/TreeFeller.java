@@ -1,5 +1,6 @@
 package com.ithinkrok.mccw.util;
 
+import com.ithinkrok.mccw.handler.GameInstance;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -16,7 +17,7 @@ import java.util.List;
  */
 public class TreeFeller {
 
-    public static void fellTree(Location location){
+    public static void fellTree(GameInstance game, Location location){
         LinkedList<Location> locations = new LinkedList<>();
 
         addSurrounding(locations, location);
@@ -29,6 +30,7 @@ public class TreeFeller {
             Block block = pos.getBlock();
             
             if(block.getType() != Material.LOG && block.getType() != Material.LOG_2) continue;
+            if(game.isInBuilding(pos)) continue;
             
             block.setType(Material.AIR);
             ingotsToSpawn.add(pos);

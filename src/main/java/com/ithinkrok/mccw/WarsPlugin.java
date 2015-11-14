@@ -192,6 +192,8 @@ public class WarsPlugin extends JavaPlugin {
 
         user.message(getLocale("map-info"));
 
+        player.teleport(Bukkit.getWorld("world").getSpawnLocation());
+
     }
 
     public User getUser(Player player) {

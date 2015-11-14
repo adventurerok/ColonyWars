@@ -79,7 +79,7 @@ public class InfernoClass extends BuyableInventory implements PlayerClassHandler
                 Block target = user.rayTraceBlocks(200);
 
                 if (target == null) break;
-                target.getWorld().createExplosion(target.getLocation(), 2F, false);
+                user.createPlayerExplosion(target.getLocation(), 2F, false, 0);
 
                 break;
         }

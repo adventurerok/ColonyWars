@@ -109,11 +109,6 @@ public class WarsGameListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void onBlockExplode(BlockExplodeEvent event) {
-
-    }
-
 
     @EventHandler
     public void onPickupItem(PlayerPickupItemEvent event) {
@@ -351,14 +346,14 @@ public class WarsGameListener implements Listener {
 
                 if (!(arrow.getShooter() instanceof Player)) return null;
                 return (Player) arrow.getShooter();
-            } else if (event.getDamager() instanceof LightningStrike) {
+            } else{
                 List<MetadataValue> values = event.getDamager().getMetadata("striker");
                 if (values == null || values.isEmpty()) return null;
 
                 User user = plugin.getUser((UUID) values.get(0).value());
                 if (user == null) return null;
                 return user.getPlayer();
-            } else return null;
+            }
         } else {
             return (Player) event.getDamager();
         }

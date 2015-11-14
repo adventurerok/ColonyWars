@@ -9,11 +9,14 @@ import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -387,6 +390,17 @@ public class User {
         player.setSaturation(5);
 
         if(removePotionEffects) removePotionEffects();
+    }
+
+    public void createPlayerExplosion(Location loc, float power, boolean fire, int fuse){
+        TNTPrimed tnt = (TNTPrimed) loc.getWorld().spawnEntity(loc, EntityType.PRIMED_TNT);
+
+        tnt.setMetadata("striker", new FixedMetadataValue(plugin, player.getUniqueId()));
+
+        tnt.setIsIncendiary(fire);
+        tnt.setYield(power);
+
+        tnt.setFuseTicks(fuse);
     }
 
     public void removePotionEffects(){

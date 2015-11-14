@@ -522,6 +522,8 @@ public class User {
 
         meta.setColor(teamColor.armorColor);
         armor.setItemMeta(meta);
+
+        meta.spigot().setUnbreakable(true);
     }
 
     public boolean hasPlayerCash(int cash) {

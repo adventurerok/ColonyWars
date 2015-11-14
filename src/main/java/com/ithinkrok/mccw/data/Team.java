@@ -173,6 +173,7 @@ public class Team {
             case Buildings.CHURCH:
             case Buildings.CATHEDRAL:
                 churchLocations.remove(building.getCenterBlock());
+                if(churchLocations.isEmpty()) setRespawnChance(0);
                 break;
         }
     }

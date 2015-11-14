@@ -108,8 +108,8 @@ public class OmniInventory extends BuyableInventory {
                             "to find a better place!");
 
                     event.getPlayerInventory().addItem(InventoryUtils
-                            .createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.CATHEDRAL,
-                                    "Builds a cathedral when placed!"));
+                            .createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, "PlayerCathedral",
+                                    "Builds a Cathedral when placed!"));
                 }
             }
 

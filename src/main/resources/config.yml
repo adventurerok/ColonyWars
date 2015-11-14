@@ -106,6 +106,7 @@ buildings:
     MageTower: "mccw_magetower.schematic"
     Church: "mccw_church.schematic"
     Cathedral: "mccw_cathedral.schematic"
+    PlayerCathedral: "mccw_cathedral.schematic"
     Greenhouse: "mccw_greenhouse.schematic"
     ScoutTower: "mccw_scouttower.schematic"
     CannonTower: "mccw_cannontower.schematic"
@@ -122,6 +123,7 @@ buildings:
     Church: 3
     #Cathedral should always be 0 so that it is built in the same rotation as the church
     Cathedral: 0
+    PlayerCathedral: 3
     Greenhouse: 3
     ScoutTower: 2
     CannonTower: 2
@@ -129,6 +131,13 @@ buildings:
     Landmine: 0
     WirelessBuffer: 0
     TimerBuffer: 0
+  offsets:
+    PlayerCathedral:
+      x: 0
+      y: 1
+      z: 0
+  transform:
+    PlayerCathedral: "Cathedral"
 
 costs:
   buildings:

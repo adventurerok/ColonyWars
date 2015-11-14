@@ -42,6 +42,7 @@ public class SchematicBuilder {
         rotation = (rotation + schemData.getBaseRotation()) % 4;
 
         File schemFile = new File(plugin.getDataFolder(), schemData.getSchematicFile());
+        Vector baseOffset = schemData.getOffset();
 
         try (NBTInputStream in = new NBTInputStream(new FileInputStream(schemFile))) {
             CompoundMap nbt = ((CompoundTag) in.readTag()).getValue();
@@ -50,9 +51,9 @@ public class SchematicBuilder {
             short height = ((ShortTag) nbt.get("Height")).getValue();
             short length = ((ShortTag) nbt.get("Length")).getValue();
 
-            int offsetX = ((IntTag) nbt.get("WEOffsetX")).getValue();
-            int offsetY = ((IntTag) nbt.get("WEOffsetY")).getValue();
-            int offsetZ = ((IntTag) nbt.get("WEOffsetZ")).getValue();
+            int offsetX = ((IntTag) nbt.get("WEOffsetX")).getValue() + baseOffset.getBlockX();
+            int offsetY = ((IntTag) nbt.get("WEOffsetY")).getValue() + baseOffset.getBlockY();
+            int offsetZ = ((IntTag) nbt.get("WEOffsetZ")).getValue() + baseOffset.getBlockZ();
 
             byte[] blocks = ((ByteArrayTag) nbt.get("Blocks")).getValue();
             byte[] data = ((ByteArrayTag) nbt.get("Data")).getValue();
@@ -101,7 +102,7 @@ public class SchematicBuilder {
             });
 
             Building result =
-                    new Building(plugin, schemData.getBuildingName(), teamColor, centerBlock, rotation, locations,
+                    new Building(plugin, schemData.getTransformName(), teamColor, centerBlock, rotation, locations,
                             oldBlocks);
 
             plugin.getGameInstance().addBuilding(result);

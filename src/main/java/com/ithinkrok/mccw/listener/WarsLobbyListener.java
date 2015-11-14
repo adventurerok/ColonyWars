@@ -77,6 +77,8 @@ public class WarsLobbyListener implements Listener {
             showTeamChooser(event.getPlayer());
         } else if (plugin.getLocale("class-chooser").equals(event.getItem().getItemMeta().getDisplayName())) {
             showClassChooser(event.getPlayer());
+        } else if(plugin.getLocale("map-chooser").equals(event.getItem().getItemMeta().getDisplayName())){
+            showMapChooser(event.getPlayer());
         }
     }
 

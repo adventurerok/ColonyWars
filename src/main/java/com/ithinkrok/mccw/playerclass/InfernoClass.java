@@ -70,33 +70,31 @@ public class InfernoClass extends BuyableInventory implements PlayerClassHandler
 
     @Override
     public void onInteractWorld(UserInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         ItemStack item = event.getItem();
         if (item == null) return;
 
         User user = event.getUserClicked();
-
-        if (event.getAction() == Action.LEFT_CLICK_BLOCK && item.getType() == Material.TNT) {
-            BlockFace mod = event.getBlockFace();
-            user.createPlayerExplosion(
-                    event.getClickedBlock().getLocation().clone().add(mod.getModX(), mod.getModY(), mod.getModZ()), 4F,
-                    false, 80);
-
-            ItemStack oneLess = item.clone();
-            if (oneLess.getAmount() > 1) oneLess.setAmount(oneLess.getAmount() - 1);
-            else oneLess = null;
-            user.getPlayer().setItemInHand(oneLess);
-            event.setCancelled(true);
-            return;
-        }
-
-        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        BlockFace mod = event.getBlockFace();
 
         switch (item.getType()) {
+            case TNT:
+                if (event.getAction() != Action.RIGHT_CLICK_BLOCK) break;
+                user.createPlayerExplosion(
+                        event.getClickedBlock().getLocation().clone().add(mod.getModX(), mod.getModY(), mod.getModZ()),
+                        4F, false, 80);
+
+                ItemStack oneLess = item.clone();
+                if (oneLess.getAmount() > 1) oneLess.setAmount(oneLess.getAmount() - 1);
+                else oneLess = null;
+                user.getPlayer().setItemInHand(oneLess);
+                event.setCancelled(true);
+                break;
             case IRON_CHESTPLATE:
                 if (!user.startCoolDown("wand", 25 - 10 * user.getUpgradeLevel("wand"),
                         plugin.getLocale("explosion-wand-cooldown"))) break;
                 Block target = user.rayTraceBlocks(200);
-                BlockFace mod = event.getBlockFace();
+
 
                 if (target == null) break;
                 user.createPlayerExplosion(

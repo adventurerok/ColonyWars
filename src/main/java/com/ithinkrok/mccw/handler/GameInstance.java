@@ -379,7 +379,7 @@ public class GameInstance {
             String closestName = null;
 
             for (User info : plugin.getUsers()) {
-                if (info.getTeamColor() == exclude) continue;
+                if (!info.isInGame() || info.getTeamColor() == exclude) continue;
 
                 double dist = player.getLocation().distanceSquared(info.getPlayer().getLocation());
 

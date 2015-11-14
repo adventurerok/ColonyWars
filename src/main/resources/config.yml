@@ -196,6 +196,9 @@ costs:
     flame1: 1600
     flame2: 1600
     tnt: 75
+  dark_knight:
+    sword1: 1350
+    sword2: 1600
 
 amounts:
   farm:
@@ -220,6 +223,7 @@ locale:
   mage-desc: "Can strike lightning and use harming potions"
   peasant-desc: "Has an enchanted iron axe to get money faster"
   inferno-desc: "Has an explosion wand and TNT"
+  dark_knight-desc: "Wields the darkness sword..."
   team-chooser: "Team Chooser"
   team-desc: "%s Team"
   team-already-member: "§cYou are already in the %s §cTeam"

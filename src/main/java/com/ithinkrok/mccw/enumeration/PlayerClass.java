@@ -15,7 +15,8 @@ public enum PlayerClass {
     ARCHER("Archer", Material.BOW),
     MAGE("Mage", Material.DIAMOND_LEGGINGS),
     PEASANT("Peasant", Material.IRON_AXE),
-    INFERNO("Inferno", Material.IRON_CHESTPLATE);
+    INFERNO("Inferno", Material.IRON_CHESTPLATE),
+    DARK_KNIGHT("Dark Knight", Material.IRON_HELMET);
 
     public final String name;
     public final Material chooser;

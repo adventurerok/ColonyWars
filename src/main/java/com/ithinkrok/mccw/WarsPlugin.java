@@ -255,7 +255,15 @@ public class WarsPlugin extends JavaPlugin {
             if (votes == highestVotes) possible.add(map);
         }
 
-        return possible.get(random.nextInt(possible.size()));
+        String bestMap = possible.get(random.nextInt(possible.size()));
+
+        while(bestMap.equals(getConfig().getString("random-map"))){
+            bestMap = mapList.get(random.nextInt(mapList.size()));
+        }
+
+        messageAll(getLocale("map-chosen", bestMap));
+
+        return bestMap;
     }
 
     public int getMapVotes(String map) {

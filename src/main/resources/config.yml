@@ -1,6 +1,9 @@
 map-list:
   - "canyon"
   - "forest_hills"
+  - "random"
+
+random-map: "random"
 
 maps:
   canyon:
@@ -200,8 +203,9 @@ amounts:
 locale:
   map-chooser: "Map Voter"
   map-chooser-desc: "Vote for a map"
-  canyon-desc: "A canyon seperates the four teams bases. Each team has only one bridge to cross it."
-  forest_hills-desc: "Teams separated by a dense forest with some hills in it."
+  canyon-desc: "A canyon seperates the four teams bases..."
+  forest_hills-desc: "Teams separated by forest and hills."
+  random-desc: "Vote for a random map"
   class-chooser: "Class Chooser"
   general-desc: "Fights with a diamond sword"
   scout-desc: "Runs fast and has a player locator"
@@ -245,4 +249,5 @@ locale:
   map-voted: "§6You have voted for §3%s§6!"
   map-already-voted: "§cYou already voted for §3%s§c!"
   player-voted: "§6%s §6voted for §3%s§3!"
-  player-vote-change: "§6%s changed their vote from §3%s§6 to §3%s§6!"
+  player-vote-change: "§6%s §6changed their vote from §3%s§6 to §3%s§6!"
+  map-chosen: "§6Playing map: §3%s"

@@ -130,7 +130,7 @@ public class User {
         Objective mapObjective = scoreboard.getObjective("map");
         if(mapObjective == null){
             mapObjective = scoreboard.registerNewObjective("map", "dummy");
-            mapObjective.setDisplayName("Map Voting");
+            mapObjective.setDisplayName(ChatColor.DARK_AQUA + "Map Voting");
             mapObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
         }
 

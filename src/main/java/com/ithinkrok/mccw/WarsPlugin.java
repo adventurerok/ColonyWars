@@ -198,6 +198,7 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public User getUser(Player player) {
+        if(player == null) return null;
         return playerInfoHashMap.get(player.getUniqueId());
     }
 
@@ -305,6 +306,7 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public User getUser(UUID uniqueId) {
+        if(uniqueId == null) return null;
         return playerInfoHashMap.get(uniqueId);
     }
 

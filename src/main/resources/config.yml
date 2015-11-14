@@ -45,6 +45,51 @@ maps:
         x: -363
         y: 94
         z: 368
+  forest_hills:
+    folder: "forest_hills"
+    center:
+      x: -227
+      y: 28
+      z: -242
+    showdown-size:
+      x: 30
+      z: 30
+    red:
+      base:
+        x: -29
+        y: 25
+        z: -44
+      spawn:
+        x: -30
+        y: 25
+        z: -45
+    yellow:
+      base:
+        x: -425
+        y: 25
+        z: -44
+      spawn:
+        x: -424
+        y: 25
+        z: -45
+    green:
+      base:
+        x: -425
+        y: 25
+        z: -440
+      spawn:
+        x: -424
+        y: 25
+        z: -439
+    blue:
+      base:
+        x: -29
+        y: 25
+        z: -440
+      spawn:
+        x: -30
+        y: 25
+        z: -439
 
 buildings:
   schematics:

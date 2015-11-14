@@ -159,6 +159,10 @@ public class WarsPlugin extends JavaPlugin {
         mapVotes.put(map, votes);
     }
 
+    public void playerTeleportLobby(Player player){
+        player.teleport(Bukkit.getWorld("world").getSpawnLocation());
+    }
+
     public void playerJoinLobby(Player player) {
         User user = getUser(player);
 
@@ -188,7 +192,6 @@ public class WarsPlugin extends JavaPlugin {
 
         user.message(getLocale("map-info"));
 
-        user.getPlayer().teleport(Bukkit.getWorld("world").getSpawnLocation());
     }
 
     public User getUser(Player player) {

@@ -72,7 +72,7 @@ public class GameInstance {
 
     public void endGame() {
         for (User user : plugin.getUsers()) {
-            plugin.playerJoinLobby(user.getPlayer());
+            plugin.playerTeleportLobby(user.getPlayer());
         }
 
         plugin.getUsers().forEach(User::decloak);

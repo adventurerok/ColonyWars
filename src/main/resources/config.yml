@@ -233,7 +233,7 @@ locale:
   team-chooser-desc: "Choose your team"
   class-chooser-desc: "Choose your class"
   choose-team-class: "§2Choose your team/class or it is chosen randomly"
-  map-info: "§2Canyon is the only map so there is no map voting"
+  map-info: "§2Map voting is now available!"
   start-minute-warning: "§7Game starting in§6 %s §7Minutes.."
   start-seconds-warning: "§7Game starting in§6 %s §7Seconds.."
   start-final-warning: "§6%s§7!"

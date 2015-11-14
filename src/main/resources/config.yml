@@ -140,7 +140,7 @@ costs:
     Cathedral: 8000
     Greenhouse: 2000
     Wall: 100
-    Landmine: 500
+    Landmine: 200
     ScoutTower: 2000
     CannonTower: 2000
     WirelessBuffer: 2500

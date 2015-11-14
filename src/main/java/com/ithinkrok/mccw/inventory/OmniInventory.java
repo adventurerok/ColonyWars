@@ -43,7 +43,7 @@ public class OmniInventory extends BuyableInventory {
         int mineCost = config.getInt("costs.buildings." + Buildings.LANDMINE);
 
         result.add(new BuildingBuyable(Buildings.SCOUTTOWER, Buildings.BLACKSMITH, scoutTowerCost));
-        result.add(new BuildingBuyable(Buildings.WALL, Buildings.BLACKSMITH, wallCost, 16));
+        result.add(new BuildingBuyable(Buildings.WALL, Buildings.BLACKSMITH, wallCost, 16, true));
         result.add(new BuildingBuyable(Buildings.LANDMINE, Buildings.BLACKSMITH, mineCost));
     }
 

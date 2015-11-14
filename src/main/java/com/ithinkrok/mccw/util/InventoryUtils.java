@@ -91,7 +91,7 @@ public class InventoryUtils {
 
         if (playerAmount > 0 && !user.subtractPlayerCash(playerAmount)) return false;
 
-        team.subtractTeamCash(teamAmount);
+        if(teamAmount > 0) team.subtractTeamCash(teamAmount);
 
         if (playerAmount > 0) user.message("Paid " + ChatColor.RED + "$" + playerAmount +
                 ChatColor.YELLOW + " using your own money as your Team did not have enough!");

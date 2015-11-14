@@ -135,8 +135,9 @@ public class GameInstance {
     }
 
     public void startGame() {
+        String mapFolder = plugin.getConfig().getString("maps." + map + ".folder");
         try {
-            DirectoryUtils.copy(Paths.get("./canyon/"), Paths.get("./playing/"));
+            DirectoryUtils.copy(Paths.get("./" + mapFolder + "/"), Paths.get("./playing/"));
         } catch (IOException e) {
             e.printStackTrace();
         }

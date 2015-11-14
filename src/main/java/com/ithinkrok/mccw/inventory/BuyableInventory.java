@@ -43,7 +43,7 @@ public class BuyableInventory implements InventoryHandler {
 
         Buyable i = stackToBuyable.get(item);
         if (i != null) {
-            if (!i.getBuildingName().equals(building.getBuildingName())) return false;
+            if (!i.getBuildingNames().contains(building.getBuildingName())) return false;
             tryBuyItem(i, building, user, team);
 
             return true;
@@ -106,7 +106,7 @@ public class BuyableInventory implements InventoryHandler {
     public void addInventoryItems(List<ItemStack> items, Building building, User user,
                                   Team team) {
         for (Buyable buyable : this.items) {
-            if (!buyable.getBuildingName().equals(building.getBuildingName())) continue;
+            if (!buyable.getBuildingNames().contains(building.getBuildingName())) continue;
             if (!buyable.canBuy(new ItemPurchaseEvent(building, user, team))) continue;
 
             items.add(buyable.getDisplayItemStack());

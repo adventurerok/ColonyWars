@@ -46,10 +46,7 @@ public class ScoutClass extends BuyableInventory implements PlayerClassHandler {
                 "knockback", 2), new UpgradeBuyable(InventoryUtils
                 .createItemWithNameAndLore(Material.COMPASS, 1, 0, "Player Compass",
                         "Locates the closest enemy player"), Buildings.CHURCH, config.getInt("costs.scout.compass"),
-                "compass", 1), new UpgradeBuyable(InventoryUtils
-                .createItemWithNameAndLore(Material.COMPASS, 1, 0, "Player Compass",
-                        "Locates the closest enemy player"), Buildings.CATHEDRAL, config.getInt("costs.scout.compass"),
-                "compass", 1), new UpgradeBuyable(InventoryUtils
+                "compass", 1).withAdditionalBuildings(Buildings.CATHEDRAL), new UpgradeBuyable(InventoryUtils
                 .createItemWithNameAndLore(Material.CHAINMAIL_HELMET, 1, 0, "Regeneration Ability 2",
                         "Cooldown: 45 seconds"), Buildings.MAGETOWER, config.getInt("costs.scout.regen"), "regen", 1));
         this.plugin = plugin;

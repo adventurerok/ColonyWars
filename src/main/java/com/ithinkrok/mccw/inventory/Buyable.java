@@ -4,6 +4,11 @@ import com.ithinkrok.mccw.event.ItemPurchaseEvent;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Created by paul on 06/11/15.
  *
@@ -15,16 +20,22 @@ public abstract class Buyable {
     private final int cost;
     private final boolean team;
     private ItemStack display;
-    private final String buildingName;
+    private List<String> buildingNames;
 
     public Buyable(ItemStack display, String buildingName, int cost, boolean team, int minFreeSlots) {
         this.display = display;
-        this.buildingName = buildingName;
+        this.buildingNames = new ArrayList<>();
+        buildingNames.add(buildingName);
         this.cost = cost;
         this.team = team;
         this.minFreeSlots = minFreeSlots;
 
         InventoryUtils.addPrice(this.display, cost, team);
+    }
+
+    public Buyable withAdditionalBuildings(String...additionalBuildings){
+        Collections.addAll(buildingNames, additionalBuildings);
+        return this;
     }
 
     public int getCost() {
@@ -43,8 +54,8 @@ public abstract class Buyable {
         return minFreeSlots;
     }
 
-    public String getBuildingName() {
-        return buildingName;
+    public List<String> getBuildingNames() {
+        return buildingNames;
     }
 
     public abstract void onPurchase(ItemPurchaseEvent event);

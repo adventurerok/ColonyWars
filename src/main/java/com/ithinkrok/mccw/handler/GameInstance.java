@@ -332,7 +332,7 @@ public class GameInstance {
         for (User user : plugin.getUsers()) {
             int offsetX = (-x / 2) + random.nextInt(x);
             int offsetZ = (-z / 2) + random.nextInt(z);
-            int offsetY = 1;
+            int offsetY = 2;
 
             Location teleport = showdownArena.getCenter().clone();
             teleport.setX(teleport.getX() + offsetX);

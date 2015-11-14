@@ -401,6 +401,7 @@ public class User {
         if(isInGame()) throw new RuntimeException("You cannot be a spectator when you are already in a game");
 
         cloak();
+        resetPlayerStats(true);
 
         player.setAllowFlight(true);
         player.spigot().setCollidesWithEntities(false);

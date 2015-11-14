@@ -52,8 +52,8 @@ public class DarkKnightClass extends BuyableInventory implements PlayerClassHand
     }
 
     @Override
-    public void onInteractWorld(UserInteractEvent event) {
-
+    public boolean onInteractWorld(UserInteractEvent event) {
+        return false;
     }
 
     @Override

@@ -77,10 +77,10 @@ public class ScoutClass extends BuyableInventory implements PlayerClassHandler {
     }
 
     @Override
-    public void onInteractWorld(UserInteractEvent event) {
-        if(event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+    public boolean onInteractWorld(UserInteractEvent event) {
+        if(event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return false;
         ItemStack item = event.getItem();
-        if (item == null) return;
+        if (item == null) return false;
 
         switch (item.getType()) {
             case COMPASS:
@@ -90,15 +90,17 @@ public class ScoutClass extends BuyableInventory implements PlayerClassHandler {
             case CHAINMAIL_HELMET:
                 User user = event.getUserClicked();
                 if (!user.startCoolDown("regen", 35 + 10 * user.getUpgradeLevel("regen"),
-                        "Your regeneration ability has cooled down!")) return;
+                        "Your regeneration ability has cooled down!")) break;
 
                 event.getPlayer().addPotionEffect(
                         new PotionEffect(PotionEffectType.REGENERATION, 200, user.getUpgradeLevel("regen")));
 
                 break;
+            default:
+                return false;
         }
 
-
+        return true;
     }
 
     @Override

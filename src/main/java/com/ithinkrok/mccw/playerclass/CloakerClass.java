@@ -62,20 +62,20 @@ public class CloakerClass extends BuyableInventory implements PlayerClassHandler
     }
 
     @Override
-    public void onInteractWorld(UserInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if (event.getItem() == null || event.getItem().getType() != Material.IRON_LEGGINGS) return;
+    public boolean onInteractWorld(UserInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return false;
+        if (event.getItem() == null || event.getItem().getType() != Material.IRON_LEGGINGS) return false;
 
         User user = event.getUserClicked();
 
         if (user.isCoolingDown("cloaking")) {
             user.message(ChatColor.RED + "You are already cloaked!");
-            return;
+            return true;
         }
 
         if (user.isCoolingDown("cloak")) {
             user.message(ChatColor.RED + "Please wait for the cloak to cool down!");
-            return;
+            return true;
         }
 
         int cloak = 10;
@@ -113,6 +113,8 @@ public class CloakerClass extends BuyableInventory implements PlayerClassHandler
                     .addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0, false, false),
                             true);
         }, cloak * 20);
+
+        return true;
     }
 
     @Override

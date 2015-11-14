@@ -69,10 +69,10 @@ public class InfernoClass extends BuyableInventory implements PlayerClassHandler
     }
 
     @Override
-    public void onInteractWorld(UserInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+    public boolean onInteractWorld(UserInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return false;
         ItemStack item = event.getItem();
-        if (item == null) return;
+        if (item == null) return false;
 
         User user = event.getUserClicked();
         BlockFace mod = event.getBlockFace();
@@ -87,7 +87,6 @@ public class InfernoClass extends BuyableInventory implements PlayerClassHandler
                 if (oneLess.getAmount() > 1) oneLess.setAmount(oneLess.getAmount() - 1);
                 else oneLess = null;
                 user.getPlayer().setItemInHand(oneLess);
-                event.setCancelled(true);
                 break;
             case IRON_CHESTPLATE:
                 if (!user.startCoolDown("wand", 25 - 10 * user.getUpgradeLevel("wand"),
@@ -100,7 +99,11 @@ public class InfernoClass extends BuyableInventory implements PlayerClassHandler
                         .add(mod.getModX() + 0.5, mod.getModY() + 0.5, mod.getModZ() + 0.5),2F, false, 0);
 
                 break;
+            default:
+                return false;
         }
+
+        return true;
     }
 
     @Override

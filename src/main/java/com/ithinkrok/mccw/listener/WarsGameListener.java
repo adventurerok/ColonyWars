@@ -269,7 +269,7 @@ public class WarsGameListener implements Listener {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getClickedBlock().getType() != Material.OBSIDIAN) {
             PlayerClassHandler classHandler = plugin.getPlayerClassHandler(user.getPlayerClass());
 
-            classHandler.onInteractWorld(new UserInteractEvent(user, event));
+            if(classHandler.onInteractWorld(new UserInteractEvent(user, event))) event.setCancelled(true);
             return;
         }
 

@@ -78,10 +78,10 @@ public class MageClass extends BuyableInventory implements PlayerClassHandler {
     }
 
     @Override
-    public void onInteractWorld(UserInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+    public boolean onInteractWorld(UserInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return false;
         ItemStack item = event.getItem();
-        if (item == null) return;
+        if (item == null) return false;
 
         User user = event.getUserClicked();
 
@@ -103,7 +103,11 @@ public class MageClass extends BuyableInventory implements PlayerClassHandler {
 
                 strike.setMetadata("striker", new FixedMetadataValue(plugin, event.getPlayer().getUniqueId()));
                 break;
+            default:
+                return false;
         }
+
+        return true;
     }
 
     @Override

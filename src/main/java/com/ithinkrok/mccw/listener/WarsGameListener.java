@@ -81,9 +81,9 @@ public class WarsGameListener implements Listener {
                     ChatColor.WHITE + "%s");
         }
 
-        plugin.getUsers().stream()
-                .filter(other -> other.getTeamColor() != user.getTeamColor() && !other.getPlayer().isOp())
-                .forEach(other -> event.getRecipients().remove(other.getPlayer()));
+//        plugin.getUsers().stream()
+//                .filter(other -> other.getTeamColor() != user.getTeamColor() && !other.getPlayer().isOp())
+//                .forEach(other -> event.getRecipients().remove(other.getPlayer()));
     }
 
     @EventHandler

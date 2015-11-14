@@ -4,6 +4,7 @@ import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.mccw.event.UserAttackUserEvent;
 import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
@@ -123,5 +124,10 @@ public class ScoutClass extends BuyableInventory implements PlayerClassHandler {
 
                 InventoryUtils.replaceItem(event.getUserInventory(), regen);
         }
+    }
+
+    @Override
+    public void onUserAttackUser(UserAttackUserEvent event) {
+
     }
 }

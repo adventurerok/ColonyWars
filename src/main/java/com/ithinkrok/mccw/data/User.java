@@ -8,20 +8,19 @@ import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by paul on 01/11/15.
@@ -29,6 +28,14 @@ import java.util.Map;
  * Stores the player's info while they are online
  */
 public class User {
+
+    private static final HashSet<Material> SEE_THROUGH = new HashSet<>();
+
+    static {
+        SEE_THROUGH.add(Material.AIR);
+        SEE_THROUGH.add(Material.WATER);
+        SEE_THROUGH.add(Material.STATIONARY_WATER);
+    }
 
     private Player player;
     private TeamColor teamColor;
@@ -46,6 +53,9 @@ public class User {
     private boolean cloaked = false;
 
     private boolean inGame = false;
+
+    private UUID fireAttacker;
+    private UUID witherAttacker;
 
     private String mapVote;
 
@@ -93,6 +103,22 @@ public class User {
         }
     }
 
+    public User getFireAttacker(){
+        return plugin.getUser(fireAttacker);
+    }
+
+    public User getWitherAttacker(){
+        return plugin.getUser(witherAttacker);
+    }
+
+    public void setFireAttacker(User fireAttacker){
+        this.fireAttacker = fireAttacker.getPlayer().getUniqueId();
+    }
+
+    public void setWitherAttacker(User witherAttacker){
+        this.witherAttacker = witherAttacker.getPlayer().getUniqueId();
+    }
+
     public void decloak(){
         setCloaked(false);
 
@@ -122,8 +148,20 @@ public class User {
             removeScoreboardObjective(scoreboard, "map");
         }
 
+    }
 
+    public void setFireTicks(User attacker, int ticks){
+        fireAttacker = attacker.getPlayer().getUniqueId();
+        player.setFireTicks(ticks);
+    }
 
+    public void setWitherTicks(User attacker, int ticks){
+        witherAttacker = attacker.getPlayer().getUniqueId();
+        player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, ticks, 0, false, true), true);
+    }
+
+    public Block rayTraceBlocks(int distance){
+        return player.getTargetBlock(SEE_THROUGH, distance);
     }
 
     private void updateMapScoreboard(Scoreboard scoreboard){

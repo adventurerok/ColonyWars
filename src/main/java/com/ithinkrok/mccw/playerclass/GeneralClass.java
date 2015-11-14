@@ -2,6 +2,7 @@ package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
+import com.ithinkrok.mccw.event.UserAttackUserEvent;
 import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
@@ -60,5 +61,10 @@ public class GeneralClass extends BuyableInventory implements PlayerClassHandler
                 InventoryUtils.replaceItem(event.getUserInventory(), sword);
                 break;
         }
+    }
+
+    @Override
+    public void onUserAttackUser(UserAttackUserEvent event) {
+
     }
 }

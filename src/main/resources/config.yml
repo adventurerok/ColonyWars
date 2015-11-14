@@ -190,6 +190,11 @@ costs:
     sharpness2: 1600
     knockback1: 1350
     knockback2: 1600
+  inferno:
+    wand1: 1350
+    wand2: 1600
+    flame1: 1600
+    flame2: 1600
 
 amounts:
   farm:
@@ -213,6 +218,7 @@ locale:
   cloaker-desc: "Can go invisible for short periods of time"
   mage-desc: "Can strike lightning and use harming potions"
   peasant-desc: "Has an enchanted iron axe to get money faster"
+  inferno-desc: "Has an explosion wand and TNT"
   team-chooser: "Team Chooser"
   team-desc: "%s Team"
   team-already-member: "§cYou are already in the %s §cTeam"
@@ -246,6 +252,7 @@ locale:
   building-not-finished: "§cPlease wait until the construction has finished."
   ender-wand-cooldown: "§cThe ender wand is cooling down."
   lightning-wand-cooldown: "§cThe lightning wand is cooling down."
+  explosion-wand-cooldown: "§cThe explosion wand is colling down."
   map-voted: "§6You have voted for §3%s§6!"
   map-already-voted: "§cYou already voted for §3%s§c!"
   player-voted: "§6%s §6voted for §3%s§3!"

@@ -3,6 +3,7 @@ package com.ithinkrok.mccw.playerclass;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.event.ItemPurchaseEvent;
+import com.ithinkrok.mccw.event.UserAttackUserEvent;
 import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
@@ -97,5 +98,10 @@ public class ArcherClass extends BuyableInventory implements PlayerClassHandler 
                 event.getUserInventory().addItem(new ItemStack(Material.ARROW, 64));
                 break;
         }
+    }
+
+    @Override
+    public void onUserAttackUser(UserAttackUserEvent event) {
+
     }
 }

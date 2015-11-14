@@ -31,13 +31,7 @@ import java.util.HashSet;
  */
 public class MageClass extends BuyableInventory implements PlayerClassHandler {
 
-    private static final HashSet<Material> SEE_THROUGH = new HashSet<>();
 
-    static {
-        SEE_THROUGH.add(Material.AIR);
-        SEE_THROUGH.add(Material.WATER);
-        SEE_THROUGH.add(Material.STATIONARY_WATER);
-    }
 
     private final WarsPlugin plugin;
 
@@ -100,7 +94,7 @@ public class MageClass extends BuyableInventory implements PlayerClassHandler {
             case DIAMOND_LEGGINGS:
                 if (!user.startCoolDown("lightning", 45 - 15 * user.getUpgradeLevel("lightning"),
                         plugin.getLocale("lightning-wand-cooldown"))) break;
-                Block target = event.getPlayer().getTargetBlock(SEE_THROUGH, 200);
+                Block target = user.rayTraceBlocks(200);
 
                 if (target == null) break;
                 LightningStrike strike =

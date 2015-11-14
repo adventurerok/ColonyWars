@@ -5,6 +5,7 @@ import com.ithinkrok.mccw.data.Building;
 import com.ithinkrok.mccw.data.Schematic;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
+import com.ithinkrok.mccw.event.UserAttackUserEvent;
 import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.handler.GameInstance;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
@@ -14,6 +15,7 @@ import com.ithinkrok.mccw.util.Facing;
 import com.ithinkrok.mccw.util.SchematicBuilder;
 import com.ithinkrok.mccw.util.TreeFeller;
 import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -326,6 +328,19 @@ public class WarsGameListener implements Listener {
         }
     }
 
+    private void userAttackUser(UserAttackUserEvent event){
+        ItemStack weapon = event.getWeapon();
+
+        if(weapon == null) return;
+
+        if(weapon.containsEnchantment(Enchantment.FIRE_ASPECT)){
+            event.getTarget().setFireAttacker(event.getAttacker());
+        }
+
+        PlayerClassHandler classHandler = plugin.getPlayerClassHandler(event.getAttacker().getPlayerClass());
+        classHandler.onUserAttackUser(event);
+    }
+
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Player damager = getDamager(event);
@@ -349,7 +364,11 @@ public class WarsGameListener implements Listener {
             return;
         }
 
-        if (target.getHealth() - event.getDamage() < 1) {
+        if(event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK){
+            userAttackUser(new UserAttackUserEvent(plugin.getUser(damager), plugin.getUser(target), event));
+        }
+
+        if (target.getHealth() - event.getFinalDamage() < 1) {
             event.setCancelled(true);
             playerDeath(target, damager);
         }
@@ -429,11 +448,24 @@ public class WarsGameListener implements Listener {
     public void onEntityDamaged(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
 
-        Player target = (Player) event.getEntity();
+        User target = plugin.getUser((Player) event.getEntity());
 
-        if (target.getHealth() - event.getDamage() < 1) {
+        if (target.getPlayer().getHealth() - event.getFinalDamage() < 1) {
             event.setCancelled(true);
-            playerDeath(target, null);
+
+            User killer = null;
+
+            switch(event.getCause()){
+                case FIRE_TICK:
+                    killer = target.getFireAttacker();
+                    break;
+                case WITHER:
+                    killer = target.getWitherAttacker();
+                    break;
+            }
+
+            if(killer == null) playerDeath(target.getPlayer(), null);
+            else playerDeath(target.getPlayer(), killer.getPlayer());
         }
     }
 

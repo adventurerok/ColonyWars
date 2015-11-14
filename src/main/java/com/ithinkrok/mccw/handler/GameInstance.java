@@ -157,6 +157,8 @@ public class GameInstance {
     public void setupPlayers() {
         for (User info : plugin.getUsers()) {
 
+            info.setMapVote(null);
+
             if (info.getTeamColor() == null) {
                 info.setTeamColor(assignPlayerTeam());
             }

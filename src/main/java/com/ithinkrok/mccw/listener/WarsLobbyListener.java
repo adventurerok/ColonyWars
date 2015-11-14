@@ -201,7 +201,9 @@ public class WarsLobbyListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        plugin.getUser(event.getPlayer()).setTeamColor(null);
+        User user = plugin.getUser(event.getPlayer());
+        user.setTeamColor(null);
+        user.setMapVote(null);
 
         String name = getPlayerNameColor(event.getPlayer()) + event.getPlayer().getName();
         String online = Integer.toString(plugin.getPlayerCount() - 1);

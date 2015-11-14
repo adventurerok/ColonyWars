@@ -167,6 +167,7 @@ public class WarsPlugin extends JavaPlugin {
         user.clearArmor();
 
         user.setTeamColor(null);
+        user.setMapVote(null);
 
         PlayerInventory inv = player.getInventory();
 

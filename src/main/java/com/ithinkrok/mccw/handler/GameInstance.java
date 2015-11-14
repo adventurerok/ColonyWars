@@ -439,7 +439,7 @@ public class GameInstance {
     }
 
     public void finishBuilding(Building building) {
-        if (getTeam(building.getTeamColor()).getBuildingCount(building.getBuildingName()) == 0) {
+        if (!getTeam(building.getTeamColor()).everHadBuilding(building.getBuildingName())) {
             for (User info : plugin.getUsers()) {
                 if (info.getTeamColor() != building.getTeamColor()) continue;
 

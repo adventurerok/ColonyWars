@@ -28,6 +28,7 @@ public class Team {
 
     private HashMap<String, Integer> buildingCounts = new HashMap<>();
     private HashMap<String, Integer> buildingNowCounts = new HashMap<>();
+    private HashMap<String, Boolean> hadBuildings = new HashMap<>();
 
     private List<Location> churchLocations = new ArrayList<>();
     private Location baseLocation;
@@ -132,6 +133,12 @@ public class Team {
         updatePlayerScoreboards();
     }
 
+    public boolean everHadBuilding(String buildingName){
+        Boolean bool = hadBuildings.get(buildingName);
+
+        return bool == null ? false : bool;
+    }
+
     public void buildingFinished(Building building){
         buildingsConstructingNow -= 1;
 
@@ -140,6 +147,7 @@ public class Team {
         else buildingNowCounts.remove(building.getBuildingName());
 
         buildingCounts.put(building.getBuildingName(), getBuildingCount(building.getBuildingName()) + 1);
+        hadBuildings.put(building.getBuildingName(), true);
 
         switch(building.getBuildingName()){
             case Buildings.CHURCH:

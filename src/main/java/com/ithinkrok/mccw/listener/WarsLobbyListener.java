@@ -170,12 +170,12 @@ public class WarsLobbyListener implements Listener {
                 user.message(plugin.getLocale("class-selected", playerClass.name));
 
                 user.getPlayer().closeInventory();
-            } else if(plugin.getLocale("map-chooser").equals(event.getInventory().getTitle())) {
+            } else if (plugin.getLocale("map-chooser").equals(event.getInventory().getTitle())) {
                 String mapName = event.getCurrentItem().getItemMeta().getDisplayName();
 
                 String oldVote = user.getMapVote();
 
-                if(mapName.equals(oldVote)){
+                if (mapName.equals(oldVote)) {
                     user.message(plugin.getLocale("map-already-voted", mapName));
                     return;
                 }
@@ -185,7 +185,7 @@ public class WarsLobbyListener implements Listener {
 
                 String playerName = getPlayerNameColor(user.getPlayer()) + user.getFormattedName();
 
-                if(oldVote == null){
+                if (oldVote == null) {
                     plugin.messageAll(plugin.getLocale("player-voted", playerName, mapName));
                 } else {
                     plugin.messageAll(plugin.getLocale("player-vote-change", playerName, oldVote, mapName));

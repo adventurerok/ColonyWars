@@ -178,7 +178,7 @@ public class WarsPlugin extends JavaPlugin {
         inv.addItem(InventoryUtils.createItemWithNameAndLore(Material.WOOD_SWORD, 1, 0, getLocale("class-chooser"),
                 getLocale("class-chooser-desc")));
 
-        inv.addItem(InventoryUtils.createItemWithNameAndLore(Material.MAP, 1, 0, getLocale("map-chooser"),
+        inv.addItem(InventoryUtils.createItemWithNameAndLore(Material.EMPTY_MAP, 1, 0, getLocale("map-chooser"),
                 getLocale("map-chooser-desc")));
 
         user.message(getLocale("choose-team-class"));

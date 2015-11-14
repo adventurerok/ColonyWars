@@ -47,6 +47,8 @@ public class User {
 
     private boolean inGame = false;
 
+    private String mapVote;
+
     public User(WarsPlugin plugin, Player player) {
         this.plugin = plugin;
         this.player = player;
@@ -109,49 +111,78 @@ public class User {
         }
 
 
-
         if (inGame) {
-            Objective mainObjective = scoreboard.getObjective("main");
-            if (mainObjective == null) {
-                mainObjective = scoreboard.registerNewObjective("main", "dummy");
-                mainObjective.setDisplayName("Colony Wars");
-                mainObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
-            }
-
-            mainObjective.getScore(ChatColor.YELLOW + "Balance:").setScore(getPlayerCash());
-
-            Team team = getTeam();
-            mainObjective.getScore(ChatColor.YELLOW + "Team Balance:").setScore(team.getTeamCash());
-
-            mainObjective.getScore(ChatColor.GOLD + "Building Now:").setScore(team.getTotalBuildingNowCount());
-
-            HashMap<String, Integer> buildingNow = team.getBuildingNowCounts();
-
-            for (String s : oldBuildingNows) {
-                if (buildingNow.containsKey(s)) continue;
-                mainObjective.getScoreboard().resetScores(ChatColor.GREEN + s + ":");
-            }
-
-            oldBuildingNows.clear();
-
-            for (Map.Entry<String, Integer> entry : buildingNow.entrySet()) {
-                mainObjective.getScore(ChatColor.GREEN + entry.getKey() + ":").setScore(entry.getValue());
-                oldBuildingNows.add(entry.getKey());
-            }
-
-            if (team.getRespawnChance() > 0) {
-                mainObjective.getScore(ChatColor.AQUA + "Revival Rate:").setScore(team.getRespawnChance());
-            }
-
+            removeScoreboardObjective(scoreboard, "map");
+            updateInGameScoreboard(scoreboard);
+        } else if(!plugin.isInGame()){
+            removeScoreboardObjective(scoreboard, "main");
+            updateMapScoreboard(scoreboard);
         } else {
-            Objective mainObjective = scoreboard.getObjective("main");
-            if(mainObjective != null){
-                mainObjective.unregister();
-            }
+            removeScoreboardObjective(scoreboard, "main");
+            removeScoreboardObjective(scoreboard, "map");
         }
 
 
 
+    }
+
+    private void updateMapScoreboard(Scoreboard scoreboard){
+        Objective mapObjective = scoreboard.getObjective("map");
+        if(mapObjective == null){
+            mapObjective = scoreboard.registerNewObjective("map", "dummy");
+            mapObjective.setDisplayName("Map Voting");
+            mapObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        }
+
+        for(String map : plugin.getMapList()){
+            int votes = plugin.getMapVotes(map);
+
+            if(votes == 0) mapObjective.getScoreboard().resetScores(map);
+            else {
+                mapObjective.getScore(map).setScore(votes);
+            }
+        }
+    }
+
+    private void updateInGameScoreboard(Scoreboard scoreboard){
+        Objective mainObjective = scoreboard.getObjective("main");
+        if (mainObjective == null) {
+            mainObjective = scoreboard.registerNewObjective("main", "dummy");
+            mainObjective.setDisplayName("Colony Wars");
+            mainObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        }
+
+        mainObjective.getScore(ChatColor.YELLOW + "Balance:").setScore(getPlayerCash());
+
+        Team team = getTeam();
+        mainObjective.getScore(ChatColor.YELLOW + "Team Balance:").setScore(team.getTeamCash());
+
+        mainObjective.getScore(ChatColor.GOLD + "Building Now:").setScore(team.getTotalBuildingNowCount());
+
+        HashMap<String, Integer> buildingNow = team.getBuildingNowCounts();
+
+        for (String s : oldBuildingNows) {
+            if (buildingNow.containsKey(s)) continue;
+            mainObjective.getScoreboard().resetScores(ChatColor.GREEN + s + ":");
+        }
+
+        oldBuildingNows.clear();
+
+        for (Map.Entry<String, Integer> entry : buildingNow.entrySet()) {
+            mainObjective.getScore(ChatColor.GREEN + entry.getKey() + ":").setScore(entry.getValue());
+            oldBuildingNows.add(entry.getKey());
+        }
+
+        if (team.getRespawnChance() > 0) {
+            mainObjective.getScore(ChatColor.AQUA + "Revival Rate:").setScore(team.getRespawnChance());
+        }
+    }
+
+    private void removeScoreboardObjective(Scoreboard scoreboard, String name){
+        Objective mainObjective = scoreboard.getObjective(name);
+        if(mainObjective != null){
+            mainObjective.unregister();
+        }
     }
 
     public int getPlayerCash() {
@@ -448,4 +479,17 @@ public class User {
         shopBlock = null;
     }
 
+    public void setMapVote(String mapVote) {
+        if(this.mapVote != null) plugin.setMapVotes(this.mapVote, plugin.getMapVotes(this.mapVote) - 1);
+
+        this.mapVote = mapVote;
+
+        if(this.mapVote != null) plugin.setMapVotes(this.mapVote, plugin.getMapVotes(this.mapVote) + 1);
+
+        plugin.getUsers().forEach(User::updateScoreboard);
+    }
+
+    public String getMapVote() {
+        return mapVote;
+    }
 }

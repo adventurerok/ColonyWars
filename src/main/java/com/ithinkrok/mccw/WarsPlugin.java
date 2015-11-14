@@ -67,6 +67,9 @@ public class WarsPlugin extends JavaPlugin {
     private CountdownHandler countdownHandler;
     private GameInstance gameInstance;
 
+    private List<String> mapList;
+    private ConcurrentHashMap<String, Integer> mapVotes = new ConcurrentHashMap<>();
+
 
     @Override
     public void onDisable() {
@@ -81,14 +84,14 @@ public class WarsPlugin extends JavaPlugin {
         this.inGame = inGame;
     }
 
-    public void changeListener(Listener newListener){
+    public void changeListener(Listener newListener) {
         HandlerList.unregisterAll(currentListener);
         currentListener = newListener;
         getServer().getPluginManager().registerEvents(currentListener, this);
     }
 
-    public void resetTeams(){
-        for(TeamColor c : TeamColor.values()){
+    public void resetTeams() {
+        for (TeamColor c : TeamColor.values()) {
             teamInfoEnumMap.put(c, new Team(this, c));
         }
     }
@@ -98,6 +101,8 @@ public class WarsPlugin extends JavaPlugin {
         commandListener = new CommandListener(this);
 
         saveDefaultConfig();
+
+        mapList = getConfig().getStringList("map-list");
 
         protocolManager = ProtocolLibrary.getProtocolManager();
         InvisiblePlayerAttacker.enablePlayerAttacker(this, protocolManager);
@@ -144,9 +149,12 @@ public class WarsPlugin extends JavaPlugin {
 
     }
 
+    public List<String> getMapList() {
+        return mapList;
+    }
 
-    public String getLocale(String name, Object... params) {
-        return String.format(getConfig().getString("locale." + name), params);
+    public void setMapVotes(String map, int votes) {
+        mapVotes.put(map, votes);
     }
 
     public void playerJoinLobby(Player player) {
@@ -170,11 +178,22 @@ public class WarsPlugin extends JavaPlugin {
         inv.addItem(InventoryUtils.createItemWithNameAndLore(Material.WOOD_SWORD, 1, 0, getLocale("class-chooser"),
                 getLocale("class-chooser-desc")));
 
+        inv.addItem(InventoryUtils.createItemWithNameAndLore(Material.MAP, 1, 0, getLocale("map-chooser"),
+                getLocale("map-chooser-desc")));
+
         user.message(getLocale("choose-team-class"));
 
         user.message(getLocale("map-info"));
 
         user.getPlayer().teleport(Bukkit.getWorld("world").getSpawnLocation());
+    }
+
+    public User getUser(Player player) {
+        return playerInfoHashMap.get(player.getUniqueId());
+    }
+
+    public String getLocale(String name, Object... params) {
+        return String.format(getConfig().getString("locale." + name), params);
     }
 
     public InventoryHandler getBuildingInventoryHandler() {
@@ -195,7 +214,6 @@ public class WarsPlugin extends JavaPlugin {
     }
 
 
-
     public PlayerClassHandler getPlayerClassHandler(PlayerClass playerClass) {
         return classHandlerEnumMap.get(playerClass);
     }
@@ -206,9 +224,6 @@ public class WarsPlugin extends JavaPlugin {
         return commandListener.onCommand(sender, command, label, args);
     }
 
-
-
-
     public CountdownHandler getCountdownHandler() {
         return countdownHandler;
     }
@@ -217,15 +232,40 @@ public class WarsPlugin extends JavaPlugin {
         return gameInstance;
     }
 
-    public void startGame(){
+    public void startGame() {
         setInGame(true);
 
-        gameInstance = new GameInstance(this);
+        gameInstance = new GameInstance(this, assignGameMap());
 
         gameInstance.startGame();
     }
 
-    public void endGame(){
+    public String assignGameMap() {
+        int highestVotes = Integer.MIN_VALUE;
+
+        List<String> possible = new ArrayList<>();
+
+        for (String map : mapList) {
+            int votes = getMapVotes(map);
+
+            if (votes > highestVotes) {
+                highestVotes = votes;
+                possible.clear();
+            }
+            if (votes == highestVotes) possible.add(map);
+        }
+
+        return possible.get(random.nextInt(possible.size()));
+    }
+
+    public int getMapVotes(String map) {
+        Integer result = mapVotes.get(map);
+
+        if (result == null) return 0;
+        return result;
+    }
+
+    public void endGame() {
         gameInstance.endGame();
 
         gameInstance = null;
@@ -239,18 +279,12 @@ public class WarsPlugin extends JavaPlugin {
         }
     }
 
-
     public double getMaxHealth() {
         return (double) 40;
     }
 
     public Schematic getSchematicData(String buildingName) {
         return schematicDataHashMap.get(buildingName);
-    }
-
-
-    public User getUser(Player player) {
-        return playerInfoHashMap.get(player.getUniqueId());
     }
 
     public User getUser(UUID uniqueId) {

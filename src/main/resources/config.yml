@@ -1,3 +1,6 @@
+map-list:
+  - "canyon"
+  - "forest_hills"
 
 maps:
   canyon:
@@ -195,6 +198,10 @@ amounts:
     goldenApple: 1
 
 locale:
+  map-chooser: "Map Voter"
+  map-chooser-desc: "Vote for a map"
+  canyon-desc: "A canyon seperates the four teams bases. Each team has only one bridge to cross it."
+  forest_hills-desc: "Teams separated by a dense forest with some hills in it."
   class-chooser: "Class Chooser"
   general-desc: "Fights with a diamond sword"
   scout-desc: "Runs fast and has a player locator"
@@ -235,3 +242,7 @@ locale:
   building-not-finished: "§cPlease wait until the construction has finished."
   ender-wand-cooldown: "§cThe ender wand is cooling down."
   lightning-wand-cooldown: "§cThe lightning wand is cooling down."
+  map-voted: "§6You have voted for §3%s§6!"
+  map-already-voted: "§cYou already voted for §3%s§c!"
+  player-voted: "§6%s §6voted for §3%s§3!"
+  player-vote-change: "§6%s changed their vote from §3%s§6 to §3%s§6!"

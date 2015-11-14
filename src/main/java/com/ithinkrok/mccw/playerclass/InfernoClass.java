@@ -7,11 +7,13 @@ import com.ithinkrok.mccw.event.UserAttackUserEvent;
 import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
+import com.ithinkrok.mccw.inventory.ItemBuyable;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
@@ -39,7 +41,9 @@ public class InfernoClass extends BuyableInventory implements PlayerClassHandler
                         config.getInt("costs.inferno.flame1"), "flame", 1), new UpgradeBuyable(InventoryUtils
                         .createItemWithNameAndLore(Material.DIAMOND_HELMET, 1, 0, "Flame Sword Upgrade 2",
                                 "Damage: 4.0 Hearts", "Fire Aspect"), Buildings.BLACKSMITH,
-                        config.getInt("costs.inferno.flame2"), "flame", 2));
+                        config.getInt("costs.inferno.flame2"), "flame", 2),
+                new ItemBuyable(new ItemStack(Material.TNT, 16), Buildings.BLACKSMITH,
+                        config.getInt("costs.inferno.tnt") * 16, true));
         this.plugin = plugin;
     }
 
@@ -66,20 +70,37 @@ public class InfernoClass extends BuyableInventory implements PlayerClassHandler
 
     @Override
     public void onInteractWorld(UserInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         ItemStack item = event.getItem();
         if (item == null) return;
 
         User user = event.getUserClicked();
+
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK && item.getType() == Material.TNT) {
+            BlockFace mod = event.getBlockFace();
+            user.createPlayerExplosion(
+                    event.getClickedBlock().getLocation().clone().add(mod.getModX(), mod.getModY(), mod.getModZ()), 4F,
+                    false, 80);
+
+            ItemStack oneLess = item.clone();
+            if (oneLess.getAmount() > 1) oneLess.setAmount(oneLess.getAmount() - 1);
+            else oneLess = null;
+            user.getPlayer().setItemInHand(oneLess);
+            event.setCancelled(true);
+            return;
+        }
+
+        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
         switch (item.getType()) {
             case IRON_CHESTPLATE:
                 if (!user.startCoolDown("wand", 25 - 10 * user.getUpgradeLevel("wand"),
                         plugin.getLocale("explosion-wand-cooldown"))) break;
                 Block target = user.rayTraceBlocks(200);
+                BlockFace mod = event.getBlockFace();
 
                 if (target == null) break;
-                user.createPlayerExplosion(target.getLocation().clone().add(0, 1, 0), 2F, false, 0);
+                user.createPlayerExplosion(
+                        target.getLocation().clone().add(mod.getModX(), mod.getModY(), mod.getModZ()), 2F, false, 0);
 
                 break;
         }
@@ -97,8 +118,8 @@ public class InfernoClass extends BuyableInventory implements PlayerClassHandler
                 break;
             case "flame":
                 float damage = 1.0f + 1.5f * event.getUpgradeLevel();
-                ItemStack sword = InventoryUtils.createItemWithNameAndLore(Material.DIAMOND_HELMET, 1, 0,
-                        "Flame Sword", "Damage: " + damage + " Hearts", "Fire Aspect");
+                ItemStack sword = InventoryUtils.createItemWithNameAndLore(Material.DIAMOND_HELMET, 1, 0, "Flame Sword",
+                        "Damage: " + damage + " Hearts", "Fire Aspect");
                 InventoryUtils.replaceItem(event.getUserInventory(), sword);
                 break;
         }
@@ -107,7 +128,7 @@ public class InfernoClass extends BuyableInventory implements PlayerClassHandler
     @Override
     public void onUserAttackUser(UserAttackUserEvent event) {
         ItemStack item = event.getWeapon();
-        if(item == null || item.getType() != Material.DIAMOND_HELMET) return;
+        if (item == null || item.getType() != Material.DIAMOND_HELMET) return;
 
         double damage = 2 + 3 * event.getAttacker().getUpgradeLevel("flame");
         event.setDamage(damage);

@@ -195,6 +195,7 @@ costs:
     wand2: 1600
     flame1: 1600
     flame2: 1600
+    tnt: 75
 
 amounts:
   farm:

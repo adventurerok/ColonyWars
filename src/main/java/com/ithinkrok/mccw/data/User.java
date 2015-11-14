@@ -56,6 +56,7 @@ public class User {
 
     private UUID fireAttacker;
     private UUID witherAttacker;
+    private UUID lastAttacker;
 
     private String mapVote;
 
@@ -111,12 +112,20 @@ public class User {
         return plugin.getUser(witherAttacker);
     }
 
+    public User getLastAttacker(){
+        return plugin.getUser(lastAttacker);
+    }
+
     public void setFireAttacker(User fireAttacker){
         this.fireAttacker = fireAttacker.getPlayer().getUniqueId();
     }
 
     public void setWitherAttacker(User witherAttacker){
         this.witherAttacker = witherAttacker.getPlayer().getUniqueId();
+    }
+
+    public void setLastAttacker(User lastAttacker){
+        this.lastAttacker = lastAttacker.getPlayer().getUniqueId();
     }
 
     public void decloak(){

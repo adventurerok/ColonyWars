@@ -99,8 +99,8 @@ public class WarsGameListener implements Listener {
     }
 
     @EventHandler
-    public void onItemSpawn(ItemSpawnEvent event){
-        switch(event.getEntity().getItemStack().getType()){
+    public void onItemSpawn(ItemSpawnEvent event) {
+        switch (event.getEntity().getItemStack().getType()) {
             case GOLD_INGOT:
             case DIAMOND:
                 return;
@@ -110,7 +110,7 @@ public class WarsGameListener implements Listener {
     }
 
     @EventHandler
-    public void onBlockExplode(BlockExplodeEvent event){
+    public void onBlockExplode(BlockExplodeEvent event) {
 
     }
 
@@ -176,8 +176,8 @@ public class WarsGameListener implements Listener {
 
         int rotation = Facing.getFacing(event.getPlayer().getLocation().getYaw());
 
-        if (!SchematicBuilder.buildSchematic(plugin, schematic, event.getBlock().getLocation(), rotation,
-                user.getTeamColor())) {
+        if (!SchematicBuilder
+                .buildSchematic(plugin, schematic, event.getBlock().getLocation(), rotation, user.getTeamColor())) {
             event.setCancelled(true);
             user.message(ChatColor.RED + "You cannot build that here!");
         }
@@ -307,44 +307,10 @@ public class WarsGameListener implements Listener {
         resetDurability((Player) event.getEntity());
     }
 
-    public Player getDamager(EntityDamageByEntityEvent event){
-
-        if (!(event.getDamager() instanceof Player)) {
-            if (event.getDamager() instanceof Projectile) {
-                Projectile arrow = (Projectile) event.getDamager();
-
-                if (!(arrow.getShooter() instanceof Player)) return null;
-                return (Player) arrow.getShooter();
-            } else if(event.getDamager() instanceof LightningStrike){
-                List<MetadataValue> values = event.getDamager().getMetadata("striker");
-                if(values == null || values.isEmpty()) return null;
-
-                User user = plugin.getUser((UUID) values.get(0).value());
-                if(user == null) return null;
-                return user.getPlayer();
-            } else return null;
-        } else {
-            return (Player) event.getDamager();
-        }
-    }
-
-    private void userAttackUser(UserAttackUserEvent event){
-        ItemStack weapon = event.getWeapon();
-
-        if(weapon == null) return;
-
-        if(weapon.containsEnchantment(Enchantment.FIRE_ASPECT)){
-            event.getTarget().setFireAttacker(event.getAttacker());
-        }
-
-        PlayerClassHandler classHandler = plugin.getPlayerClassHandler(event.getAttacker().getPlayerClass());
-        classHandler.onUserAttackUser(event);
-    }
-
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Player damager = getDamager(event);
-        if(damager == null) return;
+        if (damager == null) return;
 
         User damagerInfo = plugin.getUser(damager);
 
@@ -364,17 +330,54 @@ public class WarsGameListener implements Listener {
             return;
         }
 
-        if(event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK){
-            userAttackUser(new UserAttackUserEvent(plugin.getUser(damager), plugin.getUser(target), event));
+        User targetInfo = plugin.getUser(target);
+
+        if (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
+            userAttackUser(new UserAttackUserEvent(damagerInfo, targetInfo, event));
         }
+
 
         if (target.getHealth() - event.getFinalDamage() < 1) {
             event.setCancelled(true);
-            playerDeath(target, damager);
+            playerDeath(target, damager, true);
         }
     }
 
-    public void playerDeath(Player died, Player killer) {
+    public Player getDamager(EntityDamageByEntityEvent event) {
+
+        if (!(event.getDamager() instanceof Player)) {
+            if (event.getDamager() instanceof Projectile) {
+                Projectile arrow = (Projectile) event.getDamager();
+
+                if (!(arrow.getShooter() instanceof Player)) return null;
+                return (Player) arrow.getShooter();
+            } else if (event.getDamager() instanceof LightningStrike) {
+                List<MetadataValue> values = event.getDamager().getMetadata("striker");
+                if (values == null || values.isEmpty()) return null;
+
+                User user = plugin.getUser((UUID) values.get(0).value());
+                if (user == null) return null;
+                return user.getPlayer();
+            } else return null;
+        } else {
+            return (Player) event.getDamager();
+        }
+    }
+
+    private void userAttackUser(UserAttackUserEvent event) {
+        ItemStack weapon = event.getWeapon();
+
+        if (weapon == null) return;
+
+        if (weapon.containsEnchantment(Enchantment.FIRE_ASPECT)) {
+            event.getTarget().setFireAttacker(event.getAttacker());
+        }
+
+        PlayerClassHandler classHandler = plugin.getPlayerClassHandler(event.getAttacker().getPlayerClass());
+        classHandler.onUserAttackUser(event);
+    }
+
+    public void playerDeath(Player died, Player killer, boolean intentionally) {
         if (game.isInAftermath()) return;
         User diedInfo = plugin.getUser(died);
 
@@ -387,15 +390,16 @@ public class WarsGameListener implements Listener {
 
         User killerInfo = killer == null ? null : plugin.getUser(killer);
         if (killerInfo != null) {
-            plugin.messageAll(ChatColor.GOLD + diedInfo.getFormattedName() + ChatColor.GOLD +
-                    " was killed by " + killerInfo.getFormattedName());
+            if(intentionally) plugin.messageAll(plugin.getLocale("player-killed-player", diedInfo.getFormattedName(),
+                    killerInfo.getFormattedName()));
+            else plugin.messageAll(plugin.getLocale("player-died-last-attacker", diedInfo.getFormattedName(),
+                    killerInfo.getFormattedName()));
         } else {
-            plugin.messageAll(ChatColor.GOLD + diedInfo.getFormattedName() + ChatColor.GOLD + " died!");
+            plugin.messageAll(plugin.getLocale("player-died", diedInfo.getFormattedName()));
         }
 
         Team diedTeam = diedInfo.getTeam();
-        boolean respawn =
-                !game.isInShowdown() && plugin.getRandom().nextFloat() < (diedTeam.getRespawnChance() / 100f);
+        boolean respawn = !game.isInShowdown() && plugin.getRandom().nextFloat() < (diedTeam.getRespawnChance() / 100f);
 
         if (respawn) {
             plugin.messageAll(diedInfo.getFormattedName() + ChatColor.GOLD + " has respawned!");
@@ -455,7 +459,7 @@ public class WarsGameListener implements Listener {
 
             User killer = null;
 
-            switch(event.getCause()){
+            switch (event.getCause()) {
                 case FIRE_TICK:
                     killer = target.getFireAttacker();
                     break;
@@ -464,8 +468,8 @@ public class WarsGameListener implements Listener {
                     break;
             }
 
-            if(killer == null) playerDeath(target.getPlayer(), null);
-            else playerDeath(target.getPlayer(), killer.getPlayer());
+            if (killer == null) playerDeath(target.getPlayer(), target.getLastAttacker().getPlayer(), false);
+            else playerDeath(target.getPlayer(), killer.getPlayer(), true);
         }
     }
 
@@ -488,7 +492,7 @@ public class WarsGameListener implements Listener {
         if (event.getSlotType().equals(InventoryType.SlotType.ARMOR)) event.setCancelled(true);
 
         User user = plugin.getUser((Player) event.getWhoClicked());
-        if(!user.isInGame() || user.getTeamColor() == null){
+        if (!user.isInGame() || user.getTeamColor() == null) {
             game.handleSpectatorInventory(event);
             return;
         }
@@ -517,7 +521,6 @@ public class WarsGameListener implements Listener {
             handler.onInventoryClick(event.getCurrentItem(), building, user, team);
         }
     }
-
 
 
     @EventHandler

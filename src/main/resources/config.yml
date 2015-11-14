@@ -258,3 +258,6 @@ locale:
   player-voted: "§6%s §6voted for §3%s§3!"
   player-vote-change: "§6%s §6changed their vote from §3%s§6 to §3%s§6!"
   map-chosen: "§6Playing map: §3%s"
+  player-killed-player: "§6%s §6was killed by %s"
+  player-died-last-attacker: "§6%s §6died while fighting %s§6!"
+  player-died: "§6%s §6died!"

@@ -80,9 +80,8 @@ public class InfernoClass extends BuyableInventory implements PlayerClassHandler
         switch (item.getType()) {
             case TNT:
                 if (event.getAction() != Action.RIGHT_CLICK_BLOCK) break;
-                user.createPlayerExplosion(
-                        event.getClickedBlock().getLocation().clone().add(mod.getModX(), mod.getModY(), mod.getModZ()),
-                        4F, false, 80);
+                user.createPlayerExplosion(event.getClickedBlock().getLocation().clone()
+                        .add(mod.getModX() + 0.5, mod.getModY() + 0.5, mod.getModZ() + 0.5), 4F, false, 80);
 
                 ItemStack oneLess = item.clone();
                 if (oneLess.getAmount() > 1) oneLess.setAmount(oneLess.getAmount() - 1);
@@ -97,8 +96,8 @@ public class InfernoClass extends BuyableInventory implements PlayerClassHandler
 
 
                 if (target == null) break;
-                user.createPlayerExplosion(
-                        target.getLocation().clone().add(mod.getModX(), mod.getModY(), mod.getModZ()), 2F, false, 0);
+                user.createPlayerExplosion(target.getLocation().clone()
+                        .add(mod.getModX() + 0.5, mod.getModY() + 0.5, mod.getModZ() + 0.5),2F, false, 0);
 
                 break;
         }

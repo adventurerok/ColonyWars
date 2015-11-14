@@ -90,7 +90,7 @@ public class ArcherClass extends BuyableInventory implements PlayerClassHandler 
                 break;
             case "sword":
                 ItemStack sword = new ItemStack(Material.WOOD_SWORD);
-                InventoryUtils.enchantItem(sword, Enchantment.DAMAGE_ALL, event.getUser(), Enchantment.KNOCKBACK,
+                InventoryUtils.enchantItem(sword, Enchantment.DAMAGE_ALL, event.getUpgradeLevel(), Enchantment.KNOCKBACK,
                         event.getUpgradeLevel());
                 InventoryUtils.replaceItem(event.getUserInventory(), sword);
                 break;

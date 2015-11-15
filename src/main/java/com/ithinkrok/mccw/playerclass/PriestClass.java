@@ -11,8 +11,12 @@ import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 /**
  * Created by paul on 15/11/15.
@@ -67,28 +71,87 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
 
     @Override
     public boolean onInteractWorld(UserInteractEvent event) {
+        ItemStack item = event.getItem();
+        if (item == null) return false;
+
+        switch (item.getType()) {
+            case DIAMOND_BOOTS:
+                return handleHealingScroll(event);
+            case GOLD_CHESTPLATE:
+                return handleEarthBender(event);
+            default:
+                return false;
+        }
+    }
+
+    private boolean handleHealingScroll(UserInteractEvent event) {
         return false;
+    }
+
+    private boolean handleEarthBender(UserInteractEvent event) {
+        User user = event.getUserClicked();
+
+        switch (event.getAction()) {
+            case LEFT_CLICK_AIR:
+            case LEFT_CLICK_BLOCK:
+                return true;
+            case RIGHT_CLICK_AIR:
+            case RIGHT_CLICK_BLOCK:
+                Block target = user.rayTraceBlocks(200);
+                if (target == null) return true;
+
+                int maxDist = 3 * 3;
+
+                for (int y = 3; y <= -3; ++y) {
+                    int ys = y * y;
+                    for (int x = -3; x <= 3; ++x) {
+                        int xs = x * x;
+                        for (int z = -3; z <= 3; ++z) {
+                            int zs = z * z;
+                            if (xs + ys + zs > maxDist) continue;
+                            Block block = target.getRelative(x, y, z);
+
+                            if (block.getType() == Material.AIR) continue;
+                            if (block.isLiquid()){
+                                block.setType(Material.AIR);
+                                continue;
+                            }
+                            BlockState oldState = block.getState();
+                            block.setType(Material.AIR);
+
+                            FallingBlock falling = block.getWorld().spawnFallingBlock(block.getLocation(),
+                                    oldState.getType(), oldState.getRawData());
+
+                            falling.setVelocity(new Vector(0, 1, 0));
+                        }
+                    }
+                } return true;
+            default:
+                return false;
+        }
     }
 
     @Override
     public void onPlayerUpgrade(UserUpgradeEvent event) {
-        switch(event.getUpgradeName()){
+        switch (event.getUpgradeName()) {
             case "healing":
                 int healingCooldown = 240 - 90 * event.getUpgradeLevel();
-                ItemStack scroll = InventoryUtils.createItemWithNameAndLore(Material.DIAMOND_BOOTS, 1, 0,
-                        "Healing Scroll", "Cooldown: " + healingCooldown + " seconds");
+                ItemStack scroll = InventoryUtils
+                        .createItemWithNameAndLore(Material.DIAMOND_BOOTS, 1, 0, "Healing Scroll",
+                                "Cooldown: " + healingCooldown + " seconds");
                 InventoryUtils.replaceItem(event.getUserInventory(), scroll);
                 break;
             case "bender":
                 int benderCooldown = 45 - 15 * event.getUpgradeLevel();
-                ItemStack bender = InventoryUtils.createItemWithNameAndLore(Material.GOLD_CHESTPLATE, 1, 0,
-                        "Earth Bender", "Cooldown: " + benderCooldown + " seconds");
+                ItemStack bender = InventoryUtils
+                        .createItemWithNameAndLore(Material.GOLD_CHESTPLATE, 1, 0, "Earth Bender",
+                                "Cooldown: " + benderCooldown + " seconds");
                 InventoryUtils.replaceItem(event.getUserInventory(), bender);
                 break;
             case "cross":
                 double damage = 2.0 + 1.0 * event.getUpgradeLevel();
-                ItemStack cross = InventoryUtils.createItemWithNameAndLore(Material.GOLD_LEGGINGS, 1, 0,
-                        "Cross", "Damage: " + damage + " Hearts");
+                ItemStack cross = InventoryUtils.createItemWithNameAndLore(Material.GOLD_LEGGINGS, 1, 0, "Cross",
+                        "Damage: " + damage + " Hearts");
                 InventoryUtils.replaceItem(event.getUserInventory(), cross);
                 break;
 
@@ -98,7 +161,7 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
     @Override
     public void onUserAttackUser(UserAttackUserEvent event) {
         ItemStack item = event.getWeapon();
-        if(item == null || item.getType() != Material.GOLD_LEGGINGS) return;
+        if (item == null || item.getType() != Material.GOLD_LEGGINGS) return;
 
         double damage = 4 + 2 * event.getAttacker().getUpgradeLevel("cross");
         event.setDamage(damage);

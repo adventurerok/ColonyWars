@@ -15,11 +15,14 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -110,6 +113,14 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
 
                 int maxDist = 3 * 3;
 
+                Collection<Entity> nearby = target.getWorld().getNearbyEntities(target.getLocation(), 3, 3, 3);
+                List<Player> riders = new ArrayList<>();
+
+                for(Entity near : nearby){
+                    if(!(near instanceof Player)) continue;
+                    riders.add((Player) near);
+                }
+
                 List<FallingBlock> fallingBlockList = new ArrayList<>();
 
                 for (int y = -3; y <= 3; ++y) {
@@ -132,13 +143,13 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
                             FallingBlock falling = block.getWorld().spawnFallingBlock(block.getLocation(),
                                     oldState.getType(), oldState.getRawData());
 
-                            falling.setVelocity(new Vector(0, 2, 0));
+                            falling.setVelocity(new Vector(0, 1.5, 0));
                             fallingBlockList.add(falling);
                         }
                     }
                 }
 
-                BentEarth bentEarth = new BentEarth(fallingBlockList);
+                BentEarth bentEarth = new BentEarth(fallingBlockList, riders);
                 user.setBentEarth(bentEarth);
                 return true;
             default:

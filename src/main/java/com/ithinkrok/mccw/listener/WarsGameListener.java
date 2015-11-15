@@ -16,9 +16,7 @@ import com.ithinkrok.mccw.util.SchematicBuilder;
 import com.ithinkrok.mccw.util.TreeFeller;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -80,9 +78,9 @@ public class WarsGameListener implements Listener {
                     ChatColor.WHITE + "%s");
         }
 
-//        plugin.getUsers().stream()
-//                .filter(other -> other.getTeamColor() != user.getTeamColor() && !other.getPlayer().isOp())
-//                .forEach(other -> event.getRecipients().remove(other.getPlayer()));
+        //        plugin.getUsers().stream()
+        //                .filter(other -> other.getTeamColor() != user.getTeamColor() && !other.getPlayer().isOp())
+        //                .forEach(other -> event.getRecipients().remove(other.getPlayer()));
     }
 
     @EventHandler
@@ -302,6 +300,21 @@ public class WarsGameListener implements Listener {
         resetDurability((Player) event.getEntity());
     }
 
+    public boolean onPlayerAttackTameable(EntityDamageByEntityEvent event, User player, Tameable tameable){
+        if(tameable.getOwner() != null && tameable.getOwner() instanceof Player){
+            User owner = plugin.getUser((Player) tameable.getOwner());
+
+            if(!owner.isInGame()){
+                event.getEntity().remove();
+                return true;
+            }
+
+            if(owner.getTeamColor() == player.getTeamColor()) return true;
+        }
+
+        return false;
+    }
+
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Player damager = getDamager(event);
@@ -317,7 +330,16 @@ public class WarsGameListener implements Listener {
         resetDurability(damager);
 
         if (!(event.getEntity() instanceof Player)) {
-            userAttackNonUser(new UserAttackEvent(damagerInfo, null, event));
+            if(event.getEntity() instanceof Tameable){
+                Tameable tameable = (Tameable) event.getEntity();
+                if(onPlayerAttackTameable(event, damagerInfo, tameable)){
+                    event.setCancelled(true);
+                    return;
+                }
+            }
+
+            if (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK)
+                userAttackNonUser(new UserAttackEvent(damagerInfo, null, event));
             return;
         }
 
@@ -336,6 +358,11 @@ public class WarsGameListener implements Listener {
 
 
         if (target.getHealth() - event.getFinalDamage() < 1) {
+            if(event.getDamager() instanceof Tameable){
+                Creature creature = (Creature) event.getDamager();
+                creature.setTarget(null);
+            }
+
             event.setCancelled(true);
             playerDeath(target, damager, true);
         }
@@ -349,6 +376,10 @@ public class WarsGameListener implements Listener {
 
                 if (!(arrow.getShooter() instanceof Player)) return null;
                 return (Player) arrow.getShooter();
+            } else if(event.getDamager() instanceof Tameable){
+                Tameable tameable = (Tameable) event.getDamager();
+                if(tameable.getOwner() == null || !(tameable.getOwner() instanceof Player)) return null;
+                return (Player) tameable.getOwner();
             } else {
                 List<MetadataValue> values = event.getDamager().getMetadata("striker");
                 if (values == null || values.isEmpty()) return null;
@@ -362,6 +393,13 @@ public class WarsGameListener implements Listener {
         }
     }
 
+    private void userAttackNonUser(UserAttackEvent event) {
+        if (event.getWeapon() == null) return;
+
+        PlayerClassHandler classHandler = plugin.getPlayerClassHandler(event.getAttacker().getPlayerClass());
+        classHandler.onUserAttack(event);
+    }
+
     private void userAttackUser(UserAttackEvent event) {
         ItemStack weapon = event.getWeapon();
 
@@ -370,13 +408,6 @@ public class WarsGameListener implements Listener {
         if (weapon.containsEnchantment(Enchantment.FIRE_ASPECT)) {
             event.getTargetUser().setFireAttacker(event.getAttacker());
         }
-
-        PlayerClassHandler classHandler = plugin.getPlayerClassHandler(event.getAttacker().getPlayerClass());
-        classHandler.onUserAttack(event);
-    }
-
-    private void userAttackNonUser(UserAttackEvent event){
-        if(event.getWeapon() == null) return;
 
         PlayerClassHandler classHandler = plugin.getPlayerClassHandler(event.getAttacker().getPlayerClass());
         classHandler.onUserAttack(event);

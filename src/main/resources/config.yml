@@ -215,6 +215,13 @@ costs:
     cross2: 1600
     healing1: 1350
     healing2: 1600
+  warrior:
+    sharpness1: 1350
+    sharpness2: 1600
+    knockback1: 1350
+    knockback2: 1600
+    wolf1: 750
+    wolf2: 1000
 
 amounts:
   farm:
@@ -241,6 +248,7 @@ locale:
   inferno-desc: "Has an explosion wand and TNT"
   dark_knight-desc: "Wields the darkness sword..."
   priest-desc: "Has a healing scroll and earth bender"
+  warrior-desc: "Summons wolves and fights with an upgradable iron sword"
   team-chooser: "Team Chooser"
   team-desc: "%s Team"
   team-already-member: "§cYou are already in the %s §cTeam"
@@ -277,6 +285,7 @@ locale:
   explosion-wand-cooldown: "§aThe explosion wand is ready to use again."
   earth-bender-cooldown: "§aThe earth bender is ready to use again."
   healing-scroll-cooldown: "§aThe healing scroll is ready to use again."
+  wolf-wand-cooldown: "§aThe wolf wand is ready to use again."
   map-voted: "§6You have voted for §3%s§6!"
   map-already-voted: "§cYou already voted for §3%s§c!"
   player-voted: "§6%s §6voted for §3%s§3!"

@@ -424,6 +424,8 @@ public class WarsGameListener implements Listener {
             return;
         }
 
+        removeEntityTargets(died);
+
         User killerInfo = killer == null ? null : plugin.getUser(killer);
         if (killerInfo != null) {
             if (intentionally) plugin.messageAll(plugin.getLocale("player-killed-player", diedInfo.getFormattedName(),
@@ -451,6 +453,16 @@ public class WarsGameListener implements Listener {
             plugin.messageAll(diedInfo.getFormattedName() + ChatColor.GOLD + " did not respawn!");
             diedInfo.removeFromGame();
             diedInfo.setSpectator();
+        }
+    }
+
+    private void removeEntityTargets(Player player) {
+        for(Entity e : player.getWorld().getEntities()){
+            if(!(e instanceof Creature)) continue;
+
+            Creature creature = (Creature) e;
+            if(creature.getTarget() == null || creature.getTarget() != player) continue;
+            creature.setTarget(null);
         }
     }
 

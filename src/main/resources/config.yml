@@ -240,6 +240,7 @@ locale:
   peasant-desc: "Has an enchanted iron axe to get money faster"
   inferno-desc: "Has an explosion wand and TNT"
   dark_knight-desc: "Wields the darkness sword..."
+  priest-desc: "Has a healing scroll and earth bender"
   team-chooser: "Team Chooser"
   team-desc: "%s Team"
   team-already-member: "§cYou are already in the %s §cTeam"

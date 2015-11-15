@@ -145,6 +145,7 @@ public class WarsPlugin extends JavaPlugin {
         classHandlerEnumMap.put(PlayerClass.PEASANT, new PeasantClass(getConfig()));
         classHandlerEnumMap.put(PlayerClass.INFERNO, new InfernoClass(this, getConfig()));
         classHandlerEnumMap.put(PlayerClass.DARK_KNIGHT, new DarkKnightClass(getConfig()));
+        classHandlerEnumMap.put(PlayerClass.PRIEST, new PriestClass(this, getConfig()));
 
         countdownHandler = new CountdownHandler(this);
         countdownHandler.startLobbyCountdown();

@@ -208,6 +208,13 @@ costs:
   dark_knight:
     sword1: 1350
     sword2: 1600
+  priest:
+    bender1: 1350
+    bender2: 1600
+    cross1: 1350
+    cross2: 1600
+    healing1: 1350
+    healing2: 1600
 
 amounts:
   farm:

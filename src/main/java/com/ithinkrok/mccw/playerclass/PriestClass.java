@@ -106,7 +106,7 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
             case RIGHT_CLICK_AIR:
             case RIGHT_CLICK_BLOCK:
                 int cooldown = 45 - 15 * user.getUpgradeLevel("bender");
-                if(!user.startCoolDown("bender", cooldown, plugin.getLocale("earth-bender-cooldown"))) return true;
+                if (!user.startCoolDown("bender", cooldown, plugin.getLocale("earth-bender-cooldown"))) return true;
                 Block target = user.rayTraceBlocks(200);
                 if (target == null) return true;
                 user.setUpgradeLevel("bending", 0);
@@ -116,8 +116,8 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
                 Collection<Entity> nearby = target.getWorld().getNearbyEntities(target.getLocation(), 3, 3, 3);
                 List<Player> riders = new ArrayList<>();
 
-                for(Entity near : nearby){
-                    if(!(near instanceof Player)) continue;
+                for (Entity near : nearby) {
+                    if (!(near instanceof Player)) continue;
                     riders.add((Player) near);
                 }
 
@@ -132,16 +132,18 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
                             if (xs + ys + zs > maxDist) continue;
                             Block block = target.getRelative(x, y, z);
 
-                            if (block.getType() == Material.AIR) continue;
-                            if (block.isLiquid()){
+                            if (block.getType() == Material.AIR || block.getType() == Material.OBSIDIAN ||
+                                    block.getType() == Material.BEDROCK || block.getType() == Material.BARRIER)
+                                continue;
+                            if (block.isLiquid()) {
                                 block.setType(Material.AIR);
                                 continue;
                             }
                             BlockState oldState = block.getState();
                             block.setType(Material.AIR);
 
-                            FallingBlock falling = block.getWorld().spawnFallingBlock(block.getLocation(),
-                                    oldState.getType(), oldState.getRawData());
+                            FallingBlock falling = block.getWorld()
+                                    .spawnFallingBlock(block.getLocation(), oldState.getType(), oldState.getRawData());
 
                             falling.setVelocity(new Vector(0, 1.5, 0));
                             fallingBlockList.add(falling);
@@ -159,8 +161,8 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
 
     private void earthBenderLeftClick(User user) {
         BentEarth bent = user.getBentEarth();
-        if(bent == null) return;
-        if(user.getUpgradeLevel("bending") > 4) return;
+        if (bent == null) return;
+        if (user.getUpgradeLevel("bending") > 4) return;
         Vector add = user.getPlayer().getLocation().getDirection();
         bent.addVelocity(add);
         user.setUpgradeLevel("bending", user.getUpgradeLevel("bending") + 1);
@@ -198,7 +200,7 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
         ItemStack item = event.getWeapon();
         if (item == null) return;
 
-        switch(item.getType()){
+        switch (item.getType()) {
             case GOLD_LEGGINGS:
                 double damage = 4 + 2 * event.getAttacker().getUpgradeLevel("cross");
                 event.setDamage(damage);

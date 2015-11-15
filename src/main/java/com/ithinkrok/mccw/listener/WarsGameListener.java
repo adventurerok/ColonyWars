@@ -300,21 +300,6 @@ public class WarsGameListener implements Listener {
         resetDurability((Player) event.getEntity());
     }
 
-    public boolean onPlayerAttackTameable(EntityDamageByEntityEvent event, User player, Tameable tameable){
-        if(tameable.getOwner() != null && tameable.getOwner() instanceof Player){
-            User owner = plugin.getUser((Player) tameable.getOwner());
-
-            if(!owner.isInGame()){
-                event.getEntity().remove();
-                return true;
-            }
-
-            if(owner.getTeamColor() == player.getTeamColor()) return true;
-        }
-
-        return false;
-    }
-
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Player damager = getDamager(event);
@@ -330,9 +315,9 @@ public class WarsGameListener implements Listener {
         resetDurability(damager);
 
         if (!(event.getEntity() instanceof Player)) {
-            if(event.getEntity() instanceof Tameable){
+            if (event.getEntity() instanceof Tameable) {
                 Tameable tameable = (Tameable) event.getEntity();
-                if(onPlayerAttackTameable(event, damagerInfo, tameable)){
+                if (onPlayerAttackTameable(event, damagerInfo, tameable)) {
                     event.setCancelled(true);
                     return;
                 }
@@ -358,7 +343,7 @@ public class WarsGameListener implements Listener {
 
 
         if (target.getHealth() - event.getFinalDamage() < 1) {
-            if(event.getDamager() instanceof Tameable){
+            if (event.getDamager() instanceof Tameable) {
                 Creature creature = (Creature) event.getDamager();
                 creature.setTarget(null);
             }
@@ -376,9 +361,9 @@ public class WarsGameListener implements Listener {
 
                 if (!(arrow.getShooter() instanceof Player)) return null;
                 return (Player) arrow.getShooter();
-            } else if(event.getDamager() instanceof Tameable){
+            } else if (event.getDamager() instanceof Tameable) {
                 Tameable tameable = (Tameable) event.getDamager();
-                if(tameable.getOwner() == null || !(tameable.getOwner() instanceof Player)) return null;
+                if (tameable.getOwner() == null || !(tameable.getOwner() instanceof Player)) return null;
                 return (Player) tameable.getOwner();
             } else {
                 List<MetadataValue> values = event.getDamager().getMetadata("striker");
@@ -391,6 +376,21 @@ public class WarsGameListener implements Listener {
         } else {
             return (Player) event.getDamager();
         }
+    }
+
+    public boolean onPlayerAttackTameable(EntityDamageByEntityEvent event, User player, Tameable tameable) {
+        if (tameable.getOwner() != null && tameable.getOwner() instanceof Player) {
+            User owner = plugin.getUser((Player) tameable.getOwner());
+
+            if (!owner.isInGame()) {
+                event.getEntity().remove();
+                return true;
+            }
+
+            if (owner.getTeamColor() == player.getTeamColor()) return true;
+        }
+
+        return false;
     }
 
     private void userAttackNonUser(UserAttackEvent event) {
@@ -504,8 +504,11 @@ public class WarsGameListener implements Listener {
                     break;
             }
 
-            if (killer == null) playerDeath(target.getPlayer(), target.getLastAttacker().getPlayer(), false);
-            else playerDeath(target.getPlayer(), killer.getPlayer(), true);
+            if (killer == null) {
+                if (target.getLastAttacker() != null)
+                    playerDeath(target.getPlayer(), target.getLastAttacker().getPlayer(), false);
+                else playerDeath(target.getPlayer(), null, false);
+            } else playerDeath(target.getPlayer(), killer.getPlayer(), true);
         }
     }
 

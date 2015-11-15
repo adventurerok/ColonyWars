@@ -187,7 +187,9 @@ public class Team {
     }
 
     public void respawnPlayer(Player died) {
-        Location loc = churchLocations.get(plugin.getRandom().nextInt(churchLocations.size()));
+        Location loc;
+        if(churchLocations.size() > 0) loc = churchLocations.get(plugin.getRandom().nextInt(churchLocations.size()));
+        else loc = baseLocation;
 
         died.teleport(loc, PlayerTeleportEvent.TeleportCause.PLUGIN);
 

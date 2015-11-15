@@ -32,16 +32,16 @@ public class WarriorClass extends BuyableInventory implements PlayerClassHandler
     public WarriorClass(WarsPlugin plugin, FileConfiguration config) {
         super(new UpgradeBuyable(InventoryUtils
                 .createItemWithEnchantments(Material.IRON_SWORD, 1, 0, "Sharpness Upgrade 1", null,
-                        Enchantment.DAMAGE_ALL, 1), Buildings.LUMBERMILL, config.getInt("costs.warrior.sharpness1"),
+                        Enchantment.DAMAGE_ALL, 1), Buildings.BLACKSMITH, config.getInt("costs.warrior.sharpness1"),
                 "sharpness", 1), new UpgradeBuyable(InventoryUtils
                 .createItemWithEnchantments(Material.IRON_SWORD, 1, 0, "Sharpness Upgrade 2", null,
-                        Enchantment.DAMAGE_ALL, 2), Buildings.LUMBERMILL, config.getInt("costs.warrior.sharpness2"),
+                        Enchantment.DAMAGE_ALL, 2), Buildings.BLACKSMITH, config.getInt("costs.warrior.sharpness2"),
                 "sharpness", 2), new UpgradeBuyable(InventoryUtils
                 .createItemWithEnchantments(Material.IRON_SWORD, 1, 0, "Knockback Upgrade 1", null,
-                        Enchantment.KNOCKBACK, 1), Buildings.LUMBERMILL, config.getInt("costs.warrior.knockback1"),
+                        Enchantment.KNOCKBACK, 1), Buildings.BLACKSMITH, config.getInt("costs.warrior.knockback1"),
                 "knockback", 1), new UpgradeBuyable(InventoryUtils
                 .createItemWithEnchantments(Material.IRON_SWORD, 1, 0, "Knockback Upgrade 2", null,
-                        Enchantment.KNOCKBACK, 2), Buildings.LUMBERMILL, config.getInt("costs.warrior.knockback2"),
+                        Enchantment.KNOCKBACK, 2), Buildings.BLACKSMITH, config.getInt("costs.warrior.knockback2"),
                 "knockback", 2), new UpgradeBuyable(InventoryUtils
                 .createItemWithNameAndLore(Material.GOLD_HELMET, 1, 0, "Wolf Wand Upgrade 1", "Cooldown: 90 seconds"),
                 Buildings.BLACKSMITH, config.getInt("costs.warrior.wolf1"), "wolf", 1), new UpgradeBuyable(

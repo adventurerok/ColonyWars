@@ -3,7 +3,7 @@ package com.ithinkrok.mccw.playerclass;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
-import com.ithinkrok.mccw.event.UserAttackUserEvent;
+import com.ithinkrok.mccw.event.UserAttackEvent;
 import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
@@ -22,8 +22,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionType;
-
-import java.util.HashSet;
 
 /**
  * Created by paul on 12/11/15.
@@ -131,7 +129,7 @@ public class MageClass extends BuyableInventory implements PlayerClassHandler {
     }
 
     @Override
-    public void onUserAttackUser(UserAttackUserEvent event) {
+    public void onUserAttack(UserAttackEvent event) {
 
     }
 }

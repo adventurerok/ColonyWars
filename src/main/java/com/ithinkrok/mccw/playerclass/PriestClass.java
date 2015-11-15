@@ -4,7 +4,7 @@ import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.BentEarth;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
-import com.ithinkrok.mccw.event.UserAttackUserEvent;
+import com.ithinkrok.mccw.event.UserAttackEvent;
 import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
@@ -101,10 +101,7 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
         switch (event.getAction()) {
             case LEFT_CLICK_AIR:
             case LEFT_CLICK_BLOCK:
-                BentEarth bent = user.getBentEarth();
-                if(bent == null) return true;
-                Vector add = user.getPlayer().getLocation().getDirection();
-                bent.addVelocity(add);
+                earthBenderLeftClick(user);
                 return true;
             case RIGHT_CLICK_AIR:
             case RIGHT_CLICK_BLOCK:
@@ -157,6 +154,13 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
         }
     }
 
+    private void earthBenderLeftClick(User user) {
+        BentEarth bent = user.getBentEarth();
+        if(bent == null) return;
+        Vector add = user.getPlayer().getLocation().getDirection();
+        bent.addVelocity(add);
+    }
+
     @Override
     public void onPlayerUpgrade(UserUpgradeEvent event) {
         switch (event.getUpgradeName()) {
@@ -185,11 +189,19 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
     }
 
     @Override
-    public void onUserAttackUser(UserAttackUserEvent event) {
+    public void onUserAttack(UserAttackEvent event) {
         ItemStack item = event.getWeapon();
-        if (item == null || item.getType() != Material.GOLD_LEGGINGS) return;
+        if (item == null) return;
 
-        double damage = 4 + 2 * event.getAttacker().getUpgradeLevel("cross");
-        event.setDamage(damage);
+        switch(item.getType()){
+            case GOLD_LEGGINGS:
+                double damage = 4 + 2 * event.getAttacker().getUpgradeLevel("cross");
+                event.setDamage(damage);
+                break;
+            case GOLD_CHESTPLATE:
+                earthBenderLeftClick(event.getAttacker());
+                break;
+        }
+
     }
 }

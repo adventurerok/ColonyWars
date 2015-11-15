@@ -2,16 +2,16 @@ package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
-import com.ithinkrok.mccw.event.UserAttackUserEvent;
+import com.ithinkrok.mccw.event.UserAttackEvent;
 import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.event.UserUpgradeEvent;
-import com.ithinkrok.mccw.inventory.Buyable;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -80,7 +80,7 @@ public class DarkKnightClass extends BuyableInventory implements PlayerClassHand
     }
 
     @Override
-    public void onUserAttackUser(UserAttackUserEvent event) {
+    public void onUserAttack(UserAttackEvent event) {
         ItemStack item = event.getWeapon();
         if (item == null || item.getType() != Material.IRON_HELMET) return;
 
@@ -109,8 +109,10 @@ public class DarkKnightClass extends BuyableInventory implements PlayerClassHand
         }
 
         event.setDamage(damage);
-        event.getTarget().getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, nausea, 0,
+        if(!(event.getTarget() instanceof LivingEntity)) return;
+        ((LivingEntity)event.getTarget()).addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, nausea, 0,
                 false, true), true);
-        event.getTarget().setWitherTicks(event.getAttacker(), wither);
+        if(event.isAttackingUser()) event.getTargetUser().setWitherTicks(event.getAttacker(), wither);
+        else ((LivingEntity)event.getTarget()).addPotionEffect(new PotionEffect(PotionEffectType.WITHER, wither, 0));
     }
 }

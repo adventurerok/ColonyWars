@@ -3,7 +3,7 @@ package com.ithinkrok.mccw.playerclass;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
-import com.ithinkrok.mccw.event.UserAttackUserEvent;
+import com.ithinkrok.mccw.event.UserAttackEvent;
 import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
@@ -126,13 +126,14 @@ public class InfernoClass extends BuyableInventory implements PlayerClassHandler
     }
 
     @Override
-    public void onUserAttackUser(UserAttackUserEvent event) {
+    public void onUserAttack(UserAttackEvent event) {
         ItemStack item = event.getWeapon();
         if (item == null || item.getType() != Material.DIAMOND_HELMET) return;
 
         double damage = 2 + 3 * event.getAttacker().getUpgradeLevel("flame");
         event.setDamage(damage);
 
-        event.getTarget().setFireTicks(event.getAttacker(), 80);
+        if(event.isAttackingUser()) event.getTargetUser().setFireTicks(event.getAttacker(), 80);
+        else event.getTarget().setFireTicks(80);
     }
 }

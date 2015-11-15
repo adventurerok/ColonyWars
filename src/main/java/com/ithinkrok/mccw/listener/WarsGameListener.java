@@ -5,7 +5,7 @@ import com.ithinkrok.mccw.data.Building;
 import com.ithinkrok.mccw.data.Schematic;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
-import com.ithinkrok.mccw.event.UserAttackUserEvent;
+import com.ithinkrok.mccw.event.UserAttackEvent;
 import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.handler.GameInstance;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
@@ -16,7 +16,6 @@ import com.ithinkrok.mccw.util.SchematicBuilder;
 import com.ithinkrok.mccw.util.TreeFeller;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -317,7 +316,10 @@ public class WarsGameListener implements Listener {
 
         resetDurability(damager);
 
-        if (!(event.getEntity() instanceof Player)) return;
+        if (!(event.getEntity() instanceof Player)) {
+            userAttackNonUser(new UserAttackEvent(damagerInfo, null, event));
+            return;
+        }
 
         Player target = (Player) event.getEntity();
 
@@ -329,7 +331,7 @@ public class WarsGameListener implements Listener {
         User targetInfo = plugin.getUser(target);
 
         if (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
-            userAttackUser(new UserAttackUserEvent(damagerInfo, targetInfo, event));
+            userAttackUser(new UserAttackEvent(damagerInfo, targetInfo, event));
         }
 
 
@@ -360,17 +362,24 @@ public class WarsGameListener implements Listener {
         }
     }
 
-    private void userAttackUser(UserAttackUserEvent event) {
+    private void userAttackUser(UserAttackEvent event) {
         ItemStack weapon = event.getWeapon();
 
         if (weapon == null) return;
 
         if (weapon.containsEnchantment(Enchantment.FIRE_ASPECT)) {
-            event.getTarget().setFireAttacker(event.getAttacker());
+            event.getTargetUser().setFireAttacker(event.getAttacker());
         }
 
         PlayerClassHandler classHandler = plugin.getPlayerClassHandler(event.getAttacker().getPlayerClass());
-        classHandler.onUserAttackUser(event);
+        classHandler.onUserAttack(event);
+    }
+
+    private void userAttackNonUser(UserAttackEvent event){
+        if(event.getWeapon() == null) return;
+
+        PlayerClassHandler classHandler = plugin.getPlayerClassHandler(event.getAttacker().getPlayerClass());
+        classHandler.onUserAttack(event);
     }
 
     public void playerDeath(Player died, Player killer, boolean intentionally) {

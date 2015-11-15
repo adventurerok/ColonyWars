@@ -1,6 +1,7 @@
 package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.WarsPlugin;
+import com.ithinkrok.mccw.data.BentEarth;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.event.UserAttackUserEvent;
@@ -17,6 +18,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by paul on 15/11/15.
@@ -94,6 +98,10 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
         switch (event.getAction()) {
             case LEFT_CLICK_AIR:
             case LEFT_CLICK_BLOCK:
+                BentEarth bent = user.getBentEarth();
+                if(bent == null) return true;
+                Vector add = user.getPlayer().getLocation().getDirection();
+                bent.addVelocity(add);
                 return true;
             case RIGHT_CLICK_AIR:
             case RIGHT_CLICK_BLOCK:
@@ -102,7 +110,9 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
 
                 int maxDist = 3 * 3;
 
-                for (int y = 3; y <= -3; ++y) {
+                List<FallingBlock> fallingBlockList = new ArrayList<>();
+
+                for (int y = -3; y <= 3; ++y) {
                     int ys = y * y;
                     for (int x = -3; x <= 3; ++x) {
                         int xs = x * x;
@@ -122,10 +132,15 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
                             FallingBlock falling = block.getWorld().spawnFallingBlock(block.getLocation(),
                                     oldState.getType(), oldState.getRawData());
 
-                            falling.setVelocity(new Vector(0, 1, 0));
+                            falling.setVelocity(new Vector(0, 2, 0));
+                            fallingBlockList.add(falling);
                         }
                     }
-                } return true;
+                }
+
+                BentEarth bentEarth = new BentEarth(fallingBlockList);
+                user.setBentEarth(bentEarth);
+                return true;
             default:
                 return false;
         }

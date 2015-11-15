@@ -18,6 +18,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -92,7 +93,17 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
     }
 
     private boolean handleHealingScroll(UserInteractEvent event) {
-        return false;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_AIR) return false;
+        User user = event.getUserClicked();
+        int cooldown = 240 - 90 * user.getUpgradeLevel("healing");
+        if (!event.getUserClicked().startCoolDown("healing", cooldown, plugin.getLocale("healing-scroll-cooldown")))
+            return true;
+
+        for(Player p : user.getTeam().getPlayers()){
+            p.setHealth(plugin.getMaxHealth());
+        }
+
+        return true;
     }
 
     private boolean handleEarthBender(UserInteractEvent event) {

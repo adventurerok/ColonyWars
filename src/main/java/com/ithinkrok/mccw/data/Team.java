@@ -59,6 +59,10 @@ public class Team {
         players.add(player);
     }
 
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
+
     public void removePlayer(Player player){
         players.remove(player);
     }

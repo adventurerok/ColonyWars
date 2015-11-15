@@ -105,8 +105,11 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
                 return true;
             case RIGHT_CLICK_AIR:
             case RIGHT_CLICK_BLOCK:
+                int cooldown = 45 - 15 * user.getUpgradeLevel("bender");
+                if(!user.startCoolDown("bender", cooldown, plugin.getLocale("earth-bender-cooldown"))) return true;
                 Block target = user.rayTraceBlocks(200);
                 if (target == null) return true;
+                user.setUpgradeLevel("bending", 0);
 
                 int maxDist = 3 * 3;
 
@@ -157,8 +160,10 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
     private void earthBenderLeftClick(User user) {
         BentEarth bent = user.getBentEarth();
         if(bent == null) return;
+        if(user.getUpgradeLevel("bending") > 4) return;
         Vector add = user.getPlayer().getLocation().getDirection();
         bent.addVelocity(add);
+        user.setUpgradeLevel("bending", user.getUpgradeLevel("bending") + 1);
     }
 
     @Override

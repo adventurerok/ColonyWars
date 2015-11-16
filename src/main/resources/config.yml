@@ -126,7 +126,7 @@ buildings:
     PlayerCathedral: 3
     Greenhouse: 3
     ScoutTower: 2
-    CannonTower: 2
+    CannonTower: 0
     Wall: 0
     Landmine: 0
     WirelessBuffer: 0

@@ -3,6 +3,7 @@ package com.ithinkrok.mccw.data;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.strings.Buildings;
+import com.ithinkrok.mccw.util.CannonTowerHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -33,6 +34,8 @@ public class Team {
     private List<Location> churchLocations = new ArrayList<>();
     private Location baseLocation;
     private int respawnChance;
+
+    private HashMap<Location, Integer> cannonTowerTasks = new HashMap<>();
 
     public Location getBaseLocation() {
         return baseLocation;
@@ -165,6 +168,10 @@ public class Team {
             case Buildings.BASE:
                 baseLocation = building.getCenterBlock();
                 break;
+            case Buildings.CANNONTOWER:
+                int cannonTowerTask = CannonTowerHandler.startCannonTowerTask(plugin, building);
+                cannonTowerTasks.put(building.getCenterBlock(), cannonTowerTask);
+                break;
         }
 
         updatePlayerScoreboards();
@@ -178,6 +185,11 @@ public class Team {
             case Buildings.CATHEDRAL:
                 churchLocations.remove(building.getCenterBlock());
                 if(churchLocations.isEmpty()) setRespawnChance(0);
+                break;
+            case Buildings.CANNONTOWER:
+                int task = cannonTowerTasks.remove(building.getCenterBlock());
+
+                plugin.getServer().getScheduler().cancelTask(task);
                 break;
         }
     }

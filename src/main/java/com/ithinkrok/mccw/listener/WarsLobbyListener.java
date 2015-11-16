@@ -46,6 +46,7 @@ public class WarsLobbyListener implements Listener {
 
         if(plugin.getHandbook() == null){
             String meta = plugin.getHandbookMeta();
+            System.out.println(meta);
 
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "minecraft:give " + event.getPlayer().getName()
             + " written_book 1 0 " + meta);

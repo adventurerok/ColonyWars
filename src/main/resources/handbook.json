@@ -1,5 +1,5 @@
 {
-  "pages": [
+  pages: [
     "[\"\",{text:\"Colony Wars Handbook:\",bold:true,underlined:true},{text:\"\nThis book will fill you in on all you need to know to play Colony Wars.\n\n\",color:reset},{text:\"Credits:\",bold:true},{text:\"\nThis version of Colony Wars created by ithinkrok. Original from the MultiCube Network.\",color:reset}]",
     "[\"\",{text:\"Contents:\",bold:true,underlined:true},{text:\"\nIntroduction:\",color:reset,bold:true},{text:\"\nGame Format\nCollecting Gold\nDying/Repawning\nThe Showdown\n\n\",color:reset},{text:\"Buildings:\",bold:true},{text:\"\nBase\nFarm\nChurch\nCathedral\nGreenhouse\nLumbermill\",color:reset}]",
     "[\"\",{text:\"Buildings (Cont.)\",bold:true},{text:\"\nBlacksmith\nMageTower\nScoutTower\nCannonTower\nWalls\nLandmines\n\n\",color:reset},{text:\"Classes:\",bold:true},{text:\"\nCloaker\nScout\nGeneral\nArcher\nMage\",color:reset}]",
@@ -25,7 +25,7 @@
     "[\"\",{text:\"Dark Knight\",bold:true},{text:\"\nGets an upgradable darkness sword when the MageTower is built.This sword gives players the wither effect when attacked.\n\n\",color:reset},{text:Priest,bold:true},{text:\"\nGets the upgradable earth bender, healing scroll and cross when the Cathedral is built.\",color:reset}]",
     "[\"\",{text:\"The healing scroll will heal the entire team to full health when used. The earth bender levitates blocks.\n\n\"},{text:Warrior,bold:true},{text:\"\nGets the upgradable wolf wand and iron sword when the Blacksmith is built. The wolf wand summons wolves to fight for you.\",color:reset}]"
   ],
-  "title": "Colony Wars Handbook",
-  "author": "ithinkrok",
-  "generation": 1
+  title: "Colony Wars Handbook",
+  author: "ithinkrok",
+  generation: 1
 }

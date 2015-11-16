@@ -5,6 +5,7 @@ import com.ithinkrok.mccw.data.Building;
 import com.ithinkrok.mccw.data.Schematic;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
+import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.event.UserAttackEvent;
 import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.handler.GameInstance;
@@ -305,8 +306,19 @@ public class WarsGameListener implements Listener {
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        Player damager = getDamager(event);
-        if (damager == null) return;
+        Player damager = getPlayerFromEntity(event.getDamager());
+        if (damager == null){
+            Entity ent = event.getDamager();
+            if(!ent.hasMetadata("team")) return;
+            
+            User hurt = plugin.getUser(getPlayerFromEntity(event.getEntity()));
+            if(hurt == null) return;
+            
+            if(ent.getMetadata("team").get(0).value() == hurt.getTeamColor()){
+                event.setCancelled(true);
+            }
+            return;
+        }
 
         User damagerInfo = plugin.getUser(damager);
 
@@ -356,20 +368,20 @@ public class WarsGameListener implements Listener {
         }
     }
 
-    public Player getDamager(EntityDamageByEntityEvent event) {
+    public Player getPlayerFromEntity(Entity entity) {
 
-        if (!(event.getDamager() instanceof Player)) {
-            if (event.getDamager() instanceof Projectile) {
-                Projectile arrow = (Projectile) event.getDamager();
+        if (!(entity instanceof Player)) {
+            if (entity instanceof Projectile) {
+                Projectile arrow = (Projectile) entity;
 
                 if (!(arrow.getShooter() instanceof Player)) return null;
                 return (Player) arrow.getShooter();
-            } else if (event.getDamager() instanceof Tameable) {
-                Tameable tameable = (Tameable) event.getDamager();
+            } else if (entity instanceof Tameable) {
+                Tameable tameable = (Tameable) entity;
                 if (tameable.getOwner() == null || !(tameable.getOwner() instanceof Player)) return null;
                 return (Player) tameable.getOwner();
             } else {
-                List<MetadataValue> values = event.getDamager().getMetadata("striker");
+                List<MetadataValue> values = entity.getMetadata("striker");
                 if (values == null || values.isEmpty()) return null;
 
                 User user = plugin.getUser((UUID) values.get(0).value());
@@ -377,7 +389,7 @@ public class WarsGameListener implements Listener {
                 return user.getPlayer();
             }
         } else {
-            return (Player) event.getDamager();
+            return (Player) entity;
         }
     }
 

@@ -54,11 +54,13 @@ public class CannonTowerHandler {
             for(Turret turret : turrets){
                 Location from = turret.loc.clone().add(turret.dir.getModX() + 0.5, turret.dir.getModY() + 0.5,
                         turret.dir.getModZ() + 0.5);
-                Vector velocity = new Vector(turret.dir.getModX(), turret.dir.getModY() + 0.1, turret.dir.getModZ());
                 Entity entity;
+                Vector velocity;
                 if(turret.isFire){
+                    velocity = new Vector(turret.dir.getModX(), turret.dir.getModY(), turret.dir.getModZ());
                     entity = from.getWorld().spawnEntity(from, EntityType.SMALL_FIREBALL);
                 } else {
+                    velocity = new Vector(turret.dir.getModX(), turret.dir.getModY() + 0.1, turret.dir.getModZ());
                     entity = from.getWorld().spawnEntity(from, EntityType.ARROW);
                 }
 

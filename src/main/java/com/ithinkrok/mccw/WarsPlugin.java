@@ -186,6 +186,26 @@ public class WarsPlugin extends JavaPlugin {
         player.teleport(Bukkit.getWorld("world").getSpawnLocation());
     }
 
+    public void givePlayerHandbook(Player player){
+        PlayerInventory inv = player.getInventory();
+        if(getHandbook() == null){
+            String meta = getHandbookMeta();
+
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "minecraft:give " + player.getName()
+                    + " written_book 1 0 " + meta);
+
+            int index = inv.first(Material.WRITTEN_BOOK);
+            ItemStack book = inv.getItem(index);
+            book.setAmount(1);
+            inv.setItem(index, null);
+            setHandbook(book.clone());
+        }
+
+        if(inv.getItem(8) == null || inv.getItem(8).getType() == Material.AIR){
+            inv.setItem(8, getHandbook().clone());
+        } else inv.addItem(getHandbook().clone());
+    }
+
     public void playerJoinLobby(Player player) {
         User user = getUser(player);
 
@@ -217,20 +237,7 @@ public class WarsPlugin extends JavaPlugin {
 
         player.teleport(Bukkit.getWorld("world").getSpawnLocation());
 
-        if(getHandbook() == null){
-            String meta = getHandbookMeta();
-
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "minecraft:give " + player.getName()
-                    + " written_book 1 0 " + meta);
-
-            int index = inv.first(Material.WRITTEN_BOOK);
-            ItemStack book = inv.getItem(index);
-            book.setAmount(1);
-            inv.setItem(index, book);
-            setHandbook(book.clone());
-        } else {
-            inv.addItem(getHandbook().clone());
-        }
+        givePlayerHandbook(player);
     }
 
     public User getUser(Player player) {

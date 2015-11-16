@@ -184,7 +184,7 @@ public class GameInstance {
             PlayerClassHandler classHandler = plugin.getPlayerClassHandler(info.getPlayerClass());
             classHandler.onGameBegin(info, getTeam(info.getTeamColor()));
 
-            info.getPlayer().getInventory().setItem(8, plugin.getHandbook().clone());
+            plugin.givePlayerHandbook(info.getPlayer());
 
             info.message(ChatColor.GOLD + "You are playing on the " + info.getTeamColor().name + ChatColor.GOLD +
                     " Team");

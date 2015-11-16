@@ -25,6 +25,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -70,6 +71,20 @@ public class WarsPlugin extends JavaPlugin {
     private List<String> mapList;
     private ConcurrentHashMap<String, Integer> mapVotes = new ConcurrentHashMap<>();
 
+    private String handbookMeta;
+    private ItemStack handbook;
+
+    public ItemStack getHandbook() {
+        return handbook;
+    }
+
+    public String getHandbookMeta() {
+        return handbookMeta;
+    }
+
+    public void setHandbook(ItemStack handbook) {
+        this.handbook = handbook;
+    }
 
     @Override
     public void onDisable() {
@@ -103,6 +118,8 @@ public class WarsPlugin extends JavaPlugin {
         saveDefaultConfig();
 
         mapList = getConfig().getStringList("map-list");
+
+        handbookMeta = Handbook.loadHandbookMeta(this);
 
         protocolManager = ProtocolLibrary.getProtocolManager();
         InvisiblePlayerAttacker.enablePlayerAttacker(this, protocolManager);

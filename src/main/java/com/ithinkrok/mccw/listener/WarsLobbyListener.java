@@ -8,6 +8,7 @@ import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,6 +19,8 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 /**
  * Created by paul on 08/11/15.
@@ -40,6 +43,22 @@ public class WarsLobbyListener implements Listener {
         String online = Integer.toString(plugin.getPlayerCount());
         String max = Integer.toString(plugin.getServer().getMaxPlayers());
         event.setJoinMessage(plugin.getLocale("player-join-game", name, online, max));
+
+        if(plugin.getHandbook() == null){
+            String meta = plugin.getHandbookMeta();
+
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "minecraft:give " + event.getPlayer().getName()
+            + " written_book 1 0 " + meta);
+
+            PlayerInventory inv = event.getPlayer().getInventory();
+            int index = inv.first(Material.WRITTEN_BOOK);
+            ItemStack book = inv.getItem(index);
+            book.setAmount(1);
+            inv.setItem(index, book);
+            plugin.setHandbook(book.clone());
+        } else {
+            event.getPlayer().getInventory().addItem(plugin.getHandbook().clone());
+        }
     }
 
     private ChatColor getPlayerNameColor(Player player) {
@@ -48,6 +67,7 @@ public class WarsLobbyListener implements Listener {
 
     @EventHandler
     public void onPickupItem(PlayerPickupItemEvent event) {
+        if(event.getItem().getItemStack().getType() == Material.WRITTEN_BOOK) return;
         event.setCancelled(true);
     }
 

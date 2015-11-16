@@ -57,8 +57,9 @@ public class CannonTowerHandler {
                 Entity entity;
                 Vector velocity;
                 if(turret.isFire){
-                    velocity = new Vector(turret.dir.getModX(), turret.dir.getModY(), turret.dir.getModZ());
+                    velocity = new Vector(turret.dir.getModX(), turret.dir.getModY() - 0.05, turret.dir.getModZ());
                     entity = from.getWorld().spawnEntity(from, EntityType.SMALL_FIREBALL);
+                    ((SmallFireball)entity).setDirection(velocity);
                 } else {
                     velocity = new Vector(turret.dir.getModX(), turret.dir.getModY() + 0.1, turret.dir.getModZ());
                     entity = from.getWorld().spawnEntity(from, EntityType.ARROW);

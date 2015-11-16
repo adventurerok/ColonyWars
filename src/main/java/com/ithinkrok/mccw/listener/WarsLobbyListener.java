@@ -44,22 +44,7 @@ public class WarsLobbyListener implements Listener {
         String max = Integer.toString(plugin.getServer().getMaxPlayers());
         event.setJoinMessage(plugin.getLocale("player-join-game", name, online, max));
 
-        if(plugin.getHandbook() == null){
-            String meta = plugin.getHandbookMeta();
-            System.out.println(meta);
 
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "minecraft:give " + event.getPlayer().getName()
-            + " written_book 1 0 " + meta);
-
-            PlayerInventory inv = event.getPlayer().getInventory();
-            int index = inv.first(Material.WRITTEN_BOOK);
-            ItemStack book = inv.getItem(index);
-            book.setAmount(1);
-            inv.setItem(index, book);
-            plugin.setHandbook(book.clone());
-        } else {
-            event.getPlayer().getInventory().addItem(plugin.getHandbook().clone());
-        }
     }
 
     private ChatColor getPlayerNameColor(Player player) {
@@ -89,6 +74,7 @@ public class WarsLobbyListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
+        if(event.getItem().getType() == Material.WRITTEN_BOOK) return;
         event.setCancelled(true);
 
         if (event.getItem() == null || !event.getItem().hasItemMeta() ||

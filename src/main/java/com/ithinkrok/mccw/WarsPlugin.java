@@ -214,6 +214,21 @@ public class WarsPlugin extends JavaPlugin {
 
         player.teleport(Bukkit.getWorld("world").getSpawnLocation());
 
+        if(getHandbook() == null){
+            String meta = getHandbookMeta();
+            System.out.println(meta);
+
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "minecraft:give " + player.getName()
+                    + " written_book 1 0 " + meta);
+
+            int index = inv.first(Material.WRITTEN_BOOK);
+            ItemStack book = inv.getItem(index);
+            book.setAmount(1);
+            inv.setItem(index, book);
+            setHandbook(book.clone());
+        } else {
+            inv.addItem(getHandbook().clone());
+        }
     }
 
     public User getUser(Player player) {

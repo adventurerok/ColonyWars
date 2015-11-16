@@ -1,6 +1,5 @@
 package com.ithinkrok.mccw.data;
 
-import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;

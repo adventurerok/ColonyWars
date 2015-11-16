@@ -1,11 +1,10 @@
 package com.ithinkrok.mccw;
 
-import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.EnumWrappers;
-import com.ithinkrok.mccw.data.*;
+import com.ithinkrok.mccw.data.Schematic;
+import com.ithinkrok.mccw.data.Team;
+import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.handler.CountdownHandler;
@@ -18,8 +17,13 @@ import com.ithinkrok.mccw.listener.WarsBaseListener;
 import com.ithinkrok.mccw.listener.WarsLobbyListener;
 import com.ithinkrok.mccw.playerclass.*;
 import com.ithinkrok.mccw.strings.Buildings;
-import com.ithinkrok.mccw.util.*;
-import org.bukkit.*;
+import com.ithinkrok.mccw.util.Handbook;
+import com.ithinkrok.mccw.util.InventoryUtils;
+import com.ithinkrok.mccw.util.InvisiblePlayerAttacker;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -29,7 +33,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -216,7 +219,6 @@ public class WarsPlugin extends JavaPlugin {
 
         if(getHandbook() == null){
             String meta = getHandbookMeta();
-            System.out.println(meta);
 
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "minecraft:give " + player.getName()
                     + " written_book 1 0 " + meta);

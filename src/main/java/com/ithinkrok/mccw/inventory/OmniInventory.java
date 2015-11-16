@@ -1,6 +1,7 @@
 package com.ithinkrok.mccw.inventory;
 
 import com.ithinkrok.mccw.WarsPlugin;
+import com.ithinkrok.mccw.data.Building;
 import com.ithinkrok.mccw.event.ItemPurchaseEvent;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
@@ -33,8 +34,40 @@ public class OmniInventory extends BuyableInventory {
         addCathedralItems(result, config);
         addGreenhouseItems(result, config);
         addBlacksmithItems(result, config);
+        addScoutTowerItems(result, plugin, config);
 
         return result;
+    }
+
+    private static void addScoutTowerItems(List<Buyable> result, WarsPlugin plugin, FileConfiguration config) {
+        int cannonTowerCost = config.getInt("costs.buildings." + Buildings.CANNONTOWER);
+
+        result.add(new Buyable(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.CANNONTOWER,
+                "Replace this ScoutTower with a CannonTower"), Buildings.SCOUTTOWER,
+                cannonTowerCost, true, 1) {
+
+
+            @Override
+            public void onPurchase(ItemPurchaseEvent event) {
+                event.getBuilding().remove();
+
+                if (!SchematicBuilder.buildSchematic(plugin, plugin.getSchematicData(Buildings.CANNONTOWER),
+                        event.getBuilding().getCenterBlock(), event.getBuilding().getRotation(),
+                        event.getBuilding().getTeamColor())) {
+                    event.getUser().message("We failed to build a CannonTower here. Have the block yourself " +
+                            "to find a better place!");
+
+                    event.getPlayerInventory().addItem(InventoryUtils
+                            .createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.CANNONTOWER,
+                                    "Builds a CannonTower when placed!"));
+                }
+            }
+
+            @Override
+            public boolean canBuy(ItemPurchaseEvent event) {
+                return true;
+            }
+        });
     }
 
     private static void addBlacksmithItems(List<Buyable> result, FileConfiguration config) {

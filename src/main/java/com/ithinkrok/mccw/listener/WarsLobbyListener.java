@@ -71,7 +71,7 @@ public class WarsLobbyListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if(event.getItem().getType() == Material.WRITTEN_BOOK) return;
+        if(event.getItem() != null && event.getItem().getType() == Material.WRITTEN_BOOK) return;
         event.setCancelled(true);
 
         if (event.getItem() == null || !event.getItem().hasItemMeta() ||

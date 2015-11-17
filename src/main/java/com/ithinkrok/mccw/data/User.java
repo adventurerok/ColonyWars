@@ -418,6 +418,8 @@ public class User {
         for (PotionEffect effect : effects) {
             player.removePotionEffect(effect.getType());
         }
+
+        player.setFireTicks(0);
     }
 
     public void setSpectator() {

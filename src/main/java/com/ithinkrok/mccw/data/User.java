@@ -68,6 +68,10 @@ public class User {
         this.player = player;
     }
 
+    public UUID getUniqueId(){
+        return player.getUniqueId();
+    }
+
     public boolean isInGame() {
         return inGame && teamColor != null;
     }
@@ -88,6 +92,11 @@ public class User {
         }
 
         updateScoreboard();
+    }
+
+
+    public PlayerInventory getPlayerInventory(){
+        return player.getInventory();
     }
 
     public BentEarth getBentEarth() {

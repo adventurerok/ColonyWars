@@ -9,6 +9,8 @@ import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.handler.CountdownHandler;
 import com.ithinkrok.mccw.handler.GameInstance;
+import com.ithinkrok.mccw.handler.LobbyMinigame;
+import com.ithinkrok.mccw.handler.WoolHeadMinigame;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.inventory.OmniInventory;
 import com.ithinkrok.mccw.inventory.SpectatorInventory;
@@ -74,6 +76,8 @@ public class WarsPlugin extends JavaPlugin {
     private List<String> mapList;
     private ConcurrentHashMap<String, Integer> mapVotes = new ConcurrentHashMap<>();
 
+    private List<LobbyMinigame> lobbyMinigames = new ArrayList<>();
+
     private String handbookMeta;
     private ItemStack handbook;
 
@@ -112,6 +116,10 @@ public class WarsPlugin extends JavaPlugin {
         for (TeamColor c : TeamColor.values()) {
             teamInfoEnumMap.put(c, new Team(this, c));
         }
+    }
+
+    public List<LobbyMinigame> getLobbyMinigames() {
+        return lobbyMinigames;
     }
 
     @Override
@@ -167,6 +175,8 @@ public class WarsPlugin extends JavaPlugin {
         classHandlerEnumMap.put(PlayerClass.DARK_KNIGHT, new DarkKnightClass(getConfig()));
         classHandlerEnumMap.put(PlayerClass.PRIEST, new PriestClass(this, getConfig()));
         classHandlerEnumMap.put(PlayerClass.WARRIOR, new WarriorClass(this, getConfig()));
+
+        lobbyMinigames.add(new WoolHeadMinigame(this));
 
         countdownHandler = new CountdownHandler(this);
         countdownHandler.startLobbyCountdown();
@@ -238,6 +248,10 @@ public class WarsPlugin extends JavaPlugin {
         player.teleport(Bukkit.getWorld("world").getSpawnLocation());
 
         givePlayerHandbook(player);
+
+        for(LobbyMinigame minigame : getLobbyMinigames()){
+            minigame.onUserJoinLobby(user);
+        }
     }
 
     public User getUser(Player player) {

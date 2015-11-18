@@ -4,6 +4,7 @@ import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.mccw.handler.LobbyMinigame;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -83,6 +84,13 @@ public class WarsLobbyListener implements Listener {
             showClassChooser(event.getPlayer());
         } else if(plugin.getLocale("map-chooser").equals(event.getItem().getItemMeta().getDisplayName())){
             showMapChooser(event.getPlayer());
+        }
+    }
+
+    @EventHandler
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent event){
+        for(LobbyMinigame minigame : plugin.getLobbyMinigames()){
+            if(minigame.onUserInteractEntity(plugin.getUser(event.getPlayer()), event.getRightClicked())) break;
         }
     }
 
@@ -208,6 +216,10 @@ public class WarsLobbyListener implements Listener {
         User user = plugin.getUser(event.getPlayer());
         user.setTeamColor(null);
         user.setMapVote(null);
+
+        for(LobbyMinigame minigame : plugin.getLobbyMinigames()){
+            minigame.onUserQuitLobby(user);
+        }
 
         String name = getPlayerNameColor(event.getPlayer()) + event.getPlayer().getName();
         String online = Integer.toString(plugin.getPlayerCount() - 1);

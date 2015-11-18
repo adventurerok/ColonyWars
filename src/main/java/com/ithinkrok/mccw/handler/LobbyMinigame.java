@@ -1,6 +1,7 @@
 package com.ithinkrok.mccw.handler;
 
 import com.ithinkrok.mccw.data.User;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 
 /**
@@ -33,7 +34,15 @@ public interface LobbyMinigame {
      * Called when a User right clicks on an entity while in the lobby
      * @param user The User who right clicked on the entity
      * @param entity The entity the User right clicked on
-     * @return If the event was handled and should not be handled in other LobbyMinigames
+     * @return If the event was handled and should not be handled in other LobbyMinigame classes
      */
     boolean onUserInteractEntity(User user, Entity entity);
+
+    /**
+     * Called when a User right clicks on a block in the lobby
+     * @param user The User who right clicked on the block
+     * @param block The block the User right clicked on
+     * @return If the event was handled and should not be handled in other LobbyMinigame classes
+     */
+    boolean onUserInteractWorld(User user, Block block);
 }

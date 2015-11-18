@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -74,6 +75,14 @@ public class WarsLobbyListener implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         if(event.getItem() != null && event.getItem().getType() == Material.WRITTEN_BOOK) return;
         event.setCancelled(true);
+
+        User user = plugin.getUser(event.getPlayer());
+
+        if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            for (LobbyMinigame minigame : plugin.getLobbyMinigames()) {
+                minigame.onUserInteractWorld(user, event.getClickedBlock());
+            }
+        }
 
         if (event.getItem() == null || !event.getItem().hasItemMeta() ||
                 !event.getItem().getItemMeta().hasDisplayName()) return;

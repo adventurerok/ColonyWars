@@ -4,6 +4,7 @@ import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.User;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -82,5 +83,10 @@ public class WoolHeadMinigame implements LobbyMinigame {
         plugin.messageAllLocale("player-transfer-wool", user.getFormattedName(), newUser.getFormattedName());
 
         return true;
+    }
+
+    @Override
+    public boolean onUserInteractWorld(User user, Block block) {
+        return false;
     }
 }

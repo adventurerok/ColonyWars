@@ -68,6 +68,10 @@ public class User {
         this.player = player;
     }
 
+    public HashMap<String, Integer> getUpgradeLevels() {
+        return upgradeLevels;
+    }
+
     public UUID getUniqueId(){
         return player.getUniqueId();
     }

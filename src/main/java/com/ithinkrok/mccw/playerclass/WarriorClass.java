@@ -3,9 +3,7 @@ package com.ithinkrok.mccw.playerclass;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
-import com.ithinkrok.mccw.event.UserAttackEvent;
-import com.ithinkrok.mccw.event.UserInteractEvent;
-import com.ithinkrok.mccw.event.UserUpgradeEvent;
+import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.strings.Buildings;
@@ -52,11 +50,11 @@ public class WarriorClass extends BuyableInventory implements PlayerClassHandler
     }
 
     @Override
-    public void onBuildingBuilt(String buildingName, User user, Team team) {
-        switch (buildingName) {
+    public void onBuildingBuilt(UserTeamBuildingBuiltEvent event) {
+        switch (event.getBuilding().getBuildingName()) {
             case Buildings.BLACKSMITH:
-                user.getPlayer().getInventory().addItem(new ItemStack(Material.IRON_SWORD));
-                user.getPlayer().getInventory()
+                event.getUserInventory().addItem(new ItemStack(Material.IRON_SWORD));
+                event.getUserInventory()
                         .addItem(InventoryUtils.createItemWithNameAndLore(Material.GOLD_HELMET, 1, 0, "Wolf Wand",
                                 "Cooldown: 120 seconds"));
                 break;
@@ -64,7 +62,7 @@ public class WarriorClass extends BuyableInventory implements PlayerClassHandler
     }
 
     @Override
-    public void onGameBegin(User user, Team team) {
+    public void onUserBeginGame(UserBeginGameEvent event) {
 
     }
 
@@ -72,7 +70,7 @@ public class WarriorClass extends BuyableInventory implements PlayerClassHandler
     public boolean onInteractWorld(UserInteractEvent event) {
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return false;
         if(event.getItem() == null || event.getItem().getType() != Material.GOLD_HELMET) return false;
-        User user = event.getUserClicked();
+        User user = event.getUser();
         int cooldown = 120 - 30 * user.getUpgradeLevel("wolf");
         if(!user.startCoolDown("wolf", cooldown, plugin.getLocale("wolf-wand-cooldown"))) return true;
 

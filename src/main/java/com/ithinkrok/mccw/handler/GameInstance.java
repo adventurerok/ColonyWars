@@ -9,6 +9,8 @@ import com.ithinkrok.mccw.enumeration.CountdownType;
 import com.ithinkrok.mccw.enumeration.GameState;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.mccw.event.UserBeginGameEvent;
+import com.ithinkrok.mccw.event.UserTeamBuildingBuiltEvent;
 import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.listener.WarsGameListener;
 import com.ithinkrok.mccw.listener.WarsLobbyListener;
@@ -148,46 +150,47 @@ public class GameInstance {
         checkVictory(false);
     }
 
-    public void setupPlayers() {
-        for (User info : plugin.getUsers()) {
-
-            info.setMapVote(null);
-
-            if (info.getTeamColor() == null) {
-                info.setTeamColor(assignPlayerTeam());
-            }
-
-            if (info.getPlayerClass() == null) {
-                info.setPlayerClass(assignPlayerClass());
-            }
-
-            info.getPlayer().teleport(getMapSpawn(info.getTeamColor()));
-
-            info.getPlayer().setGameMode(GameMode.SURVIVAL);
-
-            info.resetPlayerStats(true);
-
-            info.setInGame(true);
-
-            info.getPlayer().getInventory().clear();
-            info.updateTeamArmor();
-            info.getPlayer().getInventory().addItem(new ItemStack(Material.DIAMOND_PICKAXE));
-
-            info.updateScoreboard();
-
-            PlayerClassHandler classHandler = plugin.getPlayerClassHandler(info.getPlayerClass());
-            classHandler.onGameBegin(info, getTeam(info.getTeamColor()));
-
-            plugin.givePlayerHandbook(info.getPlayer());
-
-            info.message(ChatColor.GOLD + "You are playing on the " + info.getTeamColor().name + ChatColor.GOLD +
-                    " Team");
-
-            info.message(ChatColor.GOLD + "You are playing as the class " + ChatColor.DARK_AQUA +
-                    info.getPlayerClass().name);
-        }
+    private void setupPlayers() {
+        plugin.getUsers().forEach(this::setupUser);
 
         plugin.getUsers().forEach(User::decloak);
+    }
+
+    private void setupUser(User info){
+        info.setMapVote(null);
+
+        if (info.getTeamColor() == null) {
+            info.setTeamColor(assignPlayerTeam());
+        }
+
+        if (info.getPlayerClass() == null) {
+            info.setPlayerClass(assignPlayerClass());
+        }
+
+        info.getPlayer().teleport(getMapSpawn(info.getTeamColor()));
+
+        info.getPlayer().setGameMode(GameMode.SURVIVAL);
+
+        info.resetPlayerStats(true);
+
+        info.setInGame(true);
+
+        info.getPlayer().getInventory().clear();
+        info.updateTeamArmor();
+        info.getPlayer().getInventory().addItem(new ItemStack(Material.DIAMOND_PICKAXE));
+
+        info.updateScoreboard();
+
+        PlayerClassHandler classHandler = plugin.getPlayerClassHandler(info.getPlayerClass());
+        classHandler.onUserBeginGame(new UserBeginGameEvent(info));
+
+        plugin.givePlayerHandbook(info.getPlayer());
+
+        info.message(ChatColor.GOLD + "You are playing on the " + info.getTeamColor().name + ChatColor.GOLD +
+                " Team");
+
+        info.message(ChatColor.GOLD + "You are playing as the class " + ChatColor.DARK_AQUA +
+                info.getPlayerClass().name);
     }
 
     private void calculateShowdownArena() {
@@ -205,7 +208,7 @@ public class GameInstance {
         showdownArena = new ShowdownArena(radiusX, radiusZ, center, bounds);
     }
 
-    public void setupBases() {
+    private void setupBases() {
         World world = plugin.getServer().getWorld("playing");
         FileConfiguration config = plugin.getConfig();
 
@@ -433,7 +436,7 @@ public class GameInstance {
                 info.redoShopInventory();
 
                 PlayerClassHandler playerClassHandler = plugin.getPlayerClassHandler(info.getPlayerClass());
-                playerClassHandler.onBuildingBuilt(building.getBuildingName(), info, getTeam(info.getTeamColor()));
+                playerClassHandler.onBuildingBuilt(new UserTeamBuildingBuiltEvent(info, building));
             }
         }
 

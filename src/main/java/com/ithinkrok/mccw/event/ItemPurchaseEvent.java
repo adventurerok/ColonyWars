@@ -9,21 +9,18 @@ import org.bukkit.inventory.PlayerInventory;
 
 /**
  * Created by paul on 06/11/15.
+ *
+ * An event to handle a User purchasing an item in an inventory
  */
-public class ItemPurchaseEvent {
+public class ItemPurchaseEvent extends UserEvent{
 
-    private User user;
     private Team team;
     private Building building;
 
     public ItemPurchaseEvent(Building building, User user, Team team) {
+        super(user);
         this.building = building;
-        this.user = user;
         this.team = team;
-    }
-
-    public User getUser() {
-        return user;
     }
 
     public Building getBuilding() {
@@ -34,19 +31,8 @@ public class ItemPurchaseEvent {
         return team;
     }
 
-    public Player getPlayer(){
-        return user.getPlayer();
-    }
-
-    public PlayerInventory getPlayerInventory(){
-        return user.getPlayer().getInventory();
-    }
-
-    public PlayerClass getPlayerClass(){
-        return user.getPlayerClass();
-    }
 
     public void recalculateInventory(){
-        user.redoShopInventory();
+        getUser().redoShopInventory();
     }
 }

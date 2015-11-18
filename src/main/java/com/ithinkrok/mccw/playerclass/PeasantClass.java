@@ -2,9 +2,7 @@ package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
-import com.ithinkrok.mccw.event.UserAttackEvent;
-import com.ithinkrok.mccw.event.UserInteractEvent;
-import com.ithinkrok.mccw.event.UserUpgradeEvent;
+import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.strings.Buildings;
@@ -38,15 +36,15 @@ public class PeasantClass extends BuyableInventory implements PlayerClassHandler
     }
 
     @Override
-    public void onBuildingBuilt(String buildingName, User user, Team team) {
-        if(!Buildings.LUMBERMILL.equals(buildingName)) return;
+    public void onBuildingBuilt(UserTeamBuildingBuiltEvent event) {
+        if(!Buildings.LUMBERMILL.equals(event.getBuilding().getBuildingName())) return;
 
-        user.getPlayer().getInventory().addItem(new ItemStack(Material.WOOD_SWORD));
+        event.getUserInventory().addItem(new ItemStack(Material.WOOD_SWORD));
     }
 
     @Override
-    public void onGameBegin(User user, Team team) {
-        user.getPlayer().getInventory().addItem(InventoryUtils.createItemWithEnchantments(Material.IRON_AXE,
+    public void onUserBeginGame(UserBeginGameEvent event) {
+        event.getUserInventory().addItem(InventoryUtils.createItemWithEnchantments(Material.IRON_AXE,
                 1, 0, "Peasant Axe", "Better than a usual axe!", Enchantment.DIG_SPEED, 2));
     }
 

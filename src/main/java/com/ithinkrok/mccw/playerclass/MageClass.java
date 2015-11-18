@@ -3,9 +3,7 @@ package com.ithinkrok.mccw.playerclass;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
-import com.ithinkrok.mccw.event.UserAttackEvent;
-import com.ithinkrok.mccw.event.UserInteractEvent;
-import com.ithinkrok.mccw.event.UserUpgradeEvent;
+import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
 import com.ithinkrok.mccw.inventory.ItemBuyable;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
@@ -57,10 +55,10 @@ public class MageClass extends BuyableInventory implements PlayerClassHandler {
 
 
     @Override
-    public void onBuildingBuilt(String buildingName, User user, Team team) {
-        if (!Buildings.MAGETOWER.equals(buildingName)) return;
+    public void onBuildingBuilt(UserTeamBuildingBuiltEvent event) {
+        if (!Buildings.MAGETOWER.equals(event.getBuilding().getBuildingName())) return;
 
-        PlayerInventory inv = user.getPlayer().getInventory();
+        PlayerInventory inv = event.getUserInventory();
 
         inv.addItem(InventoryUtils
                 .createItemWithNameAndLore(Material.DIAMOND_LEGGINGS, 1, 0, "Lightning Wand", "Cooldown: 30 seconds"));
@@ -71,7 +69,7 @@ public class MageClass extends BuyableInventory implements PlayerClassHandler {
     }
 
     @Override
-    public void onGameBegin(User user, Team team) {
+    public void onUserBeginGame(UserBeginGameEvent event) {
 
     }
 
@@ -81,7 +79,7 @@ public class MageClass extends BuyableInventory implements PlayerClassHandler {
         ItemStack item = event.getItem();
         if (item == null) return false;
 
-        User user = event.getUserClicked();
+        User user = event.getUser();
 
         switch (item.getType()) {
             case DIAMOND_CHESTPLATE:

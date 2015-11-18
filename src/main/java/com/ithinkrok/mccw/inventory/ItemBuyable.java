@@ -33,7 +33,7 @@ public class ItemBuyable extends Buyable {
 
     @Override
     public void onPurchase(ItemPurchaseEvent event) {
-        event.getPlayerInventory().addItem(purchase.clone());
+        event.getUserInventory().addItem(purchase.clone());
 
         int newLevel = event.getUser().getUpgradeLevel(upgradeToken) + 1;
         event.getUser().setUpgradeLevel(upgradeToken, newLevel);

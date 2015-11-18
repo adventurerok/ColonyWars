@@ -5,23 +5,18 @@ import org.bukkit.inventory.PlayerInventory;
 
 /**
  * Created by paul on 13/11/15.
- *
+ * <p>
  * An event for when a player gets an upgrade
  */
-public class UserUpgradeEvent {
+public class UserUpgradeEvent extends UserEvent {
 
-    private User user;
     private String upgradeName;
     private int upgradeLevel;
 
     public UserUpgradeEvent(User user, String upgradeName, int upgradeLevel) {
-        this.user = user;
+        super(user);
         this.upgradeName = upgradeName;
         this.upgradeLevel = upgradeLevel;
-    }
-
-    public User getUser() {
-        return user;
     }
 
     public String getUpgradeName() {
@@ -32,7 +27,5 @@ public class UserUpgradeEvent {
         return upgradeLevel;
     }
 
-    public PlayerInventory getUserInventory(){
-        return user.getPlayer().getInventory();
-    }
+
 }

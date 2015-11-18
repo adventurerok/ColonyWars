@@ -4,9 +4,7 @@ import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.enumeration.TeamColor;
-import com.ithinkrok.mccw.event.UserAttackEvent;
-import com.ithinkrok.mccw.event.UserInteractEvent;
-import com.ithinkrok.mccw.event.UserUpgradeEvent;
+import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.strings.Buildings;
@@ -53,10 +51,10 @@ public class ScoutClass extends BuyableInventory implements PlayerClassHandler {
     }
 
     @Override
-    public void onBuildingBuilt(String buildingName, User user, Team team) {
-        PlayerInventory inv = user.getPlayer().getInventory();
+    public void onBuildingBuilt(UserTeamBuildingBuiltEvent event) {
+        PlayerInventory inv = event.getUserInventory();
 
-        switch (buildingName) {
+        switch (event.getBuilding().getBuildingName()) {
             case Buildings.LUMBERMILL:
                 inv.addItem(new ItemStack(Material.WOOD_SWORD));
                 break;
@@ -69,8 +67,8 @@ public class ScoutClass extends BuyableInventory implements PlayerClassHandler {
     }
 
     @Override
-    public void onGameBegin(User user, Team team) {
-        user.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1), true);
+    public void onUserBeginGame(UserBeginGameEvent event) {
+        event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1), true);
     }
 
     @Override
@@ -81,11 +79,11 @@ public class ScoutClass extends BuyableInventory implements PlayerClassHandler {
 
         switch (item.getType()) {
             case COMPASS:
-                TeamColor exclude = event.getUserClicked().getTeamColor();
+                TeamColor exclude = event.getUser().getTeamColor();
                 plugin.getGameInstance().updateScoutCompass(item, event.getPlayer(), exclude);
                 break;
             case CHAINMAIL_HELMET:
-                User user = event.getUserClicked();
+                User user = event.getUser();
                 if (!user.startCoolDown("regen", 35 + 10 * user.getUpgradeLevel("regen"),
                         "Your regeneration ability has cooled down!")) break;
 

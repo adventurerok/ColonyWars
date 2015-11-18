@@ -3,9 +3,7 @@ package com.ithinkrok.mccw.playerclass;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
-import com.ithinkrok.mccw.event.UserAttackEvent;
-import com.ithinkrok.mccw.event.UserInteractEvent;
-import com.ithinkrok.mccw.event.UserUpgradeEvent;
+import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
 import com.ithinkrok.mccw.inventory.ItemBuyable;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
@@ -48,15 +46,15 @@ public class InfernoClass extends BuyableInventory implements PlayerClassHandler
     }
 
     @Override
-    public void onBuildingBuilt(String buildingName, User user, Team team) {
-        switch (buildingName) {
+    public void onBuildingBuilt(UserTeamBuildingBuiltEvent event) {
+        switch (event.getBuilding().getBuildingName()) {
             case Buildings.MAGETOWER:
-                user.getPlayer().getInventory().addItem(InventoryUtils
+                event.getUserInventory().addItem(InventoryUtils
                         .createItemWithNameAndLore(Material.IRON_CHESTPLATE, 1, 0, "Explosion Wand",
                                 "Cooldown: 25 seconds"));
                 break;
             case Buildings.BLACKSMITH:
-                user.getPlayer().getInventory().addItem(InventoryUtils
+                event.getUserInventory().addItem(InventoryUtils
                         .createItemWithNameAndLore(Material.DIAMOND_HELMET, 1, 0, "Flame Sword", "Damage: 1.0 Hearts",
                                 "Fire Aspect"));
                 break;
@@ -64,7 +62,7 @@ public class InfernoClass extends BuyableInventory implements PlayerClassHandler
     }
 
     @Override
-    public void onGameBegin(User user, Team team) {
+    public void onUserBeginGame(UserBeginGameEvent event) {
 
     }
 
@@ -74,7 +72,7 @@ public class InfernoClass extends BuyableInventory implements PlayerClassHandler
         ItemStack item = event.getItem();
         if (item == null) return false;
 
-        User user = event.getUserClicked();
+        User user = event.getUser();
         BlockFace mod = event.getBlockFace();
 
         switch (item.getType()) {
@@ -130,10 +128,10 @@ public class InfernoClass extends BuyableInventory implements PlayerClassHandler
         ItemStack item = event.getWeapon();
         if (item == null || item.getType() != Material.DIAMOND_HELMET) return;
 
-        double damage = 2 + 3 * event.getAttacker().getUpgradeLevel("flame");
+        double damage = 2 + 3 * event.getUser().getUpgradeLevel("flame");
         event.setDamage(damage);
 
-        if(event.isAttackingUser()) event.getTargetUser().setFireTicks(event.getAttacker(), 80);
+        if(event.isAttackingUser()) event.getTargetUser().setFireTicks(event.getUser(), 80);
         else event.getTarget().setFireTicks(80);
     }
 }

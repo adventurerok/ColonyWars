@@ -1,7 +1,6 @@
 package com.ithinkrok.mccw.inventory;
 
 import com.ithinkrok.mccw.WarsPlugin;
-import com.ithinkrok.mccw.data.Building;
 import com.ithinkrok.mccw.event.ItemPurchaseEvent;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
@@ -57,7 +56,7 @@ public class OmniInventory extends BuyableInventory {
                     event.getUser().message("We failed to build a CannonTower here. Have the block yourself " +
                             "to find a better place!");
 
-                    event.getPlayerInventory().addItem(InventoryUtils
+                    event.getUserInventory().addItem(InventoryUtils
                             .createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.CANNONTOWER,
                                     "Builds a CannonTower when placed!"));
                 }
@@ -140,7 +139,7 @@ public class OmniInventory extends BuyableInventory {
                     event.getUser().message("We failed to build a cathedral here. Have the block yourself " +
                             "to find a better place!");
 
-                    event.getPlayerInventory().addItem(InventoryUtils
+                    event.getUserInventory().addItem(InventoryUtils
                             .createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, "PlayerCathedral",
                                     "Builds a Cathedral when placed!"));
                 }

@@ -11,15 +11,14 @@ import org.bukkit.inventory.ItemStack;
  *
  * Sent to the attacker's PlayerClassHandler when they attack an entity by left clicking on them
  */
-public class UserAttackEvent implements Cancellable{
+public class UserAttackEvent extends UserEvent implements Cancellable{
 
 
-    private User attacker;
     private User target;
     private EntityDamageByEntityEvent event;
 
     public UserAttackEvent(User attacker, User target, EntityDamageByEntityEvent event) {
-        this.attacker = attacker;
+        super(attacker);
         this.target = target;
         this.event = event;
     }
@@ -34,9 +33,6 @@ public class UserAttackEvent implements Cancellable{
         event.setCancelled(b);
     }
 
-    public User getAttacker() {
-        return attacker;
-    }
 
     public boolean isAttackingUser(){
         return target != null;
@@ -59,6 +55,6 @@ public class UserAttackEvent implements Cancellable{
     }
 
     public ItemStack getWeapon(){
-        return attacker.getPlayer().getItemInHand();
+        return getUser().getPlayer().getItemInHand();
     }
 }

@@ -4,9 +4,7 @@ import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.BentEarth;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
-import com.ithinkrok.mccw.event.UserAttackEvent;
-import com.ithinkrok.mccw.event.UserInteractEvent;
-import com.ithinkrok.mccw.event.UserUpgradeEvent;
+import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.strings.Buildings;
@@ -57,23 +55,23 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
     }
 
     @Override
-    public void onBuildingBuilt(String buildingName, User user, Team team) {
-        switch (buildingName) {
+    public void onBuildingBuilt(UserTeamBuildingBuiltEvent event) {
+        switch (event.getBuilding().getBuildingName()) {
             case Buildings.CATHEDRAL:
-                user.getPlayer().getInventory().addItem(InventoryUtils
+                event.getUserInventory().addItem(InventoryUtils
                         .createItemWithNameAndLore(Material.DIAMOND_BOOTS, 1, 0, "Healing Scroll",
                                 "Cooldown: 240 seconds"));
-                user.getPlayer().getInventory().addItem(InventoryUtils
+                event.getUserInventory().addItem(InventoryUtils
                         .createItemWithNameAndLore(Material.GOLD_CHESTPLATE, 1, 0, "Earth Bender",
                                 "Cooldown: 45 seconds"));
-                user.getPlayer().getInventory().addItem(InventoryUtils
+                event.getUserInventory().addItem(InventoryUtils
                         .createItemWithNameAndLore(Material.GOLD_LEGGINGS, 1, 0, "Cross", "Damage: 2.0 Hearts"));
                 break;
         }
     }
 
     @Override
-    public void onGameBegin(User user, Team team) {
+    public void onUserBeginGame(UserBeginGameEvent event) {
 
     }
 
@@ -94,9 +92,9 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
 
     private boolean handleHealingScroll(UserInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_AIR) return false;
-        User user = event.getUserClicked();
+        User user = event.getUser();
         int cooldown = 240 - 90 * user.getUpgradeLevel("healing");
-        if (!event.getUserClicked().startCoolDown("healing", cooldown, plugin.getLocale("healing-scroll-cooldown")))
+        if (!event.getUser().startCoolDown("healing", cooldown, plugin.getLocale("healing-scroll-cooldown")))
             return true;
 
         for(Player p : user.getTeam().getPlayers()){
@@ -107,7 +105,7 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
     }
 
     private boolean handleEarthBender(UserInteractEvent event) {
-        User user = event.getUserClicked();
+        User user = event.getUser();
 
         switch (event.getAction()) {
             case LEFT_CLICK_AIR:
@@ -213,11 +211,11 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
 
         switch (item.getType()) {
             case GOLD_LEGGINGS:
-                double damage = 4 + 2 * event.getAttacker().getUpgradeLevel("cross");
+                double damage = 4 + 2 * event.getUser().getUpgradeLevel("cross");
                 event.setDamage(damage);
                 break;
             case GOLD_CHESTPLATE:
-                earthBenderLeftClick(event.getAttacker());
+                earthBenderLeftClick(event.getUser());
                 break;
         }
 

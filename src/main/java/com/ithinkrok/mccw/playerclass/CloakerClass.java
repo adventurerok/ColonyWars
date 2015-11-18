@@ -3,9 +3,7 @@ package com.ithinkrok.mccw.playerclass;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
-import com.ithinkrok.mccw.event.UserAttackEvent;
-import com.ithinkrok.mccw.event.UserInteractEvent;
-import com.ithinkrok.mccw.event.UserUpgradeEvent;
+import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.strings.Buildings;
@@ -42,10 +40,10 @@ public class CloakerClass extends BuyableInventory implements PlayerClassHandler
     }
 
     @Override
-    public void onBuildingBuilt(String buildingName, User user, Team team) {
-        switch (buildingName) {
+    public void onBuildingBuilt(UserTeamBuildingBuiltEvent event) {
+        switch (event.getBuilding().getBuildingName()) {
             case Buildings.MAGETOWER:
-                user.getPlayer().getInventory().addItem(InventoryUtils
+                event.getUserInventory().addItem(InventoryUtils
                         .createItemWithNameAndLore(Material.IRON_LEGGINGS, 1, 0, "Cloak", "Cooldown: 25 seconds",
                                 "Invisibility: 10 seconds"));
                 break;
@@ -53,10 +51,10 @@ public class CloakerClass extends BuyableInventory implements PlayerClassHandler
     }
 
     @Override
-    public void onGameBegin(User user, Team team) {
-        user.getPlayer()
+    public void onUserBeginGame(UserBeginGameEvent event) {
+        event.getPlayer()
                 .addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0, false, false), false);
-        user.getPlayer()
+        event.getPlayer()
                 .addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 3, false, false), false);
     }
 
@@ -65,7 +63,7 @@ public class CloakerClass extends BuyableInventory implements PlayerClassHandler
         if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return false;
         if (event.getItem() == null || event.getItem().getType() != Material.IRON_LEGGINGS) return false;
 
-        User user = event.getUserClicked();
+        User user = event.getUser();
 
         if (user.isCoolingDown("cloaking")) {
             user.message(ChatColor.RED + "You are already cloaked!");

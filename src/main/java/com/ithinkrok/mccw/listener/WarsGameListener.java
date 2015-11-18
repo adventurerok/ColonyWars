@@ -6,10 +6,8 @@ import com.ithinkrok.mccw.data.Schematic;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.enumeration.GameState;
-import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.event.UserAttackEvent;
 import com.ithinkrok.mccw.event.UserInteractEvent;
-import com.ithinkrok.mccw.handler.GameInstance;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.mccw.strings.Buildings;
@@ -410,7 +408,7 @@ public class WarsGameListener implements Listener {
     private void userAttackNonUser(UserAttackEvent event) {
         if (event.getWeapon() == null) return;
 
-        PlayerClassHandler classHandler = plugin.getPlayerClassHandler(event.getAttacker().getPlayerClass());
+        PlayerClassHandler classHandler = plugin.getPlayerClassHandler(event.getUser().getPlayerClass());
         classHandler.onUserAttack(event);
     }
 
@@ -420,10 +418,10 @@ public class WarsGameListener implements Listener {
         if (weapon == null) return;
 
         if (weapon.containsEnchantment(Enchantment.FIRE_ASPECT)) {
-            event.getTargetUser().setFireAttacker(event.getAttacker());
+            event.getTargetUser().setFireAttacker(event.getUser());
         }
 
-        PlayerClassHandler classHandler = plugin.getPlayerClassHandler(event.getAttacker().getPlayerClass());
+        PlayerClassHandler classHandler = plugin.getPlayerClassHandler(event.getUser().getPlayerClass());
         classHandler.onUserAttack(event);
     }
 

@@ -2,9 +2,7 @@ package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
-import com.ithinkrok.mccw.event.UserAttackEvent;
-import com.ithinkrok.mccw.event.UserInteractEvent;
-import com.ithinkrok.mccw.event.UserUpgradeEvent;
+import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.strings.Buildings;
@@ -35,10 +33,10 @@ public class DarkKnightClass extends BuyableInventory implements PlayerClassHand
     }
 
     @Override
-    public void onBuildingBuilt(String buildingName, User user, Team team) {
-        switch(buildingName){
+    public void onBuildingBuilt(UserTeamBuildingBuiltEvent event) {
+        switch(event.getBuilding().getBuildingName()){
             case Buildings.MAGETOWER:
-                user.getPlayer().getInventory().addItem(InventoryUtils.createItemWithNameAndLore(Material.IRON_HELMET,
+                event.getUserInventory().addItem(InventoryUtils.createItemWithNameAndLore(Material.IRON_HELMET,
                         1, 0, "Darkness Sword", "Damage: 2.0 Hearts", "Nausea Duration: 5 seconds",
                         "Wither Duration: 3 seconds"));
                 break;
@@ -46,8 +44,8 @@ public class DarkKnightClass extends BuyableInventory implements PlayerClassHand
     }
 
     @Override
-    public void onGameBegin(User user, Team team) {
-        user.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false,
+    public void onUserBeginGame(UserBeginGameEvent event) {
+        event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false,
                 false), true);
     }
 
@@ -88,7 +86,7 @@ public class DarkKnightClass extends BuyableInventory implements PlayerClassHand
         int nausea;
         int wither;
 
-        switch(event.getAttacker().getUpgradeLevel("sword")){
+        switch(event.getUser().getUpgradeLevel("sword")){
             case 0:
                 damage = 4;
                 nausea = 100;
@@ -112,7 +110,7 @@ public class DarkKnightClass extends BuyableInventory implements PlayerClassHand
         if(!(event.getTarget() instanceof LivingEntity)) return;
         ((LivingEntity)event.getTarget()).addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, nausea, 0,
                 false, true), true);
-        if(event.isAttackingUser()) event.getTargetUser().setWitherTicks(event.getAttacker(), wither);
+        if(event.isAttackingUser()) event.getTargetUser().setWitherTicks(event.getUser(), wither);
         else ((LivingEntity)event.getTarget()).addPotionEffect(new PotionEffect(PotionEffectType.WITHER, wither, 0));
     }
 }

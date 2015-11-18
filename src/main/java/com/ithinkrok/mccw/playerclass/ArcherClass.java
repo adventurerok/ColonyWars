@@ -2,10 +2,7 @@ package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
-import com.ithinkrok.mccw.event.ItemPurchaseEvent;
-import com.ithinkrok.mccw.event.UserAttackEvent;
-import com.ithinkrok.mccw.event.UserInteractEvent;
-import com.ithinkrok.mccw.event.UserUpgradeEvent;
+import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
 import com.ithinkrok.mccw.inventory.ItemBuyable;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
@@ -58,10 +55,10 @@ public class ArcherClass extends BuyableInventory implements PlayerClassHandler 
 
 
     @Override
-    public void onBuildingBuilt(String buildingName, User user, Team team) {
-        if (!Buildings.LUMBERMILL.equals(buildingName)) return;
+    public void onBuildingBuilt(UserTeamBuildingBuiltEvent event) {
+        if (!Buildings.LUMBERMILL.equals(event.getBuilding().getBuildingName())) return;
 
-        PlayerInventory inv = user.getPlayer().getInventory();
+        PlayerInventory inv = event.getUserInventory();
 
         inv.addItem(new ItemStack(Material.BOW));
         inv.addItem(new ItemStack(Material.WOOD_SWORD));
@@ -69,7 +66,7 @@ public class ArcherClass extends BuyableInventory implements PlayerClassHandler 
     }
 
     @Override
-    public void onGameBegin(User user, Team team) {
+    public void onUserBeginGame(UserBeginGameEvent event) {
 
     }
 

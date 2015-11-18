@@ -1,10 +1,6 @@
 package com.ithinkrok.mccw.playerclass;
 
-import com.ithinkrok.mccw.data.Team;
-import com.ithinkrok.mccw.data.User;
-import com.ithinkrok.mccw.event.UserAttackEvent;
-import com.ithinkrok.mccw.event.UserInteractEvent;
-import com.ithinkrok.mccw.event.UserUpgradeEvent;
+import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.strings.Buildings;
@@ -34,14 +30,14 @@ public class GeneralClass extends BuyableInventory implements PlayerClassHandler
 
 
     @Override
-    public void onBuildingBuilt(String buildingName, User user, Team team) {
-        if (!Buildings.BLACKSMITH.equals(buildingName)) return;
+    public void onBuildingBuilt(UserTeamBuildingBuiltEvent event) {
+        if (!Buildings.BLACKSMITH.equals(event.getBuilding().getBuildingName())) return;
 
-        user.setUpgradeLevel("sword", 0);
+        event.getUser().setUpgradeLevel("sword", 0);
     }
 
     @Override
-    public void onGameBegin(User user, Team team) {
+    public void onUserBeginGame(UserBeginGameEvent event) {
 
     }
 

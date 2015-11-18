@@ -2,18 +2,21 @@ package com.ithinkrok.mccw.playerclass.items;
 
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
+import com.ithinkrok.mccw.event.UserAttackEvent;
 import com.ithinkrok.mccw.event.UserInteractEvent;
+import com.ithinkrok.mccw.event.UserTeamBuildingBuiltEvent;
+import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.inventory.Buyable;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by paul on 18/11/15.
@@ -22,6 +25,8 @@ import java.util.Map;
  */
 public class ClassItem {
 
+    private static final double HEALTH_PER_HEART = 2;
+    private static final double TICKS_PER_SECOND = 20;
     private PlayerClass playerClass;
     private String[] upgradeBuildings;
     private boolean unlockOnBuildingBuild;
@@ -34,15 +39,19 @@ public class ClassItem {
     private Calculator rightClickCooldown;
     private Upgradable[] upgradables;
     private EnchantmentEffect[] enchantmentEffects;
+    private String signature;
 
     public ClassItem(PlayerClass playerClass, Material itemMaterial, String itemDisplayName) {
         this.playerClass = playerClass;
         this.itemMaterial = itemMaterial;
         this.itemDisplayName = itemDisplayName;
+
+        signature = UUID.randomUUID().toString();
     }
 
     public ClassItem withUpgradeBuildings(String... upgradeBuildings) {
         this.upgradeBuildings = upgradeBuildings;
+        Arrays.sort(upgradeBuildings);
         return this;
     }
 
@@ -95,7 +104,7 @@ public class ClassItem {
                         new UpgradeBuyable(display, upgradeBuildings[0], (int) upgradable.upgradeCost.calculate(level),
                                 upgradable.upgradeName, level);
 
-                for(int buildingIndex = 1; buildingIndex < upgradeBuildings.length; ++buildingIndex){
+                for (int buildingIndex = 1; buildingIndex < upgradeBuildings.length; ++buildingIndex) {
                     buyable.withAdditionalBuildings(upgradeBuildings[buildingIndex]);
                 }
 
@@ -139,8 +148,54 @@ public class ClassItem {
         else return level;
     }
 
+    public void onBuildingBuilt(UserTeamBuildingBuiltEvent event) {
+        if (!unlockOnBuildingBuild) return;
+        if (userHasItem(event.getUser())) return;
+        if (Arrays.binarySearch(upgradeBuildings, event.getBuilding().getBuildingName()) == -1) return;
+
+        setUserHasItem(event.getUser());
+        InventoryUtils.replaceItem(event.getUserInventory(), createItemForUser(event.getUser()));
+    }
+
+    private boolean userHasItem(User user) {
+        return user.getUpgradeLevel(signature) != 0;
+    }
+
+    private void setUserHasItem(User user) {
+        user.setUpgradeLevel(signature, 1);
+    }
+
     public ItemStack createItemForUser(User user) {
         return createItemFromUpgradeLevels(user.getUpgradeLevels());
+    }
+
+    public void onUserUpgrade(UserUpgradeEvent event) {
+        if (!userHasItem(event.getUser())) return;
+
+        InventoryUtils.replaceItem(event.getUserInventory(), createItemForUser(event.getUser()));
+    }
+
+    public Material getItemMaterial() {
+        return itemMaterial;
+    }
+
+    public void onUserAttack(UserAttackEvent event) {
+        if (weaponModifier == null) return;
+
+        int upgradeLevel = event.getUser().getUpgradeLevel(weaponModifier.upgradeName);
+
+        if (weaponModifier.damageCalculator != null) {
+            event.setDamage(weaponModifier.damageCalculator.calculate(upgradeLevel) * HEALTH_PER_HEART);
+        }
+        if (weaponModifier.witherCalculator != null) {
+            int wither = (int) (weaponModifier.witherCalculator.calculate(upgradeLevel) * TICKS_PER_SECOND);
+
+            if (wither > 1) {
+                if (event.isAttackingUser()) event.getTargetUser().setWitherTicks(event.getUser(), wither);
+                else if (event.getTarget() instanceof LivingEntity) ((LivingEntity) event.getTarget())
+                        .addPotionEffect(new PotionEffect(PotionEffectType.WITHER, wither, 0, false, true));
+            }
+        }
     }
 
     public interface InteractAction {

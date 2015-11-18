@@ -3,6 +3,7 @@ package com.ithinkrok.mccw.listener;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
+import com.ithinkrok.mccw.enumeration.GameState;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.util.InventoryUtils;
@@ -111,15 +112,18 @@ public class CommandListener implements CommandExecutor {
             case "start_game":
                 user.message("Attempting to start a new game!");
 
-                plugin.getCountdownHandler().stopCountdown();
-                plugin.startGame();
+                plugin.changeGameState(GameState.GAME);
 
                 break;
             case "start_showdown":
                 user.message("Attempting to start showdown");
 
-                plugin.getCountdownHandler().stopCountdown();
-                plugin.getGameInstance().startShowdown();
+                plugin.changeGameState(GameState.SHOWDOWN);
+                break;
+            case "end_game":
+                user.message("Attempting to end the game!");
+
+                plugin.changeGameState(GameState.LOBBY);
                 break;
             case "base_location":
                 Team team = user.getTeam();

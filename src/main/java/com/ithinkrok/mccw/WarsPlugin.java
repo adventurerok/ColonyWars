@@ -372,6 +372,8 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public void changeGameState(GameState state) {
+        countdownHandler.stopCountdown();
+
         if (state == GameState.GAME) {
             if(gameInstance != null) return;
             setInGame(true);

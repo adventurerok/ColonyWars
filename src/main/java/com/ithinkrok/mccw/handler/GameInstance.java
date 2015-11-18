@@ -6,12 +6,12 @@ import com.ithinkrok.mccw.data.ShowdownArena;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.enumeration.CountdownType;
+import com.ithinkrok.mccw.enumeration.GameState;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.listener.WarsGameListener;
 import com.ithinkrok.mccw.listener.WarsLobbyListener;
-import com.ithinkrok.mccw.lobby.LobbyMinigame;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.BoundingBox;
@@ -41,13 +41,13 @@ public class GameInstance {
     private TeamColor winningTeam;
     private ShowdownArena showdownArena;
 
-    private boolean inShowdown, inAftermath;
-
     private WarsPlugin plugin;
     private CountdownHandler countdownHandler;
 
     private List<Building> buildings = new ArrayList<>();
     private HashMap<Location, Building> buildingCentres = new HashMap<>();
+
+    private GameState gameState = GameState.LOBBY;
 
     public GameInstance(WarsPlugin plugin, String map) {
         this.map = map;
@@ -67,11 +67,16 @@ public class GameInstance {
         return map;
     }
 
-    public void preEndGame() {
+    private void startAftermath() {
         buildings.forEach(Building::clearHolograms);
+        countdownHandler.startEndCountdown();
     }
 
-    public void endGame() {
+    public GameState getGameState() {
+        return gameState;
+    }
+
+    private void endGame() {
         for (User user : plugin.getUsers()) {
             plugin.playerTeleportLobby(user.getPlayer());
         }
@@ -101,20 +106,6 @@ public class GameInstance {
         }
 
         System.gc();
-
-        plugin.setInGame(false);
-        setInAftermath(false);
-        setInShowdown(false);
-
-        plugin.getLobbyMinigames().forEach(LobbyMinigame::resetMinigame);
-
-        for (User user : plugin.getUsers()) {
-            plugin.playerJoinLobby(user.getPlayer());
-        }
-
-        countdownHandler.startLobbyCountdown();
-
-
     }
 
     public void addBuilding(Building building) {
@@ -137,7 +128,7 @@ public class GameInstance {
         return buildingCentres.get(center);
     }
 
-    public void startGame() {
+    private void startGame() {
         String mapFolder = plugin.getConfig().getString("maps." + map + ".folder");
         try {
             DirectoryUtils.copy(Paths.get("./" + mapFolder + "/"), Paths.get("./playing/"));
@@ -247,8 +238,7 @@ public class GameInstance {
 
         if (teamsInGame.size() == 0) {
             plugin.messageAll(ChatColor.GOLD + "Oh dear. Everyone is dead!");
-            setInAftermath(true);
-            countdownHandler.startEndCountdown();
+            changeGameState(GameState.AFTERMATH);
             return;
         } else if (teamsInGame.size() > 1) {
             if (checkShowdown) checkShowdownStart(teamsInGame.size());
@@ -260,9 +250,7 @@ public class GameInstance {
 
         plugin.messageAll(ChatColor.GOLD + "The " + winner.name + ChatColor.GOLD + " Team has won the game!");
 
-        setInAftermath(true);
-
-        countdownHandler.startEndCountdown();
+        changeGameState(GameState.AFTERMATH);
     }
 
     public TeamColor assignPlayerTeam() {
@@ -306,12 +294,9 @@ public class GameInstance {
     }
 
     public boolean isInAftermath() {
-        return inAftermath;
+        return gameState == GameState.AFTERMATH;
     }
 
-    public void setInAftermath(boolean inAftermath) {
-        this.inAftermath = inAftermath;
-    }
 
     public void checkShowdownStart(int teamsInGame) {
         if (isInShowdown() || countdownHandler.getCountdownType() == CountdownType.SHOWDOWN_START) return;
@@ -321,14 +306,11 @@ public class GameInstance {
     }
 
     public boolean isInShowdown() {
-        return inShowdown;
+        return gameState == GameState.SHOWDOWN;
     }
 
-    public void setInShowdown(boolean inShowdown) {
-        this.inShowdown = inShowdown;
-    }
 
-    public void startShowdown() {
+    private void startShowdown() {
         int x = showdownArena.getRadiusX();
         int z = showdownArena.getRadiusZ();
 
@@ -347,7 +329,7 @@ public class GameInstance {
             user.getPlayer().teleport(teleport);
         }
 
-        setInShowdown(true);
+        changeGameState(GameState.SHOWDOWN);
 
         plugin.messageAll(ChatColor.BOLD.toString() + ChatColor.GOLD + "Showdown starts NOW!");
     }
@@ -456,6 +438,25 @@ public class GameInstance {
         }
 
         getTeam(building.getTeamColor()).buildingFinished(building);
+    }
+
+    public void changeGameState(GameState state){
+        if(this.gameState == state) return;
+        this.gameState = state;
+        switch (state){
+            case LOBBY:
+                endGame();
+                break;
+            case GAME:
+                startGame();
+                break;
+            case SHOWDOWN:
+                startShowdown();
+                break;
+            case AFTERMATH:
+                startAftermath();
+                break;
+        }
     }
 
 }

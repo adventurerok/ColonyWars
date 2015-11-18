@@ -3,6 +3,7 @@ package com.ithinkrok.mccw.handler;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.enumeration.CountdownType;
+import com.ithinkrok.mccw.enumeration.GameState;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -77,7 +78,7 @@ public class CountdownHandler {
         Random random = plugin.getRandom();
         plugin.messageAll(ChatColor.GREEN + "Teleporting back to the lobby in 15 seconds!");
 
-        startCountdown(15, CountdownType.GAME_END, plugin::endGame, () -> {
+        startCountdown(15, CountdownType.GAME_END, () -> plugin.changeGameState(GameState.LOBBY), () -> {
             if (countDown < 10) return;
             Player randomPlayer = plugin.getTeam(plugin.getGameInstance().getWinningTeam()).getRandomPlayer();
             if (randomPlayer == null) return;
@@ -95,13 +96,13 @@ public class CountdownHandler {
             firework.setFireworkMeta(meta);
         });
 
-        plugin.getGameInstance().preEndGame();
+        plugin.changeGameState(GameState.AFTERMATH);
     }
 
     public void startShowdownCountdown() {
         plugin.messageAll(ChatColor.GREEN + "Showdown starting in 30 seconds!");
 
-        startCountdown(30, CountdownType.SHOWDOWN_START, plugin.getGameInstance()::startShowdown, null);
+        startCountdown(30, CountdownType.SHOWDOWN_START, () -> plugin.changeGameState(GameState.SHOWDOWN), null);
     }
 
     public void startLobbyCountdown() {
@@ -109,7 +110,7 @@ public class CountdownHandler {
 
         startCountdown(180, CountdownType.GAME_START, () -> {
             if (plugin.getPlayerCount() > 3) {
-                plugin.startGame();
+                plugin.changeGameState(GameState.GAME);
             } else {
                 plugin.messageAll(plugin.getLocale("not-enough-players"));
                 startLobbyCountdown();

@@ -5,6 +5,7 @@ import com.comphenix.protocol.ProtocolManager;
 import com.ithinkrok.mccw.data.Schematic;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
+import com.ithinkrok.mccw.enumeration.GameState;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.handler.CountdownHandler;
@@ -79,18 +80,6 @@ public class WarsPlugin extends JavaPlugin {
     private String handbookMeta;
     private ItemStack handbook;
 
-    public ItemStack getHandbook() {
-        return handbook;
-    }
-
-    public String getHandbookMeta() {
-        return handbookMeta;
-    }
-
-    public void setHandbook(ItemStack handbook) {
-        this.handbook = handbook;
-    }
-
     @Override
     public void onDisable() {
         super.onDisable();
@@ -114,10 +103,6 @@ public class WarsPlugin extends JavaPlugin {
         for (TeamColor c : TeamColor.values()) {
             teamInfoEnumMap.put(c, new Team(this, c));
         }
-    }
-
-    public List<LobbyMinigame> getLobbyMinigames() {
-        return lobbyMinigames;
     }
 
     @Override
@@ -185,6 +170,10 @@ public class WarsPlugin extends JavaPlugin {
 
     }
 
+    public List<LobbyMinigame> getLobbyMinigames() {
+        return lobbyMinigames;
+    }
+
     public List<String> getMapList() {
         return mapList;
     }
@@ -193,28 +182,8 @@ public class WarsPlugin extends JavaPlugin {
         mapVotes.put(map, votes);
     }
 
-    public void playerTeleportLobby(Player player){
+    public void playerTeleportLobby(Player player) {
         player.teleport(Bukkit.getWorld("world").getSpawnLocation());
-    }
-
-    public void givePlayerHandbook(Player player){
-        PlayerInventory inv = player.getInventory();
-        if(getHandbook() == null){
-            String meta = getHandbookMeta();
-
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "minecraft:give " + player.getName()
-                    + " written_book 1 0 " + meta);
-
-            int index = inv.first(Material.WRITTEN_BOOK);
-            ItemStack book = inv.getItem(index);
-            book.setAmount(1);
-            inv.setItem(index, null);
-            setHandbook(book.clone());
-        }
-
-        if(inv.getItem(8) == null || inv.getItem(8).getType() == Material.AIR){
-            inv.setItem(8, getHandbook().clone());
-        } else inv.addItem(getHandbook().clone());
     }
 
     public void playerJoinLobby(Player player) {
@@ -250,22 +219,54 @@ public class WarsPlugin extends JavaPlugin {
 
         givePlayerHandbook(player);
 
-        for(LobbyMinigame minigame : getLobbyMinigames()){
+        for (LobbyMinigame minigame : getLobbyMinigames()) {
             minigame.onUserJoinLobby(user);
         }
     }
 
-    public Location getLobbySpawnLocation(){
-        return Bukkit.getWorld("world").getSpawnLocation();
-    }
-
     public User getUser(Player player) {
-        if(player == null) return null;
+        if (player == null) return null;
         return playerInfoHashMap.get(player.getUniqueId());
     }
 
     public String getLocale(String name, Object... params) {
         return String.format(getConfig().getString("locale." + name), params);
+    }
+
+    public Location getLobbySpawnLocation() {
+        return Bukkit.getWorld("world").getSpawnLocation();
+    }
+
+    public void givePlayerHandbook(Player player) {
+        PlayerInventory inv = player.getInventory();
+        if (getHandbook() == null) {
+            String meta = getHandbookMeta();
+
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+                    "minecraft:give " + player.getName() + " written_book 1 0 " + meta);
+
+            int index = inv.first(Material.WRITTEN_BOOK);
+            ItemStack book = inv.getItem(index);
+            book.setAmount(1);
+            inv.setItem(index, null);
+            setHandbook(book.clone());
+        }
+
+        if (inv.getItem(8) == null || inv.getItem(8).getType() == Material.AIR) {
+            inv.setItem(8, getHandbook().clone());
+        } else inv.addItem(getHandbook().clone());
+    }
+
+    public ItemStack getHandbook() {
+        return handbook;
+    }
+
+    public String getHandbookMeta() {
+        return handbookMeta;
+    }
+
+    public void setHandbook(ItemStack handbook) {
+        this.handbook = handbook;
     }
 
     public InventoryHandler getBuildingInventoryHandler() {
@@ -304,63 +305,15 @@ public class WarsPlugin extends JavaPlugin {
         return gameInstance;
     }
 
-    public void startGame() {
-        setInGame(true);
 
-        gameInstance = new GameInstance(this, assignGameMap());
-
-        gameInstance.startGame();
-    }
-
-    public String assignGameMap() {
-        int highestVotes = Integer.MIN_VALUE;
-
-        List<String> possible = new ArrayList<>();
-
-        for (String map : mapList) {
-            int votes = getMapVotes(map);
-
-            if (votes > highestVotes) {
-                highestVotes = votes;
-                possible.clear();
-            }
-            if (votes == highestVotes) possible.add(map);
-        }
-
-        String bestMap = possible.get(random.nextInt(possible.size()));
-
-        while(bestMap.equals(getConfig().getString("random-map"))){
-            bestMap = mapList.get(random.nextInt(mapList.size()));
-        }
-
-        messageAll(getLocale("map-chosen", bestMap));
-
-        return bestMap;
-    }
-
-    public int getMapVotes(String map) {
-        Integer result = mapVotes.get(map);
-
-        if (result == null) return 0;
-        return result;
-    }
-
-    public void endGame() {
-        gameInstance.endGame();
-
-        gameInstance = null;
-
-        setInGame(false);
+    public void messageAllLocale(String locale, Object... args) {
+        messageAll(getLocale(locale, args));
     }
 
     public void messageAll(String message) {
         for (User p : playerInfoHashMap.values()) {
             p.message(message);
         }
-    }
-
-    public void messageAllLocale(String locale, Object...args){
-        messageAll(getLocale(locale, args));
     }
 
     public double getMaxHealth() {
@@ -372,7 +325,7 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public User getUser(UUID uniqueId) {
-        if(uniqueId == null) return null;
+        if (uniqueId == null) return null;
         return playerInfoHashMap.get(uniqueId);
     }
 
@@ -396,6 +349,68 @@ public class WarsPlugin extends JavaPlugin {
 
     public Collection<User> getUsers() {
         return playerInfoHashMap.values();
+    }
+
+    public void changeGameState(GameState state) {
+        if (state == GameState.GAME) {
+            if(gameInstance != null) return;
+            setInGame(true);
+            gameInstance = new GameInstance(this, assignGameMap());
+        }
+
+        if(gameInstance == null) return;
+        gameInstance.changeGameState(state);
+
+        if(state == GameState.LOBBY){
+            gameInstance = null;
+            setInGame(false);
+
+            getLobbyMinigames().forEach(LobbyMinigame::resetMinigame);
+
+            for (User user : getUsers()) {
+                playerJoinLobby(user.getPlayer());
+            }
+
+            countdownHandler.startLobbyCountdown();
+        }
+    }
+
+    public String assignGameMap() {
+        int highestVotes = Integer.MIN_VALUE;
+
+        List<String> possible = new ArrayList<>();
+
+        for (String map : mapList) {
+            int votes = getMapVotes(map);
+
+            if (votes > highestVotes) {
+                highestVotes = votes;
+                possible.clear();
+            }
+            if (votes == highestVotes) possible.add(map);
+        }
+
+        String bestMap = possible.get(random.nextInt(possible.size()));
+
+        while (bestMap.equals(getConfig().getString("random-map"))) {
+            bestMap = mapList.get(random.nextInt(mapList.size()));
+        }
+
+        messageAll(getLocale("map-chosen", bestMap));
+
+        return bestMap;
+    }
+
+    public int getMapVotes(String map) {
+        Integer result = mapVotes.get(map);
+
+        if (result == null) return 0;
+        return result;
+    }
+
+    public GameState getGameState() {
+        if (gameInstance != null) return gameInstance.getGameState();
+        else return GameState.LOBBY;
     }
 
 

@@ -45,7 +45,7 @@ public class ParcourMinigame implements LobbyMinigame {
 
         plugin.messageAllLocale("player-win-parcour", user.getFormattedName());
         user.addPlayerCash(1000);
-        user.teleport(plugin.getLobbySpawnLocation());
+        user.teleport(plugin.getLobbySpawn());
 
         return true;
     }

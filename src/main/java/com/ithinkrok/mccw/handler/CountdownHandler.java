@@ -95,8 +95,6 @@ public class CountdownHandler {
                             .build());
             firework.setFireworkMeta(meta);
         });
-
-        plugin.changeGameState(GameState.AFTERMATH);
     }
 
     public void startShowdownCountdown() {

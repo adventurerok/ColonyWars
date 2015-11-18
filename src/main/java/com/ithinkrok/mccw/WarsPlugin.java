@@ -2,9 +2,7 @@ package com.ithinkrok.mccw;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.ithinkrok.mccw.data.Schematic;
-import com.ithinkrok.mccw.data.Team;
-import com.ithinkrok.mccw.data.User;
+import com.ithinkrok.mccw.data.*;
 import com.ithinkrok.mccw.enumeration.GameState;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
@@ -30,6 +28,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -215,7 +214,7 @@ public class WarsPlugin extends JavaPlugin {
 
         user.message(getLocale("map-info"));
 
-        player.teleport(getLobbySpawnLocation());
+        player.teleport(getLobbySpawn());
 
         givePlayerHandbook(player);
 
@@ -233,8 +232,29 @@ public class WarsPlugin extends JavaPlugin {
         return String.format(getConfig().getString("locale." + name), params);
     }
 
-    public Location getLobbySpawnLocation() {
+    public Location getLobbySpawn() {
         return Bukkit.getWorld("world").getSpawnLocation();
+    }
+
+    public Location getMapSpawn(TeamColor teamColorOrNull){
+        if(gameInstance == null) return getLobbySpawn();
+        return gameInstance.getMapSpawn(teamColorOrNull);
+    }
+
+    public Building getBuildingInfo(Location centerBlock){
+        return gameInstance.getBuildingInfo(centerBlock);
+    }
+
+    public boolean isInBuilding(Location blockLocation){
+        return gameInstance.isInBuilding(blockLocation);
+    }
+
+    public void handleSpectatorInventory(InventoryClickEvent event){
+        gameInstance.handleSpectatorInventory(event);
+    }
+
+    public ShowdownArena getShowdownArena(){
+        return gameInstance.getShowdownArena();
     }
 
     public void givePlayerHandbook(Player player) {

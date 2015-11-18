@@ -1,4 +1,4 @@
-package com.ithinkrok.mccw.handler;
+package com.ithinkrok.mccw.lobby;
 
 import com.ithinkrok.mccw.data.User;
 import org.bukkit.block.Block;

@@ -297,3 +297,4 @@ locale:
   player-given-wool: "§3%s §dwas given the wool!"
   player-transfer-wool: "§3%s §dtransferred the wool to §3%s!"
   player-get-wool: "§dYou now have the wool. Right click someone to transfer it to them!"
+  player-win-parcour: "§3%s §6has completed the parcour and will start next game with $1000 extra!"

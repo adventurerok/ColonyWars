@@ -1,4 +1,4 @@
-package com.ithinkrok.mccw.handler;
+package com.ithinkrok.mccw.lobby;
 
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.User;

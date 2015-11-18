@@ -11,6 +11,7 @@ import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.listener.WarsGameListener;
 import com.ithinkrok.mccw.listener.WarsLobbyListener;
+import com.ithinkrok.mccw.lobby.LobbyMinigame;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.BoundingBox;

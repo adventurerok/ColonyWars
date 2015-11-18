@@ -514,6 +514,10 @@ public class User {
         inv.setBoots(null);
     }
 
+    public boolean teleport(Location location){
+        return player.teleport(location);
+    }
+
     public void updateTeamArmor() {
         if(!plugin.isInGame()) return;
         if(teamColor == null){

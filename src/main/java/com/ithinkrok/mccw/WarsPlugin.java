@@ -9,8 +9,9 @@ import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.handler.CountdownHandler;
 import com.ithinkrok.mccw.handler.GameInstance;
-import com.ithinkrok.mccw.handler.LobbyMinigame;
-import com.ithinkrok.mccw.handler.WoolHeadMinigame;
+import com.ithinkrok.mccw.lobby.LobbyMinigame;
+import com.ithinkrok.mccw.lobby.ParcourMinigame;
+import com.ithinkrok.mccw.lobby.WoolHeadMinigame;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.inventory.OmniInventory;
 import com.ithinkrok.mccw.inventory.SpectatorInventory;
@@ -22,10 +23,7 @@ import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.Handbook;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import com.ithinkrok.mccw.util.InvisiblePlayerAttacker;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -177,6 +175,7 @@ public class WarsPlugin extends JavaPlugin {
         classHandlerEnumMap.put(PlayerClass.WARRIOR, new WarriorClass(this, getConfig()));
 
         lobbyMinigames.add(new WoolHeadMinigame(this));
+        lobbyMinigames.add(new ParcourMinigame(this));
 
         getLobbyMinigames().forEach(LobbyMinigame::resetMinigame);
 
@@ -247,13 +246,17 @@ public class WarsPlugin extends JavaPlugin {
 
         user.message(getLocale("map-info"));
 
-        player.teleport(Bukkit.getWorld("world").getSpawnLocation());
+        player.teleport(getLobbySpawnLocation());
 
         givePlayerHandbook(player);
 
         for(LobbyMinigame minigame : getLobbyMinigames()){
             minigame.onUserJoinLobby(user);
         }
+    }
+
+    public Location getLobbySpawnLocation(){
+        return Bukkit.getWorld("world").getSpawnLocation();
     }
 
     public User getUser(Player player) {

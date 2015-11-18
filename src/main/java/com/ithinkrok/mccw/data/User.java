@@ -515,6 +515,7 @@ public class User {
     }
 
     public void updateTeamArmor() {
+        if(!plugin.isInGame()) return;
         if(teamColor == null){
             clearArmor();
             return;

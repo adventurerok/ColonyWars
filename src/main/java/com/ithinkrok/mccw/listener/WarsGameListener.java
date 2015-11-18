@@ -266,7 +266,7 @@ public class WarsGameListener implements Listener {
         resetDurability(event.getPlayer());
 
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getClickedBlock().getType() != Material.OBSIDIAN) {
-            PlayerClassHandler classHandler = plugin.getPlayerClassHandler(user.getPlayerClass());
+            PlayerClassHandler classHandler = user.getPlayerClassHandler();
 
             if (classHandler.onInteractWorld(new UserInteractEvent(user, event))) event.setCancelled(true);
             return;
@@ -408,7 +408,7 @@ public class WarsGameListener implements Listener {
     private void userAttackNonUser(UserAttackEvent event) {
         if (event.getWeapon() == null) return;
 
-        PlayerClassHandler classHandler = plugin.getPlayerClassHandler(event.getUser().getPlayerClass());
+        PlayerClassHandler classHandler = event.getUser().getPlayerClassHandler();
         classHandler.onUserAttack(event);
     }
 
@@ -421,7 +421,7 @@ public class WarsGameListener implements Listener {
             event.getTargetUser().setFireAttacker(event.getUser());
         }
 
-        PlayerClassHandler classHandler = plugin.getPlayerClassHandler(event.getUser().getPlayerClass());
+        PlayerClassHandler classHandler = event.getUser().getPlayerClassHandler();
         classHandler.onUserAttack(event);
     }
 
@@ -570,7 +570,7 @@ public class WarsGameListener implements Listener {
 
             Team team = user.getTeam();
 
-            PlayerClassHandler classHandler = plugin.getPlayerClassHandler(user.getPlayerClass());
+            PlayerClassHandler classHandler = user.getPlayerClassHandler();
 
             Building building = plugin.getBuildingInfo(user.getShopBlock());
             if (building == null) return;

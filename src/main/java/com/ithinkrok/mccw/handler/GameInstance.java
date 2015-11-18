@@ -181,7 +181,7 @@ public class GameInstance {
 
         info.updateScoreboard();
 
-        PlayerClassHandler classHandler = plugin.getPlayerClassHandler(info.getPlayerClass());
+        PlayerClassHandler classHandler = info.getPlayerClassHandler();
         classHandler.onUserBeginGame(new UserBeginGameEvent(info));
 
         plugin.givePlayerHandbook(info.getPlayer());
@@ -394,7 +394,7 @@ public class GameInstance {
     }
 
     public void onPlayerUpgrade(UserUpgradeEvent event) {
-        PlayerClassHandler classHandler = plugin.getPlayerClassHandler(event.getUser().getPlayerClass());
+        PlayerClassHandler classHandler = event.getUser().getPlayerClassHandler();
 
         classHandler.onPlayerUpgrade(event);
     }
@@ -435,7 +435,7 @@ public class GameInstance {
 
                 info.redoShopInventory();
 
-                PlayerClassHandler playerClassHandler = plugin.getPlayerClassHandler(info.getPlayerClass());
+                PlayerClassHandler playerClassHandler = info.getPlayerClassHandler();
                 playerClassHandler.onBuildingBuilt(new UserTeamBuildingBuiltEvent(info, building));
             }
         }

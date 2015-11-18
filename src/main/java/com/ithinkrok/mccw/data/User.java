@@ -94,6 +94,10 @@ public class User {
         updateScoreboard();
     }
 
+    public PlayerClassHandler getPlayerClassHandler(){
+        return plugin.getPlayerClassHandler(playerClass);
+    }
+
 
     public PlayerInventory getPlayerInventory(){
         return player.getInventory();
@@ -461,7 +465,7 @@ public class User {
 
         if (inventoryHandler != null) inventoryHandler.addInventoryItems(contents, building, this, team);
 
-        PlayerClassHandler classHandler = plugin.getPlayerClassHandler(this.getPlayerClass());
+        PlayerClassHandler classHandler = getPlayerClassHandler();
         classHandler.addInventoryItems(contents, building, this, team);
         return contents;
     }

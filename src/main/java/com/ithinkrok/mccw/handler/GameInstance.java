@@ -105,6 +105,8 @@ public class GameInstance {
         setInAftermath(false);
         setInShowdown(false);
 
+        plugin.getLobbyMinigames().forEach(LobbyMinigame::resetMinigame);
+
         for (User user : plugin.getUsers()) {
             plugin.playerJoinLobby(user.getPlayer());
         }

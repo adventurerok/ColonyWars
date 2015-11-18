@@ -178,6 +178,8 @@ public class WarsPlugin extends JavaPlugin {
 
         lobbyMinigames.add(new WoolHeadMinigame(this));
 
+        getLobbyMinigames().forEach(LobbyMinigame::resetMinigame);
+
         countdownHandler = new CountdownHandler(this);
         countdownHandler.startLobbyCountdown();
 
@@ -352,6 +354,10 @@ public class WarsPlugin extends JavaPlugin {
         for (User p : playerInfoHashMap.values()) {
             p.message(message);
         }
+    }
+
+    public void messageAllLocale(String locale, Object...args){
+        messageAll(getLocale(locale, args));
     }
 
     public double getMaxHealth() {

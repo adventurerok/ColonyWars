@@ -1,6 +1,8 @@
 package com.ithinkrok.mccw.event;
 
 import com.ithinkrok.mccw.data.User;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -11,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
  *
  * Sent to the attacker's PlayerClassHandler when they attack an entity by left clicking on them
  */
-public class UserAttackEvent extends UserEvent implements Cancellable{
+public class UserAttackEvent extends UserInteractEvent{
 
 
     private User target;
@@ -33,13 +35,8 @@ public class UserAttackEvent extends UserEvent implements Cancellable{
         event.setCancelled(b);
     }
 
-
     public boolean isAttackingUser(){
         return target != null;
-    }
-
-    public Entity getTarget(){
-        return event.getEntity();
     }
 
     public User getTargetUser() {
@@ -54,7 +51,28 @@ public class UserAttackEvent extends UserEvent implements Cancellable{
         event.setDamage(damage);
     }
 
-    public ItemStack getWeapon(){
-        return getUser().getPlayer().getItemInHand();
+    @Override
+    public Block getClickedBlock() {
+        return null;
+    }
+
+    @Override
+    public Entity getClickedEntity() {
+        return event.getEntity();
+    }
+
+    @Override
+    public boolean isRightClick() {
+        return false;
+    }
+
+    @Override
+    public BlockFace getBlockFace() {
+        return null;
+    }
+
+    @Override
+    public ItemStack getItem() {
+        return user.getPlayerInventory().getItemInHand();
     }
 }

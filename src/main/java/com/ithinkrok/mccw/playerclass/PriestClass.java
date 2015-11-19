@@ -2,7 +2,6 @@ package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.BentEarth;
-import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
@@ -76,7 +75,7 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
     }
 
     @Override
-    public boolean onInteractWorld(UserInteractEvent event) {
+    public boolean onInteract(UserInteractEvent event) {
         ItemStack item = event.getItem();
         if (item == null) return false;
 
@@ -91,13 +90,13 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
     }
 
     private boolean handleHealingScroll(UserInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_AIR) return false;
+        if (!event.isRightClick()) return false;
         User user = event.getUser();
         int cooldown = 240 - 90 * user.getUpgradeLevel("healing");
         if (!event.getUser().startCoolDown("healing", cooldown, plugin.getLocale("healing-scroll-cooldown")))
             return true;
 
-        for(Player p : user.getTeam().getPlayers()){
+        for (Player p : user.getTeam().getPlayers()) {
             p.setHealth(plugin.getMaxHealth());
         }
 
@@ -107,64 +106,59 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
     private boolean handleEarthBender(UserInteractEvent event) {
         User user = event.getUser();
 
-        switch (event.getAction()) {
-            case LEFT_CLICK_AIR:
-            case LEFT_CLICK_BLOCK:
-                earthBenderLeftClick(user);
-                return true;
-            case RIGHT_CLICK_AIR:
-            case RIGHT_CLICK_BLOCK:
-                int cooldown = 45 - 15 * user.getUpgradeLevel("bender");
-                if (!user.startCoolDown("bender", cooldown, plugin.getLocale("earth-bender-cooldown"))) return true;
-                Block target = user.rayTraceBlocks(200);
-                if (target == null) return true;
-                user.setUpgradeLevel("bending", 0);
+        if (!event.isRightClick()) {
+            earthBenderLeftClick(user);
+            return true;
+        } else {
+            int cooldown = 45 - 15 * user.getUpgradeLevel("bender");
+            if (!user.startCoolDown("bender", cooldown, plugin.getLocale("earth-bender-cooldown"))) return true;
+            Block target = user.rayTraceBlocks(200);
+            if (target == null) return true;
+            user.setUpgradeLevel("bending", 0);
 
-                int maxDist = 3 * 3;
+            int maxDist = 3 * 3;
 
-                Collection<Entity> nearby = target.getWorld().getNearbyEntities(target.getLocation(), 3, 3, 3);
-                List<Player> riders = new ArrayList<>();
+            Collection<Entity> nearby = target.getWorld().getNearbyEntities(target.getLocation(), 3, 3, 3);
+            List<Player> riders = new ArrayList<>();
 
-                for (Entity near : nearby) {
-                    if (!(near instanceof Player)) continue;
-                    riders.add((Player) near);
-                }
+            for (Entity near : nearby) {
+                if (!(near instanceof Player)) continue;
+                riders.add((Player) near);
+            }
 
-                List<FallingBlock> fallingBlockList = new ArrayList<>();
+            List<FallingBlock> fallingBlockList = new ArrayList<>();
 
-                for (int y = -3; y <= 3; ++y) {
-                    int ys = y * y;
-                    for (int x = -3; x <= 3; ++x) {
-                        int xs = x * x;
-                        for (int z = -3; z <= 3; ++z) {
-                            int zs = z * z;
-                            if (xs + ys + zs > maxDist) continue;
-                            Block block = target.getRelative(x, y, z);
+            for (int y = -3; y <= 3; ++y) {
+                int ys = y * y;
+                for (int x = -3; x <= 3; ++x) {
+                    int xs = x * x;
+                    for (int z = -3; z <= 3; ++z) {
+                        int zs = z * z;
+                        if (xs + ys + zs > maxDist) continue;
+                        Block block = target.getRelative(x, y, z);
 
-                            if (block.getType() == Material.AIR || block.getType() == Material.OBSIDIAN ||
-                                    block.getType() == Material.BEDROCK || block.getType() == Material.BARRIER)
-                                continue;
-                            if (block.isLiquid()) {
-                                block.setType(Material.AIR);
-                                continue;
-                            }
-                            BlockState oldState = block.getState();
+                        if (block.getType() == Material.AIR || block.getType() == Material.OBSIDIAN ||
+                                block.getType() == Material.BEDROCK || block.getType() == Material.BARRIER) continue;
+                        if (block.isLiquid()) {
                             block.setType(Material.AIR);
-
-                            FallingBlock falling = block.getWorld()
-                                    .spawnFallingBlock(block.getLocation(), oldState.getType(), oldState.getRawData());
-
-                            falling.setVelocity(new Vector(0, 1.5, 0));
-                            fallingBlockList.add(falling);
+                            continue;
                         }
+                        BlockState oldState = block.getState();
+                        block.setType(Material.AIR);
+
+                        FallingBlock falling = block.getWorld()
+                                .spawnFallingBlock(block.getLocation(), oldState.getType(), oldState.getRawData());
+
+                        falling.setVelocity(new Vector(0, 1.5, 0));
+                        fallingBlockList.add(falling);
                     }
                 }
+            }
 
-                BentEarth bentEarth = new BentEarth(fallingBlockList, riders);
-                user.setBentEarth(bentEarth);
-                return true;
-            default:
-                return false;
+            BentEarth bentEarth = new BentEarth(fallingBlockList, riders);
+            user.setBentEarth(bentEarth);
+            return true;
+
         }
     }
 
@@ -206,7 +200,7 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
 
     @Override
     public void onUserAttack(UserAttackEvent event) {
-        ItemStack item = event.getWeapon();
+        ItemStack item = event.getItem();
         if (item == null) return;
 
         switch (item.getType()) {

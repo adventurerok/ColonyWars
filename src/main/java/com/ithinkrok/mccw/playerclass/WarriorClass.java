@@ -67,8 +67,8 @@ public class WarriorClass extends BuyableInventory implements PlayerClassHandler
     }
 
     @Override
-    public boolean onInteractWorld(UserInteractEvent event) {
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return false;
+    public boolean onInteract(UserInteractEvent event) {
+        if(!event.isRightClick() || !event.hasBlock()) return false;
         if(event.getItem() == null || event.getItem().getType() != Material.GOLD_HELMET) return false;
         User user = event.getUser();
         int cooldown = 120 - 30 * user.getUpgradeLevel("wolf");

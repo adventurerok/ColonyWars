@@ -1,7 +1,6 @@
 package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.WarsPlugin;
-import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
@@ -67,8 +66,8 @@ public class InfernoClass extends BuyableInventory implements PlayerClassHandler
     }
 
     @Override
-    public boolean onInteractWorld(UserInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return false;
+    public boolean onInteract(UserInteractEvent event) {
+        if (!event.isRightClick()) return false;
         ItemStack item = event.getItem();
         if (item == null) return false;
 
@@ -77,7 +76,7 @@ public class InfernoClass extends BuyableInventory implements PlayerClassHandler
 
         switch (item.getType()) {
             case TNT:
-                if (event.getAction() != Action.RIGHT_CLICK_BLOCK) break;
+                if (!event.hasBlock()) break;
                 user.createPlayerExplosion(event.getClickedBlock().getLocation().clone()
                         .add(mod.getModX() + 0.5, mod.getModY() + 0.5, mod.getModZ() + 0.5), 4F, false, 80);
 
@@ -125,13 +124,13 @@ public class InfernoClass extends BuyableInventory implements PlayerClassHandler
 
     @Override
     public void onUserAttack(UserAttackEvent event) {
-        ItemStack item = event.getWeapon();
+        ItemStack item = event.getItem();
         if (item == null || item.getType() != Material.DIAMOND_HELMET) return;
 
         double damage = 2 + 3 * event.getUser().getUpgradeLevel("flame");
         event.setDamage(damage);
 
         if(event.isAttackingUser()) event.getTargetUser().setFireTicks(event.getUser(), 80);
-        else event.getTarget().setFireTicks(80);
+        else event.getClickedEntity().setFireTicks(80);
     }
 }

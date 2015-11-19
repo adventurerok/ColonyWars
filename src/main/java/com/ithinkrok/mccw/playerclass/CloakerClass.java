@@ -59,8 +59,8 @@ public class CloakerClass extends BuyableInventory implements PlayerClassHandler
     }
 
     @Override
-    public boolean onInteractWorld(UserInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return false;
+    public boolean onInteract(UserInteractEvent event) {
+        if (!event.isRightClick()) return false;
         if (event.getItem() == null || event.getItem().getType() != Material.IRON_LEGGINGS) return false;
 
         User user = event.getUser();

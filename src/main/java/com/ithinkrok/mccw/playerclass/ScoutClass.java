@@ -72,8 +72,8 @@ public class ScoutClass extends BuyableInventory implements PlayerClassHandler {
     }
 
     @Override
-    public boolean onInteractWorld(UserInteractEvent event) {
-        if(event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return false;
+    public boolean onInteract(UserInteractEvent event) {
+        if(!event.isRightClick()) return false;
         ItemStack item = event.getItem();
         if (item == null) return false;
 

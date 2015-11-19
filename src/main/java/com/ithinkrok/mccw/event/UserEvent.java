@@ -12,7 +12,7 @@ import org.bukkit.inventory.PlayerInventory;
  */
 public abstract class UserEvent {
 
-    private User user;
+    protected User user;
 
     public UserEvent(User user) {
         this.user = user;

@@ -1,7 +1,5 @@
 package com.ithinkrok.mccw.playerclass;
 
-import com.ithinkrok.mccw.data.Team;
-import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
@@ -50,7 +48,7 @@ public class DarkKnightClass extends BuyableInventory implements PlayerClassHand
     }
 
     @Override
-    public boolean onInteractWorld(UserInteractEvent event) {
+    public boolean onInteract(UserInteractEvent event) {
         return false;
     }
 
@@ -79,7 +77,7 @@ public class DarkKnightClass extends BuyableInventory implements PlayerClassHand
 
     @Override
     public void onUserAttack(UserAttackEvent event) {
-        ItemStack item = event.getWeapon();
+        ItemStack item = event.getItem();
         if (item == null || item.getType() != Material.IRON_HELMET) return;
 
         double damage;
@@ -107,10 +105,10 @@ public class DarkKnightClass extends BuyableInventory implements PlayerClassHand
         }
 
         event.setDamage(damage);
-        if(!(event.getTarget() instanceof LivingEntity)) return;
-        ((LivingEntity)event.getTarget()).addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, nausea, 0,
+        if(!(event.getClickedEntity() instanceof LivingEntity)) return;
+        ((LivingEntity)event.getClickedEntity()).addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, nausea, 0,
                 false, true), true);
         if(event.isAttackingUser()) event.getTargetUser().setWitherTicks(event.getUser(), wither);
-        else ((LivingEntity)event.getTarget()).addPotionEffect(new PotionEffect(PotionEffectType.WITHER, wither, 0));
+        else ((LivingEntity)event.getClickedEntity()).addPotionEffect(new PotionEffect(PotionEffectType.WITHER, wither, 0));
     }
 }

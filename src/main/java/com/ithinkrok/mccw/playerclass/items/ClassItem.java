@@ -1,7 +1,6 @@
 package com.ithinkrok.mccw.playerclass.items;
 
 import com.ithinkrok.mccw.data.User;
-import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.event.UserAttackEvent;
 import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.event.UserTeamBuildingBuiltEvent;
@@ -27,7 +26,6 @@ public class ClassItem {
 
     private static final double HEALTH_PER_HEART = 2;
     private static final double TICKS_PER_SECOND = 20;
-    private PlayerClass playerClass;
     private String[] upgradeBuildings;
     private boolean unlockOnBuildingBuild;
     private InteractAction rightClickAction;
@@ -41,8 +39,7 @@ public class ClassItem {
     private EnchantmentEffect[] enchantmentEffects;
     private String signature;
 
-    public ClassItem(PlayerClass playerClass, Material itemMaterial, String itemDisplayName) {
-        this.playerClass = playerClass;
+    public ClassItem(Material itemMaterial, String itemDisplayName) {
         this.itemMaterial = itemMaterial;
         this.itemDisplayName = itemDisplayName;
 
@@ -192,10 +189,33 @@ public class ClassItem {
 
             if (wither > 1) {
                 if (event.isAttackingUser()) event.getTargetUser().setWitherTicks(event.getUser(), wither);
-                else if (event.getTarget() instanceof LivingEntity) ((LivingEntity) event.getTarget())
+                else if (event.getClickedEntity() instanceof LivingEntity) ((LivingEntity) event.getClickedEntity())
                         .addPotionEffect(new PotionEffect(PotionEffectType.WITHER, wither, 0, false, true));
             }
         }
+        if (weaponModifier.nauseaCalculator != null) {
+            int nausea = (int) (weaponModifier.nauseaCalculator.calculate(upgradeLevel) * TICKS_PER_SECOND);
+
+            if (nausea > 1 && event.getClickedEntity() instanceof LivingEntity) {
+                ((LivingEntity) event.getClickedEntity())
+                        .addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, nausea, 0, false, true));
+            }
+        }
+        if (weaponModifier.fireCalculator != null) {
+            int fire = (int) (weaponModifier.fireCalculator.calculate(upgradeLevel) * TICKS_PER_SECOND);
+
+            if (fire > 1) {
+                if (event.isAttackingUser()) event.getTargetUser().setFireTicks(event.getUser(), fire);
+                else event.getClickedEntity().setFireTicks(fire);
+            }
+        }
+    }
+
+    public boolean onInteract(UserInteractEvent event) {
+        if (!event.isRightClick()) {
+            return leftClickAction != null && leftClickAction.onInteractWorld(event);
+        } else return rightClickAction != null && rightClickAction.onInteractWorld(event);
+
     }
 
     public interface InteractAction {

@@ -7,7 +7,8 @@ import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.enumeration.GameState;
 import com.ithinkrok.mccw.event.UserAttackEvent;
-import com.ithinkrok.mccw.event.UserInteractEvent;
+import com.ithinkrok.mccw.event.UserInteractWorldEvent;
+import com.ithinkrok.mccw.event.UserRightClickEntityEvent;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.mccw.strings.Buildings;
@@ -268,7 +269,7 @@ public class WarsGameListener implements Listener {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getClickedBlock().getType() != Material.OBSIDIAN) {
             PlayerClassHandler classHandler = user.getPlayerClassHandler();
 
-            if (classHandler.onInteractWorld(new UserInteractEvent(user, event))) event.setCancelled(true);
+            if (classHandler.onInteract(new UserInteractWorldEvent(user, event))) event.setCancelled(true);
             return;
         }
 
@@ -277,6 +278,21 @@ public class WarsGameListener implements Listener {
         event.setCancelled(true);
 
         user.openShopInventory(building.getCenterBlock());
+    }
+
+    @EventHandler
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent event){
+        User user = plugin.getUser(event.getPlayer());
+
+        if (!user.isInGame()) {
+            event.setCancelled(true);
+            return;
+        }
+
+        resetDurability(event.getPlayer());
+
+        PlayerClassHandler classHandler = user.getPlayerClassHandler();
+        if(classHandler.onInteract(new UserRightClickEntityEvent(user, event))) event.setCancelled(true);
     }
 
     @EventHandler
@@ -406,14 +422,14 @@ public class WarsGameListener implements Listener {
     }
 
     private void userAttackNonUser(UserAttackEvent event) {
-        if (event.getWeapon() == null) return;
+        if (event.getItem() == null) return;
 
         PlayerClassHandler classHandler = event.getUser().getPlayerClassHandler();
         classHandler.onUserAttack(event);
     }
 
     private void userAttackUser(UserAttackEvent event) {
-        ItemStack weapon = event.getWeapon();
+        ItemStack weapon = event.getItem();
 
         if (weapon == null) return;
 

@@ -49,7 +49,7 @@ public class PeasantClass extends BuyableInventory implements PlayerClassHandler
     }
 
     @Override
-    public boolean onInteractWorld(UserInteractEvent event) {
+    public boolean onInteract(UserInteractEvent event) {
         return false;
     }
 

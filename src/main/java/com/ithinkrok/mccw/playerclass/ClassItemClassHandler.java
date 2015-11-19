@@ -4,9 +4,11 @@ import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.inventory.Buyable;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
+import org.bukkit.Material;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -16,7 +18,7 @@ import java.util.List;
  */
 public class ClassItemClassHandler extends BuyableInventory implements PlayerClassHandler {
 
-    private List<ClassItem> classItemList;
+    private HashMap<Material, ClassItem> classItemHashMap;
 
     public ClassItemClassHandler(ClassItem...items){
         this(Arrays.asList(items));
@@ -24,7 +26,10 @@ public class ClassItemClassHandler extends BuyableInventory implements PlayerCla
 
     public ClassItemClassHandler(List<ClassItem> items){
         super(calculateBuyables(items));
-        classItemList = items;
+
+        for(ClassItem item : items){
+            classItemHashMap.put(item.getItemMaterial(), item);
+        }
     }
 
     private static List<Buyable> calculateBuyables(List<ClassItem> items){
@@ -39,7 +44,7 @@ public class ClassItemClassHandler extends BuyableInventory implements PlayerCla
 
     @Override
     public void onBuildingBuilt(UserTeamBuildingBuiltEvent event) {
-        for(ClassItem item : classItemList){
+        for(ClassItem item : classItemHashMap.values()){
             item.onBuildingBuilt(event);
         }
     }
@@ -50,24 +55,26 @@ public class ClassItemClassHandler extends BuyableInventory implements PlayerCla
     }
 
     @Override
-    public boolean onInteractWorld(UserInteractEvent event) {
-        return false;
+    public boolean onInteract(UserInteractEvent event) {
+        if (event.getItem() == null) return false;
+        ClassItem item = classItemHashMap.get(event.getItem().getType());
+        return item != null && item.onInteract(event);
+
     }
 
     @Override
     public void onPlayerUpgrade(UserUpgradeEvent event) {
-        for(ClassItem item : classItemList){
+        for(ClassItem item : classItemHashMap.values()){
             item.onUserUpgrade(event);
         }
     }
 
     @Override
     public void onUserAttack(UserAttackEvent event) {
-        for(ClassItem item : classItemList){
-            if(item.getItemMaterial() != event.getWeapon().getType()) continue;
+        if(event.getItem() == null) return;
+        ClassItem item = classItemHashMap.get(event.getItem().getType());
+        if(item == null) return;
 
-            item.onUserAttack(event);
-            break;
-        }
+        item.onUserAttack(event);
     }
 }

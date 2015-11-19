@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class ClassItemClassHandler extends BuyableInventory implements PlayerClassHandler {
 
-    private HashMap<Material, ClassItem> classItemHashMap;
+    private HashMap<Material, ClassItem> classItemHashMap = new HashMap<>();
 
     public ClassItemClassHandler(ClassItem...items){
         this(Arrays.asList(items));

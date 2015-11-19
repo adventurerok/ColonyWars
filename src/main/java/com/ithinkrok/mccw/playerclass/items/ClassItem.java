@@ -5,6 +5,7 @@ import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.inventory.Buyable;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.util.InventoryUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
@@ -251,13 +252,19 @@ public class ClassItem {
             return leftClickAction != null && leftClickAction.onInteractWorld(event);
         } else{
             if(rightClickAction == null) return false;
-            if(rightClickCooldown != null){
+            if(rightClickCooldown != null && event.getUser().isCoolingDown(rightClickCooldownUpgrade)){
+                event.getUser().message(ChatColor.RED + "Please wait for this ability to cool down!");
+                return true;
+            }
+            boolean done = rightClickAction.onInteractWorld(event);
+
+            if(done && rightClickCooldown != null) {
                 int cooldown =
                         (int) rightClickCooldown.calculate(event.getUser().getUpgradeLevel(rightClickCooldownUpgrade));
-                if(!event.getUser().startCoolDown(rightClickCooldownUpgrade, cooldown, rightClickCooldownFinished))
-                    return true;
+                event.getUser().startCoolDown(rightClickCooldownUpgrade, cooldown, rightClickCooldownFinished);
             }
-            return rightClickAction.onInteractWorld(event);
+
+            return done;
         }
 
     }

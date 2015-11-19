@@ -19,7 +19,7 @@ import java.util.*;
  */
 public class BuyableInventory implements InventoryHandler {
 
-    private HashMap<ItemStack, Buyable> stackToBuyable = new HashMap<>();
+    private Map<ItemStack, Buyable> stackToBuyable = new LinkedHashMap<>();
 
     public BuyableInventory(Buyable... items) {
         this(Arrays.asList(items));

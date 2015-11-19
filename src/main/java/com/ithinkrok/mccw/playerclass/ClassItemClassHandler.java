@@ -9,10 +9,7 @@ import com.ithinkrok.mccw.playerclass.items.ClassItem;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by paul on 18/11/15.
@@ -21,7 +18,7 @@ import java.util.List;
  */
 public class ClassItemClassHandler extends BuyableInventory implements PlayerClassHandler {
 
-    private HashMap<Material, ClassItem> classItemHashMap = new HashMap<>();
+    private Map<Material, ClassItem> classItemHashMap = new LinkedHashMap<>();
 
     public ClassItemClassHandler(ClassItem...items){
         this(Arrays.asList(items));

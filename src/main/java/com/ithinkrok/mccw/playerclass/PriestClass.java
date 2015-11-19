@@ -6,6 +6,8 @@ import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
+import com.ithinkrok.mccw.playerclass.items.ClassItem;
+import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Material;
@@ -28,29 +30,27 @@ import java.util.List;
  * <p>
  * Handles the priest class
  */
-public class PriestClass extends BuyableInventory implements PlayerClassHandler {
-
-    private WarsPlugin plugin;
+public class PriestClass extends ClassItemClassHandler {
 
     public PriestClass(WarsPlugin plugin, FileConfiguration config) {
-        super(new UpgradeBuyable(InventoryUtils
-                .createItemWithNameAndLore(Material.DIAMOND_BOOTS, 1, 0, "Healing Scroll Upgrade 1",
-                        "Cooldown: 150 seconds"), Buildings.CATHEDRAL, config.getInt("costs.priest.healing1"),
-                "healing", 1), new UpgradeBuyable(InventoryUtils
-                .createItemWithNameAndLore(Material.DIAMOND_BOOTS, 1, 0, "Healing Scroll Upgrade 2",
-                        "Cooldown: 60 seconds"), Buildings.CATHEDRAL, config.getInt("costs.priest.healing2"), "healing",
-                2), new UpgradeBuyable(InventoryUtils
-                .createItemWithNameAndLore(Material.GOLD_CHESTPLATE, 1, 0, "Earth Bender Upgrade 1",
-                        "Cooldown: 30 seconds"), Buildings.CATHEDRAL, config.getInt("costs.priest.bender1"), "bender",
-                1), new UpgradeBuyable(InventoryUtils
-                .createItemWithNameAndLore(Material.GOLD_CHESTPLATE, 1, 0, "Earth Bender Upgrade 2",
-                        "Cooldown: 15 seconds"), Buildings.CATHEDRAL, config.getInt("costs.priest.bender2"), "bender",
-                2), new UpgradeBuyable(InventoryUtils
-                .createItemWithNameAndLore(Material.GOLD_LEGGINGS, 1, 0, "Cross Upgrade 1", "Damage: 3.0 Hearts"),
-                Buildings.CATHEDRAL, config.getInt("costs.priest.cross1"), "cross", 1), new UpgradeBuyable(
-                InventoryUtils.createItemWithNameAndLore(Material.GOLD_LEGGINGS, 1, 0, "Cross Upgrade 2",
-                        "Damage: 4.0 Hearts"), Buildings.CATHEDRAL, config.getInt("costs.priest.cross2"), "cross", 2));
-        this.plugin = plugin;
+        super(new ClassItem(Material.DIAMOND_BOOTS, "Healing Scroll").withUpgradeBuildings(Buildings.CATHEDRAL)
+                        .withUnlockOnBuildingBuild(true).withRightClickAction(new HealingScroll(plugin))
+                        .withRightClickCooldown("healing", new LinearCalculator(240, -90),
+                                plugin.getLocale("healing-scroll-cooldown")).withUpgradables(
+                        new ClassItem.Upgradable("healing", "Healing Scroll Upgrade %s", 2,
+                                configArrayCalculator(config, "costs.priest.healing", 2))),
+                new ClassItem(Material.GOLD_CHESTPLATE, "Earth Bender").withUpgradeBuildings(Buildings.CATHEDRAL)
+                        .withUnlockOnBuildingBuild(true).withRightClickAction(new EarthBenderRightClick())
+                        .withRightClickCooldown("bender", new LinearCalculator(45, -15),
+                                plugin.getLocale("earth-bender-cooldown"))
+                        .withLeftClickAction(new EarthBenderLeftClick()).withUpgradables(
+                        new ClassItem.Upgradable("bender", "Earth Bender Upgrade %s", 2,
+                                configArrayCalculator(config, "costs.priest.bender", 2))),
+                new ClassItem(Material.GOLD_LEGGINGS, "Cross").withUpgradeBuildings(Buildings.CATHEDRAL)
+                        .withUnlockOnBuildingBuild(true).withWeaponModifier(
+                        new ClassItem.WeaponModifier("cross").withDamageCalculator(new LinearCalculator(2, 1)))
+                        .withUpgradables(new ClassItem.Upgradable("cross", "Cross Upgrade %s", 2,
+                                configArrayCalculator(config, "costs.priest.cross", 2))));
     }
 
     @Override
@@ -69,52 +69,31 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
         }
     }
 
-    @Override
-    public void onUserBeginGame(UserBeginGameEvent event) {
+    private static class HealingScroll implements ClassItem.InteractAction {
 
-    }
+        private WarsPlugin plugin;
 
-    @Override
-    public boolean onInteract(UserInteractEvent event) {
-        ItemStack item = event.getItem();
-        if (item == null) return false;
+        public HealingScroll(WarsPlugin plugin) {
+            this.plugin = plugin;
+        }
 
-        switch (item.getType()) {
-            case DIAMOND_BOOTS:
-                return handleHealingScroll(event);
-            case GOLD_CHESTPLATE:
-                return handleEarthBender(event);
-            default:
-                return false;
+        @Override
+        public boolean onInteractWorld(UserInteractEvent event) {
+            for (Player p : event.getTeam().getPlayers()) {
+                p.setHealth(plugin.getMaxHealth());
+            }
+
+            return true;
         }
     }
 
-    private boolean handleHealingScroll(UserInteractEvent event) {
-        if (!event.isRightClick()) return false;
-        User user = event.getUser();
-        int cooldown = 240 - 90 * user.getUpgradeLevel("healing");
-        if (!event.getUser().startCoolDown("healing", cooldown, plugin.getLocale("healing-scroll-cooldown")))
-            return true;
+    private static class EarthBenderRightClick implements ClassItem.InteractAction {
 
-        for (Player p : user.getTeam().getPlayers()) {
-            p.setHealth(plugin.getMaxHealth());
-        }
-
-        return true;
-    }
-
-    private boolean handleEarthBender(UserInteractEvent event) {
-        User user = event.getUser();
-
-        if (!event.isRightClick()) {
-            earthBenderLeftClick(user);
-            return true;
-        } else {
-            int cooldown = 45 - 15 * user.getUpgradeLevel("bender");
-            if (!user.startCoolDown("bender", cooldown, plugin.getLocale("earth-bender-cooldown"))) return true;
-            Block target = user.rayTraceBlocks(200);
+        @Override
+        public boolean onInteractWorld(UserInteractEvent event) {
+            Block target = event.getUser().rayTraceBlocks(200);
             if (target == null) return true;
-            user.setUpgradeLevel("bending", 0);
+            event.getUser().setUpgradeLevel("bending", 0);
 
             int maxDist = 3 * 3;
 
@@ -156,62 +135,24 @@ public class PriestClass extends BuyableInventory implements PlayerClassHandler 
             }
 
             BentEarth bentEarth = new BentEarth(fallingBlockList, riders);
-            user.setBentEarth(bentEarth);
+            event.getUser().setBentEarth(bentEarth);
+
             return true;
-
         }
     }
 
-    private void earthBenderLeftClick(User user) {
-        BentEarth bent = user.getBentEarth();
-        if (bent == null) return;
-        if (user.getUpgradeLevel("bending") > 4) return;
-        Vector add = user.getPlayer().getLocation().getDirection();
-        bent.addVelocity(add);
-        user.setUpgradeLevel("bending", user.getUpgradeLevel("bending") + 1);
-    }
+    private static class EarthBenderLeftClick implements ClassItem.InteractAction {
 
-    @Override
-    public void onPlayerUpgrade(UserUpgradeEvent event) {
-        switch (event.getUpgradeName()) {
-            case "healing":
-                int healingCooldown = 240 - 90 * event.getUpgradeLevel();
-                ItemStack scroll = InventoryUtils
-                        .createItemWithNameAndLore(Material.DIAMOND_BOOTS, 1, 0, "Healing Scroll",
-                                "Cooldown: " + healingCooldown + " seconds");
-                InventoryUtils.replaceItem(event.getUserInventory(), scroll);
-                break;
-            case "bender":
-                int benderCooldown = 45 - 15 * event.getUpgradeLevel();
-                ItemStack bender = InventoryUtils
-                        .createItemWithNameAndLore(Material.GOLD_CHESTPLATE, 1, 0, "Earth Bender",
-                                "Cooldown: " + benderCooldown + " seconds");
-                InventoryUtils.replaceItem(event.getUserInventory(), bender);
-                break;
-            case "cross":
-                double damage = 2.0 + 1.0 * event.getUpgradeLevel();
-                ItemStack cross = InventoryUtils.createItemWithNameAndLore(Material.GOLD_LEGGINGS, 1, 0, "Cross",
-                        "Damage: " + damage + " Hearts");
-                InventoryUtils.replaceItem(event.getUserInventory(), cross);
-                break;
+        @Override
+        public boolean onInteractWorld(UserInteractEvent event) {
+            BentEarth bent = event.getUser().getBentEarth();
+            if (bent == null) return true;
+            if (event.getUser().getUpgradeLevel("bending") > 4) return true;
+            Vector add = event.getPlayer().getLocation().getDirection();
+            bent.addVelocity(add);
+            event.getUser().setUpgradeLevel("bending", event.getUser().getUpgradeLevel("bending") + 1);
 
+            return true;
         }
-    }
-
-    @Override
-    public void onUserAttack(UserAttackEvent event) {
-        ItemStack item = event.getItem();
-        if (item == null) return;
-
-        switch (item.getType()) {
-            case GOLD_LEGGINGS:
-                double damage = 4 + 2 * event.getUser().getUpgradeLevel("cross");
-                event.setDamage(damage);
-                break;
-            case GOLD_CHESTPLATE:
-                earthBenderLeftClick(event.getUser());
-                break;
-        }
-
     }
 }

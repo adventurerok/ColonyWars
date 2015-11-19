@@ -15,12 +15,14 @@ import org.bukkit.enchantments.Enchantment;
 public class GeneralClass extends ClassItemClassHandler {
 
     public GeneralClass(FileConfiguration config) {
-        super(new ClassItem(Material.DIAMOND_SWORD, null).withUpgradeBuildings(Buildings.BLACKSMITH).
-                withEnchantmentEffects(
-                        new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sword", new LinearCalculator(0, 1)),
-                        new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "sword", new LinearCalculator(5, 0)))
-                .withUpgradables(new ClassItem.Upgradable("sword", "Sword Upgrade %s", 2,
-                        configArrayCalculator(config, "costs.general.sword", 2))));
+        super(new ClassItem(Material.DIAMOND_SWORD, null).withUpgradeBuildings(Buildings.BLACKSMITH)
+                .withUnlockOnBuildingBuild(true).
+                        withEnchantmentEffects(new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sword",
+                                        new LinearCalculator(0, 1)),
+                                new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "sword",
+                                        new LinearCalculator(5, 0))).withUpgradables(
+                        new ClassItem.Upgradable("sword", "Sword Upgrade %s", 2,
+                                configArrayCalculator(config, "costs.general.sword", 2))));
     }
 
 }

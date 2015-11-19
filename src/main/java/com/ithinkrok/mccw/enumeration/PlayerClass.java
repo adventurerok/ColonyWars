@@ -1,5 +1,6 @@
 package com.ithinkrok.mccw.enumeration;
 
+import com.ithinkrok.mccw.playerclass.*;
 import org.bukkit.Material;
 
 /**
@@ -9,30 +10,44 @@ import org.bukkit.Material;
  */
 public enum PlayerClass {
 
-    CLOAKER("Cloaker", Material.IRON_LEGGINGS),
-    SCOUT("Scout", Material.COMPASS),
-    GENERAL("General", Material.DIAMOND_SWORD),
-    ARCHER("Archer", Material.BOW),
-    MAGE("Mage", Material.DIAMOND_LEGGINGS),
-    PEASANT("Peasant", Material.IRON_AXE),
-    INFERNO("Inferno", Material.IRON_CHESTPLATE),
-    DARK_KNIGHT("Dark Knight", Material.IRON_HELMET),
-    PRIEST("Priest", Material.GOLD_LEGGINGS),
-    WARRIOR("Warrior", Material.IRON_SWORD);
+    CLOAKER("Cloaker", Material.IRON_LEGGINGS, CloakerClass::new),
+    SCOUT("Scout", Material.COMPASS, ScoutClass::new),
+    GENERAL("General", Material.DIAMOND_SWORD, (plugin, config) -> new GeneralClass(config)),
+    ARCHER("Archer", Material.BOW, (plugin, config) -> new ArcherClass(config)),
+    MAGE("Mage", Material.DIAMOND_LEGGINGS, MageClass::new),
+    PEASANT("Peasant", Material.IRON_AXE, (plugin, config) -> new PeasantClass(config)),
+    INFERNO("Inferno", Material.IRON_CHESTPLATE, InfernoClass::new),
+    DARK_KNIGHT("Dark Knight", Material.IRON_HELMET, (plugin, config) -> new DarkKnightClass(config)),
+    PRIEST("Priest", Material.GOLD_LEGGINGS, PriestClass::new),
+    WARRIOR("Warrior", Material.IRON_SWORD, WarriorClass::new);
 
-    public final String name;
-    public final Material chooser;
+    private final String name;
+    private final Material chooser;
+    private final PlayerClassHandlerFactory classHandlerFactory;
 
-    PlayerClass(String name, Material chooser) {
+    PlayerClass(String name, Material chooser, PlayerClassHandlerFactory classHandlerFactory) {
         this.name = name;
         this.chooser = chooser;
+        this.classHandlerFactory = classHandlerFactory;
     }
 
     public static PlayerClass fromChooserMaterial(Material mat){
         for(PlayerClass playerClass : values()){
-            if(playerClass.chooser == mat) return playerClass;
+            if(playerClass.getChooser() == mat) return playerClass;
         }
 
         return null;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Material getChooser() {
+        return chooser;
+    }
+
+    public PlayerClassHandlerFactory getClassHandlerFactory() {
+        return classHandlerFactory;
     }
 }

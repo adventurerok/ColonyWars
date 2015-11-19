@@ -118,7 +118,8 @@ public class WarsLobbyListener implements Listener {
         Inventory shopInv = Bukkit.createInventory(player, 18, plugin.getLocale("class-chooser"));
 
         for (PlayerClass playerClass : PlayerClass.values()) {
-            shopInv.addItem(InventoryUtils.createItemWithNameAndLore(playerClass.chooser, 1, 0, playerClass.name,
+            shopInv.addItem(InventoryUtils.createItemWithNameAndLore(playerClass.getChooser(), 1, 0,
+                    playerClass.getName(),
                     plugin.getLocale(playerClass.toString().toLowerCase() + "-desc")));
         }
 
@@ -190,7 +191,7 @@ public class WarsLobbyListener implements Listener {
 
                 user.setPlayerClass(playerClass);
 
-                user.message(plugin.getLocale("class-selected", playerClass.name));
+                user.message(plugin.getLocale("class-selected", playerClass.getName()));
 
                 user.getPlayer().closeInventory();
             } else if (plugin.getLocale("map-chooser").equals(event.getInventory().getTitle())) {

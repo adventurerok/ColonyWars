@@ -18,7 +18,6 @@ import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.BoundingBox;
 import com.ithinkrok.mccw.util.DirectoryUtils;
-import com.ithinkrok.mccw.util.InventoryUtils;
 import com.ithinkrok.mccw.util.SchematicBuilder;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -190,7 +189,7 @@ public class GameInstance {
                 " Team");
 
         info.message(ChatColor.GOLD + "You are playing as the class " + ChatColor.DARK_AQUA +
-                info.getPlayerClass().name);
+                info.getPlayerClass().getName());
     }
 
     private void calculateShowdownArena() {

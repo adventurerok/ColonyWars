@@ -117,9 +117,6 @@ public class WarsPlugin extends JavaPlugin {
         protocolManager = ProtocolLibrary.getProtocolManager();
         InvisiblePlayerAttacker.enablePlayerAttacker(this, protocolManager);
 
-        //WarsGameListener pluginListener = new WarsGameListener(this);
-        //getServer().getPluginManager().registerEvents(pluginListener, this);
-
         currentListener = new WarsLobbyListener(this);
         getServer().getPluginManager().registerEvents(new WarsBaseListener(this), this);
         getServer().getPluginManager().registerEvents(currentListener, this);
@@ -135,7 +132,7 @@ public class WarsPlugin extends JavaPlugin {
         schematicDataHashMap.put(Buildings.LUMBERMILL, new Schematic(Buildings.LUMBERMILL, getConfig()));
         schematicDataHashMap.put(Buildings.CHURCH, new Schematic(Buildings.CHURCH, getConfig()));
         schematicDataHashMap.put(Buildings.CATHEDRAL, new Schematic(Buildings.CATHEDRAL, getConfig()));
-        schematicDataHashMap.put("PlayerCathedral", new Schematic("PlayerCathedral", getConfig()));
+        schematicDataHashMap.put(Buildings.PLAYERCATHEDRAL, new Schematic(Buildings.PLAYERCATHEDRAL, getConfig()));
         schematicDataHashMap.put(Buildings.GREENHOUSE, new Schematic(Buildings.GREENHOUSE, getConfig()));
         schematicDataHashMap.put(Buildings.SCOUTTOWER, new Schematic(Buildings.SCOUTTOWER, getConfig()));
         schematicDataHashMap.put(Buildings.CANNONTOWER, new Schematic(Buildings.CANNONTOWER, getConfig()));
@@ -147,16 +144,10 @@ public class WarsPlugin extends JavaPlugin {
         buildingInventoryHandler = new OmniInventory(this, getConfig());
         spectatorInventoryHandler = new SpectatorInventory(this);
 
-        classHandlerEnumMap.put(PlayerClass.GENERAL, new GeneralClass(getConfig()));
-        classHandlerEnumMap.put(PlayerClass.SCOUT, new ScoutClass(this, getConfig()));
-        classHandlerEnumMap.put(PlayerClass.CLOAKER, new CloakerClass(this, getConfig()));
-        classHandlerEnumMap.put(PlayerClass.ARCHER, new ArcherClass(getConfig()));
-        classHandlerEnumMap.put(PlayerClass.MAGE, new MageClass(this, getConfig()));
-        classHandlerEnumMap.put(PlayerClass.PEASANT, new PeasantClass(getConfig()));
-        classHandlerEnumMap.put(PlayerClass.INFERNO, new InfernoClass(this, getConfig()));
-        classHandlerEnumMap.put(PlayerClass.DARK_KNIGHT, new DarkKnightClass(getConfig()));
-        classHandlerEnumMap.put(PlayerClass.PRIEST, new PriestClass(this, getConfig()));
-        classHandlerEnumMap.put(PlayerClass.WARRIOR, new WarriorClass(this, getConfig()));
+        for(PlayerClass playerClass : PlayerClass.values()){
+            classHandlerEnumMap.put(playerClass, playerClass.getClassHandlerFactory().createPlayerClassHandler(this,
+                    getConfig()));
+        }
 
         lobbyMinigames.add(new WoolHeadMinigame(this));
         lobbyMinigames.add(new ParcourMinigame(this));

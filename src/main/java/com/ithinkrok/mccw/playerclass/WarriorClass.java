@@ -21,7 +21,7 @@ import org.bukkit.entity.Wolf;
 public class WarriorClass extends ClassItemClassHandler {
 
     public WarriorClass(WarsPlugin plugin, FileConfiguration config) {
-        super(new ClassItem(Material.IRON_SWORD, null).withUpgradeBuildings(Buildings.BLACKSMITH)
+        super(new ClassItem(Material.IRON_SWORD).withUpgradeBuildings(Buildings.BLACKSMITH)
                         .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
                         new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sharpness",
                                 new LinearCalculator(0, 1)),

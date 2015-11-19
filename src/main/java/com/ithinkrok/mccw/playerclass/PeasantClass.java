@@ -17,7 +17,7 @@ public class PeasantClass extends ClassItemClassHandler {
     public PeasantClass(FileConfiguration config) {
         super(new ClassItem(Material.IRON_AXE, "Peasant Axe").withUnlockOnGameStart(true).withEnchantmentEffects(
                 new ClassItem.EnchantmentEffect(Enchantment.DIG_SPEED, "axe", new LinearCalculator(2, 0))),
-                new ClassItem(Material.WOOD_SWORD, null).withUpgradeBuildings(Buildings.LUMBERMILL)
+                new ClassItem(Material.WOOD_SWORD).withUpgradeBuildings(Buildings.LUMBERMILL)
                         .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
                         new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sharpness",
                                 new LinearCalculator(0, 1)),

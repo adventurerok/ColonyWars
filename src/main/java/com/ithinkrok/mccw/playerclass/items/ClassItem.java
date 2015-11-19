@@ -25,6 +25,7 @@ public class ClassItem {
 
     private static final double HEALTH_PER_HEART = 2;
     private static final double TICKS_PER_SECOND = 20;
+
     private String[] upgradeBuildings;
     private boolean unlockOnBuildingBuild;
     private boolean unlockOnGameStart;
@@ -40,6 +41,10 @@ public class ClassItem {
     private EnchantmentEffect[] enchantmentEffects;
     private String signature;
 
+    public ClassItem(Material itemMaterial){
+        this(itemMaterial, null);
+    }
+
     public ClassItem(Material itemMaterial, String itemDisplayName) {
         this.itemMaterial = itemMaterial;
         this.itemDisplayName = itemDisplayName;
@@ -47,6 +52,12 @@ public class ClassItem {
         signature = UUID.randomUUID().toString();
     }
 
+    /**
+     * Sets the buildings that the item can be upgraded in.
+     * If unlockOnBuildingBuild is true, the item will be given to the player when one of these buildings is built.
+     * @param upgradeBuildings The buildings that the user can upgrade the item in.
+     * @return The updated ClassItem object
+     */
     public ClassItem withUpgradeBuildings(String... upgradeBuildings) {
         this.upgradeBuildings = upgradeBuildings;
         Arrays.sort(upgradeBuildings);

@@ -26,7 +26,7 @@ import org.bukkit.potion.PotionEffectType;
 public class ScoutClass extends ClassItemClassHandler {
 
     public ScoutClass(WarsPlugin plugin, FileConfiguration config) {
-        super(new ClassItem(Material.WOOD_SWORD, null).withUpgradeBuildings(Buildings.LUMBERMILL)
+        super(new ClassItem(Material.WOOD_SWORD).withUpgradeBuildings(Buildings.LUMBERMILL)
                         .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
                         new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sharpness",
                                 new LinearCalculator(0, 1)),

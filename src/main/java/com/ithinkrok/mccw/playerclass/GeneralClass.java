@@ -15,7 +15,7 @@ import org.bukkit.enchantments.Enchantment;
 public class GeneralClass extends ClassItemClassHandler {
 
     public GeneralClass(FileConfiguration config) {
-        super(new ClassItem(Material.DIAMOND_SWORD, null).withUpgradeBuildings(Buildings.BLACKSMITH)
+        super(new ClassItem(Material.DIAMOND_SWORD).withUpgradeBuildings(Buildings.BLACKSMITH)
                 .withUnlockOnBuildingBuild(true).
                         withEnchantmentEffects(new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sword",
                                         new LinearCalculator(0, 1)),

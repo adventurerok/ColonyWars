@@ -24,13 +24,13 @@ import org.bukkit.inventory.PlayerInventory;
 public class ArcherClass extends ClassItemClassHandler {
 
     public ArcherClass(FileConfiguration config) {
-        super(new ClassItem(Material.BOW, null).withUpgradeBuildings(Buildings.LUMBERMILL)
+        super(new ClassItem(Material.BOW).withUpgradeBuildings(Buildings.LUMBERMILL)
                         .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
                         new ClassItem.EnchantmentEffect(Enchantment.ARROW_KNOCKBACK, "bow", new LinearCalculator(0, 1)),
                         new ClassItem.EnchantmentEffect(Enchantment.ARROW_DAMAGE, "bow", new ArrayCalculator(0, 1, 3)))
                         .withUpgradables(new ClassItem.Upgradable("bow", "Bow Upgrade %s", 2,
                                 configArrayCalculator(config, "costs.archer.bow", 2))),
-                new ClassItem(Material.WOOD_SWORD, null).withUpgradeBuildings(Buildings.LUMBERMILL)
+                new ClassItem(Material.WOOD_SWORD).withUpgradeBuildings(Buildings.LUMBERMILL)
                         .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
                         new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sword", new LinearCalculator(0, 1)),
                         new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "sword", new LinearCalculator(0, 1)))

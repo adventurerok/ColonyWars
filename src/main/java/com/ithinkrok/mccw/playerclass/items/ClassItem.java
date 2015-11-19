@@ -164,12 +164,14 @@ public class ClassItem {
 
         ItemStack item = InventoryUtils.createItemWithNameAndLore(itemMaterial, 1, 0, itemDisplayName, loreArray);
 
-        for (EnchantmentEffect enchantmentEffect : enchantmentEffects) {
-            int level = getUpgradeLevel(upgradeLevels, enchantmentEffect.upgradeName);
-            int enchantmentLevel = (int) enchantmentEffect.levelCalculator.calculate(level);
-            if (enchantmentLevel <= 0) continue;
+        if(enchantmentEffects != null) {
+            for (EnchantmentEffect enchantmentEffect : enchantmentEffects) {
+                int level = getUpgradeLevel(upgradeLevels, enchantmentEffect.upgradeName);
+                int enchantmentLevel = (int) enchantmentEffect.levelCalculator.calculate(level);
+                if (enchantmentLevel <= 0) continue;
 
-            item.addUnsafeEnchantment(enchantmentEffect.enchantment, enchantmentLevel);
+                item.addUnsafeEnchantment(enchantmentEffect.enchantment, enchantmentLevel);
+            }
         }
 
         return item;

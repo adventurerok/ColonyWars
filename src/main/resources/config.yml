@@ -286,6 +286,7 @@ locale:
   earth-bender-cooldown: "§aThe earth bender is ready to use again."
   healing-scroll-cooldown: "§aThe healing scroll is ready to use again."
   wolf-wand-cooldown: "§aThe wolf wand is ready to use again."
+  regen-ability-cooldown: "§aYour regeneration ability has cooled down!"
   map-voted: "§6You have voted for §3%s§6!"
   map-already-voted: "§cYou already voted for §3%s§c!"
   player-voted: "§6%s §6voted for §3%s§3!"

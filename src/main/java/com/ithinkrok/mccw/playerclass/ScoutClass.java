@@ -1,20 +1,20 @@
 package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.WarsPlugin;
-import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.enumeration.TeamColor;
-import com.ithinkrok.mccw.event.*;
-import com.ithinkrok.mccw.inventory.BuyableInventory;
-import com.ithinkrok.mccw.inventory.UpgradeBuyable;
+import com.ithinkrok.mccw.event.UserBeginGameEvent;
+import com.ithinkrok.mccw.event.UserInteractEvent;
+import com.ithinkrok.mccw.playerclass.items.ClassItem;
+import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -23,108 +23,94 @@ import org.bukkit.potion.PotionEffectType;
  * <p>
  * Handles the Scout class
  */
-public class ScoutClass extends BuyableInventory implements PlayerClassHandler {
-
-
-    private WarsPlugin plugin;
+public class ScoutClass extends ClassItemClassHandler {
 
     public ScoutClass(WarsPlugin plugin, FileConfiguration config) {
-        super(new UpgradeBuyable(InventoryUtils
-                .createItemWithEnchantments(Material.WOOD_SWORD, 1, 0, "Sharpness Upgrade 1", null,
-                        Enchantment.DAMAGE_ALL, 1), Buildings.LUMBERMILL, config.getInt("costs.scout.sharpness1"),
-                "sharpness", 1), new UpgradeBuyable(InventoryUtils
-                .createItemWithEnchantments(Material.WOOD_SWORD, 1, 0, "Sharpness Upgrade 2", null,
-                        Enchantment.DAMAGE_ALL, 2), Buildings.LUMBERMILL, config.getInt("costs.scout.sharpness2"),
-                "sharpness", 2), new UpgradeBuyable(InventoryUtils
-                .createItemWithEnchantments(Material.WOOD_SWORD, 1, 0, "Knockback Upgrade 1", null,
-                        Enchantment.KNOCKBACK, 1), Buildings.LUMBERMILL, config.getInt("costs.scout.knockback1"),
-                "knockback", 1), new UpgradeBuyable(InventoryUtils
-                .createItemWithEnchantments(Material.WOOD_SWORD, 1, 0, "Knockback Upgrade 2", null,
-                        Enchantment.KNOCKBACK, 2), Buildings.LUMBERMILL, config.getInt("costs.scout.knockback2"),
-                "knockback", 2), new UpgradeBuyable(InventoryUtils
-                .createItemWithNameAndLore(Material.COMPASS, 1, 0, "Player Compass",
-                        "Locates the closest enemy player"), Buildings.CHURCH, config.getInt("costs.scout.compass"),
-                "compass", 1).withAdditionalBuildings(Buildings.CATHEDRAL), new UpgradeBuyable(InventoryUtils
-                .createItemWithNameAndLore(Material.CHAINMAIL_HELMET, 1, 0, "Regeneration Ability 2",
-                        "Cooldown: 45 seconds"), Buildings.MAGETOWER, config.getInt("costs.scout.regen"), "regen", 1));
-        this.plugin = plugin;
+        super(new ClassItem(Material.WOOD_SWORD, null).withUpgradeBuildings(Buildings.LUMBERMILL)
+                        .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
+                        new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sharpness",
+                                new LinearCalculator(0, 1)),
+                        new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "knockback", new LinearCalculator(0, 1)))
+                        .withUpgradables(new ClassItem.Upgradable("sharpness", "Sharpness Upgrade %s", 2,
+                                        configArrayCalculator(config, "costs.scout.sharpness", 2)),
+                                new ClassItem.Upgradable("knockback", "Knockback Upgrade %s", 2,
+                                        configArrayCalculator(config, "costs.scout.knockback", 2))),
+                new ClassItem(Material.COMPASS, "Player Compass")
+                        .withUpgradeBuildings(Buildings.CHURCH, Buildings.CATHEDRAL)
+                        .withRightClickAction(new ScoutCompass(plugin)).withUpgradables(
+                        new ClassItem.Upgradable("compass", "Player Compass", 1,
+                                new LinearCalculator(config.getDouble("costs.scout.compass"), 0))),
+                new ClassItem(Material.CHAINMAIL_HELMET, "Regeneration Ability")
+                        .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
+                        .withRightClickAction(new RegenAbility())
+                        .withRightClickCooldown("regen", new LinearCalculator(35, 10),
+                                plugin.getLocale("regen-ability-cooldown")).withUpgradables(
+                        new ClassItem.Upgradable("regen", "Regen Ability Upgrade", 1,
+                                new LinearCalculator(config.getDouble("costs.scout.regen"), 0))));
     }
 
-    @Override
-    public void onBuildingBuilt(UserTeamBuildingBuiltEvent event) {
-        PlayerInventory inv = event.getUserInventory();
-
-        switch (event.getBuilding().getBuildingName()) {
-            case Buildings.LUMBERMILL:
-                inv.addItem(new ItemStack(Material.WOOD_SWORD));
-                break;
-            case Buildings.MAGETOWER:
-                inv.addItem(InventoryUtils
-                        .createItemWithNameAndLore(Material.CHAINMAIL_HELMET, 1, 0, "Regeneration Ability",
-                                "Cooldown: 35 seconds"));
-
-        }
-    }
 
     @Override
     public void onUserBeginGame(UserBeginGameEvent event) {
+        super.onUserBeginGame(event);
         event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1), true);
     }
 
-    @Override
-    public boolean onInteract(UserInteractEvent event) {
-        if(!event.isRightClick()) return false;
-        ItemStack item = event.getItem();
-        if (item == null) return false;
 
-        switch (item.getType()) {
-            case COMPASS:
-                TeamColor exclude = event.getUser().getTeamColor();
-                plugin.getGameInstance().updateScoutCompass(item, event.getPlayer(), exclude);
-                break;
-            case CHAINMAIL_HELMET:
-                User user = event.getUser();
-                if (!user.startCoolDown("regen", 35 + 10 * user.getUpgradeLevel("regen"),
-                        "Your regeneration ability has cooled down!")) break;
+    private static class ScoutCompass implements ClassItem.InteractAction {
 
-                event.getPlayer().addPotionEffect(
-                        new PotionEffect(PotionEffectType.REGENERATION, 200, user.getUpgradeLevel("regen")));
+        private WarsPlugin plugin;
 
-                break;
-            default:
-                return false;
+        public ScoutCompass(WarsPlugin plugin) {
+            this.plugin = plugin;
         }
 
-        return true;
-    }
+        @Override
+        public boolean onInteractWorld(UserInteractEvent event) {
+            TeamColor exclude = event.getUser().getTeamColor();
 
-    @Override
-    public void onPlayerUpgrade(UserUpgradeEvent event) {
-        switch (event.getUpgradeName()) {
-            case "sharpness":
-            case "knockback":
-                ItemStack sword = new ItemStack(Material.WOOD_SWORD);
-                InventoryUtils.enchantItem(sword, Enchantment.DAMAGE_ALL, event.getUser().getUpgradeLevel("sharpness"),
-                        Enchantment.KNOCKBACK, event.getUser().getUpgradeLevel("knockback"));
+            InventoryUtils.setItemNameAndLore(event.getItem(), "Locating closest player...");
 
-                InventoryUtils.replaceItem(event.getUserInventory(), sword);
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                Location closest = null;
+                double minDist = 99999999999d;
+                String closestName = null;
 
-                break;
-            case "compass":
-                event.getUserInventory().addItem(InventoryUtils
-                        .createItemWithNameAndLore(Material.COMPASS, 1, 0, "Player Compass", "Oriented at: No One"));
-                break;
-            case "regen":
-                ItemStack regen = InventoryUtils
-                        .createItemWithNameAndLore(Material.CHAINMAIL_HELMET, 1, 0, "Regeneration Ability",
-                                "Cooldown: 45 seconds");
+                for (User info : plugin.getUsers()) {
+                    if (!info.isInGame() || info.getTeamColor() == exclude) continue;
 
-                InventoryUtils.replaceItem(event.getUserInventory(), regen);
+                    double dist = event.getPlayer().getLocation().distanceSquared(info.getPlayer().getLocation());
+
+                    if (dist < minDist) {
+                        minDist = dist;
+                        closest = info.getPlayer().getLocation();
+                        closestName = info.getPlayer().getName();
+                    }
+                }
+
+                if (closest != null) event.getPlayer().setCompassTarget(closest);
+                else closestName = "No One";
+
+                int compassIndex = event.getUserInventory().first(Material.COMPASS);
+                ItemStack newCompass = event.getUserInventory().getItem(compassIndex);
+
+                InventoryUtils.setItemNameAndLore(newCompass, "Player Compass", "Oriented at: " + closestName);
+
+                event.getUserInventory().setItem(compassIndex, newCompass);
+            }, 60);
+
+            return true;
         }
     }
 
-    @Override
-    public void onUserAttack(UserAttackEvent event) {
+    private static class RegenAbility implements ClassItem.InteractAction {
 
+        @Override
+        public boolean onInteractWorld(UserInteractEvent event) {
+            event.getPlayer().addPotionEffect(
+                    new PotionEffect(PotionEffectType.REGENERATION, 200, event.getUser().getUpgradeLevel("regen")));
+
+            return true;
+        }
     }
 }

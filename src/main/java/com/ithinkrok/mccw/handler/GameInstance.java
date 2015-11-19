@@ -360,39 +360,6 @@ public class GameInstance {
         return false;
     }
 
-    public void updateScoutCompass(ItemStack item, Player player, TeamColor exclude) {
-        InventoryUtils.setItemNameAndLore(item, "Locating closest player...");
-
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            Location closest = null;
-            double minDist = 99999999999d;
-            String closestName = null;
-
-            for (User info : plugin.getUsers()) {
-                if (!info.isInGame() || info.getTeamColor() == exclude) continue;
-
-                double dist = player.getLocation().distanceSquared(info.getPlayer().getLocation());
-
-                if (dist < minDist) {
-                    minDist = dist;
-                    closest = info.getPlayer().getLocation();
-                    closestName = info.getPlayer().getName();
-                }
-            }
-
-
-            if (closest != null) player.setCompassTarget(closest);
-            else closestName = "No One";
-
-            int compassIndex = player.getInventory().first(Material.COMPASS);
-            ItemStack newCompass = player.getInventory().getItem(compassIndex);
-
-            InventoryUtils.setItemNameAndLore(newCompass, "Player Compass", "Oriented at: " + closestName);
-
-            player.getInventory().setItem(compassIndex, newCompass);
-        }, 60);
-    }
-
     public void onPlayerUpgrade(UserUpgradeEvent event) {
         PlayerClassHandler classHandler = event.getUser().getPlayerClassHandler();
 

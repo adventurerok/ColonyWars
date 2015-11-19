@@ -6,6 +6,8 @@ import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
 import com.ithinkrok.mccw.inventory.ItemBuyable;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
+import com.ithinkrok.mccw.playerclass.items.ClassItem;
+import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Material;
@@ -20,117 +22,66 @@ import org.bukkit.inventory.ItemStack;
  * <p>
  * Handles the inferno class
  */
-public class InfernoClass extends BuyableInventory implements PlayerClassHandler {
-
-
-    private final WarsPlugin plugin;
+public class InfernoClass extends ClassItemClassHandler {
 
     public InfernoClass(WarsPlugin plugin, FileConfiguration config) {
-        super(new UpgradeBuyable(InventoryUtils
-                        .createItemWithNameAndLore(Material.IRON_CHESTPLATE, 1, 0, "Explosion Wand Upgrade 1",
-                                "Cooldown: 15 seconds"), Buildings.MAGETOWER, config.getInt("costs.inferno.wand1"), "wand", 1),
-                new UpgradeBuyable(InventoryUtils
-                        .createItemWithNameAndLore(Material.IRON_CHESTPLATE, 1, 0, "Explosion Wand Upgrade 2",
-                                "Cooldown: 5 seconds"), Buildings.MAGETOWER, config.getInt("costs.inferno.wand2"),
-                        "wand", 2), new UpgradeBuyable(InventoryUtils
-                        .createItemWithNameAndLore(Material.DIAMOND_HELMET, 1, 0, "Flame Sword Upgrade 1",
-                                "Damage: 2.5 Hearts", "Fire Aspect"), Buildings.BLACKSMITH,
-                        config.getInt("costs.inferno.flame1"), "flame", 1), new UpgradeBuyable(InventoryUtils
-                        .createItemWithNameAndLore(Material.DIAMOND_HELMET, 1, 0, "Flame Sword Upgrade 2",
-                                "Damage: 4.0 Hearts", "Fire Aspect"), Buildings.BLACKSMITH,
-                        config.getInt("costs.inferno.flame2"), "flame", 2),
-                new ItemBuyable(new ItemStack(Material.TNT, 16), Buildings.BLACKSMITH,
-                        config.getInt("costs.inferno.tnt") * 16, true));
-        this.plugin = plugin;
-    }
+        super(new ClassItem(Material.IRON_CHESTPLATE, "Explosion Wand").withUpgradeBuildings(Buildings.MAGETOWER)
+                        .withUnlockOnBuildingBuild(true).withRightClickAction(new ExplosionWand())
+                        .withRightClickCooldown("wand", new LinearCalculator(25, -10),
+                                plugin.getLocale("explosion-wand-cooldown")).withUpgradables(
+                        new ClassItem.Upgradable("wand", "Explosion Wand Upgrade %s", 2,
+                                configArrayCalculator(config, "costs.inferno.wand", 2))),
+                new ClassItem(Material.DIAMOND_HELMET, "Flame Sword").withUpgradeBuildings(Buildings.BLACKSMITH)
+                        .withUnlockOnBuildingBuild(true).withWeaponModifier(
+                        new ClassItem.WeaponModifier("flame").withDamageCalculator(new LinearCalculator(1, 1.5))
+                                .withFireCalculator(new LinearCalculator(4, 0))).withUpgradables(
+                        new ClassItem.Upgradable("flame", "Flame Sword Upgrade %s", 2,
+                                configArrayCalculator(config, "costs.inferno.flame", 2))));
 
-    @Override
-    public void onBuildingBuilt(UserTeamBuildingBuiltEvent event) {
-        switch (event.getBuilding().getBuildingName()) {
-            case Buildings.MAGETOWER:
-                event.getUserInventory().addItem(InventoryUtils
-                        .createItemWithNameAndLore(Material.IRON_CHESTPLATE, 1, 0, "Explosion Wand",
-                                "Cooldown: 25 seconds"));
-                break;
-            case Buildings.BLACKSMITH:
-                event.getUserInventory().addItem(InventoryUtils
-                        .createItemWithNameAndLore(Material.DIAMOND_HELMET, 1, 0, "Flame Sword", "Damage: 1.0 Hearts",
-                                "Fire Aspect"));
-                break;
-        }
-    }
-
-    @Override
-    public void onUserBeginGame(UserBeginGameEvent event) {
-
+        addExtraBuyables(new ItemBuyable(new ItemStack(Material.TNT, 16), Buildings.BLACKSMITH,
+                config.getInt("costs.inferno.tnt") * 16, true));
     }
 
     @Override
     public boolean onInteract(UserInteractEvent event) {
+        if(super.onInteract(event)) return true;
+
         if (!event.isRightClick()) return false;
         ItemStack item = event.getItem();
         if (item == null) return false;
 
-        User user = event.getUser();
-        BlockFace mod = event.getBlockFace();
-
         switch (item.getType()) {
             case TNT:
-                if (!event.hasBlock()) break;
-                user.createPlayerExplosion(event.getClickedBlock().getLocation().clone()
+                if (!event.hasBlock()) return true;
+                BlockFace mod = event.getBlockFace();
+
+                event.getUser().createPlayerExplosion(event.getClickedBlock().getLocation().clone()
                         .add(mod.getModX() + 0.5, mod.getModY() + 0.5, mod.getModZ() + 0.5), 4F, false, 80);
 
-                ItemStack oneLess = item.clone();
+                ItemStack oneLess = event.getItem().clone();
                 if (oneLess.getAmount() > 1) oneLess.setAmount(oneLess.getAmount() - 1);
                 else oneLess = null;
-                user.getPlayer().setItemInHand(oneLess);
-                break;
-            case IRON_CHESTPLATE:
-                if (!user.startCoolDown("wand", 25 - 10 * user.getUpgradeLevel("wand"),
-                        plugin.getLocale("explosion-wand-cooldown"))) break;
-                Block target = user.rayTraceBlocks(200);
+                event.getUserInventory().setItemInHand(oneLess);
 
-
-                if (target == null) break;
-                user.createPlayerExplosion(target.getLocation().clone()
-                        .add(mod.getModX() + 0.5, mod.getModY() + 0.5, mod.getModZ() + 0.5),2F, false, 0);
-
-                break;
+                return true;
             default:
                 return false;
         }
-
-        return true;
     }
 
-    @Override
-    public void onPlayerUpgrade(UserUpgradeEvent event) {
-        switch (event.getUpgradeName()) {
-            case "wand":
-                int cooldown = 25 - event.getUpgradeLevel() * 10;
-                ItemStack wand = InventoryUtils
-                        .createItemWithNameAndLore(Material.IRON_CHESTPLATE, 1, 0, "Explosion Wand",
-                                "Cooldown: " + cooldown + " seconds");
-                InventoryUtils.replaceItem(event.getUserInventory(), wand);
-                break;
-            case "flame":
-                float damage = 1.0f + 1.5f * event.getUpgradeLevel();
-                ItemStack sword = InventoryUtils.createItemWithNameAndLore(Material.DIAMOND_HELMET, 1, 0, "Flame Sword",
-                        "Damage: " + damage + " Hearts", "Fire Aspect");
-                InventoryUtils.replaceItem(event.getUserInventory(), sword);
-                break;
+    private static class ExplosionWand implements ClassItem.InteractAction {
+
+        @Override
+        public boolean onInteractWorld(UserInteractEvent event) {
+            Block target = event.getUser().rayTraceBlocks(200);
+            if (target == null) return true;
+
+            BlockFace mod = event.getBlockFace();
+            event.getUser().createPlayerExplosion(
+                    target.getLocation().clone().add(mod.getModX() + 0.5, mod.getModY() + 0.5, mod.getModZ() + 0.5), 2F,
+                    false, 0);
+
+            return true;
         }
-    }
-
-    @Override
-    public void onUserAttack(UserAttackEvent event) {
-        ItemStack item = event.getItem();
-        if (item == null || item.getType() != Material.DIAMOND_HELMET) return;
-
-        double damage = 2 + 3 * event.getUser().getUpgradeLevel("flame");
-        event.setDamage(damage);
-
-        if(event.isAttackingUser()) event.getTargetUser().setFireTicks(event.getUser(), 80);
-        else event.getClickedEntity().setFireTicks(80);
     }
 }

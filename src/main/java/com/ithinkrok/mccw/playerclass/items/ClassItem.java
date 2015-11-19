@@ -1,10 +1,7 @@
 package com.ithinkrok.mccw.playerclass.items;
 
 import com.ithinkrok.mccw.data.User;
-import com.ithinkrok.mccw.event.UserAttackEvent;
-import com.ithinkrok.mccw.event.UserInteractEvent;
-import com.ithinkrok.mccw.event.UserTeamBuildingBuiltEvent;
-import com.ithinkrok.mccw.event.UserUpgradeEvent;
+import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.inventory.Buyable;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.util.InventoryUtils;
@@ -28,12 +25,14 @@ public class ClassItem {
     private static final double TICKS_PER_SECOND = 20;
     private String[] upgradeBuildings;
     private boolean unlockOnBuildingBuild;
+    private boolean unlockOnGameStart;
     private InteractAction rightClickAction;
     private InteractAction leftClickAction;
     private WeaponModifier weaponModifier;
     private String itemDisplayName;
     private Material itemMaterial;
     private String rightClickCooldownUpgrade;
+    private String rightClickCooldownFinished;
     private Calculator rightClickCooldown;
     private Upgradable[] upgradables;
     private EnchantmentEffect[] enchantmentEffects;
@@ -57,6 +56,11 @@ public class ClassItem {
         return this;
     }
 
+    public ClassItem withUnlockOnGameStart(boolean unlockOnGameStart){
+        this.unlockOnGameStart = unlockOnGameStart;
+        return this;
+    }
+
     public ClassItem withRightClickAction(InteractAction rightClickAction) {
         this.rightClickAction = rightClickAction;
         return this;
@@ -72,9 +76,11 @@ public class ClassItem {
         return this;
     }
 
-    public ClassItem withRightClickCooldown(String upgradeName, Calculator rightClickCooldown) {
+    public ClassItem withRightClickCooldown(String upgradeName, Calculator rightClickCooldown, String
+            cooldownFinished) {
         this.rightClickCooldownUpgrade = upgradeName;
         this.rightClickCooldown = rightClickCooldown;
+        this.rightClickCooldownFinished = cooldownFinished;
         return this;
     }
 
@@ -97,8 +103,8 @@ public class ClassItem {
                 ItemStack display = createItemFromUpgradeLevels(upgradeLevels);
                 display.getItemMeta().setDisplayName(String.format(upgradable.upgradeDisplayName, level));
 
-                UpgradeBuyable buyable =
-                        new UpgradeBuyable(display, upgradeBuildings[0], (int) upgradable.upgradeCost.calculate(level),
+                Buyable buyable =
+                        new ClassItemBuyable(display, upgradeBuildings[0], (int) upgradable.upgradeCost.calculate(level),
                                 upgradable.upgradeName, level);
 
                 for (int buildingIndex = 1; buildingIndex < upgradeBuildings.length; ++buildingIndex) {
@@ -108,6 +114,31 @@ public class ClassItem {
                 buyables.add(buyable);
             }
         }
+    }
+
+    public void onUserBeginGame(UserBeginGameEvent event) {
+        if(!unlockOnGameStart) return;
+
+        giveUserItem(event.getUser());
+    }
+
+    private class ClassItemBuyable extends UpgradeBuyable {
+
+        public ClassItemBuyable(ItemStack display, String buildingName, int cost, String upgradeName,
+                                int upgradeLevel) {
+            super(display, buildingName, cost, upgradeName, upgradeLevel);
+        }
+
+        @Override
+        public void onPurchase(ItemPurchaseEvent event) {
+            giveUserItem(event.getUser());
+            super.onPurchase(event);
+        }
+    }
+
+    private void giveUserItem(User user){
+        setUserHasItem(user);
+        InventoryUtils.replaceItem(user.getPlayerInventory(), createItemForUser(user));
     }
 
     private ItemStack createItemFromUpgradeLevels(Map<String, Integer> upgradeLevels) {
@@ -214,7 +245,16 @@ public class ClassItem {
     public boolean onInteract(UserInteractEvent event) {
         if (!event.isRightClick()) {
             return leftClickAction != null && leftClickAction.onInteractWorld(event);
-        } else return rightClickAction != null && rightClickAction.onInteractWorld(event);
+        } else{
+            if(rightClickAction == null) return false;
+            if(rightClickCooldown != null){
+                int cooldown =
+                        (int) rightClickCooldown.calculate(event.getUser().getUpgradeLevel(rightClickCooldownUpgrade));
+                if(!event.getUser().startCoolDown(rightClickCooldownUpgrade, cooldown, rightClickCooldownFinished))
+                    return true;
+            }
+            return rightClickAction.onInteractWorld(event);
+        }
 
     }
 

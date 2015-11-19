@@ -3,8 +3,11 @@ package com.ithinkrok.mccw.playerclass;
 import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.inventory.Buyable;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
+import com.ithinkrok.mccw.playerclass.items.ArrayCalculator;
+import com.ithinkrok.mccw.playerclass.items.Calculator;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,7 +54,9 @@ public class ClassItemClassHandler extends BuyableInventory implements PlayerCla
 
     @Override
     public void onUserBeginGame(UserBeginGameEvent event) {
-
+        for(ClassItem item : classItemHashMap.values()){
+            item.onUserBeginGame(event);
+        }
     }
 
     @Override
@@ -76,5 +81,15 @@ public class ClassItemClassHandler extends BuyableInventory implements PlayerCla
         if(item == null) return;
 
         item.onUserAttack(event);
+    }
+
+    protected static Calculator configArrayCalculator(FileConfiguration config, String base, int maxLevel){
+        double[] returnValues = new double[maxLevel + 1];
+
+        for(int level = 0; level <= maxLevel; ++level){
+            returnValues[level] = config.getDouble(base + level);
+        }
+
+        return new ArrayCalculator(returnValues);
     }
 }

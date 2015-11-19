@@ -425,7 +425,8 @@ public class WarsGameListener implements Listener {
         if (event.getItem() == null) return;
 
         PlayerClassHandler classHandler = event.getUser().getPlayerClassHandler();
-        classHandler.onUserAttack(event);
+        classHandler.onInteract(event);
+        if(!event.isCancelled()) classHandler.onUserAttack(event);
     }
 
     private void userAttackUser(UserAttackEvent event) {
@@ -438,7 +439,8 @@ public class WarsGameListener implements Listener {
         }
 
         PlayerClassHandler classHandler = event.getUser().getPlayerClassHandler();
-        classHandler.onUserAttack(event);
+        classHandler.onInteract(event);
+        if(!event.isCancelled()) classHandler.onUserAttack(event);
     }
 
     public void playerDeath(Player died, Player killer, boolean intentionally) {

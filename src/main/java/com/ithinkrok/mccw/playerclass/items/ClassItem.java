@@ -97,6 +97,8 @@ public class ClassItem {
     }
 
     public void addBuyablesToList(List<Buyable> buyables) {
+        if(upgradables == null) return;
+
         for (Upgradable upgradable : upgradables) {
             for (int level = 1; level <= upgradable.maxLevel; ++level) {
                 Map<String, Integer> upgradeLevels = new HashMap<>();

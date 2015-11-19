@@ -10,10 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by paul on 06/11/15.
@@ -22,7 +19,6 @@ import java.util.List;
  */
 public class BuyableInventory implements InventoryHandler {
 
-    private List<Buyable> items = new ArrayList<>();
     private HashMap<ItemStack, Buyable> stackToBuyable = new HashMap<>();
 
     public BuyableInventory(Buyable... items) {
@@ -30,9 +26,15 @@ public class BuyableInventory implements InventoryHandler {
     }
 
     public BuyableInventory(List<Buyable> items) {
-        this.items = items;
+        addExtraBuyables(items);
+    }
 
-        for (Buyable item : items) {
+    protected void addExtraBuyables(Buyable...extra){
+        addExtraBuyables(Arrays.asList(extra));
+    }
+
+    protected void addExtraBuyables(Collection<Buyable> extra){
+        for(Buyable item : extra){
             stackToBuyable.put(item.getDisplayItemStack(), item);
         }
     }
@@ -105,7 +107,7 @@ public class BuyableInventory implements InventoryHandler {
     @Override
     public void addInventoryItems(List<ItemStack> items, Building building, User user,
                                   Team team) {
-        for (Buyable buyable : this.items) {
+        for (Buyable buyable : stackToBuyable.values()) {
             if (!buyable.getBuildingNames().contains(building.getBuildingName())) continue;
             if (!buyable.canBuy(new ItemPurchaseEvent(building, user, team))) continue;
 

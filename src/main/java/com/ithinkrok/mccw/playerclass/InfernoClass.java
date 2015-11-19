@@ -1,20 +1,15 @@
 package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.WarsPlugin;
-import com.ithinkrok.mccw.data.User;
-import com.ithinkrok.mccw.event.*;
-import com.ithinkrok.mccw.inventory.BuyableInventory;
+import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.inventory.ItemBuyable;
-import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
 import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
-import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 
 /**

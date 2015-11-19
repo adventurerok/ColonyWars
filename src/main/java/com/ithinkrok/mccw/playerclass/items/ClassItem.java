@@ -164,7 +164,7 @@ public class ClassItem {
             int enchantmentLevel = (int) enchantmentEffect.levelCalculator.calculate(level);
             if (enchantmentLevel <= 0) continue;
 
-            item.addEnchantment(enchantmentEffect.enchantment, enchantmentLevel);
+            item.addUnsafeEnchantment(enchantmentEffect.enchantment, enchantmentLevel);
         }
 
         return item;

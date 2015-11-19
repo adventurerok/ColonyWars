@@ -72,7 +72,7 @@ public class User {
         return upgradeLevels;
     }
 
-    public UUID getUniqueId(){
+    public UUID getUniqueId() {
         return player.getUniqueId();
     }
 
@@ -83,7 +83,7 @@ public class User {
     public void setInGame(boolean inGame) {
         this.inGame = inGame;
 
-        if(!inGame){
+        if (!inGame) {
             upgradeLevels.clear();
             coolingDown.clear();
             oldBuildingNows.clear();
@@ -98,12 +98,7 @@ public class User {
         updateScoreboard();
     }
 
-    public PlayerClassHandler getPlayerClassHandler(){
-        return plugin.getPlayerClassHandler(playerClass);
-    }
-
-
-    public PlayerInventory getPlayerInventory(){
+    public PlayerInventory getPlayerInventory() {
         return player.getInventory();
     }
 
@@ -123,48 +118,61 @@ public class User {
         this.cloaked = cloaked;
     }
 
-    public void cloak(){
+    public void cloak() {
         setCloaked(true);
 
-        for(User u : plugin.getUsers()){
-            if(this == u) continue;
+        for (User u : plugin.getUsers()) {
+            if (this == u) continue;
 
             u.getPlayer().hidePlayer(player);
         }
     }
 
-    public User getFireAttacker(){
+    public User getFireAttacker() {
         return plugin.getUser(fireAttacker);
     }
 
-    public User getWitherAttacker(){
-        return plugin.getUser(witherAttacker);
-    }
-
-    public User getLastAttacker(){
-        return plugin.getUser(lastAttacker);
-    }
-
-    public void setFireAttacker(User fireAttacker){
+    public void setFireAttacker(User fireAttacker) {
         this.fireAttacker = fireAttacker.getPlayer().getUniqueId();
     }
 
-    public void setWitherAttacker(User witherAttacker){
+    public Player getPlayer() {
+        return player;
+    }
+
+    public User getWitherAttacker() {
+        return plugin.getUser(witherAttacker);
+    }
+
+    public void setWitherAttacker(User witherAttacker) {
         this.witherAttacker = witherAttacker.getPlayer().getUniqueId();
     }
 
-    public void setLastAttacker(User lastAttacker){
+    public User getLastAttacker() {
+        return plugin.getUser(lastAttacker);
+    }
+
+    public void setLastAttacker(User lastAttacker) {
         this.lastAttacker = lastAttacker.getPlayer().getUniqueId();
     }
 
-    public void decloak(){
-        setCloaked(false);
+    public void setFireTicks(User attacker, int ticks) {
+        fireAttacker = attacker.getPlayer().getUniqueId();
+        player.setFireTicks(ticks);
+    }
 
-        for(User u : plugin.getUsers()){
-            if(this == u) continue;
+    public void setWitherTicks(User attacker, int ticks) {
+        witherAttacker = attacker.getPlayer().getUniqueId();
+        player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, ticks, 0, false, true), true);
+    }
 
-            u.getPlayer().showPlayer(player);
-        }
+    public Block rayTraceBlocks(int distance) {
+        return player.getTargetBlock(SEE_THROUGH, distance);
+    }
+
+    public void addPlayerCash(int cash) {
+        playerCash += cash;
+        updateScoreboard();
     }
 
     public void updateScoreboard() {
@@ -178,7 +186,7 @@ public class User {
         if (inGame) {
             removeScoreboardObjective(scoreboard, "map");
             updateInGameScoreboard(scoreboard);
-        } else if(!plugin.isInGame()){
+        } else if (!plugin.isInGame()) {
             removeScoreboardObjective(scoreboard, "main");
             updateMapScoreboard(scoreboard);
         } else {
@@ -188,39 +196,14 @@ public class User {
 
     }
 
-    public void setFireTicks(User attacker, int ticks){
-        fireAttacker = attacker.getPlayer().getUniqueId();
-        player.setFireTicks(ticks);
-    }
-
-    public void setWitherTicks(User attacker, int ticks){
-        witherAttacker = attacker.getPlayer().getUniqueId();
-        player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, ticks, 0, false, true), true);
-    }
-
-    public Block rayTraceBlocks(int distance){
-        return player.getTargetBlock(SEE_THROUGH, distance);
-    }
-
-    private void updateMapScoreboard(Scoreboard scoreboard){
-        Objective mapObjective = scoreboard.getObjective("map");
-        if(mapObjective == null){
-            mapObjective = scoreboard.registerNewObjective("map", "dummy");
-            mapObjective.setDisplayName(ChatColor.DARK_AQUA + "Map Voting");
-            mapObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        }
-
-        for(String map : plugin.getMapList()){
-            int votes = plugin.getMapVotes(map);
-
-            if(votes == 0) mapObjective.getScoreboard().resetScores(map);
-            else {
-                mapObjective.getScore(map).setScore(votes);
-            }
+    private void removeScoreboardObjective(Scoreboard scoreboard, String name) {
+        Objective mainObjective = scoreboard.getObjective(name);
+        if (mainObjective != null) {
+            mainObjective.unregister();
         }
     }
 
-    private void updateInGameScoreboard(Scoreboard scoreboard){
+    private void updateInGameScoreboard(Scoreboard scoreboard) {
         Objective mainObjective = scoreboard.getObjective("main");
         if (mainObjective == null) {
             mainObjective = scoreboard.registerNewObjective("main", "dummy");
@@ -249,15 +232,25 @@ public class User {
             oldBuildingNows.add(entry.getKey());
         }
 
-        if (team.getRespawnChance() > 0) {
-            mainObjective.getScore(ChatColor.AQUA + "Revival Rate:").setScore(team.getRespawnChance());
-        }
+        mainObjective.getScore(ChatColor.AQUA + "Revival Rate:").setScore(team.getRespawnChance());
+
     }
 
-    private void removeScoreboardObjective(Scoreboard scoreboard, String name){
-        Objective mainObjective = scoreboard.getObjective(name);
-        if(mainObjective != null){
-            mainObjective.unregister();
+    private void updateMapScoreboard(Scoreboard scoreboard) {
+        Objective mapObjective = scoreboard.getObjective("map");
+        if (mapObjective == null) {
+            mapObjective = scoreboard.registerNewObjective("map", "dummy");
+            mapObjective.setDisplayName(ChatColor.DARK_AQUA + "Map Voting");
+            mapObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        }
+
+        for (String map : plugin.getMapList()) {
+            int votes = plugin.getMapVotes(map);
+
+            if (votes == 0) mapObjective.getScoreboard().resetScores(map);
+            else {
+                mapObjective.getScore(map).setScore(votes);
+            }
         }
     }
 
@@ -265,13 +258,8 @@ public class User {
         return playerCash;
     }
 
-    public Player getPlayer() {
-        return player;
-    }
-
-    public void addPlayerCash(int cash) {
-        playerCash += cash;
-        updateScoreboard();
+    public Team getTeam() {
+        return plugin.getTeam(teamColor);
     }
 
     public void setUpgradeLevel(String upgrade, int level) {
@@ -313,10 +301,6 @@ public class User {
         player.sendMessage(WarsPlugin.CHAT_PREFIX + message);
     }
 
-    public void messageLocale(String locale, Object...objects){
-        message(plugin.getLocale(locale, objects));
-    }
-
     public void stopCoolDown(String ability, String message) {
         if (!isCoolingDown(ability)) return;
 
@@ -325,6 +309,10 @@ public class User {
         if (message == null) return;
         message(ChatColor.GREEN + message);
         player.playSound(player.getLocation(), Sound.ZOMBIE_UNFECT, 1.0f, 2.0f);
+    }
+
+    public void messageLocale(String locale, Object... objects) {
+        message(plugin.getLocale(locale, objects));
     }
 
     public boolean subtractPlayerCash(int cash) {
@@ -339,7 +327,7 @@ public class User {
         return true;
     }
 
-    public void openShopInventory(Location shopBlock){
+    public void openShopInventory(Location shopBlock) {
         this.shopBlock = shopBlock;
 
         Building building = plugin.getGameInstance().getBuildingInfo(shopBlock);
@@ -348,12 +336,12 @@ public class User {
             return;
         }
 
-        if(getTeamColor() != building.getTeamColor()){
+        if (getTeamColor() != building.getTeamColor()) {
             message(plugin.getLocale("building-not-yours"));
             return;
         }
 
-        if(!building.isFinished()){
+        if (!building.isFinished()) {
             message(plugin.getLocale("building-not-finished"));
             return;
         }
@@ -363,19 +351,23 @@ public class User {
         player.openInventory(this.shopInventory);
     }
 
+    public TeamColor getTeamColor() {
+        return teamColor;
+    }
+
     public void redoShopInventory() {
         if (shopBlock == null) return;
 
         Building building = plugin.getGameInstance().getBuildingInfo(shopBlock);
         if (building == null || shopBlock.getBlock().getType() != Material.OBSIDIAN) {
-            if(shopInventory != null) player.closeInventory();
+            if (shopInventory != null) player.closeInventory();
             return;
         }
 
         List<ItemStack> contents = calculateInventoryContents(building);
 
         int index = 0;
-        if(shopInventory != null) shopInventory.clear();
+        if (shopInventory != null) shopInventory.clear();
         else {
             int slots = 9 * ((contents.size() + 9) / 9);
             shopInventory = Bukkit.createInventory(player, slots, building.getBuildingName());
@@ -384,81 +376,6 @@ public class User {
         for (ItemStack item : contents) {
             shopInventory.setItem(index++, item);
         }
-    }
-
-    public void removeFromGame(){
-        if(!isInGame()) return;
-
-        Team team = getTeam();
-        setTeamColor(null);
-        setInGame(false);
-
-        plugin.messageAll(ChatColor.GOLD + "The " + team.getTeamColor().name + ChatColor.GOLD +
-                " has lost a player!");
-        plugin.messageAll(ChatColor.GOLD + "There are now " + ChatColor.DARK_AQUA + team.getPlayerCount() +
-                ChatColor.GOLD + " players left on the " + team.getTeamColor().name + ChatColor.GOLD + " Team");
-
-        if(team.getPlayerCount() == 0){
-            team.eliminate();
-        }
-
-        plugin.getGameInstance().checkVictory(true);
-
-        plugin.getGameInstance().updateSpectatorInventories();
-
-        setSpectator();
-    }
-
-    public void resetPlayerStats(boolean removePotionEffects){
-        player.setMaxHealth(plugin.getMaxHealth());
-        player.setHealth(plugin.getMaxHealth());
-        player.setFoodLevel(20);
-        player.setSaturation(5);
-
-        if(removePotionEffects) removePotionEffects();
-    }
-
-    public void createPlayerExplosion(Location loc, float power, boolean fire, int fuse){
-        TNTPrimed tnt = (TNTPrimed) loc.getWorld().spawnEntity(loc, EntityType.PRIMED_TNT);
-
-        tnt.setMetadata("striker", new FixedMetadataValue(plugin, player.getUniqueId()));
-
-        tnt.setIsIncendiary(fire);
-        tnt.setYield(power);
-
-        tnt.setFuseTicks(fuse);
-    }
-
-    public void removePotionEffects(){
-        List<PotionEffect> effects = new ArrayList<>(player.getActivePotionEffects());
-
-        for (PotionEffect effect : effects) {
-            player.removePotionEffect(effect.getType());
-        }
-
-        player.setFireTicks(0);
-    }
-
-    public void setSpectator() {
-        if(isInGame()) throw new RuntimeException("You cannot be a spectator when you are already in a game");
-
-        cloak();
-        resetPlayerStats(true);
-
-        player.setAllowFlight(true);
-        player.spigot().setCollidesWithEntities(false);
-        clearArmor();
-
-        plugin.getGameInstance().setupSpectatorInventory(player);
-
-        updateScoreboard();
-    }
-
-    public void unsetSpectator(){
-        player.setAllowFlight(false);
-        player.spigot().setCollidesWithEntities(true);
-
-        decloak();
     }
 
     private List<ItemStack> calculateInventoryContents(Building building) {
@@ -474,30 +391,18 @@ public class User {
         return contents;
     }
 
-    public TeamColor getTeamColor() {
-        return teamColor;
-    }
-
-    public Team getTeam(){
-        return plugin.getTeam(teamColor);
-    }
-
-    public PlayerClass getPlayerClass() {
-        return playerClass;
-    }
-
-    public void setPlayerClass(PlayerClass playerClass) {
-        this.playerClass = playerClass;
+    public PlayerClassHandler getPlayerClassHandler() {
+        return plugin.getPlayerClassHandler(playerClass);
     }
 
     public void setTeamColor(TeamColor teamColor) {
-        if(this.teamColor != null){
+        if (this.teamColor != null) {
             getTeam().removePlayer(player);
         }
 
         this.teamColor = teamColor;
 
-        if(this.teamColor != null){
+        if (this.teamColor != null) {
             getTeam().addPlayer(player);
         }
 
@@ -508,12 +413,106 @@ public class User {
         else clearArmor();
     }
 
+    public void removeFromGame() {
+        if (!isInGame()) return;
+
+        Team team = getTeam();
+        setTeamColor(null);
+        setInGame(false);
+
+        plugin.messageAll(ChatColor.GOLD + "The " + team.getTeamColor().name + ChatColor.GOLD +
+                " has lost a player!");
+        plugin.messageAll(ChatColor.GOLD + "There are now " + ChatColor.DARK_AQUA + team.getPlayerCount() +
+                ChatColor.GOLD + " players left on the " + team.getTeamColor().name + ChatColor.GOLD + " Team");
+
+        if (team.getPlayerCount() == 0) {
+            team.eliminate();
+        }
+
+        plugin.getGameInstance().checkVictory(true);
+
+        plugin.getGameInstance().updateSpectatorInventories();
+
+        setSpectator();
+    }
+
+    public void resetPlayerStats(boolean removePotionEffects) {
+        player.setMaxHealth(plugin.getMaxHealth());
+        player.setHealth(plugin.getMaxHealth());
+        player.setFoodLevel(20);
+        player.setSaturation(5);
+
+        if (removePotionEffects) removePotionEffects();
+    }
+
+    public void createPlayerExplosion(Location loc, float power, boolean fire, int fuse) {
+        TNTPrimed tnt = (TNTPrimed) loc.getWorld().spawnEntity(loc, EntityType.PRIMED_TNT);
+
+        tnt.setMetadata("striker", new FixedMetadataValue(plugin, player.getUniqueId()));
+
+        tnt.setIsIncendiary(fire);
+        tnt.setYield(power);
+
+        tnt.setFuseTicks(fuse);
+    }
+
+    public void removePotionEffects() {
+        List<PotionEffect> effects = new ArrayList<>(player.getActivePotionEffects());
+
+        for (PotionEffect effect : effects) {
+            player.removePotionEffect(effect.getType());
+        }
+
+        player.setFireTicks(0);
+    }
+
+    public void setSpectator() {
+        if (isInGame()) throw new RuntimeException("You cannot be a spectator when you are already in a game");
+
+        cloak();
+        resetPlayerStats(true);
+
+        player.setAllowFlight(true);
+        player.spigot().setCollidesWithEntities(false);
+        clearArmor();
+
+        plugin.getGameInstance().setupSpectatorInventory(player);
+
+        updateScoreboard();
+    }
+
+    public void unsetSpectator() {
+        player.setAllowFlight(false);
+        player.spigot().setCollidesWithEntities(true);
+
+        decloak();
+    }
+
+    public void decloak() {
+        setCloaked(false);
+
+        for (User u : plugin.getUsers()) {
+            if (this == u) continue;
+
+            u.getPlayer().showPlayer(player);
+        }
+    }
+
+    public PlayerClass getPlayerClass() {
+        return playerClass;
+    }
+
+    public void setPlayerClass(PlayerClass playerClass) {
+        this.playerClass = playerClass;
+    }
+
     public String getFormattedName() {
         if (teamColor == null) return player.getName();
 
         return teamColor.chatColor + player.getName();
     }
-    public void clearArmor(){
+
+    public void clearArmor() {
         PlayerInventory inv = player.getInventory();
 
         inv.setHelmet(null);
@@ -522,13 +521,13 @@ public class User {
         inv.setBoots(null);
     }
 
-    public boolean teleport(Location location){
+    public boolean teleport(Location location) {
         return player.teleport(location);
     }
 
     public void updateTeamArmor() {
-        if(!plugin.isInGame()) return;
-        if(teamColor == null){
+        if (!plugin.isInGame()) return;
+        if (teamColor == null) {
             clearArmor();
             return;
         }
@@ -571,22 +570,22 @@ public class User {
         return shopInventory;
     }
 
-    public void shopInventoryClosed(){
+    public void shopInventoryClosed() {
         shopInventory = null;
         shopBlock = null;
     }
 
+    public String getMapVote() {
+        return mapVote;
+    }
+
     public void setMapVote(String mapVote) {
-        if(this.mapVote != null) plugin.setMapVotes(this.mapVote, plugin.getMapVotes(this.mapVote) - 1);
+        if (this.mapVote != null) plugin.setMapVotes(this.mapVote, plugin.getMapVotes(this.mapVote) - 1);
 
         this.mapVote = mapVote;
 
-        if(this.mapVote != null) plugin.setMapVotes(this.mapVote, plugin.getMapVotes(this.mapVote) + 1);
+        if (this.mapVote != null) plugin.setMapVotes(this.mapVote, plugin.getMapVotes(this.mapVote) + 1);
 
         plugin.getUsers().forEach(User::updateScoreboard);
-    }
-
-    public String getMapVote() {
-        return mapVote;
     }
 }

@@ -1,11 +1,13 @@
 package com.ithinkrok.mccw.playerclass;
 
-import com.ithinkrok.mccw.data.Team;
-import com.ithinkrok.mccw.data.User;
-import com.ithinkrok.mccw.event.*;
-import com.ithinkrok.mccw.inventory.BuyableInventory;
+import com.ithinkrok.mccw.event.ItemPurchaseEvent;
+import com.ithinkrok.mccw.event.UserTeamBuildingBuiltEvent;
+import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.inventory.ItemBuyable;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
+import com.ithinkrok.mccw.playerclass.items.ArrayCalculator;
+import com.ithinkrok.mccw.playerclass.items.ClassItem;
+import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Material;
@@ -19,27 +21,28 @@ import org.bukkit.inventory.PlayerInventory;
  * <p>
  * Handles the archer class
  */
-public class ArcherClass extends BuyableInventory implements PlayerClassHandler {
+public class ArcherClass extends ClassItemClassHandler {
 
     public ArcherClass(FileConfiguration config) {
-        super(new UpgradeBuyable(InventoryUtils
-                        .createItemWithEnchantments(Material.BOW, 1, 0, "Bow Upgrade 1", null, Enchantment.ARROW_KNOCKBACK, 1,
-                                Enchantment.ARROW_DAMAGE, 1), Buildings.LUMBERMILL, config.getInt("costs.archer.bow1"), "bow",
-                        1), new UpgradeBuyable(InventoryUtils
-                        .createItemWithEnchantments(Material.BOW, 1, 0, "Bow Upgrade 2", null, Enchantment.ARROW_KNOCKBACK, 2,
-                                Enchantment.ARROW_DAMAGE, 3), Buildings.LUMBERMILL, config.getInt("costs.archer.bow2"), "bow",
-                        2), new UpgradeBuyable(InventoryUtils
-                        .createItemWithEnchantments(Material.WOOD_SWORD, 1, 0, "Sword Upgrade 1", null, Enchantment.DAMAGE_ALL,
-                                1, Enchantment.KNOCKBACK, 1), Buildings.LUMBERMILL, config.getInt("costs.archer.sword1"),
-                        "sword", 1), new UpgradeBuyable(InventoryUtils
-                        .createItemWithEnchantments(Material.WOOD_SWORD, 1, 0, "Sword Upgrade 2", null, Enchantment.DAMAGE_ALL,
-                                2, Enchantment.KNOCKBACK, 2), Buildings.LUMBERMILL, config.getInt("costs.archer.sword2"),
-                        "sword", 2),
+        super(new ClassItem(Material.BOW, null).withUpgradeBuildings(Buildings.LUMBERMILL)
+                        .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
+                        new ClassItem.EnchantmentEffect(Enchantment.ARROW_KNOCKBACK, "bow", new LinearCalculator(0, 1)),
+                        new ClassItem.EnchantmentEffect(Enchantment.ARROW_DAMAGE, "bow", new ArrayCalculator(0, 1, 3)))
+                        .withUpgradables(new ClassItem.Upgradable("bow", "Bow Upgrade %s", 2,
+                                configArrayCalculator(config, "costs.archer.bow", 2))),
+                new ClassItem(Material.WOOD_SWORD, null).withUpgradeBuildings(Buildings.LUMBERMILL)
+                        .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
+                        new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sword", new LinearCalculator(0, 1)),
+                        new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "sword", new LinearCalculator(0, 1)))
+                        .withUpgradables(new ClassItem.Upgradable("sword", "Sword Upgrade %s", 2,
+                                configArrayCalculator(config, "costs.archer.sword", 2))));
+
+        addExtraBuyables(
                 new UpgradeBuyable(InventoryUtils.createItemWithNameAndLore(Material.ARROW, 64, 0, "Arrow Upgrade 1"),
                         Buildings.LUMBERMILL, config.getInt("costs.archer.arrows1"), "arrows", 1), new ItemBuyable(
                         InventoryUtils.createItemWithNameAndLore(Material.ARROW, 1, 0, "Arrow Upgrade 2",
                                 "Gives you 192 arrows. Can be purchased multiple times"),
-                        new ItemStack(Material.ARROW, 64), Buildings.LUMBERMILL, config.getInt("costs.archer.arrows1"),
+                        new ItemStack(Material.ARROW, 64), Buildings.LUMBERMILL, config.getInt("costs.archer.arrows2"),
                         false, true) {
                     @Override
                     public void onPurchase(ItemPurchaseEvent event) {
@@ -53,52 +56,23 @@ public class ArcherClass extends BuyableInventory implements PlayerClassHandler 
                 });
     }
 
-
     @Override
     public void onBuildingBuilt(UserTeamBuildingBuiltEvent event) {
+        super.onBuildingBuilt(event);
         if (!Buildings.LUMBERMILL.equals(event.getBuilding().getBuildingName())) return;
 
         PlayerInventory inv = event.getUserInventory();
-
-        inv.addItem(new ItemStack(Material.BOW));
-        inv.addItem(new ItemStack(Material.WOOD_SWORD));
         inv.addItem(new ItemStack(Material.ARROW, 32));
     }
 
     @Override
-    public void onUserBeginGame(UserBeginGameEvent event) {
-
-    }
-
-    @Override
-    public boolean onInteract(UserInteractEvent event) {
-        return false;
-    }
-
-    @Override
     public void onPlayerUpgrade(UserUpgradeEvent event) {
+        super.onPlayerUpgrade(event);
         switch (event.getUpgradeName()) {
-            case "bow":
-                int power = event.getUpgradeLevel() == 2 ? 3 : 1;
-                ItemStack bow = new ItemStack(Material.BOW);
-                InventoryUtils.enchantItem(bow, Enchantment.ARROW_KNOCKBACK, event.getUpgradeLevel(),
-                        Enchantment.ARROW_DAMAGE, power);
-                InventoryUtils.replaceItem(event.getUserInventory(), bow);
-                break;
-            case "sword":
-                ItemStack sword = new ItemStack(Material.WOOD_SWORD);
-                InventoryUtils.enchantItem(sword, Enchantment.DAMAGE_ALL, event.getUpgradeLevel(), Enchantment.KNOCKBACK,
-                        event.getUpgradeLevel());
-                InventoryUtils.replaceItem(event.getUserInventory(), sword);
-                break;
             case "arrows":
                 event.getUserInventory().addItem(new ItemStack(Material.ARROW, 64));
                 break;
         }
     }
 
-    @Override
-    public void onUserAttack(UserAttackEvent event) {
-
-    }
 }

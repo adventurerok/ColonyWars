@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -101,7 +102,10 @@ public class ClassItem {
                 upgradeLevels.put(upgradable.upgradeName, level);
 
                 ItemStack display = createItemFromUpgradeLevels(upgradeLevels);
-                display.getItemMeta().setDisplayName(String.format(upgradable.upgradeDisplayName, level));
+
+                ItemMeta displayMeta = display.getItemMeta();
+                displayMeta.setDisplayName(String.format(upgradable.upgradeDisplayName, level));
+                display.setItemMeta(displayMeta);
 
                 Buyable buyable =
                         new ClassItemBuyable(display, upgradeBuildings[0], (int) upgradable.upgradeCost.calculate(level),

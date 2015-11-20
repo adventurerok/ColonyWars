@@ -10,6 +10,7 @@ permissions:
       mccw.test: true
       mccw.gamestate: true
       mccw.members: true
+      mccw.spawn: true
     default: "op"
   mccw.test:
     description: "Allows use of the test command"
@@ -17,6 +18,9 @@ permissions:
     description: "Allows use of the gamestate command"
   mccw.members:
     description: "allows use of the members command"
+    default: true
+  mccw.spawn:
+    description: "Allows use of the spawn command"
     default: true
 commands:
   transfer:
@@ -37,3 +41,8 @@ commands:
     aliases: ["mbrs", "players", "team", "plrs", "classes"]
     usage: "/members"
     permission: "mccw.members"
+  spawn:
+    description: "If you are in the lobby, teleports you to the center"
+    aliases: ["center"]
+    usage: "/spawn"
+    permission: "mccw.spawn"

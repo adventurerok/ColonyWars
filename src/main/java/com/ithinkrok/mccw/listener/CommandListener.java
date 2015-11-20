@@ -47,10 +47,22 @@ public class CommandListener implements CommandExecutor {
                 return onGameStateCommand(user, args);
             case "members":
                 return onMembersCommand(user);
+            case "spawn":
+                return onSpawnCommand(user);
             default:
                 return false;
         }
 
+    }
+
+    private boolean onSpawnCommand(User user) {
+        if(user.isInGame()) {
+            user.messageLocale("no-command-in-game");
+            return true;
+        }
+
+        user.teleport(plugin.getMapSpawn(null));
+        return true;
     }
 
     private boolean onMembersCommand(User user) {

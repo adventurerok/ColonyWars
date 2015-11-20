@@ -302,3 +302,4 @@ locale:
   not-in-team: "§cYou are not in a team yet."
   player-info: "§6%s§6: §3%s§6, Location: §3%s"
   team-members: "§6§lMembers of your team:"
+  no-command-in-game: "§cYou cannot use this command while in game."

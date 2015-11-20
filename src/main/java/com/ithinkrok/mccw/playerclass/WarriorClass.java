@@ -21,21 +21,20 @@ import org.bukkit.entity.Wolf;
 public class WarriorClass extends ClassItemClassHandler {
 
     public WarriorClass(WarsPlugin plugin, FileConfiguration config) {
-        super(new ClassItem(Material.IRON_SWORD).withUpgradeBuildings(Buildings.BLACKSMITH)
+        super(new ClassItem(plugin.getLangFile(), Material.IRON_SWORD).withUpgradeBuildings(Buildings.BLACKSMITH)
                         .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
                         new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sharpness",
                                 new LinearCalculator(0, 1)),
                         new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "knockback", new LinearCalculator(0, 1)))
-                        .withUpgradables(new ClassItem.Upgradable("sharpness", plugin.getLocale("upgrades.sharpness.name"), 2,
+                        .withUpgradables(new ClassItem.Upgradable("sharpness", "upgrades.sharpness.name", 2,
                                         configArrayCalculator(config, "costs.warrior.sharpness", 2)),
-                                new ClassItem.Upgradable("knockback", plugin.getLocale("upgrades.knockback.name"), 2,
+                                new ClassItem.Upgradable("knockback", "upgrades.knockback.name", 2,
                                         configArrayCalculator(config, "costs.warrior.knockback", 2))),
-                new ClassItem(Material.GOLD_HELMET, plugin.getLocale("items.wolf-wand.name"))
+                new ClassItem(plugin.getLangFile(), Material.GOLD_HELMET, "items.wolf-wand.name")
                         .withUpgradeBuildings(Buildings.BLACKSMITH).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new WolfWand())
-                        .withRightClickCooldown("wolf", new LinearCalculator(120, -30),
-                                plugin.getLocale("cooldowns.wolf.finished")).withUpgradables(
-                        new ClassItem.Upgradable("wolf", plugin.getLocale("upgrades.wolf-wand.name"), 2,
+                        .withRightClickCooldown("wolf", new LinearCalculator(120, -30), "cooldowns.wolf.finished")
+                        .withUpgradables(new ClassItem.Upgradable("wolf", "upgrades.wolf-wand.name", 2,
                                 configArrayCalculator(config, "costs.warrior.wolf", 2))));
     }
 

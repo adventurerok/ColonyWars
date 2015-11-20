@@ -29,25 +29,23 @@ import java.util.List;
 public class PriestClass extends ClassItemClassHandler {
 
     public PriestClass(WarsPlugin plugin, FileConfiguration config) {
-        super(new ClassItem(Material.DIAMOND_BOOTS, plugin.getLocale("items.healing-scroll.name"))
+        super(new ClassItem(plugin.getLangFile(), Material.DIAMOND_BOOTS, "items.healing-scroll.name")
                         .withUpgradeBuildings(Buildings.CATHEDRAL).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new HealingScroll(plugin))
-                        .withRightClickCooldown("healing", new LinearCalculator(240, -90),
-                                plugin.getLocale("cooldowns.healing.finished")).withUpgradables(
-                        new ClassItem.Upgradable("healing", plugin.getLocale("upgrades.healing-scroll.name"), 2,
+                        .withRightClickCooldown("healing", new LinearCalculator(240, -90), "cooldowns.healing.finished")
+                        .withUpgradables(new ClassItem.Upgradable("healing", "upgrades.healing-scroll.name", 2,
                                 configArrayCalculator(config, "costs.priest.healing", 2))),
-                new ClassItem(Material.GOLD_CHESTPLATE, plugin.getLocale("items.earth-bender.name"))
+                new ClassItem(plugin.getLangFile(), Material.GOLD_CHESTPLATE, "items.earth-bender.name")
                         .withUpgradeBuildings(Buildings.CATHEDRAL).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new EarthBenderRightClick())
-                        .withRightClickCooldown("bender", new LinearCalculator(45, -15),
-                                plugin.getLocale("cooldowns.bender.finished"))
+                        .withRightClickCooldown("bender", new LinearCalculator(45, -15), "cooldowns.bender.finished")
                         .withLeftClickAction(new EarthBenderLeftClick()).withUpgradables(
-                        new ClassItem.Upgradable("bender", plugin.getLocale("upgrades.earth-bender.name"), 2,
+                        new ClassItem.Upgradable("bender", "upgrades.earth-bender.name", 2,
                                 configArrayCalculator(config, "costs.priest.bender", 2))),
-                new ClassItem(Material.GOLD_LEGGINGS, plugin.getLocale("items.cross.name"))
+                new ClassItem(plugin.getLangFile(), Material.GOLD_LEGGINGS, "items.cross.name")
                         .withUpgradeBuildings(Buildings.CATHEDRAL).withUnlockOnBuildingBuild(true).withWeaponModifier(
                         new ClassItem.WeaponModifier("cross").withDamageCalculator(new LinearCalculator(2, 1)))
-                        .withUpgradables(new ClassItem.Upgradable("cross", plugin.getLocale("upgrades.cross.name"), 2,
+                        .withUpgradables(new ClassItem.Upgradable("cross", "upgrades.cross.name", 2,
                                 configArrayCalculator(config, "costs.priest.cross", 2))));
     }
 

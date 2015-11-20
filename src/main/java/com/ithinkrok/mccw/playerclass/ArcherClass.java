@@ -25,17 +25,17 @@ import org.bukkit.inventory.PlayerInventory;
 public class ArcherClass extends ClassItemClassHandler {
 
     public ArcherClass(WarsPlugin plugin, FileConfiguration config) {
-        super(new ClassItem(Material.BOW).withUpgradeBuildings(Buildings.LUMBERMILL).withUnlockOnBuildingBuild(true)
-                        .withEnchantmentEffects(
-                                new ClassItem.EnchantmentEffect(Enchantment.ARROW_KNOCKBACK, "bow", new LinearCalculator(0, 1)),
-                                new ClassItem.EnchantmentEffect(Enchantment.ARROW_DAMAGE, "bow", new ArrayCalculator(0, 1, 3)))
-                        .withUpgradables(new ClassItem.Upgradable("bow", plugin.getLocale("upgrades.bow.name"), 2,
+        super(new ClassItem(plugin.getLangFile(), Material.BOW).withUpgradeBuildings(Buildings.LUMBERMILL)
+                        .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
+                        new ClassItem.EnchantmentEffect(Enchantment.ARROW_KNOCKBACK, "bow", new LinearCalculator(0, 1)),
+                        new ClassItem.EnchantmentEffect(Enchantment.ARROW_DAMAGE, "bow", new ArrayCalculator(0, 1, 3)))
+                        .withUpgradables(new ClassItem.Upgradable("bow", "upgrades.bow.name", 2,
                                 configArrayCalculator(config, "costs.archer.bow", 2))),
-                new ClassItem(Material.WOOD_SWORD).withUpgradeBuildings(Buildings.LUMBERMILL)
+                new ClassItem(plugin.getLangFile(), Material.WOOD_SWORD).withUpgradeBuildings(Buildings.LUMBERMILL)
                         .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
                         new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sword", new LinearCalculator(0, 1)),
                         new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "sword", new LinearCalculator(0, 1)))
-                        .withUpgradables(new ClassItem.Upgradable("sword", plugin.getLocale("upgrades.wood-sword.name"), 2,
+                        .withUpgradables(new ClassItem.Upgradable("sword", "upgrades.wood-sword.name", 2,
                                 configArrayCalculator(config, "costs.archer.sword", 2))));
 
         addExtraBuyables(new UpgradeBuyable(InventoryUtils

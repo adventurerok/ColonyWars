@@ -16,18 +16,17 @@ import org.bukkit.enchantments.Enchantment;
 public class PeasantClass extends ClassItemClassHandler {
 
     public PeasantClass(WarsPlugin plugin, FileConfiguration config) {
-        super(new ClassItem(Material.IRON_AXE, plugin.getLocale("items.peasant-axe.name")).withUnlockOnGameStart(true)
-                        .withEnchantmentEffects(
-                                new ClassItem.EnchantmentEffect(Enchantment.DIG_SPEED, "axe", new LinearCalculator(2, 0))),
-                new ClassItem(Material.WOOD_SWORD).withUpgradeBuildings(Buildings.LUMBERMILL)
+        super(new ClassItem(plugin.getLangFile(), Material.IRON_AXE, "items.peasant-axe.name")
+                        .withUnlockOnGameStart(true).withEnchantmentEffects(
+                        new ClassItem.EnchantmentEffect(Enchantment.DIG_SPEED, "axe", new LinearCalculator(2, 0))),
+                new ClassItem(plugin.getLangFile(), Material.WOOD_SWORD).withUpgradeBuildings(Buildings.LUMBERMILL)
                         .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
                         new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sharpness",
                                 new LinearCalculator(0, 1)),
                         new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "knockback", new LinearCalculator(0, 1)))
-                        .withUpgradables(
-                                new ClassItem.Upgradable("sharpness", plugin.getLocale("upgrades.sharpness.name"), 2,
+                        .withUpgradables(new ClassItem.Upgradable("sharpness", "upgrades.sharpness.name", 2,
                                         configArrayCalculator(config, "costs.peasant.sharpness", 2)),
-                                new ClassItem.Upgradable("knockback", plugin.getLocale("upgrades.knockback.name"), 2,
+                                new ClassItem.Upgradable("knockback", "upgrades.knockback.name", 2,
                                         configArrayCalculator(config, "costs.peasant.knockback", 2))));
     }
 

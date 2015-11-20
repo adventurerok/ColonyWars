@@ -5,6 +5,7 @@ import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.inventory.Buyable;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.util.InventoryUtils;
+import com.ithinkrok.mccw.util.LangFile;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -40,14 +41,16 @@ public class ClassItem {
     private Upgradable[] upgradables;
     private EnchantmentEffect[] enchantmentEffects;
     private String signature;
+    private LangFile langFile;
 
-    public ClassItem(Material itemMaterial){
-        this(itemMaterial, null);
+    public ClassItem(LangFile langFile, Material itemMaterial) {
+        this(langFile, itemMaterial, null);
     }
 
-    public ClassItem(Material itemMaterial, String itemDisplayName) {
+    public ClassItem(LangFile langFile, Material itemMaterial, String itemDisplayLang) {
+        this.langFile = langFile;
         this.itemMaterial = itemMaterial;
-        this.itemDisplayName = itemDisplayName;
+        this.itemDisplayName = langFile.getLocale(itemDisplayLang);
 
         signature = UUID.randomUUID().toString();
     }
@@ -55,6 +58,7 @@ public class ClassItem {
     /**
      * Sets the buildings that the item can be upgraded in.
      * If unlockOnBuildingBuild is true, the item will be given to the player when one of these buildings is built.
+     *
      * @param upgradeBuildings The buildings that the user can upgrade the item in.
      * @return The updated ClassItem object
      */
@@ -69,7 +73,7 @@ public class ClassItem {
         return this;
     }
 
-    public ClassItem withUnlockOnGameStart(boolean unlockOnGameStart){
+    public ClassItem withUnlockOnGameStart(boolean unlockOnGameStart) {
         this.unlockOnGameStart = unlockOnGameStart;
         return this;
     }
@@ -89,11 +93,11 @@ public class ClassItem {
         return this;
     }
 
-    public ClassItem withRightClickCooldown(String upgradeName, Calculator rightClickCooldown, String
-            cooldownFinished) {
+    public ClassItem withRightClickCooldown(String upgradeName, Calculator rightClickCooldown,
+                                            String cooldownFinishedLang) {
         this.rightClickCooldownUpgrade = upgradeName;
         this.rightClickCooldown = rightClickCooldown;
-        this.rightClickCooldownFinished = cooldownFinished;
+        this.rightClickCooldownFinished = langFile.getLocale(cooldownFinishedLang);
         return this;
     }
 
@@ -108,7 +112,7 @@ public class ClassItem {
     }
 
     public void addBuyablesToList(List<Buyable> buyables) {
-        if(upgradables == null) return;
+        if (upgradables == null) return;
 
         for (Upgradable upgradable : upgradables) {
             for (int level = 1; level <= upgradable.maxLevel; ++level) {
@@ -118,12 +122,11 @@ public class ClassItem {
                 ItemStack display = createItemFromUpgradeLevels(upgradeLevels);
 
                 ItemMeta displayMeta = display.getItemMeta();
-                displayMeta.setDisplayName(String.format(upgradable.upgradeDisplayName, level));
+                displayMeta.setDisplayName(langFile.getLocale(upgradable.upgradeDisplayLang, level));
                 display.setItemMeta(displayMeta);
 
-                Buyable buyable =
-                        new ClassItemBuyable(display, upgradeBuildings[0], (int) upgradable.upgradeCost.calculate(level),
-                                upgradable.upgradeName, level);
+                Buyable buyable = new ClassItemBuyable(display, upgradeBuildings[0],
+                        (int) upgradable.upgradeCost.calculate(level), upgradable.upgradeName, level);
 
                 for (int buildingIndex = 1; buildingIndex < upgradeBuildings.length; ++buildingIndex) {
                     buyable.withAdditionalBuildings(upgradeBuildings[buildingIndex]);
@@ -134,42 +137,16 @@ public class ClassItem {
         }
     }
 
-    public void onUserBeginGame(UserBeginGameEvent event) {
-        if(!unlockOnGameStart) return;
-
-        giveUserItem(event.getUser());
-    }
-
-    private class ClassItemBuyable extends UpgradeBuyable {
-
-        public ClassItemBuyable(ItemStack display, String buildingName, int cost, String upgradeName,
-                                int upgradeLevel) {
-            super(display, buildingName, cost, upgradeName, upgradeLevel);
-        }
-
-        @Override
-        public void onPurchase(ItemPurchaseEvent event) {
-            giveUserItem(event.getUser());
-            super.onPurchase(event);
-        }
-    }
-
-    private void giveUserItem(User user){
-        setUserHasItem(user);
-        InventoryUtils.replaceItem(user.getPlayerInventory(), createItemForUser(user));
-    }
-
     private ItemStack createItemFromUpgradeLevels(Map<String, Integer> upgradeLevels) {
         List<String> lore = new ArrayList<>();
 
         if (weaponModifier != null) {
-            weaponModifier.addLoreItems(lore, upgradeLevels);
+            weaponModifier.addLoreItems(langFile, lore, upgradeLevels);
         }
 
         if (rightClickCooldown != null) {
-            lore.add("Cooldown: " +
-                    rightClickCooldown.calculate(getUpgradeLevel(upgradeLevels, rightClickCooldownUpgrade)) +
-                    " seconds");
+            double seconds = rightClickCooldown.calculate(getUpgradeLevel(upgradeLevels, rightClickCooldownUpgrade));
+            lore.add(langFile.getLocale("lore.cooldown", seconds));
         }
 
         String[] loreArray = new String[lore.size()];
@@ -177,7 +154,7 @@ public class ClassItem {
 
         ItemStack item = InventoryUtils.createItemWithNameAndLore(itemMaterial, 1, 0, itemDisplayName, loreArray);
 
-        if(enchantmentEffects != null) {
+        if (enchantmentEffects != null) {
             for (EnchantmentEffect enchantmentEffect : enchantmentEffects) {
                 int level = getUpgradeLevel(upgradeLevels, enchantmentEffect.upgradeName);
                 int enchantmentLevel = (int) enchantmentEffect.levelCalculator.calculate(level);
@@ -196,6 +173,25 @@ public class ClassItem {
         else return level;
     }
 
+    public void onUserBeginGame(UserBeginGameEvent event) {
+        if (!unlockOnGameStart) return;
+
+        giveUserItem(event.getUser());
+    }
+
+    private void giveUserItem(User user) {
+        setUserHasItem(user);
+        InventoryUtils.replaceItem(user.getPlayerInventory(), createItemForUser(user));
+    }
+
+    private void setUserHasItem(User user) {
+        user.setUpgradeLevel(signature, 1);
+    }
+
+    public ItemStack createItemForUser(User user) {
+        return createItemFromUpgradeLevels(user.getUpgradeLevels());
+    }
+
     public void onBuildingBuilt(UserTeamBuildingBuiltEvent event) {
         if (!unlockOnBuildingBuild) return;
         if (userHasItem(event.getUser())) return;
@@ -207,14 +203,6 @@ public class ClassItem {
 
     private boolean userHasItem(User user) {
         return user.getUpgradeLevel(signature) != 0;
-    }
-
-    private void setUserHasItem(User user) {
-        user.setUpgradeLevel(signature, 1);
-    }
-
-    public ItemStack createItemForUser(User user) {
-        return createItemFromUpgradeLevels(user.getUpgradeLevels());
     }
 
     public void onUserUpgrade(UserUpgradeEvent event) {
@@ -265,15 +253,15 @@ public class ClassItem {
     public boolean onInteract(UserInteractEvent event) {
         if (!event.isRightClick()) {
             return leftClickAction != null && leftClickAction.onInteractWorld(event);
-        } else{
-            if(rightClickAction == null) return false;
-            if(rightClickCooldown != null && event.getUser().isCoolingDown(rightClickCooldownUpgrade)){
-                event.getUser().message(ChatColor.RED + "Please wait for this ability to cool down!");
+        } else {
+            if (rightClickAction == null) return false;
+            if (rightClickCooldown != null && event.getUser().isCoolingDown(rightClickCooldownUpgrade)) {
+                event.getUser().messageLocale("cooldowns.default.wait");
                 return true;
             }
             boolean done = rightClickAction.onInteractWorld(event);
 
-            if(done && rightClickCooldown != null) {
+            if (done && rightClickCooldown != null) {
                 int cooldown =
                         (int) rightClickCooldown.calculate(event.getUser().getUpgradeLevel(rightClickCooldownUpgrade));
                 event.getUser().startCoolDown(rightClickCooldownUpgrade, cooldown, rightClickCooldownFinished);
@@ -327,29 +315,29 @@ public class ClassItem {
             return this;
         }
 
-        public void addLoreItems(List<String> lore, Map<String, Integer> upgradeLevels) {
+        public void addLoreItems(LangFile lang, List<String> lore, Map<String, Integer> upgradeLevels) {
             int upgradeLevel = getUpgradeLevel(upgradeLevels, upgradeName);
 
-            if (damageCalculator != null) lore.add("Damage: " + damageCalculator.calculate(upgradeLevel) + " Hearts");
-            if (fireCalculator != null)
-                lore.add("Fire Duration: " + fireCalculator.calculate(upgradeLevel) + " seconds");
+            if (damageCalculator != null)
+                lore.add(lang.getLocale("lore.damage", damageCalculator.calculate(upgradeLevel)));
+            if (fireCalculator != null) lore.add(lang.getLocale("lore.fire", fireCalculator.calculate(upgradeLevel)));
             if (nauseaCalculator != null)
-                lore.add("Nausea Duration: " + nauseaCalculator.calculate(upgradeLevel) + " seconds");
+                lore.add(lang.getLocale("lore.nausea", nauseaCalculator.calculate(upgradeLevel)));
             if (witherCalculator != null)
-                lore.add("Wither Duration: " + witherCalculator.calculate(upgradeLevel) + " seconds");
+                lore.add(lang.getLocale("lore.wither", witherCalculator.calculate(upgradeLevel)));
         }
 
     }
 
     public static class Upgradable {
         private String upgradeName;
-        private String upgradeDisplayName;
+        private String upgradeDisplayLang;
         private int maxLevel;
         private Calculator upgradeCost;
 
-        public Upgradable(String upgradeName, String upgradeDisplayName, int maxLevel, Calculator upgradeCost) {
+        public Upgradable(String upgradeName, String upgradeDisplayLang, int maxLevel, Calculator upgradeCost) {
             this.upgradeName = upgradeName;
-            this.upgradeDisplayName = upgradeDisplayName;
+            this.upgradeDisplayLang = upgradeDisplayLang;
             this.maxLevel = maxLevel;
             this.upgradeCost = upgradeCost;
         }
@@ -364,6 +352,20 @@ public class ClassItem {
             this.enchantment = enchantment;
             this.upgradeName = upgradeName;
             this.levelCalculator = levelCalculator;
+        }
+    }
+
+    private class ClassItemBuyable extends UpgradeBuyable {
+
+        public ClassItemBuyable(ItemStack display, String buildingName, int cost, String upgradeName,
+                                int upgradeLevel) {
+            super(display, buildingName, cost, upgradeName, upgradeLevel);
+        }
+
+        @Override
+        public void onPurchase(ItemPurchaseEvent event) {
+            giveUserItem(event.getUser());
+            super.onPurchase(event);
         }
     }
 }

@@ -16,13 +16,13 @@ import org.bukkit.enchantments.Enchantment;
 public class GeneralClass extends ClassItemClassHandler {
 
     public GeneralClass(WarsPlugin plugin, FileConfiguration config) {
-        super(new ClassItem(Material.DIAMOND_SWORD).withUpgradeBuildings(Buildings.BLACKSMITH)
+        super(new ClassItem(plugin.getLangFile(), Material.DIAMOND_SWORD).withUpgradeBuildings(Buildings.BLACKSMITH)
                 .withUnlockOnBuildingBuild(true).
                         withEnchantmentEffects(new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sword",
                                         new LinearCalculator(0, 1)),
                                 new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "sword",
                                         new LinearCalculator(5, 0))).withUpgradables(
-                        new ClassItem.Upgradable("sword", plugin.getLocale("upgrades.diamond-sword.name"), 2,
+                        new ClassItem.Upgradable("sword", "upgrades.diamond-sword.name", 2,
                                 configArrayCalculator(config, "costs.general.sword", 2))));
     }
 

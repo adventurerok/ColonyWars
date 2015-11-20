@@ -82,6 +82,8 @@ cooldowns.healing.finished=&aThe healing scroll is ready to use again.
 cooldowns.wolf.finished=&aThe wolf wand is ready to use again.
 cooldowns.regen.finished=&aYour regeneration ability has cooled down!
 
+cooldowns.default.wait=&cPlease wait for this ability to cool down!
+
 #class-upgrades
 upgrades.sharpness.name=Sharpness Upgrade %s
 upgrades.knockback.name=Knockback Upgrade %s
@@ -117,6 +119,15 @@ items.player-compass.oriented=Oriented at: %s
 items.player-compass.no-player=No One
 items.regen-ability.name=Regeneration Ability
 items.wolf-wand.name=Wolf Wand
+
+#lore
+lore.cooldown=Cooldown: %s seconds
+lore.damage=Damage: %s Hearts
+lore.fire=Fire Duration: %s seconds
+lore.nausea=Nausea Duration: %s seconds
+lore.wither=Wither Duration: %s seconds
+
+#ability
 
 #combat
 combat.player.killed=&6%s &6was killed by %s

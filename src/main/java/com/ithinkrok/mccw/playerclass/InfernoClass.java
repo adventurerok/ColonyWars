@@ -20,17 +20,17 @@ import org.bukkit.inventory.ItemStack;
 public class InfernoClass extends ClassItemClassHandler {
 
     public InfernoClass(WarsPlugin plugin, FileConfiguration config) {
-        super(new ClassItem(Material.IRON_CHESTPLATE, plugin.getLocale("items.explosion-wand.name"))
+        super(new ClassItem(plugin.getLangFile(), Material.IRON_CHESTPLATE, "items.explosion-wand.name")
                         .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
-                        .withRightClickAction(new ExplosionWand()).withRightClickCooldown("wand", new LinearCalculator(25, -10),
-                        plugin.getLocale("cooldowns.explosion.finished")).withUpgradables(
-                        new ClassItem.Upgradable("wand", plugin.getLocale("upgrades.explosion-wand.name"), 2,
+                        .withRightClickAction(new ExplosionWand())
+                        .withRightClickCooldown("wand", new LinearCalculator(25, -10), "cooldowns.explosion.finished")
+                        .withUpgradables(new ClassItem.Upgradable("wand", "upgrades.explosion-wand.name", 2,
                                 configArrayCalculator(config, "costs.inferno.wand", 2))),
-                new ClassItem(Material.DIAMOND_HELMET, plugin.getLocale("items.flame-sword.name"))
+                new ClassItem(plugin.getLangFile(), Material.DIAMOND_HELMET, "items.flame-sword.name")
                         .withUpgradeBuildings(Buildings.BLACKSMITH).withUnlockOnBuildingBuild(true).withWeaponModifier(
                         new ClassItem.WeaponModifier("flame").withDamageCalculator(new LinearCalculator(1, 1.5))
                                 .withFireCalculator(new LinearCalculator(4, 0))).withUpgradables(
-                        new ClassItem.Upgradable("flame", plugin.getLocale("upgrades.flame-sword.name"), 2,
+                        new ClassItem.Upgradable("flame", "upgrades.flame-sword.name", 2,
                                 configArrayCalculator(config, "costs.inferno.flame", 2))));
 
         addExtraBuyables(new ItemBuyable(new ItemStack(Material.TNT, 16), Buildings.BLACKSMITH,

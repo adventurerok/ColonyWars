@@ -26,26 +26,25 @@ import org.bukkit.potion.PotionEffectType;
 public class ScoutClass extends ClassItemClassHandler {
 
     public ScoutClass(WarsPlugin plugin, FileConfiguration config) {
-        super(new ClassItem(Material.WOOD_SWORD).withUpgradeBuildings(Buildings.LUMBERMILL)
+        super(new ClassItem(plugin.getLangFile(), Material.WOOD_SWORD).withUpgradeBuildings(Buildings.LUMBERMILL)
                         .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
                         new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sharpness",
                                 new LinearCalculator(0, 1)),
                         new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "knockback", new LinearCalculator(0, 1)))
-                        .withUpgradables(new ClassItem.Upgradable("sharpness", plugin.getLocale("upgrades.sharpness.name"), 2,
+                        .withUpgradables(new ClassItem.Upgradable("sharpness", "upgrades.sharpness.name", 2,
                                         configArrayCalculator(config, "costs.scout.sharpness", 2)),
-                                new ClassItem.Upgradable("knockback", plugin.getLocale("upgrades.knockback.name"), 2,
+                                new ClassItem.Upgradable("knockback", "upgrades.knockback.name", 2,
                                         configArrayCalculator(config, "costs.scout.knockback", 2))),
-                new ClassItem(Material.COMPASS, plugin.getLocale("items.player-compass.name"))
+                new ClassItem(plugin.getLangFile(), Material.COMPASS, "items.player-compass.name")
                         .withUpgradeBuildings(Buildings.CHURCH, Buildings.CATHEDRAL)
                         .withRightClickAction(new ScoutCompass(plugin)).withUpgradables(
-                        new ClassItem.Upgradable("compass", plugin.getLocale("items.player-compass.name"), 1,
+                        new ClassItem.Upgradable("compass", "items.player-compass.name", 1,
                                 new LinearCalculator(config.getDouble("costs.scout.compass"), 0))),
-                new ClassItem(Material.CHAINMAIL_HELMET, plugin.getLocale("items.regen-ability.name"))
+                new ClassItem(plugin.getLangFile(), Material.CHAINMAIL_HELMET, "items.regen-ability.name")
                         .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new RegenAbility())
-                        .withRightClickCooldown("regen", new LinearCalculator(35, 10),
-                                plugin.getLocale("cooldowns.regen.finished")).withUpgradables(
-                        new ClassItem.Upgradable("regen", plugin.getLocale("upgrades.regen-ability.name"), 1,
+                        .withRightClickCooldown("regen", new LinearCalculator(35, 10), "cooldowns.regen.finished")
+                        .withUpgradables(new ClassItem.Upgradable("regen", "upgrades.regen-ability.name", 1,
                                 new LinearCalculator(config.getDouble("costs.scout.regen"), 0))));
     }
 

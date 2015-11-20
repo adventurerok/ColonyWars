@@ -300,4 +300,4 @@ locale:
   player-get-wool: "§dYou now have the wool. Right click someone to transfer it to them!"
   player-win-parcour: "§3%s §6has completed the parcour and will start next game with $1000 extra!"
   not-in-team: "§cYou are not in a team yet."
-  player-info: "§6%s§6: Class: §3%s§6, Nearest-Base: §3%s"
+  player-info: "§6%s§6: §3%s§6, Base: §3%s"

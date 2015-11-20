@@ -4,9 +4,16 @@ main: "com.ithinkrok.mccw.WarsPlugin"
 author: "ithinkrok"
 depend: ["HologramAPI", "ProtocolLib"]
 permissions:
+  mccw.*:
+    description: "Gives access to all MCCW commands"
+    children:
+      mccw.test: true
+      mccw.gamestate: true
+    default: "op"
   mccw.test:
     description: "Allows use of the test command"
-    default: "op"
+  mccw.gamestate:
+    description: "Allows use of the gamestate command"
 commands:
   transfer:
     description: "Transfers money from your account to your team's account"
@@ -16,3 +23,8 @@ commands:
     description: "ColonyWars test command"
     usage: "/test <test> [test arguments...]"
     permission: "mccw.test"
+  gamestate:
+    description: "Changes the game state"
+    aliases: ["gs"]
+    usage: "/gamestate <newstate>"
+    permission: "mccw.gamestate"

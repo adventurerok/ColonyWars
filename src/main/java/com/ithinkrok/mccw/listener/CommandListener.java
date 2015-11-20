@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
 
 /**
  * Created by paul on 13/11/15.
- *
+ * <p>
  * Handles commands for Colony Wars
  */
 public class CommandListener implements CommandExecutor {
@@ -35,6 +35,7 @@ public class CommandListener implements CommandExecutor {
         }
 
         Player player = (Player) sender;
+        User user = plugin.getUser(player);
 
         switch (command.getName().toLowerCase()) {
             case "transfer":
@@ -43,7 +44,6 @@ public class CommandListener implements CommandExecutor {
                 try {
                     int amount = Integer.parseInt(args[0]);
 
-                    User user = plugin.getUser(player);
                     if (!user.subtractPlayerCash(amount)) {
                         user.message(ChatColor.RED + "You do not have that amount of money");
                         return true;
@@ -65,7 +65,17 @@ public class CommandListener implements CommandExecutor {
 
             case "test":
                 return args.length >= 1 && onTestCommand(player, args);
+            case "gamestate":
+                try {
+                    GameState gameState = GameState.valueOf(args[0].toUpperCase());
+                    plugin.changeGameState(gameState);
+                    user.message("Changed gamestate to: " + gameState);
+                } catch (Exception e) {
+                    user.message("Invalid gamestate!");
+                    return false;
+                }
 
+                return true;
             default:
                 return false;
         }
@@ -108,22 +118,6 @@ public class CommandListener implements CommandExecutor {
                         .addItem(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 16, 0, args[1]));
 
                 user.message("Added 16 " + args[1] + " build blocks to your inventory");
-                break;
-            case "start_game":
-                user.message("Attempting to start a new game!");
-
-                plugin.changeGameState(GameState.GAME);
-
-                break;
-            case "start_showdown":
-                user.message("Attempting to start showdown");
-
-                plugin.changeGameState(GameState.SHOWDOWN);
-                break;
-            case "end_game":
-                user.message("Attempting to end the game!");
-
-                plugin.changeGameState(GameState.LOBBY);
                 break;
             case "base_location":
                 Team team = user.getTeam();

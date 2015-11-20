@@ -1,5 +1,7 @@
 package com.ithinkrok.mccw.util;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -9,14 +11,27 @@ import java.util.Properties;
  */
 public class LangFile {
 
-    private Properties properties;
+    private Map<Object, String> languageStrings = new HashMap<>();
 
     public LangFile(Properties properties) {
-        this.properties = properties;
+        for(Object key : properties.keySet()){
+            String value = properties.getProperty(key.toString());
+            value = value.replace('&', '§');
+            languageStrings.put(key, value);
+        }
     }
 
     public String getLocale(String locale){
-        return properties.getProperty(locale, locale);
+        String result = languageStrings.get(locale);
+
+        if(result == null){
+            System.out.println("Missing language string for: " + locale);
+
+            languageStrings.put(locale, locale);
+            return locale;
+        }
+
+        return result;
     }
 
     public String getLocale(String locale, Object...args){

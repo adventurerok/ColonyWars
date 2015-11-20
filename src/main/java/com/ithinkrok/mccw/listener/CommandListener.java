@@ -59,6 +59,8 @@ public class CommandListener implements CommandExecutor {
             return true;
         }
 
+        user.messageLocale("team-members");
+
         Team team = user.getTeam();
 
         for(Player player : team.getPlayers()){
@@ -88,7 +90,8 @@ public class CommandListener implements CommandExecutor {
                 nearestBase = "Not in game";
             }
 
-            user.messageLocale("player-info", name, playerClass, nearestBase);
+            //Send the player a message directly to avoid the chat prefix
+            user.getPlayer().sendMessage(plugin.getLocale("player-info", name, playerClass, nearestBase));
         }
 
         return true;

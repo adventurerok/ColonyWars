@@ -9,11 +9,15 @@ permissions:
     children:
       mccw.test: true
       mccw.gamestate: true
+      mccw.members: true
     default: "op"
   mccw.test:
     description: "Allows use of the test command"
   mccw.gamestate:
     description: "Allows use of the gamestate command"
+  mccw.members:
+    description: "allows use of the members command"
+    default: true
 commands:
   transfer:
     description: "Transfers money from your account to your team's account"
@@ -28,3 +32,8 @@ commands:
     aliases: ["gs"]
     usage: "/gamestate <newstate>"
     permission: "mccw.gamestate"
+  members:
+    description: "Lists the members of your team"
+    aliases: ["mbrs", "players", "team", "plrs", "classes"]
+    usage: "/members"
+    permission: "mccw.members"

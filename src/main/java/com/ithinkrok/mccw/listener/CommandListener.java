@@ -8,6 +8,7 @@ import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -39,51 +40,99 @@ public class CommandListener implements CommandExecutor {
 
         switch (command.getName().toLowerCase()) {
             case "transfer":
-                if (args.length < 1) return false;
-
-                try {
-                    int amount = Integer.parseInt(args[0]);
-
-                    if (!user.subtractPlayerCash(amount)) {
-                        user.message(ChatColor.RED + "You do not have that amount of money");
-                        return true;
-                    }
-
-                    Team team = user.getTeam();
-                    team.addTeamCash(amount);
-
-                    team.message(user.getFormattedName() + ChatColor.DARK_AQUA + " transferred " +
-                            ChatColor.GREEN + "$" + amount +
-                            ChatColor.YELLOW + " to your team's account!");
-                    team.message("Your Team's new Balance is: " + ChatColor.GREEN + "$" + team.getTeamCash() +
-                            ChatColor.YELLOW + "!");
-
-                    return true;
-                } catch (NumberFormatException e) {
-                    return false;
-                }
-
+                return onTransferCommand(user, args);
             case "test":
-                return args.length >= 1 && onTestCommand(player, args);
+                return args.length >= 1 && onTestCommand(user, args);
             case "gamestate":
-                try {
-                    GameState gameState = GameState.valueOf(args[0].toUpperCase());
-                    plugin.changeGameState(gameState);
-                    user.message("Changed gamestate to: " + gameState);
-                } catch (Exception e) {
-                    user.message("Invalid gamestate!");
-                    return false;
-                }
-
-                return true;
+                return onGameStateCommand(user, args);
+            case "members":
+                return onMembersCommand(user);
             default:
                 return false;
         }
 
     }
 
-    private boolean onTestCommand(Player player, String[] args) {
-        User user = plugin.getUser(player);
+    private boolean onMembersCommand(User user) {
+        if(user.getTeamColor() == null){
+            user.messageLocale("not-in-team");
+            return true;
+        }
+
+        Team team = user.getTeam();
+
+        for(Player player : team.getPlayers()){
+            User other = plugin.getUser(player);
+
+            String name = other.getFormattedName();
+            String playerClass = other.getPlayerClass() == null ? "None" : other.getPlayerClass().getName();
+
+            String nearestBase = null;
+            if(plugin.isInGame()){
+                double smallestDistSquared = 99999999;
+
+                for(TeamColor teamColor : TeamColor.values()){
+                    Location loc = plugin.getMapSpawn(teamColor);
+                    double distSquared = loc.distanceSquared(player.getLocation());
+
+                    if(distSquared < smallestDistSquared){
+                        smallestDistSquared = distSquared;
+                        nearestBase = teamColor.name;
+                    }
+                }
+
+                if(plugin.getMapSpawn(null).distanceSquared(player.getLocation()) < smallestDistSquared){
+                    nearestBase = nearestBase + " (Near showdown arena)";
+                }
+            } else {
+                nearestBase = "Not in game";
+            }
+
+            user.messageLocale("player-info", name, playerClass, nearestBase);
+        }
+
+        return true;
+    }
+
+    private boolean onTransferCommand(User user, String[] args) {
+        if (args.length < 1) return false;
+
+        try {
+            int amount = Integer.parseInt(args[0]);
+
+            if (!user.subtractPlayerCash(amount)) {
+                user.message(ChatColor.RED + "You do not have that amount of money");
+                return true;
+            }
+
+            Team team = user.getTeam();
+            team.addTeamCash(amount);
+
+            team.message(user.getFormattedName() + ChatColor.DARK_AQUA + " transferred " +
+                    ChatColor.GREEN + "$" + amount +
+                    ChatColor.YELLOW + " to your team's account!");
+            team.message("Your Team's new Balance is: " + ChatColor.GREEN + "$" + team.getTeamCash() +
+                    ChatColor.YELLOW + "!");
+
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private boolean onGameStateCommand(User user, String[] args){
+        try {
+            GameState gameState = GameState.valueOf(args[0].toUpperCase());
+            plugin.changeGameState(gameState);
+            user.message("Changed gamestate to: " + gameState);
+            return true;
+        } catch (Exception e) {
+            user.message("Invalid gamestate!");
+            return false;
+        }
+    }
+
+    private boolean onTestCommand(User user, String[] args) {
 
         switch (args[0]) {
             case "team":
@@ -114,7 +163,7 @@ public class CommandListener implements CommandExecutor {
             case "build":
                 if (args.length < 2) return false;
 
-                player.getInventory()
+                user.getPlayerInventory()
                         .addItem(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 16, 0, args[1]));
 
                 user.message("Added 16 " + args[1] + " build blocks to your inventory");

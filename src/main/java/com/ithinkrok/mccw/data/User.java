@@ -332,17 +332,17 @@ public class User {
 
         Building building = plugin.getGameInstance().getBuildingInfo(shopBlock);
         if (building == null || shopBlock.getBlock().getType() != Material.OBSIDIAN) {
-            message(plugin.getLocale("obsidian-not-building"));
+            message(plugin.getLocale("building.invalid"));
             return;
         }
 
         if (getTeamColor() != building.getTeamColor()) {
-            message(plugin.getLocale("building-not-yours"));
+            message(plugin.getLocale("building.not-yours"));
             return;
         }
 
         if (!building.isFinished()) {
-            message(plugin.getLocale("building-not-finished"));
+            message(plugin.getLocale("building.not-finished"));
             return;
         }
 

@@ -46,7 +46,7 @@ public class SpectatorInventory implements InventoryHandler {
 
             ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
             InventoryUtils.setItemNameAndLore(head, info.getFormattedName(),
-                    plugin.getLocale("spectate-player", info.getFormattedName()));
+                    plugin.getLocale("spectators.player.name", info.getFormattedName()));
 
 
             SkullMeta skullMeta = (SkullMeta) head.getItemMeta();

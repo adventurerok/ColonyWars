@@ -92,9 +92,9 @@ public class WarsGameListener implements Listener {
         user.setSpectator();
         user.getPlayer().teleport(plugin.getMapSpawn(null));
 
-        user.message(plugin.getLocale("game-in-progress"));
-        user.message(plugin.getLocale("game-wait-next"));
-        user.message(plugin.getLocale("spectate-heads"));
+        user.message(plugin.getLocale("spectators.game.in-progress"));
+        user.message(plugin.getLocale("spectators.game.wait-next"));
+        user.message(plugin.getLocale("spectators.players.chose"));
     }
 
     @EventHandler
@@ -458,12 +458,12 @@ public class WarsGameListener implements Listener {
 
         User killerInfo = killer == null ? null : plugin.getUser(killer);
         if (killerInfo != null) {
-            if (intentionally) plugin.messageAll(plugin.getLocale("player-killed-player", diedInfo.getFormattedName(),
+            if (intentionally) plugin.messageAll(plugin.getLocale("combat.player.killed", diedInfo.getFormattedName(),
                     killerInfo.getFormattedName()));
-            else plugin.messageAll(plugin.getLocale("player-died-last-attacker", diedInfo.getFormattedName(),
+            else plugin.messageAll(plugin.getLocale("combat.player.died-fighting", diedInfo.getFormattedName(),
                     killerInfo.getFormattedName()));
         } else {
-            plugin.messageAll(plugin.getLocale("player-died", diedInfo.getFormattedName()));
+            plugin.messageAll(plugin.getLocale("combat.player.death", diedInfo.getFormattedName()));
         }
 
         Team diedTeam = diedInfo.getTeam();

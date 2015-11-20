@@ -57,7 +57,7 @@ public class CommandListener implements CommandExecutor {
 
     private boolean onSpawnCommand(User user) {
         if(user.isInGame()) {
-            user.messageLocale("no-command-in-game");
+            user.messageLocale("commands.spawn.not-in-game");
             return true;
         }
 
@@ -67,11 +67,11 @@ public class CommandListener implements CommandExecutor {
 
     private boolean onMembersCommand(User user) {
         if(user.getTeamColor() == null){
-            user.messageLocale("not-in-team");
+            user.messageLocale("commands.members.no-team");
             return true;
         }
 
-        user.messageLocale("team-members");
+        user.messageLocale("commands.members.title");
 
         Team team = user.getTeam();
 
@@ -103,7 +103,7 @@ public class CommandListener implements CommandExecutor {
             }
 
             //Send the player a message directly to avoid the chat prefix
-            user.getPlayer().sendMessage(plugin.getLocale("player-info", name, playerClass, nearestBase));
+            user.getPlayer().sendMessage(plugin.getLocale("commands.members.player-info", name, playerClass, nearestBase));
         }
 
         return true;

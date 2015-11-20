@@ -23,7 +23,7 @@ public class InfernoClass extends ClassItemClassHandler {
         super(new ClassItem(Material.IRON_CHESTPLATE, "Explosion Wand").withUpgradeBuildings(Buildings.MAGETOWER)
                         .withUnlockOnBuildingBuild(true).withRightClickAction(new ExplosionWand())
                         .withRightClickCooldown("wand", new LinearCalculator(25, -10),
-                                plugin.getLocale("explosion-wand-cooldown")).withUpgradables(
+                                plugin.getLocale("cooldowns.explosion.finished")).withUpgradables(
                         new ClassItem.Upgradable("wand", "Explosion Wand Upgrade %s", 2,
                                 configArrayCalculator(config, "costs.inferno.wand", 2))),
                 new ClassItem(Material.DIAMOND_HELMET, "Flame Sword").withUpgradeBuildings(Buildings.BLACKSMITH)

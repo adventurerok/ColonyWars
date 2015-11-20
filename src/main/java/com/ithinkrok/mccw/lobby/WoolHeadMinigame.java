@@ -37,8 +37,8 @@ public class WoolHeadMinigame implements LobbyMinigame {
         user.getPlayerInventory().setHelmet(new ItemStack(Material.WOOL, 1, DyeColor.PINK.getWoolData()));
         woolUserUniqueId = user.getUniqueId();
 
-        plugin.messageAllLocale("player-given-wool", user.getFormattedName());
-        user.messageLocale("player-get-wool");
+        plugin.messageAllLocale("minigames.wool.initial", user.getFormattedName());
+        user.messageLocale("minigames.wool.given");
     }
 
     @Override
@@ -66,8 +66,8 @@ public class WoolHeadMinigame implements LobbyMinigame {
         woolUser.getPlayerInventory()
                 .setHelmet(new ItemStack(Material.WOOL, 1, DyeColor.PINK.getWoolData()));
 
-        plugin.messageAllLocale("player-given-wool", woolUser.getFormattedName());
-        woolUser.messageLocale("player-get-wool");
+        plugin.messageAllLocale("minigames.wool.initial", woolUser.getFormattedName());
+        woolUser.messageLocale("minigames.wool.given");
     }
 
     @Override
@@ -80,7 +80,7 @@ public class WoolHeadMinigame implements LobbyMinigame {
         newUser.getPlayerInventory().setHelmet(new ItemStack(Material.WOOL, 1, DyeColor.PINK.getWoolData()));
         woolUserUniqueId = newUser.getUniqueId();
 
-        plugin.messageAllLocale("player-transfer-wool", user.getFormattedName(), newUser.getFormattedName());
+        plugin.messageAllLocale("minigames.wool.transfer", user.getFormattedName(), newUser.getFormattedName());
 
         return true;
     }

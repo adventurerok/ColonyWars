@@ -32,13 +32,13 @@ public class PriestClass extends ClassItemClassHandler {
         super(new ClassItem(Material.DIAMOND_BOOTS, "Healing Scroll").withUpgradeBuildings(Buildings.CATHEDRAL)
                         .withUnlockOnBuildingBuild(true).withRightClickAction(new HealingScroll(plugin))
                         .withRightClickCooldown("healing", new LinearCalculator(240, -90),
-                                plugin.getLocale("healing-scroll-cooldown")).withUpgradables(
+                                plugin.getLocale("cooldowns.healing.finished")).withUpgradables(
                         new ClassItem.Upgradable("healing", "Healing Scroll Upgrade %s", 2,
                                 configArrayCalculator(config, "costs.priest.healing", 2))),
                 new ClassItem(Material.GOLD_CHESTPLATE, "Earth Bender").withUpgradeBuildings(Buildings.CATHEDRAL)
                         .withUnlockOnBuildingBuild(true).withRightClickAction(new EarthBenderRightClick())
                         .withRightClickCooldown("bender", new LinearCalculator(45, -15),
-                                plugin.getLocale("earth-bender-cooldown"))
+                                plugin.getLocale("cooldowns.bender.finished"))
                         .withLeftClickAction(new EarthBenderLeftClick()).withUpgradables(
                         new ClassItem.Upgradable("bender", "Earth Bender Upgrade %s", 2,
                                 configArrayCalculator(config, "costs.priest.bender", 2))),

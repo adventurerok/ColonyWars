@@ -199,18 +199,21 @@ public class WarsPlugin extends JavaPlugin {
 
         inv.clear();
 
-        inv.addItem(InventoryUtils.createItemWithNameAndLore(Material.LEATHER_HELMET, 1, 0, getLocale("team-chooser"),
-                getLocale("team-chooser-desc")));
+        inv.addItem(InventoryUtils.createItemWithNameAndLore(Material.LEATHER_HELMET, 1, 0, getLocale(
+                "lobby.chooser.team.name"),
+                getLocale("lobby.chooser.team.desc")));
 
-        inv.addItem(InventoryUtils.createItemWithNameAndLore(Material.WOOD_SWORD, 1, 0, getLocale("class-chooser"),
-                getLocale("class-chooser-desc")));
+        inv.addItem(InventoryUtils.createItemWithNameAndLore(Material.WOOD_SWORD, 1, 0, getLocale(
+                "lobby.chooser.class.name"),
+                getLocale("lobby.chooser.class.desc")));
 
-        inv.addItem(InventoryUtils.createItemWithNameAndLore(Material.EMPTY_MAP, 1, 0, getLocale("map-chooser"),
-                getLocale("map-chooser-desc")));
+        inv.addItem(InventoryUtils.createItemWithNameAndLore(Material.EMPTY_MAP, 1, 0, getLocale(
+                "lobby.chooser.map.name"),
+                getLocale("lobby.chooser.map.desc")));
 
-        user.message(getLocale("choose-team-class"));
+        user.message(getLocale("lobby.info.choose-class"));
 
-        user.message(getLocale("map-info"));
+        user.message(getLocale("lobby.info.map-info"));
 
         player.teleport(getLobbySpawn());
 
@@ -416,7 +419,7 @@ public class WarsPlugin extends JavaPlugin {
             bestMap = mapList.get(random.nextInt(mapList.size()));
         }
 
-        messageAll(getLocale("map-chosen", bestMap));
+        messageAll(getLocale("voting.maps.map-winner", bestMap));
 
         return bestMap;
     }

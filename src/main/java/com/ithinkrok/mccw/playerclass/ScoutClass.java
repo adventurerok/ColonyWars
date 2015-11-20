@@ -44,7 +44,7 @@ public class ScoutClass extends ClassItemClassHandler {
                         .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new RegenAbility())
                         .withRightClickCooldown("regen", new LinearCalculator(35, 10),
-                                plugin.getLocale("regen-ability-cooldown")).withUpgradables(
+                                plugin.getLocale("cooldowns.regen.finished")).withUpgradables(
                         new ClassItem.Upgradable("regen", "Regen Ability Upgrade", 1,
                                 new LinearCalculator(config.getDouble("costs.scout.regen"), 0))));
     }

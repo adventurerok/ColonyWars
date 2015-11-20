@@ -1,70 +1,94 @@
-map-chooser=Map Voter
-map-chooser-desc=Vote for a map
-canyon-desc=A canyon separates the four teams bases...
-forest_hills-desc=Teams separated by forest and hills.
-random-desc=Vote for a random map
-class-chooser=Class Chooser
-general-desc=Fights with a diamond sword
-scout-desc=Runs fast and has a player locator
-archer-desc=Fights with a bow!
-cloaker-desc=Can go invisible for short periods of time
-mage-desc=Can strike lightning and use harming potions
-peasant-desc=Has an enchanted iron axe to get money faster
-inferno-desc=Has an explosion wand and TNT
-dark_knight-desc=Wields the darkness sword...
-priest-desc=Has a healing scroll and earth bender
-warrior-desc=Summons wolves and fights with an upgradable iron sword
-team-chooser=Team Chooser
-team-desc=%s Team
-team-already-member=&cYou are already in the %s &cTeam
-team-full=&cThe %s &cTeam is full. Try another
-team-joined=&6You will be in the %s &6Team in the next game!
-class-selected=&6You will be a %s &6in the next game!
-team-chooser-desc=Choose your team
-class-chooser-desc=Choose your class
-choose-team-class=&2Choose your team/class or it is chosen randomly
-map-info=&2Map voting is now available!
-start-minute-warning=&7Game starting in&6 %s &7Minutes..
-start-seconds-warning=&7Game starting in&6 %s &7Seconds..
-start-final-warning=&6%s&7!
-showdown-minute-warning=&6&lShowdown starts in=%s minutes!
-showdown-seconds-warning=&6&lShowdown starts in=%s seconds!
-showdown-final-warning=&6&lShowdown starts in=%s seconds!
-end-minute-warning=&e&lGame ending in&c&l %s minutes!
-end-seconds-warning=&e&lGame ending in&c&l %s seconds!
-end-final-warning=&e&lGame ending in&c&l %s seconds!
-player-join-game=%s &7joined the server &8[&7%s&8/&7%s&8]
-player-quit-game=%s &7left the server &8[&7%s&8/&7%s&8]
-not-enough-players=&7Not enough Players Online for Game to start!
-game-in-progress=&4There is already a game in progress!
-game-wait-next=&6You can play when the current game ends
-spectate-heads=&6Choose a player to spectate from your inventory
-spectate-player=&dSpectate %s
-building-shop=&a%s Shop
-click-to-open=&f&oClick to Open
-obsidian-not-building=&cThat obsidian block does not appear to be a shop.
-building-not-yours=&eThat building does not belong to your team. &lMine this block to destroy it!
-building-not-finished=&cPlease wait until the construction has finished.
-ender-wand-cooldown=&aThe ender wand is ready to use again.
-lightning-wand-cooldown=&aThe lightning wand is ready to use again.
-explosion-wand-cooldown=&aThe explosion wand is ready to use again.
-earth-bender-cooldown=&aThe earth bender is ready to use again.
-healing-scroll-cooldown=&aThe healing scroll is ready to use again.
-wolf-wand-cooldown=&aThe wolf wand is ready to use again.
-regen-ability-cooldown=&aYour regeneration ability has cooled down!
-map-voted=&6You have voted for &3%s&6!
-map-already-voted=&cYou already voted for &3%s&c!
-player-voted=&6%s &6voted for &3%s&3!
-player-vote-change=&6%s &6changed their vote from &3%s&6 to &3%s&6!
-map-chosen=&6Playing map=&3%s
-player-killed-player=&6%s &6was killed by %s
-player-died-last-attacker=&6%s &6died while fighting %s&6!
-player-died=&6%s &6died!
-player-given-wool=&3%s &dwas given the wool!
-player-transfer-wool=&3%s &dtransferred the wool to &3%s!
-player-get-wool=&dYou now have the wool. Right click someone to transfer it to them!
-player-win-parcour=&3%s &6has completed the parcour and will start next game with $1000 extra!
-not-in-team=&cYou are not in a team yet.
-player-info=&6%s&6=&3%s&6, Location=&3%s
-team-members=&6&lMembers of your team:
-no-command-in-game=&cYou cannot use this command while in game.
+#--LOBBY--
+lobby.chooser.map.name=Map Voter
+lobby.chooser.map.desc=Vote for a map
+lobby.chooser.class.name=Class Chooser
+lobby.chooser.team.name=Team Chooser
+team.name=%s Team
+team.join.already-member=&cYou are already in the %s &cTeam
+team.join.full=&cThe %s &cTeam is full. Try another
+team.join.success=&6You will be in the %s &6Team in the next game!
+class.join.success=&6You will be a %s &6in the next game!
+lobby.chooser.team.desc=Choose your team
+lobby.chooser.class.desc=Choose your class
+lobby.info.choose-class=&2Choose your team/class or it is chosen randomly
+lobby.info.map-info=&2Map voting is now available!
+lobby.info.not-enough-players=&7Not enough Players Online for Game to start!
+
+#map-descriptions
+maps.canyon.desc=A canyon separates the four teams bases...
+maps.forest_hills.desc=Teams separated by forest and hills.
+maps.random.desc=Vote for a random map
+
+#class-descriptions
+classes.general.desc=Fights with a diamond sword
+classes.scout.desc=Runs fast and has a player locator
+classes.archer.desc=Fights with a bow!
+classes.cloaker.desc=Can go invisible for short periods of time
+classes.mage.desc=Can strike lightning and use harming potions
+classes.peasant.desc=Has an enchanted iron axe to get money faster
+classes.inferno.desc=Has an explosion wand and TNT
+classes.dark_knight.desc=Wields the darkness sword...
+classes.priest.desc=Has a healing scroll and earth bender
+classes.warrior.desc=Summons wolves and fights with an upgradable iron sword
+
+#map-voting
+voting.maps.success=&6You have voted for &3%s&6!
+voting.maps.already-voted=&cYou already voted for &3%s&c!
+voting.maps.player-voted=&6%s &6voted for &3%s&3!
+voting.maps.player-transfer=&6%s &6changed their vote from &3%s&6 to &3%s&6!
+voting.maps.map-winner=&6Playing map=&3%s
+
+#minigames
+minigames.wool.initial=&3%s &dwas given the wool!
+minigames.wool.transfer=&3%s &dtransferred the wool to &3%s!
+minigames.wool.given=&dYou now have the wool. Right click someone to transfer it to them!
+minigames.parcour.winner=&3%s &6has completed the parcour and will start next game with $1000 extra!
+
+#--COUNTDOWNS--
+countdowns.game.warning.minutes=&7Game starting in&6 %s &7Minutes..
+countdowns.game.warning.seconds=&7Game starting in&6 %s &7Seconds..
+countdowns.game.warning.final=&6%s&7!
+countdowns.showdown.warning.minutes=&6&lShowdown starts in=%s minutes!
+countdowns.showdown.warning.seconds=&6&lShowdown starts in=%s seconds!
+countdowns.showdown.warning.final=&6&lShowdown starts in=%s seconds!
+countdowns.lobby.warning.minutes=&e&lGame ending in&c&l %s minutes!
+countdowns.lobby.warning.seconds=&e&lGame ending in&c&l %s seconds!
+countdowns.lobby.warning.final=&e&lGame ending in&c&l %s seconds!
+
+#--GENERAL--
+server.players.join=%s &7joined the server &8[&7%s&8/&7%s&8]
+server.players.quit=%s &7left the server &8[&7%s&8/&7%s&8]
+
+#--GAME--
+#spectators
+spectators.game.in-progress=&4There is already a game in progress!
+spectators.game.wait-next=&6You can play when the current game ends
+spectators.players.chose=&6Choose a player to spectate from your inventory
+spectators.player.name=&dSpectate %s
+
+#buildings
+building.shop.name=&a%s Shop
+building.shop.hologram=&f&oClick to Open
+building.invalid=&cThat obsidian block does not appear to be a shop.
+building.not-yours=&eThat building does not belong to your team. &lMine this block to destroy it!
+building.not-finished=&cPlease wait until the construction has finished.
+
+#cooldown-finished
+cooldowns.ender.finished=&aThe ender wand is ready to use again.
+cooldowns.lightning.finished=&aThe lightning wand is ready to use again.
+cooldowns.explosion.finished=&aThe explosion wand is ready to use again.
+cooldowns.bender.finished=&aThe earth bender is ready to use again.
+cooldowns.healing.finished=&aThe healing scroll is ready to use again.
+cooldowns.wolf.finished=&aThe wolf wand is ready to use again.
+cooldowns.regen.finished=&aYour regeneration ability has cooled down!
+
+#combat
+combat.player.killed=&6%s &6was killed by %s
+combat.player.died-fighting=&6%s &6died while fighting %s&6!
+combat.player.death=&6%s &6died!
+
+#--COMMANDS-
+commands.members.no-team=&cYou are not in a team yet.
+commands.members.player-info=&6%s&6=&3%s&6, Location=&3%s
+commands.members.title=&6&lMembers of your team:
+commands.spawn.not-in-game=&cYou cannot use this command while in game.

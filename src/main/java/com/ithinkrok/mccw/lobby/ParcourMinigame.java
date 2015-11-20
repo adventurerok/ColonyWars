@@ -43,7 +43,7 @@ public class ParcourMinigame implements LobbyMinigame {
     public boolean onUserInteractWorld(User user, Block block) {
         if(block.getType() != Material.ENDER_CHEST) return false;
 
-        plugin.messageAllLocale("player-win-parcour", user.getFormattedName());
+        plugin.messageAllLocale("minigames.parcour.winner", user.getFormattedName());
         user.addPlayerCash(1000);
         user.teleport(plugin.getLobbySpawn());
 

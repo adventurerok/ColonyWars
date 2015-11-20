@@ -29,13 +29,14 @@ public class MageClass extends ClassItemClassHandler {
     public MageClass(WarsPlugin plugin, FileConfiguration config) {
         super(new ClassItem(Material.DIAMOND_CHESTPLATE, "Ender Wand").withUpgradeBuildings(Buildings.MAGETOWER)
                         .withUnlockOnBuildingBuild(true).withRightClickAction(new EnderWand())
-                        .withRightClickCooldown("ender", new LinearCalculator(45, -15), plugin.getLocale("ender-wand-cooldown"))
+                        .withRightClickCooldown("ender", new LinearCalculator(45, -15), plugin.getLocale(
+                                "cooldowns.ender.finished"))
                         .withUpgradables(new ClassItem.Upgradable("ender", "Ender Wand Upgrade %s", 2,
                                 configArrayCalculator(config, "costs.mage.ender", 2))),
                 new ClassItem(Material.DIAMOND_LEGGINGS, "Lightning Wand").withUpgradeBuildings(Buildings.MAGETOWER)
                         .withUnlockOnBuildingBuild(true).withRightClickAction(new LightningWand(plugin))
                         .withRightClickCooldown("lightning", new LinearCalculator(45, -15),
-                                plugin.getLocale("lightning-wand-cooldown")).withUpgradables(
+                                plugin.getLocale("cooldowns.lightning.finished")).withUpgradables(
                         new ClassItem.Upgradable("lightning", "Lightning Wand Upgrade %s", 2,
                                 configArrayCalculator(config, "costs.mage.lightning", 2))));
 

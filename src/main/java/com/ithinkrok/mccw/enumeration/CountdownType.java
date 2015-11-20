@@ -5,9 +5,9 @@ package com.ithinkrok.mccw.enumeration;
  */
 public enum CountdownType {
 
-    GAME_START("start"),
-    SHOWDOWN_START("showdown"),
-    GAME_END("end");
+    GAME("game"),
+    SHOWDOWN("showdown"),
+    LOBBY("lobby");
 
     public final String name;
 

@@ -301,7 +301,7 @@ public class GameInstance {
 
 
     public void checkShowdownStart(int teamsInGame) {
-        if (isInShowdown() || countdownHandler.getCountdownType() == CountdownType.SHOWDOWN_START) return;
+        if (isInShowdown() || countdownHandler.getCountdownType() == CountdownType.SHOWDOWN) return;
         if (teamsInGame > 2 && plugin.getPlayersInGame() > 4) return;
 
         countdownHandler.startShowdownCountdown();

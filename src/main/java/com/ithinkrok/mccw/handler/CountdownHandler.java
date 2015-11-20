@@ -55,19 +55,21 @@ public class CountdownHandler {
 
             if (during != null) during.run();
 
-            if (countDown == 120) plugin.messageAll(plugin.getLocale(countdownType.name + "-minute-warning", "2"));
-            else if (countDown == 60) plugin.messageAll(plugin.getLocale(countdownType.name + "-minute-warning", "1"));
+            String baseMessage = "countdowns." + countdownType.name + ".warning";
+
+            if (countDown == 120) plugin.messageAll(plugin.getLocale(baseMessage + ".minutes", "2"));
+            else if (countDown == 60) plugin.messageAll(plugin.getLocale(baseMessage + ".minutes", "1"));
             else if (countDown == 30)
-                plugin.messageAll(plugin.getLocale(countdownType.name + "-seconds-warning", "30"));
+                plugin.messageAll(plugin.getLocale(baseMessage + ".seconds", "30"));
             else if (countDown == 10)
-                plugin.messageAll(plugin.getLocale(countdownType.name + "-seconds-warning", "10"));
+                plugin.messageAll(plugin.getLocale(baseMessage + ".seconds", "10"));
             else if (countDown == 0) {
                 plugin.getServer().getScheduler().cancelTask(countDownTask);
                 countDownTask = 0;
                 finished.run();
                 this.countdownType = null;
             } else if (countDown < 6) {
-                plugin.messageAll(plugin.getLocale(countdownType.name + "-final-warning", Integer.toString(countDown)));
+                plugin.messageAll(plugin.getLocale(baseMessage + ".final", Integer.toString(countDown)));
             }
 
 
@@ -78,7 +80,7 @@ public class CountdownHandler {
         Random random = plugin.getRandom();
         plugin.messageAll(ChatColor.GREEN + "Teleporting back to the lobby in 15 seconds!");
 
-        startCountdown(15, CountdownType.GAME_END, () -> plugin.changeGameState(GameState.LOBBY), () -> {
+        startCountdown(15, CountdownType.LOBBY, () -> plugin.changeGameState(GameState.LOBBY), () -> {
             if (countDown < 10) return;
             Player randomPlayer = plugin.getTeam(plugin.getGameInstance().getWinningTeam()).getRandomPlayer();
             if (randomPlayer == null) return;
@@ -100,17 +102,17 @@ public class CountdownHandler {
     public void startShowdownCountdown() {
         plugin.messageAll(ChatColor.GREEN + "Showdown starting in 30 seconds!");
 
-        startCountdown(30, CountdownType.SHOWDOWN_START, () -> plugin.changeGameState(GameState.SHOWDOWN), null);
+        startCountdown(30, CountdownType.SHOWDOWN, () -> plugin.changeGameState(GameState.SHOWDOWN), null);
     }
 
     public void startLobbyCountdown() {
-        plugin.messageAll(plugin.getLocale("start-minute-warning", "3"));
+        plugin.messageAll(plugin.getLocale("countdowns.game.warning.minutes", "3"));
 
-        startCountdown(180, CountdownType.GAME_START, () -> {
+        startCountdown(180, CountdownType.GAME, () -> {
             if (plugin.getPlayerCount() > 3) {
                 plugin.changeGameState(GameState.GAME);
             } else {
-                plugin.messageAll(plugin.getLocale("not-enough-players"));
+                plugin.messageAll(plugin.getLocale("lobby.info.not-enough-players"));
                 startLobbyCountdown();
             }
         }, null);

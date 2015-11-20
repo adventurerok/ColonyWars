@@ -41,7 +41,7 @@ public class WarsLobbyListener implements Listener {
         String name = getPlayerNameColor(event.getPlayer()) + event.getPlayer().getName();
         String online = Integer.toString(plugin.getPlayerCount());
         String max = Integer.toString(plugin.getServer().getMaxPlayers());
-        event.setJoinMessage(plugin.getLocale("player-join-game", name, online, max));
+        event.setJoinMessage(plugin.getLocale("server.players.join", name, online, max));
 
 
     }
@@ -52,7 +52,7 @@ public class WarsLobbyListener implements Listener {
 
     @EventHandler
     public void onPickupItem(PlayerPickupItemEvent event) {
-        if(event.getItem().getItemStack().getType() == Material.WRITTEN_BOOK) return;
+        if (event.getItem().getItemStack().getType() == Material.WRITTEN_BOOK) return;
         event.setCancelled(true);
     }
 
@@ -73,12 +73,12 @@ public class WarsLobbyListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if(event.getItem() != null && event.getItem().getType() == Material.WRITTEN_BOOK) return;
+        if (event.getItem() != null && event.getItem().getType() == Material.WRITTEN_BOOK) return;
         event.setCancelled(true);
 
         User user = plugin.getUser(event.getPlayer());
 
-        if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             for (LobbyMinigame minigame : plugin.getLobbyMinigames()) {
                 minigame.onUserInteractWorld(user, event.getClickedBlock());
             }
@@ -87,54 +87,55 @@ public class WarsLobbyListener implements Listener {
         if (event.getItem() == null || !event.getItem().hasItemMeta() ||
                 !event.getItem().getItemMeta().hasDisplayName()) return;
 
-        if (plugin.getLocale("team-chooser").equals(event.getItem().getItemMeta().getDisplayName())) {
+        if (plugin.getLocale("lobby.chooser.team.name").equals(event.getItem().getItemMeta().getDisplayName())) {
             showTeamChooser(event.getPlayer());
-        } else if (plugin.getLocale("class-chooser").equals(event.getItem().getItemMeta().getDisplayName())) {
+        } else if (plugin.getLocale("lobby.chooser.class.name")
+                .equals(event.getItem().getItemMeta().getDisplayName())) {
             showClassChooser(event.getPlayer());
-        } else if(plugin.getLocale("map-chooser").equals(event.getItem().getItemMeta().getDisplayName())){
+        } else if (plugin.getLocale("lobby.chooser.map.name").equals(event.getItem().getItemMeta().getDisplayName())) {
             showMapChooser(event.getPlayer());
         }
     }
 
-    @EventHandler
-    public void onPlayerInteractEntity(PlayerInteractEntityEvent event){
-        for(LobbyMinigame minigame : plugin.getLobbyMinigames()){
-            if(minigame.onUserInteractEntity(plugin.getUser(event.getPlayer()), event.getRightClicked())) break;
-        }
-    }
-
     private void showTeamChooser(Player player) {
-        Inventory shopInv = Bukkit.createInventory(player, 9, plugin.getLocale("team-chooser"));
+        Inventory shopInv = Bukkit.createInventory(player, 9, plugin.getLocale("lobby.chooser.team.name"));
 
         for (TeamColor team : TeamColor.values()) {
             shopInv.addItem(InventoryUtils.createItemWithNameAndLore(Material.WOOL, 1, team.dyeColor.getWoolData(),
-                    plugin.getLocale("team-desc", team.name)));
+                    plugin.getLocale("team.name", team.name)));
         }
 
         player.openInventory(shopInv);
     }
 
     private void showClassChooser(Player player) {
-        Inventory shopInv = Bukkit.createInventory(player, 18, plugin.getLocale("class-chooser"));
+        Inventory shopInv = Bukkit.createInventory(player, 18, plugin.getLocale("lobby.chooser.class.name"));
 
         for (PlayerClass playerClass : PlayerClass.values()) {
-            shopInv.addItem(InventoryUtils.createItemWithNameAndLore(playerClass.getChooser(), 1, 0,
-                    playerClass.getName(),
-                    plugin.getLocale(playerClass.toString().toLowerCase() + "-desc")));
+            shopInv.addItem(InventoryUtils
+                    .createItemWithNameAndLore(playerClass.getChooser(), 1, 0, playerClass.getName(),
+                            plugin.getLocale("classes." + playerClass.toString().toLowerCase() + ".desc")));
         }
 
         player.openInventory(shopInv);
     }
 
     private void showMapChooser(Player player) {
-        Inventory shopInv = Bukkit.createInventory(player, 9, plugin.getLocale("map-chooser"));
+        Inventory shopInv = Bukkit.createInventory(player, 9, plugin.getLocale("lobby.chooser.map.name"));
 
         for (String map : plugin.getMapList()) {
-            shopInv.addItem(
-                    InventoryUtils.createItemWithNameAndLore(Material.MAP, 1, 0, map, plugin.getLocale(map + "-desc")));
+            shopInv.addItem(InventoryUtils
+                    .createItemWithNameAndLore(Material.MAP, 1, 0, map, plugin.getLocale("maps." + map + ".desc")));
         }
 
         player.openInventory(shopInv);
+    }
+
+    @EventHandler
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+        for (LobbyMinigame minigame : plugin.getLobbyMinigames()) {
+            if (minigame.onUserInteractEntity(plugin.getUser(event.getPlayer()), event.getRightClicked())) break;
+        }
     }
 
     @EventHandler
@@ -157,7 +158,7 @@ public class WarsLobbyListener implements Listener {
 
         try {
 
-            if (plugin.getLocale("team-chooser").equals(event.getInventory().getTitle())) {
+            if (plugin.getLocale("lobby.chooser.team.name").equals(event.getInventory().getTitle())) {
                 TeamColor teamColor = TeamColor.fromWoolColor(event.getCurrentItem().getDurability());
                 if (teamColor == null) {
                     user.message("Null team. This is impossible error");
@@ -165,7 +166,7 @@ public class WarsLobbyListener implements Listener {
                 }
 
                 if (teamColor == user.getTeamColor()) {
-                    user.message(plugin.getLocale("team-already-member", teamColor.name));
+                    user.message(plugin.getLocale("team.join.already-member", teamColor.name));
                     return;
                 }
 
@@ -173,16 +174,16 @@ public class WarsLobbyListener implements Listener {
                 int teamSize = plugin.getTeam(teamColor).getPlayerCount();
 
                 if (teamSize >= (playerCount + 3) / 4) {
-                    user.message(plugin.getLocale("team-full", teamColor.name));
+                    user.message(plugin.getLocale("team.join.full", teamColor.name));
                     return;
                 }
 
                 user.setTeamColor(teamColor);
 
-                user.message(plugin.getLocale("team-joined", teamColor.name));
+                user.message(plugin.getLocale("team.join.success", teamColor.name));
 
                 user.getPlayer().closeInventory();
-            } else if (plugin.getLocale("class-chooser").equals(event.getInventory().getTitle())) {
+            } else if (plugin.getLocale("lobby.chooser.class.name").equals(event.getInventory().getTitle())) {
                 PlayerClass playerClass = PlayerClass.fromChooserMaterial(event.getCurrentItem().getType());
                 if (playerClass == null) {
                     user.message("Null class. This is impossible error");
@@ -191,28 +192,28 @@ public class WarsLobbyListener implements Listener {
 
                 user.setPlayerClass(playerClass);
 
-                user.message(plugin.getLocale("class-selected", playerClass.getName()));
+                user.message(plugin.getLocale("class.join.success", playerClass.getName()));
 
                 user.getPlayer().closeInventory();
-            } else if (plugin.getLocale("map-chooser").equals(event.getInventory().getTitle())) {
+            } else if (plugin.getLocale("lobby.chooser.map.name").equals(event.getInventory().getTitle())) {
                 String mapName = event.getCurrentItem().getItemMeta().getDisplayName();
 
                 String oldVote = user.getMapVote();
 
                 if (mapName.equals(oldVote)) {
-                    user.message(plugin.getLocale("map-already-voted", mapName));
+                    user.message(plugin.getLocale("voting.maps.already-voted", mapName));
                     return;
                 }
 
                 user.setMapVote(mapName);
-                user.message(plugin.getLocale("map-voted", mapName));
+                user.message(plugin.getLocale("voting.maps.success", mapName));
 
                 String playerName = getPlayerNameColor(user.getPlayer()) + user.getFormattedName();
 
                 if (oldVote == null) {
-                    plugin.messageAll(plugin.getLocale("player-voted", playerName, mapName));
+                    plugin.messageAll(plugin.getLocale("voting.maps.player-voted", playerName, mapName));
                 } else {
-                    plugin.messageAll(plugin.getLocale("player-vote-change", playerName, oldVote, mapName));
+                    plugin.messageAll(plugin.getLocale("voting.maps.player-transfer", playerName, oldVote, mapName));
                 }
 
                 user.getPlayer().closeInventory();
@@ -227,14 +228,14 @@ public class WarsLobbyListener implements Listener {
         user.setTeamColor(null);
         user.setMapVote(null);
 
-        for(LobbyMinigame minigame : plugin.getLobbyMinigames()){
+        for (LobbyMinigame minigame : plugin.getLobbyMinigames()) {
             minigame.onUserQuitLobby(user);
         }
 
         String name = getPlayerNameColor(event.getPlayer()) + event.getPlayer().getName();
         String online = Integer.toString(plugin.getPlayerCount() - 1);
         String max = Integer.toString(plugin.getServer().getMaxPlayers());
-        event.setQuitMessage(plugin.getLocale("player-quit-game", name, online, max));
+        event.setQuitMessage(plugin.getLocale("server.players.quit", name, online, max));
     }
 
     @EventHandler

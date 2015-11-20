@@ -19,10 +19,12 @@ import org.bukkit.potion.PotionEffectType;
 /**
  * Created by paul on 07/11/15.
  * <p>
- * Handles the Cloaker class
+ * Handles the Cloaker class.
  */
 public class CloakerClass extends BuyableInventory implements PlayerClassHandler {
 
+
+    //Will be updated *eventually*
 
     private final WarsPlugin plugin;
 

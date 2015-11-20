@@ -1,7 +1,6 @@
 package com.ithinkrok.mccw.event;
 
 import com.ithinkrok.mccw.data.User;
-import org.bukkit.inventory.PlayerInventory;
 
 /**
  * Created by paul on 13/11/15.

@@ -26,15 +26,16 @@ public class WarriorClass extends ClassItemClassHandler {
                         new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sharpness",
                                 new LinearCalculator(0, 1)),
                         new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "knockback", new LinearCalculator(0, 1)))
-                        .withUpgradables(new ClassItem.Upgradable("sharpness", "Sharpness Upgrade %s", 2,
+                        .withUpgradables(new ClassItem.Upgradable("sharpness", plugin.getLocale("upgrades.sharpness.name"), 2,
                                         configArrayCalculator(config, "costs.warrior.sharpness", 2)),
-                                new ClassItem.Upgradable("knockback", "Knockback Upgrade %s", 2,
+                                new ClassItem.Upgradable("knockback", plugin.getLocale("upgrades.knockback.name"), 2,
                                         configArrayCalculator(config, "costs.warrior.knockback", 2))),
-                new ClassItem(Material.GOLD_HELMET, "Wolf Wand").withUpgradeBuildings(Buildings.BLACKSMITH)
-                        .withUnlockOnBuildingBuild(true).withRightClickAction(new WolfWand())
+                new ClassItem(Material.GOLD_HELMET, plugin.getLocale("items.wolf-wand.name"))
+                        .withUpgradeBuildings(Buildings.BLACKSMITH).withUnlockOnBuildingBuild(true)
+                        .withRightClickAction(new WolfWand())
                         .withRightClickCooldown("wolf", new LinearCalculator(120, -30),
                                 plugin.getLocale("cooldowns.wolf.finished")).withUpgradables(
-                        new ClassItem.Upgradable("wolf", "Wolf Wand Upgrade %s", 2,
+                        new ClassItem.Upgradable("wolf", plugin.getLocale("upgrades.wolf-wand.name"), 2,
                                 configArrayCalculator(config, "costs.warrior.wolf", 2))));
     }
 

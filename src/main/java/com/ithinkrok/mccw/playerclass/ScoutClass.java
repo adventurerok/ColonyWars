@@ -31,21 +31,21 @@ public class ScoutClass extends ClassItemClassHandler {
                         new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sharpness",
                                 new LinearCalculator(0, 1)),
                         new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "knockback", new LinearCalculator(0, 1)))
-                        .withUpgradables(new ClassItem.Upgradable("sharpness", "Sharpness Upgrade %s", 2,
+                        .withUpgradables(new ClassItem.Upgradable("sharpness", plugin.getLocale("upgrades.sharpness.name"), 2,
                                         configArrayCalculator(config, "costs.scout.sharpness", 2)),
-                                new ClassItem.Upgradable("knockback", "Knockback Upgrade %s", 2,
+                                new ClassItem.Upgradable("knockback", plugin.getLocale("upgrades.knockback.name"), 2,
                                         configArrayCalculator(config, "costs.scout.knockback", 2))),
-                new ClassItem(Material.COMPASS, "Player Compass")
+                new ClassItem(Material.COMPASS, plugin.getLocale("items.player-compass.name"))
                         .withUpgradeBuildings(Buildings.CHURCH, Buildings.CATHEDRAL)
                         .withRightClickAction(new ScoutCompass(plugin)).withUpgradables(
-                        new ClassItem.Upgradable("compass", "Player Compass", 1,
+                        new ClassItem.Upgradable("compass", plugin.getLocale("items.player-compass.name"), 1,
                                 new LinearCalculator(config.getDouble("costs.scout.compass"), 0))),
-                new ClassItem(Material.CHAINMAIL_HELMET, "Regeneration Ability")
+                new ClassItem(Material.CHAINMAIL_HELMET, plugin.getLocale("items.regen-ability.name"))
                         .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new RegenAbility())
                         .withRightClickCooldown("regen", new LinearCalculator(35, 10),
                                 plugin.getLocale("cooldowns.regen.finished")).withUpgradables(
-                        new ClassItem.Upgradable("regen", "Regen Ability Upgrade", 1,
+                        new ClassItem.Upgradable("regen", plugin.getLocale("upgrades.regen-ability.name"), 1,
                                 new LinearCalculator(config.getDouble("costs.scout.regen"), 0))));
     }
 
@@ -69,7 +69,7 @@ public class ScoutClass extends ClassItemClassHandler {
         public boolean onInteractWorld(UserInteractEvent event) {
             TeamColor exclude = event.getUser().getTeamColor();
 
-            InventoryUtils.setItemNameAndLore(event.getItem(), "Locating closest player...");
+            InventoryUtils.setItemNameAndLore(event.getItem(), plugin.getLocale("items.player-compass.locating"));
 
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 Location closest = null;
@@ -89,12 +89,13 @@ public class ScoutClass extends ClassItemClassHandler {
                 }
 
                 if (closest != null) event.getPlayer().setCompassTarget(closest);
-                else closestName = "No One";
+                else closestName = plugin.getLocale("items.player-compass.no-player");
 
                 int compassIndex = event.getUserInventory().first(Material.COMPASS);
                 ItemStack newCompass = event.getUserInventory().getItem(compassIndex);
 
-                InventoryUtils.setItemNameAndLore(newCompass, "Player Compass", "Oriented at: " + closestName);
+                InventoryUtils.setItemNameAndLore(newCompass, plugin.getLocale("items.player-compass.name"),
+                        plugin.getLocale("items.player-compass.oriented", closestName));
 
                 event.getUserInventory().setItem(compassIndex, newCompass);
             }, 60);

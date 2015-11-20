@@ -27,17 +27,18 @@ public class MageClass extends ClassItemClassHandler {
 
 
     public MageClass(WarsPlugin plugin, FileConfiguration config) {
-        super(new ClassItem(Material.DIAMOND_CHESTPLATE, "Ender Wand").withUpgradeBuildings(Buildings.MAGETOWER)
-                        .withUnlockOnBuildingBuild(true).withRightClickAction(new EnderWand())
-                        .withRightClickCooldown("ender", new LinearCalculator(45, -15), plugin.getLocale(
-                                "cooldowns.ender.finished"))
-                        .withUpgradables(new ClassItem.Upgradable("ender", "Ender Wand Upgrade %s", 2,
+        super(new ClassItem(Material.DIAMOND_CHESTPLATE, plugin.getLocale("items.ender-wand.name"))
+                        .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
+                        .withRightClickAction(new EnderWand()).withRightClickCooldown("ender", new LinearCalculator(45, -15),
+                        plugin.getLocale("cooldowns.ender.finished")).withUpgradables(
+                        new ClassItem.Upgradable("ender", plugin.getLocale("upgrades.ender-wand.name"), 2,
                                 configArrayCalculator(config, "costs.mage.ender", 2))),
-                new ClassItem(Material.DIAMOND_LEGGINGS, "Lightning Wand").withUpgradeBuildings(Buildings.MAGETOWER)
-                        .withUnlockOnBuildingBuild(true).withRightClickAction(new LightningWand(plugin))
+                new ClassItem(Material.DIAMOND_LEGGINGS, plugin.getLocale("items.lightning-wand.name"))
+                        .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
+                        .withRightClickAction(new LightningWand(plugin))
                         .withRightClickCooldown("lightning", new LinearCalculator(45, -15),
                                 plugin.getLocale("cooldowns.lightning.finished")).withUpgradables(
-                        new ClassItem.Upgradable("lightning", "Lightning Wand Upgrade %s", 2,
+                        new ClassItem.Upgradable("lightning", plugin.getLocale("upgrades.lightning-wand.name"), 2,
                                 configArrayCalculator(config, "costs.mage.lightning", 2))));
 
         addExtraBuyables(new ItemBuyable(InventoryUtils.createPotion(PotionType.INSTANT_DAMAGE, 1, true, false, 32),

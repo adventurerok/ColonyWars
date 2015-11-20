@@ -82,6 +82,42 @@ cooldowns.healing.finished=&aThe healing scroll is ready to use again.
 cooldowns.wolf.finished=&aThe wolf wand is ready to use again.
 cooldowns.regen.finished=&aYour regeneration ability has cooled down!
 
+#class-upgrades
+upgrades.sharpness.name=Sharpness Upgrade %s
+upgrades.knockback.name=Knockback Upgrade %s
+upgrades.bow.name=Bow Upgrade %s
+upgrades.wood-sword.name=Sword Upgrade %s
+upgrades.diamond-sword.name=Sword Upgrade %s
+upgrades.arrows.name=Arrow Upgrade %s
+upgrades.arrows2.desc=Gives you 192 arrows. Can be purchased multiple times
+upgrades.darkness-sword.name=Darkness Sword Upgrade %s
+upgrades.explosion-wand.name=Explosion Wand Upgrade %s
+upgrades.flame-sword.name=Flame Sword Upgrade %s
+upgrades.ender-wand.name=Ender Wand Upgrade %s
+upgrades.lightning-wand.name=Lightning Wand Upgrade %s
+upgrades.healing-scroll.name=Healing Scroll Upgrade %s
+upgrades.earth-bender.name=Earth Bender Upgrade %s
+upgrades.cross.name=Cross Upgrade %s
+upgrades.regen-ability.name=Regen Ability Upgrade
+upgrades.wolf-wand.name=Wolf Wand Upgrade %s
+
+#class-items
+items.peasant-axe.name=Peasant Axe
+items.darkness-sword.name=Darkness Sword
+items.explosion-wand.name=Explosion Wand
+items.flame-sword.name=Flame Sword
+items.ender-wand.name=Ender Wand
+items.lightning-wand.name=Lightning Wand
+items.healing-scroll.name=Healing Scroll
+items.earth-bender.name=Earth Bender
+items.cross.name=Cross
+items.player-compass.name=Player Compass
+items.player-compass.locating=Locating closest player...
+items.player-compass.oriented=Oriented at: %s
+items.player-compass.no-player=No One
+items.regen-ability.name=Regeneration Ability
+items.wolf-wand.name=Wolf Wand
+
 #combat
 combat.player.killed=&6%s &6was killed by %s
 combat.player.died-fighting=&6%s &6died while fighting %s&6!

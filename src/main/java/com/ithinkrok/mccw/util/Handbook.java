@@ -12,10 +12,7 @@ import java.io.*;
 public class Handbook {
 
     public static String loadHandbookMeta(WarsPlugin plugin){
-        File bookFile = new File(plugin.getDataFolder(), "handbook.json");
-        if(!bookFile.exists()){
-            plugin.saveResource("handbook.json", false);
-        }
+        File bookFile = ResourceHandler.getResource(plugin, "handbook.json");
 
         try(BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(bookFile)))){
             StringBuilder json = new StringBuilder();

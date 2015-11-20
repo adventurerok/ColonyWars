@@ -19,9 +19,7 @@ import com.ithinkrok.mccw.listener.WarsBaseListener;
 import com.ithinkrok.mccw.listener.WarsLobbyListener;
 import com.ithinkrok.mccw.playerclass.*;
 import com.ithinkrok.mccw.strings.Buildings;
-import com.ithinkrok.mccw.util.Handbook;
-import com.ithinkrok.mccw.util.InventoryUtils;
-import com.ithinkrok.mccw.util.InvisiblePlayerAttacker;
+import com.ithinkrok.mccw.util.*;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -79,6 +77,12 @@ public class WarsPlugin extends JavaPlugin {
     private String handbookMeta;
     private ItemStack handbook;
 
+    private LangFile langFile;
+
+    public LangFile getLangFile() {
+        return langFile;
+    }
+
     @Override
     public void onDisable() {
         super.onDisable();
@@ -111,6 +115,9 @@ public class WarsPlugin extends JavaPlugin {
         saveDefaultConfig();
 
         mapList = getConfig().getStringList("map-list");
+
+        String languageFile = getConfig().getString("language") + ".lang";
+        langFile = new LangFile(ResourceHandler.getPropertiesResource(this, languageFile));
 
         handbookMeta = Handbook.loadHandbookMeta(this);
 
@@ -220,7 +227,7 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public String getLocale(String name, Object... params) {
-        return String.format(getConfig().getString("locale." + name), params);
+        return langFile.getLocale(name, params);
     }
 
     public Location getLobbySpawn() {

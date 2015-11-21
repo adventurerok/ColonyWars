@@ -25,7 +25,12 @@ public class LangFile {
         String result = languageStrings.get(locale);
 
         if(result == null){
-            System.out.println("Missing language string for: " + locale);
+            try{
+                //print the stack trace
+                throw new RuntimeException("Missing language string for: " + locale);
+            } catch(RuntimeException e){
+                e.printStackTrace();
+            }
 
             languageStrings.put(locale, locale);
             return locale;

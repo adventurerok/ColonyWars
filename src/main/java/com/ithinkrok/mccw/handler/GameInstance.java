@@ -102,7 +102,7 @@ public class GameInstance {
         try {
             DirectoryUtils.delete(Paths.get("./playing/"));
         } catch (IOException e) {
-            plugin.getLogger().info("Failed to unload old world");
+            plugin.getLogger().warning(plugin.getLocale("server.world-unload-failed"));
             e.printStackTrace();
         }
 
@@ -185,11 +185,9 @@ public class GameInstance {
 
         plugin.givePlayerHandbook(info.getPlayer());
 
-        info.message(ChatColor.GOLD + "You are playing on the " + info.getTeamColor().name + ChatColor.GOLD +
-                " Team");
+        info.messageLocale("game.start.team", info.getTeamColor().name);
 
-        info.message(ChatColor.GOLD + "You are playing as the class " + ChatColor.DARK_AQUA +
-                info.getPlayerClass().getName());
+        info.messageLocale("game.start.class", info.getPlayerClass().getName());
     }
 
     private void calculateShowdownArena() {
@@ -239,7 +237,7 @@ public class GameInstance {
         }
 
         if (teamsInGame.size() == 0) {
-            plugin.messageAll(ChatColor.GOLD + "Oh dear. Everyone is dead!");
+            plugin.messageAllLocale("game.player.all-dead");
             changeGameState(GameState.AFTERMATH);
             return;
         } else if (teamsInGame.size() > 1) {
@@ -250,7 +248,7 @@ public class GameInstance {
         TeamColor winner = teamsInGame.iterator().next();
         this.winningTeam = winner;
 
-        plugin.messageAll(ChatColor.GOLD + "The " + winner.name + ChatColor.GOLD + " Team has won the game!");
+        plugin.messageAllLocale("game.team.winner", winner.name);
 
         changeGameState(GameState.AFTERMATH);
     }
@@ -333,7 +331,7 @@ public class GameInstance {
 
         changeGameState(GameState.SHOWDOWN);
 
-        plugin.messageAll(ChatColor.BOLD.toString() + ChatColor.GOLD + "Showdown starts NOW!");
+        plugin.messageAllLocale("countdowns.showdown.warning.now");
     }
 
     public void removeBuilding(Building building) {

@@ -458,12 +458,12 @@ public class WarsGameListener implements Listener {
 
         User killerInfo = killer == null ? null : plugin.getUser(killer);
         if (killerInfo != null) {
-            if (intentionally) plugin.messageAll(plugin.getLocale("combat.player.killed", diedInfo.getFormattedName(),
+            if (intentionally) plugin.messageAll(plugin.getLocale("game.player.killed", diedInfo.getFormattedName(),
                     killerInfo.getFormattedName()));
-            else plugin.messageAll(plugin.getLocale("combat.player.died-fighting", diedInfo.getFormattedName(),
+            else plugin.messageAll(plugin.getLocale("game.player.died-fighting", diedInfo.getFormattedName(),
                     killerInfo.getFormattedName()));
         } else {
-            plugin.messageAll(plugin.getLocale("combat.player.death", diedInfo.getFormattedName()));
+            plugin.messageAll(plugin.getLocale("game.player.death", diedInfo.getFormattedName()));
         }
 
         Team diedTeam = diedInfo.getTeam();

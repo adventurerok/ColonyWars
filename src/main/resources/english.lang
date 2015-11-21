@@ -52,6 +52,7 @@ countdowns.game.warning.final=&6%s&7!
 countdowns.showdown.warning.minutes=&6&lShowdown starts in=%s minutes!
 countdowns.showdown.warning.seconds=&6&lShowdown starts in=%s seconds!
 countdowns.showdown.warning.final=&6&lShowdown starts in=%s seconds!
+countdowns.showdown.warning.now=&6&lShowdown starts NOW!
 countdowns.lobby.warning.minutes=&e&lGame ending in&c&l %s minutes!
 countdowns.lobby.warning.seconds=&e&lGame ending in&c&l %s seconds!
 countdowns.lobby.warning.final=&e&lGame ending in&c&l %s seconds!
@@ -59,6 +60,7 @@ countdowns.lobby.warning.final=&e&lGame ending in&c&l %s seconds!
 #--GENERAL--
 server.players.join=%s &7joined the server &8[&7%s&8/&7%s&8]
 server.players.quit=%s &7left the server &8[&7%s&8/&7%s&8]
+server.world-unload-failed=Failed to unload old world
 
 #--GAME--
 #spectators
@@ -133,10 +135,14 @@ money.exchange.too-expensive=&cYou do not have that amount of money
 money.exchange.team-transfer=%s &3transferred &a$%s &eto your team's account!
 money.balance.team.new=&eYour Team's new Balance is: &a$%s&e!
 
-#combat
-combat.player.killed=&6%s &6was killed by %s
-combat.player.died-fighting=&6%s &6died while fighting %s&6!
-combat.player.death=&6%s &6died!
+#game
+game.player.killed=&6%s &6was killed by %s
+game.player.died-fighting=&6%s &6died while fighting %s&6!
+game.player.death=&6%s &6died!
+game.player.all-dead=&6Oh dear. Everyone is dead!
+game.team.winner=&6The %s &6Team has won the game!
+game.start.team=&6You are playing on the %s &6Team
+game.start.class=&6You are playing as the class&3 %s
 
 #--COMMANDS-
 command.no-console=You must be a player to execute Colony Wars commands

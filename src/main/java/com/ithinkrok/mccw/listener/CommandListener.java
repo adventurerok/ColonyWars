@@ -31,7 +31,7 @@ public class CommandListener implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage("You must be a player to execute Colony Wars commands");
+            sender.sendMessage(plugin.getLocale("command.no-console"));
             return true;
         }
 
@@ -55,60 +55,6 @@ public class CommandListener implements CommandExecutor {
 
     }
 
-    private boolean onSpawnCommand(User user) {
-        if(user.isInGame()) {
-            user.messageLocale("commands.spawn.not-in-game");
-            return true;
-        }
-
-        user.teleport(plugin.getMapSpawn(null));
-        return true;
-    }
-
-    private boolean onMembersCommand(User user) {
-        if(user.getTeamColor() == null){
-            user.messageLocale("commands.members.no-team");
-            return true;
-        }
-
-        user.messageLocale("commands.members.title");
-
-        Team team = user.getTeam();
-
-        for(Player player : team.getPlayers()){
-            User other = plugin.getUser(player);
-
-            String name = other.getFormattedName();
-            String playerClass = other.getPlayerClass() == null ? "None" : other.getPlayerClass().getName();
-
-            String nearestBase = null;
-            if(plugin.isInGame()){
-                double smallestDistSquared = 99999999;
-
-                for(TeamColor teamColor : TeamColor.values()){
-                    Location loc = plugin.getMapSpawn(teamColor);
-                    double distSquared = loc.distanceSquared(player.getLocation());
-
-                    if(distSquared < smallestDistSquared){
-                        smallestDistSquared = distSquared;
-                        nearestBase = teamColor.name;
-                    }
-                }
-
-                if(plugin.getMapSpawn(null).distanceSquared(player.getLocation()) < smallestDistSquared){
-                    nearestBase = nearestBase + " (Near showdown arena)";
-                }
-            } else {
-                nearestBase = "Not in game";
-            }
-
-            //Send the player a message directly to avoid the chat prefix
-            user.getPlayer().sendMessage(plugin.getLocale("commands.members.player-info", name, playerClass, nearestBase));
-        }
-
-        return true;
-    }
-
     private boolean onTransferCommand(User user, String[] args) {
         if (args.length < 1) return false;
 
@@ -116,33 +62,18 @@ public class CommandListener implements CommandExecutor {
             int amount = Integer.parseInt(args[0]);
 
             if (!user.subtractPlayerCash(amount)) {
-                user.message(ChatColor.RED + "You do not have that amount of money");
+                user.messageLocale("money.exchange.too-expensive");
                 return true;
             }
 
             Team team = user.getTeam();
             team.addTeamCash(amount);
 
-            team.message(user.getFormattedName() + ChatColor.DARK_AQUA + " transferred " +
-                    ChatColor.GREEN + "$" + amount +
-                    ChatColor.YELLOW + " to your team's account!");
-            team.message("Your Team's new Balance is: " + ChatColor.GREEN + "$" + team.getTeamCash() +
-                    ChatColor.YELLOW + "!");
+            team.messageLocale("money.exchange.team-transfer", user.getFormattedName(), amount);
+            team.messageLocale("money.balance.team.new", team.getTeamCash());
 
             return true;
         } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    private boolean onGameStateCommand(User user, String[] args){
-        try {
-            GameState gameState = GameState.valueOf(args[0].toUpperCase());
-            plugin.changeGameState(gameState);
-            user.message("Changed gamestate to: " + gameState);
-            return true;
-        } catch (Exception e) {
-            user.message("Invalid gamestate!");
             return false;
         }
     }
@@ -156,7 +87,7 @@ public class CommandListener implements CommandExecutor {
                 TeamColor teamColor = TeamColor.valueOf(args[1].toUpperCase());
                 user.setTeamColor(teamColor);
 
-                user.message("You were changed to team " + teamColor);
+                user.messageLocale("commands.test.team-change", teamColor.name);
 
                 break;
             case "class":
@@ -165,7 +96,7 @@ public class CommandListener implements CommandExecutor {
                 PlayerClass playerClass = PlayerClass.valueOf(args[1].toUpperCase());
                 user.setPlayerClass(playerClass);
 
-                user.message("You were changed to class " + playerClass);
+                user.messageLocale("commands.test.class-change", playerClass.getName());
 
                 break;
             case "money":
@@ -173,7 +104,7 @@ public class CommandListener implements CommandExecutor {
                 user.addPlayerCash(10000);
                 user.getTeam().addTeamCash(10000);
 
-                user.message("10000 added to both you and your team's balance");
+                user.messageLocale("commands.test.money", 10000);
                 break;
             case "build":
                 if (args.length < 2) return false;
@@ -181,20 +112,88 @@ public class CommandListener implements CommandExecutor {
                 user.getPlayerInventory()
                         .addItem(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 16, 0, args[1]));
 
-                user.message("Added 16 " + args[1] + " build blocks to your inventory");
+                user.messageLocale("commands.test.build-blocks", 16, args[1]);
                 break;
             case "base_location":
                 Team team = user.getTeam();
                 if (team == null) {
-                    user.message("Your team is null");
+                    user.messageLocale("commands.test.base.no-team");
                     break;
                 }
 
-                user.message("Base location: " + team.getBaseLocation());
+                user.messageLocale("commands.test.base.loc", team.getBaseLocation());
                 break;
 
         }
 
+        return true;
+    }
+
+    private boolean onGameStateCommand(User user, String[] args) {
+        try {
+            GameState gameState = GameState.valueOf(args[0].toUpperCase());
+            plugin.changeGameState(gameState);
+            user.messageLocale("commands.gamestate.changed", gameState);
+            return true;
+        } catch (Exception e) {
+            user.messageLocale("commands.gamestate.invalid");
+            return false;
+        }
+    }
+
+    private boolean onMembersCommand(User user) {
+        if (user.getTeamColor() == null) {
+            user.messageLocale("commands.members.no-team");
+            return true;
+        }
+
+        user.messageLocale("commands.members.title");
+
+        Team team = user.getTeam();
+
+        for (Player player : team.getPlayers()) {
+            User other = plugin.getUser(player);
+
+            String name = other.getFormattedName();
+            String playerClass =
+                    other.getPlayerClass() == null ? plugin.getLocale("team.none") : other.getPlayerClass().getName();
+
+            String nearestBase = null;
+            if (plugin.isInGame()) {
+                double smallestDistSquared = 99999999;
+
+                for (TeamColor teamColor : TeamColor.values()) {
+                    Location loc = plugin.getMapSpawn(teamColor);
+                    double distSquared = loc.distanceSquared(player.getLocation());
+
+                    if (distSquared < smallestDistSquared) {
+                        smallestDistSquared = distSquared;
+                        nearestBase = teamColor.name;
+                    }
+                }
+
+                if (plugin.getMapSpawn(null).distanceSquared(player.getLocation()) < smallestDistSquared) {
+                    nearestBase = plugin.getLocale("commands.members.near-showdown", nearestBase);
+                }
+            } else {
+                nearestBase = "Not in game";
+            }
+
+            //Send the player a message directly to avoid the chat prefix
+            user.getPlayer()
+                    .sendMessage(plugin.getLocale("commands.members.player-info", name, playerClass, nearestBase));
+        }
+
+        return true;
+    }
+
+    private boolean onSpawnCommand(User user) {
+        if (user.isInGame()) {
+            user.messageLocale("commands.spawn.not-in-game");
+            return true;
+        }
+
+        user.teleport(plugin.getMapSpawn(null));
         return true;
     }
 }

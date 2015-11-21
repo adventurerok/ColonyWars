@@ -222,4 +222,8 @@ public class Team {
         if(players.isEmpty()) return null;
         return players.get(plugin.getRandom().nextInt(players.size()));
     }
+
+    public void messageLocale(String locale, Object...args) {
+        message(plugin.getLocale(locale, args));
+    }
 }

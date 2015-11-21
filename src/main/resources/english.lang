@@ -61,6 +61,7 @@ countdowns.lobby.warning.final=&e&lGame ending in&c&l %s seconds!
 server.players.join=%s &7joined the server &8[&7%s&8/&7%s&8]
 server.players.quit=%s &7left the server &8[&7%s&8/&7%s&8]
 server.world-unload-failed=Failed to unload old world
+server.welcome=&aWelcome to Colony Wars!
 
 #--GAME--
 #spectators

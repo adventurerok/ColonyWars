@@ -29,7 +29,7 @@ public class WarsBaseListener implements Listener {
         User user = new User(plugin, event.getPlayer());
         plugin.setPlayerInfo(event.getPlayer(), user);
 
-        user.message(ChatColor.GREEN + "Welcome to Colony Wars!");
+        user.messageLocale("server.welcome");
 
         user.getPlayer().getInventory().clear();
     }

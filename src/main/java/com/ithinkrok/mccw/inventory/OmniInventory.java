@@ -141,7 +141,7 @@ public class OmniInventory extends BuyableInventory {
         int cannonTowerCost = config.getInt("costs.buildings." + Buildings.CANNONTOWER);
 
         result.add(new Buyable(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.CANNONTOWER,
-                plugin.getLocale("building.upgrades.replace", Buildings.SCOUTTOWER, Buildings.CANNONTOWER)),
+                plugin.getLocale("building.upgrade.replace", Buildings.SCOUTTOWER, Buildings.CANNONTOWER)),
                 Buildings.SCOUTTOWER, cannonTowerCost, true, 1) {
 
 

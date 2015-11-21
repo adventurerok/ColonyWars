@@ -115,7 +115,7 @@ public class PriestClass extends ClassItemClassHandler {
             }
 
             BentEarth bentEarth = new BentEarth(fallingBlockList, riders);
-            event.getUser().setBentEarth(bentEarth);
+            event.getUser().setMetadata("bentEarth", bentEarth, true);
 
             return true;
         }
@@ -125,8 +125,9 @@ public class PriestClass extends ClassItemClassHandler {
 
         @Override
         public boolean onInteractWorld(UserInteractEvent event) {
-            BentEarth bent = event.getUser().getBentEarth();
-            if (bent == null) return true;
+            Object bentObject = event.getUser().getMetadata("bentEarth");
+            if(bentObject == null || !(bentObject instanceof BentEarth)) return true;
+            BentEarth bent = (BentEarth) bentObject;
             if (event.getUser().getUpgradeLevel("bending") > 4) return true;
             Vector add = event.getPlayer().getLocation().getDirection();
             bent.addVelocity(add);

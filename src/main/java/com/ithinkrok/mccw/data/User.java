@@ -47,7 +47,6 @@ public class User {
     private Location shopBlock;
     private Inventory shopInventory;
     private PlayerClass playerClass;
-    private BentEarth bentEarth;
     private Map<String, Integer> upgradeLevels = new HashMap<>();
     private Map<String, Boolean> coolingDown = new HashMap<>();
     private Map<String, Metadata> metadata = new HashMap<>();
@@ -85,14 +84,6 @@ public class User {
 
     public PlayerInventory getPlayerInventory() {
         return player.getInventory();
-    }
-
-    public BentEarth getBentEarth() {
-        return bentEarth;
-    }
-
-    public void setBentEarth(BentEarth bentEarth) {
-        this.bentEarth = bentEarth;
     }
 
     public boolean isCloaked() {
@@ -324,7 +315,6 @@ public class User {
             shopBlock = null;
             playerCash = 0;
             oldBuildingNows.clear();
-            bentEarth = null;
         }
 
         updateScoreboard();

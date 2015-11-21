@@ -2,14 +2,14 @@ package com.ithinkrok.mccw.playerclass.items;
 
 /**
  * Created by paul on 18/11/15.
- *
+ * <p>
  * "Calculates" a value by looking it up in an array.
  */
 public class ArrayCalculator implements Calculator {
 
     private double[] returnValues;
 
-    public ArrayCalculator(double...returnValues) {
+    public ArrayCalculator(double... returnValues) {
         this.returnValues = returnValues;
     }
 

@@ -33,8 +33,9 @@ public class WarriorClass extends ClassItemClassHandler {
                 new ClassItem(plugin.getLangFile(), Material.GOLD_HELMET, "items.wolf-wand.name")
                         .withUpgradeBuildings(Buildings.BLACKSMITH).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new WolfWand())
-                        .withRightClickCooldown("wolf", new LinearCalculator(120, -30), "cooldowns.wolf.finished")
-                        .withUpgradables(new ClassItem.Upgradable("wolf", "upgrades.wolf-wand.name", 2,
+                        .withRightClickCooldown("wolf", "wolf", new LinearCalculator(120, -30),
+                                "cooldowns.wolf.finished").withUpgradables(
+                        new ClassItem.Upgradable("wolf", "upgrades.wolf-wand.name", 2,
                                 configArrayCalculator(config, "costs.warrior.wolf", 2))));
     }
 

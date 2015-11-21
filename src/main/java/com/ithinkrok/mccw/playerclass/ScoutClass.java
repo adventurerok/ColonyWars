@@ -43,8 +43,9 @@ public class ScoutClass extends ClassItemClassHandler {
                 new ClassItem(plugin.getLangFile(), Material.CHAINMAIL_HELMET, "items.regen-ability.name")
                         .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new RegenAbility())
-                        .withRightClickCooldown("regen", new LinearCalculator(35, 10), "cooldowns.regen.finished")
-                        .withUpgradables(new ClassItem.Upgradable("regen", "upgrades.regen-ability.name", 1,
+                        .withRightClickCooldown("regen", "regen", new LinearCalculator(35, 10),
+                                "cooldowns.regen.finished").withUpgradables(
+                        new ClassItem.Upgradable("regen", "upgrades.regen-ability.name", 1,
                                 new LinearCalculator(config.getDouble("costs.scout.regen"), 0))));
     }
 

@@ -2,7 +2,7 @@ package com.ithinkrok.mccw.playerclass.items;
 
 /**
  * Created by paul on 18/11/15.
- *
+ * <p>
  * Calculates a number based on y=mx+c, where x is the player level.
  */
 public class LinearCalculator implements Calculator {

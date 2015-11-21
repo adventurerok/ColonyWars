@@ -43,9 +43,11 @@ public class ClassItem {
     private LangFile langFile;
     private TimeoutAction timeoutAction;
     private String timeoutUpgrade;
+    private String timeoutAbility;
     private String timeoutDescriptionLocale;
     private String timeoutFinished;
     private Calculator timeoutCalculator;
+    private String rightClickCooldownAbility;
 
     public ClassItem(LangFile langFile, Material itemMaterial) {
         this(langFile, itemMaterial, null);
@@ -87,12 +89,13 @@ public class ClassItem {
         return this;
     }
 
-    public ClassItem withRightClickTimeout(TimeoutAction timeoutAction, String timeoutUpgrade,
+    public ClassItem withRightClickTimeout(TimeoutAction timeoutAction, String timeoutUpgrade, String timeoutAbility,
                                            String timeoutDescriptionLocale, String timeoutEndedLocale,
                                            Calculator timeoutCalculator) {
 
         this.timeoutAction = timeoutAction;
         this.timeoutUpgrade = timeoutUpgrade;
+        this.timeoutAbility = timeoutAbility;
         this.timeoutDescriptionLocale = timeoutDescriptionLocale;
         this.timeoutFinished = langFile.getLocale(timeoutEndedLocale);
         this.timeoutCalculator = timeoutCalculator;
@@ -109,9 +112,10 @@ public class ClassItem {
         return this;
     }
 
-    public ClassItem withRightClickCooldown(String upgradeName, Calculator rightClickCooldown,
+    public ClassItem withRightClickCooldown(String upgradeName, String abilityName, Calculator rightClickCooldown,
                                             String cooldownFinishedLang) {
         this.rightClickCooldownUpgrade = upgradeName;
+        this.rightClickCooldownAbility = abilityName;
         this.rightClickCooldown = rightClickCooldown;
         this.rightClickCooldownFinished = langFile.getLocale(cooldownFinishedLang);
         return this;
@@ -276,6 +280,10 @@ public class ClassItem {
             return leftClickAction != null && leftClickAction.onInteractWorld(event);
         } else {
             if (rightClickAction == null) return false;
+            if (isTimingOut(event.getUser())) {
+                event.getUser().messageLocale("timeouts.default.wait");
+                return true;
+            }
             if (isCoolingDown(event.getUser())) {
                 event.getUser().messageLocale("cooldowns.default.wait");
                 return true;
@@ -286,7 +294,7 @@ public class ClassItem {
             if (timeoutCalculator != null) {
                 int upgradeLevel = event.getUser().getUpgradeLevel(timeoutUpgrade);
                 int timeout = (int) timeoutCalculator.calculate(upgradeLevel);
-                event.getUser().startCoolDown(timeoutUpgrade, timeout, timeoutFinished);
+                event.getUser().startCoolDown(timeoutAbility, timeout, timeoutFinished);
             } else if (rightClickCooldown != null) {
                 startRightClickCooldown(event.getUser());
             }
@@ -296,20 +304,23 @@ public class ClassItem {
 
     }
 
+    private boolean isTimingOut(User user) {
+        return timeoutCalculator != null && user.isCoolingDown(timeoutAbility);
+    }
+
     private boolean isCoolingDown(User user) {
-        return (rightClickCooldown != null && user.isCoolingDown(rightClickCooldownUpgrade)) ||
-                (timeoutCalculator != null && user.isCoolingDown(timeoutUpgrade));
+        return rightClickCooldown != null && user.isCoolingDown(rightClickCooldownAbility);
 
     }
 
     private void startRightClickCooldown(User user) {
         int upgradeLevel = user.getUpgradeLevel(rightClickCooldownUpgrade);
         int cooldown = (int) rightClickCooldown.calculate(upgradeLevel);
-        user.startCoolDown(rightClickCooldownUpgrade, cooldown, rightClickCooldownFinished);
+        user.startCoolDown(rightClickCooldownAbility, cooldown, rightClickCooldownFinished);
     }
 
     public void onAbilityCooldown(UserAbilityCooldownEvent event) {
-        if (!event.getAbility().equals(timeoutUpgrade)) return;
+        if (!event.getAbility().equals(timeoutAbility)) return;
         if (!timeoutAction.onAbilityTimeout(event)) return;
 
         startRightClickCooldown(event.getUser());

@@ -30,15 +30,16 @@ public class PriestClass extends ClassItemClassHandler {
         super(new ClassItem(plugin.getLangFile(), Material.DIAMOND_BOOTS, "items.healing-scroll.name")
                         .withUpgradeBuildings(Buildings.CATHEDRAL).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new HealingScroll(plugin))
-                        .withRightClickCooldown("healing", new LinearCalculator(240, -90), "cooldowns.healing.finished")
-                        .withUpgradables(new ClassItem.Upgradable("healing", "upgrades.healing-scroll.name", 2,
+                        .withRightClickCooldown("healing", "healing", new LinearCalculator(240, -90),
+                                "cooldowns.healing.finished").withUpgradables(
+                        new ClassItem.Upgradable("healing", "upgrades.healing-scroll.name", 2,
                                 configArrayCalculator(config, "costs.priest.healing", 2))),
                 new ClassItem(plugin.getLangFile(), Material.GOLD_CHESTPLATE, "items.earth-bender.name")
                         .withUpgradeBuildings(Buildings.CATHEDRAL).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new EarthBenderRightClick())
-                        .withRightClickCooldown("bender", new LinearCalculator(45, -15), "cooldowns.bender.finished")
-                        .withLeftClickAction(new EarthBenderLeftClick()).withUpgradables(
-                        new ClassItem.Upgradable("bender", "upgrades.earth-bender.name", 2,
+                        .withRightClickCooldown("bender", "bender", new LinearCalculator(45, -15),
+                                "cooldowns.bender.finished").withLeftClickAction(new EarthBenderLeftClick())
+                        .withUpgradables(new ClassItem.Upgradable("bender", "upgrades.earth-bender.name", 2,
                                 configArrayCalculator(config, "costs.priest.bender", 2))),
                 new ClassItem(plugin.getLangFile(), Material.GOLD_LEGGINGS, "items.cross.name")
                         .withUpgradeBuildings(Buildings.CATHEDRAL).withUnlockOnBuildingBuild(true).withWeaponModifier(

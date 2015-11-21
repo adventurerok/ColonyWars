@@ -99,8 +99,12 @@ cooldowns.bender.finished=&aThe earth bender is ready to use again.
 cooldowns.healing.finished=&aThe healing scroll is ready to use again.
 cooldowns.wolf.finished=&aThe wolf wand is ready to use again.
 cooldowns.regen.finished=&aYour regeneration ability has cooled down!
+cooldowns.cloak.finished=&aYour cloak ability has cooled down!
 
 cooldowns.default.wait=&cPlease wait for this ability to cool down!
+
+timeouts.cloaking.finished=&cYour cloak has run out!
+timeouts.default.wait=&cYou are already using this ability!
 
 #class-upgrades
 upgrades.sharpness.name=Sharpness Upgrade %s
@@ -120,6 +124,7 @@ upgrades.earth-bender.name=Earth Bender Upgrade %s
 upgrades.cross.name=Cross Upgrade %s
 upgrades.regen-ability.name=Regen Ability Upgrade
 upgrades.wolf-wand.name=Wolf Wand Upgrade %s
+upgrades.cloak.name=Cloak Upgrade %s
 
 #class-items
 items.peasant-axe.name=Peasant Axe
@@ -138,6 +143,7 @@ items.player-compass.no-player=No One
 items.regen-ability.name=Regeneration Ability
 items.wolf-wand.name=Wolf Wand
 items.mighty-axe.name=The Mighty Axe
+items.cloak.name=Cloak
 
 #lore
 lore.cooldown=Cooldown: %s seconds
@@ -145,6 +151,8 @@ lore.damage=Damage: %s Hearts
 lore.fire=Fire Duration: %s seconds
 lore.nausea=Nausea Duration: %s seconds
 lore.wither=Wither Duration: %s seconds
+
+lore.timeout.cloak=Invisibility: %s seconds
 
 #money
 money.exchange.too-expensive=&cYou do not have that amount of money

@@ -24,6 +24,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by paul on 01/11/15.
@@ -47,21 +48,16 @@ public class User {
     private Inventory shopInventory;
     private PlayerClass playerClass;
     private BentEarth bentEarth;
-
-    private HashMap<String, Integer> upgradeLevels = new HashMap<>();
-    private HashMap<String, Boolean> coolingDown = new HashMap<>();
-
+    private Map<String, Integer> upgradeLevels = new HashMap<>();
+    private Map<String, Boolean> coolingDown = new HashMap<>();
+    private Map<String, Metadata> metadata = new HashMap<>();
     private List<String> oldBuildingNows = new ArrayList<>();
-
     private int playerCash = 0;
     private boolean cloaked = false;
-
     private boolean inGame = false;
-
     private UUID fireAttacker;
     private UUID witherAttacker;
     private UUID lastAttacker;
-
     private String mapVote;
 
     public User(WarsPlugin plugin, Player player) {
@@ -69,34 +65,22 @@ public class User {
         this.player = player;
     }
 
-    public HashMap<String, Integer> getUpgradeLevels() {
+    public Map<String, Integer> getUpgradeLevels() {
         return upgradeLevels;
+    }
+
+    public void setMetadata(String name, Object data, boolean wipeOnGameEnd) {
+        metadata.put(name, new Metadata(data, wipeOnGameEnd));
+    }
+
+    public Object getMetadata(String name) {
+        Metadata data = metadata.get(name);
+        if (data == null) return null;
+        return data.data;
     }
 
     public UUID getUniqueId() {
         return player.getUniqueId();
-    }
-
-    public boolean isInGame() {
-        return inGame && teamColor != null;
-    }
-
-    public void setInGame(boolean inGame) {
-        this.inGame = inGame;
-
-        if (!inGame) {
-            upgradeLevels.clear();
-            coolingDown.clear();
-            oldBuildingNows.clear();
-            playerClass = null;
-            shopInventory = null;
-            shopBlock = null;
-            playerCash = 0;
-            oldBuildingNows.clear();
-            bentEarth = null;
-        }
-
-        updateScoreboard();
     }
 
     public PlayerInventory getPlayerInventory() {
@@ -307,12 +291,47 @@ public class User {
 
         coolingDown.put(ability, false);
 
-        if(!isInGame()) return;
+        if (!isInGame()) return;
         getPlayerClassHandler().onAbilityCooldown(new UserAbilityCooldownEvent(this, ability));
 
         if (message == null) return;
         message(ChatColor.GREEN + message);
         player.playSound(player.getLocation(), Sound.ZOMBIE_UNFECT, 1.0f, 2.0f);
+    }
+
+    public boolean isInGame() {
+        return inGame && teamColor != null;
+    }
+
+    public void setInGame(boolean inGame) {
+        this.inGame = inGame;
+
+        if (!inGame) {
+            upgradeLevels.clear();
+            coolingDown.clear();
+            oldBuildingNows.clear();
+
+            List<String> removeMetadata =
+                    metadata.entrySet().stream().filter(entry -> entry.getValue().wipeOnGameEnd).map(Map.Entry::getKey)
+                            .collect(Collectors.toList());
+
+            for (String key : removeMetadata) {
+                metadata.remove(key);
+            }
+
+            playerClass = null;
+            shopInventory = null;
+            shopBlock = null;
+            playerCash = 0;
+            oldBuildingNows.clear();
+            bentEarth = null;
+        }
+
+        updateScoreboard();
+    }
+
+    public PlayerClassHandler getPlayerClassHandler() {
+        return plugin.getPlayerClassHandler(playerClass);
     }
 
     public void messageLocale(String locale, Object... objects) {
@@ -393,10 +412,6 @@ public class User {
         PlayerClassHandler classHandler = getPlayerClassHandler();
         classHandler.addInventoryItems(contents, building, this, team);
         return contents;
-    }
-
-    public PlayerClassHandler getPlayerClassHandler() {
-        return plugin.getPlayerClassHandler(playerClass);
     }
 
     public void setTeamColor(TeamColor teamColor) {
@@ -591,5 +606,15 @@ public class User {
         if (this.mapVote != null) plugin.setMapVotes(this.mapVote, plugin.getMapVotes(this.mapVote) + 1);
 
         plugin.getUsers().forEach(User::updateScoreboard);
+    }
+
+    private static class Metadata {
+        public Object data;
+        public boolean wipeOnGameEnd;
+
+        public Metadata(Object data, boolean wipeOnGameEnd) {
+            this.data = data;
+            this.wipeOnGameEnd = wipeOnGameEnd;
+        }
     }
 }

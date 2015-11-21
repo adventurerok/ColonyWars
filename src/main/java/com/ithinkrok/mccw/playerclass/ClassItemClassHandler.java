@@ -13,29 +13,29 @@ import java.util.*;
 
 /**
  * Created by paul on 18/11/15.
- *
+ * <p>
  * Handles classes that use ClassItems
  */
 public class ClassItemClassHandler extends BuyableInventory implements PlayerClassHandler {
 
     private Map<Material, ClassItem> classItemHashMap = new LinkedHashMap<>();
 
-    public ClassItemClassHandler(ClassItem...items){
+    public ClassItemClassHandler(ClassItem... items) {
         this(Arrays.asList(items));
     }
 
-    public ClassItemClassHandler(List<ClassItem> items){
+    public ClassItemClassHandler(List<ClassItem> items) {
         super(calculateBuyables(items));
 
-        for(ClassItem item : items){
+        for (ClassItem item : items) {
             classItemHashMap.put(item.getItemMaterial(), item);
         }
     }
 
-    private static List<Buyable> calculateBuyables(List<ClassItem> items){
+    private static List<Buyable> calculateBuyables(List<ClassItem> items) {
         List<Buyable> result = new ArrayList<>();
 
-        for(ClassItem item : items){
+        for (ClassItem item : items) {
             item.addBuyablesToList(result);
         }
 
@@ -44,14 +44,14 @@ public class ClassItemClassHandler extends BuyableInventory implements PlayerCla
 
     @Override
     public void onBuildingBuilt(UserTeamBuildingBuiltEvent event) {
-        for(ClassItem item : classItemHashMap.values()){
+        for (ClassItem item : classItemHashMap.values()) {
             item.onBuildingBuilt(event);
         }
     }
 
     @Override
     public void onUserBeginGame(UserBeginGameEvent event) {
-        for(ClassItem item : classItemHashMap.values()){
+        for (ClassItem item : classItemHashMap.values()) {
             item.onUserBeginGame(event);
         }
     }
@@ -66,31 +66,31 @@ public class ClassItemClassHandler extends BuyableInventory implements PlayerCla
 
     @Override
     public void onPlayerUpgrade(UserUpgradeEvent event) {
-        for(ClassItem item : classItemHashMap.values()){
+        for (ClassItem item : classItemHashMap.values()) {
             item.onUserUpgrade(event);
         }
     }
 
     @Override
     public void onUserAttack(UserAttackEvent event) {
-        if(event.getItem() == null) return;
+        if (event.getItem() == null) return;
         ClassItem item = classItemHashMap.get(event.getItem().getType());
-        if(item == null) return;
+        if (item == null) return;
 
         item.onUserAttack(event);
     }
 
     @Override
     public void onAbilityCooldown(UserAbilityCooldownEvent event) {
-        for(ClassItem item : classItemHashMap.values()){
+        for (ClassItem item : classItemHashMap.values()) {
             item.onAbilityCooldown(event);
         }
     }
 
-    protected static Calculator configArrayCalculator(FileConfiguration config, String base, int maxLevel){
+    protected static Calculator configArrayCalculator(FileConfiguration config, String base, int maxLevel) {
         double[] returnValues = new double[maxLevel + 1];
 
-        for(int level = 0; level <= maxLevel; ++level){
+        for (int level = 0; level <= maxLevel; ++level) {
             returnValues[level] = config.getDouble(base + level);
         }
 

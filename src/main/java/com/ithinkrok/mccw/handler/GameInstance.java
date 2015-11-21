@@ -50,6 +50,8 @@ public class GameInstance {
 
     private GameState gameState = GameState.LOBBY;
 
+    private ArrayList<Integer> gameTasks = new ArrayList<>();
+
     public GameInstance(WarsPlugin plugin, String map) {
         this.map = map;
         this.plugin = plugin;
@@ -77,7 +79,11 @@ public class GameInstance {
         return gameState;
     }
 
+    @SuppressWarnings("unchecked")
     private void endGame() {
+        List<Integer> oldTasks = (List<Integer>) gameTasks.clone();
+        oldTasks.forEach(this::cancelTask);
+
         for (User user : plugin.getUsers()) {
             plugin.playerTeleportLobby(user.getPlayer());
         }
@@ -405,6 +411,27 @@ public class GameInstance {
         }
 
         getTeam(building.getTeamColor()).buildingFinished(building);
+    }
+
+    public void cancelTask(int task){
+        if(!gameTasks.contains(task)) return;
+
+        Bukkit.getScheduler().cancelTask(task);
+        gameTasks.remove(task);
+    }
+
+    public int scheduleTask(Runnable runnable, long ticksDelay){
+        int task = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, runnable, ticksDelay);
+
+        gameTasks.add(task);
+        return task;
+    }
+
+    public int scheduleRepeatingTask(Runnable runnable, long ticksDelay, long ticksPeriod){
+        int task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, runnable, ticksDelay, ticksPeriod);
+
+        gameTasks.add(task);
+        return task;
     }
 
     public void changeGameState(GameState state){

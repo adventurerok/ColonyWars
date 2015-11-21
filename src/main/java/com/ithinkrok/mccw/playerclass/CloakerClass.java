@@ -5,6 +5,10 @@ import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
+import com.ithinkrok.mccw.playerclass.items.ArrayCalculator;
+import com.ithinkrok.mccw.playerclass.items.Calculator;
+import com.ithinkrok.mccw.playerclass.items.ClassItem;
+import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Bukkit;
@@ -21,125 +25,86 @@ import org.bukkit.potion.PotionEffectType;
  * <p>
  * Handles the Cloaker class.
  */
-public class CloakerClass extends BuyableInventory implements PlayerClassHandler {
+public class CloakerClass extends ClassItemClassHandler {
 
-
-    //Will be updated *eventually*
-
-    private final WarsPlugin plugin;
 
     public CloakerClass(WarsPlugin plugin, FileConfiguration config) {
-        super(new UpgradeBuyable(InventoryUtils
-                .createItemWithNameAndLore(Material.IRON_LEGGINGS, 1, 0, "Cloak", "Cooldown: 35 seconds",
-                        "Invisibility: 15 seconds"), Buildings.MAGETOWER, config.getInt("costs.cloaker.cloak1"),
-                "cloak", 1), new UpgradeBuyable(InventoryUtils
-                .createItemWithNameAndLore(Material.IRON_LEGGINGS, 1, 0, "Cloak", "Cooldown: 45 seconds",
-                        "Invisibility: 25 seconds"), Buildings.MAGETOWER, config.getInt("costs.cloaker.cloak2"),
-                "cloak", 2));
-        this.plugin = plugin;
+        super(new ClassItem(plugin.getLangFile(), Material.IRON_LEGGINGS, "items.cloak.name")
+                .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
+                .withRightClickAction(new Cloak(plugin, cloakDurationCalculator()))
+                .withRightClickCooldown("cloak", "cloak", new LinearCalculator(25, 10), "cooldowns.cloak.finished")
+                .withRightClickTimeout(new Decloak(plugin), "cloak", "cloaking", "lore.timeout.cloak",
+                        "timeouts.cloaking.finished", cloakDurationCalculator()).withUpgradables(
+                        new ClassItem.Upgradable("cloak", "upgrades.cloak.name", 2,
+                                configArrayCalculator(config, "costs.cloaker.cloak", 2))));
     }
 
-    @Override
-    public void onBuildingBuilt(UserTeamBuildingBuiltEvent event) {
-        switch (event.getBuilding().getBuildingName()) {
-            case Buildings.MAGETOWER:
-                event.getUserInventory().addItem(InventoryUtils
-                        .createItemWithNameAndLore(Material.IRON_LEGGINGS, 1, 0, "Cloak", "Cooldown: 25 seconds",
-                                "Invisibility: 10 seconds"));
-                break;
-        }
+    private static Calculator cloakDurationCalculator() {
+        return new ArrayCalculator(10, 15, 25);
     }
+
 
     @Override
     public void onUserBeginGame(UserBeginGameEvent event) {
+        super.onUserBeginGame(event);
         event.getPlayer()
                 .addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0, false, false), false);
         event.getPlayer()
                 .addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 3, false, false), false);
     }
 
-    @Override
-    public boolean onInteract(UserInteractEvent event) {
-        if (!event.isRightClick()) return false;
-        if (event.getItem() == null || event.getItem().getType() != Material.IRON_LEGGINGS) return false;
+    private static class Cloak implements ClassItem.InteractAction {
 
-        User user = event.getUser();
+        private Calculator cloakDuration;
+        private WarsPlugin plugin;
 
-        if (user.isCoolingDown("cloaking")) {
-            user.message(ChatColor.RED + "You are already cloaked!");
+        public Cloak(WarsPlugin plugin, Calculator cloakDuration) {
+            this.plugin = plugin;
+            this.cloakDuration = cloakDuration;
+        }
+
+        @Override
+        public boolean onInteractWorld(UserInteractEvent event) {
+            event.getUser().cloak();
+
+            int cloakLevel = event.getUser().getUpgradeLevel("cloak");
+            int cloakDuration = (int) this.cloakDuration.calculate(cloakLevel);
+
+            event.getPlayer()
+                    .addPotionEffect(new PotionEffect(PotionEffectType.SPEED, cloakDuration * 20, 1, false, true),
+                            true);
+
+
+            int swirlTask = plugin.getGameInstance().scheduleRepeatingTask(
+                    () -> event.getPlayer().getLocation().getWorld()
+                            .playEffect(event.getPlayer().getLocation(), Effect.POTION_SWIRL, 0), 20, 20);
+
+            event.getUser().setMetadata("swirlTask", swirlTask, true);
+
             return true;
         }
+    }
 
-        if (user.isCoolingDown("cloak")) {
-            user.message(ChatColor.RED + "Please wait for the cloak to cool down!");
-            return true;
+    private static class Decloak implements ClassItem.TimeoutAction {
+
+        private WarsPlugin plugin;
+
+        public Decloak(WarsPlugin plugin) {
+            this.plugin = plugin;
         }
 
-        int cloak = 10;
-        int cooldown = 25;
+        @Override
+        public boolean onAbilityTimeout(UserAbilityCooldownEvent event) {
+            if (event.getUser().isInGame()) event.getUser().decloak();
+            Object swirlTask = event.getUser().getMetadata("swirlTask");
+            if (swirlTask == null || !(swirlTask instanceof Integer)) return false;
 
-        switch (user.getUpgradeLevel("cloak")) {
-            case 1:
-                cloak = 15;
-                cooldown = 35;
-                break;
-            case 2:
-                cloak = 25;
-                cooldown = 45;
-                break;
-        }
-
-        user.startCoolDown("cloaking", cloak, null);
-
-        user.cloak();
-
-        event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, cloak * 20, 1, false, true), true);
-
-        final int finalCooldown = cooldown;
-
-        final int swirlTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin,
-                () -> user.getPlayer().getLocation().getWorld()
-                        .playEffect(user.getPlayer().getLocation(), Effect.POTION_SWIRL, 0), 20, 20);
-
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            if (user.isInGame()) user.decloak();
-            Bukkit.getScheduler().cancelTask(swirlTask);
-            user.message(ChatColor.RED + "Your cloak has run out!");
-            user.startCoolDown("cloak", finalCooldown, "Your cloak has cooled down!");
+            plugin.getGameInstance().cancelTask((Integer) swirlTask);
             event.getPlayer()
                     .addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0, false, false),
                             true);
-        }, cloak * 20);
 
-        return true;
-    }
-
-    @Override
-    public void onPlayerUpgrade(UserUpgradeEvent event) {
-        switch (event.getUpgradeName()) {
-            case "cloak":
-                int cooldown = 35;
-                int invisibility = 15;
-                if (event.getUpgradeLevel() == 2) {
-                    cooldown = 45;
-                    invisibility = 25;
-                }
-
-                ItemStack cloak = InventoryUtils.createItemWithNameAndLore(Material.IRON_LEGGINGS, 1, 0, "Cloak",
-                        "Cooldown: " + cooldown + " seconds", "Invisibility: " + invisibility + " seconds");
-
-                InventoryUtils.replaceItem(event.getUserInventory(), cloak);
-                break;
+            return true;
         }
-    }
-
-    @Override
-    public void onUserAttack(UserAttackEvent event) {
-
-    }
-
-    @Override
-    public void onAbilityCooldown(UserAbilityCooldownEvent event) {
-
     }
 }

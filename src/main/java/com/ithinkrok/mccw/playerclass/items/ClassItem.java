@@ -56,7 +56,7 @@ public class ClassItem {
     public ClassItem(LangFile langFile, Material itemMaterial, String itemDisplayLang) {
         this.langFile = langFile;
         this.itemMaterial = itemMaterial;
-        this.itemDisplayName = langFile.getLocale(itemDisplayLang);
+        if (itemDisplayLang != null) this.itemDisplayName = langFile.getLocale(itemDisplayLang);
 
         signature = UUID.randomUUID().toString();
     }

@@ -417,7 +417,7 @@ public class GameInstance {
         if(!gameTasks.contains(task)) return;
 
         Bukkit.getScheduler().cancelTask(task);
-        gameTasks.remove(task);
+        gameTasks.remove(gameTasks.indexOf(task)); //Fix exception due to remove(int) also removing at index
     }
 
     public int scheduleTask(Runnable runnable, long ticksDelay){

@@ -84,7 +84,9 @@ building.invalid-loc=&cYou cannot build that here!
 building.destroy.invalid=That obsidian block does not appear to be part of a building.
 building.destroy.own-team=&cYou cannot destroy your own team's buildings!
 building.destroy.bases=&cYou cannot destroy other team's bases!
-building.desc=Builds a %s when placed!
+building.item.desc=Builds a %s when placed!
+building.display.desc=Build a %s!
+building.purchased=%s &3purchased &f%s
 
 building.upgrade.replace=Replace this %s with a %s
 building.upgrade.failed=We failed to build a %s here. Have the block yourself to find a better place!

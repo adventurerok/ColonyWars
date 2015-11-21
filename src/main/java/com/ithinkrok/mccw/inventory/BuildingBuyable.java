@@ -2,6 +2,7 @@ package com.ithinkrok.mccw.inventory;
 
 import com.ithinkrok.mccw.event.ItemPurchaseEvent;
 import com.ithinkrok.mccw.util.InventoryUtils;
+import com.ithinkrok.mccw.util.LangFile;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
@@ -15,16 +16,17 @@ public class BuildingBuyable extends ItemBuyable {
 
     private String buildingName;
 
-    public BuildingBuyable(String buildingName, String purchaseFromBuilding, int cost){
-        this(buildingName, purchaseFromBuilding, cost, 1, true);
+    public BuildingBuyable(LangFile lang, String buildingName, String purchaseFromBuilding, int cost) {
+        this(lang, buildingName, purchaseFromBuilding, cost, 1, true);
     }
 
-    public BuildingBuyable(String buildingName, String purchaseFromBuilding, int costPerItem, int amount, boolean
-            team) {
-        super(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, amount, 0, buildingName, "Build a " +
-                        buildingName + "!"),
-                InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, amount, 0, buildingName, "Builds a " +
-                        buildingName + " when placed!"), purchaseFromBuilding, costPerItem * amount, team, true);
+    public BuildingBuyable(LangFile lang, String buildingName, String purchaseFromBuilding, int costPerItem, int amount,
+                           boolean team) {
+        super(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, amount, 0, buildingName,
+                lang.getLocale("building.display.desc", buildingName)), InventoryUtils
+                        .createItemWithNameAndLore(Material.LAPIS_ORE, amount, 0, buildingName,
+                                lang.getLocale("building.item.desc", buildingName)), purchaseFromBuilding, costPerItem * amount,
+                team, true);
         this.buildingName = buildingName;
     }
 
@@ -35,8 +37,7 @@ public class BuildingBuyable extends ItemBuyable {
 
     @Override
     public void prePurchase(ItemPurchaseEvent event) {
-        event.getTeam().message(
-                event.getUser().getFormattedName() + ChatColor.DARK_AQUA + " purchased " + ChatColor.WHITE +
-                        buildingName);
+        event.getTeam()
+                .messageLocale("building.purchased", event.getUser().getFormattedName(), buildingName);
     }
 }

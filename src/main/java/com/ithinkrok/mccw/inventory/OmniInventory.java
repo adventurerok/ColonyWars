@@ -4,6 +4,7 @@ import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.event.ItemPurchaseEvent;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
+import com.ithinkrok.mccw.util.LangFile;
 import com.ithinkrok.mccw.util.SchematicBuilder;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -27,18 +28,18 @@ public class OmniInventory extends BuyableInventory {
     private static List<Buyable> getBuyables(WarsPlugin plugin, FileConfiguration config) {
         List<Buyable> result = new ArrayList<>();
 
-        addBaseItems(result, config);
+        addBaseItems(result, plugin.getLangFile(), config);
         addFarmItems(result, config);
         addChurchItems(result, plugin, config);
         addCathedralItems(result, config);
         addGreenhouseItems(result, plugin, config);
-        addBlacksmithItems(result, config);
+        addBlacksmithItems(result, plugin.getLangFile(), config);
         addScoutTowerItems(result, plugin, config);
 
         return result;
     }
 
-    private static void addBaseItems(List<Buyable> result, FileConfiguration config) {
+    private static void addBaseItems(List<Buyable> result, LangFile lang, FileConfiguration config) {
         int farmCost = config.getInt("costs.buildings." + Buildings.FARM);
         int lumbermillCost = config.getInt("costs.buildings." + Buildings.LUMBERMILL);
         int blacksmithCost = config.getInt("costs.buildings." + Buildings.BLACKSMITH);
@@ -46,12 +47,12 @@ public class OmniInventory extends BuyableInventory {
         int churchCost = config.getInt("costs.buildings." + Buildings.CHURCH);
         int greenhouseCost = config.getInt("costs.buildings." + Buildings.GREENHOUSE);
 
-        result.add(new BuildingBuyable(Buildings.FARM, Buildings.BASE, farmCost));
-        result.add(new BuildingBuyableWithFarm(Buildings.LUMBERMILL, Buildings.BASE, lumbermillCost));
-        result.add(new BuildingBuyableWithFarm(Buildings.BLACKSMITH, Buildings.BASE, blacksmithCost));
-        result.add(new BuildingBuyableWithFarm(Buildings.MAGETOWER, Buildings.BASE, magetowerCost));
-        result.add(new BuildingBuyableWithFarm(Buildings.CHURCH, Buildings.BASE, churchCost));
-        result.add(new BuildingBuyableWithFarm(Buildings.GREENHOUSE, Buildings.BASE, greenhouseCost));
+        result.add(new BuildingBuyable(lang, Buildings.FARM, Buildings.BASE, farmCost));
+        result.add(new BuildingBuyableWithFarm(lang, Buildings.LUMBERMILL, Buildings.BASE, lumbermillCost));
+        result.add(new BuildingBuyableWithFarm(lang, Buildings.BLACKSMITH, Buildings.BASE, blacksmithCost));
+        result.add(new BuildingBuyableWithFarm(lang, Buildings.MAGETOWER, Buildings.BASE, magetowerCost));
+        result.add(new BuildingBuyableWithFarm(lang, Buildings.CHURCH, Buildings.BASE, churchCost));
+        result.add(new BuildingBuyableWithFarm(lang, Buildings.GREENHOUSE, Buildings.BASE, greenhouseCost));
 
     }
 
@@ -99,7 +100,7 @@ public class OmniInventory extends BuyableInventory {
 
                     event.getUserInventory().addItem(InventoryUtils
                             .createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.PLAYERCATHEDRAL,
-                                    plugin.getLocale("building.desc", Buildings.CATHEDRAL)));
+                                    plugin.getLocale("building.item.desc", Buildings.CATHEDRAL)));
                 }
             }
 
@@ -126,14 +127,14 @@ public class OmniInventory extends BuyableInventory {
                 Buildings.GREENHOUSE, axeCost, false));
     }
 
-    private static void addBlacksmithItems(List<Buyable> result, FileConfiguration config) {
+    private static void addBlacksmithItems(List<Buyable> result, LangFile lang, FileConfiguration config) {
         int scoutTowerCost = config.getInt("costs.buildings." + Buildings.SCOUTTOWER);
         int wallCost = config.getInt("costs.buildings." + Buildings.WALL);
         int mineCost = config.getInt("costs.buildings." + Buildings.LANDMINE);
 
-        result.add(new BuildingBuyable(Buildings.SCOUTTOWER, Buildings.BLACKSMITH, scoutTowerCost));
-        result.add(new BuildingBuyable(Buildings.WALL, Buildings.BLACKSMITH, wallCost, 16, true));
-        result.add(new BuildingBuyable(Buildings.LANDMINE, Buildings.BLACKSMITH, mineCost));
+        result.add(new BuildingBuyable(lang, Buildings.SCOUTTOWER, Buildings.BLACKSMITH, scoutTowerCost));
+        result.add(new BuildingBuyable(lang, Buildings.WALL, Buildings.BLACKSMITH, wallCost, 16, true));
+        result.add(new BuildingBuyable(lang, Buildings.LANDMINE, Buildings.BLACKSMITH, mineCost));
     }
 
     private static void addScoutTowerItems(List<Buyable> result, WarsPlugin plugin, FileConfiguration config) {
@@ -155,7 +156,7 @@ public class OmniInventory extends BuyableInventory {
 
                     event.getUserInventory().addItem(InventoryUtils
                             .createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.CANNONTOWER,
-                                    plugin.getLocale("building.desc", Buildings.CANNONTOWER)));
+                                    plugin.getLocale("building.item.desc", Buildings.CANNONTOWER)));
                 }
             }
 
@@ -168,8 +169,8 @@ public class OmniInventory extends BuyableInventory {
 
     private static class BuildingBuyableWithFarm extends BuildingBuyable {
 
-        public BuildingBuyableWithFarm(String buildingName, String purchaseFromBuilding, int cost) {
-            super(buildingName, purchaseFromBuilding, cost);
+        public BuildingBuyableWithFarm(LangFile lang, String buildingName, String purchaseFromBuilding, int cost) {
+            super(lang, buildingName, purchaseFromBuilding, cost);
         }
 
         @Override

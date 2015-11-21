@@ -3,6 +3,7 @@ package com.ithinkrok.mccw.data;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.mccw.event.UserAbilityCooldownEvent;
 import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
@@ -305,6 +306,9 @@ public class User {
         if (!isCoolingDown(ability)) return;
 
         coolingDown.put(ability, false);
+
+        if(!isInGame()) return;
+        getPlayerClassHandler().onAbilityCooldown(new UserAbilityCooldownEvent(this, ability));
 
         if (message == null) return;
         message(ChatColor.GREEN + message);

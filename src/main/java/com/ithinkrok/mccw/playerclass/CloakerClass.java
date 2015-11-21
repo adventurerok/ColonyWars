@@ -137,4 +137,9 @@ public class CloakerClass extends BuyableInventory implements PlayerClassHandler
     public void onUserAttack(UserAttackEvent event) {
 
     }
+
+    @Override
+    public void onAbilityCooldown(UserAbilityCooldownEvent event) {
+
+    }
 }

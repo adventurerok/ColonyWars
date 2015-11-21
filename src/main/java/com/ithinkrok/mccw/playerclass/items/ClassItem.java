@@ -41,6 +41,11 @@ public class ClassItem {
     private EnchantmentEffect[] enchantmentEffects;
     private String signature;
     private LangFile langFile;
+    private TimeoutAction timeoutAction;
+    private String timeoutUpgrade;
+    private String timeoutDescriptionLocale;
+    private String timeoutFinished;
+    private Calculator timeoutCalculator;
 
     public ClassItem(LangFile langFile, Material itemMaterial) {
         this(langFile, itemMaterial, null);
@@ -79,6 +84,18 @@ public class ClassItem {
 
     public ClassItem withRightClickAction(InteractAction rightClickAction) {
         this.rightClickAction = rightClickAction;
+        return this;
+    }
+
+    public ClassItem withRightClickTimeout(TimeoutAction timeoutAction, String timeoutUpgrade,
+                                           String timeoutDescriptionLocale, String timeoutEndedLocale,
+                                           Calculator timeoutCalculator) {
+
+        this.timeoutAction = timeoutAction;
+        this.timeoutUpgrade = timeoutUpgrade;
+        this.timeoutDescriptionLocale = timeoutDescriptionLocale;
+        this.timeoutFinished = langFile.getLocale(timeoutEndedLocale);
+        this.timeoutCalculator = timeoutCalculator;
         return this;
     }
 
@@ -146,6 +163,11 @@ public class ClassItem {
         if (rightClickCooldown != null) {
             double seconds = rightClickCooldown.calculate(getUpgradeLevel(upgradeLevels, rightClickCooldownUpgrade));
             lore.add(langFile.getLocale("lore.cooldown", seconds));
+        }
+
+        if (timeoutCalculator != null) {
+            double seconds = timeoutCalculator.calculate(getUpgradeLevel(upgradeLevels, timeoutUpgrade));
+            lore.add(langFile.getLocale(timeoutDescriptionLocale, seconds));
         }
 
         String[] loreArray = new String[lore.size()];
@@ -254,25 +276,52 @@ public class ClassItem {
             return leftClickAction != null && leftClickAction.onInteractWorld(event);
         } else {
             if (rightClickAction == null) return false;
-            if (rightClickCooldown != null && event.getUser().isCoolingDown(rightClickCooldownUpgrade)) {
+            if (isCoolingDown(event.getUser())) {
                 event.getUser().messageLocale("cooldowns.default.wait");
                 return true;
             }
             boolean done = rightClickAction.onInteractWorld(event);
+            if (!done) return false;
 
-            if (done && rightClickCooldown != null) {
-                int cooldown =
-                        (int) rightClickCooldown.calculate(event.getUser().getUpgradeLevel(rightClickCooldownUpgrade));
-                event.getUser().startCoolDown(rightClickCooldownUpgrade, cooldown, rightClickCooldownFinished);
+            if (timeoutCalculator != null) {
+                int upgradeLevel = event.getUser().getUpgradeLevel(timeoutUpgrade);
+                int timeout = (int) timeoutCalculator.calculate(upgradeLevel);
+                event.getUser().startCoolDown(timeoutUpgrade, timeout, timeoutFinished);
+            } else if (rightClickCooldown != null) {
+                startRightClickCooldown(event.getUser());
             }
 
-            return done;
+            return true;
         }
+
+    }
+
+    private boolean isCoolingDown(User user) {
+        return (rightClickCooldown != null && user.isCoolingDown(rightClickCooldownUpgrade)) ||
+                (timeoutCalculator != null && user.isCoolingDown(timeoutUpgrade));
+
+    }
+
+    private void startRightClickCooldown(User user) {
+        int upgradeLevel = user.getUpgradeLevel(rightClickCooldownUpgrade);
+        int cooldown = (int) rightClickCooldown.calculate(upgradeLevel);
+        user.startCoolDown(rightClickCooldownUpgrade, cooldown, rightClickCooldownFinished);
+    }
+
+    public void onAbilityCooldown(UserAbilityCooldownEvent event) {
+        if (!event.getAbility().equals(timeoutUpgrade)) return;
+        if (!timeoutAction.onAbilityTimeout(event)) return;
+
+        startRightClickCooldown(event.getUser());
 
     }
 
     public interface InteractAction {
         boolean onInteractWorld(UserInteractEvent event);
+    }
+
+    public interface TimeoutAction {
+        boolean onAbilityTimeout(UserAbilityCooldownEvent event);
     }
 
     public static class WeaponModifier {

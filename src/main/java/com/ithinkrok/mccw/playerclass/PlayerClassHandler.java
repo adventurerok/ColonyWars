@@ -40,4 +40,11 @@ public interface PlayerClassHandler extends InventoryHandler {
      * @param event The event object describing this event
      */
     void onUserAttack(UserAttackEvent event);
+
+
+    /**
+     * Called when an ability of the user has cooled down
+     * @param event The event object describing this event
+     */
+    void onAbilityCooldown(UserAbilityCooldownEvent event);
 }

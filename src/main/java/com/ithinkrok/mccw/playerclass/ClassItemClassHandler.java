@@ -80,6 +80,13 @@ public class ClassItemClassHandler extends BuyableInventory implements PlayerCla
         item.onUserAttack(event);
     }
 
+    @Override
+    public void onAbilityCooldown(UserAbilityCooldownEvent event) {
+        for(ClassItem item : classItemHashMap.values()){
+            item.onAbilityCooldown(event);
+        }
+    }
+
     protected static Calculator configArrayCalculator(FileConfiguration config, String base, int maxLevel){
         double[] returnValues = new double[maxLevel + 1];
 

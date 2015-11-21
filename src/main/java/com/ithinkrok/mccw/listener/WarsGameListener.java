@@ -92,9 +92,9 @@ public class WarsGameListener implements Listener {
         user.setSpectator();
         user.getPlayer().teleport(plugin.getMapSpawn(null));
 
-        user.message(plugin.getLocale("spectators.game.in-progress"));
-        user.message(plugin.getLocale("spectators.game.wait-next"));
-        user.message(plugin.getLocale("spectators.players.chose"));
+        user.messageLocale("spectators.game.in-progress");
+        user.messageLocale("spectators.game.wait-next");
+        user.messageLocale("spectators.players.chose");
     }
 
     @EventHandler
@@ -163,7 +163,7 @@ public class WarsGameListener implements Listener {
 
         Schematic schematic = plugin.getSchematicData(meta.getDisplayName());
         if (schematic == null) {
-            user.message(ChatColor.RED + "Unknown building!");
+            user.messageLocale("building.unknown");
             event.setCancelled(true);
             return;
         }
@@ -173,7 +173,7 @@ public class WarsGameListener implements Listener {
         if (!SchematicBuilder
                 .buildSchematic(plugin, schematic, event.getBlock().getLocation(), rotation, user.getTeamColor())) {
             event.setCancelled(true);
-            user.message(ChatColor.RED + "You cannot build that here!");
+            user.messageLocale("building.invalid-loc");
         }
     }
 
@@ -192,20 +192,18 @@ public class WarsGameListener implements Listener {
 
         Building building = plugin.getBuildingInfo(event.getBlock().getLocation());
         if (building == null) {
-            plugin.getLogger().warning("The player destroyed an obsidian block, but it wasn't a building. Odd");
-            plugin.getLogger().warning("Obsidian location: " + event.getBlock().getLocation());
-            user.message(ChatColor.RED + "That obsidian block does not appear to be part of a building");
+            user.messageLocale("building.destroy.invalid");
             return;
         }
 
         if (user.getTeamColor() == building.getTeamColor()) {
-            user.message(ChatColor.RED + "You cannot destroy your own team's buildings!");
+            user.messageLocale("building.destroy.own-team");
             event.setCancelled(true);
             return;
         }
 
         if (Buildings.BASE.equals(building.getBuildingName())) {
-            user.message(ChatColor.RED + "You cannot destroy other team's bases!");
+            user.messageLocale("building.destroy.bases");
             return;
         }
 
@@ -303,8 +301,7 @@ public class WarsGameListener implements Listener {
         if (!plugin.getShowdownArena().isInBounds(event.getTo())) {
             if (!plugin.getShowdownArena().isInBounds(event.getFrom())) {
                 event.getPlayer().teleport(plugin.getMapSpawn(null));
-                plugin.messageAll(event.getPlayer().getDisplayName() + ChatColor.GOLD + " was teleported back to the " +
-                        "center!");
+                plugin.messageAllLocale("showdown.tele-center", event.getPlayer().getDisplayName());
             }
             event.setCancelled(true);
         }
@@ -471,17 +468,14 @@ public class WarsGameListener implements Listener {
                 plugin.getRandom().nextFloat() < (diedTeam.getRespawnChance() / 100f);
 
         if (respawn) {
-            plugin.messageAll(diedInfo.getFormattedName() + ChatColor.GOLD + " has respawned!");
+            plugin.messageAllLocale("game.player.respawn", diedInfo.getFormattedName());
 
             diedTeam.setRespawnChance(diedTeam.getRespawnChance() - 15);
             diedTeam.respawnPlayer(died);
 
             diedInfo.resetPlayerStats(false);
-
-            diedTeam.message(
-                    ChatColor.GOLD + "Your revival chance is now " + ChatColor.DARK_AQUA + diedTeam.getRespawnChance());
         } else {
-            plugin.messageAll(diedInfo.getFormattedName() + ChatColor.GOLD + " did not respawn!");
+            plugin.messageAllLocale("game.player.no-respawn", diedInfo.getFormattedName());
             diedInfo.removeFromGame();
             diedInfo.setSpectator();
         }

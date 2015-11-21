@@ -89,7 +89,10 @@ public class Team {
     }
 
     public void setRespawnChance(int respawnChance) {
+        if(this.respawnChance == respawnChance) return;
         this.respawnChance = respawnChance;
+
+        messageLocale("game.revival-chance", getRespawnChance());
 
         updatePlayerScoreboards();
     }

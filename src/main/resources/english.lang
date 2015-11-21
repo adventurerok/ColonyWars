@@ -70,12 +70,20 @@ spectators.game.wait-next=&6You can play when the current game ends
 spectators.players.chose=&6Choose a player to spectate from your inventory
 spectators.player.name=&dSpectate %s
 
+#showdown
+showdown.tele-center=%s &6was teleported back to the center!
+
 #buildings
 building.shop.name=&a%s Shop
 building.shop.hologram=&f&oClick to Open
-building.invalid=&cThat obsidian block does not appear to be a shop.
-building.not-yours=&eThat building does not belong to your team. &lMine this block to destroy it!
-building.not-finished=&cPlease wait until the construction has finished.
+building.shop.invalid=&cThat obsidian block does not appear to be a shop.
+building.shop.not-yours=&eThat building does not belong to your team. &lMine this block to destroy it!
+building.shop.not-finished=&cPlease wait until the construction has finished.
+building.unknown=&cUnknown building!
+building.invalid-loc=&cYou cannot build that here!
+building.destroy.invalid=That obsidian block does not appear to be part of a building.
+building.destroy.own-team=&cYou cannot destroy your own team's buildings!
+building.destroy.bases=&cYou cannot destroy other team's bases!
 
 #cooldown-finished
 cooldowns.ender.finished=&aThe ender wand is ready to use again.
@@ -140,10 +148,13 @@ money.balance.team.new=&eYour Team's new Balance is: &a$%s&e!
 game.player.killed=&6%s &6was killed by %s
 game.player.died-fighting=&6%s &6died while fighting %s&6!
 game.player.death=&6%s &6died!
+game.player.respawn=%s &6has respawned!
+game.player.no-respawn=%s &6did not respawn!
 game.player.all-dead=&6Oh dear. Everyone is dead!
 game.team.winner=&6The %s &6Team has won the game!
 game.start.team=&6You are playing on the %s &6Team
 game.start.class=&6You are playing as the class&3 %s
+game.revival-chance=&6Your revival chance is now&3 %s
 
 #--COMMANDS-
 command.no-console=You must be a player to execute Colony Wars commands

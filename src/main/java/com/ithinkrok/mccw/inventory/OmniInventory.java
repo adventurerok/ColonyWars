@@ -31,52 +31,11 @@ public class OmniInventory extends BuyableInventory {
         addFarmItems(result, config);
         addChurchItems(result, plugin, config);
         addCathedralItems(result, config);
-        addGreenhouseItems(result, config);
+        addGreenhouseItems(result, plugin, config);
         addBlacksmithItems(result, config);
         addScoutTowerItems(result, plugin, config);
 
         return result;
-    }
-
-    private static void addScoutTowerItems(List<Buyable> result, WarsPlugin plugin, FileConfiguration config) {
-        int cannonTowerCost = config.getInt("costs.buildings." + Buildings.CANNONTOWER);
-
-        result.add(new Buyable(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.CANNONTOWER,
-                "Replace this ScoutTower with a CannonTower"), Buildings.SCOUTTOWER,
-                cannonTowerCost, true, 1) {
-
-
-            @Override
-            public void onPurchase(ItemPurchaseEvent event) {
-                event.getBuilding().remove();
-
-                if (!SchematicBuilder.buildSchematic(plugin, plugin.getSchematicData(Buildings.CANNONTOWER),
-                        event.getBuilding().getCenterBlock(), event.getBuilding().getRotation(),
-                        event.getBuilding().getTeamColor())) {
-                    event.getUser().message("We failed to build a CannonTower here. Have the block yourself " +
-                            "to find a better place!");
-
-                    event.getUserInventory().addItem(InventoryUtils
-                            .createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.CANNONTOWER,
-                                    "Builds a CannonTower when placed!"));
-                }
-            }
-
-            @Override
-            public boolean canBuy(ItemPurchaseEvent event) {
-                return true;
-            }
-        });
-    }
-
-    private static void addBlacksmithItems(List<Buyable> result, FileConfiguration config) {
-        int scoutTowerCost = config.getInt("costs.buildings." + Buildings.SCOUTTOWER);
-        int wallCost = config.getInt("costs.buildings." + Buildings.WALL);
-        int mineCost = config.getInt("costs.buildings." + Buildings.LANDMINE);
-
-        result.add(new BuildingBuyable(Buildings.SCOUTTOWER, Buildings.BLACKSMITH, scoutTowerCost));
-        result.add(new BuildingBuyable(Buildings.WALL, Buildings.BLACKSMITH, wallCost, 16, true));
-        result.add(new BuildingBuyable(Buildings.LANDMINE, Buildings.BLACKSMITH, mineCost));
     }
 
     private static void addBaseItems(List<Buyable> result, FileConfiguration config) {
@@ -125,7 +84,7 @@ public class OmniInventory extends BuyableInventory {
 
     private static void addChurchItems(List<Buyable> result, WarsPlugin plugin, FileConfiguration config) {
         result.add(new Buyable(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.CATHEDRAL,
-                "Replace this church with a Cathedral"), Buildings.CHURCH,
+                plugin.getLocale("building.upgrade.replace", Buildings.CHURCH, Buildings.CATHEDRAL)), Buildings.CHURCH,
                 config.getInt("costs.buildings." + Buildings.CATHEDRAL), true, 1) {
 
 
@@ -136,12 +95,11 @@ public class OmniInventory extends BuyableInventory {
                 if (!SchematicBuilder.buildSchematic(plugin, plugin.getSchematicData(Buildings.CATHEDRAL),
                         event.getBuilding().getCenterBlock(), event.getBuilding().getRotation(),
                         event.getBuilding().getTeamColor())) {
-                    event.getUser().message("We failed to build a cathedral here. Have the block yourself " +
-                            "to find a better place!");
+                    event.getUser().messageLocale("building.upgrade.failed", Buildings.CATHEDRAL);
 
                     event.getUserInventory().addItem(InventoryUtils
-                            .createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, "PlayerCathedral",
-                                    "Builds a Cathedral when placed!"));
+                            .createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.PLAYERCATHEDRAL,
+                                    plugin.getLocale("building.desc", Buildings.CATHEDRAL)));
                 }
             }
 
@@ -160,11 +118,52 @@ public class OmniInventory extends BuyableInventory {
                 Buildings.CATHEDRAL, config.getInt("costs.cathedral.healingPotion32"), true));
     }
 
-    private static void addGreenhouseItems(List<Buyable> result, FileConfiguration config) {
+    private static void addGreenhouseItems(List<Buyable> result, WarsPlugin plugin, FileConfiguration config) {
         int axeCost = config.getInt("costs.greenhouse.axe");
 
-        result.add(new ItemBuyable(InventoryUtils.createItemWithNameAndLore(Material.STONE_AXE, 1, 0, "The Mighty Axe"),
+        result.add(new ItemBuyable(InventoryUtils
+                .createItemWithNameAndLore(Material.STONE_AXE, 1, 0, plugin.getLocale("items.mighty-axe.name")),
                 Buildings.GREENHOUSE, axeCost, false));
+    }
+
+    private static void addBlacksmithItems(List<Buyable> result, FileConfiguration config) {
+        int scoutTowerCost = config.getInt("costs.buildings." + Buildings.SCOUTTOWER);
+        int wallCost = config.getInt("costs.buildings." + Buildings.WALL);
+        int mineCost = config.getInt("costs.buildings." + Buildings.LANDMINE);
+
+        result.add(new BuildingBuyable(Buildings.SCOUTTOWER, Buildings.BLACKSMITH, scoutTowerCost));
+        result.add(new BuildingBuyable(Buildings.WALL, Buildings.BLACKSMITH, wallCost, 16, true));
+        result.add(new BuildingBuyable(Buildings.LANDMINE, Buildings.BLACKSMITH, mineCost));
+    }
+
+    private static void addScoutTowerItems(List<Buyable> result, WarsPlugin plugin, FileConfiguration config) {
+        int cannonTowerCost = config.getInt("costs.buildings." + Buildings.CANNONTOWER);
+
+        result.add(new Buyable(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.CANNONTOWER,
+                plugin.getLocale("building.upgrades.replace", Buildings.SCOUTTOWER, Buildings.CANNONTOWER)),
+                Buildings.SCOUTTOWER, cannonTowerCost, true, 1) {
+
+
+            @Override
+            public void onPurchase(ItemPurchaseEvent event) {
+                event.getBuilding().remove();
+
+                if (!SchematicBuilder.buildSchematic(plugin, plugin.getSchematicData(Buildings.CANNONTOWER),
+                        event.getBuilding().getCenterBlock(), event.getBuilding().getRotation(),
+                        event.getBuilding().getTeamColor())) {
+                    event.getUser().messageLocale("building.upgrade.failed", Buildings.CANNONTOWER);
+
+                    event.getUserInventory().addItem(InventoryUtils
+                            .createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.CANNONTOWER,
+                                    plugin.getLocale("building.desc", Buildings.CANNONTOWER)));
+                }
+            }
+
+            @Override
+            public boolean canBuy(ItemPurchaseEvent event) {
+                return true;
+            }
+        });
     }
 
     private static class BuildingBuyableWithFarm extends BuildingBuyable {

@@ -84,6 +84,10 @@ building.invalid-loc=&cYou cannot build that here!
 building.destroy.invalid=That obsidian block does not appear to be part of a building.
 building.destroy.own-team=&cYou cannot destroy your own team's buildings!
 building.destroy.bases=&cYou cannot destroy other team's bases!
+building.desc=Builds a %s when placed!
+
+building.upgrade.replace=Replace this %s with a %s
+building.upgrade.failed=We failed to build a %s here. Have the block yourself to find a better place!
 
 #cooldown-finished
 cooldowns.ender.finished=&aThe ender wand is ready to use again.
@@ -131,6 +135,7 @@ items.player-compass.oriented=Oriented at: %s
 items.player-compass.no-player=No One
 items.regen-ability.name=Regeneration Ability
 items.wolf-wand.name=Wolf Wand
+items.mighty-axe.name=The Mighty Axe
 
 #lore
 lore.cooldown=Cooldown: %s seconds

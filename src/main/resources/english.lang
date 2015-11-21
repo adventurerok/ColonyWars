@@ -37,7 +37,7 @@ voting.maps.success=&6You have voted for &3%s&6!
 voting.maps.already-voted=&cYou already voted for &3%s&c!
 voting.maps.player-voted=&6%s &6voted for &3%s&3!
 voting.maps.player-transfer=&6%s &6changed their vote from &3%s&6 to &3%s&6!
-voting.maps.map-winner=&6Playing map=&3%s
+voting.maps.map-winner=&6Playing map: &3%s
 
 #minigames
 minigames.wool.initial=&3%s &dwas given the wool!

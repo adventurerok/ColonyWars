@@ -12,12 +12,12 @@ public enum PlayerClass {
 
     CLOAKER("Cloaker", Material.IRON_LEGGINGS, CloakerClass::new),
     SCOUT("Scout", Material.COMPASS, ScoutClass::new),
-    GENERAL("General", Material.DIAMOND_SWORD, (plugin, config) -> new GeneralClass(config)),
-    ARCHER("Archer", Material.BOW, (plugin, config) -> new ArcherClass(config)),
+    GENERAL("General", Material.DIAMOND_SWORD, GeneralClass::new),
+    ARCHER("Archer", Material.BOW, ArcherClass::new),
     MAGE("Mage", Material.DIAMOND_LEGGINGS, MageClass::new),
-    PEASANT("Peasant", Material.IRON_AXE, (plugin, config) -> new PeasantClass(config)),
+    PEASANT("Peasant", Material.IRON_AXE, PeasantClass::new),
     INFERNO("Inferno", Material.IRON_CHESTPLATE, InfernoClass::new),
-    DARK_KNIGHT("Dark Knight", Material.IRON_HELMET, (plugin, config) -> new DarkKnightClass(config)),
+    DARK_KNIGHT("Dark Knight", Material.IRON_HELMET, DarkKnightClass::new),
     PRIEST("Priest", Material.GOLD_LEGGINGS, PriestClass::new),
     WARRIOR("Warrior", Material.IRON_SWORD, WarriorClass::new);
 

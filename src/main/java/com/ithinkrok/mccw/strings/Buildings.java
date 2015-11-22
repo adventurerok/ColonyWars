@@ -2,7 +2,7 @@ package com.ithinkrok.mccw.strings;
 
 /**
  * Created by paul on 06/11/15.
- *
+ * <p>
  * Holds all the building name strings
  */
 public class Buildings {

@@ -220,7 +220,7 @@ public class ClassItem {
     public void onBuildingBuilt(UserTeamBuildingBuiltEvent event) {
         if (!unlockOnBuildingBuild) return;
         if (userHasItem(event.getUser())) return;
-        if (Arrays.binarySearch(upgradeBuildings, event.getBuilding().getBuildingName()) == -1) return;
+        if (Arrays.binarySearch(upgradeBuildings, event.getBuilding().getBuildingName()) < 0) return;
 
         setUserHasItem(event.getUser());
         InventoryUtils.replaceItem(event.getUserInventory(), createItemForUser(event.getUser()));

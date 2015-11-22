@@ -37,7 +37,7 @@ voting.maps.success=&6You have voted for &3%s&6!
 voting.maps.already-voted=&cYou already voted for &3%s&c!
 voting.maps.player-voted=&6%s &6voted for &3%s&3!
 voting.maps.player-transfer=&6%s &6changed their vote from &3%s&6 to &3%s&6!
-voting.maps.map-winner=&6Playing map: &3%s
+voting.maps.map-winner=&6Playing map\: &3%s
 
 #minigames
 minigames.wool.initial=&3%s &dwas given the wool!
@@ -49,9 +49,9 @@ minigames.parcour.winner=&3%s &6has completed the parcour and will start next ga
 countdowns.game.warning.minutes=&7Game starting in&6 %s &7Minutes..
 countdowns.game.warning.seconds=&7Game starting in&6 %s &7Seconds..
 countdowns.game.warning.final=&6%s&7!
-countdowns.showdown.warning.minutes=&6&lShowdown starts in=%s minutes!
-countdowns.showdown.warning.seconds=&6&lShowdown starts in=%s seconds!
-countdowns.showdown.warning.final=&6&lShowdown starts in=%s seconds!
+countdowns.showdown.warning.minutes=&6&lShowdown starts in %s minutes!
+countdowns.showdown.warning.seconds=&6&lShowdown starts in %s seconds!
+countdowns.showdown.warning.final=&6&lShowdown starts in %s seconds!
 countdowns.showdown.warning.now=&6&lShowdown starts NOW!
 countdowns.lobby.warning.minutes=&e&lGame ending in&c&l %s minutes!
 countdowns.lobby.warning.seconds=&e&lGame ending in&c&l %s seconds!
@@ -138,7 +138,7 @@ items.earth-bender.name=Earth Bender
 items.cross.name=Cross
 items.player-compass.name=Player Compass
 items.player-compass.locating=Locating closest player...
-items.player-compass.oriented=Oriented at: %s
+items.player-compass.oriented=Oriented at\: %s
 items.player-compass.no-player=No One
 items.regen-ability.name=Regeneration Ability
 items.wolf-wand.name=Wolf Wand
@@ -146,18 +146,18 @@ items.mighty-axe.name=The Mighty Axe
 items.cloak.name=Cloak
 
 #lore
-lore.cooldown=Cooldown: %s seconds
-lore.damage=Damage: %s Hearts
-lore.fire=Fire Duration: %s seconds
-lore.nausea=Nausea Duration: %s seconds
-lore.wither=Wither Duration: %s seconds
+lore.cooldown=Cooldown\: %s seconds
+lore.damage=Damage\: %s Hearts
+lore.fire=Fire Duration\: %s seconds
+lore.nausea=Nausea Duration\: %s seconds
+lore.wither=Wither Duration\: %s seconds
 
-lore.timeout.cloak=Invisibility: %s seconds
+lore.timeout.cloak=Invisibility\: %s seconds
 
 #money
 money.exchange.too-expensive=&cYou do not have that amount of money
 money.exchange.team-transfer=%s &3transferred &a$%s &eto your team's account!
-money.balance.team.new=&eYour Team's new Balance is: &a$%s&e!
+money.balance.team.new=&eYour Team's new Balance is\: &a$%s&e!
 
 #game
 game.player.killed=&6%s &6was killed by %s
@@ -175,7 +175,7 @@ game.revival-chance=&6Your revival chance is now&3 %s
 command.no-console=You must be a player to execute Colony Wars commands
 
 commands.members.no-team=&cYou are not in a team yet.
-commands.members.player-info=&6%s&6=&3%s&6, Location=&3%s
+commands.members.player-info=&6%s&6\: &3%s&6, Location\: &3%s
 commands.members.title=&6&lMembers of your team:
 commands.members.near-showdown=%s (Near showdown arena)
 commands.spawn.not-in-game=&cYou cannot use this command while in game.
@@ -184,6 +184,6 @@ commands.test.class-change=&eYou were changed to class %s
 commands.test.money=%s added to both you and your team's balance
 commands.test.build-blocks=&eAdded %s %s build blocks to your inventory
 commands.test.base.no-team=&cYour team is null
-commands.test.base.loc=&eBase location: %s
-commands.gamestate.changed=Changed gamestate to: %s
+commands.test.base.loc=&eBase location\: %s
+commands.gamestate.changed=Changed gamestate to\: %s
 commands.gamestate.invalid=Invalid gamestate!

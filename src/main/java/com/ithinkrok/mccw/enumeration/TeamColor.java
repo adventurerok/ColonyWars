@@ -1,5 +1,6 @@
 package com.ithinkrok.mccw.enumeration;
 
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
@@ -11,18 +12,18 @@ import org.bukkit.DyeColor;
  */
 public enum TeamColor {
 
-    RED(ChatColor.RED + "Red", DyeColor.RED, ChatColor.RED),
-    BLUE(ChatColor.BLUE + "Blue", DyeColor.BLUE, ChatColor.BLUE),
-    GREEN(ChatColor.GREEN + "Green", DyeColor.GREEN, ChatColor.GREEN),
-    YELLOW(ChatColor.YELLOW + "Yellow", DyeColor.YELLOW, ChatColor.YELLOW);
+    RED(DyeColor.RED, ChatColor.RED),
+    BLUE(DyeColor.BLUE, ChatColor.BLUE),
+    GREEN(DyeColor.GREEN, ChatColor.GREEN),
+    YELLOW(DyeColor.YELLOW, ChatColor.YELLOW);
 
     public final Color armorColor;
     public final DyeColor dyeColor;
     public final ChatColor chatColor;
     public final String name;
 
-    TeamColor(String name, DyeColor dyeColor, ChatColor chatColor) {
-        this.name = name;
+    TeamColor(DyeColor dyeColor, ChatColor chatColor) {
+        this.name = chatColor + WordUtils.capitalizeFully(dyeColor.name());
         this.armorColor = dyeColor.getColor();
         this.dyeColor = dyeColor;
         this.chatColor = chatColor;

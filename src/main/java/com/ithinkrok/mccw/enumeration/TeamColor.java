@@ -11,19 +11,19 @@ import org.bukkit.DyeColor;
  */
 public enum TeamColor {
 
-    RED(ChatColor.RED + "Red", Color.RED, DyeColor.RED, ChatColor.RED),
-    BLUE(ChatColor.BLUE + "Blue", Color.fromRGB(100, 100, 255), DyeColor.BLUE, ChatColor.BLUE),
-    GREEN(ChatColor.GREEN + "Green", Color.fromRGB(0, 200, 0), DyeColor.GREEN, ChatColor.GREEN),
-    YELLOW(ChatColor.YELLOW + "Yellow", Color.fromRGB(200, 200, 0), DyeColor.YELLOW, ChatColor.YELLOW);
+    RED(ChatColor.RED + "Red", DyeColor.RED, ChatColor.RED),
+    BLUE(ChatColor.BLUE + "Blue", DyeColor.BLUE, ChatColor.BLUE),
+    GREEN(ChatColor.GREEN + "Green", DyeColor.GREEN, ChatColor.GREEN),
+    YELLOW(ChatColor.YELLOW + "Yellow", DyeColor.YELLOW, ChatColor.YELLOW);
 
     public final Color armorColor;
     public final DyeColor dyeColor;
     public final ChatColor chatColor;
     public final String name;
 
-    TeamColor(String name, Color armorColor, DyeColor dyeColor, ChatColor chatColor) {
+    TeamColor(String name, DyeColor dyeColor, ChatColor chatColor) {
         this.name = name;
-        this.armorColor = armorColor;
+        this.armorColor = dyeColor.getColor();
         this.dyeColor = dyeColor;
         this.chatColor = chatColor;
     }

@@ -93,7 +93,11 @@ public class CommandListener implements CommandExecutor {
             case "class":
                 if (args.length < 2) return false;
 
-                PlayerClass playerClass = PlayerClass.valueOf(args[1].toUpperCase());
+                PlayerClass playerClass = PlayerClass.fromName(args[1]);
+                if(playerClass == null){
+                    user.messageLocale("commands.test.invalid-class", args[1]);
+                    return true;
+                }
                 user.setPlayerClass(playerClass);
 
                 user.messageLocale("commands.test.class-change", playerClass.getName());

@@ -283,7 +283,7 @@ public class GameInstance {
     }
 
     public PlayerClass assignPlayerClass() {
-        return PlayerClass.values()[plugin.getRandom().nextInt(PlayerClass.values().length)];
+        return PlayerClass.values().get(plugin.getRandom().nextInt(PlayerClass.values().size()));
     }
 
     public Location getMapSpawn(TeamColor team) {

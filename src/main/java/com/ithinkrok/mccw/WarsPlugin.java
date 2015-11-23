@@ -58,7 +58,7 @@ public class WarsPlugin extends JavaPlugin {
     private OmniInventory buildingInventoryHandler;
     private SpectatorInventory spectatorInventoryHandler;
 
-    private EnumMap<PlayerClass, PlayerClassHandler> classHandlerEnumMap = new EnumMap<>(PlayerClass.class);
+    private Map<PlayerClass, PlayerClassHandler> classHandlerEnumMap = new HashMap<>();
     private Random random = new Random();
 
     private ProtocolManager protocolManager;

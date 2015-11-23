@@ -58,10 +58,8 @@ public class WarsPlugin extends JavaPlugin {
     private OmniInventory buildingInventoryHandler;
     private SpectatorInventory spectatorInventoryHandler;
 
-    private Map<PlayerClass, PlayerClassHandler> classHandlerEnumMap = new HashMap<>();
+    private Map<PlayerClass, PlayerClassHandler> classHandlerMap = new HashMap<>();
     private Random random = new Random();
-
-    private ProtocolManager protocolManager;
 
     private Listener currentListener;
     private CommandListener commandListener;
@@ -121,7 +119,7 @@ public class WarsPlugin extends JavaPlugin {
 
         handbookMeta = Handbook.loadHandbookMeta(this);
 
-        protocolManager = ProtocolLibrary.getProtocolManager();
+        ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
         InvisiblePlayerAttacker.enablePlayerAttacker(this, protocolManager);
 
         currentListener = new WarsLobbyListener(this);
@@ -150,11 +148,6 @@ public class WarsPlugin extends JavaPlugin {
 
         buildingInventoryHandler = new OmniInventory(this, getConfig());
         spectatorInventoryHandler = new SpectatorInventory(this);
-
-        for(PlayerClass playerClass : PlayerClass.values()){
-            classHandlerEnumMap.put(playerClass, playerClass.getClassHandlerFactory().createPlayerClassHandler(this,
-                    getConfig()));
-        }
 
         lobbyMinigames.add(new WoolHeadMinigame(this));
         lobbyMinigames.add(new ParcourMinigame(this));
@@ -317,7 +310,14 @@ public class WarsPlugin extends JavaPlugin {
 
 
     public PlayerClassHandler getPlayerClassHandler(PlayerClass playerClass) {
-        return classHandlerEnumMap.get(playerClass);
+        PlayerClassHandler classHandler = classHandlerMap.get(playerClass);
+        if(classHandler == null) {
+            classHandler = playerClass.getClassHandlerFactory().createPlayerClassHandler(this, getConfig());
+
+            classHandlerMap.put(playerClass, classHandler);
+        }
+
+        return classHandler;
     }
 
 

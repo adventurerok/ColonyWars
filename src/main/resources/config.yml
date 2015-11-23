@@ -1,14 +1,23 @@
+# Used to determine which language file to use.
 language: "english"
 
+# The list of available maps to play.
 map-list:
   - "canyon"
   - "forest_hills"
   - "random"
 
+# The name of the random option in the maps list.
 random-map: "random"
+
+# The name of the map to use as the lobby
 lobby-map: "world"
+
+# The name of the world folder used to store the playing map while a game is in progress.
+# This folder will be deleted when a game finishes.
 playing-map: "playing"
 
+# Map info
 maps:
   canyon:
     folder: "canyon"
@@ -101,6 +110,7 @@ maps:
         y: 25
         z: -439
 
+# Building info such as schematic locations and default rotations.
 buildings:
   schematics:
     Base: "mccw_base.schematic"
@@ -143,6 +153,7 @@ buildings:
   transform:
     PlayerCathedral: "Cathedral"
 
+# Costs for all buyables
 costs:
   buildings:
     Farm: 2000
@@ -227,6 +238,7 @@ costs:
     wolf1: 750
     wolf2: 1000
 
+# The amounts of an item sold (currently only for the farm shop)
 amounts:
   farm:
     rawPotato: 5

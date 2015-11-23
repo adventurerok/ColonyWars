@@ -1,10 +1,13 @@
+language: "english"
+
 map-list:
   - "canyon"
   - "forest_hills"
   - "random"
 
 random-map: "random"
-language: "english"
+lobby-map: "world"
+playing-map: "playing"
 
 maps:
   canyon:

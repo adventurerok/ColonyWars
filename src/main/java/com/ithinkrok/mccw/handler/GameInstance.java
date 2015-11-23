@@ -103,10 +103,12 @@ public class GameInstance {
 
         plugin.changeListener(new WarsLobbyListener(plugin));
 
-        Bukkit.unloadWorld("playing", false);
+        String playingFolder = plugin.getPlayingWorldName();
+
+        Bukkit.unloadWorld(playingFolder, false);
 
         try {
-            DirectoryUtils.delete(Paths.get("./playing/"));
+            DirectoryUtils.delete(Paths.get("./" + playingFolder + "/"));
         } catch (IOException e) {
             plugin.getLogger().warning(plugin.getLocale("server.world-unload-failed"));
             e.printStackTrace();
@@ -137,13 +139,14 @@ public class GameInstance {
 
     private void startGame() {
         String mapFolder = plugin.getConfig().getString("maps." + map + ".folder");
+        String playingFolder = plugin.getPlayingWorldName();
         try {
-            DirectoryUtils.copy(Paths.get("./" + mapFolder + "/"), Paths.get("./playing/"));
+            DirectoryUtils.copy(Paths.get("./" + mapFolder + "/"), Paths.get("./" + playingFolder + "/"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        Bukkit.createWorld(new WorldCreator("playing"));
+        Bukkit.createWorld(new WorldCreator(plugin.getPlayingWorldName()));
 
         plugin.changeListener(new WarsGameListener(plugin));
         setupPlayers();
@@ -212,7 +215,7 @@ public class GameInstance {
     }
 
     private void setupBases() {
-        World world = plugin.getServer().getWorld("playing");
+        World world = plugin.getServer().getWorld(plugin.getPlayingWorldName());
         FileConfiguration config = plugin.getConfig();
 
         for (TeamColor team : TeamColor.values()) {
@@ -284,7 +287,7 @@ public class GameInstance {
     }
 
     public Location getMapSpawn(TeamColor team) {
-        World world = plugin.getServer().getWorld("playing");
+        World world = plugin.getServer().getWorld(plugin.getPlayingWorldName());
         FileConfiguration config = plugin.getConfig();
 
         String base;

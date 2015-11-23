@@ -180,7 +180,7 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public void playerTeleportLobby(Player player) {
-        player.teleport(Bukkit.getWorld("world").getSpawnLocation());
+        player.teleport(getLobbySpawn());
     }
 
     public void playerJoinLobby(Player player) {
@@ -233,8 +233,16 @@ public class WarsPlugin extends JavaPlugin {
         return langFile.getLocale(name, params);
     }
 
+    public String getLobbyWorldName(){
+        return getConfig().getString("lobby-map");
+    }
+
+    public String getPlayingWorldName(){
+        return getConfig().getString("playing-map");
+    }
+
     public Location getLobbySpawn() {
-        return Bukkit.getWorld("world").getSpawnLocation();
+        return Bukkit.getWorld(getLobbyWorldName()).getSpawnLocation();
     }
 
     public Location getMapSpawn(TeamColor teamColorOrNull){

@@ -24,6 +24,7 @@ public class UserTest {
             Bukkit.setServer(mock(Server.class, RETURNS_DEEP_STUBS));
         } catch (UnsupportedOperationException ignored){}
 
+        TeamColor.initialise(4);
     }
 
     @Test
@@ -50,7 +51,7 @@ public class UserTest {
         user.setInGame(true);
 
         try {
-            user.setTeamColor(TeamColor.RED);
+            user.setTeamColor(TeamColor.fromName("red"));
         } catch(ClassCastException ignored) {} //when the armor tries to update. Cannot cast ItemMeta to
         // LeatherArmorMeta
         assertTrue(user.isInGame());

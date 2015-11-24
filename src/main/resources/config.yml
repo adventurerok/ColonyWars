@@ -17,6 +17,11 @@ lobby-map: "world"
 # This folder will be deleted when a game finishes.
 playing-map: "playing"
 
+# The number of teams in colony wars games.
+# Team order: red, blue, green, yellow, orange, light_blue, lime, purple, cyan, pink, magenta, brown, black, white,
+#             gray, silver
+team-count: 4
+
 # Map info
 maps:
   canyon:

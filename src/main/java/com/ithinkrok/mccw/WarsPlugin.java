@@ -33,6 +33,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 
 /**
@@ -45,9 +46,9 @@ public class WarsPlugin extends JavaPlugin {
     public static final String CHAT_PREFIX =
             ChatColor.GRAY + "[" + ChatColor.DARK_AQUA + "ColonyWars" + ChatColor.GRAY + "] " + ChatColor.YELLOW;
 
-    private ConcurrentHashMap<UUID, User> playerInfoHashMap = new ConcurrentHashMap<>();
-    private EnumMap<TeamColor, Team> teamInfoEnumMap = new EnumMap<>(TeamColor.class);
-    private HashMap<String, Schematic> schematicDataHashMap = new HashMap<>();
+    private ConcurrentMap<UUID, User> playerInfoHashMap = new ConcurrentHashMap<>();
+    private Map<TeamColor, Team> teamInfoEnumMap = new HashMap<>();
+    private Map<String, Schematic> schematicDataHashMap = new HashMap<>();
 
 
     /**
@@ -126,9 +127,9 @@ public class WarsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new WarsBaseListener(this), this);
         getServer().getPluginManager().registerEvents(currentListener, this);
 
-        for (TeamColor c : TeamColor.values()) {
-            teamInfoEnumMap.put(c, new Team(this, c));
-        }
+        TeamColor.initialise(getConfig().getInt("team-count"));
+
+        resetTeams();
 
         schematicDataHashMap.put(Buildings.BASE, new Schematic(Buildings.BASE, getConfig()));
         schematicDataHashMap.put(Buildings.FARM, new Schematic(Buildings.FARM, getConfig()));

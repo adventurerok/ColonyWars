@@ -84,7 +84,11 @@ public class CommandListener implements CommandExecutor {
             case "team":
                 if (args.length < 2) return false;
 
-                TeamColor teamColor = TeamColor.valueOf(args[1].toUpperCase());
+                TeamColor teamColor = TeamColor.fromName(args[1]);
+                if(teamColor == null) {
+                    user.messageLocale("commands.test.invalid-team", args[1]);
+                    return true;
+                }
                 user.setTeamColor(teamColor);
 
                 user.messageLocale("commands.test.team-change", teamColor.name);

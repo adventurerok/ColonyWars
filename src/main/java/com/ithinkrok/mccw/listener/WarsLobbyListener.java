@@ -98,7 +98,8 @@ public class WarsLobbyListener implements Listener {
     }
 
     private void showTeamChooser(Player player) {
-        Inventory shopInv = Bukkit.createInventory(player, 9, plugin.getLocale("lobby.chooser.team.name"));
+        int size = 9 * ((TeamColor.values().size() + 9) / 9);
+        Inventory shopInv = Bukkit.createInventory(player, size, plugin.getLocale("lobby.chooser.team.name"));
 
         for (TeamColor team : TeamColor.values()) {
             shopInv.addItem(InventoryUtils.createItemWithNameAndLore(Material.WOOL, 1, team.getDyeColor().getWoolData(),

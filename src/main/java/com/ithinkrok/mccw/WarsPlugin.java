@@ -340,8 +340,12 @@ public class WarsPlugin extends JavaPlugin {
         messageAll(getLocale(locale, args));
     }
 
-    public void messageAll(String message) {
-        getLogger().info("Messaging all: " + message);
+    public void messageAll(String message){
+        messageAll(message, true);
+    }
+
+    public void messageAll(String message, boolean log) {
+        if(log) getLogger().info("Messaging all: " + message);
         for (User p : playerInfoHashMap.values()) {
             p.message(message);
         }

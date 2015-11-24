@@ -174,7 +174,7 @@ public class WarsLobbyListener implements Listener {
                 int playerCount = plugin.getPlayerCount();
                 int teamSize = plugin.getTeam(teamColor).getPlayerCount();
 
-                if (teamSize >= (playerCount + 3) / 4) {
+                if (teamSize >= (playerCount + TeamColor.values().size() - 1) / TeamColor.values().size()) {
                     user.message(plugin.getLocale("team.join.full", teamColor.getFormattedName()));
                     return;
                 }

@@ -71,7 +71,7 @@ public class WarsGameListener implements Listener {
         }
 
         if (user.isInGame() && user.getTeamColor() != null) {
-            String playerClass = user.getPlayerClass().toString();
+            String playerClass = user.getPlayerClass().getName().toUpperCase();
             String teamColor = user.getTeamColor().getChatColor().toString();
             event.setFormat(teamColor + "<" + ChatColor.DARK_GRAY + "[" + ChatColor.GRAY + playerClass +
                     ChatColor.DARK_GRAY + "] %s" + teamColor + "> " + ChatColor.WHITE + "%s");

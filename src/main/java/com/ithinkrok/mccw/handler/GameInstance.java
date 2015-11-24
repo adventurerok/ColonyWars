@@ -219,7 +219,7 @@ public class GameInstance {
         FileConfiguration config = plugin.getConfig();
 
         for (TeamColor team : TeamColor.values()) {
-            String base = "maps." + map + "." + team.toString().toLowerCase() + ".base";
+            String base = "maps." + map + "." + team.getName() + ".base";
 
             Location build = new Location(world, config.getInt(base + ".x"), config.getInt(base + ".y"),
                     config.getInt(base + ".z"));
@@ -292,7 +292,7 @@ public class GameInstance {
 
         String base;
         if (team == null) base = "maps." + map + ".center";
-        else base = "maps." + map + "." + team.toString().toLowerCase() + ".spawn";
+        else base = "maps." + map + "." + team.getName() + ".spawn";
 
         return new Location(world, config.getDouble(base + ".x"), config.getDouble(base + ".y"),
                 config.getDouble(base + ".z"));

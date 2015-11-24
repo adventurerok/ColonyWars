@@ -212,7 +212,7 @@ public class Team {
     }
 
     public void eliminate() {
-        plugin.messageAll(ChatColor.GOLD + "The " + getTeamColor().getName() + ChatColor.GOLD +
+        plugin.messageAll(ChatColor.GOLD + "The " + getTeamColor().getFormattedName() + ChatColor.GOLD +
                 " Team was eliminated!");
 
         if(baseLocation != null){

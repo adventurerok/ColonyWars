@@ -90,7 +90,7 @@ public class CommandListener implements CommandExecutor {
                 }
                 user.setTeamColor(teamColor);
 
-                user.messageLocale("commands.test.team-change", teamColor.getName());
+                user.messageLocale("commands.test.team-change", teamColor.getFormattedName());
 
                 break;
             case "class":
@@ -175,7 +175,7 @@ public class CommandListener implements CommandExecutor {
 
                     if (distSquared < smallestDistSquared) {
                         smallestDistSquared = distSquared;
-                        nearestBase = teamColor.getName();
+                        nearestBase = teamColor.getFormattedName();
                     }
                 }
 

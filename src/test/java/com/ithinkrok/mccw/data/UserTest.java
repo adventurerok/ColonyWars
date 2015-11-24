@@ -48,12 +48,13 @@ public class UserTest {
 
         User user = new User(plugin, player);
 
-        user.setInGame(true);
-
         try {
             user.setTeamColor(TeamColor.fromName("red"));
         } catch(ClassCastException ignored) {} //when the armor tries to update. Cannot cast ItemMeta to
         // LeatherArmorMeta
+
+        user.setInGame(true);
+
         assertTrue(user.isInGame());
 
         user.addPlayerCash(3000);

@@ -429,10 +429,10 @@ public class User {
         setTeamColor(null);
         setInGame(false);
 
-        plugin.messageAll(ChatColor.GOLD + "The " + team.getTeamColor().getName() + ChatColor.GOLD +
+        plugin.messageAll(ChatColor.GOLD + "The " + team.getTeamColor().getFormattedName() + ChatColor.GOLD +
                 " has lost a player!");
         plugin.messageAll(ChatColor.GOLD + "There are now " + ChatColor.DARK_AQUA + team.getPlayerCount() +
-                ChatColor.GOLD + " players left on the " + team.getTeamColor().getName() + ChatColor.GOLD + " Team");
+                ChatColor.GOLD + " players left on the " + team.getTeamColor().getFormattedName() + ChatColor.GOLD + " Team");
 
         if (team.getPlayerCount() == 0) {
             team.eliminate();

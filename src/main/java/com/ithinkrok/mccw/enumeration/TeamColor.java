@@ -23,11 +23,13 @@ public class TeamColor {
     private final Color armorColor;
     private final DyeColor dyeColor;
     private final ChatColor chatColor;
+    private final String formattedName;
     private final String name;
 
     private TeamColor(DyeColor dyeColor) {
+        this.name = WordUtils.capitalizeFully(dyeColor.name());
         this.chatColor = DyeToChatColorConverter.convert(dyeColor);
-        this.name = getChatColor() + WordUtils.capitalizeFully(dyeColor.name());
+        this.formattedName = getChatColor() + name;
         this.armorColor = dyeColor.getColor();
         this.dyeColor = dyeColor;
     }
@@ -61,6 +63,10 @@ public class TeamColor {
         }
 
         teamColorList = Collections.unmodifiableList(teamColors);
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override
@@ -111,7 +117,7 @@ public class TeamColor {
         return chatColor;
     }
 
-    public String getName() {
-        return name;
+    public String getFormattedName() {
+        return formattedName;
     }
 }

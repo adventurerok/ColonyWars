@@ -194,7 +194,7 @@ public class GameInstance {
 
         plugin.givePlayerHandbook(info.getPlayer());
 
-        info.messageLocale("game.start.team", info.getTeamColor().getName());
+        info.messageLocale("game.start.team", info.getTeamColor().getFormattedName());
 
         info.messageLocale("game.start.class", info.getPlayerClass().getName());
     }
@@ -257,7 +257,7 @@ public class GameInstance {
         TeamColor winner = teamsInGame.iterator().next();
         this.winningTeam = winner;
 
-        plugin.messageAllLocale("game.team.winner", winner.getName());
+        plugin.messageAllLocale("game.team.winner", winner.getFormattedName());
 
         changeGameState(GameState.AFTERMATH);
     }

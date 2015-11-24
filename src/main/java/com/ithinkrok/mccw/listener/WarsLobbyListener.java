@@ -102,7 +102,7 @@ public class WarsLobbyListener implements Listener {
 
         for (TeamColor team : TeamColor.values()) {
             shopInv.addItem(InventoryUtils.createItemWithNameAndLore(Material.WOOL, 1, team.getDyeColor().getWoolData(),
-                    plugin.getLocale("team.name", team.getName())));
+                    plugin.getLocale("team.name", team.getFormattedName())));
         }
 
         player.openInventory(shopInv);
@@ -166,7 +166,7 @@ public class WarsLobbyListener implements Listener {
                 }
 
                 if (teamColor == user.getTeamColor()) {
-                    user.message(plugin.getLocale("team.join.already-member", teamColor.getName()));
+                    user.message(plugin.getLocale("team.join.already-member", teamColor.getFormattedName()));
                     return;
                 }
 
@@ -174,13 +174,13 @@ public class WarsLobbyListener implements Listener {
                 int teamSize = plugin.getTeam(teamColor).getPlayerCount();
 
                 if (teamSize >= (playerCount + 3) / 4) {
-                    user.message(plugin.getLocale("team.join.full", teamColor.getName()));
+                    user.message(plugin.getLocale("team.join.full", teamColor.getFormattedName()));
                     return;
                 }
 
                 user.setTeamColor(teamColor);
 
-                user.message(plugin.getLocale("team.join.success", teamColor.getName()));
+                user.message(plugin.getLocale("team.join.success", teamColor.getFormattedName()));
 
                 user.getPlayer().closeInventory();
             } else if (plugin.getLocale("lobby.chooser.class.name").equals(event.getInventory().getTitle())) {

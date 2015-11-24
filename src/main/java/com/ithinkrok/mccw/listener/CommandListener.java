@@ -103,7 +103,7 @@ public class CommandListener implements CommandExecutor {
                 }
                 user.setPlayerClass(playerClass);
 
-                user.messageLocale("commands.test.class-change", playerClass.getName());
+                user.messageLocale("commands.test.class-change", playerClass.getFormattedName());
 
                 break;
             case "money":
@@ -163,7 +163,7 @@ public class CommandListener implements CommandExecutor {
 
             String name = other.getFormattedName();
             String playerClass =
-                    other.getPlayerClass() == null ? plugin.getLocale("team.none") : other.getPlayerClass().getName();
+                    other.getPlayerClass() == null ? plugin.getLocale("team.none") : other.getPlayerClass().getFormattedName();
 
             String nearestBase = null;
             if (plugin.isInGame()) {

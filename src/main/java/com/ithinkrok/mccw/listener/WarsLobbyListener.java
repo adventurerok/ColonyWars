@@ -114,8 +114,8 @@ public class WarsLobbyListener implements Listener {
 
         for (PlayerClass playerClass : PlayerClass.values()) {
             shopInv.addItem(InventoryUtils
-                    .createItemWithNameAndLore(playerClass.getChooser(), 1, 0, playerClass.getName(),
-                            plugin.getLocale("classes." + playerClass.toString().toLowerCase() + ".desc")));
+                    .createItemWithNameAndLore(playerClass.getChooser(), 1, 0, playerClass.getFormattedName(),
+                            plugin.getLocale("classes." + playerClass.getName() + ".desc")));
         }
 
         player.openInventory(shopInv);
@@ -193,7 +193,7 @@ public class WarsLobbyListener implements Listener {
 
                 user.setPlayerClass(playerClass);
 
-                user.message(plugin.getLocale("class.join.success", playerClass.getName()));
+                user.message(plugin.getLocale("class.join.success", playerClass.getFormattedName()));
 
                 user.getPlayer().closeInventory();
             } else if (plugin.getLocale("lobby.chooser.map.name").equals(event.getInventory().getTitle())) {

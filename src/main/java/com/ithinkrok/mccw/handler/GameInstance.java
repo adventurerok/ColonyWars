@@ -196,7 +196,7 @@ public class GameInstance {
 
         info.messageLocale("game.start.team", info.getTeamColor().getFormattedName());
 
-        info.messageLocale("game.start.class", info.getPlayerClass().getName());
+        info.messageLocale("game.start.class", info.getPlayerClass().getFormattedName());
     }
 
     private void calculateShowdownArena() {

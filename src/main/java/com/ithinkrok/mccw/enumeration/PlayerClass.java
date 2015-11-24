@@ -1,6 +1,7 @@
 package com.ithinkrok.mccw.enumeration;
 
 import com.ithinkrok.mccw.playerclass.*;
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
@@ -15,32 +16,34 @@ public class PlayerClass {
 
     private static List<PlayerClass> playerClassList = new ArrayList<>();
 
-    public static final PlayerClass CLOAKER = new PlayerClass("Cloaker", Material.IRON_LEGGINGS, CloakerClass::new);
-    public static final PlayerClass SCOUT = new PlayerClass("Scout", Material.COMPASS, ScoutClass::new);
-    public static final PlayerClass GENERAL = new PlayerClass("General", Material.DIAMOND_SWORD, GeneralClass::new);
-    public static final PlayerClass ARCHER = new PlayerClass("Archer", Material.BOW, ArcherClass::new);
-    public static final PlayerClass MAGE = new PlayerClass("Mage", Material.DIAMOND_LEGGINGS, MageClass::new);
-    public static final PlayerClass PEASANT = new PlayerClass("Peasant", Material.IRON_AXE, PeasantClass::new);
-    public static final PlayerClass INFERNO = new PlayerClass("Inferno", Material.IRON_CHESTPLATE, InfernoClass::new);
-    public static final PlayerClass DARK_KNIGHT = new PlayerClass("Dark Knight", Material.IRON_HELMET,
+    public static final PlayerClass CLOAKER = new PlayerClass("cloaker", Material.IRON_LEGGINGS, CloakerClass::new);
+    public static final PlayerClass SCOUT = new PlayerClass("scout", Material.COMPASS, ScoutClass::new);
+    public static final PlayerClass GENERAL = new PlayerClass("general", Material.DIAMOND_SWORD, GeneralClass::new);
+    public static final PlayerClass ARCHER = new PlayerClass("archer", Material.BOW, ArcherClass::new);
+    public static final PlayerClass MAGE = new PlayerClass("mage", Material.DIAMOND_LEGGINGS, MageClass::new);
+    public static final PlayerClass PEASANT = new PlayerClass("peasant", Material.IRON_AXE, PeasantClass::new);
+    public static final PlayerClass INFERNO = new PlayerClass("inferno", Material.IRON_CHESTPLATE, InfernoClass::new);
+    public static final PlayerClass DARK_KNIGHT = new PlayerClass("dark_knight", Material.IRON_HELMET,
             DarkKnightClass::new);
 
-    public static final PlayerClass PRIEST = new PlayerClass("Priest", Material.GOLD_LEGGINGS, PriestClass::new);
-    public static final PlayerClass WARRIOR = new PlayerClass("Warrior", Material.IRON_SWORD, WarriorClass::new);
+    public static final PlayerClass PRIEST = new PlayerClass("priest", Material.GOLD_LEGGINGS, PriestClass::new);
+    public static final PlayerClass WARRIOR = new PlayerClass("warrior", Material.IRON_SWORD, WarriorClass::new);
 
 
     private final String name;
+    private final String formattedName;
     private final Material chooser;
     private final PlayerClassHandlerFactory classHandlerFactory;
 
     public PlayerClass(String name, Material chooser, PlayerClassHandlerFactory classHandlerFactory) {
-        this.name = name;
-        this.chooser = chooser;
-        this.classHandlerFactory = classHandlerFactory;
-
         if(name == null || chooser == null || classHandlerFactory == null ) {
             throw new NullPointerException("All constructor parameters for PlayerClass must not be null");
         }
+
+        this.name = name;
+        this.formattedName = WordUtils.capitalizeFully(name.replace('_', ' '));
+        this.chooser = chooser;
+        this.classHandlerFactory = classHandlerFactory;
 
         if(fromChooserMaterial(chooser) != null){
             throw new RuntimeException("A player class already exists with the chooser material: " + chooser);
@@ -86,8 +89,8 @@ public class PlayerClass {
         return result;
     }
 
-    public String getName() {
-        return name;
+    public String getFormattedName() {
+        return formattedName;
     }
 
     public Material getChooser() {
@@ -101,5 +104,9 @@ public class PlayerClass {
     @Override
     public String toString() {
         return getName();
+    }
+
+    public String getName() {
+        return name;
     }
 }

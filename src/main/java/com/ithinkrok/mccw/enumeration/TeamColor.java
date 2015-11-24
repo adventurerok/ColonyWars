@@ -27,9 +27,9 @@ public class TeamColor {
     private final String name;
 
     private TeamColor(DyeColor dyeColor) {
-        this.name = WordUtils.capitalizeFully(dyeColor.name());
+        this.name = dyeColor.name().toLowerCase();
         this.chatColor = DyeToChatColorConverter.convert(dyeColor);
-        this.formattedName = getChatColor() + name;
+        this.formattedName = getChatColor() + WordUtils.capitalizeFully(name);
         this.armorColor = dyeColor.getColor();
         this.dyeColor = dyeColor;
     }
@@ -119,5 +119,10 @@ public class TeamColor {
 
     public String getFormattedName() {
         return formattedName;
+    }
+
+    @Override
+    public String toString() {
+        return getName();
     }
 }

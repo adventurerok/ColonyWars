@@ -345,7 +345,7 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public void messageAll(String message, boolean log) {
-        if(log) getLogger().info("Messaging all: " + message);
+        if(log) getServer().getConsoleSender().sendMessage("Messaging all: " + message);
         for (User p : playerInfoHashMap.values()) {
             p.message(message);
         }

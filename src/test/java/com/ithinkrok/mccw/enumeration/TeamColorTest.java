@@ -53,4 +53,13 @@ public class TeamColorTest {
 
         assertNull(TeamColor.fromName(null));
     }
+
+    @Test
+    public void testToString() throws Exception {
+        TeamColor.initialise(16);
+
+        for(TeamColor teamColor : TeamColor.values()){
+            assertEquals(teamColor.getName(), teamColor.toString());
+        }
+    }
 }

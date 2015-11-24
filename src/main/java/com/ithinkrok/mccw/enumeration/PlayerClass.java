@@ -97,4 +97,9 @@ public class PlayerClass {
     public PlayerClassHandlerFactory getClassHandlerFactory() {
         return classHandlerFactory;
     }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

@@ -341,6 +341,7 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public void messageAll(String message) {
+        getLogger().info("Messaging all: " + message);
         for (User p : playerInfoHashMap.values()) {
             p.message(message);
         }

@@ -7,7 +7,6 @@ import com.ithinkrok.mccw.enumeration.GameState;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.util.InventoryUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -91,7 +90,7 @@ public class CommandListener implements CommandExecutor {
                 }
                 user.setTeamColor(teamColor);
 
-                user.messageLocale("commands.test.team-change", teamColor.name);
+                user.messageLocale("commands.test.team-change", teamColor.getName());
 
                 break;
             case "class":
@@ -176,7 +175,7 @@ public class CommandListener implements CommandExecutor {
 
                     if (distSquared < smallestDistSquared) {
                         smallestDistSquared = distSquared;
-                        nearestBase = teamColor.name;
+                        nearestBase = teamColor.getName();
                     }
                 }
 

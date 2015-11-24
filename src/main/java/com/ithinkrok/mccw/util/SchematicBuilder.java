@@ -302,9 +302,9 @@ public class SchematicBuilder {
 
                 Block block = loc.getBlock();
 
-                if (bId == Material.WOOL.getId()) bData = building.getTeamColor().dyeColor.getWoolData();
+                if (bId == Material.WOOL.getId()) bData = building.getTeamColor().getDyeColor().getWoolData();
                 else if (bId == Material.STAINED_CLAY.getId())
-                    bData = building.getTeamColor().dyeColor.getWoolData();
+                    bData = building.getTeamColor().getDyeColor().getWoolData();
 
                 block.setTypeIdAndData(bId, rotateData(Material.getMaterial(bId), schem.getRotation(), bData), false);
 

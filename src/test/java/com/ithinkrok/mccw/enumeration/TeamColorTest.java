@@ -39,7 +39,7 @@ public class TeamColorTest {
         TeamColor.initialise(16);
 
         for(TeamColor teamColor : TeamColor.values()){
-            assertTrue(TeamColor.fromWoolColor(teamColor.dyeColor.getWoolData()) == teamColor);
+            assertTrue(TeamColor.fromWoolColor(teamColor.getDyeColor().getWoolData()) == teamColor);
         }
     }
 
@@ -48,7 +48,7 @@ public class TeamColorTest {
         TeamColor.initialise(16);
 
         for(TeamColor teamColor : TeamColor.values()){
-            assertTrue(TeamColor.fromName(teamColor.name) == teamColor);
+            assertTrue(TeamColor.fromName(teamColor.getName()) == teamColor);
         }
 
         assertNull(TeamColor.fromName(null));

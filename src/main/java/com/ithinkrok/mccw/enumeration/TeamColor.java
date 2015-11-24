@@ -20,14 +20,14 @@ public class TeamColor {
 
     private static List<TeamColor> teamColorList;
 
-    public final Color armorColor;
-    public final DyeColor dyeColor;
-    public final ChatColor chatColor;
-    public final String name;
+    private final Color armorColor;
+    private final DyeColor dyeColor;
+    private final ChatColor chatColor;
+    private final String name;
 
     private TeamColor(DyeColor dyeColor) {
         this.chatColor = DyeToChatColorConverter.convert(dyeColor);
-        this.name = chatColor + WordUtils.capitalizeFully(dyeColor.name());
+        this.name = getChatColor() + WordUtils.capitalizeFully(dyeColor.name());
         this.armorColor = dyeColor.getColor();
         this.dyeColor = dyeColor;
     }
@@ -70,13 +70,13 @@ public class TeamColor {
 
         TeamColor teamColor = (TeamColor) o;
 
-        return dyeColor == teamColor.dyeColor;
+        return getDyeColor() == teamColor.getDyeColor();
 
     }
 
     public static TeamColor fromName(String name) {
         for(TeamColor teamColor : teamColorList) {
-            if(teamColor.name.equalsIgnoreCase(name)) return teamColor;
+            if(teamColor.getName().equalsIgnoreCase(name)) return teamColor;
         }
 
         return null;
@@ -84,7 +84,7 @@ public class TeamColor {
 
     @Override
     public int hashCode() {
-        return dyeColor.hashCode();
+        return getDyeColor().hashCode();
     }
 
     public static List<TeamColor> values() {
@@ -93,9 +93,25 @@ public class TeamColor {
 
     public static TeamColor fromWoolColor(short woolColor) {
         for(TeamColor c : values()){
-            if(c.dyeColor.getWoolData() == woolColor) return c;
+            if(c.getDyeColor().getWoolData() == woolColor) return c;
         }
 
         return null;
+    }
+
+    public Color getArmorColor() {
+        return armorColor;
+    }
+
+    public DyeColor getDyeColor() {
+        return dyeColor;
+    }
+
+    public ChatColor getChatColor() {
+        return chatColor;
+    }
+
+    public String getName() {
+        return name;
     }
 }

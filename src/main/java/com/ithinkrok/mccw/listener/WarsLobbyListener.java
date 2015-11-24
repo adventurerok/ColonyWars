@@ -101,8 +101,8 @@ public class WarsLobbyListener implements Listener {
         Inventory shopInv = Bukkit.createInventory(player, 9, plugin.getLocale("lobby.chooser.team.name"));
 
         for (TeamColor team : TeamColor.values()) {
-            shopInv.addItem(InventoryUtils.createItemWithNameAndLore(Material.WOOL, 1, team.dyeColor.getWoolData(),
-                    plugin.getLocale("team.name", team.name)));
+            shopInv.addItem(InventoryUtils.createItemWithNameAndLore(Material.WOOL, 1, team.getDyeColor().getWoolData(),
+                    plugin.getLocale("team.name", team.getName())));
         }
 
         player.openInventory(shopInv);
@@ -166,7 +166,7 @@ public class WarsLobbyListener implements Listener {
                 }
 
                 if (teamColor == user.getTeamColor()) {
-                    user.message(plugin.getLocale("team.join.already-member", teamColor.name));
+                    user.message(plugin.getLocale("team.join.already-member", teamColor.getName()));
                     return;
                 }
 
@@ -174,13 +174,13 @@ public class WarsLobbyListener implements Listener {
                 int teamSize = plugin.getTeam(teamColor).getPlayerCount();
 
                 if (teamSize >= (playerCount + 3) / 4) {
-                    user.message(plugin.getLocale("team.join.full", teamColor.name));
+                    user.message(plugin.getLocale("team.join.full", teamColor.getName()));
                     return;
                 }
 
                 user.setTeamColor(teamColor);
 
-                user.message(plugin.getLocale("team.join.success", teamColor.name));
+                user.message(plugin.getLocale("team.join.success", teamColor.getName()));
 
                 user.getPlayer().closeInventory();
             } else if (plugin.getLocale("lobby.chooser.class.name").equals(event.getInventory().getTitle())) {

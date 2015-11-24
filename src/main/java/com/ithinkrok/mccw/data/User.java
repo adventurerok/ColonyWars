@@ -429,10 +429,10 @@ public class User {
         setTeamColor(null);
         setInGame(false);
 
-        plugin.messageAll(ChatColor.GOLD + "The " + team.getTeamColor().name + ChatColor.GOLD +
+        plugin.messageAll(ChatColor.GOLD + "The " + team.getTeamColor().getName() + ChatColor.GOLD +
                 " has lost a player!");
         plugin.messageAll(ChatColor.GOLD + "There are now " + ChatColor.DARK_AQUA + team.getPlayerCount() +
-                ChatColor.GOLD + " players left on the " + team.getTeamColor().name + ChatColor.GOLD + " Team");
+                ChatColor.GOLD + " players left on the " + team.getTeamColor().getName() + ChatColor.GOLD + " Team");
 
         if (team.getPlayerCount() == 0) {
             team.eliminate();
@@ -518,7 +518,7 @@ public class User {
     public String getFormattedName() {
         if (teamColor == null) return player.getName();
 
-        return teamColor.chatColor + player.getName();
+        return teamColor.getChatColor() + player.getName();
     }
 
     public void clearArmor() {
@@ -561,7 +561,7 @@ public class User {
     private void setArmorColor(ItemStack armor) {
         LeatherArmorMeta meta = (LeatherArmorMeta) armor.getItemMeta();
 
-        meta.setColor(teamColor.armorColor);
+        meta.setColor(teamColor.getArmorColor());
         armor.setItemMeta(meta);
 
         meta.spigot().setUnbreakable(true);

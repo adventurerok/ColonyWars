@@ -50,7 +50,7 @@ public class WarriorClass extends ClassItemClassHandler {
             target = target.clone().add(face.getModX(), face.getModY(), face.getModZ());
 
             Wolf wolf = (Wolf) target.getWorld().spawnEntity(target, EntityType.WOLF);
-            wolf.setCollarColor(event.getUser().getTeamColor().dyeColor);
+            wolf.setCollarColor(event.getUser().getTeamColor().getDyeColor());
             wolf.setOwner(event.getPlayer());
 
             return true;

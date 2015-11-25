@@ -68,6 +68,7 @@ public class InfernoClass extends ClassItemClassHandler {
 
         @Override
         public boolean onInteractWorld(UserInteractEvent event) {
+            if(!event.isRightClick() || event.getBlockFace() == null) return false;
             Block target = event.getUser().rayTraceBlocks(200);
             if (target == null) return true;
 

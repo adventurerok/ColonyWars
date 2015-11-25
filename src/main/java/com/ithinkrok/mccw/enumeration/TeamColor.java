@@ -47,14 +47,14 @@ public class TeamColor {
         dyeColors[5] = DyeColor.LIGHT_BLUE;
         dyeColors[6] = DyeColor.LIME;
         dyeColors[7] = DyeColor.PURPLE;
-        dyeColors[8] = DyeColor.CYAN;
-        dyeColors[9] = DyeColor.PINK;
-        dyeColors[10] = DyeColor.MAGENTA;
+        dyeColors[8] = DyeColor.MAGENTA;
+        dyeColors[9] = DyeColor.CYAN;
+        dyeColors[10] = DyeColor.SILVER;
         dyeColors[11] = DyeColor.BROWN;
         dyeColors[12] = DyeColor.BLACK;
         dyeColors[13] = DyeColor.WHITE;
         dyeColors[14] = DyeColor.GRAY;
-        dyeColors[15] = DyeColor.SILVER;
+        dyeColors[15] = DyeColor.PINK;
 
         List<TeamColor> teamColors = new ArrayList<>();
 

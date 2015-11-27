@@ -73,6 +73,6 @@ public class ShowdownArena {
 
                 checkUserMove(user, user.getPlayer().getLocation());
             }
-        }, 20 * 30, 20 * 30);
+        }, 20 * 60 * 5, 20 * 20);
     }
 }

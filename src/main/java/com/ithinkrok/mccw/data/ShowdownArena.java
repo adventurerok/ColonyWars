@@ -1,5 +1,6 @@
 package com.ithinkrok.mccw.data;
 
+import com.ithinkrok.mccw.handler.GameInstance;
 import com.ithinkrok.mccw.util.BoundingBox;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
@@ -59,5 +60,12 @@ public class ShowdownArena {
         double zd = Math.abs(loc.getZ() - center.getZ());
 
         return !(xd > radiusX || zd > radiusZ);
+    }
+
+    public void startShrinkTask(GameInstance gameInstance){
+        gameInstance.scheduleRepeatingTask(() -> {
+            if(radiusX > 5) radiusX -= 1;
+            if(radiusZ > 5) radiusZ -= 1;
+        }, 20 * 30, 20 * 30);
     }
 }

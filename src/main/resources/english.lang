@@ -72,7 +72,8 @@ spectators.players.chose=&6Choose a player to spectate from your inventory
 spectators.player.name=&dSpectate %s
 
 #showdown
-showdown.escape=&cYou cannot escape showdown!
+showdown.escape=&cYou cannot escape the showdown arena!
+showdown.shrinking=&6The showdown arena will shrink slowly until it is 10x10!
 
 #buildings
 building.shop.name=&a%s Shop

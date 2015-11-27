@@ -300,12 +300,6 @@ public class WarsGameListener implements Listener {
         if (event.getPlayer().getAllowFlight()) return;
 
         if (!plugin.getShowdownArena().isInBounds(event.getTo())) {
-//            if (!plugin.getShowdownArena().isInBounds(event.getFrom())) {
-//                event.getPlayer().teleport(plugin.getMapSpawn(null));
-//                plugin.messageAllLocale("showdown.tele-center", event.getPlayer().getDisplayName());
-//            }
-//            event.setCancelled(true);
-
             Location showdown = plugin.getShowdownArena().getCenter();
             
             double xv = 0;

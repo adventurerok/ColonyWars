@@ -11,6 +11,7 @@ permissions:
       mccw.gamestate: true
       mccw.members: true
       mccw.spawn: true
+      mccw.fix: true
     default: "op"
   mccw.test:
     description: "Allows use of the test command"
@@ -21,6 +22,9 @@ permissions:
     default: true
   mccw.spawn:
     description: "Allows use of the spawn command"
+    default: true
+  mccw.fix:
+    description: "Allows use of the fix command"
     default: true
 commands:
   transfer:
@@ -46,3 +50,8 @@ commands:
     aliases: ["center"]
     usage: "/spawn"
     permission: "mccw.spawn"
+  fix:
+    description: "Fixes you if you are stuck"
+    aliases: ["fixme", "unstuck"]
+    usage: "/fix"
+    permission: "mccw.fix"

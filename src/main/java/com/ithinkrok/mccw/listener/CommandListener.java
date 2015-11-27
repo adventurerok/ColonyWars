@@ -48,10 +48,17 @@ public class CommandListener implements CommandExecutor {
                 return onMembersCommand(user);
             case "spawn":
                 return onSpawnCommand(user);
+            case "fix":
+                return onFixCommand(user);
             default:
                 return false;
         }
 
+    }
+
+    private boolean onFixCommand(User user) {
+        user.teleport(user.getPlayer().getLocation().add(0, 0.5d, 0));
+        return true;
     }
 
     private boolean onTransferCommand(User user, String[] args) {

@@ -79,15 +79,19 @@ public class SchematicBuilder {
                         Location l = new Location(loc.getWorld(), x + loc.getX() + schem.getOffsetX(),
                                 y + loc.getY() + schem.getOffsetY(), z + loc.getZ() + schem.getOffsetZ());
 
+                        oldState = l.getBlock().getState();
+                        if(oldState.getType() == Material.LAPIS_ORE) oldState.setType(Material.AIR);
+                        else if(oldState.getType() == Material.BEDROCK || oldState.getType() == Material.BARRIER){
+                            //prevent building over map boundaries
+                            return false;
+                        }
+
                         int bId = schem.getBlock(x, y, z);
                         if (bId == 0) continue;
 
                         if (bId == Material.OBSIDIAN.getId()) centerBlock = l;
 
                         locations.add(l);
-
-                        oldState = l.getBlock().getState();
-                        if(oldState.getType() == Material.LAPIS_ORE) oldState.setType(Material.AIR);
 
                         oldBlocks.put(l, oldState);
                     }

@@ -326,7 +326,7 @@ public class WarsGameListener implements Listener {
 
             if (ent.getMetadata("team").get(0).value() == hurt.getTeamColor()) {
                 event.setCancelled(true);
-            }
+            } else plugin.onUserAttacked();
             return;
         }
 
@@ -359,6 +359,8 @@ public class WarsGameListener implements Listener {
             event.setCancelled(true);
             return;
         }
+
+        plugin.onUserAttacked();
 
         User targetInfo = plugin.getUser(target);
 

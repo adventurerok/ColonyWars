@@ -280,6 +280,11 @@ public class WarsPlugin extends JavaPlugin {
         } else inv.addItem(getHandbook().clone());
     }
 
+    public void onUserAttacked(){
+        if(gameInstance == null) return;
+        gameInstance.onUserAttacked();
+    }
+
     public ItemStack getHandbook() {
         return handbook;
     }

@@ -52,6 +52,9 @@ public class GameInstance {
 
     private ArrayList<Integer> gameTasks = new ArrayList<>();
 
+    private int forceShowdownTimer;
+    private int forceShowdownTask;
+
     public GameInstance(WarsPlugin plugin, String map) {
         this.map = map;
         this.plugin = plugin;
@@ -155,6 +158,14 @@ public class GameInstance {
 
         setupBases();
 
+        forceShowdownTimer = plugin.getConfig().getInt("force-showdown.times.start");
+
+        forceShowdownTask = scheduleRepeatingTask(() -> {
+            forceShowdownTimer -= 1;
+
+            if(forceShowdownTimer <= 0) plugin.changeGameState(GameState.SHOWDOWN);
+        }, 20, 20);
+
         checkVictory(false);
     }
 
@@ -162,6 +173,10 @@ public class GameInstance {
         plugin.getUsers().forEach(this::setupUser);
 
         plugin.getUsers().forEach(User::decloak);
+    }
+
+    public void onUserAttacked() {
+        forceShowdownTimer = Math.max(forceShowdownTimer, plugin.getConfig().getInt("force-showdown.times.attack"));
     }
 
     private void setupUser(User info){
@@ -309,7 +324,8 @@ public class GameInstance {
 
     public void checkShowdownStart(int teamsInGame) {
         if (isInShowdown() || countdownHandler.getCountdownType() == CountdownType.SHOWDOWN) return;
-        if (teamsInGame > 2 && plugin.getPlayersInGame() > 4) return;
+        if (teamsInGame > plugin.getConfig().getInt("force-showdown.teams")
+                && plugin.getPlayersInGame() > plugin.getConfig().getInt("force-showdown.players")) return;
 
         countdownHandler.startShowdownCountdown();
     }
@@ -450,9 +466,11 @@ public class GameInstance {
                 startGame();
                 break;
             case SHOWDOWN:
+                cancelTask(forceShowdownTask);
                 startShowdown();
                 break;
             case AFTERMATH:
+                cancelTask(forceShowdownTask);
                 startAftermath();
                 break;
         }

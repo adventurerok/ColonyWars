@@ -233,6 +233,17 @@ maps:
         y: 109
         z: 392
 
+# When to force showdown start
+force-showdown:
+# The start time is the time after the start if no players are attacked. The attack time is the time after the last
+# player was attacked
+  times:
+    start: 1800
+    attack: 300
+# The maximum number of teams left that will cause showdown to start
+  teams: 2
+# The maximum number of players left that will cause showdown to start
+  players: 4
 
 # Building info such as schematic locations and default rotations.
 buildings:

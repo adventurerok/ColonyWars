@@ -102,6 +102,7 @@ cooldowns.healing.finished=&aThe healing scroll is ready to use again.
 cooldowns.wolf.finished=&aThe wolf wand is ready to use again.
 cooldowns.regen.finished=&aYour regeneration ability has cooled down!
 cooldowns.cloak.finished=&aYour cloak ability has cooled down!
+cooldowns.fix.finished=&aYou can now use the fix command again!
 
 cooldowns.default.wait=&cPlease wait for this ability to cool down!
 

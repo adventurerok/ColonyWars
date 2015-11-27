@@ -15,10 +15,7 @@ import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.Facing;
 import com.ithinkrok.mccw.util.SchematicBuilder;
 import com.ithinkrok.mccw.util.TreeFeller;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -35,6 +32,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
+import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.List;
@@ -302,11 +300,23 @@ public class WarsGameListener implements Listener {
         if (event.getPlayer().getAllowFlight()) return;
 
         if (!plugin.getShowdownArena().isInBounds(event.getTo())) {
-            if (!plugin.getShowdownArena().isInBounds(event.getFrom())) {
-                event.getPlayer().teleport(plugin.getMapSpawn(null));
-                plugin.messageAllLocale("showdown.tele-center", event.getPlayer().getDisplayName());
-            }
-            event.setCancelled(true);
+//            if (!plugin.getShowdownArena().isInBounds(event.getFrom())) {
+//                event.getPlayer().teleport(plugin.getMapSpawn(null));
+//                plugin.messageAllLocale("showdown.tele-center", event.getPlayer().getDisplayName());
+//            }
+//            event.setCancelled(true);
+
+            Location showdown = plugin.getShowdownArena().getCenter();
+            
+            double xv = 0;
+            if(event.getTo().getX() > showdown.getX() + plugin.getShowdownArena().getRadiusX() - 2) xv = -1;
+            else if(event.getTo().getX() < showdown.getX() - plugin.getShowdownArena().getRadiusX() + 2) xv = 1;
+
+            double zv = 0;
+            if(event.getTo().getZ() > showdown.getZ() + plugin.getShowdownArena().getRadiusZ() - 2) zv = -1;
+            else if(event.getTo().getZ() < showdown.getZ() - plugin.getShowdownArena().getRadiusZ() + 2) zv = 1;
+
+            event.getPlayer().setVelocity(new Vector(xv * 0.5, 0.3, zv * 0.5));
         }
     }
 

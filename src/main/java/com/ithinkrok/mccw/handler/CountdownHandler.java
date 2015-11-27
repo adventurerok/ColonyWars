@@ -71,20 +71,20 @@ public class CountdownHandler {
 
             String baseMessage = "countdowns." + countdownType.name + ".warning";
 
-            if (countDown == 120) plugin.messageAll(plugin.getLocale(baseMessage + ".minutes", "2"), false);
-            else if (countDown == 60) plugin.messageAll(plugin.getLocale(baseMessage + ".minutes", "1"), false);
+            if (countDown == 120) plugin.messageAll(plugin.getLocale(baseMessage + ".minutes", "2"));
+            else if (countDown == 60) plugin.messageAll(plugin.getLocale(baseMessage + ".minutes", "1"));
             else if (countDown == 30)
-                plugin.messageAll(plugin.getLocale(baseMessage + ".seconds", "30"), false);
+                plugin.messageAll(plugin.getLocale(baseMessage + ".seconds", "30"));
             else if (countDown == 10)
                 //Log the 10 second warning only
-                plugin.messageAll(plugin.getLocale(baseMessage + ".seconds", "10"), true);
+                plugin.messageAll(plugin.getLocale(baseMessage + ".seconds", "10"));
             else if (countDown == 0) {
                 plugin.getServer().getScheduler().cancelTask(countDownTask);
                 countDownTask = 0;
                 finished.run();
                 this.countdownType = null;
             } else if (countDown < 6) {
-                plugin.messageAll(plugin.getLocale(baseMessage + ".final", Integer.toString(countDown)), false);
+                plugin.messageAll(plugin.getLocale(baseMessage + ".final", Integer.toString(countDown)));
             }
 
 
@@ -127,7 +127,7 @@ public class CountdownHandler {
             if (plugin.getPlayerCount() > 3) {
                 plugin.changeGameState(GameState.GAME);
             } else {
-                plugin.messageAll(plugin.getLocale("lobby.info.not-enough-players"), false);
+                plugin.messageAll(plugin.getLocale("lobby.info.not-enough-players"));
                 startLobbyCountdown();
             }
         }, null);

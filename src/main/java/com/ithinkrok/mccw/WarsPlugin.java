@@ -345,12 +345,8 @@ public class WarsPlugin extends JavaPlugin {
         messageAll(getLocale(locale, args));
     }
 
-    public void messageAll(String message){
-        messageAll(message, true);
-    }
-
-    public void messageAll(String message, boolean log) {
-        if(log) getServer().getConsoleSender().sendMessage(CHAT_PREFIX + message);
+    public void messageAll(String message) {
+        getServer().getConsoleSender().sendMessage(CHAT_PREFIX + message);
         for (User p : playerInfoHashMap.values()) {
             p.message(message);
         }

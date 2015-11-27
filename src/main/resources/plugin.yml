@@ -12,9 +12,12 @@ permissions:
       mccw.members: true
       mccw.spawn: true
       mccw.fix: true
+      mccw.countdown: true
     default: "op"
   mccw.test:
     description: "Allows use of the test command"
+  mccw.countdown:
+    description: "Allows the use of the countdown command"
   mccw.gamestate:
     description: "Allows use of the gamestate command"
   mccw.members:
@@ -55,3 +58,8 @@ commands:
     aliases: ["fixme", "unstuck"]
     usage: "/fix"
     permission: "mccw.fix"
+  countdown:
+    descrption: "Change the countdown time remaining"
+    aliases: ["cd", "count","timer"]
+    usage: "/countdown <value-to-add>"
+    permission: "mccw.countdown"

@@ -6,6 +6,7 @@ import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.enumeration.GameState;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.mccw.handler.CountdownHandler;
 import com.ithinkrok.mccw.util.InventoryUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -51,10 +52,33 @@ public class CommandListener implements CommandExecutor {
                 return onSpawnCommand(user);
             case "fix":
                 return onFixCommand(user);
+            case "countdown":
+                return onCountdownCommand(user, args);
             default:
                 return false;
         }
 
+    }
+
+    private boolean onCountdownCommand(User user, String[] args) {
+        if(args.length < 1) return false;
+
+        CountdownHandler handler = plugin.getCountdownHandler();
+        if(!handler.isCountingDown()){
+            user.messageLocale("commands.countdown.none");
+            return true;
+        }
+
+        try {
+            int amount = Integer.parseInt(args[0]);
+
+            int newTime = Math.max(handler.getCountDownTime() + amount, 1);
+            handler.setCountDownTime(newTime);
+
+            return true;
+        } catch(NumberFormatException e){
+            return false;
+        }
     }
 
     private boolean onFixCommand(User user) {

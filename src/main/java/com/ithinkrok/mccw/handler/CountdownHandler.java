@@ -37,6 +37,18 @@ public class CountdownHandler {
         this.plugin = plugin;
     }
 
+    public boolean isCountingDown(){
+        return countDownTask != 0;
+    }
+
+    public int getCountDownTime() {
+        return countDown;
+    }
+
+    public void setCountDownTime(int countDownTime){
+        this.countDown = countDownTime;
+    }
+
     public void startCountdown(int countdownFrom, CountdownType countdownType, Runnable finished, Runnable during) {
         if (this.countDownTask != 0) {
             plugin.getServer().getScheduler().cancelTask(countDownTask);

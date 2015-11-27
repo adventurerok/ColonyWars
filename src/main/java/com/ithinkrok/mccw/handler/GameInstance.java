@@ -342,7 +342,7 @@ public class GameInstance {
 
         plugin.messageAllLocale("countdowns.showdown.warning.now");
 
-        showdownArena.startShrinkTask(this);
+        showdownArena.startShrinkTask(plugin);
 
         plugin.messageAllLocale("showdown.shrinking");
     }

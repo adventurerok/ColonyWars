@@ -1,5 +1,6 @@
 package com.ithinkrok.mccw.data;
 
+import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.handler.GameInstance;
 import com.ithinkrok.mccw.util.BoundingBox;
 import org.bukkit.Location;
@@ -62,10 +63,16 @@ public class ShowdownArena {
         return !(xd > radiusX || zd > radiusZ);
     }
 
-    public void startShrinkTask(GameInstance gameInstance){
-        gameInstance.scheduleRepeatingTask(() -> {
+    public void startShrinkTask(WarsPlugin plugin){
+        plugin.getGameInstance().scheduleRepeatingTask(() -> {
             if(radiusX > 5) radiusX -= 1;
             if(radiusZ > 5) radiusZ -= 1;
+
+            for(User user : plugin.getUsers()){
+                if(!user.isInGame()) continue;
+
+                checkUserMove(user, user.getPlayer().getLocation());
+            }
         }, 20 * 30, 20 * 30);
     }
 }

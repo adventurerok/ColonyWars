@@ -311,6 +311,8 @@ public class WarsGameListener implements Listener {
             else if(event.getTo().getZ() < showdown.getZ() - plugin.getShowdownArena().getRadiusZ() + 2) zv = 1;
 
             event.getPlayer().setVelocity(new Vector(xv * 0.5, 0.3, zv * 0.5));
+
+            plugin.getUser(event.getPlayer()).messageLocale("showdown.escape");
         }
     }
 

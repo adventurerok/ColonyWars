@@ -72,7 +72,7 @@ spectators.players.chose=&6Choose a player to spectate from your inventory
 spectators.player.name=&dSpectate %s
 
 #showdown
-showdown.tele-center=%s &6was teleported back to the center!
+showdown.escape=&cYou cannot escape showdown!
 
 #buildings
 building.shop.name=&a%s Shop

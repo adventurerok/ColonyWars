@@ -161,6 +161,7 @@ public class GameInstance {
         forceShowdownTimer = plugin.getConfig().getInt("force-showdown.times.start");
 
         forceShowdownTask = scheduleRepeatingTask(() -> {
+            if(gameState != GameState.GAME) return;
             forceShowdownTimer -= 1;
 
             if(forceShowdownTimer <= 0) plugin.changeGameState(GameState.SHOWDOWN);

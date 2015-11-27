@@ -11,6 +11,7 @@ import com.ithinkrok.mccw.playerclass.items.ClassItem;
 import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
+import com.ithinkrok.mccw.util.TeamCompass;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
@@ -36,7 +37,8 @@ public class CloakerClass extends ClassItemClassHandler {
                 .withRightClickTimeout(new Decloak(plugin), "cloak", "cloaking", "lore.timeout.cloak",
                         "timeouts.cloaking.finished", cloakDurationCalculator()).withUpgradables(
                         new ClassItem.Upgradable("cloak", "upgrades.cloak.name", 2,
-                                configArrayCalculator(config, "costs.cloaker.cloak", 2))));
+                                configArrayCalculator(config, "costs.cloaker.cloak", 2))),
+                TeamCompass.createTeamCompass(plugin, config));
     }
 
     private static Calculator cloakDurationCalculator() {

@@ -5,6 +5,7 @@ import com.ithinkrok.mccw.event.UserBeginGameEvent;
 import com.ithinkrok.mccw.playerclass.items.ArrayCalculator;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
 import com.ithinkrok.mccw.strings.Buildings;
+import com.ithinkrok.mccw.util.TeamCompass;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.potion.PotionEffect;
@@ -24,7 +25,8 @@ public class DarkKnightClass extends ClassItemClassHandler {
                                 .withWitherCalculator(new ArrayCalculator(3, 6, 10))
                                 .withNauseaCalculator(new ArrayCalculator(5, 7, 8))).withUpgradables(
                         new ClassItem.Upgradable("sword", "upgrades.darkness-sword.name", 2,
-                                configArrayCalculator(config, "costs.dark_knight.sword", 2))));
+                                configArrayCalculator(config, "costs.dark_knight.sword", 2))),
+                TeamCompass.createTeamCompass(plugin, config));
     }
 
     @Override

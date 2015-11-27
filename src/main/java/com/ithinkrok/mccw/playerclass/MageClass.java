@@ -8,6 +8,7 @@ import com.ithinkrok.mccw.playerclass.items.ClassItem;
 import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
+import com.ithinkrok.mccw.util.TeamCompass;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -40,7 +41,8 @@ public class MageClass extends ClassItemClassHandler {
                         .withRightClickCooldown("lightning", "lightning", new LinearCalculator(45, -15),
                                 "cooldowns.lightning.finished").withUpgradables(
                         new ClassItem.Upgradable("lightning", "upgrades.lightning-wand.name", 2,
-                                configArrayCalculator(config, "costs.mage.lightning", 2))));
+                                configArrayCalculator(config, "costs.mage.lightning", 2))),
+                TeamCompass.createTeamCompass(plugin, config));
 
         addExtraBuyables(new ItemBuyable(InventoryUtils.createPotion(PotionType.INSTANT_DAMAGE, 1, true, false, 32),
                         Buildings.MAGETOWER, config.getInt("costs.mage.harming"), true),

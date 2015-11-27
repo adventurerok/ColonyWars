@@ -4,6 +4,7 @@ import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
 import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
+import com.ithinkrok.mccw.util.TeamCompass;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -27,7 +28,8 @@ public class PeasantClass extends ClassItemClassHandler {
                         .withUpgradables(new ClassItem.Upgradable("sharpness", "upgrades.sharpness.name", 2,
                                         configArrayCalculator(config, "costs.peasant.sharpness", 2)),
                                 new ClassItem.Upgradable("knockback", "upgrades.knockback.name", 2,
-                                        configArrayCalculator(config, "costs.peasant.knockback", 2))));
+                                        configArrayCalculator(config, "costs.peasant.knockback", 2))),
+                TeamCompass.createTeamCompass(plugin, config));
     }
 
 }

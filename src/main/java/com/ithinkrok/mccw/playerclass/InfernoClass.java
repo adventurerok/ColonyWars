@@ -6,6 +6,7 @@ import com.ithinkrok.mccw.inventory.ItemBuyable;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
 import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
+import com.ithinkrok.mccw.util.TeamCompass;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -31,7 +32,8 @@ public class InfernoClass extends ClassItemClassHandler {
                         new ClassItem.WeaponModifier("flame").withDamageCalculator(new LinearCalculator(1, 1.5))
                                 .withFireCalculator(new LinearCalculator(4, 0))).withUpgradables(
                         new ClassItem.Upgradable("flame", "upgrades.flame-sword.name", 2,
-                                configArrayCalculator(config, "costs.inferno.flame", 2))));
+                                configArrayCalculator(config, "costs.inferno.flame", 2))),
+                TeamCompass.createTeamCompass(plugin, config));
 
         addExtraBuyables(new ItemBuyable(new ItemStack(Material.TNT, 16), Buildings.BLACKSMITH,
                 config.getInt("costs.inferno.tnt") * 16, true));

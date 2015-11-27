@@ -6,6 +6,7 @@ import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
 import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
+import com.ithinkrok.mccw.util.TeamCompass;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -45,7 +46,8 @@ public class PriestClass extends ClassItemClassHandler {
                         .withUpgradeBuildings(Buildings.CATHEDRAL).withUnlockOnBuildingBuild(true).withWeaponModifier(
                         new ClassItem.WeaponModifier("cross").withDamageCalculator(new LinearCalculator(2, 1)))
                         .withUpgradables(new ClassItem.Upgradable("cross", "upgrades.cross.name", 2,
-                                configArrayCalculator(config, "costs.priest.cross", 2))));
+                                configArrayCalculator(config, "costs.priest.cross", 2))),
+                TeamCompass.createTeamCompass(plugin, config));
     }
 
 

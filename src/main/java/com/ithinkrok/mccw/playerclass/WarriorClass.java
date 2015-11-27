@@ -5,6 +5,7 @@ import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
 import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
+import com.ithinkrok.mccw.util.TeamCompass;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -36,7 +37,8 @@ public class WarriorClass extends ClassItemClassHandler {
                         .withRightClickCooldown("wolf", "wolf", new LinearCalculator(120, -30),
                                 "cooldowns.wolf.finished").withUpgradables(
                         new ClassItem.Upgradable("wolf", "upgrades.wolf-wand.name", 2,
-                                configArrayCalculator(config, "costs.warrior.wolf", 2))));
+                                configArrayCalculator(config, "costs.warrior.wolf", 2))),
+                TeamCompass.createTeamCompass(plugin, config));
     }
 
     private static class WolfWand implements ClassItem.InteractAction {

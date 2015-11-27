@@ -304,6 +304,7 @@ costs:
     healingPotion32: 1250
   cathedral:
     healingPotion32: 500
+    team-compass: 1000
   greenhouse:
     axe: 1600
   scout:

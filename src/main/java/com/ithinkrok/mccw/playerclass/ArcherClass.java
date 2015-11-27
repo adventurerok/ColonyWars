@@ -11,6 +11,7 @@ import com.ithinkrok.mccw.playerclass.items.ClassItem;
 import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.InventoryUtils;
+import com.ithinkrok.mccw.util.TeamCompass;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -36,7 +37,8 @@ public class ArcherClass extends ClassItemClassHandler {
                         new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sword", new LinearCalculator(0, 1)),
                         new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "sword", new LinearCalculator(0, 1)))
                         .withUpgradables(new ClassItem.Upgradable("sword", "upgrades.wood-sword.name", 2,
-                                configArrayCalculator(config, "costs.archer.sword", 2))));
+                                configArrayCalculator(config, "costs.archer.sword", 2))),
+                TeamCompass.createTeamCompass(plugin, config));
 
         addExtraBuyables(new UpgradeBuyable(InventoryUtils
                 .createItemWithNameAndLore(Material.ARROW, 64, 0, plugin.getLocale("upgrades.arrows.name", 1)),

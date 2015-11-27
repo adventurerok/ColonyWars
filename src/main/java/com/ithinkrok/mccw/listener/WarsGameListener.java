@@ -204,10 +204,13 @@ public class WarsGameListener implements Listener {
 
         if (Buildings.BASE.equals(building.getBuildingName())) {
             user.messageLocale("building.destroy.bases");
+            event.setCancelled(true);
             return;
         }
 
-        building.explode();
+        plugin.messageAllLocale("building.destroyed", user.getFormattedName(), building.getBuildingName(),
+                building.getTeamColor().getFormattedName());
+        plugin.getGameInstance().scheduleTask(building::explode, 60);
     }
 
     private void resetDurability(Player player) {
@@ -279,7 +282,7 @@ public class WarsGameListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerInteractEntity(PlayerInteractEntityEvent event){
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
         User user = plugin.getUser(event.getPlayer());
 
         if (!user.isInGame()) {
@@ -290,7 +293,7 @@ public class WarsGameListener implements Listener {
         resetDurability(event.getPlayer());
 
         PlayerClassHandler classHandler = user.getPlayerClassHandler();
-        if(classHandler.onInteract(new UserRightClickEntityEvent(user, event))) event.setCancelled(true);
+        if (classHandler.onInteract(new UserRightClickEntityEvent(user, event))) event.setCancelled(true);
     }
 
     @EventHandler
@@ -423,7 +426,7 @@ public class WarsGameListener implements Listener {
 
         PlayerClassHandler classHandler = event.getUser().getPlayerClassHandler();
         classHandler.onInteract(event);
-        if(!event.isCancelled()) classHandler.onUserAttack(event);
+        if (!event.isCancelled()) classHandler.onUserAttack(event);
     }
 
     private void userAttackUser(UserAttackEvent event) {
@@ -437,7 +440,7 @@ public class WarsGameListener implements Listener {
 
         PlayerClassHandler classHandler = event.getUser().getPlayerClassHandler();
         classHandler.onInteract(event);
-        if(!event.isCancelled()) classHandler.onUserAttack(event);
+        if (!event.isCancelled()) classHandler.onUserAttack(event);
     }
 
     public void playerDeath(Player died, Player killer, boolean intentionally) {
@@ -455,8 +458,8 @@ public class WarsGameListener implements Listener {
 
         User killerInfo = killer == null ? null : plugin.getUser(killer);
         if (killerInfo != null) {
-            if (intentionally) plugin.messageAll(plugin.getLocale("game.player.killed", diedInfo.getFormattedName(),
-                    killerInfo.getFormattedName()));
+            if (intentionally) plugin.messageAll(
+                    plugin.getLocale("game.player.killed", diedInfo.getFormattedName(), killerInfo.getFormattedName()));
             else plugin.messageAll(plugin.getLocale("game.player.died-fighting", diedInfo.getFormattedName(),
                     killerInfo.getFormattedName()));
         } else {

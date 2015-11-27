@@ -37,6 +37,8 @@ public class Team {
 
     private HashMap<Location, Integer> cannonTowerTasks = new HashMap<>();
 
+    private boolean disableRespawnNotification = false;
+
     public Location getBaseLocation() {
         return baseLocation;
     }
@@ -60,6 +62,14 @@ public class Team {
         if(players.contains(player)) return;
 
         players.add(player);
+    }
+
+    public boolean isRespawnNotificationDisabled() {
+        return disableRespawnNotification;
+    }
+
+    public void setDisableRespawnNotification(boolean disableRespawnNotification) {
+        this.disableRespawnNotification = disableRespawnNotification;
     }
 
     public ArrayList<Player> getPlayers() {
@@ -92,7 +102,7 @@ public class Team {
         if(this.respawnChance == respawnChance) return;
         this.respawnChance = respawnChance;
 
-        messageLocale("game.revival-chance", getRespawnChance());
+        if(!isRespawnNotificationDisabled()) messageLocale("game.revival-chance", getRespawnChance());
 
         updatePlayerScoreboards();
     }

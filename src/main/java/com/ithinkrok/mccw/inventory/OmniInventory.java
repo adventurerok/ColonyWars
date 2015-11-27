@@ -91,7 +91,13 @@ public class OmniInventory extends BuyableInventory {
 
             @Override
             public void onPurchase(ItemPurchaseEvent event) {
+                int oldRespawnChance = event.getTeam().getRespawnChance();
+                event.getTeam().setDisableRespawnNotification(true);
+
                 event.getBuilding().remove();
+                event.getTeam().setRespawnChance(oldRespawnChance);
+
+                event.getTeam().setDisableRespawnNotification(false);
 
                 if (!SchematicBuilder.buildSchematic(plugin, plugin.getSchematicData(Buildings.CATHEDRAL),
                         event.getBuilding().getCenterBlock(), event.getBuilding().getRotation(),

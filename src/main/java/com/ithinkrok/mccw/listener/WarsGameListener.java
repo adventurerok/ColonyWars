@@ -299,20 +299,11 @@ public class WarsGameListener implements Listener {
         if (plugin.getGameState() != GameState.SHOWDOWN) return;
         if (event.getPlayer().getAllowFlight()) return;
 
-        if (!plugin.getShowdownArena().isInBounds(event.getTo())) {
-            Location showdown = plugin.getShowdownArena().getCenter();
-            
-            double xv = 0;
-            if(event.getTo().getX() > showdown.getX() + plugin.getShowdownArena().getRadiusX() - 2) xv = -1;
-            else if(event.getTo().getX() < showdown.getX() - plugin.getShowdownArena().getRadiusX() + 2) xv = 1;
+        User user = plugin.getUser(event.getPlayer());
+        if(user == null) return;
 
-            double zv = 0;
-            if(event.getTo().getZ() > showdown.getZ() + plugin.getShowdownArena().getRadiusZ() - 2) zv = -1;
-            else if(event.getTo().getZ() < showdown.getZ() - plugin.getShowdownArena().getRadiusZ() + 2) zv = 1;
-
-            event.getPlayer().setVelocity(new Vector(xv * 0.5, 0.3, zv * 0.5));
-
-            plugin.getUser(event.getPlayer()).messageLocale("showdown.escape");
+        if(plugin.getShowdownArena().checkUserMove(user, event.getTo())){
+            user.messageLocale("showdown.escape");
         }
     }
 

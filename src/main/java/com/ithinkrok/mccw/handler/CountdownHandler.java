@@ -55,6 +55,8 @@ public class CountdownHandler {
             this.countDownTask = 0;
         }
 
+        if(plugin.getUsers().isEmpty()) return;
+
         this.countDown = countdownFrom;
         this.countdownType = countdownType;
 

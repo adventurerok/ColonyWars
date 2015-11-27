@@ -156,7 +156,7 @@ public class WarsPlugin extends JavaPlugin {
         getLobbyMinigames().forEach(LobbyMinigame::resetMinigame);
 
         countdownHandler = new CountdownHandler(this);
-        countdownHandler.startLobbyCountdown();
+        //countdownHandler.startLobbyCountdown();
 
 
     }

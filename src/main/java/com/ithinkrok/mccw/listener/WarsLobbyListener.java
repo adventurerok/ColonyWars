@@ -43,7 +43,7 @@ public class WarsLobbyListener implements Listener {
         String max = Integer.toString(plugin.getServer().getMaxPlayers());
         event.setJoinMessage(plugin.getLocale("server.players.join", name, online, max));
 
-
+        if(!plugin.getCountdownHandler().isCountingDown()) plugin.getCountdownHandler().startLobbyCountdown();
     }
 
     private ChatColor getPlayerNameColor(Player player) {

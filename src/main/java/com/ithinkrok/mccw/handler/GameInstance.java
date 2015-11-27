@@ -458,13 +458,15 @@ public class GameInstance {
 
     public void changeGameState(GameState state){
         if(this.gameState == state) return;
+        GameState oldState = this.gameState;
         this.gameState = state;
         switch (state){
             case LOBBY:
                 endGame();
                 break;
             case GAME:
-                startGame();
+                if(oldState == GameState.LOBBY) startGame();
+                else cancelTask(forceShowdownTask);
                 break;
             case SHOWDOWN:
                 cancelTask(forceShowdownTask);

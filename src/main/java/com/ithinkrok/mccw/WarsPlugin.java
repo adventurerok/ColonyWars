@@ -394,14 +394,12 @@ public class WarsPlugin extends JavaPlugin {
     public void changeGameState(GameState state) {
         countdownHandler.stopCountdown();
 
-        if (state == GameState.GAME) {
-            if(gameInstance != null) return;
+        if (state == GameState.GAME && gameInstance == null) {
             setInGame(true);
             gameInstance = new GameInstance(this, assignGameMap());
         }
 
-        if(gameInstance == null) return;
-        gameInstance.changeGameState(state);
+        if(gameInstance != null) gameInstance.changeGameState(state);
 
         if(state == GameState.LOBBY){
             gameInstance = null;

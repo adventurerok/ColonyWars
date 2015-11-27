@@ -64,6 +64,12 @@ public class ShowdownArena {
     }
 
     public void startShrinkTask(WarsPlugin plugin){
+        int startTime = 20 * 60 * 5;
+
+        plugin.getGameInstance().scheduleTask(() -> {
+            plugin.messageAllLocale("showdown.shrinking");
+        }, startTime);
+
         plugin.getGameInstance().scheduleRepeatingTask(() -> {
             if(radiusX > 5) radiusX -= 1;
             if(radiusZ > 5) radiusZ -= 1;
@@ -73,6 +79,6 @@ public class ShowdownArena {
 
                 checkUserMove(user, user.getPlayer().getLocation());
             }
-        }, 20 * 60 * 5, 20 * 20);
+        }, startTime, 20 * 20);
     }
 }

@@ -343,8 +343,6 @@ public class GameInstance {
         plugin.messageAllLocale("countdowns.showdown.warning.now");
 
         showdownArena.startShrinkTask(plugin);
-
-        plugin.messageAllLocale("showdown.shrinking");
     }
 
     public void removeBuilding(Building building) {

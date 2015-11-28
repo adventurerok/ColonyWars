@@ -90,6 +90,7 @@ public class CommandListener implements CommandExecutor {
         user.getPlayer().sendMessage(plugin.getLocale("commands.stats.losses", stats.getGameLosses()));
         user.getPlayer().sendMessage(plugin.getLocale("commands.stats.games", stats.getGames()));
         user.getPlayer().sendMessage(plugin.getLocale("commands.stats.totalmoney", stats.getTotalMoney()));
+        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.score", stats.getScore()));
 
         return true;
     }

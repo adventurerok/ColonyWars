@@ -529,6 +529,12 @@ public class WarsGameListener implements Listener {
 
         User target = plugin.getUser((Player) event.getEntity());
 
+        if(!target.isInGame()){
+            //Prevent spectators from being damaged
+            event.setCancelled(true);
+            return;
+        }
+
         if (target.getPlayer().getHealth() - event.getFinalDamage() < 1) {
             event.setCancelled(true);
 

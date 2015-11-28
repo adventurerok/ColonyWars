@@ -236,6 +236,7 @@ public class WarsGameListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onBlockExp(BlockExpEvent event) {
+        if(plugin.getGameState() == GameState.AFTERMATH) return;
         switch (event.getBlock().getType()) {
             case QUARTZ_ORE:
             case GOLD_ORE:

@@ -108,20 +108,6 @@ public class User {
         return plugin.getUserCategoryStats(getUniqueId(), category);
     }
 
-    //    public UserCategoryStats getTotalStats(){
-    //        return currentStats.get(0);
-    //    }
-
-    //    public void loadStats() {
-    //        if (!plugin.hasPersistence()) return;
-    //
-    //
-    //        currentStats = new ArrayList<>();
-    //        currentStats.add(totalStats);
-    //        currentStats.add(classStats);
-    //        currentStats.add(teamStats);
-    //    }
-
     public UUID getUniqueId() {
         return player.getUniqueId();
     }

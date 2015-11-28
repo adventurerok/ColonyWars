@@ -3,6 +3,7 @@ version: "${project.version}"
 main: "com.ithinkrok.mccw.WarsPlugin"
 author: "ithinkrok"
 depend: ["HologramAPI", "ProtocolLib"]
+database: true
 permissions:
   mccw.*:
     description: "Gives access to all MCCW commands"

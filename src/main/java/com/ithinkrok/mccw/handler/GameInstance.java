@@ -222,6 +222,8 @@ public class GameInstance {
             info.setPlayerClass(assignPlayerClass());
         }
 
+        info.loadStats();
+
         info.getPlayer().teleport(getMapSpawn(info.getTeamColor()));
 
         info.getPlayer().setGameMode(GameMode.SURVIVAL);
@@ -244,6 +246,8 @@ public class GameInstance {
         info.messageLocale("game.start.team", info.getTeamColor().getFormattedName());
 
         info.messageLocale("game.start.class", info.getPlayerClass().getFormattedName());
+
+        info.addGame();
     }
 
     public TeamColor assignPlayerTeam() {
@@ -340,6 +344,12 @@ public class GameInstance {
         this.winningTeam = winner;
 
         plugin.messageAllLocale("game.team.winner", winner.getFormattedName());
+
+        for(Player player : plugin.getTeam(winner).getPlayers()){
+            User user = plugin.getUser(player);
+
+            user.addGameWin();
+        }
 
         changeGameState(GameState.AFTERMATH);
     }

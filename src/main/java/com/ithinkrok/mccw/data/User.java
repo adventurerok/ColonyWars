@@ -60,6 +60,8 @@ public class User {
     private String mapVote;
     private int trappedTicks;
 
+    private List<UserCategoryStats> currentStats;
+
     public User(WarsPlugin plugin, Player player) {
         this.plugin = plugin;
         this.player = player;
@@ -103,6 +105,101 @@ public class User {
 
             u.getPlayer().hidePlayer(player);
         }
+    }
+
+    public UserCategoryStats getTotalStats(){
+        return currentStats.get(0);
+    }
+
+    public void loadStats(){
+        if(!plugin.hasPersistence()) return;
+
+        UserCategoryStats totalStats = plugin.getOrCreateUserCategoryStats(player.getUniqueId(), "total");
+        UserCategoryStats classStats = plugin.getOrCreateUserCategoryStats(player.getUniqueId(), playerClass.getName());
+        UserCategoryStats teamStats = plugin.getOrCreateUserCategoryStats(player.getUniqueId(), teamColor.getName());
+
+        currentStats = new ArrayList<>();
+        currentStats.add(totalStats);
+        currentStats.add(classStats);
+        currentStats.add(teamStats);
+    }
+
+    public void saveStats(){
+        if(!plugin.hasPersistence()) return;
+
+        List<UserCategoryStats> copy = currentStats;
+
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            for(UserCategoryStats stats : copy) plugin.saveUserCategoryStats(stats);
+        });
+    }
+
+    public void addGameWin(){
+        if(!plugin.hasPersistence()) return;
+
+        for(UserCategoryStats stats : currentStats){
+            stats.setGameWins(stats.getGameWins() + 1);
+        }
+
+        addScore(plugin.getWarsConfig().getWinScoreModifier());
+    }
+
+    public void addGameLoss(){
+        if(!plugin.hasPersistence()) return;
+
+        for(UserCategoryStats stats : currentStats){
+            stats.setGameLosses(stats.getGameLosses() + 1);
+        }
+
+        addScore(plugin.getWarsConfig().getLossScoreModifier());
+    }
+
+    public void addGame(){
+        if(!plugin.hasPersistence()) return;
+
+        for(UserCategoryStats stats : currentStats){
+            stats.setGames(stats.getGames() + 1);
+        }
+    }
+
+    public void addKill(){
+        if(!plugin.hasPersistence()) return;
+
+        for(UserCategoryStats stats : currentStats){
+            stats.setKills(stats.getKills() + 1);
+        }
+
+        addScore(plugin.getWarsConfig().getKillScoreModifier());
+    }
+
+    public void addDeath(){
+        if(!plugin.hasPersistence()) return;
+
+        for(UserCategoryStats stats : currentStats){
+            stats.setDeaths(stats.getDeaths() + 1);
+        }
+
+        addScore(plugin.getWarsConfig().getDeathScoreModifier());
+    }
+
+    public void addTotalMoney(int amount){
+        if(!plugin.hasPersistence()) return;
+
+        for(UserCategoryStats stats : currentStats){
+            stats.setTotalMoney(stats.getTotalMoney() + amount);
+        }
+    }
+
+    private void addScore(int amount){
+        if(amount == 0) return;
+        if(!plugin.hasPersistence()) return;
+
+        for(UserCategoryStats stats : currentStats){
+            stats.setScore(stats.getScore() + amount);
+        }
+
+        if(amount > 0) messageLocale("score.gain", amount);
+        else messageLocale("score.loss", -amount);
     }
 
     public User getFireAttacker() {
@@ -150,6 +247,7 @@ public class User {
     public void addPlayerCash(int cash) {
         playerCash += cash;
         updateScoreboard();
+        addTotalMoney(cash);
     }
 
     public void updateScoreboard() {

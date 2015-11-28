@@ -85,6 +85,8 @@ public class WarsPlugin extends JavaPlugin {
 
     private WarsConfig warsConfig;
 
+    private Persistence persistence;
+
     public LangFile getLangFile() {
         return langFile;
     }
@@ -108,18 +110,44 @@ public class WarsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(currentListener, this);
     }
 
-    public void resetTeams() {
-        for (TeamColor c : TeamColor.values()) {
-            teamInfoEnumMap.put(c, new Team(this, c));
-        }
+    public boolean hasPersistence() {
+        return persistence != null;
+    }
+
+    @Override
+    public void installDDL() {
+        super.installDDL();
+    }
+
+    @Override
+    public List<Class<?>> getDatabaseClasses() {
+        List<Class<?>> classes = new ArrayList<>();
+
+        classes.add(UserCategoryStats.class);
+
+        return classes;
+    }
+
+    public Persistence getPersistence() {
+        return persistence;
+    }
+
+    public UserCategoryStats getOrCreateUserCategoryStats(UUID playerUUID, String category) {
+        return persistence.getOrCreateUserCategoryStats(playerUUID, category);
+    }
+
+    public void saveUserCategoryStats(UserCategoryStats stats){
+        persistence.saveUserCategoryStats(stats);
     }
 
     @Override
     public void onEnable() {
         warsConfig = new WarsConfig(this);
-        commandListener = new CommandListener(this);
 
         saveDefaultConfig();
+
+        if (warsConfig.hasPersistence()) persistence = new Persistence(this);
+        commandListener = new CommandListener(this);
 
         mapList = getWarsConfig().getMapList();
 
@@ -140,7 +168,6 @@ public class WarsPlugin extends JavaPlugin {
         resetTeams();
 
 
-
         buildingInventoryHandler = new OmniInventory(this, getWarsConfig());
         spectatorInventoryHandler = new SpectatorInventory(this);
 
@@ -154,35 +181,36 @@ public class WarsPlugin extends JavaPlugin {
 
     }
 
-
     /**
-     *
      * @return The {@code WarsConfig} to access known configuration values
      */
     public WarsConfig getWarsConfig() {
         return warsConfig;
     }
 
-
-    /**
-     *
-     * @return The base configuration, ignoring the current map configuration
-     */
-    public FileConfiguration getBaseConfig(){
-        return super.getConfig();
-    }
-
-    /**
-     *
-     * @return The configuration for the current map
-     */
-    public ConfigurationSection getMapConfig(){
-        if(gameInstance != null) return gameInstance.getMapConfig();
-        else return getBaseConfig();
+    public void resetTeams() {
+        for (TeamColor c : TeamColor.values()) {
+            teamInfoEnumMap.put(c, new Team(this, c));
+        }
     }
 
     public List<LobbyMinigame> getLobbyMinigames() {
         return lobbyMinigames;
+    }
+
+    /**
+     * @return The configuration for the current map
+     */
+    public ConfigurationSection getMapConfig() {
+        if (gameInstance != null) return gameInstance.getMapConfig();
+        else return getBaseConfig();
+    }
+
+    /**
+     * @return The base configuration, ignoring the current map configuration
+     */
+    public FileConfiguration getBaseConfig() {
+        return super.getConfig();
     }
 
     public List<String> getMapList() {
@@ -197,124 +225,42 @@ public class WarsPlugin extends JavaPlugin {
         player.teleport(getLobbySpawn());
     }
 
-    public void playerJoinLobby(Player player) {
-        User user = getUser(player);
-
-        user.setInGame(false);
-        user.getPlayer().setGameMode(GameMode.ADVENTURE);
-        user.unsetSpectator();
-        user.resetPlayerStats(true);
-        user.clearArmor();
-
-        user.setTeamColor(null);
-        user.setMapVote(null);
-
-        PlayerInventory inv = player.getInventory();
-
-        inv.clear();
-
-        inv.addItem(InventoryUtils.createItemWithNameAndLore(Material.LEATHER_HELMET, 1, 0, getLocale(
-                "lobby.chooser.team.name"),
-                getLocale("lobby.chooser.team.desc")));
-
-        inv.addItem(InventoryUtils.createItemWithNameAndLore(Material.WOOD_SWORD, 1, 0, getLocale(
-                "lobby.chooser.class.name"),
-                getLocale("lobby.chooser.class.desc")));
-
-        inv.addItem(InventoryUtils.createItemWithNameAndLore(Material.EMPTY_MAP, 1, 0, getLocale(
-                "lobby.chooser.map.name"),
-                getLocale("lobby.chooser.map.desc")));
-
-        user.message(getLocale("lobby.info.choose-class"));
-
-        user.message(getLocale("lobby.info.map-info"));
-
-        player.teleport(getLobbySpawn());
-
-        givePlayerHandbook(player);
-
-        for (LobbyMinigame minigame : getLobbyMinigames()) {
-            minigame.onUserJoinLobby(user);
-        }
-    }
-
-    public User getUser(Player player) {
-        if (player == null) return null;
-        return playerInfoHashMap.get(player.getUniqueId());
-    }
-
-    public String getLocale(String name, Object... params) {
-        return langFile.getLocale(name, params);
-    }
-
-    public String getLobbyWorldName(){
-        return getWarsConfig().getLobbyMapFolder();
-    }
-
-    public String getPlayingWorldName(){
-        return getWarsConfig().getGameMapFolder();
-    }
-
     public Location getLobbySpawn() {
         return Bukkit.getWorld(getLobbyWorldName()).getSpawnLocation();
     }
 
-    public Location getMapSpawn(TeamColor teamColorOrNull){
-        if(gameInstance == null) return getLobbySpawn();
+    public String getLobbyWorldName() {
+        return getWarsConfig().getLobbyMapFolder();
+    }
+
+    public String getPlayingWorldName() {
+        return getWarsConfig().getGameMapFolder();
+    }
+
+    public Location getMapSpawn(TeamColor teamColorOrNull) {
+        if (gameInstance == null) return getLobbySpawn();
         return gameInstance.getMapSpawn(teamColorOrNull);
     }
 
-    public Building getBuildingInfo(Location centerBlock){
+    public Building getBuildingInfo(Location centerBlock) {
         return gameInstance.getBuildingInfo(centerBlock);
     }
 
-    public boolean isInBuilding(Location blockLocation){
+    public boolean isInBuilding(Location blockLocation) {
         return gameInstance.isInBuilding(blockLocation);
     }
 
-    public void handleSpectatorInventory(InventoryClickEvent event){
+    public void handleSpectatorInventory(InventoryClickEvent event) {
         gameInstance.handleSpectatorInventory(event);
     }
 
-    public ShowdownArena getShowdownArena(){
+    public ShowdownArena getShowdownArena() {
         return gameInstance.getShowdownArena();
     }
 
-    public void givePlayerHandbook(Player player) {
-        PlayerInventory inv = player.getInventory();
-        if (getHandbook() == null) {
-            String meta = getHandbookMeta();
-
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-                    "minecraft:give " + player.getName() + " written_book 1 0 " + meta);
-
-            int index = inv.first(Material.WRITTEN_BOOK);
-            ItemStack book = inv.getItem(index);
-            book.setAmount(1);
-            inv.setItem(index, null);
-            setHandbook(book.clone());
-        }
-
-        if (inv.getItem(8) == null || inv.getItem(8).getType() == Material.AIR) {
-            inv.setItem(8, getHandbook().clone());
-        } else inv.addItem(getHandbook().clone());
-    }
-
-    public void onUserAttacked(){
-        if(gameInstance == null) return;
+    public void onUserAttacked() {
+        if (gameInstance == null) return;
         gameInstance.onUserAttacked();
-    }
-
-    public ItemStack getHandbook() {
-        return handbook;
-    }
-
-    public String getHandbookMeta() {
-        return handbookMeta;
-    }
-
-    public void setHandbook(ItemStack handbook) {
-        this.handbook = handbook;
     }
 
     public InventoryHandler getBuildingInventoryHandler() {
@@ -334,10 +280,9 @@ public class WarsPlugin extends JavaPlugin {
         return teamInfoEnumMap.get(teamColor);
     }
 
-
     public PlayerClassHandler getPlayerClassHandler(PlayerClass playerClass) {
         PlayerClassHandler classHandler = classHandlerMap.get(playerClass);
-        if(classHandler == null) {
+        if (classHandler == null) {
             classHandler = playerClass.createPlayerClassHandler(this);
 
             classHandlerMap.put(playerClass, classHandler);
@@ -345,7 +290,6 @@ public class WarsPlugin extends JavaPlugin {
 
         return classHandler;
     }
-
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -360,7 +304,6 @@ public class WarsPlugin extends JavaPlugin {
         return gameInstance;
     }
 
-
     public void messageAllLocale(String locale, Object... args) {
         messageAll(getLocale(locale, args));
     }
@@ -370,6 +313,10 @@ public class WarsPlugin extends JavaPlugin {
         for (User p : playerInfoHashMap.values()) {
             p.message(message);
         }
+    }
+
+    public String getLocale(String name, Object... params) {
+        return langFile.getLocale(name, params);
     }
 
     public double getMaxHealth() {
@@ -403,10 +350,6 @@ public class WarsPlugin extends JavaPlugin {
         return spectatorInventoryHandler;
     }
 
-    public Collection<User> getUsers() {
-        return playerInfoHashMap.values();
-    }
-
     public void changeGameState(GameState state) {
         countdownHandler.stopCountdown();
 
@@ -415,9 +358,9 @@ public class WarsPlugin extends JavaPlugin {
             gameInstance = new GameInstance(this, assignGameMap());
         }
 
-        if(gameInstance != null) gameInstance.changeGameState(state);
+        if (gameInstance != null) gameInstance.changeGameState(state);
 
-        if(state == GameState.LOBBY){
+        if (state == GameState.LOBBY) {
             gameInstance = null;
             setInGame(false);
 
@@ -457,11 +400,93 @@ public class WarsPlugin extends JavaPlugin {
         return bestMap;
     }
 
+    public Collection<User> getUsers() {
+        return playerInfoHashMap.values();
+    }
+
+    public void playerJoinLobby(Player player) {
+        User user = getUser(player);
+
+        user.setInGame(false);
+        user.getPlayer().setGameMode(GameMode.ADVENTURE);
+        user.unsetSpectator();
+        user.resetPlayerStats(true);
+        user.clearArmor();
+
+        user.setTeamColor(null);
+        user.setMapVote(null);
+
+        PlayerInventory inv = player.getInventory();
+
+        inv.clear();
+
+        inv.addItem(InventoryUtils
+                .createItemWithNameAndLore(Material.LEATHER_HELMET, 1, 0, getLocale("lobby.chooser.team.name"),
+                        getLocale("lobby.chooser.team.desc")));
+
+        inv.addItem(InventoryUtils
+                .createItemWithNameAndLore(Material.WOOD_SWORD, 1, 0, getLocale("lobby.chooser.class.name"),
+                        getLocale("lobby.chooser.class.desc")));
+
+        inv.addItem(InventoryUtils
+                .createItemWithNameAndLore(Material.EMPTY_MAP, 1, 0, getLocale("lobby.chooser.map.name"),
+                        getLocale("lobby.chooser.map.desc")));
+
+        user.message(getLocale("lobby.info.choose-class"));
+
+        user.message(getLocale("lobby.info.map-info"));
+
+        player.teleport(getLobbySpawn());
+
+        givePlayerHandbook(player);
+
+        for (LobbyMinigame minigame : getLobbyMinigames()) {
+            minigame.onUserJoinLobby(user);
+        }
+    }
+
     public int getMapVotes(String map) {
         Integer result = mapVotes.get(map);
 
         if (result == null) return 0;
         return result;
+    }
+
+    public User getUser(Player player) {
+        if (player == null) return null;
+        return playerInfoHashMap.get(player.getUniqueId());
+    }
+
+    public void givePlayerHandbook(Player player) {
+        PlayerInventory inv = player.getInventory();
+        if (getHandbook() == null) {
+            String meta = getHandbookMeta();
+
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+                    "minecraft:give " + player.getName() + " written_book 1 0 " + meta);
+
+            int index = inv.first(Material.WRITTEN_BOOK);
+            ItemStack book = inv.getItem(index);
+            book.setAmount(1);
+            inv.setItem(index, null);
+            setHandbook(book.clone());
+        }
+
+        if (inv.getItem(8) == null || inv.getItem(8).getType() == Material.AIR) {
+            inv.setItem(8, getHandbook().clone());
+        } else inv.addItem(getHandbook().clone());
+    }
+
+    public ItemStack getHandbook() {
+        return handbook;
+    }
+
+    public String getHandbookMeta() {
+        return handbookMeta;
+    }
+
+    public void setHandbook(ItemStack handbook) {
+        this.handbook = handbook;
     }
 
     public GameState getGameState() {

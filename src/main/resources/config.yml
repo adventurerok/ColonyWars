@@ -8,6 +8,8 @@ map-list:
   - "cavern"
   - "random"
 
+persistence: true
+
 # The name of the random option in the maps list.
 random-map: "random"
 
@@ -34,6 +36,12 @@ force-showdown:
   teams: 2
 # The maximum number of players left that will cause showdown to start
   players: 4
+
+score:
+  death: -5
+  kill: 10
+  win: 50
+  loss: -20
 
 # Building info such as schematic locations and default rotations.
 buildings:

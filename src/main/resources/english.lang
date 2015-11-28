@@ -178,7 +178,7 @@ game.start.team=&6You are playing on the %s &6Team
 game.start.class=&6You are playing as the class&3 %s
 game.revival-chance=&6Your revival chance is now&3 %s
 
-#--COMMANDS-
+#--COMMANDS--
 command.no-console=You must be a player to execute Colony Wars commands
 
 commands.members.no-team=&cYou are not in a team yet.
@@ -199,3 +199,7 @@ commands.gamestate.invalid=Invalid gamestate!
 commands.countdown.none=There is no countdown at the moment
 commands.shrink.done=Showdown radius decreased by %s
 commands.shrink.bad-size=Bad shrink amount %s
+
+#--SCORE--
+score.gain=&6You gained &a%s &6points!
+score.loss=&6You lost &c%s &6points!

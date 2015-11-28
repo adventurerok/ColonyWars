@@ -113,4 +113,28 @@ public class WarsConfig {
     public Vector getMapCenter(String mapName){
         return getVector("maps." + mapName + ".center");
     }
+
+    public boolean hasPersistence(){
+        return config().getBoolean("persistence");
+    }
+
+    public int getDeathScoreModifier(){
+        return getScoreModifier("death");
+    }
+
+    public int getKillScoreModifier(){
+        return getScoreModifier("kill");
+    }
+
+    public int getWinScoreModifier(){
+        return getScoreModifier("win");
+    }
+
+    public int getLossScoreModifier(){
+        return getScoreModifier("loss");
+    }
+
+    public int getScoreModifier(String event){
+        return config().getInt("score." + event);
+    }
 }

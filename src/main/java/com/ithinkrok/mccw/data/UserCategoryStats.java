@@ -17,7 +17,7 @@ public class UserCategoryStats {
 
     @Id private long id;
 
-    @Column private UUID playerUUID;
+    @Column private String playerUUID;
 
     /**
      * The category of the stats. Can be "total", a player class name, or a team name.
@@ -36,11 +36,11 @@ public class UserCategoryStats {
     }
 
     public UUID getPlayerUUID() {
-        return playerUUID;
+        return UUID.fromString(playerUUID);
     }
 
     public void setPlayerUUID(UUID playerUUID) {
-        this.playerUUID = playerUUID;
+        this.playerUUID = playerUUID.toString();
     }
 
     public String getCategory() {

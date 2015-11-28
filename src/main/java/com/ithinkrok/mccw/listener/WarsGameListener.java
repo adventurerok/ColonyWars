@@ -478,9 +478,13 @@ public class WarsGameListener implements Listener {
                     plugin.getLocale("game.player.killed", diedInfo.getFormattedName(), killerInfo.getFormattedName()));
             else plugin.messageAll(plugin.getLocale("game.player.died-fighting", diedInfo.getFormattedName(),
                     killerInfo.getFormattedName()));
+
+            killerInfo.addKill();
         } else {
             plugin.messageAll(plugin.getLocale("game.player.death", diedInfo.getFormattedName()));
         }
+
+        diedInfo.addDeath();
 
         Team diedTeam = diedInfo.getTeam();
         boolean respawn = plugin.getGameState() != GameState.SHOWDOWN &&
@@ -495,6 +499,7 @@ public class WarsGameListener implements Listener {
             diedInfo.resetPlayerStats(false);
         } else {
             plugin.messageAllLocale("game.player.no-respawn", diedInfo.getFormattedName());
+            diedInfo.addGameLoss();
             diedInfo.removeFromGame();
             diedInfo.setSpectator();
         }

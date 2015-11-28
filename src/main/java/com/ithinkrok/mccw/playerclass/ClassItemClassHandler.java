@@ -45,17 +45,6 @@ public class ClassItemClassHandler extends BuyableInventory implements PlayerCla
         return result;
     }
 
-    protected static Calculator configArrayCalculator(WarsConfig config, PlayerClass playerClass, String item,
-                                                      int maxLevel) {
-        double[] returnValues = new double[maxLevel + 1];
-
-        for (int level = 0; level <= maxLevel; ++level) {
-            returnValues[level] = config.getClassItemCost(playerClass, item + level);
-        }
-
-        return new ArrayCalculator(returnValues);
-    }
-
     @Override
     public void onBuildingBuilt(UserTeamBuildingBuiltEvent event) {
         for (ClassItem item : classItemHashMap.values()) {

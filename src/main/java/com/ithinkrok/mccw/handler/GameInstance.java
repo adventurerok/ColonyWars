@@ -31,7 +31,7 @@ import java.util.*;
 
 /**
  * Created by paul on 13/11/15.
- *
+ * <p>
  * Handles the game itself
  */
 public class GameInstance {
@@ -56,10 +56,6 @@ public class GameInstance {
 
     private MapConfig mapConfig;
 
-    public MapConfig getMapConfig() {
-        return mapConfig;
-    }
-
     public GameInstance(WarsPlugin plugin, String map) {
         this.map = map;
         this.plugin = plugin;
@@ -69,24 +65,7 @@ public class GameInstance {
         loadSchematics();
     }
 
-    public TeamColor getWinningTeam() {
-        return winningTeam;
-    }
-
-    public ShowdownArena getShowdownArena() {
-        return showdownArena;
-    }
-
-    public String getMap() {
-        return map;
-    }
-
-    private void startAftermath() {
-        buildings.forEach(Building::clearHolograms);
-        countdownHandler.startEndCountdown();
-    }
-    
-    private void loadSchematics(){
+    private void loadSchematics() {
         ConfigurationSection config = getMapConfig();
         schematicDataHashMap.put(Buildings.BASE, new Schematic(Buildings.BASE, config));
         schematicDataHashMap.put(Buildings.FARM, new Schematic(Buildings.FARM, config));
@@ -105,7 +84,28 @@ public class GameInstance {
         schematicDataHashMap.put(Buildings.TIMERBUFFER, new Schematic(Buildings.TIMERBUFFER, config));
     }
 
-    public Schematic getSchematicData(String buildingName){
+    public MapConfig getMapConfig() {
+        return mapConfig;
+    }
+
+    public TeamColor getWinningTeam() {
+        return winningTeam;
+    }
+
+    public ShowdownArena getShowdownArena() {
+        return showdownArena;
+    }
+
+    public String getMap() {
+        return map;
+    }
+
+    private void startAftermath() {
+        buildings.forEach(Building::clearHolograms);
+        countdownHandler.startEndCountdown();
+    }
+
+    public Schematic getSchematicData(String buildingName) {
         return schematicDataHashMap.get(buildingName);
     }
 
@@ -172,7 +172,7 @@ public class GameInstance {
     }
 
     private void startGame() {
-        String mapFolder = getMapConfig().getString("maps." + map + ".folder");
+        String mapFolder = plugin.getWarsConfig().getMapFolder(map);
         String playingFolder = plugin.getPlayingWorldName();
         try {
             DirectoryUtils.copy(Paths.get("./" + mapFolder + "/"), Paths.get("./" + playingFolder + "/"));
@@ -189,13 +189,13 @@ public class GameInstance {
 
         setupBases();
 
-        forceShowdownTimer = getMapConfig().getInt("force-showdown.times.start");
+        forceShowdownTimer = plugin.getWarsConfig().getShowdownStartTimeNoAttackSinceStart();
 
         forceShowdownTask = scheduleRepeatingTask(() -> {
-            if(gameState != GameState.GAME) return;
+            if (gameState != GameState.GAME) return;
             forceShowdownTimer -= 1;
 
-            if(forceShowdownTimer <= 0) plugin.changeGameState(GameState.SHOWDOWN);
+            if (forceShowdownTimer <= 0) plugin.changeGameState(GameState.SHOWDOWN);
         }, 20, 20);
 
         checkVictory(false);
@@ -208,10 +208,10 @@ public class GameInstance {
     }
 
     public void onUserAttacked() {
-        forceShowdownTimer = Math.max(forceShowdownTimer, getMapConfig().getInt("force-showdown.times.attack"));
+        forceShowdownTimer = Math.max(forceShowdownTimer, plugin.getWarsConfig().getShowdownStartTimeSinceLastAttack());
     }
 
-    private void setupUser(User info){
+    private void setupUser(User info) {
         info.setMapVote(null);
 
         if (info.getTeamColor() == null) {
@@ -246,11 +246,48 @@ public class GameInstance {
         info.messageLocale("game.start.class", info.getPlayerClass().getFormattedName());
     }
 
+    public TeamColor assignPlayerTeam() {
+        ArrayList<TeamColor> smallest = new ArrayList<>();
+        int leastCount = Integer.MAX_VALUE;
+
+        for (TeamColor team : TeamColor.values()) {
+            Team info = getTeam(team);
+            if (info.getPlayerCount() < leastCount) {
+                leastCount = info.getPlayerCount();
+
+                smallest.clear();
+            }
+
+            if (info.getPlayerCount() == leastCount) {
+                smallest.add(team);
+            }
+        }
+
+        return smallest.get(plugin.getRandom().nextInt(smallest.size()));
+    }
+
+    public PlayerClass assignPlayerClass() {
+        return PlayerClass.values().get(plugin.getRandom().nextInt(PlayerClass.values().size()));
+    }
+
+    public Location getMapSpawn(TeamColor team) {
+        World world = plugin.getServer().getWorld(plugin.getPlayingWorldName());
+
+        Vector base;
+        if (team == null) base = plugin.getWarsConfig().getMapCenter(map);
+        else base = plugin.getWarsConfig().getTeamSpawnLocation(map, team);
+
+        return new Location(world, base.getX(), base.getY(), base.getZ());
+    }
+
+    public Team getTeam(TeamColor teamColor) {
+        return plugin.getTeam(teamColor);
+    }
+
     private void calculateShowdownArena() {
-        ConfigurationSection config = getMapConfig();
-        String base = "maps." + map + ".showdown-size";
-        int radiusX = config.getInt(base + ".x");
-        int radiusZ = config.getInt(base + ".z");
+        Vector showdownSize = plugin.getWarsConfig().getShowdownSize(map);
+        int radiusX = showdownSize.getBlockX();
+        int radiusZ = showdownSize.getBlockZ();
 
         Location center = getMapSpawn(null);
         Vector showdownMin = center.toVector().add(new Vector(-radiusX - 5, 0, -radiusZ - 5));
@@ -263,13 +300,11 @@ public class GameInstance {
 
     private void setupBases() {
         World world = plugin.getServer().getWorld(plugin.getPlayingWorldName());
-        ConfigurationSection config = getMapConfig();
 
         for (TeamColor team : TeamColor.values()) {
-            String base = "maps." + map + "." + team.getName() + ".base";
+            Vector vectorLoc = plugin.getWarsConfig().getBaseLocation(map, team);
 
-            Location build = new Location(world, config.getInt(base + ".x"), config.getInt(base + ".y"),
-                    config.getInt(base + ".z"));
+            Location build = new Location(world, vectorLoc.getX(), vectorLoc.getY(), vectorLoc.getZ());
 
 
             SchematicBuilder.pasteSchematic(plugin, plugin.getSchematicData(Buildings.BASE), build, 0, team);
@@ -309,46 +344,6 @@ public class GameInstance {
         changeGameState(GameState.AFTERMATH);
     }
 
-    public TeamColor assignPlayerTeam() {
-        ArrayList<TeamColor> smallest = new ArrayList<>();
-        int leastCount = Integer.MAX_VALUE;
-
-        for (TeamColor team : TeamColor.values()) {
-            Team info = getTeam(team);
-            if (info.getPlayerCount() < leastCount) {
-                leastCount = info.getPlayerCount();
-
-                smallest.clear();
-            }
-
-            if (info.getPlayerCount() == leastCount) {
-                smallest.add(team);
-            }
-        }
-
-        return smallest.get(plugin.getRandom().nextInt(smallest.size()));
-    }
-
-    public PlayerClass assignPlayerClass() {
-        return PlayerClass.values().get(plugin.getRandom().nextInt(PlayerClass.values().size()));
-    }
-
-    public Location getMapSpawn(TeamColor team) {
-        World world = plugin.getServer().getWorld(plugin.getPlayingWorldName());
-        ConfigurationSection config = getMapConfig();
-
-        String base;
-        if (team == null) base = "maps." + map + ".center";
-        else base = "maps." + map + "." + team.getName() + ".spawn";
-
-        return new Location(world, config.getDouble(base + ".x"), config.getDouble(base + ".y"),
-                config.getDouble(base + ".z"));
-    }
-
-    public Team getTeam(TeamColor teamColor) {
-        return plugin.getTeam(teamColor);
-    }
-
     public boolean isInAftermath() {
         return gameState == GameState.AFTERMATH;
     }
@@ -356,8 +351,8 @@ public class GameInstance {
 
     public void checkShowdownStart(int teamsInGame) {
         if (isInShowdown() || countdownHandler.getCountdownType() == CountdownType.SHOWDOWN) return;
-        if (teamsInGame > getMapConfig().getInt("force-showdown.teams")
-                && plugin.getPlayersInGame() > getMapConfig().getInt("force-showdown.players")) return;
+        if (teamsInGame > plugin.getWarsConfig().getShowdownStartTeams() &&
+                plugin.getPlayersInGame() > plugin.getWarsConfig().getShowdownStartPlayers()) return;
 
         countdownHandler.startShowdownCountdown();
     }
@@ -408,9 +403,9 @@ public class GameInstance {
         building.clearHolograms();
     }
 
-    public boolean isInBuilding(Location loc){
-        for(Building building : buildings){
-            if(building.getBounds().containsLocation(loc)) return true;
+    public boolean isInBuilding(Location loc) {
+        for (Building building : buildings) {
+            if (building.getBounds().containsLocation(loc)) return true;
         }
 
         return false;
@@ -468,37 +463,37 @@ public class GameInstance {
         getTeam(building.getTeamColor()).buildingFinished(building);
     }
 
-    public void cancelTask(int task){
-        if(!gameTasks.contains(task)) return;
+    public void cancelTask(int task) {
+        if (!gameTasks.contains(task)) return;
 
         Bukkit.getScheduler().cancelTask(task);
         gameTasks.remove(gameTasks.indexOf(task)); //Fix exception due to remove(int) also removing at index
     }
 
-    public int scheduleTask(Runnable runnable, long ticksDelay){
+    public int scheduleTask(Runnable runnable, long ticksDelay) {
         int task = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, runnable, ticksDelay);
 
         gameTasks.add(task);
         return task;
     }
 
-    public int scheduleRepeatingTask(Runnable runnable, long ticksDelay, long ticksPeriod){
+    public int scheduleRepeatingTask(Runnable runnable, long ticksDelay, long ticksPeriod) {
         int task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, runnable, ticksDelay, ticksPeriod);
 
         gameTasks.add(task);
         return task;
     }
 
-    public void changeGameState(GameState state){
-        if(this.gameState == state) return;
+    public void changeGameState(GameState state) {
+        if (this.gameState == state) return;
         GameState oldState = this.gameState;
         this.gameState = state;
-        switch (state){
+        switch (state) {
             case LOBBY:
                 endGame();
                 break;
             case GAME:
-                if(oldState == GameState.LOBBY) startGame();
+                if (oldState == GameState.LOBBY) startGame();
                 else cancelTask(forceShowdownTask);
                 break;
             case SHOWDOWN:

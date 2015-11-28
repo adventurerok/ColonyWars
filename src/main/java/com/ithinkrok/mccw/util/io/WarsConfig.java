@@ -2,7 +2,9 @@ package com.ithinkrok.mccw.util.io;
 
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
+import com.ithinkrok.mccw.enumeration.TeamColor;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.util.Vector;
 
 import java.util.List;
 
@@ -59,27 +61,52 @@ public class WarsConfig {
         return config().getInt("force-showdown.times.start");
     }
 
-    public int getShowdownStartTimeSinceLastAttack(){
+    public int getShowdownStartTimeSinceLastAttack() {
         return config().getInt("force-showdown.times.attack");
     }
 
-    public int getBuildingCost(String buildingName){
+    public String getMapFolder(String mapName) {
+        return config().getString("maps." + mapName + ".folder");
+    }
+
+    public int getBuildingCost(String buildingName) {
         return getCost("buildings", buildingName);
     }
 
-    public int getBuildingItemCost(String buildingName, String item){
-        return getCost(buildingName, item);
-    }
-
-    public int getClassItemCost(PlayerClass playerClass, String item){
-        return getCost(playerClass.getName(), item);
-    }
-
-    public int getCost(String itemGroup, String item){
+    public int getCost(String itemGroup, String item) {
         return config().getInt("costs." + itemGroup + "." + item);
     }
 
-    public int getBuildingItemAmount(String buildingName, String item){
+    public int getBuildingItemCost(String buildingName, String item) {
+        return getCost(buildingName, item);
+    }
+
+    public int getClassItemCost(PlayerClass playerClass, String item) {
+        return getCost(playerClass.getName(), item);
+    }
+
+    public int getBuildingItemAmount(String buildingName, String item) {
         return config().getInt("amounts." + buildingName + "." + item);
+    }
+
+    public Vector getVector(String path) {
+        return new Vector(config().getDouble(path + ".x"), config().getDouble(path + ".y"),
+                config().getDouble(path + ".z"));
+    }
+
+    public Vector getShowdownSize(String mapName){
+        return getVector("maps." + mapName + ".showdown-size");
+    }
+
+    public Vector getBaseLocation(String mapName, TeamColor team){
+        return getVector("maps." + mapName + "." + team.getName() + ".base");
+    }
+
+    public Vector getTeamSpawnLocation(String mapName, TeamColor team){
+        return getVector("maps." + mapName + "." + team.getName() + ".spawn");
+    }
+
+    public Vector getMapCenter(String mapName){
+        return getVector("maps." + mapName + ".center");
     }
 }

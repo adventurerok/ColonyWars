@@ -448,7 +448,7 @@ public class WarsPlugin extends JavaPlugin {
 
         String bestMap = possible.get(random.nextInt(possible.size()));
 
-        while (bestMap.equals(getMapConfig().getString("random-map"))) {
+        while (bestMap.equals(getWarsConfig().getRandomMapName())) {
             bestMap = mapList.get(random.nextInt(mapList.size()));
         }
 

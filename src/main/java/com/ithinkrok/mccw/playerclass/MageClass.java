@@ -1,6 +1,7 @@
 package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.WarsPlugin;
+import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.event.UserTeamBuildingBuiltEvent;
 import com.ithinkrok.mccw.inventory.ItemBuyable;
@@ -28,27 +29,27 @@ import org.bukkit.potion.PotionType;
 public class MageClass extends ClassItemClassHandler {
 
 
-    public MageClass(WarsPlugin plugin, ConfigurationSection config) {
+    public MageClass(WarsPlugin plugin, PlayerClass playerClass) {
         super(new ClassItem(plugin.getLangFile(), Material.DIAMOND_CHESTPLATE, "items.ender-wand.name")
                         .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new EnderWand())
                         .withRightClickCooldown("ender", "ender", new LinearCalculator(45, -15),
                                 "cooldowns.ender.finished").withUpgradables(
                         new ClassItem.Upgradable("ender", "upgrades.ender-wand.name", 2,
-                                configArrayCalculator(config, "costs.mage.ender", 2))),
+                                configArrayCalculator(plugin.getWarsConfig(), playerClass, "ender", 2))),
                 new ClassItem(plugin.getLangFile(), Material.DIAMOND_LEGGINGS, "items.lightning-wand.name")
                         .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new LightningWand(plugin))
                         .withRightClickCooldown("lightning", "lightning", new LinearCalculator(45, -15),
                                 "cooldowns.lightning.finished").withUpgradables(
                         new ClassItem.Upgradable("lightning", "upgrades.lightning-wand.name", 2,
-                                configArrayCalculator(config, "costs.mage.lightning", 2))),
-                TeamCompass.createTeamCompass(plugin, config));
+                                configArrayCalculator(plugin.getWarsConfig(), playerClass, "lightning", 2))),
+                TeamCompass.createTeamCompass(plugin));
 
         addExtraBuyables(new ItemBuyable(InventoryUtils.createPotion(PotionType.INSTANT_DAMAGE, 1, true, false, 32),
-                        Buildings.MAGETOWER, config.getInt("costs.mage.harming"), true),
+                        Buildings.MAGETOWER, plugin.getWarsConfig().getClassItemCost(playerClass, "harming"), true),
                 new ItemBuyable(InventoryUtils.createPotion(PotionType.INSTANT_HEAL, 1, true, false, 32),
-                        Buildings.MAGETOWER, config.getInt("costs.mage.healing"), true));
+                        Buildings.MAGETOWER, plugin.getWarsConfig().getClassItemCost(playerClass, "healing"), true));
     }
 
     @Override

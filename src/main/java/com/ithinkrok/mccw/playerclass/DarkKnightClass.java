@@ -1,6 +1,7 @@
 package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.WarsPlugin;
+import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.event.UserBeginGameEvent;
 import com.ithinkrok.mccw.playerclass.items.ArrayCalculator;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
@@ -21,7 +22,7 @@ import org.bukkit.potion.PotionEffectType;
  */
 public class DarkKnightClass extends ClassItemClassHandler {
 
-    public DarkKnightClass(WarsPlugin plugin, ConfigurationSection config) {
+    public DarkKnightClass(WarsPlugin plugin, PlayerClass playerClass) {
         super(new ClassItem(plugin.getLangFile(), Material.IRON_HELMET, "items.darkness-sword.name")
                 .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true).withWeaponModifier(
                         new ClassItem.WeaponModifier("sword").withDamageCalculator(new ArrayCalculator(2, 4, 6))
@@ -30,8 +31,8 @@ public class DarkKnightClass extends ClassItemClassHandler {
                         new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "sword", new LinearCalculator(0, 1))
                 ).withUpgradables(
                         new ClassItem.Upgradable("sword", "upgrades.darkness-sword.name", 2,
-                                configArrayCalculator(config, "costs.dark_knight.sword", 2))),
-                TeamCompass.createTeamCompass(plugin, config));
+                                configArrayCalculator(plugin.getWarsConfig(), playerClass, "sword", 2))),
+                TeamCompass.createTeamCompass(plugin));
     }
 
     @Override

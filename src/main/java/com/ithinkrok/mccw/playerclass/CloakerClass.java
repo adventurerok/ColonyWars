@@ -1,12 +1,14 @@
 package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.WarsPlugin;
+import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.playerclass.items.ArrayCalculator;
 import com.ithinkrok.mccw.playerclass.items.Calculator;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
 import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
+import com.ithinkrok.mccw.util.io.WarsConfig;
 import com.ithinkrok.mccw.util.item.TeamCompass;
 import org.bukkit.Effect;
 import org.bukkit.Material;
@@ -23,7 +25,7 @@ import org.bukkit.potion.PotionEffectType;
 public class CloakerClass extends ClassItemClassHandler {
 
 
-    public CloakerClass(WarsPlugin plugin, ConfigurationSection config) {
+    public CloakerClass(WarsPlugin plugin, PlayerClass playerClass) {
         super(new ClassItem(plugin.getLangFile(), Material.IRON_LEGGINGS, "items.cloak.name")
                 .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
                 .withRightClickAction(new Cloak(plugin, cloakDurationCalculator()))
@@ -31,8 +33,8 @@ public class CloakerClass extends ClassItemClassHandler {
                 .withRightClickTimeout(new Decloak(plugin), "cloak", "cloaking", "lore.timeout.cloak",
                         "timeouts.cloaking.finished", cloakDurationCalculator()).withUpgradables(
                         new ClassItem.Upgradable("cloak", "upgrades.cloak.name", 2,
-                                configArrayCalculator(config, "costs.cloaker.cloak", 2))),
-                TeamCompass.createTeamCompass(plugin, config));
+                                configArrayCalculator(plugin.getWarsConfig(), playerClass, "cloak", 2))),
+                TeamCompass.createTeamCompass(plugin));
     }
 
     private static Calculator cloakDurationCalculator() {

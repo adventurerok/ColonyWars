@@ -1,5 +1,6 @@
 package com.ithinkrok.mccw.enumeration;
 
+import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.playerclass.*;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
@@ -51,6 +52,10 @@ public class PlayerClass {
         playerClassList.add(this);
     }
 
+    public PlayerClassHandler createPlayerClassHandler(WarsPlugin plugin){
+        return classHandlerFactory.createPlayerClassHandler(plugin, this);
+    }
+
     public static PlayerClass fromChooserMaterial(Material mat){
         for(PlayerClass playerClass : playerClassList){
             if(playerClass.getChooser() == mat) return playerClass;
@@ -95,10 +100,6 @@ public class PlayerClass {
 
     public Material getChooser() {
         return chooser;
-    }
-
-    public PlayerClassHandlerFactory getClassHandlerFactory() {
-        return classHandlerFactory;
     }
 
     @Override

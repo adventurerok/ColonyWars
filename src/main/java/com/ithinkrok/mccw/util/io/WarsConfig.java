@@ -20,7 +20,7 @@ public class WarsConfig {
     }
 
     public String getRandomMapName() {
-        return config().getString("random-string");
+        return config().getString("random-map");
     }
 
     private ConfigurationSection config() {
@@ -31,8 +31,12 @@ public class WarsConfig {
         return config().getStringList("map-list");
     }
 
-    public String getGameMapName() {
+    public String getGameMapFolder() {
         return config().getString("playing-map");
+    }
+
+    public String getLobbyMapFolder() {
+        return config().getString("lobby-map");
     }
 
     public String getLanguageName() {
@@ -60,15 +64,19 @@ public class WarsConfig {
     }
 
     public int getBuildingCost(String buildingName){
-        return config().getInt("costs.buildings." + buildingName);
+        return getCost("buildings", buildingName);
     }
 
     public int getBuildingItemCost(String buildingName, String item){
-        return config().getInt("costs." + buildingName + "." + item);
+        return getCost(buildingName, item);
     }
 
     public int getClassItemCost(PlayerClass playerClass, String item){
-        return config().getInt("costs." + playerClass.getName() + ".item");
+        return getCost(playerClass.getName(), item);
+    }
+
+    public int getCost(String itemGroup, String item){
+        return config().getInt("costs." + itemGroup + "." + item);
     }
 
     public int getBuildingItemAmount(String buildingName, String item){

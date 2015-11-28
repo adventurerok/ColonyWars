@@ -1,6 +1,7 @@
 package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.WarsPlugin;
+import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.event.ItemPurchaseEvent;
 import com.ithinkrok.mccw.event.UserTeamBuildingBuiltEvent;
 import com.ithinkrok.mccw.event.UserUpgradeEvent;
@@ -26,38 +27,39 @@ import org.bukkit.inventory.PlayerInventory;
  */
 public class ArcherClass extends ClassItemClassHandler {
 
-    public ArcherClass(WarsPlugin plugin, ConfigurationSection config) {
+    public ArcherClass(WarsPlugin plugin, PlayerClass playerClass) {
         super(new ClassItem(plugin.getLangFile(), Material.BOW).withUpgradeBuildings(Buildings.LUMBERMILL)
                         .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
                         new ClassItem.EnchantmentEffect(Enchantment.ARROW_KNOCKBACK, "bow", new LinearCalculator(0, 1)),
                         new ClassItem.EnchantmentEffect(Enchantment.ARROW_DAMAGE, "bow", new ArrayCalculator(0, 1, 3)))
                         .withUpgradables(new ClassItem.Upgradable("bow", "upgrades.bow.name", 2,
-                                configArrayCalculator(config, "costs.archer.bow", 2))),
+                                configArrayCalculator(plugin.getWarsConfig(), playerClass, "bow", 2))),
                 new ClassItem(plugin.getLangFile(), Material.WOOD_SWORD).withUpgradeBuildings(Buildings.LUMBERMILL)
                         .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
                         new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sword", new LinearCalculator(0, 1)),
                         new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "sword", new LinearCalculator(0, 1)))
                         .withUpgradables(new ClassItem.Upgradable("sword", "upgrades.wood-sword.name", 2,
-                                configArrayCalculator(config, "costs.archer.sword", 2))),
-                TeamCompass.createTeamCompass(plugin, config));
+                                configArrayCalculator(plugin.getWarsConfig(), playerClass, "sword", 2))),
+                TeamCompass.createTeamCompass(plugin));
 
         addExtraBuyables(new UpgradeBuyable(InventoryUtils
-                .createItemWithNameAndLore(Material.ARROW, 64, 0, plugin.getLocale("upgrades.arrows.name", 1)),
-                Buildings.LUMBERMILL, config.getInt("costs.archer.arrows1"), "arrows", 1), new ItemBuyable(
-                InventoryUtils
+                        .createItemWithNameAndLore(Material.ARROW, 64, 0, plugin.getLocale("upgrades.arrows.name", 1)),
+                        Buildings.LUMBERMILL, plugin.getWarsConfig().getClassItemCost(playerClass, "arrows1"), "arrows", 1),
+                new ItemBuyable(InventoryUtils
                         .createItemWithNameAndLore(Material.ARROW, 1, 0, plugin.getLocale("upgrades.arrows.name", 2),
                                 plugin.getLocale("upgrades.arrows2.desc")), new ItemStack(Material.ARROW, 64),
-                Buildings.LUMBERMILL, config.getInt("costs.archer.arrows2"), false, true) {
-            @Override
-            public void onPurchase(ItemPurchaseEvent event) {
-                for (int i = 0; i < 3; ++i) super.onPurchase(event);
-            }
+                        Buildings.LUMBERMILL, plugin.getWarsConfig().getClassItemCost(playerClass, "arrows2"), false,
+                        true) {
+                    @Override
+                    public void onPurchase(ItemPurchaseEvent event) {
+                        for (int i = 0; i < 3; ++i) super.onPurchase(event);
+                    }
 
-            @Override
-            public boolean canBuy(ItemPurchaseEvent event) {
-                return super.canBuy(event) && event.getUser().getUpgradeLevel("arrows") > 0;
-            }
-        });
+                    @Override
+                    public boolean canBuy(ItemPurchaseEvent event) {
+                        return super.canBuy(event) && event.getUser().getUpgradeLevel("arrows") > 0;
+                    }
+                });
     }
 
     @Override

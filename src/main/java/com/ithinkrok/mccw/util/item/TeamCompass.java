@@ -25,13 +25,14 @@ public class TeamCompass implements ClassItem.InteractAction {
         this.plugin = plugin;
     }
 
-    public static ClassItem createTeamCompass(WarsPlugin plugin, ConfigurationSection config) {
+    public static ClassItem createTeamCompass(WarsPlugin plugin) {
         ClassItem compass = new ClassItem(plugin.getLangFile(), Material.COMPASS, "items.team-compass.name");
 
         compass.withUpgradeBuildings(Buildings.CATHEDRAL);
         compass.withRightClickAction(new TeamCompass(plugin));
         compass.withUpgradables(new ClassItem.Upgradable("team-compass", "items.team-compass.name", 1,
-                new LinearCalculator(config.getInt("costs.cathedral.team-compass"), 0)));
+                new LinearCalculator(plugin.getWarsConfig().getBuildingItemCost(Buildings.CATHEDRAL, "team-compass"),
+                        0)));
 
         return compass;
     }

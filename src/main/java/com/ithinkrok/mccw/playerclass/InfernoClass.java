@@ -1,6 +1,7 @@
 package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.WarsPlugin;
+import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.inventory.ItemBuyable;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
@@ -21,23 +22,23 @@ import org.bukkit.inventory.ItemStack;
  */
 public class InfernoClass extends ClassItemClassHandler {
 
-    public InfernoClass(WarsPlugin plugin, ConfigurationSection config) {
+    public InfernoClass(WarsPlugin plugin, PlayerClass playerClass) {
         super(new ClassItem(plugin.getLangFile(), Material.IRON_CHESTPLATE, "items.explosion-wand.name")
                         .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new ExplosionWand())
                         .withRightClickCooldown("wand", "wand", new LinearCalculator(25, -10), "cooldowns.explosion.finished")
                         .withUpgradables(new ClassItem.Upgradable("wand", "upgrades.explosion-wand.name", 2,
-                                configArrayCalculator(config, "costs.inferno.wand", 2))),
+                                configArrayCalculator(plugin.getWarsConfig(), playerClass, "wand", 2))),
                 new ClassItem(plugin.getLangFile(), Material.DIAMOND_HELMET, "items.flame-sword.name")
                         .withUpgradeBuildings(Buildings.BLACKSMITH).withUnlockOnBuildingBuild(true).withWeaponModifier(
                         new ClassItem.WeaponModifier("flame").withDamageCalculator(new LinearCalculator(1, 1.5))
                                 .withFireCalculator(new LinearCalculator(4, 0))).withUpgradables(
                         new ClassItem.Upgradable("flame", "upgrades.flame-sword.name", 2,
-                                configArrayCalculator(config, "costs.inferno.flame", 2))),
-                TeamCompass.createTeamCompass(plugin, config));
+                                configArrayCalculator(plugin.getWarsConfig(), playerClass, "flame", 2))),
+                TeamCompass.createTeamCompass(plugin));
 
         addExtraBuyables(new ItemBuyable(new ItemStack(Material.TNT, 16), Buildings.BLACKSMITH,
-                config.getInt("costs.inferno.tnt") * 16, true));
+                plugin.getWarsConfig().getClassItemCost(playerClass, "tnt") * 16, true));
     }
 
     @Override

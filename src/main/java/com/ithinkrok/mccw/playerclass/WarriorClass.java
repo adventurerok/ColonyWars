@@ -1,6 +1,7 @@
 package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.WarsPlugin;
+import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
 import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
@@ -22,24 +23,24 @@ import org.bukkit.entity.Wolf;
  */
 public class WarriorClass extends ClassItemClassHandler {
 
-    public WarriorClass(WarsPlugin plugin, ConfigurationSection config) {
+    public WarriorClass(WarsPlugin plugin, PlayerClass playerClass) {
         super(new ClassItem(plugin.getLangFile(), Material.IRON_SWORD).withUpgradeBuildings(Buildings.BLACKSMITH)
                         .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
                         new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sharpness",
                                 new LinearCalculator(0, 1)),
                         new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "knockback", new LinearCalculator(0, 1)))
                         .withUpgradables(new ClassItem.Upgradable("sharpness", "upgrades.sharpness.name", 2,
-                                        configArrayCalculator(config, "costs.warrior.sharpness", 2)),
+                                        configArrayCalculator(plugin.getWarsConfig(), playerClass, "sharpness", 2)),
                                 new ClassItem.Upgradable("knockback", "upgrades.knockback.name", 2,
-                                        configArrayCalculator(config, "costs.warrior.knockback", 2))),
+                                        configArrayCalculator(plugin.getWarsConfig(), playerClass, "knockback", 2))),
                 new ClassItem(plugin.getLangFile(), Material.GOLD_HELMET, "items.wolf-wand.name")
                         .withUpgradeBuildings(Buildings.BLACKSMITH).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new WolfWand())
                         .withRightClickCooldown("wolf", "wolf", new LinearCalculator(120, -30),
                                 "cooldowns.wolf.finished").withUpgradables(
                         new ClassItem.Upgradable("wolf", "upgrades.wolf-wand.name", 2,
-                                configArrayCalculator(config, "costs.warrior.wolf", 2))),
-                TeamCompass.createTeamCompass(plugin, config));
+                                configArrayCalculator(plugin.getWarsConfig(), playerClass, "wolf", 2))),
+                TeamCompass.createTeamCompass(plugin));
     }
 
     private static class WolfWand implements ClassItem.InteractAction {

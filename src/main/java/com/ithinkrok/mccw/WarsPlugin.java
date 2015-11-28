@@ -18,7 +18,6 @@ import com.ithinkrok.mccw.lobby.LobbyMinigame;
 import com.ithinkrok.mccw.lobby.ParcourMinigame;
 import com.ithinkrok.mccw.lobby.WoolHeadMinigame;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
-import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.*;
 import com.ithinkrok.mccw.util.io.LangFile;
 import com.ithinkrok.mccw.util.io.ResourceHandler;
@@ -155,14 +154,28 @@ public class WarsPlugin extends JavaPlugin {
 
     }
 
+
+    /**
+     *
+     * @return The {@code WarsConfig} to access known configuration values
+     */
     public WarsConfig getWarsConfig() {
         return warsConfig;
     }
 
+
+    /**
+     *
+     * @return The base configuration, ignoring the current map configuration
+     */
     public FileConfiguration getBaseConfig(){
         return super.getConfig();
     }
 
+    /**
+     *
+     * @return The configuration for the current map
+     */
     public ConfigurationSection getMapConfig(){
         if(gameInstance != null) return gameInstance.getMapConfig();
         else return getBaseConfig();
@@ -235,11 +248,11 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public String getLobbyWorldName(){
-        return getMapConfig().getString("lobby-map");
+        return getWarsConfig().getLobbyMapFolder();
     }
 
     public String getPlayingWorldName(){
-        return getMapConfig().getString("playing-map");
+        return getWarsConfig().getGameMapFolder();
     }
 
     public Location getLobbySpawn() {
@@ -325,7 +338,7 @@ public class WarsPlugin extends JavaPlugin {
     public PlayerClassHandler getPlayerClassHandler(PlayerClass playerClass) {
         PlayerClassHandler classHandler = classHandlerMap.get(playerClass);
         if(classHandler == null) {
-            classHandler = playerClass.getClassHandlerFactory().createPlayerClassHandler(this, getMapConfig());
+            classHandler = playerClass.createPlayerClassHandler(this);
 
             classHandlerMap.put(playerClass, classHandler);
         }

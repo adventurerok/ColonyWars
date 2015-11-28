@@ -75,6 +75,14 @@ public class UserCategoryStats {
         return games;
     }
 
+    public void setPlayerUUID(String playerUUID) {
+        this.playerUUID = playerUUID;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public void setCategory(String category) {
         this.category = category;
     }

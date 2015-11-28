@@ -52,7 +52,7 @@ public class Persistence {
 
             //TODO prevent two being created at once
 
-            return result;
+            return query.findUnique();
         }
     }
 

@@ -54,7 +54,6 @@ public class WarsPlugin extends JavaPlugin {
 
     private ConcurrentMap<UUID, User> playerInfoHashMap = new ConcurrentHashMap<>();
     private Map<TeamColor, Team> teamInfoEnumMap = new HashMap<>();
-    private Map<String, Schematic> schematicDataHashMap = new HashMap<>();
 
 
     /**
@@ -137,21 +136,7 @@ public class WarsPlugin extends JavaPlugin {
 
         resetTeams();
 
-        schematicDataHashMap.put(Buildings.BASE, new Schematic(Buildings.BASE, getConfig()));
-        schematicDataHashMap.put(Buildings.FARM, new Schematic(Buildings.FARM, getConfig()));
-        schematicDataHashMap.put(Buildings.BLACKSMITH, new Schematic(Buildings.BLACKSMITH, getConfig()));
-        schematicDataHashMap.put(Buildings.MAGETOWER, new Schematic(Buildings.MAGETOWER, getConfig()));
-        schematicDataHashMap.put(Buildings.LUMBERMILL, new Schematic(Buildings.LUMBERMILL, getConfig()));
-        schematicDataHashMap.put(Buildings.CHURCH, new Schematic(Buildings.CHURCH, getConfig()));
-        schematicDataHashMap.put(Buildings.CATHEDRAL, new Schematic(Buildings.CATHEDRAL, getConfig()));
-        schematicDataHashMap.put(Buildings.PLAYERCATHEDRAL, new Schematic(Buildings.PLAYERCATHEDRAL, getConfig()));
-        schematicDataHashMap.put(Buildings.GREENHOUSE, new Schematic(Buildings.GREENHOUSE, getConfig()));
-        schematicDataHashMap.put(Buildings.SCOUTTOWER, new Schematic(Buildings.SCOUTTOWER, getConfig()));
-        schematicDataHashMap.put(Buildings.CANNONTOWER, new Schematic(Buildings.CANNONTOWER, getConfig()));
-        schematicDataHashMap.put(Buildings.WALL, new Schematic(Buildings.WALL, getConfig()));
-        schematicDataHashMap.put(Buildings.LANDMINE, new Schematic(Buildings.LANDMINE, getConfig()));
-        schematicDataHashMap.put(Buildings.WIRELESSBUFFER, new Schematic(Buildings.WIRELESSBUFFER, getConfig()));
-        schematicDataHashMap.put(Buildings.TIMERBUFFER, new Schematic(Buildings.TIMERBUFFER, getConfig()));
+
 
         buildingInventoryHandler = new OmniInventory(this, getConfig());
         spectatorInventoryHandler = new SpectatorInventory(this);
@@ -162,7 +147,6 @@ public class WarsPlugin extends JavaPlugin {
         getLobbyMinigames().forEach(LobbyMinigame::resetMinigame);
 
         countdownHandler = new CountdownHandler(this);
-        //countdownHandler.startLobbyCountdown();
 
 
     }
@@ -372,7 +356,7 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public Schematic getSchematicData(String buildingName) {
-        return schematicDataHashMap.get(buildingName);
+        return gameInstance.getSchematicData(buildingName);
     }
 
     public User getUser(UUID uniqueId) {

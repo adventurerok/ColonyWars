@@ -1,10 +1,7 @@
 package com.ithinkrok.mccw.handler;
 
 import com.ithinkrok.mccw.WarsPlugin;
-import com.ithinkrok.mccw.data.Building;
-import com.ithinkrok.mccw.data.ShowdownArena;
-import com.ithinkrok.mccw.data.Team;
-import com.ithinkrok.mccw.data.User;
+import com.ithinkrok.mccw.data.*;
 import com.ithinkrok.mccw.enumeration.CountdownType;
 import com.ithinkrok.mccw.enumeration.GameState;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
@@ -53,6 +50,7 @@ public class GameInstance {
     private GameState gameState = GameState.LOBBY;
 
     private ArrayList<Integer> gameTasks = new ArrayList<>();
+    private Map<String, Schematic> schematicDataHashMap = new HashMap<>();
 
     private int forceShowdownTimer;
     private int forceShowdownTask;
@@ -64,10 +62,12 @@ public class GameInstance {
     }
 
     public GameInstance(WarsPlugin plugin, String map) {
-        mapConfig = new MapConfig(plugin, map);
         this.map = map;
         this.plugin = plugin;
         this.countdownHandler = plugin.getCountdownHandler();
+
+        mapConfig = new MapConfig(plugin, map);
+        loadSchematics();
     }
 
     public TeamColor getWinningTeam() {
@@ -85,6 +85,29 @@ public class GameInstance {
     private void startAftermath() {
         buildings.forEach(Building::clearHolograms);
         countdownHandler.startEndCountdown();
+    }
+    
+    private void loadSchematics(){
+        ConfigurationSection config = getMapConfig();
+        schematicDataHashMap.put(Buildings.BASE, new Schematic(Buildings.BASE, config));
+        schematicDataHashMap.put(Buildings.FARM, new Schematic(Buildings.FARM, config));
+        schematicDataHashMap.put(Buildings.BLACKSMITH, new Schematic(Buildings.BLACKSMITH, config));
+        schematicDataHashMap.put(Buildings.MAGETOWER, new Schematic(Buildings.MAGETOWER, config));
+        schematicDataHashMap.put(Buildings.LUMBERMILL, new Schematic(Buildings.LUMBERMILL, config));
+        schematicDataHashMap.put(Buildings.CHURCH, new Schematic(Buildings.CHURCH, config));
+        schematicDataHashMap.put(Buildings.CATHEDRAL, new Schematic(Buildings.CATHEDRAL, config));
+        schematicDataHashMap.put(Buildings.PLAYERCATHEDRAL, new Schematic(Buildings.PLAYERCATHEDRAL, config));
+        schematicDataHashMap.put(Buildings.GREENHOUSE, new Schematic(Buildings.GREENHOUSE, config));
+        schematicDataHashMap.put(Buildings.SCOUTTOWER, new Schematic(Buildings.SCOUTTOWER, config));
+        schematicDataHashMap.put(Buildings.CANNONTOWER, new Schematic(Buildings.CANNONTOWER, config));
+        schematicDataHashMap.put(Buildings.WALL, new Schematic(Buildings.WALL, config));
+        schematicDataHashMap.put(Buildings.LANDMINE, new Schematic(Buildings.LANDMINE, config));
+        schematicDataHashMap.put(Buildings.WIRELESSBUFFER, new Schematic(Buildings.WIRELESSBUFFER, config));
+        schematicDataHashMap.put(Buildings.TIMERBUFFER, new Schematic(Buildings.TIMERBUFFER, config));
+    }
+
+    public Schematic getSchematicData(String buildingName){
+        return schematicDataHashMap.get(buildingName);
     }
 
     public GameState getGameState() {

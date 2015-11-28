@@ -17,9 +17,11 @@ import com.ithinkrok.mccw.listener.WarsLobbyListener;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.BoundingBox;
+import com.ithinkrok.mccw.util.MapConfig;
 import com.ithinkrok.mccw.util.io.DirectoryUtils;
 import com.ithinkrok.mccw.util.building.SchematicBuilder;
 import org.bukkit.*;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -55,7 +57,14 @@ public class GameInstance {
     private int forceShowdownTimer;
     private int forceShowdownTask;
 
+    private MapConfig mapConfig;
+
+    public MapConfig getMapConfig() {
+        return mapConfig;
+    }
+
     public GameInstance(WarsPlugin plugin, String map) {
+        mapConfig = new MapConfig(plugin, map);
         this.map = map;
         this.plugin = plugin;
         this.countdownHandler = plugin.getCountdownHandler();
@@ -141,7 +150,7 @@ public class GameInstance {
     }
 
     private void startGame() {
-        String mapFolder = plugin.getConfig().getString("maps." + map + ".folder");
+        String mapFolder = getMapConfig().getString("maps." + map + ".folder");
         String playingFolder = plugin.getPlayingWorldName();
         try {
             DirectoryUtils.copy(Paths.get("./" + mapFolder + "/"), Paths.get("./" + playingFolder + "/"));
@@ -158,7 +167,7 @@ public class GameInstance {
 
         setupBases();
 
-        forceShowdownTimer = plugin.getConfig().getInt("force-showdown.times.start");
+        forceShowdownTimer = getMapConfig().getInt("force-showdown.times.start");
 
         forceShowdownTask = scheduleRepeatingTask(() -> {
             if(gameState != GameState.GAME) return;
@@ -177,7 +186,7 @@ public class GameInstance {
     }
 
     public void onUserAttacked() {
-        forceShowdownTimer = Math.max(forceShowdownTimer, plugin.getConfig().getInt("force-showdown.times.attack"));
+        forceShowdownTimer = Math.max(forceShowdownTimer, getMapConfig().getInt("force-showdown.times.attack"));
     }
 
     private void setupUser(User info){
@@ -216,7 +225,7 @@ public class GameInstance {
     }
 
     private void calculateShowdownArena() {
-        FileConfiguration config = plugin.getConfig();
+        ConfigurationSection config = getMapConfig();
         String base = "maps." + map + ".showdown-size";
         int radiusX = config.getInt(base + ".x");
         int radiusZ = config.getInt(base + ".z");
@@ -232,7 +241,7 @@ public class GameInstance {
 
     private void setupBases() {
         World world = plugin.getServer().getWorld(plugin.getPlayingWorldName());
-        FileConfiguration config = plugin.getConfig();
+        ConfigurationSection config = getMapConfig();
 
         for (TeamColor team : TeamColor.values()) {
             String base = "maps." + map + "." + team.getName() + ".base";
@@ -304,7 +313,7 @@ public class GameInstance {
 
     public Location getMapSpawn(TeamColor team) {
         World world = plugin.getServer().getWorld(plugin.getPlayingWorldName());
-        FileConfiguration config = plugin.getConfig();
+        ConfigurationSection config = getMapConfig();
 
         String base;
         if (team == null) base = "maps." + map + ".center";
@@ -325,8 +334,8 @@ public class GameInstance {
 
     public void checkShowdownStart(int teamsInGame) {
         if (isInShowdown() || countdownHandler.getCountdownType() == CountdownType.SHOWDOWN) return;
-        if (teamsInGame > plugin.getConfig().getInt("force-showdown.teams")
-                && plugin.getPlayersInGame() > plugin.getConfig().getInt("force-showdown.players")) return;
+        if (teamsInGame > getMapConfig().getInt("force-showdown.teams")
+                && plugin.getPlayersInGame() > getMapConfig().getInt("force-showdown.players")) return;
 
         countdownHandler.startShowdownCountdown();
     }

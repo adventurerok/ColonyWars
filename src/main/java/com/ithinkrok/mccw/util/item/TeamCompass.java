@@ -8,6 +8,7 @@ import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
@@ -24,7 +25,7 @@ public class TeamCompass implements ClassItem.InteractAction {
         this.plugin = plugin;
     }
 
-    public static ClassItem createTeamCompass(WarsPlugin plugin, FileConfiguration config) {
+    public static ClassItem createTeamCompass(WarsPlugin plugin, ConfigurationSection config) {
         ClassItem compass = new ClassItem(plugin.getLangFile(), Material.COMPASS, "items.team-compass.name");
 
         compass.withUpgradeBuildings(Buildings.CATHEDRAL);

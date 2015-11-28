@@ -10,6 +10,7 @@ import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.item.TeamCompass;
 import org.bukkit.Effect;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -22,7 +23,7 @@ import org.bukkit.potion.PotionEffectType;
 public class CloakerClass extends ClassItemClassHandler {
 
 
-    public CloakerClass(WarsPlugin plugin, FileConfiguration config) {
+    public CloakerClass(WarsPlugin plugin, ConfigurationSection config) {
         super(new ClassItem(plugin.getLangFile(), Material.IRON_LEGGINGS, "items.cloak.name")
                 .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
                 .withRightClickAction(new Cloak(plugin, cloakDurationCalculator()))

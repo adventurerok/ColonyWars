@@ -1,5 +1,6 @@
 package com.ithinkrok.mccw.data;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.util.Vector;
 
@@ -16,7 +17,7 @@ public class Schematic {
     private String transformName;
     private Vector offset;
 
-    public Schematic(String buildingName, FileConfiguration config) {
+    public Schematic(String buildingName, ConfigurationSection config) {
         this.buildingName = buildingName;
         this.schematicFile = config.getString("buildings.schematics." + buildingName);
         this.baseRotation = config.getInt("buildings.rotations." + buildingName);

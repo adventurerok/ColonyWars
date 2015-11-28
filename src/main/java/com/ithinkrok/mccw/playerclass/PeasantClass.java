@@ -6,6 +6,7 @@ import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.item.TeamCompass;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 
@@ -16,7 +17,7 @@ import org.bukkit.enchantments.Enchantment;
  */
 public class PeasantClass extends ClassItemClassHandler {
 
-    public PeasantClass(WarsPlugin plugin, FileConfiguration config) {
+    public PeasantClass(WarsPlugin plugin, ConfigurationSection config) {
         super(new ClassItem(plugin.getLangFile(), Material.IRON_AXE, "items.peasant-axe.name")
                         .withUnlockOnGameStart(true).withEnchantmentEffects(
                         new ClassItem.EnchantmentEffect(Enchantment.DIG_SPEED, "axe", new LinearCalculator(2, 0))),

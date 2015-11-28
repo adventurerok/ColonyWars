@@ -6,6 +6,7 @@ import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.item.TeamCompass;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 
@@ -16,7 +17,7 @@ import org.bukkit.enchantments.Enchantment;
  */
 public class GeneralClass extends ClassItemClassHandler {
 
-    public GeneralClass(WarsPlugin plugin, FileConfiguration config) {
+    public GeneralClass(WarsPlugin plugin, ConfigurationSection config) {
         super(new ClassItem(plugin.getLangFile(), Material.DIAMOND_SWORD).withUpgradeBuildings(Buildings.BLACKSMITH)
                 .withUnlockOnBuildingBuild(true).
                         withEnchantmentEffects(new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sword",

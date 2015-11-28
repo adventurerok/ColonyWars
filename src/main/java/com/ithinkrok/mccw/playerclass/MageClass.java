@@ -12,6 +12,7 @@ import com.ithinkrok.mccw.util.item.TeamCompass;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.LightningStrike;
@@ -27,7 +28,7 @@ import org.bukkit.potion.PotionType;
 public class MageClass extends ClassItemClassHandler {
 
 
-    public MageClass(WarsPlugin plugin, FileConfiguration config) {
+    public MageClass(WarsPlugin plugin, ConfigurationSection config) {
         super(new ClassItem(plugin.getLangFile(), Material.DIAMOND_CHESTPLATE, "items.ender-wand.name")
                         .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new EnderWand())

@@ -10,6 +10,7 @@ import com.ithinkrok.mccw.util.item.TeamCompass;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
@@ -27,7 +28,7 @@ import java.util.List;
  */
 public class PriestClass extends ClassItemClassHandler {
 
-    public PriestClass(WarsPlugin plugin, FileConfiguration config) {
+    public PriestClass(WarsPlugin plugin, ConfigurationSection config) {
         super(new ClassItem(plugin.getLangFile(), Material.DIAMOND_BOOTS, "items.healing-scroll.name")
                         .withUpgradeBuildings(Buildings.CATHEDRAL).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new HealingScroll(plugin))

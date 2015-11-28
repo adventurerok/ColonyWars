@@ -13,6 +13,7 @@ import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.item.InventoryUtils;
 import com.ithinkrok.mccw.util.item.TeamCompass;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -25,7 +26,7 @@ import org.bukkit.inventory.PlayerInventory;
  */
 public class ArcherClass extends ClassItemClassHandler {
 
-    public ArcherClass(WarsPlugin plugin, FileConfiguration config) {
+    public ArcherClass(WarsPlugin plugin, ConfigurationSection config) {
         super(new ClassItem(plugin.getLangFile(), Material.BOW).withUpgradeBuildings(Buildings.LUMBERMILL)
                         .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
                         new ClassItem.EnchantmentEffect(Enchantment.ARROW_KNOCKBACK, "bow", new LinearCalculator(0, 1)),

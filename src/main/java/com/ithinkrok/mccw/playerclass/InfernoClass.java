@@ -10,6 +10,7 @@ import com.ithinkrok.mccw.util.item.TeamCompass;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
@@ -20,7 +21,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public class InfernoClass extends ClassItemClassHandler {
 
-    public InfernoClass(WarsPlugin plugin, FileConfiguration config) {
+    public InfernoClass(WarsPlugin plugin, ConfigurationSection config) {
         super(new ClassItem(plugin.getLangFile(), Material.IRON_CHESTPLATE, "items.explosion-wand.name")
                         .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new ExplosionWand())

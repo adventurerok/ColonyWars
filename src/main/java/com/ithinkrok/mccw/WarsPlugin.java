@@ -27,6 +27,7 @@ import com.ithinkrok.mccw.util.item.InventoryUtils;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -170,6 +171,11 @@ public class WarsPlugin extends JavaPlugin {
         return super.getConfig();
     }
 
+    public ConfigurationSection getMapConfig(){
+        if(gameInstance != null) return gameInstance.getMapConfig();
+        else return getBaseConfig();
+    }
+
     public List<LobbyMinigame> getLobbyMinigames() {
         return lobbyMinigames;
     }
@@ -237,11 +243,11 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public String getLobbyWorldName(){
-        return getConfig().getString("lobby-map");
+        return getMapConfig().getString("lobby-map");
     }
 
     public String getPlayingWorldName(){
-        return getConfig().getString("playing-map");
+        return getMapConfig().getString("playing-map");
     }
 
     public Location getLobbySpawn() {
@@ -327,7 +333,7 @@ public class WarsPlugin extends JavaPlugin {
     public PlayerClassHandler getPlayerClassHandler(PlayerClass playerClass) {
         PlayerClassHandler classHandler = classHandlerMap.get(playerClass);
         if(classHandler == null) {
-            classHandler = playerClass.getClassHandlerFactory().createPlayerClassHandler(this, getConfig());
+            classHandler = playerClass.getClassHandlerFactory().createPlayerClassHandler(this, getMapConfig());
 
             classHandlerMap.put(playerClass, classHandler);
         }
@@ -437,7 +443,7 @@ public class WarsPlugin extends JavaPlugin {
 
         String bestMap = possible.get(random.nextInt(possible.size()));
 
-        while (bestMap.equals(getConfig().getString("random-map"))) {
+        while (bestMap.equals(getMapConfig().getString("random-map"))) {
             bestMap = mapList.get(random.nextInt(mapList.size()));
         }
 

@@ -7,6 +7,7 @@ import com.ithinkrok.mccw.playerclass.items.ArrayCalculator;
 import com.ithinkrok.mccw.playerclass.items.Calculator;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.*;
@@ -87,7 +88,7 @@ public class ClassItemClassHandler extends BuyableInventory implements PlayerCla
         }
     }
 
-    protected static Calculator configArrayCalculator(FileConfiguration config, String base, int maxLevel) {
+    protected static Calculator configArrayCalculator(ConfigurationSection config, String base, int maxLevel) {
         double[] returnValues = new double[maxLevel + 1];
 
         for (int level = 0; level <= maxLevel; ++level) {

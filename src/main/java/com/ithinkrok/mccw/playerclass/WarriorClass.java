@@ -9,6 +9,7 @@ import com.ithinkrok.mccw.util.item.TeamCompass;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
@@ -21,7 +22,7 @@ import org.bukkit.entity.Wolf;
  */
 public class WarriorClass extends ClassItemClassHandler {
 
-    public WarriorClass(WarsPlugin plugin, FileConfiguration config) {
+    public WarriorClass(WarsPlugin plugin, ConfigurationSection config) {
         super(new ClassItem(plugin.getLangFile(), Material.IRON_SWORD).withUpgradeBuildings(Buildings.BLACKSMITH)
                         .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
                         new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sharpness",

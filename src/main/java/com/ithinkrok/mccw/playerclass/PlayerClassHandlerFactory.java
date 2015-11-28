@@ -1,6 +1,7 @@
 package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.WarsPlugin;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**
@@ -17,5 +18,5 @@ public interface PlayerClassHandlerFactory {
      * @param config The configuration to use while creating the PlayerClassHandler
      * @return A new PlayerClassHandler
      */
-    PlayerClassHandler createPlayerClassHandler(WarsPlugin plugin, FileConfiguration config);
+    PlayerClassHandler createPlayerClassHandler(WarsPlugin plugin, ConfigurationSection config);
 }

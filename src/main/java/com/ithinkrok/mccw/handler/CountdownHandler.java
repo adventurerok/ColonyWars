@@ -138,6 +138,7 @@ public class CountdownHandler {
 
         plugin.getServer().getScheduler().cancelTask(countDownTask);
         countDownTask = 0;
+        countdownType = null;
 
         for (User p : plugin.getUsers()) {
             p.getPlayer().setLevel(0);

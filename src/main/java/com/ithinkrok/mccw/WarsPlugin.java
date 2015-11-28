@@ -497,4 +497,7 @@ public class WarsPlugin extends JavaPlugin {
     }
 
 
+    public UserCategoryStats getUserCategoryStats(UUID uniqueId, String category) {
+        return persistence.getUserCategoryStats(uniqueId, category);
+    }
 }

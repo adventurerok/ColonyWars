@@ -105,7 +105,7 @@ public class User {
     }
 
     public UserCategoryStats getStats(String category) {
-        return plugin.getOrCreateUserCategoryStats(getUniqueId(), category);
+        return plugin.getUserCategoryStats(getUniqueId(), category);
     }
 
     //    public UserCategoryStats getTotalStats(){

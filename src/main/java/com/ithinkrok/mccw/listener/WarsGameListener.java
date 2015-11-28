@@ -101,13 +101,16 @@ public class WarsGameListener implements Listener {
             case GOLD_INGOT:
             case DIAMOND:
                 return;
-            case POTION:
-                event.getEntity().remove();
-                return;
             default:
-                if(event.getEntity().getItemStack().getType().isEdible()) event.getEntity().remove();
-                else event.setCancelled(true);
+                event.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void onDropItem(PlayerDropItemEvent event) {
+        if(event.getItemDrop().getItemStack().getType() == Material.POTION || event.getItemDrop().getItemStack()
+                .getType().isEdible()) return;
+        event.setCancelled(true);
     }
 
 

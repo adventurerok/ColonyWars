@@ -46,6 +46,11 @@ public class WarsLobbyListener implements Listener {
         if(!plugin.getCountdownHandler().isCountingDown()) plugin.getCountdownHandler().startLobbyCountdown();
     }
 
+    @EventHandler
+    public void onDropItem(PlayerDropItemEvent event) {
+        event.setCancelled(true);
+    }
+
     private ChatColor getPlayerNameColor(Player player) {
         return player.isOp() ? ChatColor.DARK_RED : ChatColor.YELLOW;
     }

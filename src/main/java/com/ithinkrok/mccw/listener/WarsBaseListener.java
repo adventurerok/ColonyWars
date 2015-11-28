@@ -40,11 +40,6 @@ public class WarsBaseListener implements Listener {
     }
 
     @EventHandler
-    public void onDropItem(PlayerDropItemEvent event) {
-        event.setCancelled(true);
-    }
-
-    @EventHandler
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         if (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) return;
 

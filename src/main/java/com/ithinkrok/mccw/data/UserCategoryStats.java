@@ -13,7 +13,7 @@ import java.util.UUID;
 @Table(name = "mccw_stats")
 public class UserCategoryStats {
 
-    @Id private long id;
+    @Id private int id;
 
     @Column private String playerUUID;
 
@@ -32,7 +32,7 @@ public class UserCategoryStats {
     @Version
     private Date version;
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
@@ -80,7 +80,7 @@ public class UserCategoryStats {
         this.playerUUID = playerUUID;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

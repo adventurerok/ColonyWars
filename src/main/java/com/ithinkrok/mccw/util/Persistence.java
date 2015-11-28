@@ -15,6 +15,7 @@ import java.util.UUID;
 public class Persistence {
 
     private final WarsPlugin plugin;
+    private final Object writeLock = new Object();
 
 
     public Persistence(WarsPlugin plugin) {
@@ -37,19 +38,21 @@ public class Persistence {
     public UserCategoryStats getOrCreateUserCategoryStats(UUID playerUUID, String category){
         Query<UserCategoryStats> query = query(playerUUID, category);
 
-        UserCategoryStats result = query.findUnique();
-        if(result != null) return result;
+        synchronized (writeLock) {
+            UserCategoryStats result = query.findUnique();
+            if (result != null) return result;
 
-        result = plugin.getDatabase().createEntityBean(UserCategoryStats.class);
+            result = plugin.getDatabase().createEntityBean(UserCategoryStats.class);
 
-        result.setPlayerUUID(playerUUID);
-        result.setCategory(category);
+            result.setPlayerUUID(playerUUID);
+            result.setCategory(category);
 
-        plugin.getDatabase().save(result);
+            plugin.getDatabase().save(result);
 
-        //TODO prevent two being created at once
+            //TODO prevent two being created at once
 
-        return result;
+            return result;
+        }
     }
 
     public void saveUserCategoryStats(UserCategoryStats stats){

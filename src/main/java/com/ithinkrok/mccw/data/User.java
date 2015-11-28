@@ -122,6 +122,10 @@ public class User {
 //        currentStats.add(teamStats);
 //    }
 
+    public UserCategoryStats getTotalStats(){
+        return plugin.getOrCreateUserCategoryStats(getUniqueId(), "total");
+    }
+
     public void saveStats() {
         if (!plugin.hasPersistence()) return;
 

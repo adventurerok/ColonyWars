@@ -239,8 +239,9 @@ public class WarsGameListener implements Listener {
             case LOG_2:
                 if (plugin.isInBuilding(event.getBlock().getLocation())) break;
                 int count = 1 + TreeFeller.fellTree(plugin.getGameInstance(), event.getBlock().getLocation());
-                event.getBlock().getWorld()
-                        .dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, count));
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> event.getBlock().getWorld()
+                        .dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, count)), 1);
+
                 break;
             case DIAMOND_ORE:
                 event.getBlock().getWorld()

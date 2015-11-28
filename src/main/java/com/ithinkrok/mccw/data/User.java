@@ -82,10 +82,6 @@ public class User {
         return data.data;
     }
 
-    public UUID getUniqueId() {
-        return player.getUniqueId();
-    }
-
     public PlayerInventory getPlayerInventory() {
         return player.getInventory();
     }
@@ -108,22 +104,26 @@ public class User {
         }
     }
 
+    public UserCategoryStats getStats(String category) {
+        return plugin.getOrCreateUserCategoryStats(getUniqueId(), category);
+    }
+
     //    public UserCategoryStats getTotalStats(){
     //        return currentStats.get(0);
     //    }
 
-//    public void loadStats() {
-//        if (!plugin.hasPersistence()) return;
-//
-//
-//        currentStats = new ArrayList<>();
-//        currentStats.add(totalStats);
-//        currentStats.add(classStats);
-//        currentStats.add(teamStats);
-//    }
+    //    public void loadStats() {
+    //        if (!plugin.hasPersistence()) return;
+    //
+    //
+    //        currentStats = new ArrayList<>();
+    //        currentStats.add(totalStats);
+    //        currentStats.add(classStats);
+    //        currentStats.add(teamStats);
+    //    }
 
-    public UserCategoryStats getStats(String category) {
-        return plugin.getOrCreateUserCategoryStats(getUniqueId(), category);
+    public UUID getUniqueId() {
+        return player.getUniqueId();
     }
 
     public void saveStats() {
@@ -134,26 +134,27 @@ public class User {
         statsChanges = new UserCategoryStats();
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            List<UserCategoryStats> statsList = new ArrayList<>();
-            statsList.add(plugin.getOrCreateUserCategoryStats(player.getUniqueId(), "total"));
-            if (lastPlayerClass != null)
-                statsList.add(plugin.getOrCreateUserCategoryStats(player.getUniqueId(), lastPlayerClass.getName()));
-            if (lastTeamColor != null)
-                statsList.add(plugin.getOrCreateUserCategoryStats(player.getUniqueId(), lastTeamColor.getName()));
+            updateStats(changes, plugin.getOrCreateUserCategoryStats(player.getUniqueId(), "total"));
+            if (lastPlayerClass != null) updateStats(changes,
+                    plugin.getOrCreateUserCategoryStats(player.getUniqueId(), lastPlayerClass.getName()));
+            if (lastTeamColor != null) updateStats(changes,
+                    plugin.getOrCreateUserCategoryStats(player.getUniqueId(), lastTeamColor.getName()));
 
-            for(UserCategoryStats stats : statsList){
-                stats.setScore(stats.getScore() + changes.getScore());
-                stats.setKills(stats.getKills() + changes.getKills());
-                stats.setDeaths(stats.getDeaths() + changes.getDeaths());
-                stats.setGames(stats.getGames() + changes.getGames());
-                stats.setGameWins(stats.getGameWins() + changes.getGameWins());
-                stats.setGameLosses(stats.getGameLosses() + changes.getGameLosses());
-                stats.setTotalMoney(stats.getTotalMoney() + changes.getTotalMoney());
 
-                plugin.saveUserCategoryStats(stats);
-            }
         });
 
+    }
+
+    private void updateStats(UserCategoryStats changes, UserCategoryStats target) {
+        target.setScore(target.getScore() + changes.getScore());
+        target.setKills(target.getKills() + changes.getKills());
+        target.setDeaths(target.getDeaths() + changes.getDeaths());
+        target.setGames(target.getGames() + changes.getGames());
+        target.setGameWins(target.getGameWins() + changes.getGameWins());
+        target.setGameLosses(target.getGameLosses() + changes.getGameLosses());
+        target.setTotalMoney(target.getTotalMoney() + changes.getTotalMoney());
+
+        plugin.saveUserCategoryStats(target);
     }
 
     public void addGameWin() {

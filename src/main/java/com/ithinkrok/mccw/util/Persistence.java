@@ -4,6 +4,7 @@ import com.avaje.ebean.Query;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.UserCategoryStats;
 
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 import java.util.UUID;
 
@@ -56,7 +57,12 @@ public class Persistence {
     }
 
     public void saveUserCategoryStats(UserCategoryStats stats){
-        plugin.getDatabase().save(stats);
+        try {
+            plugin.getDatabase().save(stats);
+        } catch(OptimisticLockException e){
+            plugin.getLogger().warning("Failed to save stats");
+            e.printStackTrace();
+        }
     }
 
     private Query<UserCategoryStats> query(UUID playerUUID, String category){

@@ -74,6 +74,7 @@ spectators.player.name=&dSpectate %s
 #showdown
 showdown.escape=&cYou cannot escape the showdown arena!
 showdown.shrinking=&6The showdown arena will now shrink slowly until it is 10x10!
+showdown.tele-center=%s &6was teleported back to the center!
 
 #buildings
 building.shop.name=&a%s Shop

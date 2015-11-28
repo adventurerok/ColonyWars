@@ -58,6 +58,7 @@ public class User {
     private UUID witherAttacker;
     private UUID lastAttacker;
     private String mapVote;
+    private int trappedTicks;
 
     public User(WarsPlugin plugin, Player player) {
         this.plugin = plugin;
@@ -596,6 +597,14 @@ public class User {
         if (this.mapVote != null) plugin.setMapVotes(this.mapVote, plugin.getMapVotes(this.mapVote) + 1);
 
         plugin.getUsers().forEach(User::updateScoreboard);
+    }
+
+    public void setTrappedTicks(int trappedTicks) {
+        this.trappedTicks = trappedTicks;
+    }
+
+    public int getTrappedTicks() {
+        return trappedTicks;
     }
 
     private static class Metadata {

@@ -407,6 +407,8 @@ public class GameInstance {
     }
 
     public void setupSpectatorInventory(Player player) {
+        player.closeInventory();
+
         PlayerInventory inv = player.getInventory();
         inv.clear();
 

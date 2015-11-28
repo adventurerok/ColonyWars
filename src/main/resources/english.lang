@@ -197,3 +197,5 @@ commands.test.base.loc=&eBase location\: %s
 commands.gamestate.changed=Changed gamestate to\: %s
 commands.gamestate.invalid=Invalid gamestate!
 commands.countdown.none=There is no countdown at the moment
+commands.shrink.done=Showdown radius decreased by %s
+commands.shrink.bad-size=Bad shrink amount %s

@@ -165,6 +165,27 @@ public class CommandListener implements CommandExecutor {
 
                 user.messageLocale("commands.test.base.loc", team.getBaseLocation());
                 break;
+            case "shrink":
+                if(plugin.getShowdownArena() == null) return true;
+                if (args.length < 2) return false;
+
+                try{
+                    int amount = Integer.parseInt(args[1]);
+
+                    if(amount < 1 || amount > 30){
+                        user.messageLocale("commands.shrink.bad-size", args[2]);
+                        return true;
+                    }
+
+                    for(int count = 0; count < amount; ++count){
+                        plugin.getShowdownArena().shrinkArena(plugin);
+                    }
+
+                    return true;
+                } catch(NumberFormatException e){
+                    user.messageLocale("commands.shrink.bad-size", args[2]);
+                    return true;
+                }
 
         }
 

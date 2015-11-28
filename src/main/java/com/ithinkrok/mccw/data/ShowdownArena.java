@@ -71,14 +71,18 @@ public class ShowdownArena {
         }, startTime);
 
         plugin.getGameInstance().scheduleRepeatingTask(() -> {
-            if(radiusX > 5) radiusX -= 1;
-            if(radiusZ > 5) radiusZ -= 1;
-
-            for(User user : plugin.getUsers()){
-                if(!user.isInGame()) continue;
-
-                checkUserMove(user, user.getPlayer().getLocation());
-            }
+            shrinkArena(plugin);
         }, startTime, 20 * 20);
+    }
+
+    public void shrinkArena(WarsPlugin plugin) {
+        if(radiusX > 5) radiusX -= 1;
+        if(radiusZ > 5) radiusZ -= 1;
+
+        for(User user : plugin.getUsers()){
+            if(!user.isInGame()) continue;
+
+            checkUserMove(user, user.getPlayer().getLocation());
+        }
     }
 }

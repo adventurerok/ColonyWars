@@ -3,6 +3,7 @@ package com.ithinkrok.mccw.listener;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
+import com.ithinkrok.mccw.data.UserCategoryStats;
 import com.ithinkrok.mccw.enumeration.GameState;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
@@ -54,10 +55,43 @@ public class CommandListener implements CommandExecutor {
                 return onFixCommand(user);
             case "countdown":
                 return onCountdownCommand(user, args);
+            case "stats":
+                return onStatsCommand(user, args);
             default:
                 return false;
         }
 
+    }
+
+    private boolean onStatsCommand(User user, String[] args) {
+        if(!plugin.hasPersistence()){
+            user.messageLocale("commands.stats.disabled");
+            return true;
+        }
+
+        String category = "total";
+        if(args.length > 0) category = args[0];
+
+        UserCategoryStats stats = user.getStats(category);
+        if(stats == null){
+            user.messageLocale("commands.stats.none", category);
+            return true;
+        }
+
+        user.messageLocale("commands.stats.category", category);
+
+        String kd = "NA";
+        if(stats.getDeaths() > 0) kd = Double.toString(stats.getKills() / stats.getDeaths());
+
+        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.kills", stats.getKills()));
+        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.deaths", stats.getDeaths()));
+        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.kd", kd));
+        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.wins", stats.getGameWins()));
+        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.losses", stats.getGameLosses()));
+        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.games", stats.getGames()));
+        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.totalmoney", stats.getTotalMoney()));
+
+        return true;
     }
 
     private boolean onCountdownCommand(User user, String[] args) {

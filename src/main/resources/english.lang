@@ -199,6 +199,17 @@ commands.gamestate.invalid=Invalid gamestate!
 commands.countdown.none=There is no countdown at the moment
 commands.shrink.done=Showdown radius decreased by %s
 commands.shrink.bad-size=Bad shrink amount %s
+commands.stats.disabled=Stats are disabled on this server
+commands.stats.none=You have no stats for category %s
+commands.stats.category=Stats for category %s\:
+commands.stats.kills=Kills\: %s
+commands.stats.deaths=Deaths\: %s
+commands.stats.kd=K/D\: %s
+commands.stats.wins=Wins\: %s
+commands.stats.losses=Losses\: %s
+commands.stats.games=Total games\: %s
+commands.stats.totalmoney=Total gold collected\: %s
+commands.stats.score=Score\: %s
 
 #--SCORE--
 score.gain=&6You gained &a%s &6points!

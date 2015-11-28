@@ -14,6 +14,7 @@ permissions:
       mccw.spawn: true
       mccw.fix: true
       mccw.countdown: true
+      mccw.stats: true
     default: "op"
   mccw.test:
     description: "Allows use of the test command"
@@ -29,6 +30,9 @@ permissions:
     default: true
   mccw.fix:
     description: "Allows use of the fix command"
+    default: true
+  mccw.stats:
+    description: "Allows use of the stats command"
     default: true
 commands:
   transfer:
@@ -60,7 +64,11 @@ commands:
     usage: "/fix"
     permission: "mccw.fix"
   countdown:
-    descrption: "Change the countdown time remaining"
+    description: "Change the countdown time remaining"
     aliases: ["cd", "count","timer"]
     usage: "/countdown <value-to-add>"
     permission: "mccw.countdown"
+  stats:
+    description: "Gets your stats"
+    usage: "/stats [category]"
+    permission: "mccw.stats"

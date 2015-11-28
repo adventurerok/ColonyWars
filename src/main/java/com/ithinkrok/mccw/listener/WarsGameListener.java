@@ -313,10 +313,10 @@ public class WarsGameListener implements Listener {
 
         //Prevent players from escaping showdown bounds
         if(plugin.getShowdownArena().checkUserMove(user, event.getTo())){
-            if((user.getTrappedTicks() % 20) == 0) user.messageLocale("showdown.escape");
+            if((user.getTrappedTicks() % 50) == 0) user.messageLocale("showdown.escape");
             user.setTrappedTicks(user.getTrappedTicks() + 1);
 
-            if(user.getTrappedTicks() >= 99){
+            if(user.getTrappedTicks() >= 199){
                 user.teleport(plugin.getShowdownArena().getCenter().clone().add(0, 1, 0));
                 user.setTrappedTicks(0);
                 plugin.messageAllLocale("showdown.tele-center", user.getFormattedName());

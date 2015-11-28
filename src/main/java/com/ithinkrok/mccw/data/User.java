@@ -126,6 +126,7 @@ public class User {
 
     public void saveStats(){
         if(!plugin.hasPersistence()) return;
+        if(currentStats == null) return;
 
         List<UserCategoryStats> copy = currentStats;
 

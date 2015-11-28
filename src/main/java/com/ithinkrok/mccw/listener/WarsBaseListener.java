@@ -2,7 +2,6 @@ package com.ithinkrok.mccw.listener;
 
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.User;
-import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -27,7 +26,7 @@ public class WarsBaseListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
         User user = new User(plugin, event.getPlayer());
-        plugin.setPlayerInfo(event.getPlayer(), user);
+        plugin.setUser(event.getPlayer(), user);
 
         user.messageLocale("server.welcome");
 
@@ -36,7 +35,8 @@ public class WarsBaseListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        plugin.setPlayerInfo(event.getPlayer(), null);
+        plugin.getUser(event.getPlayer()).saveStats();
+        plugin.setUser(event.getPlayer(), null);
     }
 
     @EventHandler

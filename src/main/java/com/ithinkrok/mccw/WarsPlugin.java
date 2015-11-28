@@ -267,7 +267,7 @@ public class WarsPlugin extends JavaPlugin {
         return buildingInventoryHandler;
     }
 
-    public void setPlayerInfo(Player player, User user) {
+    public void setUser(Player player, User user) {
         if (user == null) playerInfoHashMap.remove(player.getUniqueId());
         else playerInfoHashMap.put(player.getUniqueId(), user);
     }

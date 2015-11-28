@@ -41,6 +41,7 @@ public class User {
         SEE_THROUGH.add(Material.STATIONARY_WATER);
     }
 
+    private UserCategoryStats statsChanges = new UserCategoryStats();
     private Player player;
     private TeamColor teamColor;
     private WarsPlugin plugin;
@@ -59,8 +60,8 @@ public class User {
     private UUID lastAttacker;
     private String mapVote;
     private int trappedTicks;
-
-    private List<UserCategoryStats> currentStats;
+    private PlayerClass lastPlayerClass;
+    private TeamColor lastTeamColor;
 
     public User(WarsPlugin plugin, Player player) {
         this.plugin = plugin;
@@ -107,100 +108,99 @@ public class User {
         }
     }
 
-    public UserCategoryStats getTotalStats(){
-        return currentStats.get(0);
-    }
+    //    public UserCategoryStats getTotalStats(){
+    //        return currentStats.get(0);
+    //    }
 
-    public void loadStats(){
-        if(!plugin.hasPersistence()) return;
+//    public void loadStats() {
+//        if (!plugin.hasPersistence()) return;
+//
+//
+//        currentStats = new ArrayList<>();
+//        currentStats.add(totalStats);
+//        currentStats.add(classStats);
+//        currentStats.add(teamStats);
+//    }
 
-        UserCategoryStats totalStats = plugin.getOrCreateUserCategoryStats(player.getUniqueId(), "total");
-        UserCategoryStats classStats = plugin.getOrCreateUserCategoryStats(player.getUniqueId(), playerClass.getName());
-        UserCategoryStats teamStats = plugin.getOrCreateUserCategoryStats(player.getUniqueId(), teamColor.getName());
+    public void saveStats() {
+        if (!plugin.hasPersistence()) return;
 
-        currentStats = new ArrayList<>();
-        currentStats.add(totalStats);
-        currentStats.add(classStats);
-        currentStats.add(teamStats);
-    }
 
-    public void saveStats(){
-        if(!plugin.hasPersistence()) return;
-        if(currentStats == null) return;
-
-        List<UserCategoryStats> copy = currentStats;
+        UserCategoryStats changes = statsChanges;
+        statsChanges = new UserCategoryStats();
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            for(UserCategoryStats stats : copy) plugin.saveUserCategoryStats(stats);
+            List<UserCategoryStats> statsList = new ArrayList<>();
+            statsList.add(plugin.getOrCreateUserCategoryStats(player.getUniqueId(), "total"));
+            if (lastPlayerClass != null)
+                statsList.add(plugin.getOrCreateUserCategoryStats(player.getUniqueId(), lastPlayerClass.getName()));
+            if (lastTeamColor != null)
+                statsList.add(plugin.getOrCreateUserCategoryStats(player.getUniqueId(), lastTeamColor.getName()));
+
+            for(UserCategoryStats stats : statsList){
+                stats.setScore(stats.getScore() + changes.getScore());
+                stats.setKills(stats.getKills() + changes.getKills());
+                stats.setDeaths(stats.getDeaths() + changes.getDeaths());
+                stats.setGames(stats.getGames() + changes.getGames());
+                stats.setGameWins(stats.getGameWins() + changes.getGameWins());
+                stats.setGameLosses(stats.getGameLosses() + changes.getGameLosses());
+                stats.setTotalMoney(stats.getTotalMoney() + changes.getTotalMoney());
+
+                plugin.saveUserCategoryStats(stats);
+            }
         });
+
     }
 
-    public void addGameWin(){
-        if(!plugin.hasPersistence()) return;
-
-        for(UserCategoryStats stats : currentStats){
-            stats.setGameWins(stats.getGameWins() + 1);
-        }
+    public void addGameWin() {
+        statsChanges.setGameWins(statsChanges.getGameWins() + 1);
 
         addScore(plugin.getWarsConfig().getWinScoreModifier());
     }
 
-    public void addGameLoss(){
-        if(!plugin.hasPersistence()) return;
+    private void addScore(int amount) {
+        if (amount == 0) return;
 
-        for(UserCategoryStats stats : currentStats){
-            stats.setGameLosses(stats.getGameLosses() + 1);
-        }
+        statsChanges.setScore(statsChanges.getScore() + amount);
+
+        if (amount > 0) messageLocale("score.gain", amount);
+        else messageLocale("score.loss", -amount);
+    }
+
+    public void messageLocale(String locale, Object... objects) {
+        message(plugin.getLocale(locale, objects));
+    }
+
+    public void message(String message) {
+        player.sendMessage(WarsPlugin.CHAT_PREFIX + message);
+    }
+
+    public void addGameLoss() {
+        statsChanges.setGameLosses(statsChanges.getGameLosses() + 1);
 
         addScore(plugin.getWarsConfig().getLossScoreModifier());
     }
 
-    public void addGame(){
-        if(!plugin.hasPersistence()) return;
+    public void addGame() {
+        if (!plugin.hasPersistence()) return;
 
-        for(UserCategoryStats stats : currentStats){
-            stats.setGames(stats.getGames() + 1);
-        }
+        statsChanges.setGames(statsChanges.getGames() + 1);
     }
 
-    public void addKill(){
-        if(!plugin.hasPersistence()) return;
+    public void addKill() {
+        if (!plugin.hasPersistence()) return;
 
-        for(UserCategoryStats stats : currentStats){
-            stats.setKills(stats.getKills() + 1);
-        }
+        statsChanges.setKills(statsChanges.getKills() + 1);
 
         addScore(plugin.getWarsConfig().getKillScoreModifier());
     }
 
-    public void addDeath(){
-        if(!plugin.hasPersistence()) return;
+    public void addDeath() {
+        if (!plugin.hasPersistence()) return;
 
-        for(UserCategoryStats stats : currentStats){
-            stats.setDeaths(stats.getDeaths() + 1);
-        }
+        statsChanges.setDeaths(statsChanges.getDeaths() + 1);
 
         addScore(plugin.getWarsConfig().getDeathScoreModifier());
-    }
-
-    public void addTotalMoney(int amount){
-        if(!plugin.hasPersistence()) return;
-
-        for(UserCategoryStats stats : currentStats){
-            stats.setTotalMoney(stats.getTotalMoney() + amount);
-        }
-    }
-
-    private void addScore(int amount){
-        if(amount == 0) return;
-        if(!plugin.hasPersistence()) return;
-
-        for(UserCategoryStats stats : currentStats){
-            stats.setScore(stats.getScore() + amount);
-        }
-
-        if(amount > 0) messageLocale("score.gain", amount);
-        else messageLocale("score.loss", -amount);
     }
 
     public User getFireAttacker() {
@@ -270,6 +270,12 @@ public class User {
             removeScoreboardObjective(scoreboard, "map");
         }
 
+    }
+
+    public void addTotalMoney(int amount) {
+        if (!plugin.hasPersistence()) return;
+
+        statsChanges.setTotalMoney(statsChanges.getTotalMoney() + amount);
     }
 
     private void removeScoreboardObjective(Scoreboard scoreboard, String name) {
@@ -373,10 +379,6 @@ public class User {
         return b;
     }
 
-    public void message(String message) {
-        player.sendMessage(WarsPlugin.CHAT_PREFIX + message);
-    }
-
     public void stopCoolDown(String ability, String message) {
         if (!isCoolingDown(ability)) return;
 
@@ -422,10 +424,6 @@ public class User {
 
     public PlayerClassHandler getPlayerClassHandler() {
         return plugin.getPlayerClassHandler(playerClass);
-    }
-
-    public void messageLocale(String locale, Object... objects) {
-        message(plugin.getLocale(locale, objects));
     }
 
     public boolean subtractPlayerCash(int cash) {
@@ -507,8 +505,10 @@ public class User {
     public void setTeamColor(TeamColor teamColor) {
         if (this.teamColor != null) {
             getTeam().removePlayer(player);
+            if (teamColor == null) lastTeamColor = this.teamColor;
         }
 
+        if (teamColor != null) lastTeamColor = teamColor;
         this.teamColor = teamColor;
 
         if (this.teamColor != null) {
@@ -532,7 +532,8 @@ public class User {
         plugin.messageAll(ChatColor.GOLD + "The " + team.getTeamColor().getFormattedName() + ChatColor.GOLD +
                 " has lost a player!");
         plugin.messageAll(ChatColor.GOLD + "There are now " + ChatColor.DARK_AQUA + team.getPlayerCount() +
-                ChatColor.GOLD + " players left on the " + team.getTeamColor().getFormattedName() + ChatColor.GOLD + " Team");
+                ChatColor.GOLD + " players left on the " + team.getTeamColor().getFormattedName() + ChatColor.GOLD +
+                " Team");
 
         if (team.getPlayerCount() == 0) {
             team.eliminate();
@@ -612,6 +613,9 @@ public class User {
     }
 
     public void setPlayerClass(PlayerClass playerClass) {
+        if (this.playerClass != null && playerClass == null) lastPlayerClass = this.playerClass;
+        else lastPlayerClass = playerClass;
+
         this.playerClass = playerClass;
     }
 
@@ -698,12 +702,12 @@ public class User {
         plugin.getUsers().forEach(User::updateScoreboard);
     }
 
-    public void setTrappedTicks(int trappedTicks) {
-        this.trappedTicks = trappedTicks;
-    }
-
     public int getTrappedTicks() {
         return trappedTicks;
+    }
+
+    public void setTrappedTicks(int trappedTicks) {
+        this.trappedTicks = trappedTicks;
     }
 
     private static class Metadata {

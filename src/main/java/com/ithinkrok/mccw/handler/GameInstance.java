@@ -222,8 +222,6 @@ public class GameInstance {
             info.setPlayerClass(assignPlayerClass());
         }
 
-        info.loadStats();
-
         info.getPlayer().teleport(getMapSpawn(info.getTeamColor()));
 
         info.getPlayer().setGameMode(GameMode.SURVIVAL);

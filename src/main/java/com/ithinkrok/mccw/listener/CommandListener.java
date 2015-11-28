@@ -173,7 +173,7 @@ public class CommandListener implements CommandExecutor {
                     int amount = Integer.parseInt(args[1]);
 
                     if(amount < 1 || amount > 30){
-                        user.messageLocale("commands.shrink.bad-size", args[2]);
+                        user.messageLocale("commands.shrink.bad-size", args[1]);
                         return true;
                     }
 
@@ -183,7 +183,7 @@ public class CommandListener implements CommandExecutor {
 
                     return true;
                 } catch(NumberFormatException e){
-                    user.messageLocale("commands.shrink.bad-size", args[2]);
+                    user.messageLocale("commands.shrink.bad-size", args[1]);
                     return true;
                 }
 

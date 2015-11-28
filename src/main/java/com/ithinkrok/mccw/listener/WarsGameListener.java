@@ -127,7 +127,7 @@ public class WarsGameListener implements Listener {
 
         switch (event.getItem().getItemStack().getType()) {
             case GOLD_INGOT:
-                giveCashPerItem(event, 120, 80);
+                giveCashPerItem(event, 60, 40);
                 break;
             case DIAMOND:
                 giveCashPerItem(event, 1200, 800);
@@ -237,7 +237,7 @@ public class WarsGameListener implements Listener {
             case QUARTZ_ORE:
             case GOLD_ORE:
                 event.getBlock().getWorld()
-                        .dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, 3));
+                        .dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, 6));
                 break;
             case LOG:
             case LOG_2:

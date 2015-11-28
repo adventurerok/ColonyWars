@@ -35,8 +35,8 @@ public class UserCategoryStats {
         return id;
     }
 
-    public UUID getPlayerUUID() {
-        return UUID.fromString(playerUUID);
+    public String getPlayerUUID() {
+        return playerUUID;
     }
 
     public void setPlayerUUID(UUID playerUUID) {

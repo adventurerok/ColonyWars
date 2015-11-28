@@ -11,8 +11,6 @@ import com.ithinkrok.mccw.util.item.TeamCompass;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -23,18 +21,16 @@ import org.bukkit.inventory.ItemStack;
 public class InfernoClass extends ClassItemClassHandler {
 
     public InfernoClass(WarsPlugin plugin, PlayerClass playerClass) {
-        super(new ClassItem(plugin.getLangFile(), Material.IRON_CHESTPLATE, "items.explosion-wand.name")
+        super(new ClassItem(plugin, playerClass, Material.IRON_CHESTPLATE, "items.explosion-wand.name")
                         .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new ExplosionWand())
                         .withRightClickCooldown("wand", "wand", new LinearCalculator(25, -10), "cooldowns.explosion.finished")
-                        .withUpgradables(new ClassItem.Upgradable("wand", "upgrades.explosion-wand.name", 2,
-                                configArrayCalculator(plugin.getWarsConfig(), playerClass, "wand", 2))),
-                new ClassItem(plugin.getLangFile(), Material.DIAMOND_HELMET, "items.flame-sword.name")
+                        .withUpgradables(new ClassItem.Upgradable("wand", "upgrades.explosion-wand.name", 2)),
+                new ClassItem(plugin, playerClass, Material.DIAMOND_HELMET, "items.flame-sword.name")
                         .withUpgradeBuildings(Buildings.BLACKSMITH).withUnlockOnBuildingBuild(true).withWeaponModifier(
                         new ClassItem.WeaponModifier("flame").withDamageCalculator(new LinearCalculator(1, 1.5))
                                 .withFireCalculator(new LinearCalculator(4, 0))).withUpgradables(
-                        new ClassItem.Upgradable("flame", "upgrades.flame-sword.name", 2,
-                                configArrayCalculator(plugin.getWarsConfig(), playerClass, "flame", 2))),
+                        new ClassItem.Upgradable("flame", "upgrades.flame-sword.name", 2)),
                 TeamCompass.createTeamCompass(plugin));
 
         addExtraBuyables(new ItemBuyable(new ItemStack(Material.TNT, 16), Buildings.BLACKSMITH,

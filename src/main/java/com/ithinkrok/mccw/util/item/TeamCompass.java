@@ -4,12 +4,9 @@ import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
-import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -30,9 +27,7 @@ public class TeamCompass implements ClassItem.InteractAction {
 
         compass.withUpgradeBuildings(Buildings.CATHEDRAL);
         compass.withRightClickAction(new TeamCompass(plugin));
-        compass.withUpgradables(new ClassItem.Upgradable("team-compass", "items.team-compass.name", 1,
-                new LinearCalculator(plugin.getWarsConfig().getBuildingItemCost(Buildings.CATHEDRAL, "team-compass"),
-                        0)));
+        compass.withUpgradables(new ClassItem.Upgradable("team-compass", "items.team-compass.name", 1));
 
         return compass;
     }

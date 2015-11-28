@@ -13,8 +13,6 @@ import com.ithinkrok.mccw.util.item.TeamCompass;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.LightningStrike;
 import org.bukkit.inventory.PlayerInventory;
@@ -30,20 +28,18 @@ public class MageClass extends ClassItemClassHandler {
 
 
     public MageClass(WarsPlugin plugin, PlayerClass playerClass) {
-        super(new ClassItem(plugin.getLangFile(), Material.DIAMOND_CHESTPLATE, "items.ender-wand.name")
+        super(new ClassItem(plugin, playerClass, Material.DIAMOND_CHESTPLATE, "items.ender-wand.name")
                         .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new EnderWand())
                         .withRightClickCooldown("ender", "ender", new LinearCalculator(45, -15),
                                 "cooldowns.ender.finished").withUpgradables(
-                        new ClassItem.Upgradable("ender", "upgrades.ender-wand.name", 2,
-                                configArrayCalculator(plugin.getWarsConfig(), playerClass, "ender", 2))),
-                new ClassItem(plugin.getLangFile(), Material.DIAMOND_LEGGINGS, "items.lightning-wand.name")
+                        new ClassItem.Upgradable("ender", "upgrades.ender-wand.name", 2)),
+                new ClassItem(plugin, playerClass, Material.DIAMOND_LEGGINGS, "items.lightning-wand.name")
                         .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new LightningWand(plugin))
                         .withRightClickCooldown("lightning", "lightning", new LinearCalculator(45, -15),
                                 "cooldowns.lightning.finished").withUpgradables(
-                        new ClassItem.Upgradable("lightning", "upgrades.lightning-wand.name", 2,
-                                configArrayCalculator(plugin.getWarsConfig(), playerClass, "lightning", 2))),
+                        new ClassItem.Upgradable("lightning", "upgrades.lightning-wand.name", 2)),
                 TeamCompass.createTeamCompass(plugin));
 
         addExtraBuyables(new ItemBuyable(InventoryUtils.createPotion(PotionType.INSTANT_DAMAGE, 1, true, false, 32),

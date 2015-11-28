@@ -1,9 +1,12 @@
 package com.ithinkrok.mccw.playerclass.items;
 
+import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.User;
+import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.inventory.Buyable;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
+import com.ithinkrok.mccw.util.io.WarsConfig;
 import com.ithinkrok.mccw.util.item.InventoryUtils;
 import com.ithinkrok.mccw.util.io.LangFile;
 import org.bukkit.Material;
@@ -48,13 +51,18 @@ public class ClassItem {
     private String timeoutFinished;
     private Calculator timeoutCalculator;
     private String rightClickCooldownAbility;
+    private WarsConfig warsConfig;
+    private PlayerClass playerClass;
 
-    public ClassItem(LangFile langFile, Material itemMaterial) {
-        this(langFile, itemMaterial, null);
+    public ClassItem(WarsPlugin plugin, PlayerClass playerClass, Material itemMaterial) {
+        this(plugin, playerClass, itemMaterial, null);
     }
 
-    public ClassItem(LangFile langFile, Material itemMaterial, String itemDisplayLang) {
-        this.langFile = langFile;
+    public ClassItem(WarsPlugin plugin, PlayerClass playerClass, Material itemMaterial, String itemDisplayLang) {
+        this.playerClass = playerClass;
+        this.langFile = plugin.getLangFile();
+        this.warsConfig = plugin.getWarsConfig();
+
         this.itemMaterial = itemMaterial;
         if (itemDisplayLang != null) this.itemDisplayName = langFile.getLocale(itemDisplayLang);
 
@@ -146,7 +154,8 @@ public class ClassItem {
                 display.setItemMeta(displayMeta);
 
                 Buyable buyable = new ClassItemBuyable(display, upgradeBuildings[0],
-                        (int) upgradable.upgradeCost.calculate(level), upgradable.upgradeName, level);
+                        warsConfig.getClassItemCost(playerClass, upgradable.upgradeName + level),
+                        upgradable.upgradeName, level);
 
                 for (int buildingIndex = 1; buildingIndex < upgradeBuildings.length; ++buildingIndex) {
                     buyable.withAdditionalBuildings(upgradeBuildings[buildingIndex]);
@@ -392,13 +401,11 @@ public class ClassItem {
         private String upgradeName;
         private String upgradeDisplayLang;
         private int maxLevel;
-        private Calculator upgradeCost;
 
-        public Upgradable(String upgradeName, String upgradeDisplayLang, int maxLevel, Calculator upgradeCost) {
+        public Upgradable(String upgradeName, String upgradeDisplayLang, int maxLevel) {
             this.upgradeName = upgradeName;
             this.upgradeDisplayLang = upgradeDisplayLang;
             this.maxLevel = maxLevel;
-            this.upgradeCost = upgradeCost;
         }
     }
 

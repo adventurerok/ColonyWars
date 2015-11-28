@@ -13,8 +13,6 @@ import com.ithinkrok.mccw.util.item.InventoryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -28,29 +26,23 @@ import org.bukkit.potion.PotionEffectType;
 public class ScoutClass extends ClassItemClassHandler {
 
     public ScoutClass(WarsPlugin plugin, PlayerClass playerClass) {
-        super(new ClassItem(plugin.getLangFile(), Material.WOOD_SWORD).withUpgradeBuildings(Buildings.LUMBERMILL)
+        super(new ClassItem(plugin, playerClass, Material.WOOD_SWORD).withUpgradeBuildings(Buildings.LUMBERMILL)
                         .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
                         new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sharpness",
                                 new LinearCalculator(0, 1)),
                         new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "knockback", new LinearCalculator(0, 1)))
-                        .withUpgradables(new ClassItem.Upgradable("sharpness", "upgrades.sharpness.name", 2,
-                                        configArrayCalculator(plugin.getWarsConfig(), playerClass, "sharpness", 2)),
-                                new ClassItem.Upgradable("knockback", "upgrades.knockback.name", 2,
-                                        configArrayCalculator(plugin.getWarsConfig(), playerClass, "knockback", 2))),
-                new ClassItem(plugin.getLangFile(), Material.COMPASS, "items.player-compass.name")
+                        .withUpgradables(new ClassItem.Upgradable("sharpness", "upgrades.sharpness.name", 2),
+                                new ClassItem.Upgradable("knockback", "upgrades.knockback.name", 2)),
+                new ClassItem(plugin, playerClass, Material.COMPASS, "items.player-compass.name")
                         .withUpgradeBuildings(Buildings.CHURCH, Buildings.CATHEDRAL)
-                        .withRightClickAction(new ScoutCompass(plugin)).withUpgradables(
-                        new ClassItem.Upgradable("compass", "items.player-compass.name", 1,
-                                new LinearCalculator(plugin.getWarsConfig().getClassItemCost(playerClass, "compass"),
-                                        0))),
-                new ClassItem(plugin.getLangFile(), Material.CHAINMAIL_HELMET, "items.regen-ability.name")
+                        .withRightClickAction(new ScoutCompass(plugin))
+                        .withUpgradables(new ClassItem.Upgradable("compass", "items.player-compass.name", 1)),
+                new ClassItem(plugin, playerClass, Material.CHAINMAIL_HELMET, "items.regen-ability.name")
                         .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new RegenAbility())
                         .withRightClickCooldown("regen", "regen", new LinearCalculator(35, 10),
-                                "cooldowns.regen.finished").withUpgradables(
-                        new ClassItem.Upgradable("regen", "upgrades.regen-ability.name", 1,
-                                new LinearCalculator(plugin.getWarsConfig().getClassItemCost(playerClass, "regen"),
-                                        0))));
+                                "cooldowns.regen.finished")
+                        .withUpgradables(new ClassItem.Upgradable("regen", "upgrades.regen-ability.name", 1)));
     }
 
 

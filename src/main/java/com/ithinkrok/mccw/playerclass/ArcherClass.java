@@ -14,8 +14,6 @@ import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.item.InventoryUtils;
 import com.ithinkrok.mccw.util.item.TeamCompass;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -28,18 +26,16 @@ import org.bukkit.inventory.PlayerInventory;
 public class ArcherClass extends ClassItemClassHandler {
 
     public ArcherClass(WarsPlugin plugin, PlayerClass playerClass) {
-        super(new ClassItem(plugin.getLangFile(), Material.BOW).withUpgradeBuildings(Buildings.LUMBERMILL)
+        super(new ClassItem(plugin, playerClass, Material.BOW).withUpgradeBuildings(Buildings.LUMBERMILL)
                         .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
                         new ClassItem.EnchantmentEffect(Enchantment.ARROW_KNOCKBACK, "bow", new LinearCalculator(0, 1)),
                         new ClassItem.EnchantmentEffect(Enchantment.ARROW_DAMAGE, "bow", new ArrayCalculator(0, 1, 3)))
-                        .withUpgradables(new ClassItem.Upgradable("bow", "upgrades.bow.name", 2,
-                                configArrayCalculator(plugin.getWarsConfig(), playerClass, "bow", 2))),
-                new ClassItem(plugin.getLangFile(), Material.WOOD_SWORD).withUpgradeBuildings(Buildings.LUMBERMILL)
+                        .withUpgradables(new ClassItem.Upgradable("bow", "upgrades.bow.name", 2)),
+                new ClassItem(plugin, playerClass, Material.WOOD_SWORD).withUpgradeBuildings(Buildings.LUMBERMILL)
                         .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
                         new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sword", new LinearCalculator(0, 1)),
                         new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "sword", new LinearCalculator(0, 1)))
-                        .withUpgradables(new ClassItem.Upgradable("sword", "upgrades.wood-sword.name", 2,
-                                configArrayCalculator(plugin.getWarsConfig(), playerClass, "sword", 2))),
+                        .withUpgradables(new ClassItem.Upgradable("sword", "upgrades.wood-sword.name", 2)),
                 TeamCompass.createTeamCompass(plugin));
 
         addExtraBuyables(new UpgradeBuyable(InventoryUtils

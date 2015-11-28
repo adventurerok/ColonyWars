@@ -11,8 +11,6 @@ import com.ithinkrok.mccw.util.item.TeamCompass;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
@@ -30,25 +28,22 @@ import java.util.List;
 public class PriestClass extends ClassItemClassHandler {
 
     public PriestClass(WarsPlugin plugin, PlayerClass playerClass) {
-        super(new ClassItem(plugin.getLangFile(), Material.DIAMOND_BOOTS, "items.healing-scroll.name")
+        super(new ClassItem(plugin, playerClass, Material.DIAMOND_BOOTS, "items.healing-scroll.name")
                         .withUpgradeBuildings(Buildings.CATHEDRAL).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new HealingScroll(plugin))
                         .withRightClickCooldown("healing", "healing", new LinearCalculator(240, -90),
                                 "cooldowns.healing.finished").withUpgradables(
-                        new ClassItem.Upgradable("healing", "upgrades.healing-scroll.name", 2,
-                                configArrayCalculator(plugin.getWarsConfig(), playerClass, "healing", 2))),
-                new ClassItem(plugin.getLangFile(), Material.GOLD_CHESTPLATE, "items.earth-bender.name")
+                        new ClassItem.Upgradable("healing", "upgrades.healing-scroll.name", 2)),
+                new ClassItem(plugin, playerClass, Material.GOLD_CHESTPLATE, "items.earth-bender.name")
                         .withUpgradeBuildings(Buildings.CATHEDRAL).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new EarthBenderRightClick())
                         .withRightClickCooldown("bender", "bender", new LinearCalculator(45, -15),
                                 "cooldowns.bender.finished").withLeftClickAction(new EarthBenderLeftClick())
-                        .withUpgradables(new ClassItem.Upgradable("bender", "upgrades.earth-bender.name", 2,
-                                configArrayCalculator(plugin.getWarsConfig(), playerClass, "bender", 2))),
-                new ClassItem(plugin.getLangFile(), Material.GOLD_LEGGINGS, "items.cross.name")
+                        .withUpgradables(new ClassItem.Upgradable("bender", "upgrades.earth-bender.name", 2)),
+                new ClassItem(plugin, playerClass, Material.GOLD_LEGGINGS, "items.cross.name")
                         .withUpgradeBuildings(Buildings.CATHEDRAL).withUnlockOnBuildingBuild(true).withWeaponModifier(
                         new ClassItem.WeaponModifier("cross").withDamageCalculator(new LinearCalculator(2, 1)))
-                        .withUpgradables(new ClassItem.Upgradable("cross", "upgrades.cross.name", 2,
-                                configArrayCalculator(plugin.getWarsConfig(), playerClass, "cross", 2))),
+                        .withUpgradables(new ClassItem.Upgradable("cross", "upgrades.cross.name", 2)),
                 TeamCompass.createTeamCompass(plugin));
     }
 

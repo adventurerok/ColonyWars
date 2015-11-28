@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class TreeFeller {
 
-    public static void fellTree(GameInstance game, Location location){
+    public static int fellTree(GameInstance game, Location location){
         LinkedList<Location> locations = new LinkedList<>();
 
         addSurrounding(locations, location);
@@ -42,6 +42,8 @@ public class TreeFeller {
             Location pos = ingotsToSpawn.get(i);
             pos.getWorld().dropItemNaturally(pos, new ItemStack(Material.GOLD_INGOT, 1));
         }
+
+        return (int) (Math.log(ingotsToSpawn.size()) / Math.log(1.5d));
     }
 
     private static void addSurrounding(List<Location> locations, Location l){

@@ -230,6 +230,7 @@ public class WarsGameListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onBlockExp(BlockExpEvent event) {
         switch (event.getBlock().getType()) {
+            case QUARTZ_ORE:
             case GOLD_ORE:
                 event.getBlock().getWorld()
                         .dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, 3));
@@ -237,9 +238,9 @@ public class WarsGameListener implements Listener {
             case LOG:
             case LOG_2:
                 if (plugin.isInBuilding(event.getBlock().getLocation())) break;
+                int count = 1 + TreeFeller.fellTree(plugin.getGameInstance(), event.getBlock().getLocation());
                 event.getBlock().getWorld()
-                        .dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, 1));
-                TreeFeller.fellTree(plugin.getGameInstance(), event.getBlock().getLocation());
+                        .dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, count));
                 break;
             case DIAMOND_ORE:
                 event.getBlock().getWorld()

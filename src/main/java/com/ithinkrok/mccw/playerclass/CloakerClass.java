@@ -1,23 +1,16 @@
 package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.WarsPlugin;
-import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.event.*;
-import com.ithinkrok.mccw.inventory.BuyableInventory;
-import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.playerclass.items.ArrayCalculator;
 import com.ithinkrok.mccw.playerclass.items.Calculator;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
 import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
-import com.ithinkrok.mccw.util.InventoryUtils;
-import com.ithinkrok.mccw.util.TeamCompass;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import com.ithinkrok.mccw.util.item.TeamCompass;
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 

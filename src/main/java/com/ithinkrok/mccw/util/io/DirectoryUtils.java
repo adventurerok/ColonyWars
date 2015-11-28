@@ -1,4 +1,4 @@
-package com.ithinkrok.mccw.util;
+package com.ithinkrok.mccw.util.io;
 
 import java.io.IOException;
 import java.nio.file.*;

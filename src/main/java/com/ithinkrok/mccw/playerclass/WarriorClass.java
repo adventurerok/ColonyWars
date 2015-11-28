@@ -5,7 +5,7 @@ import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
 import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
-import com.ithinkrok.mccw.util.TeamCompass;
+import com.ithinkrok.mccw.util.item.TeamCompass;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;

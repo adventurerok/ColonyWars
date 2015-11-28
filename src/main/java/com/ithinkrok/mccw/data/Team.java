@@ -3,7 +3,7 @@ package com.ithinkrok.mccw.data;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.strings.Buildings;
-import com.ithinkrok.mccw.util.CannonTowerHandler;
+import com.ithinkrok.mccw.util.building.CannonTowerHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

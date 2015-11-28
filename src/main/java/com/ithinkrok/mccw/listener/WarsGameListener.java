@@ -12,8 +12,8 @@ import com.ithinkrok.mccw.event.UserRightClickEntityEvent;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.mccw.strings.Buildings;
-import com.ithinkrok.mccw.util.Facing;
-import com.ithinkrok.mccw.util.SchematicBuilder;
+import com.ithinkrok.mccw.util.building.Facing;
+import com.ithinkrok.mccw.util.building.SchematicBuilder;
 import com.ithinkrok.mccw.util.TreeFeller;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
@@ -32,7 +32,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
-import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.List;

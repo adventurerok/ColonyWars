@@ -1,4 +1,4 @@
-package com.ithinkrok.mccw.util;
+package com.ithinkrok.mccw.util.building;
 
 /**
  * Created by paul on 07/11/15.

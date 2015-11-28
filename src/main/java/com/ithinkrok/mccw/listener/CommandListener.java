@@ -7,7 +7,7 @@ import com.ithinkrok.mccw.enumeration.GameState;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.handler.CountdownHandler;
-import com.ithinkrok.mccw.util.InventoryUtils;
+import com.ithinkrok.mccw.util.item.InventoryUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;

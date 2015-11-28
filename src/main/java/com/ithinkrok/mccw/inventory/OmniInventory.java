@@ -3,6 +3,7 @@ package com.ithinkrok.mccw.inventory;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.event.ItemPurchaseEvent;
 import com.ithinkrok.mccw.strings.Buildings;
+import com.ithinkrok.mccw.util.io.WarsConfig;
 import com.ithinkrok.mccw.util.item.InventoryUtils;
 import com.ithinkrok.mccw.util.io.LangFile;
 import com.ithinkrok.mccw.util.building.SchematicBuilder;
@@ -21,11 +22,11 @@ import java.util.List;
  */
 public class OmniInventory extends BuyableInventory {
 
-    public OmniInventory(WarsPlugin plugin, FileConfiguration config) {
+    public OmniInventory(WarsPlugin plugin, WarsConfig config) {
         super(getBuyables(plugin, config));
     }
 
-    private static List<Buyable> getBuyables(WarsPlugin plugin, FileConfiguration config) {
+    private static List<Buyable> getBuyables(WarsPlugin plugin, WarsConfig config) {
         List<Buyable> result = new ArrayList<>();
 
         addBaseItems(result, plugin.getLangFile(), config);
@@ -39,13 +40,13 @@ public class OmniInventory extends BuyableInventory {
         return result;
     }
 
-    private static void addBaseItems(List<Buyable> result, LangFile lang, FileConfiguration config) {
-        int farmCost = config.getInt("costs.buildings." + Buildings.FARM);
-        int lumbermillCost = config.getInt("costs.buildings." + Buildings.LUMBERMILL);
-        int blacksmithCost = config.getInt("costs.buildings." + Buildings.BLACKSMITH);
-        int magetowerCost = config.getInt("costs.buildings." + Buildings.MAGETOWER);
-        int churchCost = config.getInt("costs.buildings." + Buildings.CHURCH);
-        int greenhouseCost = config.getInt("costs.buildings." + Buildings.GREENHOUSE);
+    private static void addBaseItems(List<Buyable> result, LangFile lang, WarsConfig config) {
+        int farmCost = config.getBuildingCost(Buildings.FARM);
+        int lumbermillCost = config.getBuildingCost(Buildings.LUMBERMILL);
+        int blacksmithCost = config.getBuildingCost(Buildings.BLACKSMITH);
+        int magetowerCost = config.getBuildingCost(Buildings.MAGETOWER);
+        int churchCost = config.getBuildingCost(Buildings.CHURCH);
+        int greenhouseCost = config.getBuildingCost(Buildings.GREENHOUSE);
 
         result.add(new BuildingBuyable(lang, Buildings.FARM, Buildings.BASE, farmCost));
         result.add(new BuildingBuyableWithFarm(lang, Buildings.LUMBERMILL, Buildings.BASE, lumbermillCost));
@@ -56,37 +57,39 @@ public class OmniInventory extends BuyableInventory {
 
     }
 
-    private static void addFarmItems(List<Buyable> result, FileConfiguration config) {
-        int rawPotatoAmount = config.getInt("amounts.farm.rawPotato");
-        int cookieAmount = config.getInt("amounts.farm.cookie");
-        int rawBeefAmount = config.getInt("amounts.farm.rawBeef");
-        int bakedPotatoAmount = config.getInt("amounts.farm.bakedPotato");
-        int cookedBeefAmount = config.getInt("amounts.farm.cookedBeef");
-        int goldenAppleAmount = config.getInt("amounts.farm.goldenApple");
+    private static void addFarmItems(List<Buyable> result, WarsConfig config) {
+        String buildingName = Buildings.FARM;
+        
+        int rawPotatoAmount = config.getBuildingItemAmount(buildingName, "rawPotato");
+        int cookieAmount = config.getBuildingItemAmount(buildingName, "cookie");
+        int rawBeefAmount = config.getBuildingItemAmount(buildingName, "rawBeef");
+        int bakedPotatoAmount = config.getBuildingItemAmount(buildingName, "bakedPotato");
+        int cookedBeefAmount = config.getBuildingItemAmount(buildingName, "cookedBeef");
+        int goldenAppleAmount = config.getBuildingItemAmount(buildingName, "goldenApple");
 
         result.add(new ItemBuyable(new ItemStack(Material.POTATO_ITEM, rawPotatoAmount), Buildings.FARM,
-                config.getInt("costs.farm.rawPotato") * rawPotatoAmount, true));
+                config.getBuildingItemCost(buildingName, "rawPotato") * rawPotatoAmount, true));
 
         result.add(new ItemBuyable(new ItemStack(Material.COOKIE, cookieAmount), Buildings.FARM,
-                config.getInt("costs.farm.cookie") * cookieAmount, true));
+                config.getBuildingItemCost(buildingName, "cookie") * cookieAmount, true));
 
         result.add(new ItemBuyable(new ItemStack(Material.RAW_BEEF, rawBeefAmount), Buildings.FARM,
-                config.getInt("costs.farm.rawBeef") * rawBeefAmount, true));
+                config.getBuildingItemCost(buildingName, "rawBeef") * rawBeefAmount, true));
 
         result.add(new ItemBuyable(new ItemStack(Material.BAKED_POTATO, bakedPotatoAmount), Buildings.FARM,
-                config.getInt("costs.farm.bakedPotato") * bakedPotatoAmount, true));
+                config.getBuildingItemCost(buildingName, "bakedPotato") * bakedPotatoAmount, true));
 
         result.add(new ItemBuyable(new ItemStack(Material.COOKED_BEEF, cookedBeefAmount), Buildings.FARM,
-                config.getInt("costs.farm.cookedBeef") * cookedBeefAmount, true));
+                config.getBuildingItemCost(buildingName, "cookedBeef") * cookedBeefAmount, true));
 
         result.add(new ItemBuyable(new ItemStack(Material.GOLDEN_APPLE, goldenAppleAmount), Buildings.FARM,
-                config.getInt("costs.farm.goldenApple") * goldenAppleAmount, true));
+                config.getBuildingItemCost(buildingName, "goldenApple") * goldenAppleAmount, true));
     }
 
-    private static void addChurchItems(List<Buyable> result, WarsPlugin plugin, FileConfiguration config) {
+    private static void addChurchItems(List<Buyable> result, WarsPlugin plugin, WarsConfig config) {
         result.add(new Buyable(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.CATHEDRAL,
                 plugin.getLocale("building.upgrade.replace", Buildings.CHURCH, Buildings.CATHEDRAL)), Buildings.CHURCH,
-                config.getInt("costs.buildings." + Buildings.CATHEDRAL), true, 1) {
+                config.getBuildingCost(Buildings.CATHEDRAL), true, 1) {
 
 
             @Override
@@ -117,34 +120,34 @@ public class OmniInventory extends BuyableInventory {
         });
 
         result.add(new ItemBuyable(InventoryUtils.createPotion(PotionType.INSTANT_HEAL, 1, true, false, 32),
-                Buildings.CHURCH, config.getInt("costs.church.healingPotion32"), true));
+                Buildings.CHURCH, config.getBuildingItemCost(Buildings.CHURCH, "healingPotion32"), true));
     }
 
-    private static void addCathedralItems(List<Buyable> result, FileConfiguration config) {
+    private static void addCathedralItems(List<Buyable> result, WarsConfig config) {
         result.add(new ItemBuyable(InventoryUtils.createPotion(PotionType.INSTANT_HEAL, 1, true, false, 32),
-                Buildings.CATHEDRAL, config.getInt("costs.cathedral.healingPotion32"), true));
+                Buildings.CATHEDRAL, config.getBuildingItemCost(Buildings.CATHEDRAL, "healingPotion32"), true));
     }
 
-    private static void addGreenhouseItems(List<Buyable> result, WarsPlugin plugin, FileConfiguration config) {
-        int axeCost = config.getInt("costs.greenhouse.axe");
+    private static void addGreenhouseItems(List<Buyable> result, WarsPlugin plugin, WarsConfig config) {
+        int axeCost = config.getBuildingItemCost(Buildings.GREENHOUSE, "axe");
 
         result.add(new ItemBuyable(InventoryUtils
                 .createItemWithNameAndLore(Material.STONE_AXE, 1, 0, plugin.getLocale("items.mighty-axe.name")),
                 Buildings.GREENHOUSE, axeCost, false));
     }
 
-    private static void addBlacksmithItems(List<Buyable> result, LangFile lang, FileConfiguration config) {
-        int scoutTowerCost = config.getInt("costs.buildings." + Buildings.SCOUTTOWER);
-        int wallCost = config.getInt("costs.buildings." + Buildings.WALL);
-        int mineCost = config.getInt("costs.buildings." + Buildings.LANDMINE);
+    private static void addBlacksmithItems(List<Buyable> result, LangFile lang, WarsConfig config) {
+        int scoutTowerCost = config.getBuildingCost(Buildings.SCOUTTOWER);
+        int wallCost = config.getBuildingCost(Buildings.WALL);
+        int mineCost = config.getBuildingCost(Buildings.LANDMINE);
 
         result.add(new BuildingBuyable(lang, Buildings.SCOUTTOWER, Buildings.BLACKSMITH, scoutTowerCost));
         result.add(new BuildingBuyable(lang, Buildings.WALL, Buildings.BLACKSMITH, wallCost, 16, true));
         result.add(new BuildingBuyable(lang, Buildings.LANDMINE, Buildings.BLACKSMITH, mineCost));
     }
 
-    private static void addScoutTowerItems(List<Buyable> result, WarsPlugin plugin, FileConfiguration config) {
-        int cannonTowerCost = config.getInt("costs.buildings." + Buildings.CANNONTOWER);
+    private static void addScoutTowerItems(List<Buyable> result, WarsPlugin plugin, WarsConfig config) {
+        int cannonTowerCost = config.getBuildingCost(Buildings.CANNONTOWER);
 
         result.add(new Buyable(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.CANNONTOWER,
                 plugin.getLocale("building.upgrade.replace", Buildings.SCOUTTOWER, Buildings.CANNONTOWER)),

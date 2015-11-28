@@ -1,4 +1,4 @@
-package com.ithinkrok.mccw.util;
+package com.ithinkrok.mccw.util.io;
 
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.util.io.ResourceHandler;

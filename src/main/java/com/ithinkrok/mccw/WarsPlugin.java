@@ -22,6 +22,7 @@ import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.*;
 import com.ithinkrok.mccw.util.io.LangFile;
 import com.ithinkrok.mccw.util.io.ResourceHandler;
+import com.ithinkrok.mccw.util.io.WarsConfig;
 import com.ithinkrok.mccw.util.item.Handbook;
 import com.ithinkrok.mccw.util.item.InventoryUtils;
 import org.bukkit.*;
@@ -83,6 +84,8 @@ public class WarsPlugin extends JavaPlugin {
 
     private LangFile langFile;
 
+    private WarsConfig warsConfig;
+
     public LangFile getLangFile() {
         return langFile;
     }
@@ -114,13 +117,14 @@ public class WarsPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        warsConfig = new WarsConfig(this);
         commandListener = new CommandListener(this);
 
         saveDefaultConfig();
 
-        mapList = getConfig().getStringList("map-list");
+        mapList = getWarsConfig().getMapList();
 
-        String languageFile = getConfig().getString("language") + ".lang";
+        String languageFile = getWarsConfig().getLanguageName() + ".lang";
         langFile = new LangFile(ResourceHandler.getPropertiesResource(this, languageFile));
 
         handbookMeta = Handbook.loadHandbookMeta(this);
@@ -132,13 +136,13 @@ public class WarsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new WarsBaseListener(this), this);
         getServer().getPluginManager().registerEvents(currentListener, this);
 
-        TeamColor.initialise(getConfig().getInt("team-count"));
+        TeamColor.initialise(getWarsConfig().getTeamCount());
 
         resetTeams();
 
 
 
-        buildingInventoryHandler = new OmniInventory(this, getConfig());
+        buildingInventoryHandler = new OmniInventory(this, getWarsConfig());
         spectatorInventoryHandler = new SpectatorInventory(this);
 
         lobbyMinigames.add(new WoolHeadMinigame(this));
@@ -149,6 +153,10 @@ public class WarsPlugin extends JavaPlugin {
         countdownHandler = new CountdownHandler(this);
 
 
+    }
+
+    public WarsConfig getWarsConfig() {
+        return warsConfig;
     }
 
     public FileConfiguration getBaseConfig(){

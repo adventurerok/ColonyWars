@@ -94,19 +94,19 @@ costs:
     CannonTower: 2000
     WirelessBuffer: 2500
     TimerBuffer: 2500
-  farm:
+  Farm:
     rawPotato: 3
     cookie: 2
     rawBeef: 6
     bakedPotato: 6
     cookedBeef: 10
     goldenApple: 125
-  church:
+  Church:
     healingPotion32: 1250
-  cathedral:
+  Cathedral:
     healingPotion32: 500
     team-compass: 1000
-  greenhouse:
+  Greenhouse:
     axe: 1600
   scout:
     sharpness1: 1350
@@ -166,7 +166,7 @@ costs:
 
 # The amounts of an item sold (currently only for the farm shop)
 amounts:
-  farm:
+  Farm:
     rawPotato: 5
     cookie: 10
     rawBeef: 5

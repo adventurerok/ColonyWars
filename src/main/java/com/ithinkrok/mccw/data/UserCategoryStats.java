@@ -1,9 +1,7 @@
 package com.ithinkrok.mccw.data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -30,6 +28,9 @@ public class UserCategoryStats {
     @Column private int totalMoney;
     @Column private int score;
     @Column private int games;
+
+    @Version
+    private Date version;
 
     public long getId() {
         return id;
@@ -81,6 +82,14 @@ public class UserCategoryStats {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public Date getVersion() {
+        return version;
+    }
+
+    public void setVersion(Date version) {
+        this.version = version;
     }
 
     public void setCategory(String category) {

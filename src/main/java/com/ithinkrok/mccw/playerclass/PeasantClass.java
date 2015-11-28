@@ -17,10 +17,10 @@ import org.bukkit.enchantments.Enchantment;
 public class PeasantClass extends ClassItemClassHandler {
 
     public PeasantClass(WarsPlugin plugin, PlayerClass playerClass) {
-        super(new ClassItem(plugin, playerClass, Material.IRON_AXE, "items.peasant-axe.name")
+        super(new ClassItem(plugin, playerClass.getName(), Material.IRON_AXE, "items.peasant-axe.name")
                         .withUnlockOnGameStart(true).withEnchantmentEffects(
                         new ClassItem.EnchantmentEffect(Enchantment.DIG_SPEED, "axe", new LinearCalculator(2, 0))),
-                new ClassItem(plugin, playerClass, Material.WOOD_SWORD).withUpgradeBuildings(Buildings.LUMBERMILL)
+                new ClassItem(plugin, playerClass.getName(), Material.WOOD_SWORD).withUpgradeBuildings(Buildings.LUMBERMILL)
                         .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
                         new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sharpness",
                                 new LinearCalculator(0, 1)),

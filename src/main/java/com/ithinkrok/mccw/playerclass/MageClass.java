@@ -28,13 +28,13 @@ public class MageClass extends ClassItemClassHandler {
 
 
     public MageClass(WarsPlugin plugin, PlayerClass playerClass) {
-        super(new ClassItem(plugin, playerClass, Material.DIAMOND_CHESTPLATE, "items.ender-wand.name")
+        super(new ClassItem(plugin, playerClass.getName(), Material.DIAMOND_CHESTPLATE, "items.ender-wand.name")
                         .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new EnderWand())
                         .withRightClickCooldown("ender", "ender", new LinearCalculator(45, -15),
                                 "cooldowns.ender.finished").withUpgradables(
                         new ClassItem.Upgradable("ender", "upgrades.ender-wand.name", 2)),
-                new ClassItem(plugin, playerClass, Material.DIAMOND_LEGGINGS, "items.lightning-wand.name")
+                new ClassItem(plugin, playerClass.getName(), Material.DIAMOND_LEGGINGS, "items.lightning-wand.name")
                         .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new LightningWand(plugin))
                         .withRightClickCooldown("lightning", "lightning", new LinearCalculator(45, -15),

@@ -22,14 +22,14 @@ import org.bukkit.entity.Wolf;
 public class WarriorClass extends ClassItemClassHandler {
 
     public WarriorClass(WarsPlugin plugin, PlayerClass playerClass) {
-        super(new ClassItem(plugin, playerClass, Material.IRON_SWORD).withUpgradeBuildings(Buildings.BLACKSMITH)
+        super(new ClassItem(plugin, playerClass.getName(), Material.IRON_SWORD).withUpgradeBuildings(Buildings.BLACKSMITH)
                         .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
                         new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sharpness",
                                 new LinearCalculator(0, 1)),
                         new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "knockback", new LinearCalculator(0, 1)))
                         .withUpgradables(new ClassItem.Upgradable("sharpness", "upgrades.sharpness.name", 2),
                                 new ClassItem.Upgradable("knockback", "upgrades.knockback.name", 2)),
-                new ClassItem(plugin, playerClass, Material.GOLD_HELMET, "items.wolf-wand.name")
+                new ClassItem(plugin, playerClass.getName(), Material.GOLD_HELMET, "items.wolf-wand.name")
                         .withUpgradeBuildings(Buildings.BLACKSMITH).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new WolfWand())
                         .withRightClickCooldown("wolf", "wolf", new LinearCalculator(120, -30),

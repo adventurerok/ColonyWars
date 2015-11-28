@@ -23,7 +23,7 @@ public class CloakerClass extends ClassItemClassHandler {
 
 
     public CloakerClass(WarsPlugin plugin, PlayerClass playerClass) {
-        super(new ClassItem(plugin, playerClass, Material.IRON_LEGGINGS, "items.cloak.name")
+        super(new ClassItem(plugin, playerClass.getName(), Material.IRON_LEGGINGS, "items.cloak.name")
                 .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
                 .withRightClickAction(new Cloak(plugin, cloakDurationCalculator()))
                 .withRightClickCooldown("cloak", "cloak", new LinearCalculator(25, 10), "cooldowns.cloak.finished")

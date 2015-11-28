@@ -26,18 +26,18 @@ import org.bukkit.potion.PotionEffectType;
 public class ScoutClass extends ClassItemClassHandler {
 
     public ScoutClass(WarsPlugin plugin, PlayerClass playerClass) {
-        super(new ClassItem(plugin, playerClass, Material.WOOD_SWORD).withUpgradeBuildings(Buildings.LUMBERMILL)
+        super(new ClassItem(plugin, playerClass.getName(), Material.WOOD_SWORD).withUpgradeBuildings(Buildings.LUMBERMILL)
                         .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
                         new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sharpness",
                                 new LinearCalculator(0, 1)),
                         new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "knockback", new LinearCalculator(0, 1)))
                         .withUpgradables(new ClassItem.Upgradable("sharpness", "upgrades.sharpness.name", 2),
                                 new ClassItem.Upgradable("knockback", "upgrades.knockback.name", 2)),
-                new ClassItem(plugin, playerClass, Material.COMPASS, "items.player-compass.name")
+                new ClassItem(plugin, playerClass.getName(), Material.COMPASS, "items.player-compass.name")
                         .withUpgradeBuildings(Buildings.CHURCH, Buildings.CATHEDRAL)
                         .withRightClickAction(new ScoutCompass(plugin))
                         .withUpgradables(new ClassItem.Upgradable("compass", "items.player-compass.name", 1)),
-                new ClassItem(plugin, playerClass, Material.CHAINMAIL_HELMET, "items.regen-ability.name")
+                new ClassItem(plugin, playerClass.getName(), Material.CHAINMAIL_HELMET, "items.regen-ability.name")
                         .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new RegenAbility())
                         .withRightClickCooldown("regen", "regen", new LinearCalculator(35, 10),

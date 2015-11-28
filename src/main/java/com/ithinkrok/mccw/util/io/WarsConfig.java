@@ -82,7 +82,11 @@ public class WarsConfig {
     }
 
     public int getClassItemCost(PlayerClass playerClass, String item) {
-        return getCost(playerClass.getName(), item);
+        return getClassItemCost(playerClass.getName(), item);
+    }
+
+    public int getClassItemCost(String playerClassName, String item) {
+        return getCost(playerClassName, item);
     }
 
     public int getBuildingItemAmount(String buildingName, String item) {

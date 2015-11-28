@@ -23,7 +23,7 @@ public class TeamCompass implements ClassItem.InteractAction {
     }
 
     public static ClassItem createTeamCompass(WarsPlugin plugin) {
-        ClassItem compass = new ClassItem(plugin.getLangFile(), Material.COMPASS, "items.team-compass.name");
+        ClassItem compass = new ClassItem(plugin, Buildings.CATHEDRAL, Material.COMPASS, "items.team-compass.name");
 
         compass.withUpgradeBuildings(Buildings.CATHEDRAL);
         compass.withRightClickAction(new TeamCompass(plugin));

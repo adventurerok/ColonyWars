@@ -17,7 +17,7 @@ import org.bukkit.enchantments.Enchantment;
 public class GeneralClass extends ClassItemClassHandler {
 
     public GeneralClass(WarsPlugin plugin, PlayerClass playerClass) {
-        super(new ClassItem(plugin, playerClass, Material.DIAMOND_SWORD).withUpgradeBuildings(Buildings.BLACKSMITH)
+        super(new ClassItem(plugin, playerClass.getName(), Material.DIAMOND_SWORD).withUpgradeBuildings(Buildings.BLACKSMITH)
                 .withUnlockOnBuildingBuild(true).
                         withEnchantmentEffects(new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sword",
                                         new LinearCalculator(0, 1)),

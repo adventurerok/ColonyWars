@@ -2,7 +2,6 @@ package com.ithinkrok.mccw.playerclass.items;
 
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.User;
-import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.inventory.Buyable;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
@@ -52,14 +51,15 @@ public class ClassItem {
     private Calculator timeoutCalculator;
     private String rightClickCooldownAbility;
     private WarsConfig warsConfig;
-    private PlayerClass playerClass;
+    private String upgradeGroup;
 
-    public ClassItem(WarsPlugin plugin, PlayerClass playerClass, Material itemMaterial) {
-        this(plugin, playerClass, itemMaterial, null);
+    public ClassItem(WarsPlugin plugin, String upgradeGroup, Material itemMaterial) {
+        this(plugin, upgradeGroup, itemMaterial, null);
     }
 
-    public ClassItem(WarsPlugin plugin, PlayerClass playerClass, Material itemMaterial, String itemDisplayLang) {
-        this.playerClass = playerClass;
+    public ClassItem(WarsPlugin plugin, String upgradeGroup, Material itemMaterial, String
+            itemDisplayLang) {
+        this.upgradeGroup = upgradeGroup;
         this.langFile = plugin.getLangFile();
         this.warsConfig = plugin.getWarsConfig();
 
@@ -154,7 +154,7 @@ public class ClassItem {
                 display.setItemMeta(displayMeta);
 
                 Buyable buyable = new ClassItemBuyable(display, upgradeBuildings[0],
-                        warsConfig.getClassItemCost(playerClass, upgradable.upgradeName + level),
+                        warsConfig.getCost(upgradeGroup, upgradable.upgradeName + level),
                         upgradable.upgradeName, level);
 
                 for (int buildingIndex = 1; buildingIndex < upgradeBuildings.length; ++buildingIndex) {

@@ -21,12 +21,12 @@ import org.bukkit.inventory.ItemStack;
 public class InfernoClass extends ClassItemClassHandler {
 
     public InfernoClass(WarsPlugin plugin, PlayerClass playerClass) {
-        super(new ClassItem(plugin, playerClass, Material.IRON_CHESTPLATE, "items.explosion-wand.name")
+        super(new ClassItem(plugin, playerClass.getName(), Material.IRON_CHESTPLATE, "items.explosion-wand.name")
                         .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new ExplosionWand())
                         .withRightClickCooldown("wand", "wand", new LinearCalculator(25, -10), "cooldowns.explosion.finished")
                         .withUpgradables(new ClassItem.Upgradable("wand", "upgrades.explosion-wand.name", 2)),
-                new ClassItem(plugin, playerClass, Material.DIAMOND_HELMET, "items.flame-sword.name")
+                new ClassItem(plugin, playerClass.getName(), Material.DIAMOND_HELMET, "items.flame-sword.name")
                         .withUpgradeBuildings(Buildings.BLACKSMITH).withUnlockOnBuildingBuild(true).withWeaponModifier(
                         new ClassItem.WeaponModifier("flame").withDamageCalculator(new LinearCalculator(1, 1.5))
                                 .withFireCalculator(new LinearCalculator(4, 0))).withUpgradables(

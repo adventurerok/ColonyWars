@@ -1,6 +1,7 @@
 package com.ithinkrok.mccw.util.io;
 
 import com.ithinkrok.mccw.WarsPlugin;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,18 +15,35 @@ import java.util.Properties;
  */
 public class ResourceHandler {
 
+    /**
+     *
+     * @param plugin The plugin to load resource for
+     * @param name The name of the resource in the plugin's data folder
+     * @return The File representing the resource, or {@code null} if the file does not exist
+     */
     public static File getResource(WarsPlugin plugin, String name){
         File file = new File(plugin.getDataFolder(), name);
         if(!file.exists()){
-            plugin.saveResource(name, false);
+            try {
+                plugin.saveResource(name, false);
+            } catch(IllegalArgumentException e){
+                return null;
+            }
         }
         return file;
     }
 
+    /**
+     *
+     * @param plugin The plugin to load the properties file for
+     * @param name The name of the properties file in the plugin's data folder
+     * @return The Properties file, or an empty Properties file if it does not exist
+     */
     public static Properties getPropertiesResource(WarsPlugin plugin, String name){
         File file = getResource(plugin, name);
 
         Properties properties = new Properties();
+        if(file == null) return properties;
 
         try(FileInputStream in = new FileInputStream(file)){
             properties.load(in);
@@ -35,5 +53,18 @@ public class ResourceHandler {
         }
 
         return properties;
+    }
+
+    /**
+     *
+     * @param plugin The plugin to load the config file for
+     * @param name The name of the config file in the plugin's data folder
+     * @return A {@code YamlConfiguration} representing the config, or an empty one if the config does not exist
+     */
+    public static YamlConfiguration getConfigResource(WarsPlugin plugin, String name){
+        File file = getResource(plugin, name);
+        if(file == null) return new YamlConfiguration();
+
+        return YamlConfiguration.loadConfiguration(file);
     }
 }

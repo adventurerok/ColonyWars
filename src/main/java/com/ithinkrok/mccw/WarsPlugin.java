@@ -27,6 +27,7 @@ import com.ithinkrok.mccw.util.item.InventoryUtils;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -163,6 +164,10 @@ public class WarsPlugin extends JavaPlugin {
         //countdownHandler.startLobbyCountdown();
 
 
+    }
+
+    public FileConfiguration getBaseConfig(){
+        return super.getConfig();
     }
 
     public List<LobbyMinigame> getLobbyMinigames() {

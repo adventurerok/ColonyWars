@@ -119,15 +119,11 @@ public class User {
         UserCategoryStats changes = statsChanges;
         statsChanges = new UserCategoryStats();
 
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            updateStats(changes, plugin.getOrCreateUserCategoryStats(player.getUniqueId(), "total"));
-            if (lastPlayerClass != null) updateStats(changes,
-                    plugin.getOrCreateUserCategoryStats(player.getUniqueId(), lastPlayerClass.getName()));
-            if (lastTeamColor != null) updateStats(changes,
-                    plugin.getOrCreateUserCategoryStats(player.getUniqueId(), lastTeamColor.getName()));
-
-
-        });
+        updateStats(changes, plugin.getOrCreateUserCategoryStats(player.getUniqueId(), "total"));
+        if (lastPlayerClass != null)
+            updateStats(changes, plugin.getOrCreateUserCategoryStats(player.getUniqueId(), lastPlayerClass.getName()));
+        if (lastTeamColor != null)
+            updateStats(changes, plugin.getOrCreateUserCategoryStats(player.getUniqueId(), lastTeamColor.getName()));
 
     }
 

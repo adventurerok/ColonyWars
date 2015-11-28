@@ -68,9 +68,7 @@ public class Persistence {
     private Query<UserCategoryStats> query(UUID playerUUID, String category){
         Query<UserCategoryStats> query = plugin.getDatabase().find(UserCategoryStats.class);
 
-        query.where().eq("playerUUID", playerUUID.toString()).eq("category", category);
-
-        query.setMaxRows(1);
+        query.where().eq("player_uuid", playerUUID.toString()).eq("category", category);
 
         return query;
     }

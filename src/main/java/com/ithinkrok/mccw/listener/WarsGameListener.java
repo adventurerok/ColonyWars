@@ -107,10 +107,9 @@ public class WarsGameListener implements Listener {
 
     @EventHandler
     public void onDropItem(PlayerDropItemEvent event) {
-        if(event.getItemDrop().getItemStack()
-                .getType().isEdible()) return;
+        if (event.getItemDrop().getItemStack().getType().isEdible()) return;
 
-        switch(event.getItemDrop().getItemStack().getType()){
+        switch (event.getItemDrop().getItemStack().getType()) {
             case POTION:
             case TNT:
             case WRITTEN_BOOK:
@@ -242,7 +241,7 @@ public class WarsGameListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onBlockExp(BlockExpEvent event) {
-        if(plugin.getGameState() == GameState.AFTERMATH) return;
+        if (plugin.getGameState() == GameState.AFTERMATH) return;
         switch (event.getBlock().getType()) {
             case QUARTZ_ORE:
             case GOLD_ORE:
@@ -254,7 +253,8 @@ public class WarsGameListener implements Listener {
                 if (plugin.isInBuilding(event.getBlock().getLocation())) break;
                 int count = 1 + TreeFeller.fellTree(plugin.getGameInstance(), event.getBlock().getLocation());
                 Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> event.getBlock().getWorld()
-                        .dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, count)), 1);
+                                .dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, count)),
+                        1);
 
                 break;
             case DIAMOND_ORE:
@@ -316,14 +316,14 @@ public class WarsGameListener implements Listener {
         if (event.getPlayer().getAllowFlight()) return;
 
         User user = plugin.getUser(event.getPlayer());
-        if(user == null) return;
+        if (user == null) return;
 
         //Prevent players from escaping showdown bounds
-        if(plugin.getShowdownArena().checkUserMove(user, event.getTo())){
-            if((user.getTrappedTicks() % 50) == 0) user.messageLocale("showdown.escape");
+        if (plugin.getShowdownArena().checkUserMove(user, event.getTo())) {
+            if ((user.getTrappedTicks() % 50) == 0) user.messageLocale("showdown.escape");
             user.setTrappedTicks(user.getTrappedTicks() + 1);
 
-            if(user.getTrappedTicks() >= 199){
+            if (user.getTrappedTicks() >= 199) {
                 user.teleport(plugin.getShowdownArena().getCenter().clone().add(0, 1, 0));
                 user.setTrappedTicks(0);
                 plugin.messageAllLocale("showdown.tele-center", user.getFormattedName());
@@ -536,8 +536,10 @@ public class WarsGameListener implements Listener {
             return;
         }
 
+        PotionEffectType type = event.getPotion().getEffects().iterator().next().getType();
+
         //If NPE then add potion to GOOD_POTIONS
-        boolean good = GOOD_POTIONS.get(event.getPotion().getEffects().iterator().next().getType());
+        boolean good = GOOD_POTIONS.get(type);
 
         for (LivingEntity ent : event.getAffectedEntities()) {
             if (!(ent instanceof Player)) continue;
@@ -545,9 +547,16 @@ public class WarsGameListener implements Listener {
             Player player = (Player) ent;
             User user = plugin.getUser(player);
 
-            if (!user.isInGame() || user.getTeamColor() == null ||
-                    (user.getTeamColor() == shooterInfo.getTeamColor()) != good) {
+            if (!user.isInGame()) {
                 event.setIntensity(ent, 0);
+                continue;
+            }
+
+            if ((user.getTeamColor() == shooterInfo.getTeamColor()) != good) {
+                event.setIntensity(ent, 0);
+            } else if(type == PotionEffectType.HEAL){
+                event.setIntensity(ent, event.getIntensity(ent) * user.getPotionStrengthModifier());
+                user.setPotionStrengthModifier(Math.max(user.getPotionStrengthModifier() - 0.01d, 0.5d));
             }
         }
     }
@@ -558,7 +567,7 @@ public class WarsGameListener implements Listener {
 
         User target = plugin.getUser((Player) event.getEntity());
 
-        if(!target.isInGame()){
+        if (!target.isInGame()) {
             //Prevent spectators from being damaged
             event.setCancelled(true);
             return;

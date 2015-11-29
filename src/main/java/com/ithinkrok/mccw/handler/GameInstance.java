@@ -198,7 +198,19 @@ public class GameInstance {
             if (forceShowdownTimer <= 0) plugin.changeGameState(GameState.SHOWDOWN);
         }, 20, 20);
 
+        startPotionStrengthTask();
+
         checkVictory(false);
+    }
+
+    private void startPotionStrengthTask() {
+        int ticks = 10;
+
+        scheduleRepeatingTask(() -> {
+            for(User user : plugin.getUsers()){
+                user.setPotionStrengthModifier(Math.min(user.getPotionStrengthModifier() + 0.01d, 1));
+            }
+        }, ticks, ticks);
     }
 
     private void setupPlayers() {

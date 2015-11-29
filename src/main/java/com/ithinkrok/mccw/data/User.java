@@ -62,6 +62,7 @@ public class User {
     private int trappedTicks;
     private PlayerClass lastPlayerClass;
     private TeamColor lastTeamColor;
+    private double potionStrengthModifier;
 
     public User(WarsPlugin plugin, Player player) {
         this.plugin = plugin;
@@ -102,6 +103,14 @@ public class User {
 
             u.getPlayer().hidePlayer(player);
         }
+    }
+
+    public double getPotionStrengthModifier() {
+        return potionStrengthModifier;
+    }
+
+    public void setPotionStrengthModifier(double potionStrengthModifier) {
+        this.potionStrengthModifier = potionStrengthModifier;
     }
 
     public UserCategoryStats getStats(String category) {

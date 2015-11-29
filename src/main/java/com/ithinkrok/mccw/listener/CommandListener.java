@@ -81,7 +81,7 @@ public class CommandListener implements CommandExecutor {
         user.messageLocale("commands.stats.category", category);
 
         String kd = "NA";
-        if(stats.getDeaths() > 0) kd = Double.toString(stats.getKills() / stats.getDeaths());
+        if(stats.getDeaths() > 0) kd = Double.toString(stats.getKills() / (double)stats.getDeaths());
 
         user.getPlayer().sendMessage(plugin.getLocale("commands.stats.kills", stats.getKills()));
         user.getPlayer().sendMessage(plugin.getLocale("commands.stats.deaths", stats.getDeaths()));

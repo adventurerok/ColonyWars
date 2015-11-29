@@ -107,8 +107,15 @@ public class WarsGameListener implements Listener {
 
     @EventHandler
     public void onDropItem(PlayerDropItemEvent event) {
-        if(event.getItemDrop().getItemStack().getType() == Material.POTION || event.getItemDrop().getItemStack()
+        if(event.getItemDrop().getItemStack()
                 .getType().isEdible()) return;
+
+        switch(event.getItemDrop().getItemStack().getType()){
+            case POTION:
+            case TNT:
+            case WRITTEN_BOOK:
+                return;
+        }
         event.setCancelled(true);
     }
 

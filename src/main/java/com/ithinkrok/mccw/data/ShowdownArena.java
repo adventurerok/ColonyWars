@@ -64,7 +64,7 @@ public class ShowdownArena {
     }
 
     public void startShrinkTask(WarsPlugin plugin){
-        int startTime = 20 * 60 * 5;
+        int startTime = 20 * 60 * 3;
 
         plugin.getGameInstance().scheduleTask(() -> {
             plugin.messageAllLocale("showdown.shrinking");

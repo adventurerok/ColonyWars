@@ -556,7 +556,7 @@ public class WarsGameListener implements Listener {
                 event.setIntensity(ent, 0);
             } else if(type == PotionEffectType.HEAL){
                 event.setIntensity(ent, event.getIntensity(ent) * user.getPotionStrengthModifier());
-                user.setPotionStrengthModifier(Math.max(user.getPotionStrengthModifier() - 0.01d, 0.5d));
+                user.setPotionStrengthModifier(Math.max(user.getPotionStrengthModifier() - 0.05d, 0.5d));
             }
         }
     }

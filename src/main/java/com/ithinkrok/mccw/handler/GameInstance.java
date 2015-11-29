@@ -208,7 +208,7 @@ public class GameInstance {
 
         scheduleRepeatingTask(() -> {
             for(User user : plugin.getUsers()){
-                user.setPotionStrengthModifier(Math.min(user.getPotionStrengthModifier() + 0.01d, 1));
+                user.setPotionStrengthModifier(Math.min(user.getPotionStrengthModifier() + 0.05d, 1));
             }
         }, ticks, ticks);
     }

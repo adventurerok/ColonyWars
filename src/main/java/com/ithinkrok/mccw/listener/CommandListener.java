@@ -118,7 +118,7 @@ public class CommandListener implements CommandExecutor {
 
     private boolean onFixCommand(User user) {
         if(!plugin.isInGame()) return true;
-        if(!user.startCoolDown("fix", 10, plugin.getLocale("cooldowns.fix.finished"))) return true;
+        if(!user.startCoolDown("fix", 1, plugin.getLocale("cooldowns.fix.finished"))) return true;
         user.teleport(user.getPlayer().getLocation().add(0, 0.4d, 0));
         user.getPlayer().setVelocity(new Vector(0, -1, 0));
         return true;

@@ -210,7 +210,7 @@ commands.stats.wins=&6Wins\: &3%s
 commands.stats.losses=&6Losses\: &3%s
 commands.stats.games=&6Total games\: &3%s
 commands.stats.totalmoney=&6Total gold collected\: &3%s
-commands.stats.score=&6Score\: %s
+commands.stats.score=&6Score\: &3%s
 
 #--SCORE--
 score.gain=&6You gained &a%s &6points!

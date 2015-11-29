@@ -13,6 +13,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -77,11 +78,11 @@ public class PriestClass extends ClassItemClassHandler {
             int maxDist = 3 * 3;
 
             Collection<Entity> nearby = target.getWorld().getNearbyEntities(target.getLocation(), 3, 3, 3);
-            List<Player> riders = new ArrayList<>();
+            List<LivingEntity> riders = new ArrayList<>();
 
             for (Entity near : nearby) {
-                if (!(near instanceof Player)) continue;
-                riders.add((Player) near);
+                if (!(near instanceof LivingEntity)) continue;
+                riders.add((LivingEntity) near);
             }
 
             List<FallingBlock> fallingBlockList = new ArrayList<>();

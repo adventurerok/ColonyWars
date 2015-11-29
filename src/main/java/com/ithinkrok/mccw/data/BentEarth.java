@@ -1,6 +1,7 @@
 package com.ithinkrok.mccw.data;
 
 import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -16,16 +17,16 @@ public class BentEarth {
 
     private List<FallingBlock> blocks;
 
-    public BentEarth(List<FallingBlock> blocks, List<Player> riders) {
+    public BentEarth(List<FallingBlock> blocks, List<LivingEntity> riders) {
         this.blocks = blocks;
 
         HashSet<FallingBlock> taken = new HashSet<>();
-        for(Player p : riders){
+        for(LivingEntity living : riders){
             double closest = 99999999D;
             FallingBlock block = null;
 
             for(FallingBlock b : blocks){
-                double dist = b.getLocation().distanceSquared(p.getLocation());
+                double dist = b.getLocation().distanceSquared(living.getLocation());
                 if(dist >= closest) continue;
                 if(taken.contains(b)) continue;
 
@@ -35,7 +36,7 @@ public class BentEarth {
 
             if(block == null) continue;
             taken.add(block);
-            block.setPassenger(p);
+            block.setPassenger(living);
         }
     }
 

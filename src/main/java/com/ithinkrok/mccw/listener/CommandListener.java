@@ -63,69 +63,27 @@ public class CommandListener implements CommandExecutor {
 
     }
 
-    private boolean onStatsCommand(User user, String[] args) {
-        if(!plugin.hasPersistence()){
-            user.messageLocale("commands.stats.disabled");
-            return true;
-        }
-
-        String category = "total";
-        if(args.length > 0) category = args[0];
-
-        UserCategoryStats stats = user.getStats(category);
-        if(stats == null){
-            user.messageLocale("commands.stats.none", category);
-            return true;
-        }
-
-        user.messageLocale("commands.stats.category", category);
-
-        String kd = "NA";
-        if(stats.getDeaths() > 0) kd = Double.toString(stats.getKills() / (double)stats.getDeaths());
-
-        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.kills", stats.getKills()));
-        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.deaths", stats.getDeaths()));
-        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.kd", kd));
-        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.wins", stats.getGameWins()));
-        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.losses", stats.getGameLosses()));
-        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.games", stats.getGames()));
-        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.totalmoney", stats.getTotalMoney()));
-        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.score", stats.getScore()));
-
-        return true;
-    }
-
-    private boolean onCountdownCommand(User user, String[] args) {
-        if(args.length < 1) return false;
-
-        CountdownHandler handler = plugin.getCountdownHandler();
-        if(!handler.isCountingDown()){
-            user.messageLocale("commands.countdown.none");
-            return true;
-        }
-
-        try {
-            int amount = Integer.parseInt(args[0]);
-
-            int newTime = Math.max(handler.getCountDownTime() + amount, 1);
-            handler.setCountDownTime(newTime);
-
-            return true;
-        } catch(NumberFormatException e){
-            return false;
-        }
-    }
-
-    private boolean onFixCommand(User user) {
-        if(!plugin.isInGame()) return true;
-        if(!user.startCoolDown("fix", 1, plugin.getLocale("cooldowns.fix.finished"))) return true;
-        user.teleport(user.getPlayer().getLocation().add(0, 0.4d, 0));
-        user.getPlayer().setVelocity(new Vector(0, -1, 0));
-        return true;
-    }
-
     private boolean onTransferCommand(User user, String[] args) {
         if (args.length < 1) return false;
+        if (user.getTeam() == null) {
+            user.messageLocale("commands.transfer.not-in-game");
+            return true;
+        }
+
+        User target = null;
+        if (args.length > 1) {
+            String targetName = args[1];
+
+            for (Player player : user.getTeam().getPlayers()) {
+                if (!player.getName().equals(targetName)) continue;
+                target = plugin.getUser(player);
+            }
+
+            if (target == null) {
+                user.messageLocale("commands.transfer.no-player", targetName);
+                return true;
+            }
+        }
 
         try {
             int amount = Integer.parseInt(args[0]);
@@ -135,11 +93,18 @@ public class CommandListener implements CommandExecutor {
                 return true;
             }
 
-            Team team = user.getTeam();
-            team.addTeamCash(amount);
+            if (target == null) {
+                Team team = user.getTeam();
+                team.addTeamCash(amount);
 
-            team.messageLocale("money.exchange.team-transfer", user.getFormattedName(), amount);
-            team.messageLocale("money.balance.team.new", team.getTeamCash());
+                team.messageLocale("money.exchange.team-transfer", user.getFormattedName(), amount);
+                team.messageLocale("money.balance.team.new", team.getTeamCash());
+            } else {
+                target.addPlayerCash(amount);
+
+                user.getTeam().messageLocale("money.exchange.user-transfer", user.getFormattedName(), amount,
+                        target.getFormattedName());
+            }
 
             return true;
         } catch (NumberFormatException e) {
@@ -154,7 +119,7 @@ public class CommandListener implements CommandExecutor {
                 if (args.length < 2) return false;
 
                 TeamColor teamColor = TeamColor.fromName(args[1]);
-                if(teamColor == null) {
+                if (teamColor == null) {
                     user.messageLocale("commands.test.invalid-team", args[1]);
                     return true;
                 }
@@ -167,7 +132,7 @@ public class CommandListener implements CommandExecutor {
                 if (args.length < 2) return false;
 
                 PlayerClass playerClass = PlayerClass.fromName(args[1]);
-                if(playerClass == null){
+                if (playerClass == null) {
                     user.messageLocale("commands.test.invalid-class", args[1]);
                     return true;
                 }
@@ -201,23 +166,23 @@ public class CommandListener implements CommandExecutor {
                 user.messageLocale("commands.test.base.loc", team.getBaseLocation());
                 break;
             case "shrink":
-                if(plugin.getShowdownArena() == null) return true;
+                if (plugin.getShowdownArena() == null) return true;
                 if (args.length < 2) return false;
 
-                try{
+                try {
                     int amount = Integer.parseInt(args[1]);
 
-                    if(amount < 1 || amount > 30){
+                    if (amount < 1 || amount > 30) {
                         user.messageLocale("commands.shrink.bad-size", args[1]);
                         return true;
                     }
 
-                    for(int count = 0; count < amount; ++count){
+                    for (int count = 0; count < amount; ++count) {
                         plugin.getShowdownArena().shrinkArena(plugin);
                     }
 
                     return true;
-                } catch(NumberFormatException e){
+                } catch (NumberFormatException e) {
                     user.messageLocale("commands.shrink.bad-size", args[1]);
                     return true;
                 }
@@ -253,8 +218,8 @@ public class CommandListener implements CommandExecutor {
             User other = plugin.getUser(player);
 
             String name = other.getFormattedName();
-            String playerClass =
-                    other.getPlayerClass() == null ? plugin.getLocale("team.none") : other.getPlayerClass().getFormattedName();
+            String playerClass = other.getPlayerClass() == null ? plugin.getLocale("team.none") :
+                    other.getPlayerClass().getFormattedName();
 
             String nearestBase = null;
             if (plugin.isInGame()) {
@@ -292,6 +257,67 @@ public class CommandListener implements CommandExecutor {
         }
 
         user.teleport(plugin.getMapSpawn(null));
+        return true;
+    }
+
+    private boolean onFixCommand(User user) {
+        if (!plugin.isInGame()) return true;
+        if (!user.startCoolDown("fix", 1, plugin.getLocale("cooldowns.fix.finished"))) return true;
+        user.teleport(user.getPlayer().getLocation().add(0, 0.4d, 0));
+        user.getPlayer().setVelocity(new Vector(0, -1, 0));
+        return true;
+    }
+
+    private boolean onCountdownCommand(User user, String[] args) {
+        if (args.length < 1) return false;
+
+        CountdownHandler handler = plugin.getCountdownHandler();
+        if (!handler.isCountingDown()) {
+            user.messageLocale("commands.countdown.none");
+            return true;
+        }
+
+        try {
+            int amount = Integer.parseInt(args[0]);
+
+            int newTime = Math.max(handler.getCountDownTime() + amount, 1);
+            handler.setCountDownTime(newTime);
+
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private boolean onStatsCommand(User user, String[] args) {
+        if (!plugin.hasPersistence()) {
+            user.messageLocale("commands.stats.disabled");
+            return true;
+        }
+
+        String category = "total";
+        if (args.length > 0) category = args[0];
+
+        UserCategoryStats stats = user.getStats(category);
+        if (stats == null) {
+            user.messageLocale("commands.stats.none", category);
+            return true;
+        }
+
+        user.messageLocale("commands.stats.category", category);
+
+        String kd = "NA";
+        if (stats.getDeaths() > 0) kd = Double.toString(stats.getKills() / (double) stats.getDeaths());
+
+        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.kills", stats.getKills()));
+        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.deaths", stats.getDeaths()));
+        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.kd", kd));
+        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.wins", stats.getGameWins()));
+        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.losses", stats.getGameLosses()));
+        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.games", stats.getGames()));
+        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.totalmoney", stats.getTotalMoney()));
+        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.score", stats.getScore()));
+
         return true;
     }
 }

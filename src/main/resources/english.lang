@@ -165,6 +165,7 @@ lore.timeout.cloak=Invisibility\: %s seconds
 #money
 money.exchange.too-expensive=&cYou do not have that amount of money
 money.exchange.team-transfer=%s &3transferred &a$%s &eto your team's account!
+money.exchange.user-transfer=%s &3transferred &a$%s &eto %s&e's account!
 money.balance.team.new=&eYour Team's new Balance is\: &a$%s&e!
 
 #game
@@ -187,6 +188,8 @@ commands.members.player-info=&6%s&6\: &3%s&6, Location\: &3%s
 commands.members.title=&6&lMembers of your team:
 commands.members.near-showdown=%s (Near showdown arena)
 commands.spawn.not-in-game=&cYou cannot use this command while in game.
+commands.transfer.not-in-game=&cYou cannot use this command while in game.
+commands.transfer.no-player=&cNo player named &3%s &cin your team!
 commands.test.team-change=&eYou were changed to team %s
 commands.test.class-change=&eYou were changed to class %s
 commands.test.invalid-class=&cInvalid class %s

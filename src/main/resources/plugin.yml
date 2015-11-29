@@ -36,9 +36,9 @@ permissions:
     default: true
 commands:
   transfer:
-    description: "Transfers money from your account to your team's account"
-    aliases: ["t", "tf"]
-    usage: "/transfer [money]"
+    description: "Transfers money from you to your team or a player in your team"
+    aliases: ["t", "tf", "share"]
+    usage: "/transfer <money> [targetplayer]"
   test:
     description: "ColonyWars test command"
     usage: "/test <test> [test arguments...]"

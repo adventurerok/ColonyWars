@@ -25,9 +25,7 @@ public class DarkKnightClass extends ClassItemClassHandler {
                 .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true).withWeaponModifier(
                         new ClassItem.WeaponModifier("sword").withDamageCalculator(new ArrayCalculator(2, 4, 6))
                                 .withWitherCalculator(new ArrayCalculator(3, 6, 10))
-                                .withNauseaCalculator(new ArrayCalculator(5, 7, 8))).withEnchantmentEffects(
-                        new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "sword", new LinearCalculator(0, 1))
-                ).withUpgradables(
+                                .withNauseaCalculator(new ArrayCalculator(5, 7, 8))).withUpgradables(
                         new ClassItem.Upgradable("sword", "upgrades.darkness-sword.name", 2)),
                 TeamCompass.createTeamCompass(plugin));
     }

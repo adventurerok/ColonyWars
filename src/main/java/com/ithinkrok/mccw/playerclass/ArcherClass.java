@@ -39,7 +39,7 @@ public class ArcherClass extends ClassItemClassHandler {
                         .withEnchantmentEffects(new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sword",
                                         new LinearCalculator(0, 1)),
                                 new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "sword",
-                                        new LinearCalculator(0, 1)))
+                                        new LinearCalculator(0, 0.5d)))
                         .withUpgradables(new ClassItem.Upgradable("sword", "upgrades.wood-sword.name", 2)),
                 TeamCompass.createTeamCompass(plugin));
 

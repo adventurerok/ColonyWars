@@ -22,7 +22,7 @@ public class GeneralClass extends ClassItemClassHandler {
                         withEnchantmentEffects(new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sword",
                                         new LinearCalculator(0, 1)),
                                 new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "sword",
-                                        new LinearCalculator(3, 0))).withUpgradables(
+                                        new LinearCalculator(1, 0))).withUpgradables(
                         new ClassItem.Upgradable("sword", "upgrades.diamond-sword.name", 2)),
                 TeamCompass.createTeamCompass(plugin));
     }

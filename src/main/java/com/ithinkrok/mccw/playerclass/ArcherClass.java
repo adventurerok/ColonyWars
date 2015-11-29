@@ -3,6 +3,7 @@ package com.ithinkrok.mccw.playerclass;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.event.ItemPurchaseEvent;
+import com.ithinkrok.mccw.event.UserBeginGameEvent;
 import com.ithinkrok.mccw.event.UserTeamBuildingBuiltEvent;
 import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.inventory.ItemBuyable;
@@ -17,6 +18,8 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 /**
  * Created by paul on 10/11/15.
@@ -31,10 +34,12 @@ public class ArcherClass extends ClassItemClassHandler {
                         new ClassItem.EnchantmentEffect(Enchantment.ARROW_KNOCKBACK, "bow", new LinearCalculator(0, 1)),
                         new ClassItem.EnchantmentEffect(Enchantment.ARROW_DAMAGE, "bow", new ArrayCalculator(0, 1, 3)))
                         .withUpgradables(new ClassItem.Upgradable("bow", "upgrades.bow.name", 2)),
-                new ClassItem(plugin, playerClass.getName(), Material.WOOD_SWORD).withUpgradeBuildings(Buildings.LUMBERMILL)
-                        .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
-                        new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sword", new LinearCalculator(0, 1)),
-                        new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "sword", new LinearCalculator(0, 1)))
+                new ClassItem(plugin, playerClass.getName(), Material.WOOD_SWORD)
+                        .withUpgradeBuildings(Buildings.LUMBERMILL).withUnlockOnBuildingBuild(true)
+                        .withEnchantmentEffects(new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sword",
+                                        new LinearCalculator(0, 1)),
+                                new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "sword",
+                                        new LinearCalculator(0, 1)))
                         .withUpgradables(new ClassItem.Upgradable("sword", "upgrades.wood-sword.name", 2)),
                 TeamCompass.createTeamCompass(plugin));
 
@@ -56,6 +61,14 @@ public class ArcherClass extends ClassItemClassHandler {
                         return super.canBuy(event) && event.getUser().getUpgradeLevel("arrows") > 0;
                     }
                 });
+    }
+
+    @Override
+    public void onUserBeginGame(UserBeginGameEvent event) {
+        super.onUserBeginGame(event);
+
+        event.getPlayer()
+                .addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0, false, false), false);
     }
 
     @Override

@@ -428,8 +428,8 @@ public class User {
 
         updateScoreboard();
 
-        message(ChatColor.RED + "$" + cash + ChatColor.YELLOW + " were deducted from your Account!");
-        message("Your new Balance is: " + ChatColor.GREEN + "$" + playerCash + "!");
+        messageLocale("money.balance.user.deduct", cash);
+        messageLocale("money.balance.user.new", playerCash);
 
         return true;
     }

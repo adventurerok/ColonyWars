@@ -167,6 +167,8 @@ money.exchange.too-expensive=&cYou do not have that amount of money
 money.exchange.team-transfer=%s &3transferred &a$%s &eto your team's account!
 money.exchange.user-transfer=%s &3transferred &a$%s &eto %s&e's account!
 money.balance.team.new=&eYour Team's new Balance is\: &a$%s&e!
+money.balance.user.new=&eYour new Balance is: &a$%s!
+money.balance.user.deduct=&c$%s &ewere deducted from your Account!
 
 #game
 game.player.killed=&6%s &6was killed by %s

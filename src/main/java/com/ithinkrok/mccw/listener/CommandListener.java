@@ -104,6 +104,8 @@ public class CommandListener implements CommandExecutor {
 
                 user.getTeam().messageLocale("money.exchange.user-transfer", user.getFormattedName(), amount,
                         target.getFormattedName());
+
+                target.messageLocale("money.balance.user.new", target.getPlayerCash());
             }
 
             return true;

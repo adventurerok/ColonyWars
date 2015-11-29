@@ -44,7 +44,7 @@ public class ParcourMinigame implements LobbyMinigame {
         if(block.getType() != Material.ENDER_CHEST) return false;
 
         plugin.messageAllLocale("minigames.parcour.winner", user.getFormattedName());
-        user.addPlayerCash(1000);
+        user.addPlayerCash(500);
         user.teleport(plugin.getLobbySpawn());
 
         return true;

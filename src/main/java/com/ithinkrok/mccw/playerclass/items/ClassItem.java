@@ -198,6 +198,8 @@ public class ClassItem {
             }
         }
 
+        item.getItemMeta().spigot().setUnbreakable(true);
+
         return item;
     }
 

@@ -19,6 +19,7 @@ lobby.info.not-enough-players=&7Not enough Players Online for Game to start!
 maps.canyon.desc=A canyon separates the four teams bases...
 maps.forest_hills.desc=Teams separated by forest and hills.
 maps.cavern.desc=Team bases are in caverns, with tunnels between them.
+maps.hills_and_lakes.desc=Hills and lakes...
 maps.random.desc=Vote for a random map
 
 #class-descriptions

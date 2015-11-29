@@ -446,7 +446,7 @@ public class GameInstance {
 
     public void updateSpectatorInventories() {
         for (User info : plugin.getUsers()) {
-            if (info.isInGame() && info.getTeamColor() != null) return;
+            if (info.isInGame() && info.getTeamColor() != null) continue;
 
             setupSpectatorInventory(info.getPlayer());
         }

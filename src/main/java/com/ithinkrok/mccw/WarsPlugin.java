@@ -373,7 +373,9 @@ public class WarsPlugin extends JavaPlugin {
             countdownHandler.startLobbyCountdown();
         }
 
-        getUsers().forEach(User::saveStats);
+        if(state == GameState.AFTERMATH) {
+            getUsers().forEach(User::saveStats);
+        }
     }
 
     public String assignGameMap() {

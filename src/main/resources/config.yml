@@ -6,6 +6,7 @@ map-list:
   - "canyon"
   - "forest_hills"
   - "cavern"
+  - "hills_and_lakes"
   - "random"
 
 persistence: true

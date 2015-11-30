@@ -343,6 +343,11 @@ public class WarsGameListener implements Listener {
         event.setCancelled(true);
     }
 
+    @EventHandler
+    public void onBlockSpread(BlockSpreadEvent event) {
+        event.setCancelled(true);
+    }
+
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {

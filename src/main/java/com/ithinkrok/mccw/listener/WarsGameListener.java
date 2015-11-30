@@ -339,6 +339,12 @@ public class WarsGameListener implements Listener {
     }
 
     @EventHandler
+    public void onBlockBurn(BlockBurnEvent event) {
+        event.setCancelled(true);
+    }
+
+
+    @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Player damager = getPlayerFromEntity(event.getDamager());
         if (damager == null) {

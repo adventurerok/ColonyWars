@@ -12,11 +12,10 @@ import com.ithinkrok.mccw.event.UserRightClickEntityEvent;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.mccw.strings.Buildings;
+import com.ithinkrok.mccw.util.TreeFeller;
 import com.ithinkrok.mccw.util.building.Facing;
 import com.ithinkrok.mccw.util.building.SchematicBuilder;
-import com.ithinkrok.mccw.util.TreeFeller;
 import org.bukkit.*;
-import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -34,9 +33,7 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by paul on 01/11/15.
@@ -45,13 +42,24 @@ import java.util.UUID;
  */
 public class WarsGameListener implements Listener {
 
-    private static HashMap<PotionEffectType, Boolean> GOOD_POTIONS = new HashMap<>();
+    private static Map<PotionEffectType, Boolean> GOOD_POTIONS = new HashMap<>();
+    private static Map<EntityDamageEvent.DamageCause, String> DEATH_MESSAGE_ENDINGS =
+            new EnumMap<>(EntityDamageEvent.DamageCause.class);
 
     static {
         GOOD_POTIONS.put(PotionEffectType.HEAL, true);
         GOOD_POTIONS.put(PotionEffectType.HARM, false);
-
         //Add more potions if required
+
+        DEATH_MESSAGE_ENDINGS.put(EntityDamageEvent.DamageCause.FALL, ".falling");
+        DEATH_MESSAGE_ENDINGS.put(EntityDamageEvent.DamageCause.BLOCK_EXPLOSION, ".explosion");
+        DEATH_MESSAGE_ENDINGS.put(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION, ".explosion");
+        DEATH_MESSAGE_ENDINGS.put(EntityDamageEvent.DamageCause.PROJECTILE, ".shot");
+        DEATH_MESSAGE_ENDINGS.put(EntityDamageEvent.DamageCause.DROWNING, ".drowned");
+        DEATH_MESSAGE_ENDINGS.put(EntityDamageEvent.DamageCause.FIRE, ".fire");
+        DEATH_MESSAGE_ENDINGS.put(EntityDamageEvent.DamageCause.FIRE_TICK, ".fire");
+
+
     }
 
     private WarsPlugin plugin;
@@ -517,6 +525,16 @@ public class WarsGameListener implements Listener {
         }
     }
 
+    private void removeEntityTargets(Player player) {
+        for (Entity e : player.getWorld().getEntities()) {
+            if (!(e instanceof Creature)) continue;
+
+            Creature creature = (Creature) e;
+            if (creature.getTarget() == null || creature.getTarget() != player) continue;
+            creature.setTarget(null);
+        }
+    }
+
     private void displayDeathMessage(User diedInfo, User killerInfo, EntityDamageEvent.DamageCause cause,
                                      boolean intentionally) {
         Object[] args;
@@ -531,39 +549,11 @@ public class WarsGameListener implements Listener {
             args = new Object[]{diedInfo.getFormattedName()};
         }
 
-        switch(cause){
-            case FALL:
-                locale = locale + ".falling";
-                break;
-            case ENTITY_EXPLOSION:
-            case BLOCK_EXPLOSION:
-                locale = locale + ".explosion";
-                break;
-            case PROJECTILE:
-                locale = locale + ".shot";
-                break;
-            case DROWNING:
-                locale = locale + ".drowned";
-                break;
-            case FIRE:
-            case FIRE_TICK:
-                locale = locale + ".fire";
-                break;
-        }
+        String ending = DEATH_MESSAGE_ENDINGS.get(cause);
+        if (ending != null) locale += ending;
 
         plugin.messageAllLocale(locale, args);
     }
-
-    private void removeEntityTargets(Player player) {
-        for (Entity e : player.getWorld().getEntities()) {
-            if (!(e instanceof Creature)) continue;
-
-            Creature creature = (Creature) e;
-            if (creature.getTarget() == null || creature.getTarget() != player) continue;
-            creature.setTarget(null);
-        }
-    }
-
 
     @EventHandler
     public void onPotionSplash(PotionSplashEvent event) {

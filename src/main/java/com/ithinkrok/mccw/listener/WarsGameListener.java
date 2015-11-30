@@ -16,6 +16,7 @@ import com.ithinkrok.mccw.util.building.Facing;
 import com.ithinkrok.mccw.util.building.SchematicBuilder;
 import com.ithinkrok.mccw.util.TreeFeller;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -565,7 +566,7 @@ public class WarsGameListener implements Listener {
 
             if ((user.getTeamColor() == shooterInfo.getTeamColor()) != good) {
                 event.setIntensity(ent, 0);
-            } else if(type == PotionEffectType.HEAL){
+            } else if (type == PotionEffectType.HEAL) {
                 event.setIntensity(ent, event.getIntensity(ent) * user.getPotionStrengthModifier());
                 user.setPotionStrengthModifier(Math.max(user.getPotionStrengthModifier() - 0.05d, 0.5d));
             }
@@ -616,11 +617,11 @@ public class WarsGameListener implements Listener {
     }
 
     @EventHandler
-    public void onFoodLevelChange(FoodLevelChangeEvent event){
-        if(!(event.getEntity() instanceof Player)) return;
+    public void onFoodLevelChange(FoodLevelChangeEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
 
         User user = plugin.getUser((Player) event.getEntity());
-        if(user == null || user.isInGame()) return;
+        if (user == null || user.isInGame()) return;
 
         event.setCancelled(true);
     }

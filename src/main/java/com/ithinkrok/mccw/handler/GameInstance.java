@@ -101,7 +101,7 @@ public class GameInstance {
     }
 
     private void startAftermath() {
-        buildings.forEach(Building::clearHolograms);
+        buildings.forEach(Building::removed);
         countdownHandler.startEndCountdown();
     }
 
@@ -128,7 +128,7 @@ public class GameInstance {
 
         buildingCentres.clear();
 
-        buildings.forEach(Building::clearHolograms);
+        buildings.forEach(Building::removed);
 
         buildings.clear();
 
@@ -420,7 +420,7 @@ public class GameInstance {
             info.redoShopInventory();
         }
 
-        building.clearHolograms();
+        building.removed();
     }
 
     public boolean isInBuilding(Location loc) {

@@ -114,7 +114,7 @@ public class SchematicBuilder {
             SchematicBuilderTask task = new SchematicBuilderTask(plugin, loc, result, schem, instant ? -1 : 2);
 
             if (!instant) {
-                task.schedule(plugin);
+                result.setBuildTask(task.schedule(plugin));
             } else {
                 task.run();
             }
@@ -281,6 +281,8 @@ public class SchematicBuilder {
             hologram = HologramAPI.createHologram(holoLoc, "Building: 0%");
 
             hologram.spawn();
+
+            building.addHologram(hologram);
         }
 
         @Override
@@ -323,9 +325,11 @@ public class SchematicBuilder {
                 }
             }
 
-            Bukkit.getScheduler().cancelTask(taskId);
+            building.setBuildTask(0);
+            plugin.getGameInstance().cancelTask(taskId);
 
             hologram.despawn();
+            building.removeHologram(hologram);
 
             if (building.getCenterBlock() != null) {
                 building.getCenterBlock().getWorld()
@@ -338,8 +342,8 @@ public class SchematicBuilder {
             building = null;
         }
 
-        public void schedule(Plugin plugin) {
-            taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, 1, 1);
+        public int schedule(WarsPlugin plugin) {
+            return taskId = plugin.getGameInstance().scheduleRepeatingTask(this, 1, 1);
         }
     }
 }

@@ -34,6 +34,7 @@ public class Building {
     private boolean finished;
     private int rotation;
     private List<Hologram> holograms = new ArrayList<>();
+    private int buildTask;
 
     public int getRotation() {
         return rotation;
@@ -114,10 +115,20 @@ public class Building {
 
     }
 
-    public void clearHolograms(){
+    public void removed(){
+        if(buildTask != 0) plugin.getGameInstance().cancelTask(buildTask);
+
         holograms.stream().filter(Hologram::isSpawned).forEach(Hologram::despawn);
 
         holograms.clear();
+    }
+
+    public void addHologram(Hologram hologram){
+        holograms.add(hologram);
+    }
+
+    public void removeHologram(Hologram hologram){
+        holograms.remove(hologram);
     }
 
     public void explode(){
@@ -158,5 +169,13 @@ public class Building {
 
         plugin.getGameInstance().removeBuilding(this);
         if(centerBlock != null) oldBlocks.get(centerBlock).update(true, false);
+    }
+
+    public int getBuildTask() {
+        return buildTask;
+    }
+
+    public void setBuildTask(int buildTask) {
+        this.buildTask = buildTask;
     }
 }

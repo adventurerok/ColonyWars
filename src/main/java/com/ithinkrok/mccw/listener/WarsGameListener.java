@@ -412,7 +412,7 @@ public class WarsGameListener implements Listener {
             }
 
             event.setCancelled(true);
-            playerDeath(target, damager, true);
+            playerDeath(target, damager, event.getCause(), true);
         }
     }
 
@@ -478,7 +478,7 @@ public class WarsGameListener implements Listener {
         if (!event.isCancelled()) classHandler.onUserAttack(event);
     }
 
-    public void playerDeath(Player died, Player killer, boolean intentionally) {
+    public void playerDeath(Player died, Player killer, EntityDamageEvent.DamageCause cause, boolean intentionally) {
         if (plugin.getGameState() == GameState.AFTERMATH) return;
         User diedInfo = plugin.getUser(died);
 
@@ -492,16 +492,9 @@ public class WarsGameListener implements Listener {
         removeEntityTargets(died);
 
         User killerInfo = killer == null ? null : plugin.getUser(killer);
-        if (killerInfo != null) {
-            if (intentionally) plugin.messageAll(
-                    plugin.getLocale("game.player.killed", diedInfo.getFormattedName(), killerInfo.getFormattedName()));
-            else plugin.messageAll(plugin.getLocale("game.player.died-fighting", diedInfo.getFormattedName(),
-                    killerInfo.getFormattedName()));
+        if (killerInfo != null) killerInfo.addKill();
 
-            killerInfo.addKill();
-        } else {
-            plugin.messageAll(plugin.getLocale("game.player.death", diedInfo.getFormattedName()));
-        }
+        displayDeathMessage(diedInfo, killerInfo, cause, intentionally);
 
         diedInfo.addDeath();
 
@@ -522,6 +515,43 @@ public class WarsGameListener implements Listener {
             diedInfo.removeFromGame();
             diedInfo.setSpectator();
         }
+    }
+
+    private void displayDeathMessage(User diedInfo, User killerInfo, EntityDamageEvent.DamageCause cause,
+                                     boolean intentionally) {
+        Object[] args;
+        String locale;
+        if (killerInfo != null) {
+            if (intentionally) locale = "game.player.killed";
+            else locale = "game.player.died-fighting";
+
+            args = new Object[]{diedInfo.getFormattedName(), killerInfo.getFormattedName()};
+        } else {
+            locale = "game.player.death";
+            args = new Object[]{diedInfo.getFormattedName()};
+        }
+
+        switch(cause){
+            case FALL:
+                locale = locale + ".falling";
+                break;
+            case ENTITY_EXPLOSION:
+            case BLOCK_EXPLOSION:
+                locale = locale + ".explosion";
+                break;
+            case PROJECTILE:
+                locale = locale + ".shot";
+                break;
+            case DROWNING:
+                locale = locale + ".drowned";
+                break;
+            case FIRE:
+            case FIRE_TICK:
+                locale = locale + ".fire";
+                break;
+        }
+
+        plugin.messageAllLocale(locale, args);
     }
 
     private void removeEntityTargets(Player player) {
@@ -601,9 +631,9 @@ public class WarsGameListener implements Listener {
 
             if (killer == null) {
                 if (target.getLastAttacker() != null)
-                    playerDeath(target.getPlayer(), target.getLastAttacker().getPlayer(), false);
-                else playerDeath(target.getPlayer(), null, false);
-            } else playerDeath(target.getPlayer(), killer.getPlayer(), true);
+                    playerDeath(target.getPlayer(), target.getLastAttacker().getPlayer(), event.getCause(), false);
+                else playerDeath(target.getPlayer(), null, event.getCause(), false);
+            } else playerDeath(target.getPlayer(), killer.getPlayer(), event.getCause(), true);
         }
     }
 

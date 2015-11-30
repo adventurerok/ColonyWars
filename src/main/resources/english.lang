@@ -172,8 +172,26 @@ money.balance.user.deduct=&c$%s &ewere deducted from your Account!
 
 #game
 game.player.killed=&6%s &6was killed by %s
+game.player.killed.explosion=&6%s &6was blown up by %s
+game.player.killed.shot=&6%s &6was shot by %s
+game.player.killed.fire=&6%s &6was burned to death by %s
+
 game.player.died-fighting=&6%s &6died while fighting %s&6!
+game.player.died-fighting.falling=&6%s &6fell to their death while fighting %s&6!
+game.player.died-fighting.explosion=&6%s &6blew up while fighting %s&6!
+game.player.died-fighting.shot=&6%s &6got shot while fighting %s&6!
+# suppress inspection "UnusedProperty"
+game.player.died-fighting.drowned=&6%s &6drowned while fighting %s&6!
+game.player.died-fighting.fire=&6%s &6burned to death while fighting %s&6!
+
 game.player.death=&6%s &6died!
+game.player.death.falling=&6%s &6fell to their death!
+game.player.death.explosion=&6%s &6blew up!
+game.player.death.shot=&6%s &6was shot to death by a monster!
+# suppress inspection "UnusedProperty"
+game.player.death.drowned=&6%s &6drowned!
+game.player.death.fire=&6%s &6burned to death!
+
 game.player.respawn=%s &6has respawned!
 game.player.no-respawn=%s &6did not respawn!
 game.player.all-dead=&6Oh dear. Everyone is dead!

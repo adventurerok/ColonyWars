@@ -51,11 +51,16 @@ public class ShowdownArena {
         if (target.getZ() > center.getZ() + radiusZ - 2) zv = -1;
         else if (target.getZ() < center.getZ() - radiusZ + 2) zv = 1;
 
-        Vector velocity = user.getPlayer().getVelocity();
+        Vector velocity;
+        if(!user.getPlayer().isInsideVehicle()) velocity = user.getPlayer().getVelocity();
+        else velocity = user.getPlayer().getVehicle().getVelocity();
+
         velocity.setX(velocity.getX() + xv * 0.5);
         velocity.setY(0.3);
         velocity.setZ(velocity.getZ() + zv * 0.5);
-        user.getPlayer().setVelocity(velocity);
+
+        if(!user.getPlayer().isInsideVehicle()) user.getPlayer().setVelocity(velocity);
+        else user.getPlayer().getVehicle().setVelocity(velocity);
 
         return true;
     }

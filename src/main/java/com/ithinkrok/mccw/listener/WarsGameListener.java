@@ -605,6 +605,16 @@ public class WarsGameListener implements Listener {
     }
 
     @EventHandler
+    public void onFoodLevelChange(FoodLevelChangeEvent event){
+        if(!(event.getEntity() instanceof Player)) return;
+
+        User user = plugin.getUser((Player) event.getEntity());
+        if(user == null || user.isInGame()) return;
+
+        event.setCancelled(true);
+    }
+
+    @EventHandler
     public void onLeavesDecay(LeavesDecayEvent event) {
         event.getBlock().setType(Material.AIR);
     }

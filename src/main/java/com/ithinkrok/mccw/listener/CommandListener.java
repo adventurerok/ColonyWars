@@ -9,6 +9,7 @@ import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.handler.CountdownHandler;
 import com.ithinkrok.mccw.util.item.InventoryUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -16,6 +17,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+
+import java.util.*;
 
 /**
  * Created by paul on 13/11/15.
@@ -57,6 +60,8 @@ public class CommandListener implements CommandExecutor {
                 return onCountdownCommand(user, args);
             case "stats":
                 return onStatsCommand(user, args);
+            case "list":
+                return onListCommand(user);
             default:
                 return false;
         }
@@ -320,6 +325,42 @@ public class CommandListener implements CommandExecutor {
         user.getPlayer().sendMessage(plugin.getLocale("commands.stats.totalmoney", stats.getTotalMoney()));
         user.getPlayer().sendMessage(plugin.getLocale("commands.stats.score", stats.getScore()));
 
+        return true;
+    }
+
+    private boolean onListCommand(User sender) {
+        Map<TeamColor, List<User>> teams = new LinkedHashMap<>();
+
+        teams.put(null, new ArrayList<>());
+        for (TeamColor teamColor : TeamColor.values()) {
+            teams.put(teamColor, new ArrayList<>());
+        }
+
+        for (User user : plugin.getUsers()) {
+            if (!user.isInGame()) teams.get(null).add(user);
+            else teams.get(user.getTeamColor()).add(user);
+        }
+
+        sender.messageLocale("commands.list.title");
+
+        for (Map.Entry<TeamColor, List<User>> entry : teams.entrySet()) {
+            if (entry.getValue().isEmpty()) continue;
+
+            StringBuilder names = new StringBuilder();
+
+            for (User user : entry.getValue()) {
+                if (names.length() != 0) names.append(ChatColor.GOLD).append(", ");
+
+                names.append(user.getFormattedName());
+            }
+
+            String teamName;
+            if(entry.getKey() == null) teamName = plugin.getLocale("commands.list.spectator");
+            else teamName = entry.getKey().getFormattedName();
+
+            //send a message directly to player to avoid Colony Wars prefix
+            sender.getPlayer().sendMessage(plugin.getLocale("commands.list.line", teamName, names));
+        }
         return true;
     }
 }

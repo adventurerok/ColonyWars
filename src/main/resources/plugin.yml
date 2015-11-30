@@ -15,6 +15,7 @@ permissions:
       mccw.fix: true
       mccw.countdown: true
       mccw.stats: true
+      mccw.list: true
     default: "op"
   mccw.test:
     description: "Allows use of the test command"
@@ -33,6 +34,9 @@ permissions:
     default: true
   mccw.stats:
     description: "Allows use of the stats command"
+    default: true
+  mccw.list:
+    description: "Allows use of the list command"
     default: true
 commands:
   transfer:
@@ -72,3 +76,7 @@ commands:
     description: "Gets your stats"
     usage: "/stats [category]"
     permission: "mccw.stats"
+  list:
+    description: "Lists the players on the server"
+    usage: "/list"
+    permission: "mccw.list"

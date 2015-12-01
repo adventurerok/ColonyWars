@@ -31,7 +31,6 @@ public class ArcherClass extends ClassItemClassHandler {
     public ArcherClass(WarsPlugin plugin, PlayerClass playerClass) {
         super(new ClassItem(plugin, playerClass.getName(), Material.BOW).withUpgradeBuildings(Buildings.LUMBERMILL)
                         .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
-                        new ClassItem.EnchantmentEffect(Enchantment.ARROW_KNOCKBACK, "bow", new LinearCalculator(0, 1)),
                         new ClassItem.EnchantmentEffect(Enchantment.ARROW_DAMAGE, "bow", new ArrayCalculator(0, 1, 3)))
                         .withUpgradables(new ClassItem.Upgradable("bow", "upgrades.bow.name", 2)),
                 new ClassItem(plugin, playerClass.getName(), Material.WOOD_SWORD)

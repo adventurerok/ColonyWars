@@ -38,7 +38,7 @@ public class PriestClass extends ClassItemClassHandler {
                 new ClassItem(plugin, playerClass.getName(), Material.GOLD_CHESTPLATE, "items.earth-bender.name")
                         .withUpgradeBuildings(Buildings.CATHEDRAL).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new EarthBenderRightClick())
-                        .withRightClickCooldown("bender", "bender", new LinearCalculator(45, -15),
+                        .withRightClickCooldown("bender", "bender", new LinearCalculator(50, -15),
                                 "cooldowns.bender.finished").withLeftClickAction(new EarthBenderLeftClick())
                         .withUpgradables(new ClassItem.Upgradable("bender", "upgrades.earth-bender.name", 2)),
                 new ClassItem(plugin, playerClass.getName(), Material.GOLD_LEGGINGS, "items.cross.name")

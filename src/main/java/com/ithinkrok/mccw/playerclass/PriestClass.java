@@ -9,6 +9,7 @@ import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.item.TeamCompass;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
@@ -75,6 +76,8 @@ public class PriestClass extends ClassItemClassHandler {
             if (target == null) return true;
             event.getUser().setUpgradeLevel("bending", 0);
 
+            target.getWorld().playSound(target.getLocation(), Sound.WITHER_SPAWN, 1.0f, 2.0f);
+
             int maxDist = 3 * 3;
 
             Collection<Entity> nearby = target.getWorld().getNearbyEntities(target.getLocation(), 3, 3, 3);
@@ -131,6 +134,7 @@ public class PriestClass extends ClassItemClassHandler {
             if (event.getUser().getUpgradeLevel("bending") > 4) return true;
             Vector add = event.getPlayer().getLocation().getDirection();
             bent.addVelocity(add);
+            bent.playKnockSound(event.getPlayer());
             event.getUser().setUpgradeLevel("bending", event.getUser().getUpgradeLevel("bending") + 1);
 
             return true;

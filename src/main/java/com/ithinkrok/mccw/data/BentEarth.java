@@ -1,5 +1,6 @@
 package com.ithinkrok.mccw.data;
 
+import org.bukkit.Sound;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -47,6 +48,17 @@ public class BentEarth {
             Vector velocity = block.getVelocity();
             velocity.add(add);
             block.setVelocity(velocity);
+        }
+    }
+
+    public void playKnockSound(Player priest) {
+        priest.playSound(priest.getLocation(), Sound.WITHER_SHOOT, 1.0f, 1.5f);
+
+        for(FallingBlock block : blocks) {
+            if(block.isDead() || block.isOnGround()) continue;
+
+            block.getWorld().playSound(block.getLocation(), Sound.WITHER_SHOOT, 1.0f, 1.5f);
+            return;
         }
     }
 }

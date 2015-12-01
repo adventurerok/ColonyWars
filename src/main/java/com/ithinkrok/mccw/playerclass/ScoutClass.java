@@ -26,8 +26,8 @@ import org.bukkit.potion.PotionEffectType;
 public class ScoutClass extends ClassItemClassHandler {
 
     public ScoutClass(WarsPlugin plugin, PlayerClass playerClass) {
-        super(new ClassItem(plugin, playerClass.getName(), Material.WOOD_SWORD).withUpgradeBuildings(Buildings.LUMBERMILL)
-                        .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
+        super(new ClassItem(plugin, playerClass.getName(), Material.WOOD_SWORD)
+                        .withUpgradeBuildings(Buildings.LUMBERMILL).withUnlockOnBuildingBuild(true).withEnchantmentEffects(
                         new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sharpness",
                                 new LinearCalculator(0, 1)),
                         new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "knockback", new LinearCalculator(0, 1)))
@@ -104,8 +104,8 @@ public class ScoutClass extends ClassItemClassHandler {
 
         @Override
         public boolean onInteractWorld(UserInteractEvent event) {
-            event.getPlayer().addPotionEffect(
-                    new PotionEffect(PotionEffectType.REGENERATION, 200, event.getUser().getUpgradeLevel("regen")));
+            event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 200,
+                    event.getUser().getUpgradeLevel("regen") * 2 + 1));
 
             return true;
         }

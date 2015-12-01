@@ -12,6 +12,7 @@ import com.ithinkrok.mccw.util.item.InventoryUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -270,8 +271,38 @@ public class CommandListener implements CommandExecutor {
     private boolean onFixCommand(User user) {
         if (!plugin.isInGame()) return true;
         if (!user.startCoolDown("fix", 1, plugin.getLocale("cooldowns.fix.finished"))) return true;
-        user.teleport(user.getPlayer().getLocation().add(0, 0.4d, 0));
-        user.getPlayer().setVelocity(new Vector(0, -1, 0));
+
+        Block base = user.getPlayer().getLocation().clone().add(0, 1, 0).getBlock();
+        Block block;
+
+        for(int radius = 0; radius < 5; ++radius) {
+            for(int x = -radius; x <= radius; ++x) {
+                for(int z = -radius; z <= radius; ++z) {
+                    boolean above = false;
+                    for(int y = radius + 1; y >= -radius - 1; --y) {
+                        if(Math.abs(x) < radius && Math.abs(y + 2) < radius && Math.abs(z) < radius) continue;
+                        block = base.getRelative(x, y, z);
+
+                        boolean save = block.getType().isTransparent() || block.isLiquid();
+                        if(!save){
+                            above = false;
+                            continue;
+                        } else if(!above){
+                            above = true;
+                            continue;
+                        }
+
+                        user.teleport(block.getLocation().clone().add(0.5, 0, 0.5));
+                        user.getPlayer().setVelocity(new Vector(0, -1, 0));
+                        return true;
+                    }
+                }
+            }
+        }
+
+        user.teleport(plugin.getMapSpawn(user.getTeamColor()));
+        user.messageLocale("commands.fix.failed");
+
         return true;
     }
 

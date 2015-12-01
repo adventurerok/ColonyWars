@@ -341,7 +341,7 @@ public class CommandListener implements CommandExecutor {
             else teams.get(user.getTeamColor()).add(user);
         }
 
-        sender.messageLocale("commands.list.title");
+        sender.messageLocale("commands.list.title", plugin.getUsers().size(), plugin.getServer().getMaxPlayers());
 
         for (Map.Entry<TeamColor, List<User>> entry : teams.entrySet()) {
             if (entry.getValue().isEmpty()) continue;

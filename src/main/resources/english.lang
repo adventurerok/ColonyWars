@@ -234,7 +234,7 @@ commands.stats.losses=&6Losses\: &3%s
 commands.stats.games=&6Total games\: &3%s
 commands.stats.totalmoney=&6Total gold collected\: &3%s
 commands.stats.score=&6Score\: &3%s
-commands.list.title=&6&lPlayers connected to the server\:
+commands.list.title=&6&lPlayers connected to the server &8(&7%s&8/&7%s&8)&6\:
 commands.list.line=%s&6\: %s
 commands.list.spectator=&dSpectator
 

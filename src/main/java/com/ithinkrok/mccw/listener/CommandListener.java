@@ -17,6 +17,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.util.Vector;
 
 import java.util.*;
@@ -63,10 +64,50 @@ public class CommandListener implements CommandExecutor {
                 return onStatsCommand(user, args);
             case "list":
                 return onListCommand(user);
+            case "teamchat":
+                return onTeamChatCommand(user, args);
             default:
                 return false;
         }
 
+    }
+
+    private boolean onTeamChatCommand(User user, String[] args) {
+        if(args.length == 0) return false;
+
+        StringBuilder message = new StringBuilder();
+        for(String s : args){
+            if(message.length() == 0) message.append(' ');
+            message.append(s);
+        }
+
+        TeamColor teamColor = user.getTeamColor();
+
+        Set<Player> receivers = new HashSet<>();
+
+        for(User other : plugin.getUsers()){
+            if(other.getTeamColor() != teamColor) continue;
+
+            receivers.add(other.getPlayer());
+        }
+
+        String teamColorCode = teamColor != null ? teamColor.getChatColor().toString() : ChatColor.LIGHT_PURPLE
+                .toString();
+
+        String chatMessage = ChatColor.GRAY + "[" + teamColorCode + "Team" + ChatColor.GRAY + "] " + ChatColor
+                .WHITE + message;
+
+        AsyncPlayerChatEvent event = new AsyncPlayerChatEvent(false, user.getPlayer(), chatMessage, receivers);
+
+        plugin.getServer().getPluginManager().callEvent(event);
+        if(!event.isCancelled()){
+            String formatted = String.format(event.getFormat(), user.getFormattedName(), event.getMessage());
+            for(Player player : event.getRecipients()){
+                player.sendMessage(formatted);
+            }
+        }
+
+        return true;
     }
 
     private boolean onTransferCommand(User user, String[] args) {

@@ -16,6 +16,7 @@ permissions:
       mccw.countdown: true
       mccw.stats: true
       mccw.list: true
+      mccw.teamchat: true
     default: "op"
   mccw.test:
     description: "Allows use of the test command"
@@ -37,6 +38,9 @@ permissions:
     default: true
   mccw.list:
     description: "Allows use of the list command"
+    default: true
+  mccw.teamchat:
+    description: "Allows use of the teamchat command"
     default: true
 commands:
   transfer:
@@ -80,3 +84,8 @@ commands:
     description: "Lists the players on the server"
     usage: "/list"
     permission: "mccw.list"
+  teamchat:
+    description: "Chat to members of your team"
+    aliases: ["tc", "ct", "chatteam", "t"]
+    usage: "/teamchat <message>"
+    permission: "mccw.teamchat"

@@ -312,6 +312,7 @@ public class CommandListener implements CommandExecutor {
     private boolean onFixCommand(User user) {
         if (!plugin.isInGame()) return true;
         if (!user.startCoolDown("fix", 1, plugin.getLocale("cooldowns.fix.finished"))) return true;
+        if(user.getPlayer().getVelocity().lengthSquared() > 0.3d) return true;
 
         Block base = user.getPlayer().getLocation().clone().add(0, 1, 0).getBlock();
         Block block;
@@ -321,7 +322,7 @@ public class CommandListener implements CommandExecutor {
                 for(int z = -radius; z <= radius; ++z) {
                     int state = 0;
                     for(int y = radius + 1; y >= -radius - 2; --y) {
-                        if(Math.abs(x) < radius && Math.abs(y + 2) < radius && Math.abs(z) < radius) continue;
+                        if(Math.abs(x) < radius && Math.abs(y) + 3 < radius && Math.abs(z) < radius) continue;
                         block = base.getRelative(x, y, z);
 
                         boolean air = block.getType().isTransparent() || block.isLiquid();
@@ -334,7 +335,7 @@ public class CommandListener implements CommandExecutor {
                             continue;
                         }
 
-                        user.teleport(block.getLocation().clone().add(0.5, 1.0, 0.5));
+                        user.teleport(block.getLocation().clone().add(0.5, 2.0, 0.5));
                         user.getPlayer().setVelocity(new Vector(0, -1, 0));
                         return true;
                     }

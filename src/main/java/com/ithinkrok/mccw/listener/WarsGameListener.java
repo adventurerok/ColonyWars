@@ -624,6 +624,8 @@ public class WarsGameListener implements Listener {
                     playerDeath(target.getPlayer(), target.getLastAttacker().getPlayer(), event.getCause(), false);
                 else playerDeath(target.getPlayer(), null, event.getCause(), false);
             } else playerDeath(target.getPlayer(), killer.getPlayer(), event.getCause(), true);
+        } else if(target.isCloaked()){
+            target.getPlayer().getWorld().playSound(target.getPlayer().getLocation(), Sound.SUCCESSFUL_HIT, 1.0f, 1.0f);
         }
     }
 

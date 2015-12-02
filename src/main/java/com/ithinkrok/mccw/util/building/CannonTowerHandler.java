@@ -43,8 +43,8 @@ public class CannonTowerHandler {
 
         return plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             boolean player = false;
-            for(Entity e : building.getCenterBlock().getWorld().getNearbyEntities(building.getCenterBlock(), 25, 25,
-                    25)) {
+            for(Entity e : building.getCenterBlock().getWorld().getNearbyEntities(building.getCenterBlock(), 35, 35,
+                    35)) {
                 if(!(e instanceof Player)) continue;
                 if(plugin.getUser((Player) e).getTeamColor() == building.getTeamColor()) continue;
 

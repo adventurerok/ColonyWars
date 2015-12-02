@@ -200,6 +200,7 @@ public class SchematicBuilder {
                 else if (bId == Material.STAINED_CLAY.getId())
                     bData = building.getTeamColor().getDyeColor().getWoolData();
                 else if(bId == Material.BARRIER.getId()) bId = 0;
+                else if(bId == Material.DIAMOND_ORE.getId()) bId = Material.GOLD_ORE.getId();
 
                 block.setTypeIdAndData(bId, rotateData(Material.getMaterial(bId), schem.getRotation(), bData), false);
 

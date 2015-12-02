@@ -199,6 +199,7 @@ public class SchematicBuilder {
                 if (bId == Material.WOOL.getId()) bData = building.getTeamColor().getDyeColor().getWoolData();
                 else if (bId == Material.STAINED_CLAY.getId())
                     bData = building.getTeamColor().getDyeColor().getWoolData();
+                else if(bId == Material.BARRIER.getId()) bId = 0;
 
                 block.setTypeIdAndData(bId, rotateData(Material.getMaterial(bId), schem.getRotation(), bData), false);
 

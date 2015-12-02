@@ -19,16 +19,15 @@ public class SchematicRotation {
     private int width, height, length;
     private int offsetX, offsetY, offsetZ;
 
-    public SchematicRotation(int width, int height, int length, int offsetX, int offsetY, int offsetZ,
-                             byte[] blocks, byte[] data, int rotation) {
-        this.width = width;
-        this.height = height;
-        this.length = length;
-        this.offsetX = offsetX;
-        this.offsetY = offsetY;
-        this.offsetZ = offsetZ;
-        this.blocks = blocks;
-        this.data = data;
+    public SchematicRotation(Schematic schematic, int rotation) {
+        this.width = schematic.getSize().getBlockX();
+        this.height = schematic.getSize().getBlockY();
+        this.length = schematic.getSize().getBlockZ();
+        this.offsetX = schematic.getOffset().getBlockX();
+        this.offsetY = schematic.getOffset().getBlockY();
+        this.offsetZ = schematic.getOffset().getBlockZ();
+        this.blocks = schematic.getBlocks();
+        this.data = schematic.getData();
         this.rotation = rotation;
 
         if (rotation == 1 || rotation == 3) xzSwap = true;

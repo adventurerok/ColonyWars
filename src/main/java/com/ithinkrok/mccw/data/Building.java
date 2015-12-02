@@ -40,7 +40,9 @@ public class Building {
         return rotation;
     }
 
-    public Building(WarsPlugin plugin, String buildingName, TeamColor teamColor, Location centerBlock, int rotation,
+    public Building(WarsPlugin plugin, String buildingName, TeamColor teamColor, Location centerBlock, BoundingBox
+            bounds,
+                    int rotation,
                     List<Location> buildingBlocks, Map<Location, BlockState> oldBlocks) {
         this.plugin = plugin;
         this.buildingName = buildingName;
@@ -50,23 +52,7 @@ public class Building {
         this.buildingBlocks = buildingBlocks;
         this.oldBlocks = oldBlocks;
 
-        if(centerBlock == null) centerBlock = buildingBlocks.get(0);
-
-        Vector minBB = new Vector(centerBlock.getX(), centerBlock.getY(), centerBlock.getZ());
-        Vector maxBB = new Vector(centerBlock.getX(), centerBlock.getY(), centerBlock.getZ());
-        
-        for(Location l : buildingBlocks){
-            if(l.getX() < minBB.getX()) minBB.setX(l.getX());
-            else if(l.getX() > maxBB.getX()) maxBB.setX(l.getX());
-
-            if(l.getY() < minBB.getY()) minBB.setY(l.getY());
-            else if(l.getY() > maxBB.getY()) maxBB.setY(l.getY());
-
-            if(l.getZ() < minBB.getZ()) minBB.setZ(l.getZ());
-            else if(l.getZ() > maxBB.getZ()) maxBB.setZ(l.getZ());
-        }
-
-        this.bounds = new BoundingBox(minBB, maxBB);
+        this.bounds = bounds;
     }
 
     public BoundingBox getBounds() {

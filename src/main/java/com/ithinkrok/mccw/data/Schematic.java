@@ -62,6 +62,11 @@ public class Schematic {
         }
     }
 
+    public SchematicRotation getSchematicRotation(int rotation){
+        rotation = (rotation + baseRotation) % 4;
+
+        return new SchematicRotation(this, rotation);
+    }
 
     public String getBuildingName() {
         return buildingName;

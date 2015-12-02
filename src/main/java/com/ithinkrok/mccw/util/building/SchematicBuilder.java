@@ -38,17 +38,8 @@ public class SchematicBuilder {
 
     private static boolean doSchematic(WarsPlugin plugin, Schematic schemData, Location loc, TeamColor teamColor,
                                        int rotation, boolean instant) {
-        rotation = (rotation + schemData.getBaseRotation()) % 4;
 
-        Vector size = schemData.getSize();
-        Vector offset = schemData.getOffset();
-
-        byte[] blocks = schemData.getBlocks();
-        byte[] data = schemData.getData();
-
-        SchematicRotation schem =
-                new SchematicRotation(size.getBlockX(), size.getBlockY(), size.getBlockZ(), offset.getBlockX(),
-                        offset.getBlockY(), offset.getBlockZ(), blocks, data, rotation);
+        SchematicRotation schem = schemData.getSchematicRotation(rotation);
 
         BoundingBox bounds = schem.calcBounds(loc);
 
@@ -95,7 +86,7 @@ public class SchematicBuilder {
         });
 
         Building result =
-                new Building(plugin, schemData.getTransformName(), teamColor, centerBlock, rotation, locations,
+                new Building(plugin, schemData.getTransformName(), teamColor, centerBlock, bounds, rotation, locations,
                         oldBlocks);
 
         plugin.getGameInstance().addBuilding(result);

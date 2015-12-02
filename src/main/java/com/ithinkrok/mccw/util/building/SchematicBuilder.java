@@ -68,6 +68,7 @@ public class SchematicBuilder {
 
                     int bId = schem.getBlock(x, y, z);
                     if (bId == 0) continue;
+                    if(bId == Material.BARRIER.getId()) bId = 0;
 
                     if (bId == Material.OBSIDIAN.getId()) centerBlock = l;
 

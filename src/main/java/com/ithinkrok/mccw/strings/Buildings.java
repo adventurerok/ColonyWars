@@ -21,4 +21,5 @@ public class Buildings {
     public static final String LANDMINE = "Landmine";
     public static final String WIRELESSBUFFER = "WirelessBuffer";
     public static final String TIMERBUFFER = "TimerBuffer";
+    public static final String FORTRESS = "Fortress";
 }

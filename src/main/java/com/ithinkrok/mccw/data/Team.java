@@ -182,6 +182,7 @@ public class Team {
                 baseLocation = building.getCenterBlock();
                 break;
             case Buildings.CANNONTOWER:
+            case Buildings.FORTRESS:
                 int cannonTowerTask = CannonTowerHandler.startCannonTowerTask(plugin, building);
                 cannonTowerTasks.put(building.getCenterBlock(), cannonTowerTask);
                 break;

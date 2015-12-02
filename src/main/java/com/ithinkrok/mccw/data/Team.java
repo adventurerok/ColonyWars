@@ -201,6 +201,7 @@ public class Team {
                 if(churchLocations.isEmpty()) setRespawnChance(0);
                 break;
             case Buildings.CANNONTOWER:
+            case Buildings.FORTRESS:
                 int task = cannonTowerTasks.remove(building.getCenterBlock());
 
                 plugin.getServer().getScheduler().cancelTask(task);

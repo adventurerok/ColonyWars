@@ -6,6 +6,8 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers;
+import com.ithinkrok.mccw.WarsPlugin;
+import com.ithinkrok.mccw.data.User;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -18,11 +20,11 @@ import org.bukkit.util.Vector;
  */
 public class InvisiblePlayerAttacker {
 
-    public static void enablePlayerAttacker(Plugin plugin, ProtocolManager protocolManager) {
+    public static void enablePlayerAttacker(WarsPlugin warsPlugin, ProtocolManager protocolManager) {
 
 
         protocolManager.getAsynchronousManager().registerAsyncHandler(new PacketAdapter(
-                new PacketAdapter.AdapterParameteters().plugin(plugin).clientSide()
+                new PacketAdapter.AdapterParameteters().plugin(warsPlugin).clientSide()
                         .types(PacketType.Play.Client.ARM_ANIMATION)) {
 
             @Override
@@ -42,6 +44,9 @@ public class InvisiblePlayerAttacker {
                 for (Player target : protocolManager.getEntityTrackers(observer)) {
                     // No need to simulate an attack if the player is already visible
                     if (!observer.canSee(target)) {
+                        User user = warsPlugin.getUser(target);
+                        if(user == null || !user.isInGame()) continue;
+
                         // Bounding box of the given player
                         Vector3D targetPos = new Vector3D(target.getLocation());
                         Vector3D minimum = targetPos.add(-0.5, 0, -0.5);

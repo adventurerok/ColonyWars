@@ -129,6 +129,9 @@ public class SchematicBuilder {
             case TRAPPED_CHEST:
             case FURNACE:
                 return (byte) Facing.rotateLadderFurnaceChest(data, rotation);
+            case LOG:
+            case LOG_2:
+                return (byte) ((data & 3) | Facing.rotateLogs(data & 12, rotation));
             default:
                 return data;
         }

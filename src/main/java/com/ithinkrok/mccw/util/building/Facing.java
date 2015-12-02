@@ -2,6 +2,9 @@ package com.ithinkrok.mccw.util.building;
 
 /**
  * Created by paul on 07/11/15.
+ *
+ * Handles building facing and block rotation
+ *
  */
 public class Facing {
 
@@ -95,5 +98,12 @@ public class Facing {
             default:
                 return data;
         }
+    }
+
+    public static int rotateLogs(int data, int rotation) {
+        if(data == 0 || data == 12 || (rotation % 2) == 0) return data;
+
+        if(data == 4) return 8;
+        else return 4;
     }
 }

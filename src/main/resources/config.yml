@@ -101,6 +101,7 @@ costs:
     CannonTower: 2000
     WirelessBuffer: 2500
     TimerBuffer: 2500
+    Fortress: 25000
   Farm:
     rawPotato: 3
     cookie: 2

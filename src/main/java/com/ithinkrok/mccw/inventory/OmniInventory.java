@@ -29,18 +29,21 @@ public class OmniInventory extends BuyableInventory {
     private static List<Buyable> getBuyables(WarsPlugin plugin, WarsConfig config) {
         List<Buyable> result = new ArrayList<>();
 
-        addBaseItems(result, plugin.getLangFile(), config);
+        addBaseItems(result, plugin, config);
         addFarmItems(result, config);
         addChurchItems(result, plugin, config);
         addCathedralItems(result, config);
         addGreenhouseItems(result, plugin, config);
         addBlacksmithItems(result, plugin.getLangFile(), config);
         addScoutTowerItems(result, plugin, config);
+        addFortressItems(result, plugin.getLangFile(), config);
 
         return result;
     }
 
-    private static void addBaseItems(List<Buyable> result, LangFile lang, WarsConfig config) {
+    private static void addBaseItems(List<Buyable> result, WarsPlugin plugin, WarsConfig config) {
+        LangFile lang = plugin.getLangFile();
+
         int farmCost = config.getBuildingCost(Buildings.FARM);
         int lumbermillCost = config.getBuildingCost(Buildings.LUMBERMILL);
         int blacksmithCost = config.getBuildingCost(Buildings.BLACKSMITH);
@@ -48,18 +51,51 @@ public class OmniInventory extends BuyableInventory {
         int churchCost = config.getBuildingCost(Buildings.CHURCH);
         int greenhouseCost = config.getBuildingCost(Buildings.GREENHOUSE);
 
-        result.add(new BuildingBuyable(lang, Buildings.FARM, Buildings.BASE, farmCost));
-        result.add(new BuildingBuyableWithFarm(lang, Buildings.LUMBERMILL, Buildings.BASE, lumbermillCost));
-        result.add(new BuildingBuyableWithFarm(lang, Buildings.BLACKSMITH, Buildings.BASE, blacksmithCost));
-        result.add(new BuildingBuyableWithFarm(lang, Buildings.MAGETOWER, Buildings.BASE, magetowerCost));
-        result.add(new BuildingBuyableWithFarm(lang, Buildings.CHURCH, Buildings.BASE, churchCost));
-        result.add(new BuildingBuyableWithFarm(lang, Buildings.GREENHOUSE, Buildings.BASE, greenhouseCost));
+        result.add(new BuildingBuyable(lang, Buildings.FARM, Buildings.BASE, farmCost)
+                .withAdditionalBuildings(Buildings.FORTRESS));
+        result.add(new BuildingBuyableWithFarm(lang, Buildings.LUMBERMILL, Buildings.BASE, lumbermillCost)
+                .withAdditionalBuildings(Buildings.FORTRESS));
+        result.add(new BuildingBuyableWithFarm(lang, Buildings.BLACKSMITH, Buildings.BASE, blacksmithCost)
+                .withAdditionalBuildings(Buildings.FORTRESS));
+        result.add(new BuildingBuyableWithFarm(lang, Buildings.MAGETOWER, Buildings.BASE, magetowerCost)
+                .withAdditionalBuildings(Buildings.FORTRESS));
+        result.add(new BuildingBuyableWithFarm(lang, Buildings.CHURCH, Buildings.BASE, churchCost)
+                .withAdditionalBuildings(Buildings.FORTRESS));
+        result.add(new BuildingBuyableWithFarm(lang, Buildings.GREENHOUSE, Buildings.BASE, greenhouseCost)
+                .withAdditionalBuildings(Buildings.FORTRESS));
+
+        result.add(new Buyable(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.FORTRESS,
+                plugin.getLocale("building.upgrade.replace", Buildings.BASE, Buildings.FORTRESS)), Buildings.BASE,
+                config.getBuildingCost(Buildings.FORTRESS), true, 1) {
+
+
+            @Override
+            public void onPurchase(ItemPurchaseEvent event) {
+                event.getBuilding().remove();
+
+                if (!SchematicBuilder.buildSchematic(plugin, plugin.getSchematicData(Buildings.FORTRESS),
+                        event.getBuilding().getCenterBlock(), event.getBuilding().getRotation(),
+                        event.getBuilding().getTeamColor())) {
+                    plugin.getLogger().warning("Fortress should be marked as upgradable from base in the config.");
+                }
+            }
+
+            @Override
+            public boolean canBuy(ItemPurchaseEvent event) {
+                return (event.getTeam().getBuildingCount(Buildings.FARM) > 0) &&
+                        (event.getTeam().getBuildingCount(Buildings.LUMBERMILL) > 0) &&
+                        (event.getTeam().getBuildingCount(Buildings.BLACKSMITH) > 0) &&
+                        (event.getTeam().getBuildingCount(Buildings.MAGETOWER) > 0) &&
+                        (event.getTeam().getBuildingCount(Buildings.GREENHOUSE) > 0) &&
+                        (event.getTeam().getBuildingCount(Buildings.CATHEDRAL) > 0);
+            }
+        });
 
     }
 
     private static void addFarmItems(List<Buyable> result, WarsConfig config) {
         String buildingName = Buildings.FARM;
-        
+
         int rawPotatoAmount = config.getBuildingItemAmount(buildingName, "rawPotato");
         int cookieAmount = config.getBuildingItemAmount(buildingName, "cookie");
         int rawBeefAmount = config.getBuildingItemAmount(buildingName, "rawBeef");
@@ -166,6 +202,12 @@ public class OmniInventory extends BuyableInventory {
                 return true;
             }
         });
+    }
+
+    private static void addFortressItems(List<Buyable> result, LangFile lang, WarsConfig config) {
+        int cannonTowerCost = config.getBuildingCost(Buildings.CANNONTOWER);
+
+        result.add(new BuildingBuyable(lang, Buildings.CANNONTOWER, Buildings.FORTRESS, cannonTowerCost));
     }
 
     private static class BuildingBuyableWithFarm extends BuildingBuyable {

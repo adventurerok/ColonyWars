@@ -205,7 +205,8 @@ public class OmniInventory extends BuyableInventory {
     }
 
     private static void addFortressItems(List<Buyable> result, LangFile lang, WarsConfig config) {
-        int cannonTowerCost = config.getBuildingCost(Buildings.CANNONTOWER);
+        int cannonTowerCost =
+                config.getBuildingCost(Buildings.CANNONTOWER) + config.getBuildingCost(Buildings.SCOUTTOWER);
 
         result.add(new BuildingBuyable(lang, Buildings.CANNONTOWER, Buildings.FORTRESS, cannonTowerCost));
     }

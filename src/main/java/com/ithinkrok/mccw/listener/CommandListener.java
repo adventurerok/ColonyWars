@@ -235,6 +235,9 @@ public class CommandListener implements CommandExecutor {
                     user.messageLocale("commands.shrink.bad-size", args[1]);
                     return true;
                 }
+            case "rejoin":
+                plugin.getGameInstance().setupUser(user);
+                return true;
 
         }
 

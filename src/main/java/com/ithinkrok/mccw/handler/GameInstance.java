@@ -223,7 +223,7 @@ public class GameInstance {
         forceShowdownTimer = Math.max(forceShowdownTimer, plugin.getWarsConfig().getShowdownStartTimeSinceLastAttack());
     }
 
-    private void setupUser(User info) {
+    public void setupUser(User info) {
         info.setMapVote(null);
 
         if (info.getTeamColor() == null) {

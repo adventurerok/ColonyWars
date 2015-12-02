@@ -9,6 +9,7 @@ import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.handler.CountdownHandler;
 import com.ithinkrok.mccw.util.item.InventoryUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -162,6 +163,11 @@ public class CommandListener implements CommandExecutor {
     }
 
     private boolean onTestCommand(User user, String[] args) {
+        if(args.length > 0) {
+            Player targetPlayer = Bukkit.getPlayer(args[args.length - 1]);
+
+            if(targetPlayer != null) user = plugin.getUser(targetPlayer);
+        }
 
         switch (args[0]) {
             case "team":

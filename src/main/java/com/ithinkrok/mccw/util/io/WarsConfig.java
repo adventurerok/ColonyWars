@@ -65,6 +65,10 @@ public class WarsConfig {
         return config().getInt("force-showdown.times.attack");
     }
 
+    public int getShowdownStartTimeSinceLastDeath() {
+        return config().getInt("force-showdown.times.death");
+    }
+
     public String getMapFolder(String mapName) {
         return config().getString("maps." + mapName + ".folder");
     }

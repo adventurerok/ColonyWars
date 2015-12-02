@@ -32,7 +32,8 @@ force-showdown:
 # player was attacked
   times:
     start: 1800
-    attack: 300
+    death: 480
+    attack: 180
 # The maximum number of teams left that will cause showdown to start
   teams: 2
 # The maximum number of players left that will cause showdown to start

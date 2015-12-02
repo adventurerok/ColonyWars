@@ -51,7 +51,7 @@ public class GameInstance {
     private ArrayList<Integer> gameTasks = new ArrayList<>();
     private Map<String, Schematic> schematicDataHashMap = new HashMap<>();
 
-    private int forceShowdownTimer;
+    private Map<String, Integer> forceShowdownTimer = new HashMap<>();
     private int forceShowdownTask;
 
     private MapConfig mapConfig;
@@ -189,13 +189,23 @@ public class GameInstance {
 
         setupBases();
 
-        forceShowdownTimer = plugin.getWarsConfig().getShowdownStartTimeNoAttackSinceStart();
+        int startTime = plugin.getWarsConfig().getShowdownStartTimeNoAttackSinceStart();
+        forceShowdownTimer.put("death", startTime);
+        forceShowdownTimer.put("attack", startTime);
 
         forceShowdownTask = scheduleRepeatingTask(() -> {
             if (gameState != GameState.GAME) return;
-            forceShowdownTimer -= 1;
 
-            if (forceShowdownTimer <= 0) plugin.changeGameState(GameState.SHOWDOWN);
+            forceShowdownTimer.replaceAll((s, integer) -> integer - 1);
+
+            for (int time : forceShowdownTimer.values()) {
+                if (time <= 0){
+                    plugin.changeGameState(GameState.SHOWDOWN);
+                    break;
+                }
+
+            }
+
         }, 20, 20);
 
         startPotionStrengthTask();
@@ -207,7 +217,7 @@ public class GameInstance {
         int ticks = 10;
 
         scheduleRepeatingTask(() -> {
-            for(User user : plugin.getUsers()){
+            for (User user : plugin.getUsers()) {
                 user.setPotionStrengthModifier(Math.min(user.getPotionStrengthModifier() + 0.05d, 1));
             }
         }, ticks, ticks);
@@ -220,7 +230,18 @@ public class GameInstance {
     }
 
     public void onUserAttacked() {
-        forceShowdownTimer = Math.max(forceShowdownTimer, plugin.getWarsConfig().getShowdownStartTimeSinceLastAttack());
+        updateForceShowdownTimer("attack", plugin.getWarsConfig().getShowdownStartTimeSinceLastAttack());
+    }
+
+    public void onUserDeath() {
+        updateForceShowdownTimer("death", plugin.getWarsConfig().getShowdownStartTimeSinceLastDeath());
+    }
+
+    private void updateForceShowdownTimer(String field, int min){
+        int time = forceShowdownTimer.get(field);
+        time = Math.max(time, min);
+
+        forceShowdownTimer.put(field, time);
     }
 
     public void setupUser(User info) {
@@ -355,7 +376,7 @@ public class GameInstance {
 
         plugin.messageAllLocale("game.team.winner", winner.getFormattedName());
 
-        for(Player player : plugin.getTeam(winner).getPlayers()){
+        for (Player player : plugin.getTeam(winner).getPlayers()) {
             User user = plugin.getUser(player);
 
             user.addGameWin();

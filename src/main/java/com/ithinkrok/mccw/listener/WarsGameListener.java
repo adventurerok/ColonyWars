@@ -497,6 +497,8 @@ public class WarsGameListener implements Listener {
             return;
         }
 
+        plugin.getGameInstance().onUserDeath();
+
         removeEntityTargets(died);
 
         User killerInfo = killer == null ? null : plugin.getUser(killer);

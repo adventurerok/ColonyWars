@@ -48,6 +48,7 @@ score:
 buildings:
   schematics:
     Base: "mccw_base.schematic"
+    Fortress: "mccw_fortress.schematic"
     Farm: "mccw_farm.schematic"
     Lumbermill: "mccw_lumbermill.schematic"
     Blacksmith: "mccw_blacksmith.schematic"
@@ -81,6 +82,8 @@ buildings:
       - "Cathedral"
     ScoutTower:
       - "CannonTower"
+    Base:
+      - "Fortress"
 
 # Costs for all buyables
 costs:

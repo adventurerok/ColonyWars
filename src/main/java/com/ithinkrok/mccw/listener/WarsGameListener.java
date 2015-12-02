@@ -221,7 +221,7 @@ public class WarsGameListener implements Listener {
             return;
         }
 
-        if (Buildings.BASE.equals(building.getBuildingName())) {
+        if (Buildings.BASE.equals(building.getBuildingName()) || Buildings.FORTRESS.equals(building.getBuildingName())) {
             user.messageLocale("building.destroy.bases");
             event.setCancelled(true);
             return;

@@ -68,6 +68,7 @@ public class GameInstance {
     private void loadSchematics() {
         ConfigurationSection config = getMapConfig();
         schematicDataHashMap.put(Buildings.BASE, new Schematic(plugin, Buildings.BASE, config));
+        schematicDataHashMap.put(Buildings.FORTRESS, new Schematic(plugin, Buildings.FORTRESS, config));
         schematicDataHashMap.put(Buildings.FARM, new Schematic(plugin, Buildings.FARM, config));
         schematicDataHashMap.put(Buildings.BLACKSMITH, new Schematic(plugin, Buildings.BLACKSMITH, config));
         schematicDataHashMap.put(Buildings.MAGETOWER, new Schematic(plugin, Buildings.MAGETOWER, config));

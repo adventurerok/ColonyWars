@@ -77,7 +77,7 @@ public class CommandListener implements CommandExecutor {
 
         StringBuilder message = new StringBuilder();
         for(String s : args){
-            if(message.length() == 0) message.append(' ');
+            if(message.length() != 0) message.append(' ');
             message.append(s);
         }
 

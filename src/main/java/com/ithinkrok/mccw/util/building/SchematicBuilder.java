@@ -1,7 +1,5 @@
 package com.ithinkrok.mccw.util.building;
 
-import com.flowpowered.nbt.*;
-import com.flowpowered.nbt.stream.NBTInputStream;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.Building;
 import com.ithinkrok.mccw.data.Schematic;
@@ -9,15 +7,14 @@ import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.util.BoundingBox;
 import de.inventivegames.hologram.Hologram;
 import de.inventivegames.hologram.HologramAPI;
-import org.bukkit.*;
+import org.bukkit.Effect;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,89 +39,75 @@ public class SchematicBuilder {
                                        int rotation, boolean instant) {
         rotation = (rotation + schemData.getBaseRotation()) % 4;
 
-        File schemFile = new File(plugin.getDataFolder(), schemData.getSchematicFile());
-        Vector baseOffset = schemData.getOffset();
+        Vector size = schemData.getSize();
+        Vector offset = schemData.getOffset();
 
-        try (NBTInputStream in = new NBTInputStream(new FileInputStream(schemFile))) {
-            CompoundMap nbt = ((CompoundTag) in.readTag()).getValue();
+        byte[] blocks = schemData.getBlocks();
+        byte[] data = schemData.getData();
 
-            short width = ((ShortTag) nbt.get("Width")).getValue();
-            short height = ((ShortTag) nbt.get("Height")).getValue();
-            short length = ((ShortTag) nbt.get("Length")).getValue();
+        SchematicRotation schem =
+                new SchematicRotation(size.getBlockX(), size.getBlockY(), size.getBlockZ(), offset.getBlockX(),
+                        offset.getBlockY(), offset.getBlockZ(), blocks, data, rotation);
 
-            int offsetX = ((IntTag) nbt.get("WEOffsetX")).getValue() + baseOffset.getBlockX();
-            int offsetY = ((IntTag) nbt.get("WEOffsetY")).getValue() + baseOffset.getBlockY();
-            int offsetZ = ((IntTag) nbt.get("WEOffsetZ")).getValue() + baseOffset.getBlockZ();
+        BoundingBox bounds = schem.calcBounds(loc);
 
-            byte[] blocks = ((ByteArrayTag) nbt.get("Blocks")).getValue();
-            byte[] data = ((ByteArrayTag) nbt.get("Data")).getValue();
+        if (!plugin.getGameInstance().canBuild(bounds)) return false;
 
-            SchematicRotation schem =
-                    new SchematicRotation(width, height, length, offsetX, offsetY, offsetZ, blocks, data, rotation);
+        List<Location> locations = new ArrayList<>();
 
-            BoundingBox bounds = schem.calcBounds(loc);
+        Location centerBlock = null;
 
-            if (!plugin.getGameInstance().canBuild(bounds)) return false;
+        HashMap<Location, BlockState> oldBlocks = new HashMap<>();
 
-            List<Location> locations = new ArrayList<>();
+        BlockState oldState;
 
-            Location centerBlock = null;
+        for (int x = 0; x < schem.getWidth(); ++x) {
+            for (int y = 0; y < schem.getHeight(); ++y) {
+                for (int z = 0; z < schem.getLength(); ++z) {
+                    Location l = new Location(loc.getWorld(), x + loc.getX() + schem.getOffsetX(),
+                            y + loc.getY() + schem.getOffsetY(), z + loc.getZ() + schem.getOffsetZ());
 
-            HashMap<Location, BlockState> oldBlocks = new HashMap<>();
-
-            BlockState oldState;
-
-            for (int x = 0; x < schem.getWidth(); ++x) {
-                for (int y = 0; y < schem.getHeight(); ++y) {
-                    for (int z = 0; z < schem.getLength(); ++z) {
-                        Location l = new Location(loc.getWorld(), x + loc.getX() + schem.getOffsetX(),
-                                y + loc.getY() + schem.getOffsetY(), z + loc.getZ() + schem.getOffsetZ());
-
-                        oldState = l.getBlock().getState();
-                        if(oldState.getType() == Material.LAPIS_ORE) oldState.setType(Material.AIR);
-                        else if(oldState.getType() == Material.BEDROCK || oldState.getType() == Material.BARRIER){
-                            //prevent building over map boundaries
-                            return false;
-                        }
-
-                        int bId = schem.getBlock(x, y, z);
-                        if (bId == 0) continue;
-
-                        if (bId == Material.OBSIDIAN.getId()) centerBlock = l;
-
-                        locations.add(l);
-
-                        oldBlocks.put(l, oldState);
+                    oldState = l.getBlock().getState();
+                    if (oldState.getType() == Material.LAPIS_ORE) oldState.setType(Material.AIR);
+                    else if (oldState.getType() == Material.BEDROCK || oldState.getType() == Material.BARRIER) {
+                        //prevent building over map boundaries
+                        return false;
                     }
+
+                    int bId = schem.getBlock(x, y, z);
+                    if (bId == 0) continue;
+
+                    if (bId == Material.OBSIDIAN.getId()) centerBlock = l;
+
+                    locations.add(l);
+
+                    oldBlocks.put(l, oldState);
                 }
             }
-
-            Collections.sort(locations, (o1, o2) -> {
-                if (o1.getY() != o2.getY()) return Double.compare(o1.getY(), o2.getY());
-                if (o1.getX() != o2.getX()) return Double.compare(o1.getX(), o2.getX());
-
-                return Double.compare(o1.getZ(), o2.getZ());
-            });
-
-            Building result =
-                    new Building(plugin, schemData.getTransformName(), teamColor, centerBlock, rotation, locations,
-                            oldBlocks);
-
-            plugin.getGameInstance().addBuilding(result);
-            SchematicBuilderTask task = new SchematicBuilderTask(plugin, loc, result, schem, instant ? -1 : 2);
-
-            if (!instant) {
-                result.setBuildTask(task.schedule(plugin));
-            } else {
-                task.run();
-            }
-
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-
-            return false;
         }
+
+        Collections.sort(locations, (o1, o2) -> {
+            if (o1.getY() != o2.getY()) return Double.compare(o1.getY(), o2.getY());
+            if (o1.getX() != o2.getX()) return Double.compare(o1.getX(), o2.getX());
+
+            return Double.compare(o1.getZ(), o2.getZ());
+        });
+
+        Building result =
+                new Building(plugin, schemData.getTransformName(), teamColor, centerBlock, rotation, locations,
+                        oldBlocks);
+
+        plugin.getGameInstance().addBuilding(result);
+        SchematicBuilderTask task = new SchematicBuilderTask(plugin, loc, result, schem, instant ? -1 : 2);
+
+        if (!instant) {
+            result.setBuildTask(task.schedule(plugin));
+        } else {
+            task.run();
+        }
+
+        return true;
+
 
     }
 
@@ -167,10 +150,10 @@ public class SchematicBuilder {
         boolean xFlip = false;
         boolean zFlip = false;
         private int rotation;
-        private short width, height, length;
+        private int width, height, length;
         private int offsetX, offsetY, offsetZ;
 
-        public SchematicRotation(short width, short height, short length, int offsetX, int offsetY, int offsetZ,
+        public SchematicRotation(int width, int height, int length, int offsetX, int offsetY, int offsetZ,
                                  byte[] blocks, byte[] data, int rotation) {
             this.width = width;
             this.height = height;
@@ -238,15 +221,15 @@ public class SchematicBuilder {
             return base;
         }
 
-        public short getWidth() {
+        public int getWidth() {
             return xzSwap ? length : width;
         }
 
-        public short getHeight() {
+        public int getHeight() {
             return height;
         }
 
-        public short getLength() {
+        public int getLength() {
             return xzSwap ? width : length;
         }
     }
@@ -265,8 +248,8 @@ public class SchematicBuilder {
 
         private boolean clearedOrigin = false;
 
-        public SchematicBuilderTask(WarsPlugin plugin, Location origin, Building building,
-                                    SchematicRotation schem, int buildSpeed) {
+        public SchematicBuilderTask(WarsPlugin plugin, Location origin, Building building, SchematicRotation schem,
+                                    int buildSpeed) {
             this.plugin = plugin;
             this.origin = origin;
             this.building = building;
@@ -274,8 +257,7 @@ public class SchematicBuilder {
             this.buildSpeed = buildSpeed;
 
             Location holoLoc;
-            if (building.getCenterBlock() != null)
-                holoLoc = building.getCenterBlock().clone().add(0.5d, 1.5d, 0.5d);
+            if (building.getCenterBlock() != null) holoLoc = building.getCenterBlock().clone().add(0.5d, 1.5d, 0.5d);
             else holoLoc = origin.clone().add(0.5d, 1.5d, 0.5d);
 
             hologram = HologramAPI.createHologram(holoLoc, "Building: 0%");
@@ -332,8 +314,7 @@ public class SchematicBuilder {
             building.removeHologram(hologram);
 
             if (building.getCenterBlock() != null) {
-                building.getCenterBlock().getWorld()
-                        .playSound(building.getCenterBlock(), Sound.LEVEL_UP, 1.0f, 1.0f);
+                building.getCenterBlock().getWorld().playSound(building.getCenterBlock(), Sound.LEVEL_UP, 1.0f, 1.0f);
             }
 
             building.setFinished(true);

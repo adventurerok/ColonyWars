@@ -79,7 +79,7 @@ public class SchematicRotation {
 
         Iterator<Schematic> schems = schematic.getUpgradesToSchematics();
 
-        int modRotation = rotation = (rotation - schematic.getBaseRotation()) % 4;
+        int modRotation = (rotation - schematic.getBaseRotation()) % 4;
 
         while(schems.hasNext()){
             Schematic upgrade = schems.next();

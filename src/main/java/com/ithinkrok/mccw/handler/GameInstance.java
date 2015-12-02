@@ -67,21 +67,21 @@ public class GameInstance {
 
     private void loadSchematics() {
         ConfigurationSection config = getMapConfig();
-        schematicDataHashMap.put(Buildings.BASE, new Schematic(Buildings.BASE, config));
-        schematicDataHashMap.put(Buildings.FARM, new Schematic(Buildings.FARM, config));
-        schematicDataHashMap.put(Buildings.BLACKSMITH, new Schematic(Buildings.BLACKSMITH, config));
-        schematicDataHashMap.put(Buildings.MAGETOWER, new Schematic(Buildings.MAGETOWER, config));
-        schematicDataHashMap.put(Buildings.LUMBERMILL, new Schematic(Buildings.LUMBERMILL, config));
-        schematicDataHashMap.put(Buildings.CHURCH, new Schematic(Buildings.CHURCH, config));
-        schematicDataHashMap.put(Buildings.CATHEDRAL, new Schematic(Buildings.CATHEDRAL, config));
-        schematicDataHashMap.put(Buildings.PLAYERCATHEDRAL, new Schematic(Buildings.PLAYERCATHEDRAL, config));
-        schematicDataHashMap.put(Buildings.GREENHOUSE, new Schematic(Buildings.GREENHOUSE, config));
-        schematicDataHashMap.put(Buildings.SCOUTTOWER, new Schematic(Buildings.SCOUTTOWER, config));
-        schematicDataHashMap.put(Buildings.CANNONTOWER, new Schematic(Buildings.CANNONTOWER, config));
-        schematicDataHashMap.put(Buildings.WALL, new Schematic(Buildings.WALL, config));
-        schematicDataHashMap.put(Buildings.LANDMINE, new Schematic(Buildings.LANDMINE, config));
-        schematicDataHashMap.put(Buildings.WIRELESSBUFFER, new Schematic(Buildings.WIRELESSBUFFER, config));
-        schematicDataHashMap.put(Buildings.TIMERBUFFER, new Schematic(Buildings.TIMERBUFFER, config));
+        schematicDataHashMap.put(Buildings.BASE, new Schematic(plugin, Buildings.BASE, config));
+        schematicDataHashMap.put(Buildings.FARM, new Schematic(plugin, Buildings.FARM, config));
+        schematicDataHashMap.put(Buildings.BLACKSMITH, new Schematic(plugin, Buildings.BLACKSMITH, config));
+        schematicDataHashMap.put(Buildings.MAGETOWER, new Schematic(plugin, Buildings.MAGETOWER, config));
+        schematicDataHashMap.put(Buildings.LUMBERMILL, new Schematic(plugin, Buildings.LUMBERMILL, config));
+        schematicDataHashMap.put(Buildings.CHURCH, new Schematic(plugin, Buildings.CHURCH, config));
+        schematicDataHashMap.put(Buildings.CATHEDRAL, new Schematic(plugin, Buildings.CATHEDRAL, config));
+        schematicDataHashMap.put(Buildings.PLAYERCATHEDRAL, new Schematic(plugin, Buildings.PLAYERCATHEDRAL, config));
+        schematicDataHashMap.put(Buildings.GREENHOUSE, new Schematic(plugin, Buildings.GREENHOUSE, config));
+        schematicDataHashMap.put(Buildings.SCOUTTOWER, new Schematic(plugin, Buildings.SCOUTTOWER, config));
+        schematicDataHashMap.put(Buildings.CANNONTOWER, new Schematic(plugin, Buildings.CANNONTOWER, config));
+        schematicDataHashMap.put(Buildings.WALL, new Schematic(plugin, Buildings.WALL, config));
+        schematicDataHashMap.put(Buildings.LANDMINE, new Schematic(plugin, Buildings.LANDMINE, config));
+        schematicDataHashMap.put(Buildings.WIRELESSBUFFER, new Schematic(plugin, Buildings.WIRELESSBUFFER, config));
+        schematicDataHashMap.put(Buildings.TIMERBUFFER, new Schematic(plugin, Buildings.TIMERBUFFER, config));
     }
 
     public MapConfig getMapConfig() {

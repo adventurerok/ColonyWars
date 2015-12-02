@@ -2,12 +2,17 @@ package com.ithinkrok.mccw.data;
 
 import com.flowpowered.nbt.*;
 import com.flowpowered.nbt.stream.NBTInputStream;
+import com.ithinkrok.mccw.WarsPlugin;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by paul on 04/11/15.
@@ -15,6 +20,8 @@ import java.io.IOException;
  * Stores schematic data for buildings
  */
 public class Schematic {
+
+    private WarsPlugin plugin;
 
     private String buildingName;
     private int baseRotation;
@@ -25,7 +32,10 @@ public class Schematic {
     private byte[] blocks;
     private byte[] data;
 
-    public Schematic(File dataFolder, String buildingName, ConfigurationSection config) {
+    private List<String> upgradesTo;
+
+    public Schematic(WarsPlugin plugin, String buildingName, ConfigurationSection config) {
+        this.plugin = plugin;
         this.buildingName = buildingName;
         this.baseRotation = config.getInt("buildings.rotations." + buildingName);
         String schematicFile = config.getString("buildings.schematics." + buildingName);
@@ -36,7 +46,10 @@ public class Schematic {
                 new Vector(config.getInt(base + ".x"), config.getInt(base + ".y"), config.getInt(base + ".z"));
         this.transformName = config.getString("buildings.transform." + buildingName, buildingName);
 
-        File schemFile = new File(dataFolder, schematicFile);
+        this.upgradesTo = config.getStringList("buildings.upgrades." + buildingName);
+        if(this.upgradesTo == null) this.upgradesTo = Collections.emptyList();
+
+        File schemFile = new File(plugin.getDataFolder(), schematicFile);
 
         try (NBTInputStream in = new NBTInputStream(new FileInputStream(schemFile))) {
             CompoundMap nbt = ((CompoundTag) in.readTag()).getValue();
@@ -63,9 +76,23 @@ public class Schematic {
     }
 
     public SchematicRotation getSchematicRotation(int rotation){
-        rotation = (rotation + baseRotation) % 4;
-
         return new SchematicRotation(this, rotation);
+    }
+
+    public Iterator<Schematic> getUpgradesToSchematics(){
+        Iterator<String> names = upgradesTo.iterator();
+
+        return new Iterator<Schematic>() {
+            @Override
+            public boolean hasNext() {
+                return names.hasNext();
+            }
+
+            @Override
+            public Schematic next() {
+                return plugin.getSchematicData(names.next());
+            }
+        };
     }
 
     public String getBuildingName() {

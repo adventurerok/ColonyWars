@@ -4,6 +4,8 @@ import com.ithinkrok.mccw.util.BoundingBox;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
+import java.util.Iterator;
+
 /**
  * Created by paul on 02/12/15.
  *
@@ -18,8 +20,10 @@ public class SchematicRotation {
     private int rotation;
     private int width, height, length;
     private int offsetX, offsetY, offsetZ;
+    private Schematic schematic;
 
     public SchematicRotation(Schematic schematic, int rotation) {
+        this.schematic = schematic;
         this.width = schematic.getSize().getBlockX();
         this.height = schematic.getSize().getBlockY();
         this.length = schematic.getSize().getBlockZ();
@@ -28,6 +32,8 @@ public class SchematicRotation {
         this.offsetZ = schematic.getOffset().getBlockZ();
         this.blocks = schematic.getBlocks();
         this.data = schematic.getData();
+
+        rotation = (rotation + schematic.getBaseRotation()) % 4;
         this.rotation = rotation;
 
         if (rotation == 1 || rotation == 3) xzSwap = true;
@@ -60,12 +66,36 @@ public class SchematicRotation {
         return data[calcIndex(x, y, z)];
     }
 
-    public BoundingBox calcBounds(Location loc) {
+    private BoundingBox calcBoundsNoUpgrades(Location loc) {
         Vector minBB = new Vector(loc.getX() + getOffsetX(), loc.getY() + getOffsetY(), loc.getZ() + getOffsetZ());
         Vector maxBB = new Vector(minBB.getX() + getWidth() - 1, minBB.getY() + getHeight() - 1,
                 minBB.getZ() + getLength() - 1);
 
         return new BoundingBox(minBB, maxBB);
+    }
+
+    public BoundingBox calcBounds(Location loc) {
+        BoundingBox bounds = calcBoundsNoUpgrades(loc);
+
+        Iterator<Schematic> schems = schematic.getUpgradesToSchematics();
+
+        int modRotation = rotation = (rotation - schematic.getBaseRotation()) % 4;
+
+        while(schems.hasNext()){
+            Schematic upgrade = schems.next();
+            if(upgrade == null) continue;
+
+
+            BoundingBox other = upgrade.getSchematicRotation(modRotation).calcBoundsNoUpgrades(loc);
+            if(other.min.getX() < bounds.min.getX()) bounds.min.setX(other.min.getX());
+            if(other.min.getY() < bounds.min.getY()) bounds.min.setY(other.min.getY());
+            if(other.min.getZ() < bounds.min.getZ()) bounds.min.setZ(other.min.getZ());
+            if(other.max.getX() > bounds.max.getX()) bounds.max.setX(other.max.getX());
+            if(other.max.getY() > bounds.max.getY()) bounds.max.setY(other.max.getY());
+            if(other.max.getZ() > bounds.max.getZ()) bounds.max.setZ(other.max.getZ());
+        }
+
+        return bounds;
     }
 
     public int getOffsetX() {

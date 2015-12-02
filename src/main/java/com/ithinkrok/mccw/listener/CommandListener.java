@@ -319,21 +319,22 @@ public class CommandListener implements CommandExecutor {
         for(int radius = 0; radius < 5; ++radius) {
             for(int x = -radius; x <= radius; ++x) {
                 for(int z = -radius; z <= radius; ++z) {
-                    boolean above = false;
-                    for(int y = radius + 1; y >= -radius - 1; --y) {
+                    int state = 0;
+                    for(int y = radius + 1; y >= -radius - 2; --y) {
                         if(Math.abs(x) < radius && Math.abs(y + 2) < radius && Math.abs(z) < radius) continue;
                         block = base.getRelative(x, y, z);
 
-                        boolean save = block.getType().isTransparent() || block.isLiquid();
-                        if(!save){
-                            above = false;
+                        boolean air = block.getType().isTransparent() || block.isLiquid();
+                        if(!air && state < 2){
+                            state = 0;
                             continue;
-                        } else if(!above){
-                            above = true;
+                        } else if (air && state == 2) continue;
+                        else if(state < 3){
+                            ++state;
                             continue;
                         }
 
-                        user.teleport(block.getLocation().clone().add(0.5, 0, 0.5));
+                        user.teleport(block.getLocation().clone().add(0.5, 1.0, 0.5));
                         user.getPlayer().setVelocity(new Vector(0, -1, 0));
                         return true;
                     }

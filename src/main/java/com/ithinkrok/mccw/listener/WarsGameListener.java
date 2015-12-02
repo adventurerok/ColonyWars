@@ -595,11 +595,6 @@ public class WarsGameListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityDamaged(EntityDamageEvent event) {
-        if(!(event.getEntity() instanceof LivingEntity)) return;
-
-        event.getEntity().getWorld().playEffect(event.getEntity().getLocation().clone().add(0, 0.5f, 0), Effect
-                .COLOURED_DUST, 0);
-
         if (!(event.getEntity() instanceof Player)) return;
 
         User target = plugin.getUser((Player) event.getEntity());

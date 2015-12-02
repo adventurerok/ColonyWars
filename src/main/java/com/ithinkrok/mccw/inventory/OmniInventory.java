@@ -105,11 +105,7 @@ public class OmniInventory extends BuyableInventory {
                 if (!SchematicBuilder.buildSchematic(plugin, plugin.getSchematicData(Buildings.CATHEDRAL),
                         event.getBuilding().getCenterBlock(), event.getBuilding().getRotation(),
                         event.getBuilding().getTeamColor())) {
-                    event.getUser().messageLocale("building.upgrade.failed", Buildings.CATHEDRAL);
-
-                    event.getUserInventory().addItem(InventoryUtils
-                            .createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.PLAYERCATHEDRAL,
-                                    plugin.getLocale("building.item.desc", Buildings.CATHEDRAL)));
+                    plugin.getLogger().warning("Cathedral should be marked as upgradable from church in the config.");
                 }
             }
 
@@ -161,11 +157,7 @@ public class OmniInventory extends BuyableInventory {
                 if (!SchematicBuilder.buildSchematic(plugin, plugin.getSchematicData(Buildings.CANNONTOWER),
                         event.getBuilding().getCenterBlock(), event.getBuilding().getRotation(),
                         event.getBuilding().getTeamColor())) {
-                    event.getUser().messageLocale("building.upgrade.failed", Buildings.CANNONTOWER);
-
-                    event.getUserInventory().addItem(InventoryUtils
-                            .createItemWithNameAndLore(Material.LAPIS_ORE, 1, 0, Buildings.CANNONTOWER,
-                                    plugin.getLocale("building.item.desc", Buildings.CANNONTOWER)));
+                    plugin.getLogger().warning("CT should be marked as upgradable from ST in the config.");
                 }
             }
 

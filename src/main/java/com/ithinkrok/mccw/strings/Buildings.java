@@ -14,7 +14,6 @@ public class Buildings {
     public static final String LUMBERMILL = "Lumbermill";
     public static final String CHURCH = "Church";
     public static final String CATHEDRAL = "Cathedral";
-    public static final String PLAYERCATHEDRAL = "PlayerCathedral";
     public static final String GREENHOUSE = "Greenhouse";
     public static final String SCOUTTOWER = "ScoutTower";
     public static final String CANNONTOWER = "CannonTower";

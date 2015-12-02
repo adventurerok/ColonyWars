@@ -74,7 +74,6 @@ public class GameInstance {
         schematicDataHashMap.put(Buildings.LUMBERMILL, new Schematic(plugin, Buildings.LUMBERMILL, config));
         schematicDataHashMap.put(Buildings.CHURCH, new Schematic(plugin, Buildings.CHURCH, config));
         schematicDataHashMap.put(Buildings.CATHEDRAL, new Schematic(plugin, Buildings.CATHEDRAL, config));
-        schematicDataHashMap.put(Buildings.PLAYERCATHEDRAL, new Schematic(plugin, Buildings.PLAYERCATHEDRAL, config));
         schematicDataHashMap.put(Buildings.GREENHOUSE, new Schematic(plugin, Buildings.GREENHOUSE, config));
         schematicDataHashMap.put(Buildings.SCOUTTOWER, new Schematic(plugin, Buildings.SCOUTTOWER, config));
         schematicDataHashMap.put(Buildings.CANNONTOWER, new Schematic(plugin, Buildings.CANNONTOWER, config));

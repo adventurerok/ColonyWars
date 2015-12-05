@@ -55,9 +55,9 @@ public class ShowdownArena {
         if(!user.getPlayer().isInsideVehicle()) velocity = user.getPlayer().getVelocity();
         else velocity = user.getPlayer().getVehicle().getVelocity();
 
-        velocity.setX(velocity.getX() + xv * 0.5);
-        velocity.setY(0.3);
-        velocity.setZ(velocity.getZ() + zv * 0.5);
+        velocity.setX(velocity.getX() + xv * 0.3);
+        velocity.setY(0.2);
+        velocity.setZ(velocity.getZ() + zv * 0.3);
 
         if(!user.getPlayer().isInsideVehicle()) user.getPlayer().setVelocity(velocity);
         else user.getPlayer().getVehicle().setVelocity(velocity);

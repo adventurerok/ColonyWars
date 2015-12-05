@@ -41,12 +41,21 @@ public class ParcourMinigame implements LobbyMinigame {
 
     @Override
     public boolean onUserInteractWorld(User user, Block block) {
-        if(block.getType() != Material.ENDER_CHEST) return false;
+        switch(block.getType()){
+            case ENDER_CHEST:
+                plugin.messageAllLocale("minigames.parcour.winner", user.getFormattedName(), 500);
+                user.addPlayerCash(500);
+                user.teleport(plugin.getLobbySpawn());
 
-        plugin.messageAllLocale("minigames.parcour.winner", user.getFormattedName());
-        user.addPlayerCash(500);
-        user.teleport(plugin.getLobbySpawn());
+                return true;
+            case REDSTONE_LAMP_OFF:
+                plugin.messageAllLocale("minigames.parcour.advanced", user.getFormattedName(), 2000);
+                user.addPlayerCash(2000);
+                user.teleport(plugin.getLobbySpawn());
+            default:
+                return false;
+        }
 
-        return true;
+
     }
 }

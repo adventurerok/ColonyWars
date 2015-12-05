@@ -46,7 +46,8 @@ voting.maps.map-winner=&6Playing map\: &3%s
 minigames.wool.initial=&3%s &dwas given the wool!
 minigames.wool.transfer=&3%s &dtransferred the wool to &3%s!
 minigames.wool.given=&dYou now have the wool. Right click someone to transfer it to them!
-minigames.parcour.winner=&3%s &6has completed the parcour and will start next game with $500 extra!
+minigames.parcour.winner=&3%s &6has completed the parkour and will start next game with $%s extra!
+minigames.parcour.advanced=&3%s &6has completed the advanced parkour and will start next game with $%s extra!
 
 #--COUNTDOWNS--
 countdowns.game.warning.minutes=&7Game starting in&6 %s &7Minutes..

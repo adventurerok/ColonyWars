@@ -51,6 +51,7 @@ public class WarriorClass extends ClassItemClassHandler {
             Wolf wolf = (Wolf) target.getWorld().spawnEntity(target, EntityType.WOLF);
             wolf.setCollarColor(event.getUser().getTeamColor().getDyeColor());
             wolf.setOwner(event.getPlayer());
+            wolf.setHealth(wolf.getMaxHealth());
 
             return true;
         }

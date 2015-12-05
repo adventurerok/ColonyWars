@@ -43,16 +43,16 @@ public class WarsLobbyListener implements Listener {
         String max = Integer.toString(plugin.getServer().getMaxPlayers());
         event.setJoinMessage(plugin.getLocale("server.players.join", name, online, max));
 
-        if(!plugin.getCountdownHandler().isCountingDown()) plugin.getCountdownHandler().startLobbyCountdown();
+        if (!plugin.getCountdownHandler().isCountingDown()) plugin.getCountdownHandler().startLobbyCountdown();
+    }
+
+    private ChatColor getPlayerNameColor(Player player) {
+        return player.isOp() ? ChatColor.DARK_RED : ChatColor.YELLOW;
     }
 
     @EventHandler
     public void onDropItem(PlayerDropItemEvent event) {
         event.setCancelled(true);
-    }
-
-    private ChatColor getPlayerNameColor(Player player) {
-        return player.isOp() ? ChatColor.DARK_RED : ChatColor.YELLOW;
     }
 
     @EventHandler
@@ -80,8 +80,9 @@ public class WarsLobbyListener implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getItem() != null && event.getItem().getType() == Material.WRITTEN_BOOK) return;
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK || !isRedstoneControl(event.getClickedBlock().getType())) event
-                .setCancelled(true);
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || !isRedstoneControl(event.getClickedBlock().getType())) {
+            event.setCancelled(true);
+        }
 
         User user = plugin.getUser(event.getPlayer());
 
@@ -105,7 +106,7 @@ public class WarsLobbyListener implements Listener {
     }
 
     private static boolean isRedstoneControl(Material type) {
-        switch(type){
+        switch (type) {
             case LEVER:
             case STONE_BUTTON:
             case WOOD_BUTTON:
@@ -242,11 +243,11 @@ public class WarsLobbyListener implements Listener {
         }
     }
 
-    public boolean checkTeamJoinAllowed(int players){
-        if(players < (plugin.getPlayerCount() / TeamColor.values().size())) return true;
+    public boolean checkTeamJoinAllowed(int players) {
+        if (players < (plugin.getPlayerCount() / TeamColor.values().size())) return true;
 
-        for(TeamColor teamColor : TeamColor.values()){
-            if(plugin.getTeam(teamColor).getPlayerCount() < players) return false;
+        for (TeamColor teamColor : TeamColor.values()) {
+            if (plugin.getTeam(teamColor).getPlayerCount() < players) return false;
         }
 
         return true;

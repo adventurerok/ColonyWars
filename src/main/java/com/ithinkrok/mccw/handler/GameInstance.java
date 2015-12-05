@@ -245,6 +245,7 @@ public class GameInstance {
     }
 
     public void setupUser(User info) {
+        info.decloak();
         info.setMapVote(null);
 
         if (info.getTeamColor() == null) {

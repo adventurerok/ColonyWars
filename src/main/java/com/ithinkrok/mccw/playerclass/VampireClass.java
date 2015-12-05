@@ -25,7 +25,7 @@ public class VampireClass extends ClassItemClassHandler {
         vampireSword.withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true);
 
         vampireSword.withEnchantmentEffects(
-                new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "vampire", new LinearCalculator(0, 2)));
+                new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "vampire", new LinearCalculator(0, 1)));
 
         vampireSword.withAttackAction(event -> {
             if(event.getUser().isCoolingDown("batting")) {

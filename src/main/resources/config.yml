@@ -173,6 +173,9 @@ costs:
     knockback2: 1600
     wolf1: 750
     wolf2: 1000
+  vampire:
+    vampire1: 1350
+    vampire2: 1600
 
 # The amounts of an item sold (currently only for the farm shop)
 amounts:

@@ -7,6 +7,7 @@ map-list:
   - "forest_hills"
   - "cavern"
   - "hills_and_lakes"
+  - "jungle_valley"
   - "random"
 
 persistence: true

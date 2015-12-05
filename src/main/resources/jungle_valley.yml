@@ -1,0 +1,46 @@
+maps:
+  canyon:
+    folder: "jungle_valley"
+    center:
+      x: 116
+      y: 36
+      z: 114
+    showdown-size:
+      x: 30
+      z: 30
+    red:
+      base:
+        x: 290
+        y: 35
+        z: 303
+      spawn:
+        x: 289.5
+        y: 35
+        z: 302.5
+    blue:
+      base:
+        x: -58
+        y: 35
+        z: -74
+      spawn:
+        x: -56.5
+        y: 35
+        z: -73.5
+    green:
+      base:
+        x: 305
+        y: 35
+        z: -60
+      spawn:
+        x: 304.5
+        y: 35
+        z: -58.5
+    yellow:
+      base:
+        x: -73
+        y: 35
+        z: 288
+      spawn:
+        x: -71.5
+        y: 35
+        z: 387.5

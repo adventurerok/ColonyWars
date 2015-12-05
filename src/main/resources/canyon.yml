@@ -33,7 +33,7 @@ maps:
         z: 370
       spawn:
         x: 7
-        y: 64
+        y: 94
         z: 369
     yellow:
       base:

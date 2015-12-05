@@ -38,7 +38,7 @@ public class SchematicRotation {
 
         if (rotation == 1 || rotation == 3) xzSwap = true;
         if (rotation == 2 || rotation == 3) xFlip = true;
-        if (rotation == 1 || rotation == 2) zFlip = true;
+        if (rotation == 3 || rotation == 0) zFlip = true;
     }
 
     public int getRotation() {

@@ -10,25 +10,26 @@ import java.util.List;
 
 /**
  * Created by paul on 05/11/15.
- *
+ * <p>
  * An enum to represent the available classes in the game
  */
 public class PlayerClass {
 
     private static List<PlayerClass> playerClassList = new ArrayList<>();
 
-    public static final PlayerClass CLOAKER = new PlayerClass("cloaker", Material.IRON_LEGGINGS, CloakerClass::new);
-    public static final PlayerClass SCOUT = new PlayerClass("scout", Material.COMPASS, ScoutClass::new);
-    public static final PlayerClass GENERAL = new PlayerClass("general", Material.DIAMOND_SWORD, GeneralClass::new);
-    public static final PlayerClass ARCHER = new PlayerClass("archer", Material.BOW, ArcherClass::new);
-    public static final PlayerClass MAGE = new PlayerClass("mage", Material.DIAMOND_LEGGINGS, MageClass::new);
-    public static final PlayerClass PEASANT = new PlayerClass("peasant", Material.IRON_AXE, PeasantClass::new);
-    public static final PlayerClass INFERNO = new PlayerClass("inferno", Material.IRON_CHESTPLATE, InfernoClass::new);
-    public static final PlayerClass DARK_KNIGHT = new PlayerClass("dark_knight", Material.IRON_HELMET,
-            DarkKnightClass::new);
-
-    public static final PlayerClass PRIEST = new PlayerClass("priest", Material.GOLD_LEGGINGS, PriestClass::new);
-    public static final PlayerClass WARRIOR = new PlayerClass("warrior", Material.IRON_SWORD, WarriorClass::new);
+    static {
+        new PlayerClass("warrior", Material.IRON_SWORD, WarriorClass::new);
+        new PlayerClass("priest", Material.GOLD_LEGGINGS, PriestClass::new);
+        new PlayerClass("dark_knight", Material.IRON_HELMET, DarkKnightClass::new);
+        new PlayerClass("inferno", Material.IRON_CHESTPLATE, InfernoClass::new);
+        new PlayerClass("peasant", Material.IRON_AXE, PeasantClass::new);
+        new PlayerClass("mage", Material.DIAMOND_LEGGINGS, MageClass::new);
+        new PlayerClass("archer", Material.BOW, ArcherClass::new);
+        new PlayerClass("scout", Material.COMPASS, ScoutClass::new);
+        new PlayerClass("cloaker", Material.IRON_LEGGINGS, CloakerClass::new);
+        new PlayerClass("general", Material.DIAMOND_SWORD, GeneralClass::new);
+        new PlayerClass("vampire", Material.GOLD_SWORD, VampireClass::new);
+    }
 
 
     private final String name;
@@ -37,7 +38,7 @@ public class PlayerClass {
     private final PlayerClassHandlerFactory classHandlerFactory;
 
     public PlayerClass(String name, Material chooser, PlayerClassHandlerFactory classHandlerFactory) {
-        if(name == null || chooser == null || classHandlerFactory == null ) {
+        if (name == null || chooser == null || classHandlerFactory == null) {
             throw new NullPointerException("All constructor parameters for PlayerClass must not be null");
         }
 
@@ -46,34 +47,38 @@ public class PlayerClass {
         this.chooser = chooser;
         this.classHandlerFactory = classHandlerFactory;
 
-        if(fromChooserMaterial(chooser) != null){
+        if (fromChooserMaterial(chooser) != null) {
             throw new RuntimeException("A player class already exists with the chooser material: " + chooser);
         }
         playerClassList.add(this);
     }
 
-    public PlayerClassHandler createPlayerClassHandler(WarsPlugin plugin){
-        return classHandlerFactory.createPlayerClassHandler(plugin, this);
-    }
-
-    public static PlayerClass fromChooserMaterial(Material mat){
-        for(PlayerClass playerClass : playerClassList){
-            if(playerClass.getChooser() == mat) return playerClass;
+    public static PlayerClass fromChooserMaterial(Material mat) {
+        for (PlayerClass playerClass : playerClassList) {
+            if (playerClass.getChooser() == mat) return playerClass;
         }
 
         return null;
+    }
+
+    public Material getChooser() {
+        return chooser;
     }
 
     public static PlayerClass fromName(String name) {
-        for(PlayerClass playerClass : playerClassList) {
-            if(playerClass.name.equalsIgnoreCase(name)) return playerClass;
+        for (PlayerClass playerClass : playerClassList) {
+            if (playerClass.name.equalsIgnoreCase(name)) return playerClass;
         }
 
         return null;
     }
 
-    public static List<PlayerClass> values(){
+    public static List<PlayerClass> values() {
         return playerClassList;
+    }
+
+    public PlayerClassHandler createPlayerClassHandler(WarsPlugin plugin) {
+        return classHandlerFactory.createPlayerClassHandler(plugin, this);
     }
 
     @Override
@@ -96,10 +101,6 @@ public class PlayerClass {
 
     public String getFormattedName() {
         return formattedName;
-    }
-
-    public Material getChooser() {
-        return chooser;
     }
 
     @Override

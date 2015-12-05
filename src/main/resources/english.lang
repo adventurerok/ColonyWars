@@ -34,6 +34,7 @@ classes.inferno.desc=Has an explosion wand and TNT
 classes.dark_knight.desc=Wields the darkness sword...
 classes.priest.desc=Has a healing scroll and earth bender
 classes.warrior.desc=Summons wolves and fights with an upgradable iron sword
+classes.vampire.desc=Regens health when damage is dealt
 
 #map-voting
 voting.maps.success=&6You have voted for &3%s&6!
@@ -133,6 +134,7 @@ upgrades.cross.name=Cross Upgrade %s
 upgrades.regen-ability.name=Regen Ability Upgrade
 upgrades.wolf-wand.name=Wolf Wand Upgrade %s
 upgrades.cloak.name=Cloak Upgrade %s
+upgrades.vampire.name=Vampire Sword Upgrade %s
 
 #class-items
 items.peasant-axe.name=Peasant Axe
@@ -155,6 +157,7 @@ items.wolf-wand.name=Wolf Wand
 items.mighty-axe.name=The Mighty Axe
 items.cloak.name=Cloak
 items.vampire-sword.name=Vampire Sword
+items.vampire-sword.desc=Regenerates health when damage is dealt.
 
 #lore
 lore.cooldown=Cooldown\: %s seconds

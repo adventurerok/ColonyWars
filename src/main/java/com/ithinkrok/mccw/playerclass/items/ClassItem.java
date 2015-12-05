@@ -53,6 +53,7 @@ public class ClassItem {
     private String rightClickCooldownAbility;
     private WarsConfig warsConfig;
     private String upgradeGroup;
+    private String descriptionLocale;
 
     public ClassItem(WarsPlugin plugin, String upgradeGroup, Material itemMaterial) {
         this(plugin, upgradeGroup, itemMaterial, null);
@@ -79,6 +80,11 @@ public class ClassItem {
     public ClassItem withUpgradeBuildings(String... upgradeBuildings) {
         this.upgradeBuildings = upgradeBuildings;
         Arrays.sort(upgradeBuildings);
+        return this;
+    }
+
+    public ClassItem withDescriptionLocale(String descriptionLocale) {
+        this.descriptionLocale = descriptionLocale;
         return this;
     }
 
@@ -173,6 +179,10 @@ public class ClassItem {
 
     private ItemStack createItemFromUpgradeLevels(Map<String, Integer> upgradeLevels) {
         List<String> lore = new ArrayList<>();
+
+        if(descriptionLocale != null) {
+            lore.add(langFile.getLocale(descriptionLocale));
+        }
 
         if (weaponModifier != null) {
             weaponModifier.addLoreItems(langFile, lore, upgradeLevels);

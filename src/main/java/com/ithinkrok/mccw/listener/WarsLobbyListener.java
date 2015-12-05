@@ -79,7 +79,9 @@ public class WarsLobbyListener implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getItem() != null && event.getItem().getType() == Material.WRITTEN_BOOK) return;
-        event.setCancelled(true);
+
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK || !isRedstoneControl(event.getClickedBlock().getType())) event
+                .setCancelled(true);
 
         User user = plugin.getUser(event.getPlayer());
 
@@ -99,6 +101,17 @@ public class WarsLobbyListener implements Listener {
             showClassChooser(event.getPlayer());
         } else if (plugin.getLocale("lobby.chooser.map.name").equals(event.getItem().getItemMeta().getDisplayName())) {
             showMapChooser(event.getPlayer());
+        }
+    }
+
+    private static boolean isRedstoneControl(Material type) {
+        switch(type){
+            case LEVER:
+            case STONE_BUTTON:
+            case WOOD_BUTTON:
+                return true;
+            default:
+                return false;
         }
     }
 

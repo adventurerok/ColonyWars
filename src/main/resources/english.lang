@@ -154,6 +154,7 @@ items.regen-ability.name=Regeneration Ability
 items.wolf-wand.name=Wolf Wand
 items.mighty-axe.name=The Mighty Axe
 items.cloak.name=Cloak
+items.vampire-sword.name=Vampire Sword
 
 #lore
 lore.cooldown=Cooldown\: %s seconds

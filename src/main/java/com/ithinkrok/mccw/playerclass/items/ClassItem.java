@@ -33,6 +33,7 @@ public class ClassItem {
     private boolean unlockOnGameStart;
     private InteractAction rightClickAction;
     private InteractAction leftClickAction;
+    private AttackAction attackAction;
     private WeaponModifier weaponModifier;
     private String itemDisplayName;
     private Material itemMaterial;
@@ -57,8 +58,7 @@ public class ClassItem {
         this(plugin, upgradeGroup, itemMaterial, null);
     }
 
-    public ClassItem(WarsPlugin plugin, String upgradeGroup, Material itemMaterial, String
-            itemDisplayLang) {
+    public ClassItem(WarsPlugin plugin, String upgradeGroup, Material itemMaterial, String itemDisplayLang) {
         this.upgradeGroup = upgradeGroup;
         this.langFile = plugin.getLangFile();
         this.warsConfig = plugin.getWarsConfig();
@@ -115,6 +115,11 @@ public class ClassItem {
         return this;
     }
 
+    public ClassItem withAttackAction(AttackAction attackAction) {
+        this.attackAction = attackAction;
+        return this;
+    }
+
     public ClassItem withWeaponModifier(WeaponModifier weaponModifier) {
         this.weaponModifier = weaponModifier;
         return this;
@@ -154,8 +159,8 @@ public class ClassItem {
                 display.setItemMeta(displayMeta);
 
                 Buyable buyable = new ClassItemBuyable(display, upgradeBuildings[0],
-                        warsConfig.getCost(upgradeGroup, upgradable.upgradeName + level),
-                        upgradable.upgradeName, level);
+                        warsConfig.getCost(upgradeGroup, upgradable.upgradeName + level), upgradable.upgradeName,
+                        level);
 
                 for (int buildingIndex = 1; buildingIndex < upgradeBuildings.length; ++buildingIndex) {
                     buyable.withAdditionalBuildings(upgradeBuildings[buildingIndex]);
@@ -252,8 +257,14 @@ public class ClassItem {
     }
 
     public void onUserAttack(UserAttackEvent event) {
-        if (weaponModifier == null) return;
+        if (weaponModifier != null) attackWithWeaponModifier(event);
 
+        if (attackAction == null) return;
+
+        attackAction.onUserAttack(event);
+    }
+
+    private void attackWithWeaponModifier(UserAttackEvent event) {
         int upgradeLevel = event.getUser().getUpgradeLevel(weaponModifier.upgradeName);
 
         if (weaponModifier.damageCalculator != null) {
@@ -344,6 +355,10 @@ public class ClassItem {
 
     public interface TimeoutAction {
         boolean onAbilityTimeout(UserAbilityCooldownEvent event);
+    }
+
+    public interface AttackAction {
+        void onUserAttack(UserAttackEvent event);
     }
 
     public static class WeaponModifier {

@@ -28,11 +28,7 @@ public class ClassItemClassHandler extends BuyableInventory implements PlayerCla
     }
 
     public ClassItemClassHandler(List<ClassItem> items) {
-        super(calculateBuyables(items));
-
-        for (ClassItem item : items) {
-            classItemHashMap.put(item.getItemMaterial(), item);
-        }
+        addExtraClassItems(items);
     }
 
     private static List<Buyable> calculateBuyables(List<ClassItem> items) {
@@ -43,6 +39,18 @@ public class ClassItemClassHandler extends BuyableInventory implements PlayerCla
         }
 
         return result;
+    }
+
+    public void addExtraClassItems(ClassItem...extra){
+        addExtraClassItems(Arrays.asList(extra));
+    }
+
+    public void addExtraClassItems(List<ClassItem> extra) {
+        addExtraBuyables(calculateBuyables(extra));
+
+        for (ClassItem item : extra) {
+            classItemHashMap.put(item.getItemMaterial(), item);
+        }
     }
 
     @Override

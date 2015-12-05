@@ -297,12 +297,9 @@ public class WarsGameListener implements Listener {
             return;
         }
 
-        Building building = plugin.getBuildingInfo(event.getClickedBlock().getLocation());
-        if(building == null) return;
-
         event.setCancelled(true);
 
-        user.openShopInventory(building.getCenterBlock());
+        user.openShopInventory(event.getClickedBlock().getLocation());
     }
 
     @EventHandler

@@ -21,7 +21,7 @@ maps:
       base:
         x: -58
         y: 35
-        z: -74
+        z: -75
       spawn:
         x: -56.5
         y: 35

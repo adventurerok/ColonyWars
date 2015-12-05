@@ -109,6 +109,8 @@ public class WarsLobbyListener implements Listener {
             case LEVER:
             case STONE_BUTTON:
             case WOOD_BUTTON:
+            case WOOD_DOOR:
+            case TRAP_DOOR:
                 return true;
             default:
                 return false;

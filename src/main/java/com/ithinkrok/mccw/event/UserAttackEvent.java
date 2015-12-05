@@ -46,6 +46,10 @@ public class UserAttackEvent extends UserInteractEvent{
         return event.getDamage();
     }
 
+    public double getFinalDamage() {
+        return event.getFinalDamage();
+    }
+
     public void setDamage(double damage){
         event.setDamage(damage);
     }

@@ -6,6 +6,7 @@ import com.ithinkrok.mccw.data.UserCategoryStats;
 
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -63,6 +64,10 @@ public class Persistence extends Thread{
         void run(UserCategoryStats stats);
     }
 
+    public interface ScoresTask {
+        void run(List<UserCategoryStats> statsByScore);
+    }
+
     private void checkDDL(){
         try{
             plugin.getDatabase().find(UserCategoryStats.class).findRowCount();
@@ -77,6 +82,22 @@ public class Persistence extends Thread{
 
     private UserCategoryStats _getUserCategoryStats(UUID playerUUID, String category){
         return query(playerUUID, category).findUnique();
+    }
+
+    public void getUserCategoryStatsByScore(String category, int max, ScoresTask task){
+        threadTasks.add(() -> task.run(_getUserCategoryStatsByScore(category, max)));
+    }
+
+    private List<UserCategoryStats> _getUserCategoryStatsByScore(String category, int max) {
+        Query<UserCategoryStats> query = plugin.getDatabase().find(UserCategoryStats.class);
+
+        query.where().eq("category", category);
+
+        query.orderBy("score desc");
+
+        query.setMaxRows(max);
+
+        return query.findList();
     }
 
     public void getOrCreateUserCategoryStats(UUID playerUUID, String category, PersistenceTask task) {

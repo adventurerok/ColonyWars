@@ -17,6 +17,7 @@ permissions:
       mccw.stats: true
       mccw.list: true
       mccw.teamchat: true
+      mccw.leaderboard: true
     default: "op"
   mccw.test:
     description: "Allows use of the test command"
@@ -41,6 +42,9 @@ permissions:
     default: true
   mccw.teamchat:
     description: "Allows use of the teamchat command"
+    default: true
+  mccw.leaderboard:
+    description: "Allows use of the leaderboard command"
     default: true
 commands:
   transfer:
@@ -89,3 +93,8 @@ commands:
     aliases: ["tc", "ct", "chatteam", "t"]
     usage: "/teamchat <message>"
     permission: "mccw.teamchat"
+  leaderboad:
+    description: "Shows the leaderboard"
+    aliases: ["lb", "leaders", "board"]
+    usage: "/leaderboard [category]"
+    permission: "mccw.leaderboard"

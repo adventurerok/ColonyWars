@@ -44,7 +44,7 @@ score:
   death: -5
   kill: 10
   win: 50
-  loss: -20
+  loss: -10
 
 # Building info such as schematic locations and default rotations.
 buildings:

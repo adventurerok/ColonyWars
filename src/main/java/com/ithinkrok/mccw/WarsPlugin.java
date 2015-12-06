@@ -94,6 +94,8 @@ public class WarsPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         super.onDisable();
+
+        if(persistence != null) persistence.onPluginDisabled();
     }
 
     public boolean isInGame() {

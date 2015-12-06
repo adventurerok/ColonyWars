@@ -7,21 +7,56 @@ import com.ithinkrok.mccw.data.UserCategoryStats;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Created by paul on 28/11/15.
  *
  * Handles saving player stats to database
  */
-public class Persistence {
+public class Persistence extends Thread{
 
     private final WarsPlugin plugin;
     private final Object writeLock = new Object();
+
+    private boolean stop = false;
+    private ConcurrentLinkedQueue<Runnable> threadTasks = new ConcurrentLinkedQueue<>();
 
 
     public Persistence(WarsPlugin plugin) {
         this.plugin = plugin;
         checkDDL();
+
+        start();
+    }
+
+    public void onPluginDisabled() {
+        stop = true;
+
+        try {
+            join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void run() {
+        while(!stop) {
+            Runnable runnable;
+
+            while((runnable = threadTasks.poll()) != null) {
+                runnable.run();
+            }
+
+            try {
+                Thread.sleep(5);
+            } catch (InterruptedException e) {
+                plugin.getLogger().warning("Persistence thread interrupted");
+                e.printStackTrace();
+                return;
+            }
+        }
     }
 
     private void checkDDL(){

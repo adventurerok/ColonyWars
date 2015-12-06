@@ -18,17 +18,18 @@ public class PlayerClass {
     private static List<PlayerClass> playerClassList = new ArrayList<>();
 
     static {
+        new PlayerClass("general", Material.DIAMOND_SWORD, GeneralClass::new);
+        new PlayerClass("cloaker", Material.IRON_LEGGINGS, CloakerClass::new);
+        new PlayerClass("scout", Material.COMPASS, ScoutClass::new);
+        new PlayerClass("archer", Material.BOW, ArcherClass::new);
         new PlayerClass("warrior", Material.IRON_SWORD, WarriorClass::new);
         new PlayerClass("priest", Material.GOLD_LEGGINGS, PriestClass::new);
         new PlayerClass("dark_knight", Material.IRON_HELMET, DarkKnightClass::new);
         new PlayerClass("inferno", Material.IRON_CHESTPLATE, InfernoClass::new);
         new PlayerClass("peasant", Material.IRON_AXE, PeasantClass::new);
         new PlayerClass("mage", Material.DIAMOND_LEGGINGS, MageClass::new);
-        new PlayerClass("archer", Material.BOW, ArcherClass::new);
-        new PlayerClass("scout", Material.COMPASS, ScoutClass::new);
-        new PlayerClass("cloaker", Material.IRON_LEGGINGS, CloakerClass::new);
-        new PlayerClass("general", Material.DIAMOND_SWORD, GeneralClass::new);
-        new PlayerClass("vampire", Material.GOLD_SWORD, VampireClass::new);
+
+        //new PlayerClass("vampire", Material.GOLD_SWORD, VampireClass::new);
     }
 
 

@@ -69,16 +69,16 @@ public class Facing {
             case 0:
             case 1:
             case 2:
-                readDir = 0;
-                break;
-            case 3:
                 readDir = 2;
                 break;
+            case 3:
+                readDir = 0;
+                break;
             case 4:
-                readDir = 3;
+                readDir = 1;
                 break;
             case 5:
-                readDir = 1;
+                readDir = 3;
                 break;
             default:
                 return data;

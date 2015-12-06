@@ -73,44 +73,6 @@ public class CommandListener implements CommandExecutor {
 
     }
 
-    private boolean onTeamChatCommand(User user, String[] args) {
-        if(args.length == 0) return false;
-
-        StringBuilder message = new StringBuilder();
-        for(String s : args){
-            if(message.length() != 0) message.append(' ');
-            message.append(s);
-        }
-
-        TeamColor teamColor = user.getTeamColor();
-
-        Set<Player> receivers = new HashSet<>();
-
-        for(User other : plugin.getUsers()){
-            if(other.getTeamColor() != teamColor) continue;
-
-            receivers.add(other.getPlayer());
-        }
-
-        String teamColorCode = teamColor != null ? teamColor.getChatColor().toString() : ChatColor.LIGHT_PURPLE
-                .toString();
-
-        String chatMessage = ChatColor.GRAY + "[" + teamColorCode + "Team" + ChatColor.GRAY + "] " + ChatColor
-                .WHITE + message;
-
-        AsyncPlayerChatEvent event = new AsyncPlayerChatEvent(false, user.getPlayer(), chatMessage, receivers);
-
-        plugin.getServer().getPluginManager().callEvent(event);
-        if(!event.isCancelled()){
-            String formatted = String.format(event.getFormat(), user.getFormattedName(), event.getMessage());
-            for(Player player : event.getRecipients()){
-                player.sendMessage(formatted);
-            }
-        }
-
-        return true;
-    }
-
     private boolean onTransferCommand(User user, String[] args) {
         if (args.length < 1) return false;
         if (user.getTeam() == null) {
@@ -163,10 +125,10 @@ public class CommandListener implements CommandExecutor {
     }
 
     private boolean onTestCommand(User user, String[] args) {
-        if(args.length > 0) {
+        if (args.length > 0) {
             Player targetPlayer = Bukkit.getPlayer(args[args.length - 1]);
 
-            if(targetPlayer != null) user = plugin.getUser(targetPlayer);
+            if (targetPlayer != null) user = plugin.getUser(targetPlayer);
         }
 
         switch (args[0]) {
@@ -321,25 +283,25 @@ public class CommandListener implements CommandExecutor {
     private boolean onFixCommand(User user) {
         if (!plugin.isInGame()) return true;
         if (!user.startCoolDown("fix", 1, plugin.getLocale("cooldowns.fix.finished"))) return true;
-        if(user.getPlayer().getVelocity().lengthSquared() > 0.3d) return true;
+        if (user.getPlayer().getVelocity().lengthSquared() > 0.3d) return true;
 
         Block base = user.getPlayer().getLocation().clone().add(0, 1, 0).getBlock();
         Block block;
 
-        for(int radius = 0; radius < 5; ++radius) {
-            for(int x = -radius; x <= radius; ++x) {
-                for(int z = -radius; z <= radius; ++z) {
+        for (int radius = 0; radius < 5; ++radius) {
+            for (int x = -radius; x <= radius; ++x) {
+                for (int z = -radius; z <= radius; ++z) {
                     int state = 0;
-                    for(int y = radius + 1; y >= -radius - 2; --y) {
-                        if(Math.abs(x) < radius && Math.abs(y) + 3 < radius && Math.abs(z) < radius) continue;
+                    for (int y = radius + 1; y >= -radius - 2; --y) {
+                        if (Math.abs(x) < radius && Math.abs(y) + 3 < radius && Math.abs(z) < radius) continue;
                         block = base.getRelative(x, y, z);
 
                         boolean air = block.getType().isTransparent() || block.isLiquid();
-                        if(!air && state < 2){
+                        if (!air && state < 2) {
                             state = 0;
                             continue;
                         } else if (air && state == 2) continue;
-                        else if(state < 3){
+                        else if (state < 3) {
                             ++state;
                             continue;
                         }
@@ -395,19 +357,30 @@ public class CommandListener implements CommandExecutor {
                 return;
             }
 
+            UserCategoryStats add;
+            if (finalCategory.equals("total") || finalCategory.equals(user.getLastPlayerClass().getName()) ||
+                    finalCategory.equals(user.getLastTeamColor().getName())) {
+                add = user.getStatsChanges();
+            } else add = new UserCategoryStats();
+
             user.messageLocale("commands.stats.category", finalCategory);
 
             String kd = "NA";
-            if (stats.getDeaths() > 0) kd = Double.toString(stats.getKills() / (double) stats.getDeaths());
+            if (stats.getDeaths() + add.getDeaths() > 0) kd = Double.toString(
+                    (stats.getKills() + add.getKills()) / (double) (stats.getDeaths() + add.getDeaths()));
 
-            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.kills", stats.getKills()));
-            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.deaths", stats.getDeaths()));
+            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.kills", stats.getKills() + add.getKills()));
+            user.getPlayer()
+                    .sendMessage(plugin.getLocale("commands.stats.deaths", stats.getDeaths() + add.getDeaths()));
             user.getPlayer().sendMessage(plugin.getLocale("commands.stats.kd", kd));
-            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.wins", stats.getGameWins()));
-            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.losses", stats.getGameLosses()));
-            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.games", stats.getGames()));
-            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.totalmoney", stats.getTotalMoney()));
-            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.score", stats.getScore()));
+            user.getPlayer()
+                    .sendMessage(plugin.getLocale("commands.stats.wins", stats.getGameWins() + add.getGameWins()));
+            user.getPlayer().sendMessage(
+                    plugin.getLocale("commands.stats.losses", stats.getGameLosses() + add.getGameLosses()));
+            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.games", stats.getGames() + add.getGames()));
+            user.getPlayer().sendMessage(
+                    plugin.getLocale("commands.stats.totalmoney", stats.getTotalMoney() + add.getTotalMoney()));
+            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.score", stats.getScore() + add.getScore()));
         }));
 
         return true;
@@ -440,12 +413,50 @@ public class CommandListener implements CommandExecutor {
             }
 
             String teamName;
-            if(entry.getKey() == null) teamName = plugin.getLocale("commands.list.spectator");
+            if (entry.getKey() == null) teamName = plugin.getLocale("commands.list.spectator");
             else teamName = entry.getKey().getFormattedName();
 
             //send a message directly to player to avoid Colony Wars prefix
             sender.getPlayer().sendMessage(plugin.getLocale("commands.list.line", teamName, names));
         }
+        return true;
+    }
+
+    private boolean onTeamChatCommand(User user, String[] args) {
+        if (args.length == 0) return false;
+
+        StringBuilder message = new StringBuilder();
+        for (String s : args) {
+            if (message.length() != 0) message.append(' ');
+            message.append(s);
+        }
+
+        TeamColor teamColor = user.getTeamColor();
+
+        Set<Player> receivers = new HashSet<>();
+
+        for (User other : plugin.getUsers()) {
+            if (other.getTeamColor() != teamColor) continue;
+
+            receivers.add(other.getPlayer());
+        }
+
+        String teamColorCode =
+                teamColor != null ? teamColor.getChatColor().toString() : ChatColor.LIGHT_PURPLE.toString();
+
+        String chatMessage =
+                ChatColor.GRAY + "[" + teamColorCode + "Team" + ChatColor.GRAY + "] " + ChatColor.WHITE + message;
+
+        AsyncPlayerChatEvent event = new AsyncPlayerChatEvent(false, user.getPlayer(), chatMessage, receivers);
+
+        plugin.getServer().getPluginManager().callEvent(event);
+        if (!event.isCancelled()) {
+            String formatted = String.format(event.getFormat(), user.getFormattedName(), event.getMessage());
+            for (Player player : event.getRecipients()) {
+                player.sendMessage(formatted);
+            }
+        }
+
         return true;
     }
 }

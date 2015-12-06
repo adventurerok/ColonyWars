@@ -65,6 +65,14 @@ public class User {
     private TeamColor lastTeamColor;
     private double potionStrengthModifier;
 
+    public PlayerClass getLastPlayerClass() {
+        return lastPlayerClass;
+    }
+
+    public TeamColor getLastTeamColor() {
+        return lastTeamColor;
+    }
+
     public User(WarsPlugin plugin, Player player) {
         this.plugin = plugin;
         this.player = player;
@@ -82,6 +90,10 @@ public class User {
         Metadata data = metadata.get(name);
         if (data == null) return null;
         return data.data;
+    }
+
+    public UserCategoryStats getStatsChanges() {
+        return statsChanges;
     }
 
     public PlayerInventory getPlayerInventory() {

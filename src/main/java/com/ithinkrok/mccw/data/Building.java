@@ -104,7 +104,7 @@ public class Building {
     public void removed(){
         if(buildTask != 0) plugin.getGameInstance().cancelTask(buildTask);
 
-        holograms.stream().filter(Hologram::isSpawned).forEach(Hologram::despawn);
+        holograms.forEach(HologramAPI::removeHologram);
 
         holograms.clear();
     }

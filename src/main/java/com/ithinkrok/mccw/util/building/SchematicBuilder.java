@@ -217,7 +217,7 @@ public class SchematicBuilder {
             building.setBuildTask(0);
             plugin.getGameInstance().cancelTask(taskId);
 
-            hologram.despawn();
+            HologramAPI.removeHologram(hologram);
             building.removeHologram(hologram);
 
             if (building.getCenterBlock() != null) {

@@ -137,7 +137,6 @@ public class User {
     public void saveStats() {
         if (!plugin.hasPersistence()) return;
 
-
         StatsUpdater statsUpdater = new StatsUpdater(statsChanges);
         statsChanges = new UserCategoryStats();
 

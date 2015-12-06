@@ -21,6 +21,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.util.Vector;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -30,6 +31,7 @@ import java.util.*;
  */
 public class CommandListener implements CommandExecutor {
 
+    private static DecimalFormat twoDecimalPlaces = new DecimalFormat("0.00");
     private WarsPlugin plugin;
 
     public CommandListener(WarsPlugin plugin) {
@@ -365,22 +367,30 @@ public class CommandListener implements CommandExecutor {
 
             user.messageLocale("commands.stats.category", finalCategory);
 
-            String kd = "NA";
-            if (stats.getDeaths() + add.getDeaths() > 0) kd = Double.toString(
-                    (stats.getKills() + add.getKills()) / (double) (stats.getDeaths() + add.getDeaths()));
 
-            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.kills", stats.getKills() + add.getKills()));
-            user.getPlayer()
-                    .sendMessage(plugin.getLocale("commands.stats.deaths", stats.getDeaths() + add.getDeaths()));
-            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.kd", kd));
-            user.getPlayer()
-                    .sendMessage(plugin.getLocale("commands.stats.wins", stats.getGameWins() + add.getGameWins()));
-            user.getPlayer().sendMessage(
-                    plugin.getLocale("commands.stats.losses", stats.getGameLosses() + add.getGameLosses()));
-            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.games", stats.getGames() + add.getGames()));
-            user.getPlayer().sendMessage(
-                    plugin.getLocale("commands.stats.totalmoney", stats.getTotalMoney() + add.getTotalMoney()));
-            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.score", stats.getScore() + add.getScore()));
+            int kills = stats.getKills() + add.getKills();
+            int deaths = stats.getDeaths() + add.getDeaths();
+
+            double kd = kills;
+            if (deaths != 0) kd /= (double) deaths;
+
+            int gameWins = stats.getGameWins() + add.getGameWins();
+            int gameLosses = stats.getGameLosses() + add.getGameLosses();
+            int games = stats.getGames() + add.getGames();
+            int totalMoney = stats.getTotalMoney() + add.getTotalMoney();
+            int score = stats.getScore() + add.getScore();
+
+
+            String kdText = twoDecimalPlaces.format(kd);
+
+            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.kills", kills));
+            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.deaths", deaths));
+            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.kd", kdText));
+            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.wins", gameWins));
+            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.losses", gameLosses));
+            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.games", games));
+            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.totalmoney", totalMoney));
+            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.score", score));
         }));
 
         return true;

@@ -59,6 +59,10 @@ public class Persistence extends Thread{
         }
     }
 
+    public interface PersistenceTask {
+        void run(UserCategoryStats stats);
+    }
+
     private void checkDDL(){
         try{
             plugin.getDatabase().find(UserCategoryStats.class).findRowCount();
@@ -67,11 +71,19 @@ public class Persistence extends Thread{
         }
     }
 
-    public UserCategoryStats getUserCategoryStats(UUID playerUUID, String category){
+    public void getUserCategoryStats(UUID playerUUID, String category, PersistenceTask task){
+        threadTasks.add(() -> task.run(_getUserCategoryStats(playerUUID, category)));
+    }
+
+    private UserCategoryStats _getUserCategoryStats(UUID playerUUID, String category){
         return query(playerUUID, category).findUnique();
     }
 
-    public UserCategoryStats getOrCreateUserCategoryStats(UUID playerUUID, String category){
+    public void getOrCreateUserCategoryStats(UUID playerUUID, String category, PersistenceTask task) {
+        threadTasks.add(() -> task.run(_getOrCreateUserCategoryStats(playerUUID, category)));
+    }
+
+    private UserCategoryStats _getOrCreateUserCategoryStats(UUID playerUUID, String category){
         Query<UserCategoryStats> query = query(playerUUID, category);
 
         synchronized (writeLock) {
@@ -91,7 +103,12 @@ public class Persistence extends Thread{
         }
     }
 
-    public void saveUserCategoryStats(UserCategoryStats stats){
+    public void saveUserCategoryStats(UserCategoryStats stats) {
+        if(Thread.currentThread() == this) _saveUserCategoryStats(stats);
+        else threadTasks.add(() -> _saveUserCategoryStats(stats));
+    }
+
+    private void _saveUserCategoryStats(UserCategoryStats stats){
         try {
             plugin.getDatabase().save(stats);
         } catch(OptimisticLockException e){

@@ -388,25 +388,27 @@ public class CommandListener implements CommandExecutor {
         String category = "total";
         if (args.length > 0) category = args[0];
 
-        UserCategoryStats stats = user.getStats(category);
-        if (stats == null) {
-            user.messageLocale("commands.stats.none", category);
-            return true;
-        }
+        final String finalCategory = category;
+        user.getStats(category, stats -> Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+            if (stats == null) {
+                user.messageLocale("commands.stats.none", finalCategory);
+                return;
+            }
 
-        user.messageLocale("commands.stats.category", category);
+            user.messageLocale("commands.stats.category", finalCategory);
 
-        String kd = "NA";
-        if (stats.getDeaths() > 0) kd = Double.toString(stats.getKills() / (double) stats.getDeaths());
+            String kd = "NA";
+            if (stats.getDeaths() > 0) kd = Double.toString(stats.getKills() / (double) stats.getDeaths());
 
-        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.kills", stats.getKills()));
-        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.deaths", stats.getDeaths()));
-        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.kd", kd));
-        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.wins", stats.getGameWins()));
-        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.losses", stats.getGameLosses()));
-        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.games", stats.getGames()));
-        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.totalmoney", stats.getTotalMoney()));
-        user.getPlayer().sendMessage(plugin.getLocale("commands.stats.score", stats.getScore()));
+            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.kills", stats.getKills()));
+            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.deaths", stats.getDeaths()));
+            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.kd", kd));
+            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.wins", stats.getGameWins()));
+            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.losses", stats.getGameLosses()));
+            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.games", stats.getGames()));
+            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.totalmoney", stats.getTotalMoney()));
+            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.score", stats.getScore()));
+        }));
 
         return true;
     }

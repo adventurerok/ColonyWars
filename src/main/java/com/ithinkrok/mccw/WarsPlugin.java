@@ -134,8 +134,8 @@ public class WarsPlugin extends JavaPlugin {
         return persistence;
     }
 
-    public UserCategoryStats getOrCreateUserCategoryStats(UUID playerUUID, String category) {
-        return persistence.getOrCreateUserCategoryStats(playerUUID, category);
+    public void getOrCreateUserCategoryStats(UUID playerUUID, String category, Persistence.PersistenceTask task) {
+        persistence.getOrCreateUserCategoryStats(playerUUID, category, task);
     }
 
     public void saveUserCategoryStats(UserCategoryStats stats){
@@ -501,7 +501,7 @@ public class WarsPlugin extends JavaPlugin {
     }
 
 
-    public UserCategoryStats getUserCategoryStats(UUID uniqueId, String category) {
-        return persistence.getUserCategoryStats(uniqueId, category);
+    public void getUserCategoryStats(UUID uniqueId, String category, Persistence.PersistenceTask task) {
+        persistence.getUserCategoryStats(uniqueId, category, task);
     }
 }

@@ -7,6 +7,7 @@ import com.ithinkrok.mccw.event.UserAbilityCooldownEvent;
 import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
+import com.ithinkrok.mccw.util.Persistence;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
@@ -113,8 +114,8 @@ public class User {
         this.potionStrengthModifier = potionStrengthModifier;
     }
 
-    public UserCategoryStats getStats(String category) {
-        return plugin.getUserCategoryStats(getUniqueId(), category);
+    public void getStats(String category, Persistence.PersistenceTask task) {
+        plugin.getUserCategoryStats(getUniqueId(), category, task);
     }
 
     public UUID getUniqueId() {
@@ -125,28 +126,38 @@ public class User {
         if (!plugin.hasPersistence()) return;
 
 
-        UserCategoryStats changes = statsChanges;
+        StatsUpdater statsUpdater = new StatsUpdater(statsChanges);
         statsChanges = new UserCategoryStats();
 
-        updateStats(changes, plugin.getOrCreateUserCategoryStats(player.getUniqueId(), "total"));
+        plugin.getOrCreateUserCategoryStats(player.getUniqueId(), "total", statsUpdater);
         if (lastPlayerClass != null)
-            updateStats(changes, plugin.getOrCreateUserCategoryStats(player.getUniqueId(), lastPlayerClass.getName()));
+            plugin.getOrCreateUserCategoryStats(player.getUniqueId(), lastPlayerClass.getName(), statsUpdater);
         if (lastTeamColor != null)
-            updateStats(changes, plugin.getOrCreateUserCategoryStats(player.getUniqueId(), lastTeamColor.getName()));
+            plugin.getOrCreateUserCategoryStats(player.getUniqueId(), lastTeamColor.getName(), statsUpdater);
 
     }
 
-    private void updateStats(UserCategoryStats changes, UserCategoryStats target) {
-        target.setScore(target.getScore() + changes.getScore());
-        target.setKills(target.getKills() + changes.getKills());
-        target.setDeaths(target.getDeaths() + changes.getDeaths());
-        target.setGames(target.getGames() + changes.getGames());
-        target.setGameWins(target.getGameWins() + changes.getGameWins());
-        target.setGameLosses(target.getGameLosses() + changes.getGameLosses());
-        target.setTotalMoney(target.getTotalMoney() + changes.getTotalMoney());
+    private class StatsUpdater implements Persistence.PersistenceTask{
+        private UserCategoryStats changes;
 
-        plugin.saveUserCategoryStats(target);
+        public StatsUpdater(UserCategoryStats changes) {
+            this.changes = changes;
+        }
+
+        @Override
+        public void run(UserCategoryStats target) {
+            target.setScore(target.getScore() + changes.getScore());
+            target.setKills(target.getKills() + changes.getKills());
+            target.setDeaths(target.getDeaths() + changes.getDeaths());
+            target.setGames(target.getGames() + changes.getGames());
+            target.setGameWins(target.getGameWins() + changes.getGameWins());
+            target.setGameLosses(target.getGameLosses() + changes.getGameLosses());
+            target.setTotalMoney(target.getTotalMoney() + changes.getTotalMoney());
+
+            plugin.saveUserCategoryStats(target);
+        }
     }
+
 
     public void addGameWin() {
         statsChanges.setGameWins(statsChanges.getGameWins() + 1);

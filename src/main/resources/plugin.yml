@@ -93,7 +93,7 @@ commands:
     aliases: ["tc", "ct", "chatteam", "t"]
     usage: "/teamchat <message>"
     permission: "mccw.teamchat"
-  leaderboad:
+  leaderboard:
     description: "Shows the leaderboard"
     aliases: ["lb", "leaders", "board"]
     usage: "/leaderboard [category]"

@@ -486,7 +486,7 @@ public class CommandListener implements CommandExecutor {
         plugin.getPersistence().getUserCategoryStatsByScore(category, 10, statsByScore -> {
             Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                 for (int index = 0; index < statsByScore.size(); ++index) {
-                    user.getPlayer().sendMessage(plugin.getLocale("commands.leaderboard.listing", index,
+                    user.getPlayer().sendMessage(plugin.getLocale("commands.leaderboard.listing", index + 1,
                             Bukkit.getOfflinePlayer(UUID.fromString(statsByScore.get(index).getPlayerUUID())).getName(),
                             statsByScore.get(index).getScore()));
                 }

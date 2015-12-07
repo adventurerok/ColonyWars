@@ -37,10 +37,10 @@ public class Facing {
                 readDir = 3;
                 break;
             case 2:
-                readDir = 2;
+                readDir = 0;
                 break;
             case 3:
-                readDir = 0;
+                readDir = 2;
                 break;
             default:
                 return data;

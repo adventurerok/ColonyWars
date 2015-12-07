@@ -259,6 +259,8 @@ public class GameInstance {
         info.getPlayer().teleport(getMapSpawn(info.getTeamColor()));
 
         info.getPlayer().setGameMode(GameMode.SURVIVAL);
+        info.getPlayer().setAllowFlight(false);
+        info.getPlayer().spigot().setCollidesWithEntities(true);
 
         info.resetPlayerStats(true);
 

@@ -2,6 +2,7 @@ package com.ithinkrok.mccw.util.building;
 
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.Building;
+import com.ithinkrok.mccw.data.User;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -46,7 +47,9 @@ public class CannonTowerHandler {
             for(Entity e : building.getCenterBlock().getWorld().getNearbyEntities(building.getCenterBlock(), 35, 35,
                     35)) {
                 if(!(e instanceof Player)) continue;
-                if(plugin.getUser((Player) e).getTeamColor() == building.getTeamColor()) continue;
+
+                User user = plugin.getUser((Player) e);
+                if(!user.isInGame() || user.getTeamColor() == building.getTeamColor()) continue;
 
                 player = true;
                 break;

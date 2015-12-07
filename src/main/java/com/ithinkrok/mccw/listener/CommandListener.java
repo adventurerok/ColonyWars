@@ -129,10 +129,15 @@ public class CommandListener implements CommandExecutor {
     }
 
     private boolean onTestCommand(User user, String[] args) {
-        if (args.length > 0) {
-            Player targetPlayer = Bukkit.getPlayer(args[args.length - 1]);
+        if (args.length > 0 && args[args.length - 1].startsWith("-p")) {
+            String playerName = args[args.length - 1].substring(2);
+            Player targetPlayer = Bukkit.getPlayer(playerName);
 
             if (targetPlayer != null) user = plugin.getUser(targetPlayer);
+            else {
+                user.messageLocale("commands.test.unknown-player", playerName);
+                return true;
+            }
         }
 
         switch (args[0]) {

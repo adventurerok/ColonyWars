@@ -216,6 +216,7 @@ commands.members.near-showdown=%s (Near showdown arena)
 commands.spawn.not-in-game=&cYou cannot use this command while in game.
 commands.transfer.not-in-game=&cYou cannot use this command while in game.
 commands.transfer.no-player=&cNo player named &3%s &cin your team!
+commands.test.unknown-player=&cNo player named &3%s in the game!
 commands.test.team-change=&eYou were changed to team %s
 commands.test.class-change=&eYou were changed to class %s
 commands.test.invalid-class=&cInvalid class %s

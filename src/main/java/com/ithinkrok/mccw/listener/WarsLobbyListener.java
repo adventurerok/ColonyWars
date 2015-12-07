@@ -161,14 +161,6 @@ public class WarsLobbyListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerChat(AsyncPlayerChatEvent event) {
-        ChatColor playerColor = getPlayerNameColor(event.getPlayer());
-
-        event.setFormat(ChatColor.DARK_GRAY + "<" + playerColor + "%s" + ChatColor.DARK_GRAY + "> " + ChatColor.WHITE +
-                "%s");
-    }
-
-    @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         event.setCancelled(true);
 

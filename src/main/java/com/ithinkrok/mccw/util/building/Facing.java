@@ -75,10 +75,10 @@ public class Facing {
                 readDir = 0;
                 break;
             case 4:
-                readDir = 1;
+                readDir = 3;
                 break;
             case 5:
-                readDir = 3;
+                readDir = 1;
                 break;
             default:
                 return data;

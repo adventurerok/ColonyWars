@@ -68,7 +68,7 @@ public class WarsGameListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         User user = plugin.getUser(event.getPlayer());
         if (user == null) {

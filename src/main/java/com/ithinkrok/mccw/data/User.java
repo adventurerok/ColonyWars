@@ -157,6 +157,7 @@ public class User {
 
         @Override
         public void run(UserCategoryStats target) {
+            target.setName(player.getName());
             target.setScore(target.getScore() + changes.getScore());
             target.setKills(target.getKills() + changes.getKills());
             target.setDeaths(target.getDeaths() + changes.getDeaths());

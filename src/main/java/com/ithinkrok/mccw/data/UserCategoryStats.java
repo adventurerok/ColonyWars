@@ -21,6 +21,7 @@ public class UserCategoryStats {
      * The category of the stats. Can be "total", a player class name, or a team name.
      */
     @Column private String category;
+    @Column private String name;
     @Column private int gameWins;
     @Column private int gameLosses;
     @Column private int kills;
@@ -34,6 +35,14 @@ public class UserCategoryStats {
 
     public int getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPlayerUUID() {

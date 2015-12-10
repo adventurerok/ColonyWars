@@ -4,10 +4,7 @@ import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.command.WarsCommandExecutor;
 import com.ithinkrok.mccw.command.WarsCommandSender;
 import com.ithinkrok.mccw.command.WarsConsoleSender;
-import com.ithinkrok.mccw.command.executors.FixExecutor;
-import com.ithinkrok.mccw.command.executors.ListExecutor;
-import com.ithinkrok.mccw.command.executors.MembersExecutor;
-import com.ithinkrok.mccw.command.executors.TransferExecutor;
+import com.ithinkrok.mccw.command.executors.*;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.data.UserCategoryStats;
@@ -51,6 +48,7 @@ public class CommandListener implements CommandExecutor {
         executorHashMap.put("fix", new FixExecutor());
         executorHashMap.put("transfer", new TransferExecutor());
         executorHashMap.put("list", new ListExecutor());
+        executorHashMap.put("gamestate", new GameStateExecutor());
     }
 
     @Override
@@ -78,8 +76,6 @@ public class CommandListener implements CommandExecutor {
         switch (command.getName().toLowerCase()) {
             case "test":
                 return args.length >= 1 && onTestCommand(user, args);
-            case "gamestate":
-                return onGameStateCommand(user, args);
             case "spawn":
                 return onSpawnCommand(user);
             case "countdown":
@@ -187,18 +183,6 @@ public class CommandListener implements CommandExecutor {
         }
 
         return true;
-    }
-
-    private boolean onGameStateCommand(User user, String[] args) {
-        try {
-            GameState gameState = GameState.valueOf(args[0].toUpperCase());
-            plugin.changeGameState(gameState);
-            user.sendLocale("commands.gamestate.changed", gameState);
-            return true;
-        } catch (Exception e) {
-            user.sendLocale("commands.gamestate.invalid");
-            return false;
-        }
     }
 
     private boolean onSpawnCommand(User user) {

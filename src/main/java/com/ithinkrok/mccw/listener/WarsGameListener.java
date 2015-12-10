@@ -396,15 +396,16 @@ public class WarsGameListener implements Listener {
         }
 
         Player target = (Player) event.getEntity();
+        User targetInfo = plugin.getUser(target);
 
-        if (damagerInfo.getTeamColor() == plugin.getUser(target).getTeamColor()) {
-            event.setCancelled(true);
-            return;
+        if (damagerInfo.getTeamColor() == targetInfo.getTeamColor()) {
+            if(!(event.getDamager() instanceof TNTPrimed) || damagerInfo != targetInfo) {
+                event.setCancelled(true);
+                return;
+            }
         }
 
         plugin.onUserAttacked();
-
-        User targetInfo = plugin.getUser(target);
 
         if (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
             userAttackUser(new UserAttackEvent(damagerInfo, targetInfo, event));

@@ -27,6 +27,16 @@ playing-map: "playing"
 # white, gray, pink
 team-count: 4
 
+
+# Parkour gold amounts
+parkour:
+  # Amount for right clicking an ender chest
+  basic: 500
+  # Amount for right clicking an off redstone lamp
+  advanced: 2000
+  # Money cap
+  cap: 2500
+
 # When to force showdown start
 force-showdown:
 # The start time is the time after the start if no players are attacked. The attack time is the time after the last

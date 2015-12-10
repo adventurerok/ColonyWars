@@ -14,10 +14,14 @@ import org.bukkit.entity.Entity;
 public class ParcourMinigame implements LobbyMinigame {
 
     WarsPlugin plugin;
-    private int maxParkourMoney = 2500;
+    private int basicParkourMoney, advancedParkourMoney, maxParkourMoney;
 
     public ParcourMinigame(WarsPlugin plugin) {
         this.plugin = plugin;
+
+        basicParkourMoney = plugin.getWarsConfig().getParkourMoney("basic");
+        advancedParkourMoney = plugin.getWarsConfig().getParkourMoney("advanced");
+        maxParkourMoney = plugin.getWarsConfig().getParkourMoney("cap");
     }
 
     @Override
@@ -44,10 +48,10 @@ public class ParcourMinigame implements LobbyMinigame {
     public boolean onUserInteractWorld(User user, Block block) {
         switch (block.getType()) {
             case ENDER_CHEST:
-                addParkourMoney(user, 500, false);
+                addParkourMoney(user, basicParkourMoney, false);
                 return true;
             case REDSTONE_LAMP_OFF:
-                addParkourMoney(user, 2000, true);
+                addParkourMoney(user, advancedParkourMoney, true);
                 return true;
             default:
                 return false;

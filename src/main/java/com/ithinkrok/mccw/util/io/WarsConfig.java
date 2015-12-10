@@ -141,4 +141,8 @@ public class WarsConfig {
     public int getScoreModifier(String event){
         return config().getInt("score." + event);
     }
+
+    public int getParkourMoney(String type) {
+        return config().getInt("parkour." + type);
+    }
 }

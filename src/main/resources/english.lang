@@ -198,7 +198,7 @@ game.player.death.shot=&6%s &6was shot to death by a monster!
 game.player.death.drowned=&6%s &6drowned!
 game.player.death.fire=&6%s &6burned to death!
 
-game.player.respawn=%s &6has respawned!
+game.player.respawn=%s &6was revived by the gods!
 game.player.no-respawn=%s &6did not respawn!
 game.player.all-dead=&6Oh dear. Everyone is dead!
 game.team.winner=&6The %s &6Team has won the game!

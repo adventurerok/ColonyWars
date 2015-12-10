@@ -4,6 +4,7 @@ import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.command.WarsCommandExecutor;
 import com.ithinkrok.mccw.command.WarsCommandSender;
 import com.ithinkrok.mccw.command.WarsConsoleSender;
+import com.ithinkrok.mccw.command.executors.FixExecutor;
 import com.ithinkrok.mccw.command.executors.MembersExecutor;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
@@ -45,6 +46,7 @@ public class CommandListener implements CommandExecutor {
         this.consoleSender = new WarsConsoleSender(plugin);
 
         executorHashMap.put("members", new MembersExecutor());
+        executorHashMap.put("fix", new FixExecutor());
     }
 
     @Override
@@ -78,8 +80,6 @@ public class CommandListener implements CommandExecutor {
                 return onGameStateCommand(user, args);
             case "spawn":
                 return onSpawnCommand(user);
-            case "fix":
-                return onFixCommand(user);
             case "countdown":
                 return onCountdownCommand(user, args);
             case "stats":
@@ -259,46 +259,6 @@ public class CommandListener implements CommandExecutor {
         }
 
         user.teleport(plugin.getMapSpawn(null));
-        return true;
-    }
-
-    private boolean onFixCommand(User user) {
-        if (!plugin.isInGame()) return true;
-        if (!user.startCoolDown("fix", 1, plugin.getLocale("cooldowns.fix.finished"))) return true;
-        if (user.getPlayer().getVelocity().lengthSquared() > 0.3d) return true;
-
-        Block base = user.getPlayer().getLocation().clone().add(0, 1, 0).getBlock();
-        Block block;
-
-        for (int radius = 0; radius < 5; ++radius) {
-            for (int x = -radius; x <= radius; ++x) {
-                for (int z = -radius; z <= radius; ++z) {
-                    int state = 0;
-                    for (int y = radius + 1; y >= -radius - 2; --y) {
-                        if (Math.abs(x) < radius && Math.abs(y) + 3 < radius && Math.abs(z) < radius) continue;
-                        block = base.getRelative(x, y, z);
-
-                        boolean air = block.getType().isTransparent() || block.isLiquid();
-                        if (!air && state < 2) {
-                            state = 0;
-                            continue;
-                        } else if (air && state == 2) continue;
-                        else if (state < 3) {
-                            ++state;
-                            continue;
-                        }
-
-                        user.teleport(block.getLocation().clone().add(0.5, 2.0, 0.5));
-                        user.getPlayer().setVelocity(new Vector(0, -1, 0));
-                        return true;
-                    }
-                }
-            }
-        }
-
-        user.teleport(plugin.getMapSpawn(user.getTeamColor()));
-        user.sendLocale("commands.fix.failed");
-
         return true;
     }
 

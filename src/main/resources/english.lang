@@ -207,7 +207,7 @@ game.start.class=&6You are playing as the class&3 %s
 game.revival-chance=&6Your revival chance is now&3 %s
 
 #--COMMANDS--
-command.no-console=You must be a player to execute Colony Wars commands
+command.no-console=&cYou must be a player to execute this command.
 
 commands.members.no-team=&cYou are not in a team yet.
 commands.members.specify-team=&cPlease specify a proper team.

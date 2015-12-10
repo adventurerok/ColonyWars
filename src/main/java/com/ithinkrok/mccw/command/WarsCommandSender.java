@@ -1,5 +1,7 @@
 package com.ithinkrok.mccw.command;
 
+import com.ithinkrok.mccw.WarsPlugin;
+
 /**
  * Created by paul on 10/12/15.
  *
@@ -12,5 +14,6 @@ public interface WarsCommandSender {
     void sendLocaleDirect(String locale, Object...args);
     void sendMessage(String message);
     String getName();
+    WarsPlugin getPlugin();
 
 }

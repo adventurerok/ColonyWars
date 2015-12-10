@@ -210,6 +210,7 @@ game.revival-chance=&6Your revival chance is now&3 %s
 command.no-console=You must be a player to execute Colony Wars commands
 
 commands.members.no-team=&cYou are not in a team yet.
+commands.members.specify-team=&cPlease specify a proper team.
 commands.members.player-info=&6%s&6\: &3%s&6, Location\: &3%s
 commands.members.title=&6&lMembers of your team:
 commands.members.near-showdown=%s (Near showdown arena)

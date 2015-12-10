@@ -210,6 +210,11 @@ public class User implements WarsCommandSender {
         return player.getName();
     }
 
+    @Override
+    public WarsPlugin getPlugin() {
+        return plugin;
+    }
+
     public void addGameLoss() {
         statsChanges.setGameLosses(statsChanges.getGameLosses() + 1);
 

@@ -1,7 +1,6 @@
 package com.ithinkrok.mccw.command;
 
 import com.ithinkrok.mccw.WarsPlugin;
-import com.ithinkrok.mccw.util.io.LangFile;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 
@@ -14,15 +13,15 @@ public class WarsConsoleSender implements WarsCommandSender {
 
     private static ConsoleCommandSender consoleCommandSender = Bukkit.getConsoleSender();
 
-    private LangFile langFile;
+    private WarsPlugin plugin;
 
-    public WarsConsoleSender(LangFile langFile) {
-        this.langFile = langFile;
+    public WarsConsoleSender(WarsPlugin plugin) {
+        this.plugin = plugin;
     }
 
     @Override
     public void sendLocale(String locale, Object... args) {
-        consoleCommandSender.sendMessage(WarsPlugin.CHAT_PREFIX + langFile.getLocale(locale, args));
+        consoleCommandSender.sendMessage(WarsPlugin.CHAT_PREFIX + plugin.getLocale(locale, args));
     }
 
     @Override
@@ -32,7 +31,7 @@ public class WarsConsoleSender implements WarsCommandSender {
 
     @Override
     public void sendLocaleDirect(String locale, Object... args) {
-        consoleCommandSender.sendMessage(langFile.getLocale(locale, args));
+        consoleCommandSender.sendMessage(plugin.getLocale(locale, args));
     }
 
     @Override
@@ -43,5 +42,10 @@ public class WarsConsoleSender implements WarsCommandSender {
     @Override
     public String getName() {
         return consoleCommandSender.getName();
+    }
+
+    @Override
+    public WarsPlugin getPlugin() {
+        return plugin;
     }
 }

@@ -1,6 +1,10 @@
 package com.ithinkrok.mccw.listener;
 
 import com.ithinkrok.mccw.WarsPlugin;
+import com.ithinkrok.mccw.command.WarsCommandExecutor;
+import com.ithinkrok.mccw.command.WarsCommandSender;
+import com.ithinkrok.mccw.command.WarsConsoleSender;
+import com.ithinkrok.mccw.command.executors.MembersExecutor;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.data.UserCategoryStats;
@@ -32,14 +36,31 @@ import java.util.*;
 public class CommandListener implements CommandExecutor {
 
     private static DecimalFormat twoDecimalPlaces = new DecimalFormat("0.00");
+    private HashMap<String, WarsCommandExecutor> executorHashMap = new HashMap<>();
     private WarsPlugin plugin;
+    private WarsConsoleSender consoleSender;
 
     public CommandListener(WarsPlugin plugin) {
         this.plugin = plugin;
+        this.consoleSender = new WarsConsoleSender(plugin);
+
+        executorHashMap.put("members", new MembersExecutor());
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        String commandName = command.getName().toLowerCase();
+
+        if (executorHashMap.containsKey(commandName)) {
+            WarsCommandSender warsCommandSender;
+            if (sender instanceof Player) warsCommandSender = plugin.getUser((Player) sender);
+            else warsCommandSender = consoleSender;
+
+            return executorHashMap.get(commandName).onCommand(warsCommandSender, command, label, args);
+        } else return onCommandOld(sender, command, label, args);
+    }
+
+    public boolean onCommandOld(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(plugin.getLocale("command.no-console"));
             return true;
@@ -55,8 +76,6 @@ public class CommandListener implements CommandExecutor {
                 return args.length >= 1 && onTestCommand(user, args);
             case "gamestate":
                 return onGameStateCommand(user, args);
-            case "members":
-                return onMembersCommand(user);
             case "spawn":
                 return onSpawnCommand(user);
             case "fix":
@@ -231,52 +250,6 @@ public class CommandListener implements CommandExecutor {
             user.sendLocale("commands.gamestate.invalid");
             return false;
         }
-    }
-
-    private boolean onMembersCommand(User user) {
-        if (user.getTeamColor() == null) {
-            user.sendLocale("commands.members.no-team");
-            return true;
-        }
-
-        user.sendLocale("commands.members.title");
-
-        Team team = user.getTeam();
-
-        for (Player player : team.getPlayers()) {
-            User other = plugin.getUser(player);
-
-            String name = other.getFormattedName();
-            String playerClass = other.getPlayerClass() == null ? plugin.getLocale("team.none") :
-                    other.getPlayerClass().getFormattedName();
-
-            String nearestBase = null;
-            if (plugin.isInGame()) {
-                double smallestDistSquared = 99999999;
-
-                for (TeamColor teamColor : TeamColor.values()) {
-                    Location loc = plugin.getMapSpawn(teamColor);
-                    double distSquared = loc.distanceSquared(player.getLocation());
-
-                    if (distSquared < smallestDistSquared) {
-                        smallestDistSquared = distSquared;
-                        nearestBase = teamColor.getFormattedName();
-                    }
-                }
-
-                if (plugin.getMapSpawn(null).distanceSquared(player.getLocation()) < smallestDistSquared) {
-                    nearestBase = plugin.getLocale("commands.members.near-showdown", nearestBase);
-                }
-            } else {
-                nearestBase = "Not in game";
-            }
-
-            //Send the player a message directly to avoid the chat prefix
-            user.getPlayer()
-                    .sendMessage(plugin.getLocale("commands.members.player-info", name, playerClass, nearestBase));
-        }
-
-        return true;
     }
 
     private boolean onSpawnCommand(User user) {

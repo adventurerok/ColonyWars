@@ -49,6 +49,7 @@ minigames.wool.transfer=&3%s &dtransferred the wool to &3%s!
 minigames.wool.given=&dYou now have the wool. Right click someone to transfer it to them!
 minigames.parcour.winner=&3%s &6has completed the parkour and will start next game with $%s extra!
 minigames.parcour.advanced=&3%s &6has completed the advanced parkour and will start next game with $%s extra!
+minigames.parcour.capped=&cYou have already earned all the money you can from this parcour run!
 
 #--COUNTDOWNS--
 countdowns.game.warning.minutes=&7Game starting in&6 %s &7Minutes..

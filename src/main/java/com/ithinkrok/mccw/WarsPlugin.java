@@ -313,7 +313,7 @@ public class WarsPlugin extends JavaPlugin {
     public void messageAll(String message) {
         getServer().getConsoleSender().sendMessage(CHAT_PREFIX + message);
         for (User p : playerInfoHashMap.values()) {
-            p.message(message);
+            p.sendMessage(message);
         }
     }
 
@@ -436,9 +436,9 @@ public class WarsPlugin extends JavaPlugin {
                 .createItemWithNameAndLore(Material.EMPTY_MAP, 1, 0, getLocale("lobby.chooser.map.name"),
                         getLocale("lobby.chooser.map.desc")));
 
-        user.message(getLocale("lobby.info.choose-class"));
+        user.sendMessage(getLocale("lobby.info.choose-class"));
 
-        user.message(getLocale("lobby.info.map-info"));
+        user.sendMessage(getLocale("lobby.info.map-info"));
 
         player.teleport(getLobbySpawn());
 

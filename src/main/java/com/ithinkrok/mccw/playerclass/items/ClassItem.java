@@ -313,11 +313,11 @@ public class ClassItem {
         } else {
             if (rightClickAction == null) return false;
             if (isTimingOut(event.getUser())) {
-                event.getUser().messageLocale("timeouts.default.wait");
+                event.getUser().sendLocale("timeouts.default.wait");
                 return true;
             }
             if (isCoolingDown(event.getUser())) {
-                event.getUser().messageLocale("cooldowns.default.wait");
+                event.getUser().sendLocale("cooldowns.default.wait");
                 return true;
             }
             boolean done = rightClickAction.onInteractWorld(event);

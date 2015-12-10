@@ -28,7 +28,7 @@ public class WarsBaseListener implements Listener {
         User user = new User(plugin, event.getPlayer());
         plugin.setUser(event.getPlayer(), user);
 
-        user.messageLocale("server.welcome");
+        user.sendLocale("server.welcome");
 
         user.getPlayer().getInventory().clear();
 

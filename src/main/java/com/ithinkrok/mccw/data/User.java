@@ -1,6 +1,7 @@
 package com.ithinkrok.mccw.data;
 
 import com.ithinkrok.mccw.WarsPlugin;
+import com.ithinkrok.mccw.command.WarsCommandSender;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.event.UserAbilityCooldownEvent;
@@ -32,7 +33,7 @@ import java.util.stream.Collectors;
  * <p>
  * Stores the player's info while they are online
  */
-public class User {
+public class User implements WarsCommandSender {
 
     private static final HashSet<Material> SEE_THROUGH = new HashSet<>();
 
@@ -182,16 +183,31 @@ public class User {
 
         statsChanges.setScore(statsChanges.getScore() + amount);
 
-        if (amount > 0) messageLocale("score.gain", amount);
-        else messageLocale("score.loss", -amount);
+        if (amount > 0) sendLocale("score.gain", amount);
+        else sendLocale("score.loss", -amount);
     }
 
-    public void messageLocale(String locale, Object... objects) {
-        message(plugin.getLocale(locale, objects));
+    public void sendLocale(String locale, Object... objects) {
+        sendMessage(plugin.getLocale(locale, objects));
     }
 
-    public void message(String message) {
+    @Override
+    public void sendMessageDirect(String message) {
+        player.sendMessage(message);
+    }
+
+    @Override
+    public void sendLocaleDirect(String locale, Object... args) {
+        player.sendMessage(plugin.getLocale(locale, args));
+    }
+
+    public void sendMessage(String message) {
         player.sendMessage(WarsPlugin.CHAT_PREFIX + message);
+    }
+
+    @Override
+    public String getName() {
+        return player.getName();
     }
 
     public void addGameLoss() {
@@ -380,7 +396,7 @@ public class User {
 
     public boolean startCoolDown(String ability, int seconds, String coolDownMessage) {
         if (isCoolingDown(ability)) {
-            message(ChatColor.RED + "Please wait for this ability to cool down!");
+            sendMessage(ChatColor.RED + "Please wait for this ability to cool down!");
             return false;
         }
 
@@ -407,7 +423,7 @@ public class User {
         getPlayerClassHandler().onAbilityCooldown(new UserAbilityCooldownEvent(this, ability));
 
         if (message == null) return;
-        message(ChatColor.GREEN + message);
+        sendMessage(ChatColor.GREEN + message);
         player.playSound(player.getLocation(), Sound.ZOMBIE_UNFECT, 1.0f, 2.0f);
     }
 
@@ -451,8 +467,8 @@ public class User {
 
         updateScoreboard();
 
-        messageLocale("money.balance.user.deduct", cash);
-        messageLocale("money.balance.user.new", playerCash);
+        sendLocale("money.balance.user.deduct", cash);
+        sendLocale("money.balance.user.new", playerCash);
 
         return true;
     }
@@ -462,17 +478,17 @@ public class User {
 
         Building building = plugin.getGameInstance().getBuildingInfo(shopBlock);
         if (building == null || shopBlock.getBlock().getType() != Material.OBSIDIAN) {
-            message(plugin.getLocale("building.shop.invalid"));
+            sendMessage(plugin.getLocale("building.shop.invalid"));
             return;
         }
 
         if (getTeamColor() != building.getTeamColor()) {
-            message(plugin.getLocale("building.shop.not-yours"));
+            sendMessage(plugin.getLocale("building.shop.not-yours"));
             return;
         }
 
         if (!building.isFinished()) {
-            message(plugin.getLocale("building.shop.not-finished"));
+            sendMessage(plugin.getLocale("building.shop.not-finished"));
             return;
         }
 

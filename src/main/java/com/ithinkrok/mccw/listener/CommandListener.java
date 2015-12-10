@@ -80,7 +80,7 @@ public class CommandListener implements CommandExecutor {
     private boolean onTransferCommand(User user, String[] args) {
         if (args.length < 1) return false;
         if (user.getTeam() == null) {
-            user.messageLocale("commands.transfer.not-in-game");
+            user.sendLocale("commands.transfer.not-in-game");
             return true;
         }
 
@@ -94,7 +94,7 @@ public class CommandListener implements CommandExecutor {
             }
 
             if (target == null) {
-                user.messageLocale("commands.transfer.no-player", targetName);
+                user.sendLocale("commands.transfer.no-player", targetName);
                 return true;
             }
         }
@@ -103,7 +103,7 @@ public class CommandListener implements CommandExecutor {
             int amount = Integer.parseInt(args[0]);
 
             if (!user.subtractPlayerCash(amount)) {
-                user.messageLocale("money.exchange.too-expensive");
+                user.sendLocale("money.exchange.too-expensive");
                 return true;
             }
 
@@ -119,7 +119,7 @@ public class CommandListener implements CommandExecutor {
                 user.getTeam().messageLocale("money.exchange.user-transfer", user.getFormattedName(), amount,
                         target.getFormattedName());
 
-                target.messageLocale("money.balance.user.new", target.getPlayerCash());
+                target.sendLocale("money.balance.user.new", target.getPlayerCash());
             }
 
             return true;
@@ -135,7 +135,7 @@ public class CommandListener implements CommandExecutor {
 
             if (targetPlayer != null) user = plugin.getUser(targetPlayer);
             else {
-                user.messageLocale("commands.test.unknown-player", playerName);
+                user.sendLocale("commands.test.unknown-player", playerName);
                 return true;
             }
         }
@@ -146,12 +146,12 @@ public class CommandListener implements CommandExecutor {
 
                 TeamColor teamColor = TeamColor.fromName(args[1]);
                 if (teamColor == null) {
-                    user.messageLocale("commands.test.invalid-team", args[1]);
+                    user.sendLocale("commands.test.invalid-team", args[1]);
                     return true;
                 }
                 user.setTeamColor(teamColor);
 
-                user.messageLocale("commands.test.team-change", teamColor.getFormattedName());
+                user.sendLocale("commands.test.team-change", teamColor.getFormattedName());
 
                 break;
             case "class":
@@ -159,12 +159,12 @@ public class CommandListener implements CommandExecutor {
 
                 PlayerClass playerClass = PlayerClass.fromName(args[1]);
                 if (playerClass == null) {
-                    user.messageLocale("commands.test.invalid-class", args[1]);
+                    user.sendLocale("commands.test.invalid-class", args[1]);
                     return true;
                 }
                 user.setPlayerClass(playerClass);
 
-                user.messageLocale("commands.test.class-change", playerClass.getFormattedName());
+                user.sendLocale("commands.test.class-change", playerClass.getFormattedName());
 
                 break;
             case "money":
@@ -172,7 +172,7 @@ public class CommandListener implements CommandExecutor {
                 user.addPlayerCash(10000);
                 user.getTeam().addTeamCash(10000);
 
-                user.messageLocale("commands.test.money", 10000);
+                user.sendLocale("commands.test.money", 10000);
                 break;
             case "build":
                 if (args.length < 2) return false;
@@ -180,16 +180,16 @@ public class CommandListener implements CommandExecutor {
                 user.getPlayerInventory()
                         .addItem(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 16, 0, args[1]));
 
-                user.messageLocale("commands.test.build-blocks", 16, args[1]);
+                user.sendLocale("commands.test.build-blocks", 16, args[1]);
                 break;
             case "base_location":
                 Team team = user.getTeam();
                 if (team == null) {
-                    user.messageLocale("commands.test.base.no-team");
+                    user.sendLocale("commands.test.base.no-team");
                     break;
                 }
 
-                user.messageLocale("commands.test.base.loc", team.getBaseLocation());
+                user.sendLocale("commands.test.base.loc", team.getBaseLocation());
                 break;
             case "shrink":
                 if (plugin.getShowdownArena() == null) return true;
@@ -199,7 +199,7 @@ public class CommandListener implements CommandExecutor {
                     int amount = Integer.parseInt(args[1]);
 
                     if (amount < 1 || amount > 30) {
-                        user.messageLocale("commands.shrink.bad-size", args[1]);
+                        user.sendLocale("commands.shrink.bad-size", args[1]);
                         return true;
                     }
 
@@ -209,7 +209,7 @@ public class CommandListener implements CommandExecutor {
 
                     return true;
                 } catch (NumberFormatException e) {
-                    user.messageLocale("commands.shrink.bad-size", args[1]);
+                    user.sendLocale("commands.shrink.bad-size", args[1]);
                     return true;
                 }
             case "rejoin":
@@ -225,21 +225,21 @@ public class CommandListener implements CommandExecutor {
         try {
             GameState gameState = GameState.valueOf(args[0].toUpperCase());
             plugin.changeGameState(gameState);
-            user.messageLocale("commands.gamestate.changed", gameState);
+            user.sendLocale("commands.gamestate.changed", gameState);
             return true;
         } catch (Exception e) {
-            user.messageLocale("commands.gamestate.invalid");
+            user.sendLocale("commands.gamestate.invalid");
             return false;
         }
     }
 
     private boolean onMembersCommand(User user) {
         if (user.getTeamColor() == null) {
-            user.messageLocale("commands.members.no-team");
+            user.sendLocale("commands.members.no-team");
             return true;
         }
 
-        user.messageLocale("commands.members.title");
+        user.sendLocale("commands.members.title");
 
         Team team = user.getTeam();
 
@@ -281,7 +281,7 @@ public class CommandListener implements CommandExecutor {
 
     private boolean onSpawnCommand(User user) {
         if (user.isInGame()) {
-            user.messageLocale("commands.spawn.not-in-game");
+            user.sendLocale("commands.spawn.not-in-game");
             return true;
         }
 
@@ -324,7 +324,7 @@ public class CommandListener implements CommandExecutor {
         }
 
         user.teleport(plugin.getMapSpawn(user.getTeamColor()));
-        user.messageLocale("commands.fix.failed");
+        user.sendLocale("commands.fix.failed");
 
         return true;
     }
@@ -334,7 +334,7 @@ public class CommandListener implements CommandExecutor {
 
         CountdownHandler handler = plugin.getCountdownHandler();
         if (!handler.isCountingDown()) {
-            user.messageLocale("commands.countdown.none");
+            user.sendLocale("commands.countdown.none");
             return true;
         }
 
@@ -352,7 +352,7 @@ public class CommandListener implements CommandExecutor {
 
     private boolean onStatsCommand(User user, String[] args) {
         if (!plugin.hasPersistence()) {
-            user.messageLocale("commands.stats.disabled");
+            user.sendLocale("commands.stats.disabled");
             return true;
         }
 
@@ -362,7 +362,7 @@ public class CommandListener implements CommandExecutor {
         final String finalCategory = category;
         user.getStats(category, stats -> Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             if (stats == null) {
-                user.messageLocale("commands.stats.none", finalCategory);
+                user.sendLocale("commands.stats.none", finalCategory);
                 return;
             }
 
@@ -372,7 +372,7 @@ public class CommandListener implements CommandExecutor {
                 add = user.getStatsChanges();
             } else add = new UserCategoryStats();
 
-            user.messageLocale("commands.stats.category", finalCategory);
+            user.sendLocale("commands.stats.category", finalCategory);
 
 
             int kills = stats.getKills() + add.getKills();
@@ -416,7 +416,7 @@ public class CommandListener implements CommandExecutor {
             else teams.get(user.getTeamColor()).add(user);
         }
 
-        sender.messageLocale("commands.list.title", plugin.getUsers().size(), plugin.getServer().getMaxPlayers());
+        sender.sendLocale("commands.list.title", plugin.getUsers().size(), plugin.getServer().getMaxPlayers());
 
         for (Map.Entry<TeamColor, List<User>> entry : teams.entrySet()) {
             if (entry.getValue().isEmpty()) continue;
@@ -479,14 +479,14 @@ public class CommandListener implements CommandExecutor {
 
     private boolean onLeaderboardCommand(User user, String[] args) {
         if (!plugin.hasPersistence()) {
-            user.messageLocale("commands.stats.disabled");
+            user.sendLocale("commands.stats.disabled");
             return true;
         }
 
         String category = "total";
         if (args.length > 0) category = args[0];
 
-        user.messageLocale("commands.leaderboard.category", category);
+        user.sendLocale("commands.leaderboard.category", category);
 
         plugin.getPersistence().getUserCategoryStatsByScore(category, 10, statsByScore -> {
             Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {

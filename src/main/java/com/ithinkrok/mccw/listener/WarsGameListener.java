@@ -98,9 +98,9 @@ public class WarsGameListener implements Listener {
         user.setSpectator();
         user.getPlayer().teleport(plugin.getMapSpawn(null));
 
-        user.messageLocale("spectators.game.in-progress");
-        user.messageLocale("spectators.game.wait-next");
-        user.messageLocale("spectators.players.chose");
+        user.sendLocale("spectators.game.in-progress");
+        user.sendLocale("spectators.game.wait-next");
+        user.sendLocale("spectators.players.chose");
     }
 
     @EventHandler
@@ -182,7 +182,7 @@ public class WarsGameListener implements Listener {
 
         Schematic schematic = plugin.getSchematicData(meta.getDisplayName());
         if (schematic == null) {
-            user.messageLocale("building.unknown");
+            user.sendLocale("building.unknown");
             event.setCancelled(true);
             return;
         }
@@ -192,7 +192,7 @@ public class WarsGameListener implements Listener {
         if (!SchematicBuilder
                 .buildSchematic(plugin, schematic, event.getBlock().getLocation(), rotation, user.getTeamColor())) {
             event.setCancelled(true);
-            user.messageLocale("building.invalid-loc");
+            user.sendLocale("building.invalid-loc");
         }
     }
 
@@ -211,18 +211,18 @@ public class WarsGameListener implements Listener {
 
         Building building = plugin.getBuildingInfo(event.getBlock().getLocation());
         if (building == null) {
-            user.messageLocale("building.destroy.invalid");
+            user.sendLocale("building.destroy.invalid");
             return;
         }
 
         if (user.getTeamColor() == building.getTeamColor()) {
-            user.messageLocale("building.destroy.own-team");
+            user.sendLocale("building.destroy.own-team");
             event.setCancelled(true);
             return;
         }
 
         if (Buildings.BASE.equals(building.getBuildingName()) || Buildings.FORTRESS.equals(building.getBuildingName())) {
-            user.messageLocale("building.destroy.bases");
+            user.sendLocale("building.destroy.bases");
             event.setCancelled(true);
             return;
         }
@@ -327,7 +327,7 @@ public class WarsGameListener implements Listener {
 
         //Prevent players from escaping showdown bounds
         if (plugin.getShowdownArena().checkUserMove(user, event.getTo())) {
-            if ((user.getTrappedTicks() % 50) == 0) user.messageLocale("showdown.escape");
+            if ((user.getTrappedTicks() % 50) == 0) user.sendLocale("showdown.escape");
             user.setTrappedTicks(user.getTrappedTicks() + 1);
 
             if (user.getTrappedTicks() >= 199) {

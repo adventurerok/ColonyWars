@@ -38,7 +38,7 @@ public class WoolHeadMinigame implements LobbyMinigame {
         woolUserUniqueId = user.getUniqueId();
 
         plugin.messageAllLocale("minigames.wool.initial", user.getFormattedName());
-        user.messageLocale("minigames.wool.given");
+        user.sendLocale("minigames.wool.given");
     }
 
     @Override
@@ -67,7 +67,7 @@ public class WoolHeadMinigame implements LobbyMinigame {
                 .setHelmet(new ItemStack(Material.WOOL, 1, DyeColor.PINK.getWoolData()));
 
         plugin.messageAllLocale("minigames.wool.initial", woolUser.getFormattedName());
-        woolUser.messageLocale("minigames.wool.given");
+        woolUser.sendLocale("minigames.wool.given");
     }
 
     @Override

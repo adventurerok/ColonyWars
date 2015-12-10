@@ -277,9 +277,9 @@ public class GameInstance {
 
         plugin.givePlayerHandbook(info.getPlayer());
 
-        info.messageLocale("game.start.team", info.getTeamColor().getFormattedName());
+        info.sendLocale("game.start.team", info.getTeamColor().getFormattedName());
 
-        info.messageLocale("game.start.class", info.getPlayerClass().getFormattedName());
+        info.sendLocale("game.start.class", info.getPlayerClass().getFormattedName());
 
         info.addGame();
     }

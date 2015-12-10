@@ -5,6 +5,7 @@ import com.ithinkrok.mccw.command.WarsCommandExecutor;
 import com.ithinkrok.mccw.command.WarsCommandSender;
 import com.ithinkrok.mccw.command.WarsConsoleSender;
 import com.ithinkrok.mccw.command.executors.FixExecutor;
+import com.ithinkrok.mccw.command.executors.ListExecutor;
 import com.ithinkrok.mccw.command.executors.MembersExecutor;
 import com.ithinkrok.mccw.command.executors.TransferExecutor;
 import com.ithinkrok.mccw.data.Team;
@@ -49,6 +50,7 @@ public class CommandListener implements CommandExecutor {
         executorHashMap.put("members", new MembersExecutor());
         executorHashMap.put("fix", new FixExecutor());
         executorHashMap.put("transfer", new TransferExecutor());
+        executorHashMap.put("list", new ListExecutor());
     }
 
     @Override
@@ -84,8 +86,6 @@ public class CommandListener implements CommandExecutor {
                 return onCountdownCommand(user, args);
             case "stats":
                 return onStatsCommand(user, args);
-            case "list":
-                return onListCommand(user);
             case "teamchat":
                 return onTeamChatCommand(user, args);
             case "leaderboard":
@@ -282,42 +282,6 @@ public class CommandListener implements CommandExecutor {
             user.getPlayer().sendMessage(plugin.getLocale("commands.stats.score", score));
         }));
 
-        return true;
-    }
-
-    private boolean onListCommand(User sender) {
-        Map<TeamColor, List<User>> teams = new LinkedHashMap<>();
-
-        teams.put(null, new ArrayList<>());
-        for (TeamColor teamColor : TeamColor.values()) {
-            teams.put(teamColor, new ArrayList<>());
-        }
-
-        for (User user : plugin.getUsers()) {
-            if (!user.isInGame()) teams.get(null).add(user);
-            else teams.get(user.getTeamColor()).add(user);
-        }
-
-        sender.sendLocale("commands.list.title", plugin.getUsers().size(), plugin.getServer().getMaxPlayers());
-
-        for (Map.Entry<TeamColor, List<User>> entry : teams.entrySet()) {
-            if (entry.getValue().isEmpty()) continue;
-
-            StringBuilder names = new StringBuilder();
-
-            for (User user : entry.getValue()) {
-                if (names.length() != 0) names.append(ChatColor.GOLD).append(", ");
-
-                names.append(user.getFormattedName());
-            }
-
-            String teamName;
-            if (entry.getKey() == null) teamName = plugin.getLocale("commands.list.spectator");
-            else teamName = entry.getKey().getFormattedName();
-
-            //send a message directly to player to avoid Colony Wars prefix
-            sender.getPlayer().sendMessage(plugin.getLocale("commands.list.line", teamName, names));
-        }
         return true;
     }
 

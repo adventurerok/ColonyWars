@@ -49,6 +49,7 @@ public class CommandListener implements CommandExecutor {
         executorHashMap.put("transfer", new TransferExecutor());
         executorHashMap.put("list", new ListExecutor());
         executorHashMap.put("gamestate", new GameStateExecutor());
+        executorHashMap.put("leaderboard", new LeaderboardExecutor());
     }
 
     @Override
@@ -84,8 +85,6 @@ public class CommandListener implements CommandExecutor {
                 return onStatsCommand(user, args);
             case "teamchat":
                 return onTeamChatCommand(user, args);
-            case "leaderboard":
-                return onLeaderboardCommand(user, args);
             default:
                 return false;
         }
@@ -303,30 +302,6 @@ public class CommandListener implements CommandExecutor {
                 player.sendMessage(formatted);
             }
         }
-
-        return true;
-    }
-
-    private boolean onLeaderboardCommand(User user, String[] args) {
-        if (!plugin.hasPersistence()) {
-            user.sendLocale("commands.stats.disabled");
-            return true;
-        }
-
-        String category = "total";
-        if (args.length > 0) category = args[0];
-
-        user.sendLocale("commands.leaderboard.category", category);
-
-        plugin.getPersistence().getUserCategoryStatsByScore(category, 10, statsByScore -> {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                for (int index = 0; index < statsByScore.size(); ++index) {
-                    user.getPlayer().sendMessage(plugin.getLocale("commands.leaderboard.listing", index + 1,
-                            Bukkit.getOfflinePlayer(UUID.fromString(statsByScore.get(index).getPlayerUUID())).getName(),
-                            statsByScore.get(index).getScore()));
-                }
-            });
-        });
 
         return true;
     }

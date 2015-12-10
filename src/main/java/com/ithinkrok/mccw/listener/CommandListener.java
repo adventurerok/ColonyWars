@@ -6,6 +6,7 @@ import com.ithinkrok.mccw.command.WarsCommandSender;
 import com.ithinkrok.mccw.command.WarsConsoleSender;
 import com.ithinkrok.mccw.command.executors.FixExecutor;
 import com.ithinkrok.mccw.command.executors.MembersExecutor;
+import com.ithinkrok.mccw.command.executors.TransferExecutor;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.data.UserCategoryStats;
@@ -47,6 +48,7 @@ public class CommandListener implements CommandExecutor {
 
         executorHashMap.put("members", new MembersExecutor());
         executorHashMap.put("fix", new FixExecutor());
+        executorHashMap.put("transfer", new TransferExecutor());
     }
 
     @Override
@@ -72,8 +74,6 @@ public class CommandListener implements CommandExecutor {
         User user = plugin.getUser(player);
 
         switch (command.getName().toLowerCase()) {
-            case "transfer":
-                return onTransferCommand(user, args);
             case "test":
                 return args.length >= 1 && onTestCommand(user, args);
             case "gamestate":
@@ -94,57 +94,6 @@ public class CommandListener implements CommandExecutor {
                 return false;
         }
 
-    }
-
-    private boolean onTransferCommand(User user, String[] args) {
-        if (args.length < 1) return false;
-        if (user.getTeam() == null) {
-            user.sendLocale("commands.transfer.not-in-game");
-            return true;
-        }
-
-        User target = null;
-        if (args.length > 1) {
-            String targetName = args[1];
-
-            for (Player player : user.getTeam().getPlayers()) {
-                if (!player.getName().equals(targetName)) continue;
-                target = plugin.getUser(player);
-            }
-
-            if (target == null) {
-                user.sendLocale("commands.transfer.no-player", targetName);
-                return true;
-            }
-        }
-
-        try {
-            int amount = Integer.parseInt(args[0]);
-
-            if (!user.subtractPlayerCash(amount)) {
-                user.sendLocale("money.exchange.too-expensive");
-                return true;
-            }
-
-            if (target == null) {
-                Team team = user.getTeam();
-                team.addTeamCash(amount);
-
-                team.messageLocale("money.exchange.team-transfer", user.getFormattedName(), amount);
-                team.messageLocale("money.balance.team.new", team.getTeamCash());
-            } else {
-                target.addPlayerCash(amount);
-
-                user.getTeam().messageLocale("money.exchange.user-transfer", user.getFormattedName(), amount,
-                        target.getFormattedName());
-
-                target.sendLocale("money.balance.user.new", target.getPlayerCash());
-            }
-
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
     }
 
     private boolean onTestCommand(User user, String[] args) {

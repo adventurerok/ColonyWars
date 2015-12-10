@@ -1,5 +1,6 @@
 package com.ithinkrok.mccw.command.executors;
 
+import com.ithinkrok.mccw.command.CommandUtils;
 import com.ithinkrok.mccw.command.WarsCommandExecutor;
 import com.ithinkrok.mccw.command.WarsCommandSender;
 import com.ithinkrok.mccw.data.User;
@@ -15,10 +16,7 @@ import org.bukkit.util.Vector;
 public class FixExecutor implements WarsCommandExecutor {
     @Override
     public boolean onCommand(WarsCommandSender sender, Command command, String label, String[] args) {
-        if(!(sender instanceof User)) {
-            sender.sendLocale("command.no-console");
-            return true;
-        }
+        if(!CommandUtils.checkUser(sender)) return true;
 
         if (!sender.getPlugin().isInGame()) return true;
 

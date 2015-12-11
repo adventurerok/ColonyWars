@@ -281,7 +281,7 @@ public class GameInstance {
 
         info.sendLocale("game.start.class", info.getPlayerClass().getFormattedName());
 
-        info.addGame();
+        info.getStatsHolder().addGame();
     }
 
     public TeamColor assignPlayerTeam() {
@@ -382,7 +382,7 @@ public class GameInstance {
         for (Player player : plugin.getTeam(winner).getPlayers()) {
             User user = plugin.getUser(player);
 
-            user.addGameWin();
+            user.getStatsHolder().addGameWin();
         }
 
         changeGameState(GameState.AFTERMATH);

@@ -43,7 +43,7 @@ public class StatsExecutor implements WarsCommandExecutor {
             UserCategoryStats add;
             if (finalCategory.equals("total") || finalCategory.equals(user.getLastPlayerClass().getName()) ||
                     finalCategory.equals(user.getLastTeamColor().getName())) {
-                add = user.getStatsChanges();
+                add = user.getStatsHolder().getStatsChanges();
             } else add = new UserCategoryStats();
 
             user.sendLocale("commands.stats.category", finalCategory);

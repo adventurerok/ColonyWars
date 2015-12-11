@@ -43,7 +43,7 @@ public class User implements WarsCommandSender {
         SEE_THROUGH.add(Material.STATIONARY_WATER);
     }
 
-    private UserCategoryStats statsChanges = new UserCategoryStats();
+    private StatsHolder statsHolder;
     private Player player;
     private TeamColor teamColor;
     private WarsPlugin plugin;
@@ -62,21 +62,21 @@ public class User implements WarsCommandSender {
     private UUID lastAttacker;
     private String mapVote;
     private int trappedTicks;
-    private PlayerClass lastPlayerClass;
-    private TeamColor lastTeamColor;
     private double potionStrengthModifier;
-
-    public PlayerClass getLastPlayerClass() {
-        return lastPlayerClass;
-    }
-
-    public TeamColor getLastTeamColor() {
-        return lastTeamColor;
-    }
 
     public User(WarsPlugin plugin, Player player) {
         this.plugin = plugin;
         this.player = player;
+
+        statsHolder = new StatsHolder(this);
+    }
+
+    public PlayerClass getLastPlayerClass() {
+        return statsHolder.getLastPlayerClass();
+    }
+
+    public TeamColor getLastTeamColor() {
+        return statsHolder.getLastTeamColor();
     }
 
     public Map<String, Integer> getUpgradeLevels() {
@@ -93,8 +93,12 @@ public class User implements WarsCommandSender {
         return data.data;
     }
 
-    public UserCategoryStats getStatsChanges() {
-        return statsChanges;
+    public StatsHolder getStatsHolder() {
+        return statsHolder;
+    }
+
+    public void onDisconnect(){
+        statsHolder.setUser(null);
     }
 
     public PlayerInventory getPlayerInventory() {
@@ -135,62 +139,6 @@ public class User implements WarsCommandSender {
         return player.getUniqueId();
     }
 
-    public void saveStats() {
-        if (!plugin.hasPersistence()) return;
-
-        StatsUpdater statsUpdater = new StatsUpdater(statsChanges);
-        statsChanges = new UserCategoryStats();
-
-        plugin.getOrCreateUserCategoryStats(player.getUniqueId(), "total", statsUpdater);
-        if (lastPlayerClass != null)
-            plugin.getOrCreateUserCategoryStats(player.getUniqueId(), lastPlayerClass.getName(), statsUpdater);
-        if (lastTeamColor != null)
-            plugin.getOrCreateUserCategoryStats(player.getUniqueId(), lastTeamColor.getName(), statsUpdater);
-
-    }
-
-    private class StatsUpdater implements Persistence.PersistenceTask{
-        private UserCategoryStats changes;
-
-        public StatsUpdater(UserCategoryStats changes) {
-            this.changes = changes;
-        }
-
-        @Override
-        public void run(UserCategoryStats target) {
-            target.setName(player.getName());
-            target.setScore(target.getScore() + changes.getScore());
-            target.setKills(target.getKills() + changes.getKills());
-            target.setDeaths(target.getDeaths() + changes.getDeaths());
-            target.setGames(target.getGames() + changes.getGames());
-            target.setGameWins(target.getGameWins() + changes.getGameWins());
-            target.setGameLosses(target.getGameLosses() + changes.getGameLosses());
-            target.setTotalMoney(target.getTotalMoney() + changes.getTotalMoney());
-
-            plugin.saveUserCategoryStats(target);
-        }
-    }
-
-
-    public void addGameWin() {
-        statsChanges.setGameWins(statsChanges.getGameWins() + 1);
-
-        addScore(plugin.getWarsConfig().getWinScoreModifier());
-    }
-
-    private void addScore(int amount) {
-        if (amount == 0) return;
-
-        statsChanges.setScore(statsChanges.getScore() + amount);
-
-        if (amount > 0) sendLocale("score.gain", amount);
-        else sendLocale("score.loss", -amount);
-    }
-
-    public void sendLocale(String locale, Object... objects) {
-        sendMessage(plugin.getLocale(locale, objects));
-    }
-
     @Override
     public void sendMessageDirect(String message) {
         player.sendMessage(message);
@@ -201,10 +149,6 @@ public class User implements WarsCommandSender {
         player.sendMessage(plugin.getLocale(locale, args));
     }
 
-    public void sendMessage(String message) {
-        player.sendMessage(WarsPlugin.CHAT_PREFIX + message);
-    }
-
     @Override
     public String getName() {
         return player.getName();
@@ -213,34 +157,6 @@ public class User implements WarsCommandSender {
     @Override
     public WarsPlugin getPlugin() {
         return plugin;
-    }
-
-    public void addGameLoss() {
-        statsChanges.setGameLosses(statsChanges.getGameLosses() + 1);
-
-        addScore(plugin.getWarsConfig().getLossScoreModifier());
-    }
-
-    public void addGame() {
-        if (!plugin.hasPersistence()) return;
-
-        statsChanges.setGames(statsChanges.getGames() + 1);
-    }
-
-    public void addKill() {
-        if (!plugin.hasPersistence()) return;
-
-        statsChanges.setKills(statsChanges.getKills() + 1);
-
-        addScore(plugin.getWarsConfig().getKillScoreModifier());
-    }
-
-    public void addDeath() {
-        if (!plugin.hasPersistence()) return;
-
-        statsChanges.setDeaths(statsChanges.getDeaths() + 1);
-
-        addScore(plugin.getWarsConfig().getDeathScoreModifier());
     }
 
     public User getFireAttacker() {
@@ -288,7 +204,7 @@ public class User implements WarsCommandSender {
     public void addPlayerCash(int cash) {
         playerCash += cash;
         updateScoreboard();
-        addTotalMoney(cash);
+        statsHolder.addTotalMoney(cash);
     }
 
     public void updateScoreboard() {
@@ -297,7 +213,6 @@ public class User implements WarsCommandSender {
             scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
             player.setScoreboard(scoreboard);
         }
-
 
         if (inGame) {
             removeScoreboardObjective(scoreboard, "map");
@@ -310,12 +225,6 @@ public class User implements WarsCommandSender {
             removeScoreboardObjective(scoreboard, "map");
         }
 
-    }
-
-    public void addTotalMoney(int amount) {
-        if (!plugin.hasPersistence()) return;
-
-        statsChanges.setTotalMoney(statsChanges.getTotalMoney() + amount);
     }
 
     private void removeScoreboardObjective(Scoreboard scoreboard, String name) {
@@ -419,6 +328,10 @@ public class User implements WarsCommandSender {
         return b;
     }
 
+    public void sendMessage(String message) {
+        player.sendMessage(WarsPlugin.CHAT_PREFIX + message);
+    }
+
     public void stopCoolDown(String ability, String message) {
         if (!isCoolingDown(ability)) return;
 
@@ -476,6 +389,10 @@ public class User implements WarsCommandSender {
         sendLocale("money.balance.user.new", playerCash);
 
         return true;
+    }
+
+    public void sendLocale(String locale, Object... objects) {
+        sendMessage(plugin.getLocale(locale, objects));
     }
 
     public void openShopInventory(Location shopBlock) {
@@ -545,10 +462,10 @@ public class User implements WarsCommandSender {
     public void setTeamColor(TeamColor teamColor) {
         if (this.teamColor != null) {
             getTeam().removePlayer(player);
-            if (teamColor == null) lastTeamColor = this.teamColor;
+            if (teamColor == null) statsHolder.setLastTeamColor(this.teamColor);
         }
 
-        if (teamColor != null) lastTeamColor = teamColor;
+        if (teamColor != null) statsHolder.setLastTeamColor(teamColor);
         this.teamColor = teamColor;
 
         if (this.teamColor != null) {
@@ -653,8 +570,8 @@ public class User implements WarsCommandSender {
     }
 
     public void setPlayerClass(PlayerClass playerClass) {
-        if (this.playerClass != null && playerClass == null) lastPlayerClass = this.playerClass;
-        else lastPlayerClass = playerClass;
+        if (this.playerClass != null && playerClass == null) statsHolder.setLastPlayerClass(this.playerClass);
+        else statsHolder.setLastPlayerClass(playerClass);
 
         this.playerClass = playerClass;
     }

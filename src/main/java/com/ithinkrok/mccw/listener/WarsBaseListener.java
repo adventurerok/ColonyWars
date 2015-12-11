@@ -42,7 +42,10 @@ public class WarsBaseListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        plugin.getUser(event.getPlayer()).saveStats();
+        User oldUser = plugin.getUser(event.getPlayer());
+
+        oldUser.getStatsHolder().saveStats();
+        oldUser.onDisconnect();
         plugin.setUser(event.getPlayer(), null);
     }
 

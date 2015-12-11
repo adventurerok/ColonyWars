@@ -22,6 +22,7 @@ public class Team {
 
     private TeamColor teamColor;
     private ArrayList<Player> players = new ArrayList<>();
+    //private ArrayList<StatsHolder> statsHolders = new ArrayList<>();
     private WarsPlugin plugin;
     private int teamCash;
 

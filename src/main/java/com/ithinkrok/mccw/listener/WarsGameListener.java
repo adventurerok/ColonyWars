@@ -479,11 +479,11 @@ public class WarsGameListener implements Listener {
         removeEntityTargets(died);
 
         User killerInfo = killer == null ? null : plugin.getUser(killer);
-        if (killerInfo != null) killerInfo.addKill();
+        if (killerInfo != null) killerInfo.getStatsHolder().addKill();
 
         displayDeathMessage(diedInfo, killerInfo, cause, intentionally);
 
-        diedInfo.addDeath();
+        diedInfo.getStatsHolder().addDeath();
 
         Team diedTeam = diedInfo.getTeam();
         boolean respawn = plugin.getGameState() != GameState.SHOWDOWN &&
@@ -498,7 +498,7 @@ public class WarsGameListener implements Listener {
             diedInfo.resetPlayerStats(false);
         } else {
             plugin.messageAllLocale("game.player.no-respawn", diedInfo.getFormattedName());
-            diedInfo.addGameLoss();
+            diedInfo.getStatsHolder().addGameLoss();
             diedInfo.removeFromGame();
             diedInfo.setSpectator();
         }

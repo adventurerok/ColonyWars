@@ -95,7 +95,7 @@ public class WarsPlugin extends JavaPlugin {
     public void onDisable() {
         super.onDisable();
 
-        if(persistence != null) persistence.onPluginDisabled();
+        if (persistence != null) persistence.onPluginDisabled();
     }
 
     public boolean isInGame() {
@@ -138,7 +138,7 @@ public class WarsPlugin extends JavaPlugin {
         persistence.getOrCreateUserCategoryStats(playerUUID, category, task);
     }
 
-    public void saveUserCategoryStats(UserCategoryStats stats){
+    public void saveUserCategoryStats(UserCategoryStats stats) {
         persistence.saveUserCategoryStats(stats);
     }
 
@@ -375,7 +375,9 @@ public class WarsPlugin extends JavaPlugin {
             countdownHandler.startLobbyCountdown();
         }
 
-        getUsers().forEach(User::saveStats);
+        for (User user : getUsers()) {
+            user.getStatsHolder().saveStats();
+        }
     }
 
     public String assignGameMap() {

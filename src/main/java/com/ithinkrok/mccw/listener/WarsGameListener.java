@@ -97,8 +97,8 @@ public class WarsGameListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         User user = plugin.getUser(event.getPlayer());
 
-        user.setSpectator();
         user.getPlayer().teleport(plugin.getMapSpawn(null));
+        user.setSpectator();
 
         user.sendLocale("spectators.game.in-progress");
         user.sendLocale("spectators.game.wait-next");

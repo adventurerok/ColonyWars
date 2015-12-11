@@ -12,7 +12,7 @@ class.join.success=&6You will be a %s &6in the next game!
 lobby.chooser.team.desc=Choose your team
 lobby.chooser.class.desc=Choose your class
 lobby.info.choose-class=&2Choose your team/class or it is chosen randomly
-lobby.info.map-info=&2Map voting is now available!
+lobby.info.map-info=&2Resource pack\: https\://files.ithinkrok.com/CWRP.zip
 lobby.info.not-enough-players=&7Not enough Players Online for Game to start!
 
 #map-descriptions
@@ -49,7 +49,7 @@ minigames.wool.transfer=&3%s &dtransferred the wool to &3%s!
 minigames.wool.given=&dYou now have the wool. Right click someone to transfer it to them!
 minigames.parcour.winner=&3%s &6has completed the parkour and will start next game with $%s extra!
 minigames.parcour.advanced=&3%s &6has completed the advanced parkour and will start next game with $%s extra!
-minigames.parcour.capped=&cYou have already earned all the money you can from this parcour run!
+minigames.parcour.capped=&cYou have already earned all the money you can from this parkour run!
 
 #--COUNTDOWNS--
 countdowns.game.warning.minutes=&7Game starting in&6 %s &7Minutes..

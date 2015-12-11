@@ -35,7 +35,6 @@ import java.util.*;
  */
 public class CommandListener implements CommandExecutor {
 
-    private static DecimalFormat twoDecimalPlaces = new DecimalFormat("0.00");
     private HashMap<String, WarsCommandExecutor> executorHashMap = new HashMap<>();
     private WarsPlugin plugin;
     private WarsConsoleSender consoleSender;
@@ -50,6 +49,10 @@ public class CommandListener implements CommandExecutor {
         executorHashMap.put("list", new ListExecutor());
         executorHashMap.put("gamestate", new GameStateExecutor());
         executorHashMap.put("leaderboard", new LeaderboardExecutor());
+        executorHashMap.put("spawn", new SpawnExecutor());
+        executorHashMap.put("countdown", new CountdownExecutor());
+        executorHashMap.put("teamchat", new TeamChatExecutor());
+        executorHashMap.put("stats", new StatsExecutor());
     }
 
     @Override
@@ -77,14 +80,6 @@ public class CommandListener implements CommandExecutor {
         switch (command.getName().toLowerCase()) {
             case "test":
                 return args.length >= 1 && onTestCommand(user, args);
-            case "spawn":
-                return onSpawnCommand(user);
-            case "countdown":
-                return onCountdownCommand(user, args);
-            case "stats":
-                return onStatsCommand(user, args);
-            case "teamchat":
-                return onTeamChatCommand(user, args);
             default:
                 return false;
         }
@@ -184,125 +179,5 @@ public class CommandListener implements CommandExecutor {
         return true;
     }
 
-    private boolean onSpawnCommand(User user) {
-        if (user.isInGame()) {
-            user.sendLocale("commands.spawn.not-in-game");
-            return true;
-        }
 
-        user.teleport(plugin.getMapSpawn(null));
-        return true;
-    }
-
-    private boolean onCountdownCommand(User user, String[] args) {
-        if (args.length < 1) return false;
-
-        CountdownHandler handler = plugin.getCountdownHandler();
-        if (!handler.isCountingDown()) {
-            user.sendLocale("commands.countdown.none");
-            return true;
-        }
-
-        try {
-            int amount = Integer.parseInt(args[0]);
-
-            int newTime = Math.max(handler.getCountDownTime() + amount, 1);
-            handler.setCountDownTime(newTime);
-
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    private boolean onStatsCommand(User user, String[] args) {
-        if (!plugin.hasPersistence()) {
-            user.sendLocale("commands.stats.disabled");
-            return true;
-        }
-
-        String category = "total";
-        if (args.length > 0) category = args[0];
-
-        final String finalCategory = category;
-        user.getStats(category, stats -> Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            if (stats == null) {
-                user.sendLocale("commands.stats.none", finalCategory);
-                return;
-            }
-
-            UserCategoryStats add;
-            if (finalCategory.equals("total") || finalCategory.equals(user.getLastPlayerClass().getName()) ||
-                    finalCategory.equals(user.getLastTeamColor().getName())) {
-                add = user.getStatsChanges();
-            } else add = new UserCategoryStats();
-
-            user.sendLocale("commands.stats.category", finalCategory);
-
-
-            int kills = stats.getKills() + add.getKills();
-            int deaths = stats.getDeaths() + add.getDeaths();
-
-            double kd = kills;
-            if (deaths != 0) kd /= (double) deaths;
-
-            int gameWins = stats.getGameWins() + add.getGameWins();
-            int gameLosses = stats.getGameLosses() + add.getGameLosses();
-            int games = stats.getGames() + add.getGames();
-            int totalMoney = stats.getTotalMoney() + add.getTotalMoney();
-            int score = stats.getScore() + add.getScore();
-
-
-            String kdText = twoDecimalPlaces.format(kd);
-
-            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.kills", kills));
-            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.deaths", deaths));
-            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.kd", kdText));
-            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.wins", gameWins));
-            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.losses", gameLosses));
-            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.games", games));
-            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.totalmoney", totalMoney));
-            user.getPlayer().sendMessage(plugin.getLocale("commands.stats.score", score));
-        }));
-
-        return true;
-    }
-
-    private boolean onTeamChatCommand(User user, String[] args) {
-        if (args.length == 0) return false;
-
-        StringBuilder message = new StringBuilder();
-        for (String s : args) {
-            if (message.length() != 0) message.append(' ');
-            message.append(s);
-        }
-
-        TeamColor teamColor = user.getTeamColor();
-
-        Set<Player> receivers = new HashSet<>();
-
-        for (User other : plugin.getUsers()) {
-            if (other.getTeamColor() != teamColor) continue;
-
-            receivers.add(other.getPlayer());
-        }
-
-        String teamColorCode =
-                teamColor != null ? teamColor.getChatColor().toString() : ChatColor.LIGHT_PURPLE.toString();
-
-        String chatMessage =
-                ChatColor.GRAY + "[" + teamColorCode + "Team" + ChatColor.GRAY + "] " + ChatColor.WHITE + message;
-
-        AsyncPlayerChatEvent event = new AsyncPlayerChatEvent(false, user.getPlayer(), chatMessage, receivers);
-
-        plugin.getServer().getPluginManager().callEvent(event);
-        if (!event.isCancelled()) {
-            String formatted = String.format(event.getFormat(), user.getFormattedName(), event.getMessage());
-            for (Player player : event.getRecipients()) {
-                player.sendMessage(formatted);
-            }
-        }
-
-        return true;
-    }
 }

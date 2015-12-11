@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 
 /**
  * Created by paul on 11/12/15.
- *
+ * <p>
  * Handles the /test command
  */
 public class TestExecutor implements WarsCommandExecutor {
@@ -29,89 +29,115 @@ public class TestExecutor implements WarsCommandExecutor {
             if (targetPlayer != null) user = sender.getPlugin().getUser(targetPlayer);
         }
 
-        if(user == null) {
+        if (user == null) {
             sender.sendLocale("commands.test.unknown-player", playerName);
             return true;
         }
 
         switch (args[0]) {
             case "team":
-                if (args.length < 2) return false;
-
-                TeamColor teamColor = TeamColor.fromName(args[1]);
-                if (teamColor == null) {
-                    user.sendLocale("commands.test.invalid-team", args[1]);
-                    return true;
-                }
-                user.setTeamColor(teamColor);
-
-                user.sendLocale("commands.test.team-change", teamColor.getFormattedName());
-
-                break;
+                return handleTeamSubcommand(user, args);
             case "class":
-                if (args.length < 2) return false;
-
-                PlayerClass playerClass = PlayerClass.fromName(args[1]);
-                if (playerClass == null) {
-                    user.sendLocale("commands.test.invalid-class", args[1]);
-                    return true;
-                }
-                user.setPlayerClass(playerClass);
-
-                user.sendLocale("commands.test.class-change", playerClass.getFormattedName());
-
-                break;
+                return handleClassSubcommand(user, args);
             case "money":
-
-                user.addPlayerCash(10000);
-                user.getTeam().addTeamCash(10000);
-
-                user.sendLocale("commands.test.money", 10000);
-                break;
+                return handleMoneySubcommand(user);
             case "build":
-                if (args.length < 2) return false;
-
-                user.getPlayerInventory()
-                        .addItem(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 16, 0, args[1]));
-
-                user.sendLocale("commands.test.build-blocks", 16, args[1]);
-                break;
+                return handleBuildSubcommand(user, args);
             case "base_location":
-                Team team = user.getTeam();
-                if (team == null) {
-                    user.sendLocale("commands.test.base.no-team");
-                    break;
-                }
-
-                user.sendLocale("commands.test.base.loc", team.getBaseLocation());
-                break;
+                return handleBaseLocationSubcommand(user);
             case "shrink":
-                if (user.getPlugin().getShowdownArena() == null) return true;
-                if (args.length < 2) return false;
-
-                try {
-                    int amount = Integer.parseInt(args[1]);
-
-                    if (amount < 1 || amount > 30) {
-                        user.sendLocale("commands.shrink.bad-size", args[1]);
-                        return true;
-                    }
-
-                    for (int count = 0; count < amount; ++count) {
-                        user.getPlugin().getShowdownArena().shrinkArena(user.getPlugin());
-                    }
-
-                    return true;
-                } catch (NumberFormatException e) {
-                    user.sendLocale("commands.shrink.bad-size", args[1]);
-                    return true;
-                }
+                return handleShrinkSubcommand(user, args);
             case "rejoin":
-                user.getPlugin().getGameInstance().setupUser(user);
-                return true;
+                return handleRejoinSubcommand(user);
 
         }
 
+        return true;
+    }
+
+    private boolean handleTeamSubcommand(User user, String[] args) {
+        if (args.length < 2) return false;
+
+        TeamColor teamColor = TeamColor.fromName(args[1]);
+        if (teamColor == null) {
+            user.sendLocale("commands.test.invalid-team", args[1]);
+            return true;
+        }
+        user.setTeamColor(teamColor);
+
+        user.sendLocale("commands.test.team-change", teamColor.getFormattedName());
+
+        return true;
+    }
+
+    private boolean handleClassSubcommand(User user, String[] args) {
+        if (args.length < 2) return false;
+
+        PlayerClass playerClass = PlayerClass.fromName(args[1]);
+        if (playerClass == null) {
+            user.sendLocale("commands.test.invalid-class", args[1]);
+            return true;
+        }
+        user.setPlayerClass(playerClass);
+
+        user.sendLocale("commands.test.class-change", playerClass.getFormattedName());
+
+        return true;
+    }
+
+    private boolean handleMoneySubcommand(User user) {
+        user.addPlayerCash(10000);
+        user.getTeam().addTeamCash(10000);
+
+        user.sendLocale("commands.test.money", 10000);
+        return true;
+    }
+
+    private boolean handleBuildSubcommand(User user, String[] args) {
+        if (args.length < 2) return false;
+
+        user.getPlayerInventory().addItem(InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, 16, 0, args[1]));
+
+        user.sendLocale("commands.test.build-blocks", 16, args[1]);
+        return true;
+    }
+
+    private boolean handleBaseLocationSubcommand(User user) {
+        Team team = user.getTeam();
+        if (team == null) {
+            user.sendLocale("commands.test.base.no-team");
+            return true;
+        }
+
+        user.sendLocale("commands.test.base.loc", team.getBaseLocation());
+        return true;
+    }
+
+    private boolean handleShrinkSubcommand(User user, String[] args) {
+        if (user.getPlugin().getShowdownArena() == null) return true;
+        if (args.length < 2) return false;
+
+        try {
+            int amount = Integer.parseInt(args[1]);
+
+            if (amount < 1 || amount > 30) {
+                user.sendLocale("commands.shrink.bad-size", args[1]);
+                return true;
+            }
+
+            for (int count = 0; count < amount; ++count) {
+                user.getPlugin().getShowdownArena().shrinkArena(user.getPlugin());
+            }
+
+            return true;
+        } catch (NumberFormatException e) {
+            user.sendLocale("commands.shrink.bad-size", args[1]);
+            return true;
+        }
+    }
+
+    private boolean handleRejoinSubcommand(User user) {
+        user.getPlugin().getGameInstance().setupUser(user);
         return true;
     }
 }

@@ -64,11 +64,13 @@ public class User implements WarsCommandSender {
     private int trappedTicks;
     private double potionStrengthModifier;
 
-    public User(WarsPlugin plugin, Player player) {
+
+    public User(WarsPlugin plugin, Player player, StatsHolder statsHolder) {
         this.plugin = plugin;
         this.player = player;
 
-        statsHolder = new StatsHolder(this);
+        if(statsHolder != null) this.statsHolder = statsHolder;
+        else this.statsHolder = new StatsHolder(this);
     }
 
     public PlayerClass getLastPlayerClass() {

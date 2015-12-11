@@ -25,8 +25,7 @@ public class WarsBaseListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        User user = new User(plugin, event.getPlayer());
-        plugin.setUser(event.getPlayer(), user);
+        User user = plugin.createUser(event.getPlayer());
 
         user.sendLocale("server.welcome");
 

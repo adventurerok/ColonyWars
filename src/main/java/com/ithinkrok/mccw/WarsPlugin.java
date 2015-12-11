@@ -2,6 +2,7 @@ package com.ithinkrok.mccw;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import com.google.common.collect.MapMaker;
 import com.ithinkrok.mccw.data.*;
 import com.ithinkrok.mccw.enumeration.GameState;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
@@ -37,6 +38,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -53,6 +55,7 @@ public class WarsPlugin extends JavaPlugin {
             ChatColor.GRAY + "[" + ChatColor.DARK_AQUA + "ColonyWars" + ChatColor.GRAY + "] " + ChatColor.YELLOW;
 
     private ConcurrentMap<UUID, User> playerInfoHashMap = new ConcurrentHashMap<>();
+    private Map<UUID, StatsHolder> statsHolderMap = new MapMaker().weakValues().makeMap();
     private Map<TeamColor, Team> teamInfoEnumMap = new HashMap<>();
 
 
@@ -272,6 +275,19 @@ public class WarsPlugin extends JavaPlugin {
     public void setUser(Player player, User user) {
         if (user == null) playerInfoHashMap.remove(player.getUniqueId());
         else playerInfoHashMap.put(player.getUniqueId(), user);
+    }
+
+    public User createUser(Player player) {
+        StatsHolder statsHolder = statsHolderMap.get(player.getUniqueId());
+
+        User user = new User(this, player, statsHolder);
+
+        statsHolderMap.put(user.getUniqueId(), user.getStatsHolder());
+
+
+        setUser(player, user);
+
+        return user;
     }
 
     public Random getRandom() {

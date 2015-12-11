@@ -1,4 +1,4 @@
-package com.ithinkrok.mccw.listener;
+package com.ithinkrok.mccw.command;
 
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.command.TestExecutor;

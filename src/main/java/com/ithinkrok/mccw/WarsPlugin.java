@@ -11,7 +11,7 @@ import com.ithinkrok.mccw.handler.GameInstance;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.inventory.OmniInventory;
 import com.ithinkrok.mccw.inventory.SpectatorInventory;
-import com.ithinkrok.mccw.listener.CommandListener;
+import com.ithinkrok.mccw.command.CommandListener;
 import com.ithinkrok.mccw.listener.WarsBaseListener;
 import com.ithinkrok.mccw.listener.WarsLobbyListener;
 import com.ithinkrok.mccw.lobby.LobbyMinigame;

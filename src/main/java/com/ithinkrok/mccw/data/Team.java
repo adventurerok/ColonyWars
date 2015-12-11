@@ -21,7 +21,7 @@ import java.util.List;
 public class Team {
 
     private TeamColor teamColor;
-    private ArrayList<Player> players = new ArrayList<>();
+    private ArrayList<User> users = new ArrayList<>();
     //private ArrayList<StatsHolder> statsHolders = new ArrayList<>();
     private WarsPlugin plugin;
     private int teamCash;
@@ -50,8 +50,8 @@ public class Team {
     }
 
     public void message(String message){
-        for(Player p : players){
-            p.sendMessage(WarsPlugin.CHAT_PREFIX + message);
+        for(User p : users){
+            p.sendMessage(message);
         }
     }
 
@@ -59,10 +59,10 @@ public class Team {
         return teamColor;
     }
 
-    public void addPlayer(Player player){
-        if(players.contains(player)) return;
+    public void addUser(User user){
+        if(users.contains(user)) return;
 
-        players.add(player);
+        users.add(user);
     }
 
     public boolean isRespawnNotificationDisabled() {
@@ -73,16 +73,16 @@ public class Team {
         this.disableRespawnNotification = disableRespawnNotification;
     }
 
-    public ArrayList<Player> getPlayers() {
-        return players;
+    public ArrayList<User> getUsers() {
+        return users;
     }
 
-    public void removePlayer(Player player){
-        players.remove(player);
+    public void removeUser(User user){
+        users.remove(user);
     }
 
-    public boolean hasPlayer(Player player){
-        return players.contains(player);
+    public boolean hasUser(User user){
+        return users.contains(user);
     }
 
     public int getTeamCash() {
@@ -125,9 +125,7 @@ public class Team {
     }
 
     public void updatePlayerScoreboards(){
-        for(Player p : players){
-            plugin.getUser(p).updateScoreboard();
-        }
+        users.forEach(User::updateScoreboard);
     }
 
     public int getBuildingCount(String buildingType){
@@ -210,8 +208,8 @@ public class Team {
         }
     }
 
-    public int getPlayerCount() {
-        return players.size();
+    public int getUserCount() {
+        return users.size();
     }
 
     public void respawnPlayer(Player died) {
@@ -234,9 +232,9 @@ public class Team {
         }
     }
 
-    public Player getRandomPlayer() {
-        if(players.isEmpty()) return null;
-        return players.get(plugin.getRandom().nextInt(players.size()));
+    public User getRandomUser() {
+        if(users.isEmpty()) return null;
+        return users.get(plugin.getRandom().nextInt(users.size()));
     }
 
     public void messageLocale(String locale, Object...args) {

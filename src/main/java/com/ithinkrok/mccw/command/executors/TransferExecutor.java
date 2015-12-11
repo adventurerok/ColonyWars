@@ -6,7 +6,6 @@ import com.ithinkrok.mccw.command.WarsCommandSender;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
 import org.bukkit.command.Command;
-import org.bukkit.entity.Player;
 
 /**
  * Created by paul on 10/12/15.
@@ -30,9 +29,9 @@ public class TransferExecutor implements WarsCommandExecutor {
         if (args.length > 1) {
             String targetName = args[1];
 
-            for (Player player : user.getTeam().getPlayers()) {
-                if (!player.getName().equals(targetName)) continue;
-                target = sender.getPlugin().getUser(player);
+            for (User other : user.getTeam().getUsers()) {
+                if (!other.getName().equals(targetName)) continue;
+                target = other;
             }
 
             if (target == null) {

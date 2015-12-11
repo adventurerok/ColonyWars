@@ -17,7 +17,6 @@ import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -62,8 +61,8 @@ public class PriestClass extends ClassItemClassHandler {
 
         @Override
         public boolean onInteractWorld(UserInteractEvent event) {
-            for (Player p : event.getTeam().getPlayers()) {
-                p.setHealth(plugin.getMaxHealth());
+            for (User user : event.getTeam().getUsers()) {
+                user.getPlayer().setHealth(plugin.getMaxHealth());
             }
 
             return true;

@@ -38,7 +38,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -358,7 +357,7 @@ public class WarsPlugin extends JavaPlugin {
         int count = 0;
 
         for (Team team : teamInfoEnumMap.values()) {
-            count += team.getPlayerCount();
+            count += team.getUserCount();
         }
 
         return count;

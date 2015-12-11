@@ -31,7 +31,7 @@ public class UserTest {
     public void testClearArmor() throws Exception {
         Player player = mock(Player.class, RETURNS_DEEP_STUBS);
 
-        User user = new User(null, player);
+        User user = new User(null, player, null);
 
         user.clearArmor();
 
@@ -46,7 +46,7 @@ public class UserTest {
         WarsPlugin plugin = mock(WarsPlugin.class, RETURNS_DEEP_STUBS);
         Player player = mock(Player.class, RETURNS_DEEP_STUBS);
 
-        User user = new User(plugin, player);
+        User user = new User(plugin, player, null);
 
         try {
             user.setTeamColor(TeamColor.fromName("red"));

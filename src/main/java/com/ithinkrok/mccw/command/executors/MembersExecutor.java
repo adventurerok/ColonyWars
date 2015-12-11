@@ -7,11 +7,10 @@ import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
-import org.bukkit.entity.Player;
 
 /**
  * Created by paul on 10/12/15.
- *
+ * <p>
  * Handles the /members command
  */
 public class MembersExecutor implements WarsCommandExecutor {
@@ -20,7 +19,7 @@ public class MembersExecutor implements WarsCommandExecutor {
     public boolean onCommand(WarsCommandSender sender, Command command, String label, String[] args) {
         Team team;
 
-        if(sender instanceof User) {
+        if (sender instanceof User) {
             User user = (User) sender;
 
             if (user.getTeamColor() == null) {
@@ -30,9 +29,9 @@ public class MembersExecutor implements WarsCommandExecutor {
 
             team = user.getTeam();
         } else {
-            try{
+            try {
                 team = sender.getPlugin().getTeam(TeamColor.fromName(args[0]));
-                if(team == null) throw new NullPointerException();
+                if (team == null) throw new NullPointerException();
             } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
                 sender.sendLocale("commands.members.specify-team");
                 return true;
@@ -41,8 +40,7 @@ public class MembersExecutor implements WarsCommandExecutor {
 
         sender.sendLocale("commands.members.title");
 
-        for (Player player : team.getPlayers()) {
-            User other = sender.getPlugin().getUser(player);
+        for (User other : team.getUsers()) {
 
             String name = other.getFormattedName();
             String playerClass = other.getPlayerClass() == null ? sender.getPlugin().getLocale("team.none") :
@@ -54,7 +52,7 @@ public class MembersExecutor implements WarsCommandExecutor {
 
                 for (TeamColor teamColor : TeamColor.values()) {
                     Location loc = sender.getPlugin().getMapSpawn(teamColor);
-                    double distSquared = loc.distanceSquared(player.getLocation());
+                    double distSquared = loc.distanceSquared(other.getPlayer().getLocation());
 
                     if (distSquared < smallestDistSquared) {
                         smallestDistSquared = distSquared;
@@ -62,7 +60,8 @@ public class MembersExecutor implements WarsCommandExecutor {
                     }
                 }
 
-                if (sender.getPlugin().getMapSpawn(null).distanceSquared(player.getLocation()) < smallestDistSquared) {
+                if (sender.getPlugin().getMapSpawn(null).distanceSquared(other.getPlayer().getLocation()) <
+                        smallestDistSquared) {
                     nearestBase = sender.getPlugin().getLocale("commands.members.near-showdown", nearestBase);
                 }
             } else {

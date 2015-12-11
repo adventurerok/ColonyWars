@@ -463,7 +463,7 @@ public class User implements WarsCommandSender {
 
     public void setTeamColor(TeamColor teamColor) {
         if (this.teamColor != null) {
-            getTeam().removePlayer(player);
+            getTeam().removeUser(this);
             if (teamColor == null) statsHolder.setLastTeamColor(this.teamColor);
         }
 
@@ -471,7 +471,7 @@ public class User implements WarsCommandSender {
         this.teamColor = teamColor;
 
         if (this.teamColor != null) {
-            getTeam().addPlayer(player);
+            getTeam().addUser(this);
         }
 
         player.setPlayerListName(getFormattedName());
@@ -490,11 +490,11 @@ public class User implements WarsCommandSender {
 
         plugin.messageAll(ChatColor.GOLD + "The " + team.getTeamColor().getFormattedName() + ChatColor.GOLD +
                 " has lost a player!");
-        plugin.messageAll(ChatColor.GOLD + "There are now " + ChatColor.DARK_AQUA + team.getPlayerCount() +
+        plugin.messageAll(ChatColor.GOLD + "There are now " + ChatColor.DARK_AQUA + team.getUserCount() +
                 ChatColor.GOLD + " players left on the " + team.getTeamColor().getFormattedName() + ChatColor.GOLD +
                 " Team");
 
-        if (team.getPlayerCount() == 0) {
+        if (team.getUserCount() == 0) {
             team.eliminate();
         }
 

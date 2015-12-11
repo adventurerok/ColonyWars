@@ -290,13 +290,13 @@ public class GameInstance {
 
         for (TeamColor team : TeamColor.values()) {
             Team info = getTeam(team);
-            if (info.getPlayerCount() < leastCount) {
-                leastCount = info.getPlayerCount();
+            if (info.getUserCount() < leastCount) {
+                leastCount = info.getUserCount();
 
                 smallest.clear();
             }
 
-            if (info.getPlayerCount() == leastCount) {
+            if (info.getUserCount() == leastCount) {
                 smallest.add(team);
             }
         }
@@ -347,7 +347,7 @@ public class GameInstance {
 
             SchematicBuilder.pasteSchematic(plugin, plugin.getSchematicData(Buildings.BASE), build, 0, team);
 
-            if (getTeam(team).getPlayerCount() == 0) {
+            if (getTeam(team).getUserCount() == 0) {
                 getTeam(team).eliminate();
             }
 
@@ -379,9 +379,7 @@ public class GameInstance {
 
         plugin.messageAllLocale("game.team.winner", winner.getFormattedName());
 
-        for (Player player : plugin.getTeam(winner).getPlayers()) {
-            User user = plugin.getUser(player);
-
+        for (User user : plugin.getTeam(winner).getUsers()) {
             user.getStatsHolder().addGameWin();
         }
 

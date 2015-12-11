@@ -10,7 +10,6 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.util.Vector;
 
@@ -97,9 +96,9 @@ public class CountdownHandler {
 
         startCountdown(15, CountdownType.LOBBY, () -> plugin.changeGameState(GameState.LOBBY), () -> {
             if (countDown < 10) return;
-            Player randomPlayer = plugin.getTeam(plugin.getGameInstance().getWinningTeam()).getRandomPlayer();
-            if (randomPlayer == null) return;
-            Location loc = randomPlayer.getLocation();
+            User randomUser = plugin.getTeam(plugin.getGameInstance().getWinningTeam()).getRandomUser();
+            if (randomUser == null) return;
+            Location loc = randomUser.getPlayer().getLocation();
             Firework firework = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
 
             Color color = Color.fromRGB(random.nextInt(255), random.nextInt(255), random.nextInt(255));

@@ -63,6 +63,7 @@ public class User implements WarsCommandSender {
     private String mapVote;
     private int trappedTicks;
     private double potionStrengthModifier;
+    private boolean showCloakedPlayers = false;
 
 
     public User(WarsPlugin plugin, Player player, StatsHolder statsHolder) {
@@ -115,11 +116,30 @@ public class User implements WarsCommandSender {
         this.cloaked = cloaked;
     }
 
+    public boolean showCloakedPlayers() {
+        return showCloakedPlayers;
+    }
+
+    public void setShowCloakedPlayers(boolean showCloakedPlayers) {
+        this.showCloakedPlayers = showCloakedPlayers;
+
+        for(User u : plugin.getUsers()) {
+            if(this == u) continue;
+
+            if(!u.isCloaked()) continue;
+
+            if(showCloakedPlayers) getPlayer().showPlayer(u.getPlayer());
+            else getPlayer().hidePlayer(u.getPlayer());
+        }
+    }
+
     public void cloak() {
         setCloaked(true);
 
         for (User u : plugin.getUsers()) {
             if (this == u) continue;
+
+            if(u.showCloakedPlayers()) continue;
 
             u.getPlayer().hidePlayer(player);
         }
@@ -372,6 +392,8 @@ public class User implements WarsCommandSender {
             shopBlock = null;
             playerCash = 0;
             oldBuildingNows.clear();
+        } else {
+            showCloakedPlayers = false;
         }
 
         updateScoreboard();

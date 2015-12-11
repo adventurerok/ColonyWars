@@ -159,6 +159,7 @@ items.mighty-axe.name=The Mighty Axe
 items.cloak.name=Cloak
 items.vampire-sword.name=Vampire Sword
 items.vampire-sword.desc=Regenerates health when damage is dealt.
+items.spectator-toggle.name=Show/Hide other spectators
 
 #lore
 lore.cooldown=Cooldown\: %s seconds

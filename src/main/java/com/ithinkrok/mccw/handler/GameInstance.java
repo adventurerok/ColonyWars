@@ -17,6 +17,7 @@ import com.ithinkrok.mccw.util.BoundingBox;
 import com.ithinkrok.mccw.util.io.MapConfig;
 import com.ithinkrok.mccw.util.io.DirectoryUtils;
 import com.ithinkrok.mccw.util.building.SchematicBuilder;
+import com.ithinkrok.mccw.util.item.InventoryUtils;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -199,7 +200,7 @@ public class GameInstance {
             forceShowdownTimer.replaceAll((s, integer) -> integer - 1);
 
             for (int time : forceShowdownTimer.values()) {
-                if (time <= 0){
+                if (time <= 0) {
                     plugin.changeGameState(GameState.SHOWDOWN);
                     break;
                 }
@@ -233,15 +234,15 @@ public class GameInstance {
         updateForceShowdownTimer("attack", plugin.getWarsConfig().getShowdownStartTimeSinceLastAttack());
     }
 
-    public void onUserDeath() {
-        updateForceShowdownTimer("death", plugin.getWarsConfig().getShowdownStartTimeSinceLastDeath());
-    }
-
-    private void updateForceShowdownTimer(String field, int min){
+    private void updateForceShowdownTimer(String field, int min) {
         int time = forceShowdownTimer.get(field);
         time = Math.max(time, min);
 
         forceShowdownTimer.put(field, time);
+    }
+
+    public void onUserDeath() {
+        updateForceShowdownTimer("death", plugin.getWarsConfig().getShowdownStartTimeSinceLastDeath());
     }
 
     public void setupUser(User info) {
@@ -379,7 +380,7 @@ public class GameInstance {
 
         plugin.messageAllLocale("game.team.winner", winner.getFormattedName());
 
-        for(StatsHolder statsHolder : plugin.getTeam(winningTeam).getStatsHolders()) {
+        for (StatsHolder statsHolder : plugin.getTeam(winningTeam).getStatsHolders()) {
             statsHolder.addGameWin();
             statsHolder.saveStats();
         }
@@ -465,6 +466,7 @@ public class GameInstance {
 
         plugin.getSpectatorInventoryHandler()
                 .onInventoryClick(event.getCurrentItem(), null, plugin.getUser((Player) event.getWhoClicked()), null);
+
     }
 
     public void updateSpectatorInventories() {
@@ -480,6 +482,9 @@ public class GameInstance {
 
         PlayerInventory inv = player.getInventory();
         inv.clear();
+
+        inv.setItem(0, InventoryUtils.setItemNameAndLore(new ItemStack(Material.IRON_LEGGINGS),
+                plugin.getLocale("items.spectator-toggle.name")));
 
         int slot = 9;
 

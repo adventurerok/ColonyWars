@@ -287,6 +287,10 @@ public class WarsGameListener implements Listener {
         User user = plugin.getUser(event.getPlayer());
 
         if (!user.isInGame()) {
+            if(event.getItem() != null && event.getItem().getType() == Material.IRON_LEGGINGS) {
+                user.setShowCloakedPlayers(!user.showCloakedPlayers());
+            }
+
             event.setCancelled(true);
             return;
         }

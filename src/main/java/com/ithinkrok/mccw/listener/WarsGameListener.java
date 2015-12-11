@@ -1,6 +1,7 @@
 package com.ithinkrok.mccw.listener;
 
 import com.ithinkrok.mccw.WarsPlugin;
+import com.ithinkrok.mccw.command.executors.FixExecutor;
 import com.ithinkrok.mccw.data.Building;
 import com.ithinkrok.mccw.data.Schematic;
 import com.ithinkrok.mccw.data.Team;
@@ -222,7 +223,8 @@ public class WarsGameListener implements Listener {
             return;
         }
 
-        if (Buildings.BASE.equals(building.getBuildingName()) || Buildings.FORTRESS.equals(building.getBuildingName())) {
+        if (Buildings.BASE.equals(building.getBuildingName()) ||
+                Buildings.FORTRESS.equals(building.getBuildingName())) {
             user.sendLocale("building.destroy.bases");
             event.setCancelled(true);
             return;
@@ -400,7 +402,7 @@ public class WarsGameListener implements Listener {
         User targetInfo = plugin.getUser(target);
 
         if (damagerInfo.getTeamColor() == targetInfo.getTeamColor()) {
-            if(!(event.getDamager() instanceof TNTPrimed) || damagerInfo != targetInfo) {
+            if (!(event.getDamager() instanceof TNTPrimed) || damagerInfo != targetInfo) {
                 event.setCancelled(true);
                 return;
             }
@@ -423,7 +425,6 @@ public class WarsGameListener implements Listener {
             playerDeath(target, damager, event.getCause(), true);
         }
     }
-
 
 
     public boolean onPlayerAttackTameable(EntityDamageByEntityEvent event, User player, Tameable tameable) {
@@ -577,6 +578,9 @@ public class WarsGameListener implements Listener {
 
         User target = plugin.getUser((Player) event.getEntity());
 
+        if (event.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION)
+            new FixExecutor().onCommand(target, null, "fix", new String[0]);
+
         if (!target.isInGame()) {
             //Prevent spectators from being damaged
             event.setCancelled(true);
@@ -602,7 +606,7 @@ public class WarsGameListener implements Listener {
                     playerDeath(target.getPlayer(), target.getLastAttacker().getPlayer(), event.getCause(), false);
                 else playerDeath(target.getPlayer(), null, event.getCause(), false);
             } else playerDeath(target.getPlayer(), killer.getPlayer(), event.getCause(), true);
-        } else if(target.isCloaked()){
+        } else if (target.isCloaked()) {
             target.getPlayer().getWorld().playSound(target.getPlayer().getLocation(), Sound.HURT_FLESH, 1.0f, 1.0f);
         }
     }

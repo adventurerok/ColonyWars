@@ -379,8 +379,9 @@ public class GameInstance {
 
         plugin.messageAllLocale("game.team.winner", winner.getFormattedName());
 
-        for (User user : plugin.getTeam(winner).getUsers()) {
-            user.getStatsHolder().addGameWin();
+        for(StatsHolder statsHolder : plugin.getTeam(winningTeam).getStatsHolders()) {
+            statsHolder.addGameWin();
+            statsHolder.saveStats();
         }
 
         changeGameState(GameState.AFTERMATH);

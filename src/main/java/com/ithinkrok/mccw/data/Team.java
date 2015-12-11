@@ -22,7 +22,7 @@ public class Team {
 
     private TeamColor teamColor;
     private ArrayList<User> users = new ArrayList<>();
-    //private ArrayList<StatsHolder> statsHolders = new ArrayList<>();
+    private ArrayList<StatsHolder> statsHolders = new ArrayList<>();
     private WarsPlugin plugin;
     private int teamCash;
 
@@ -63,6 +63,10 @@ public class Team {
         if(users.contains(user)) return;
 
         users.add(user);
+
+        if(statsHolders.contains(user.getStatsHolder())) return;
+
+        statsHolders.add(user.getStatsHolder());
     }
 
     public boolean isRespawnNotificationDisabled() {
@@ -77,8 +81,16 @@ public class Team {
         return users;
     }
 
+    public ArrayList<StatsHolder> getStatsHolders() {
+        return statsHolders;
+    }
+
     public void removeUser(User user){
         users.remove(user);
+
+        if(plugin.isInGame()) return;
+
+        statsHolders.remove(user.getStatsHolder());
     }
 
     public boolean hasUser(User user){
@@ -230,6 +242,13 @@ public class Team {
             plugin.getGameInstance().getBuildingInfo(baseLocation).explode();
             baseLocation = null;
         }
+
+        for(StatsHolder statsHolder : statsHolders) {
+            statsHolder.addGameLoss();
+            statsHolder.saveStats();
+        }
+
+        statsHolders.clear();
     }
 
     public User getRandomUser() {

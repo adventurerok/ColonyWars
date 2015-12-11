@@ -498,7 +498,6 @@ public class WarsGameListener implements Listener {
             diedInfo.resetPlayerStats(false);
         } else {
             plugin.messageAllLocale("game.player.no-respawn", diedInfo.getFormattedName());
-            diedInfo.getStatsHolder().addGameLoss();
             diedInfo.removeFromGame();
             diedInfo.setSpectator();
         }

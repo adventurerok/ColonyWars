@@ -1,12 +1,15 @@
 package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.WarsPlugin;
+import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.event.UserAttackEvent;
+import com.ithinkrok.mccw.event.UserBeginGameEvent;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
 import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.Disguises;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.potion.PotionEffect;
@@ -41,34 +44,71 @@ public class VampireClass extends ClassItemClassHandler {
         vampireSword.withUpgradables(new ClassItem.Upgradable("vampire", "upgrades.vampire.name", 2));
 
         addExtraClassItems(vampireSword);
-
-        ClassItem batWand = new ClassItem(plugin, playerClass.getName(), Material.STICK, "items.bat-wand.name");
-
-        batWand.withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true);
-
-        batWand.withRightClickAction(event -> {
-            Disguises.disguise(event.getUser(), DisguiseType.Bat);
-            return true;
-        });
-
-        batWand.withRightClickTimeout(event -> {
-            Disguises.unDisguise(event.getUser());
-            return true;
-        }, "bat", "batting", "lore.timeout.bat", "timeouts.batting.finished", new LinearCalculator(5, 5));
-
-        batWand.withRightClickCooldown("bat", "bat", new LinearCalculator(15, 5), "cooldowns.bat.finished");
-
-        batWand.withUpgradables(new ClassItem.Upgradable("bat", "upgrades.bat-wand.name", 2));
-
-        addExtraClassItems(batWand);
     }
 
     @Override
     public void onUserAttack(UserAttackEvent event) {
-        if (event.getUser().isCoolingDown("batting")) {
+        if (event.getUser().getPlayer().isFlying()) {
             event.setCancelled(true);
             return;
         }
         super.onUserAttack(event);
+    }
+
+    @Override
+    public void onUserBeginGame(UserBeginGameEvent event) {
+        super.onUserBeginGame(event);
+
+        UserFlyingChanger changer = new UserFlyingChanger(event.getUser());
+
+        changer.startTask(event.getUser().getPlugin());
+    }
+
+    private static class UserFlyingChanger implements Runnable{
+
+        private int taskId;
+        private User user;
+        private boolean bat = false;
+        private boolean allowFlight = false;
+
+        private UserFlyingChanger(User user) {
+            this.user = user;
+
+            user.getPlayer().setExp(1f);
+        }
+
+        @Override
+        public void run() {
+            if(!user.isInGame()) Bukkit.getScheduler().cancelTask(taskId);
+
+            if(user.getPlayer().isFlying()){
+                float exp = user.getPlayer().getExp();
+                exp = Math.max(exp - 0.005f, 0);
+                user.getPlayer().setExp(exp);
+
+                if(!bat){
+                    Disguises.disguise(user, DisguiseType.Bat);
+                    bat = true;
+                }
+
+                if(exp > 0) return;
+                user.getPlayer().setAllowFlight(allowFlight = false);
+            } else {
+                float exp = user.getPlayer().getExp();
+                exp = Math.min(exp + 0.003f, 1);
+                user.getPlayer().setExp(exp);
+
+                if(exp > 0.1f && !allowFlight) user.getPlayer().setAllowFlight(allowFlight = true);
+
+                if(bat) {
+                    Disguises.unDisguise(user);
+                    bat = false;
+                }
+            }
+        }
+
+        public void startTask(WarsPlugin plugin) {
+            taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, 1, 1);
+        }
     }
 }

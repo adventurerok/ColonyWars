@@ -21,14 +21,11 @@ public class Disguises {
 
         if(dcAPI.isDisguised(user.getPlayer())) dcAPI.changePlayerDisguise(user.getPlayer(), disguise);
         else dcAPI.disguisePlayer(user.getPlayer(), disguise);
-
-        if(type == DisguiseType.Bat) user.getPlayer().setAllowFlight(true);
     }
 
     public static void unDisguise(User user) {
         if(dcAPI.isDisguised(user.getPlayer())){
             dcAPI.undisguisePlayer(user.getPlayer());
-            user.getPlayer().setAllowFlight(false);
         }
     }
 }

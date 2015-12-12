@@ -532,6 +532,7 @@ public class User implements WarsCommandSender {
         player.setHealth(plugin.getMaxHealth());
         player.setFoodLevel(20);
         player.setSaturation(5);
+        player.setTotalExperience(0);
 
         if (removePotionEffects) removePotionEffects();
     }

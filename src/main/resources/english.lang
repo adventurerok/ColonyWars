@@ -179,11 +179,11 @@ money.exchange.too-expensive=&cYou do not have that amount of money
 money.exchange.team-transfer=%s &3transferred &a$%s &eto your team's account!
 money.exchange.user-transfer=%s &3transferred &a$%s &eto %s&e's account!
 money.balance.team.new=&eYour Team's new Balance is\: &a$%s&e!
-money.balance.team.deduct=&c$%s &was deducted from your Team's Account!
-money.balance.team.add=&a$%s &was added to your Team's Account!
+money.balance.team.deduct=&c$%s &ewas deducted from your Team's Account!
+money.balance.team.add=&a$%s &ewas added to your Team's Account!
 money.balance.user.new=&eYour new Balance is: &a$%s!
-money.balance.user.deduct=&c$%s &was deducted from your Account!
-money.balance.user.add=&a$%s &was added to your Account!
+money.balance.user.deduct=&c$%s &ewas deducted from your Account!
+money.balance.user.add=&a$%s &ewas added to your Account!
 
 #purchase
 purchase.no-slots=&cYou do not have enough free slots in your inventory!

@@ -533,6 +533,7 @@ public class User implements WarsCommandSender {
         player.setFoodLevel(20);
         player.setSaturation(5);
         player.setTotalExperience(0);
+        player.setFlySpeed(0.1f);
 
         if (removePotionEffects) removePotionEffects();
     }

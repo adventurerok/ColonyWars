@@ -45,9 +45,10 @@ public class MageClass extends ClassItemClassHandler {
         addExtraBuyables(new ItemBuyable(InventoryUtils.createPotion(PotionType.INSTANT_DAMAGE, 1, true, false, 32),
                         Buildings.MAGETOWER, plugin.getWarsConfig().getClassItemCost(playerClass, "harming"), true),
                 new ItemBuyable(InventoryUtils.createPotion(PotionType.INSTANT_HEAL, 1, true, false, 32),
-                        Buildings.MAGETOWER, plugin.getWarsConfig().getClassItemCost(playerClass, "healing"), true),
-                new ItemBuyable(InventoryUtils.createPotion(PotionType.STRENGTH, 1, true, false, 1),
-                        Buildings.MAGETOWER, plugin.getWarsConfig().getClassItemCost(playerClass, "strength"), true));
+                        Buildings.MAGETOWER, plugin.getWarsConfig().getClassItemCost(playerClass, "healing"), true));
+
+//        addExtraBuyables(new ItemBuyable(InventoryUtils.createPotion(PotionType.STRENGTH, 1, true, false, 1),
+//                Buildings.MAGETOWER, plugin.getWarsConfig().getClassItemCost(playerClass, "strength"), true));
     }
 
     @Override

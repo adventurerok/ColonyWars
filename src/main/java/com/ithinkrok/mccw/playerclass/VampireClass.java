@@ -115,7 +115,7 @@ public class VampireClass extends ClassItemClassHandler {
             double newHealth = user.getPlayer().getHealth();
             float change = 0f;
 
-            if(newHealth < oldHealth) change = -0.05f;
+            if(newHealth < oldHealth) change = -0.07f;
             else if(user.getPlayer().hasPotionEffect(PotionEffectType.REGENERATION)) change = 0.001f;
 
             if(change != 0) {

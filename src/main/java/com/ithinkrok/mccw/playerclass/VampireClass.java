@@ -101,7 +101,7 @@ public class VampireClass extends ClassItemClassHandler {
                 user.sendLocale("unlock.bat-flight.message");
             }
 
-            if (user.getPlayer().isFlying()) {
+            if (user.getPlayer().isFlying() || !user.getPlayer().isOnGround()) {
                 float exp = user.getPlayer().getExp();
                 exp = Math.max(exp - flightDecreaseAmount(user.getUpgradeLevel("bat")), 0);
                 user.getPlayer().setExp(exp);
@@ -122,6 +122,7 @@ public class VampireClass extends ClassItemClassHandler {
                 if (exp > 0.2f && !allowFlight) {
                     user.getPlayer().setAllowFlight(allowFlight = true);
                     user.sendLocale("cooldowns.bat.finished");
+                    user.getPlayer().setFlySpeed(0.05f);
                 }
 
                 if (bat) {

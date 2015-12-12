@@ -91,6 +91,7 @@ public class VampireClass extends ClassItemClassHandler {
         private boolean allowFlight = false;
         private boolean mageTower = false;
         private double oldHealth = 0;
+        private boolean wasFlying = false;
 
         private UserFlyingChanger(User user) {
             this.user = user;
@@ -125,7 +126,7 @@ public class VampireClass extends ClassItemClassHandler {
 
             oldHealth = newHealth;
 
-            if (user.getPlayer().isFlying()) {
+            if (user.getPlayer().isFlying() && !user.getPlayer().getLocation().getBlock().isLiquid()) {
                 float exp = user.getPlayer().getExp();
                 exp = Math.max(exp - flightDecreaseAmount(user.getUpgradeLevel("bat")), 0);
                 user.getPlayer().setExp(exp);
@@ -135,6 +136,8 @@ public class VampireClass extends ClassItemClassHandler {
                     bat = true;
                 }
 
+                wasFlying = true;
+
                 if (exp > 0) return;
                 user.getPlayer().setAllowFlight(allowFlight = false);
                 user.sendLocale("timeouts.batting.finished");
@@ -142,6 +145,9 @@ public class VampireClass extends ClassItemClassHandler {
                 float exp = user.getPlayer().getExp();
                 exp = Math.min(exp + 0.00025f, 1);
                 user.getPlayer().setExp(exp);
+                if(wasFlying) user.getPlayer().setFlying(false);
+
+                wasFlying = false;
 
                 if (exp > 0.2f && !allowFlight) {
                     user.getPlayer().setAllowFlight(allowFlight = true);

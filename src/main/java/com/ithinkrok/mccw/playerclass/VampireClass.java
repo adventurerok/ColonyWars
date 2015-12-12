@@ -115,8 +115,8 @@ public class VampireClass extends ClassItemClassHandler {
             double newHealth = user.getPlayer().getHealth();
             float change = 0f;
 
-            if(newHealth < oldHealth) change = -0.01f;
-            if(user.getPlayer().hasPotionEffect(PotionEffectType.REGENERATION)) change = 0.001f;
+            if(newHealth < oldHealth) change = -0.05f;
+            else if(user.getPlayer().hasPotionEffect(PotionEffectType.REGENERATION)) change = 0.001f;
 
             if(change != 0) {
                 float exp = user.getPlayer().getExp();
@@ -143,7 +143,7 @@ public class VampireClass extends ClassItemClassHandler {
                 user.sendLocale("timeouts.batting.finished");
             } else {
                 float exp = user.getPlayer().getExp();
-                exp = Math.min(exp + 0.00025f, 1);
+                exp = Math.min(exp + 0.001f, 1);
                 user.getPlayer().setExp(exp);
                 if(wasFlying) user.getPlayer().setFlying(false);
 

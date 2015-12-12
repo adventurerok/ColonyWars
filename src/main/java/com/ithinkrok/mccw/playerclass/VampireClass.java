@@ -98,7 +98,7 @@ public class VampireClass extends ClassItemClassHandler {
                 exp = Math.min(exp + 0.001f, 1);
                 user.getPlayer().setExp(exp);
 
-                if(exp > 0.1f && !allowFlight) user.getPlayer().setAllowFlight(allowFlight = true);
+                if(exp > 0.2f && !allowFlight) user.getPlayer().setAllowFlight(allowFlight = true);
 
                 if(bat) {
                     Disguises.unDisguise(user);

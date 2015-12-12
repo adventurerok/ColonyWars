@@ -36,7 +36,7 @@ parkour:
   # Amount for right clicking an off redstone lamp
   advanced: 2000
   # Money cap
-  cap: 2500
+  cap: 4000
 
 # When to force showdown start
 force-showdown:

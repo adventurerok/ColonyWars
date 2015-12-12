@@ -61,7 +61,7 @@ public class ParcourMinigame implements LobbyMinigame {
     }
 
     private void addParkourMoney(User user, int amount, boolean advanced) {
-        amount = Math.min(amount, maxParkourMoney - user.getPlayerCash());
+        amount = Math.min(amount, (maxParkourMoney - user.getPlayerCash()) / 2);
 
         if (amount <= 0) user.sendLocale("minigames.parcour.capped");
         else {

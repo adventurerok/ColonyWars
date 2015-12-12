@@ -428,7 +428,7 @@ public class WarsPlugin extends JavaPlugin {
     public void playerJoinLobby(Player player) {
         User user = getUser(player);
 
-        Disguises.undisguise(user);
+        Disguises.unDisguise(user);
 
         user.setInGame(false);
         user.getPlayer().setGameMode(GameMode.ADVENTURE);

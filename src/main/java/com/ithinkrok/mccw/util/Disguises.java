@@ -23,7 +23,7 @@ public class Disguises {
         else dcAPI.disguisePlayer(user.getPlayer(), disguise);
     }
 
-    public static void undisguise(User user) {
+    public static void unDisguise(User user) {
         if(dcAPI.isDisguised(user.getPlayer())) dcAPI.undisguisePlayer(user.getPlayer());
     }
 }

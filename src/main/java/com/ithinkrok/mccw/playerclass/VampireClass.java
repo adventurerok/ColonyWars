@@ -11,8 +11,6 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
-import pgDev.bukkit.DisguiseCraft.api.DisguiseCraftAPI;
 import pgDev.bukkit.DisguiseCraft.disguise.DisguiseType;
 
 /**
@@ -54,7 +52,7 @@ public class VampireClass extends ClassItemClassHandler {
         });
 
         batWand.withRightClickTimeout(event -> {
-            Disguises.undisguise(event.getUser());
+            Disguises.unDisguise(event.getUser());
             return true;
         }, "bat", "batting", "lore.timeout.bat", "timeouts.batting.finished", new LinearCalculator(5, 5));
 

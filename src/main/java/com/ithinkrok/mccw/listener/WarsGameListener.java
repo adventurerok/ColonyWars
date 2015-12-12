@@ -32,7 +32,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 
@@ -510,7 +509,7 @@ public class WarsGameListener implements Listener {
         plugin.getGameInstance().onUserDeath();
 
         removeEntityTargets(died);
-        Disguises.undisguise(diedInfo);
+        Disguises.unDisguise(diedInfo);
 
         User killerInfo = killer == null ? null : plugin.getUser(killer);
         if (killerInfo != null) killerInfo.getStatsHolder().addKill();

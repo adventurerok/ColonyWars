@@ -114,12 +114,12 @@ cooldowns.wolf.finished=&aThe wolf wand is ready to use again.
 cooldowns.regen.finished=&aYour regeneration ability has cooled down!
 cooldowns.cloak.finished=&aYour cloak ability has cooled down!
 cooldowns.fix.finished=&aYou can now use the fix command again!
-cooldowns.bat.finished=&aYou can now use the bat wand again!
+cooldowns.bat.finished=&cYou can now use bat flight again!
 
 cooldowns.default.wait=&cPlease wait for this ability to cool down!
 
 timeouts.cloaking.finished=&cYour cloak has run out!
-timeouts.batting.finished=&cYour bat disguise has run out!
+timeouts.batting.finished=&cYour bat ability has run out and must recharge!
 timeouts.default.wait=&cYou are already using this ability!
 
 #class-upgrades
@@ -142,7 +142,10 @@ upgrades.regen-ability.name=Regen Ability Upgrade
 upgrades.wolf-wand.name=Wolf Wand Upgrade %s
 upgrades.cloak.name=Cloak Upgrade %s
 upgrades.vampire.name=Vampire Sword Upgrade %s
-upgrades.bat-wand.name=Bat Wand Upgrade %s
+upgrades.bat-flight.name=Bat Flight Upgrade %s
+
+#ability-unlock
+unlock.bat-flight.message=The MageTower gives you the bat flight ability!
 
 #class-items
 items.peasant-axe.name=Peasant Axe

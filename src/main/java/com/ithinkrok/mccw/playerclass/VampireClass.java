@@ -5,13 +5,18 @@ import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.event.UserAttackEvent;
 import com.ithinkrok.mccw.event.UserBeginGameEvent;
+import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
 import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.Disguises;
+import com.ithinkrok.mccw.util.item.InventoryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Monster;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import pgDev.bukkit.DisguiseCraft.disguise.DisguiseType;
@@ -44,6 +49,13 @@ public class VampireClass extends ClassItemClassHandler {
         vampireSword.withUpgradables(new ClassItem.Upgradable("vampire", "upgrades.vampire.name", 2));
 
         addExtraClassItems(vampireSword);
+
+        for (int level = 1; level <= 2; ++level) {
+            addExtraBuyables(new UpgradeBuyable(InventoryUtils
+                    .createItemWithNameAndLore(Material.MONSTER_EGG, 1, EntityType.BAT.getTypeId(),
+                            plugin.getLocale("upgrades.bat-flight.name", level)), Buildings.MAGETOWER,
+                    plugin.getWarsConfig().getClassItemCost(playerClass, "bat" + level), "bat", level));
+        }
     }
 
     @Override
@@ -64,46 +76,68 @@ public class VampireClass extends ClassItemClassHandler {
         changer.startTask(event.getUser().getPlugin());
     }
 
-    private static class UserFlyingChanger implements Runnable{
+    private static class UserFlyingChanger implements Runnable {
 
         private int taskId;
         private User user;
         private boolean bat = false;
         private boolean allowFlight = false;
+        private boolean mageTower = false;
 
         private UserFlyingChanger(User user) {
             this.user = user;
 
-            user.getPlayer().setExp(1f);
+            user.getPlayer().setExp(0f);
         }
 
         @Override
         public void run() {
-            if(!user.isInGame()) Bukkit.getScheduler().cancelTask(taskId);
+            if (!user.isInGame()) Bukkit.getScheduler().cancelTask(taskId);
 
-            if(user.getPlayer().isFlying()){
+            if (!mageTower) {
+                if (user.getTeam().getBuildingCount(Buildings.MAGETOWER) < 1) return;
+                mageTower = true;
+                user.sendLocale("unlock.bat-flight.message");
+            }
+
+            if (user.getPlayer().isFlying()) {
                 float exp = user.getPlayer().getExp();
-                exp = Math.max(exp - 0.005f, 0);
+                exp = Math.max(exp - flightDecreaseAmount(user.getUpgradeLevel("bat")), 0);
                 user.getPlayer().setExp(exp);
 
-                if(!bat){
+                if (!bat) {
                     Disguises.disguise(user, DisguiseType.Bat);
                     bat = true;
                 }
 
-                if(exp > 0) return;
+                if (exp > 0) return;
                 user.getPlayer().setAllowFlight(allowFlight = false);
+                user.sendLocale("timeouts.batting.finished");
             } else {
                 float exp = user.getPlayer().getExp();
                 exp = Math.min(exp + 0.001f, 1);
                 user.getPlayer().setExp(exp);
 
-                if(exp > 0.2f && !allowFlight) user.getPlayer().setAllowFlight(allowFlight = true);
+                if (exp > 0.2f && !allowFlight) {
+                    user.getPlayer().setAllowFlight(allowFlight = true);
+                    user.sendLocale("cooldowns.bat.finished");
+                }
 
-                if(bat) {
+                if (bat) {
                     Disguises.unDisguise(user);
                     bat = false;
                 }
+            }
+        }
+
+        private float flightDecreaseAmount(int level) {
+            switch(level) {
+                case 1:
+                    return 0.005f;
+                case 2:
+                    return (1f/300f);
+                default:
+                    return 0.01f;
             }
         }
 

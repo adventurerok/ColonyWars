@@ -187,6 +187,8 @@ costs:
   vampire:
     vampire1: 1350
     vampire2: 1600
+    bat1: 1350
+    bat2: 1600
 
 # The amounts of an item sold (currently only for the farm shop)
 amounts:

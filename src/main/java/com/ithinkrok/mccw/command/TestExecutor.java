@@ -27,6 +27,8 @@ public class TestExecutor implements WarsCommandExecutor {
             Player targetPlayer = Bukkit.getPlayer(playerName);
 
             if (targetPlayer != null) user = sender.getPlugin().getUser(targetPlayer);
+        } else if(sender instanceof User) {
+            user = (User) sender;
         }
 
         if (user == null) {

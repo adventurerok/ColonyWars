@@ -13,6 +13,7 @@ import com.ithinkrok.mccw.event.UserRightClickEntityEvent;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.mccw.strings.Buildings;
+import com.ithinkrok.mccw.util.Disguises;
 import com.ithinkrok.mccw.util.PlayerUtils;
 import com.ithinkrok.mccw.util.TreeFeller;
 import com.ithinkrok.mccw.util.building.Facing;
@@ -509,6 +510,7 @@ public class WarsGameListener implements Listener {
         plugin.getGameInstance().onUserDeath();
 
         removeEntityTargets(died);
+        Disguises.undisguise(diedInfo);
 
         User killerInfo = killer == null ? null : plugin.getUser(killer);
         if (killerInfo != null) killerInfo.getStatsHolder().addKill();

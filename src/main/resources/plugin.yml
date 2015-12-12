@@ -2,7 +2,7 @@ name: "ColonyWars"
 version: "${project.version}"
 main: "com.ithinkrok.mccw.WarsPlugin"
 author: "ithinkrok"
-depend: ["HologramAPI", "ProtocolLib"]
+depend: ["HologramAPI", "ProtocolLib", "DisguiseCraft"]
 database: true
 permissions:
   mccw.*:

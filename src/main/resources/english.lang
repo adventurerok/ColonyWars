@@ -114,10 +114,12 @@ cooldowns.wolf.finished=&aThe wolf wand is ready to use again.
 cooldowns.regen.finished=&aYour regeneration ability has cooled down!
 cooldowns.cloak.finished=&aYour cloak ability has cooled down!
 cooldowns.fix.finished=&aYou can now use the fix command again!
+cooldowns.bat.finished=&cYou can now use the bat wand again!
 
 cooldowns.default.wait=&cPlease wait for this ability to cool down!
 
 timeouts.cloaking.finished=&cYour cloak has run out!
+timeouts.batting.finished=&cYour bat disguise has run out!
 timeouts.default.wait=&cYou are already using this ability!
 
 #class-upgrades
@@ -140,6 +142,7 @@ upgrades.regen-ability.name=Regen Ability Upgrade
 upgrades.wolf-wand.name=Wolf Wand Upgrade %s
 upgrades.cloak.name=Cloak Upgrade %s
 upgrades.vampire.name=Vampire Sword Upgrade %s
+upgrades.bat-wand.name=Bat Wand Upgrade %s
 
 #class-items
 items.peasant-axe.name=Peasant Axe
@@ -163,6 +166,7 @@ items.mighty-axe.name=The Mighty Axe
 items.cloak.name=Cloak
 items.vampire-sword.name=Vampire Sword
 items.vampire-sword.desc=Regenerates health when damage is dealt.
+items.bat-wand.name=Bat Wand
 items.spectator-toggle.name=Show/Hide other spectators
 
 #lore
@@ -173,6 +177,7 @@ lore.nausea=Nausea Duration\: %s seconds
 lore.wither=Wither Duration\: %s seconds
 
 lore.timeout.cloak=Invisibility\: %s seconds
+lore.timeout.bat=Bat Disguise\: %s seconds
 
 #money
 money.exchange.too-expensive=&cYou do not have that amount of money

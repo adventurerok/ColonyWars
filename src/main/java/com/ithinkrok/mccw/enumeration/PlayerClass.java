@@ -29,7 +29,7 @@ public class PlayerClass {
         new PlayerClass("peasant", Material.IRON_AXE, PeasantClass::new);
         new PlayerClass("mage", Material.DIAMOND_LEGGINGS, MageClass::new);
 
-        //new PlayerClass("vampire", Material.GOLD_SWORD, VampireClass::new);
+        new PlayerClass("vampire", Material.GOLD_SWORD, VampireClass::new);
     }
 
 

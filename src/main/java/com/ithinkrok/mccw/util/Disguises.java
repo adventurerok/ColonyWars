@@ -24,6 +24,6 @@ public class Disguises {
     }
 
     public static void undisguise(User user) {
-        if(dcAPI.isDisguised(user.getPlayer())) dcAPI.undisguisePlayer(user.getPlayer(), true);
+        if(dcAPI.isDisguised(user.getPlayer())) dcAPI.undisguisePlayer(user.getPlayer());
     }
 }

@@ -23,7 +23,7 @@ public class DarkKnightClass extends ClassItemClassHandler {
     public DarkKnightClass(WarsPlugin plugin, PlayerClass playerClass) {
         super(new ClassItem(plugin, playerClass.getName(), Material.IRON_HELMET, "items.darkness-sword.name")
                 .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true).withWeaponModifier(
-                        new ClassItem.WeaponModifier("sword").withDamageCalculator(new ArrayCalculator(2, 4, 6))
+                        new ClassItem.WeaponModifier("sword").withDamageCalculator(new ArrayCalculator(1.5, 3.5, 5))
                                 .withWitherCalculator(new ArrayCalculator(3, 6, 10))
                                 .withNauseaCalculator(new ArrayCalculator(5, 7, 8))).withUpgradables(
                         new ClassItem.Upgradable("sword", "upgrades.darkness-sword.name", 2)),

@@ -2,9 +2,9 @@ maps:
   oasis:
     folder: "oasis"
     center:
-      x: -178
-      y: 95
-      z: 183
+      x: 8
+      y: 33
+      z: -34
     showdown-size:
       x: 30
       z: 30

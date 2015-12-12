@@ -5,6 +5,7 @@ import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.event.UserAttackEvent;
 import com.ithinkrok.mccw.event.UserBeginGameEvent;
+import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
 import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
@@ -68,6 +69,12 @@ public class VampireClass extends ClassItemClassHandler {
     }
 
     @Override
+    public boolean onInteract(UserInteractEvent event) {
+        return event.getUser().getPlayer().isFlying() || super.onInteract(event);
+
+    }
+
+    @Override
     public void onUserBeginGame(UserBeginGameEvent event) {
         super.onUserBeginGame(event);
 
@@ -83,6 +90,7 @@ public class VampireClass extends ClassItemClassHandler {
         private boolean bat = false;
         private boolean allowFlight = false;
         private boolean mageTower = false;
+        private double oldHealth = 0;
 
         private UserFlyingChanger(User user) {
             this.user = user;
@@ -99,9 +107,25 @@ public class VampireClass extends ClassItemClassHandler {
                 mageTower = true;
                 user.getPlayer().setExp(1f);
                 user.sendLocale("unlock.bat-flight.message");
+
+                oldHealth = user.getPlayer().getHealth();
             }
 
-            if (user.getPlayer().isFlying() || !user.getPlayer().isOnGround()) {
+            double newHealth = user.getPlayer().getHealth();
+            float change = 0f;
+
+            if(newHealth < oldHealth) change = -0.01f;
+            if(user.getPlayer().hasPotionEffect(PotionEffectType.REGENERATION)) change = 0.001f;
+
+            if(change != 0) {
+                float exp = user.getPlayer().getExp();
+                exp = Math.max(Math.min(exp + change, 1f), 0f);
+                user.getPlayer().setExp(exp);
+            }
+
+            oldHealth = newHealth;
+
+            if (user.getPlayer().isFlying()) {
                 float exp = user.getPlayer().getExp();
                 exp = Math.max(exp - flightDecreaseAmount(user.getUpgradeLevel("bat")), 0);
                 user.getPlayer().setExp(exp);
@@ -116,7 +140,7 @@ public class VampireClass extends ClassItemClassHandler {
                 user.sendLocale("timeouts.batting.finished");
             } else {
                 float exp = user.getPlayer().getExp();
-                exp = Math.min(exp + 0.001f, 1);
+                exp = Math.min(exp + 0.00025f, 1);
                 user.getPlayer().setExp(exp);
 
                 if (exp > 0.2f && !allowFlight) {

@@ -93,7 +93,7 @@ public class WarsGameListener implements Listener {
         //                .forEach(other -> event.getRecipients().remove(other.getPlayer()));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
         User user = plugin.getUser(event.getPlayer());
 
@@ -103,6 +103,9 @@ public class WarsGameListener implements Listener {
         user.sendLocale("spectators.game.in-progress");
         user.sendLocale("spectators.game.wait-next");
         user.sendLocale("spectators.players.chose");
+
+        //Set allow flight to true after essentials has the opportunity to set it to false
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, user::setSpectator, 2);
     }
 
     @EventHandler

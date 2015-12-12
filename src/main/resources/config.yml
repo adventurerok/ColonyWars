@@ -8,6 +8,7 @@ map-list:
   - "cavern"
   - "hills_and_lakes"
   - "jungle_valley"
+  - "oasis"
   - "random"
 
 persistence: true

@@ -1,0 +1,46 @@
+maps:
+  oasis:
+    folder: "oasis"
+    center:
+      x: -178
+      y: 95
+      z: 183
+    showdown-size:
+      x: 30
+      z: 30
+    red:
+      base:
+        x: -265
+        y: 37
+        z: 238
+      spawn:
+        x: -263.5
+        y: 37
+        z: 237.5
+    blue:
+      base:
+        x: 281
+        y: 37
+        z: -306
+      spawn:
+        x: 280.5
+        y: 37
+        z: -304.5
+    green:
+      base:
+        x: 280
+        y: 37
+        z: 239
+      spawn:
+        x: 279.5
+        y: 37
+        z: 238.5
+    yellow:
+      base:
+        x: -264
+        y: 37
+        z: -307
+      spawn:
+        x: -262.5
+        y: 37
+        z: -305.5

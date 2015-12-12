@@ -114,7 +114,7 @@ cooldowns.wolf.finished=&aThe wolf wand is ready to use again.
 cooldowns.regen.finished=&aYour regeneration ability has cooled down!
 cooldowns.cloak.finished=&aYour cloak ability has cooled down!
 cooldowns.fix.finished=&aYou can now use the fix command again!
-cooldowns.bat.finished=&cYou can now use the bat wand again!
+cooldowns.bat.finished=&aYou can now use the bat wand again!
 
 cooldowns.default.wait=&cPlease wait for this ability to cool down!
 

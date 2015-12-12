@@ -34,6 +34,10 @@
             <id>dmulloy2-repo</id>
             <url>http://repo.dmulloy2.net/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>DisguiseCraft Repo</id>
+            <url>http://build.yu8.me:8080/plugin/repository/everything/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -71,6 +75,12 @@
             <artifactId>mockito-core</artifactId>
             <version>2.0.31-beta</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>pgDev</groupId>
+            <artifactId>DisguiseCraft</artifactId>
+            <version>5.1</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

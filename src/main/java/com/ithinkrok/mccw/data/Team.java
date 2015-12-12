@@ -130,7 +130,7 @@ public class Team {
 
         updatePlayerScoreboards();
 
-        messageLocale("money.balance.team.deduct");
+        messageLocale("money.balance.team.deduct", cash);
         messageLocale("money.balance.team.new", teamCash);
 
         return true;

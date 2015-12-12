@@ -290,7 +290,7 @@ public class WarsGameListener implements Listener {
         User user = plugin.getUser(event.getPlayer());
 
         if (!user.isInGame()) {
-            if(event.getItem() != null && event.getItem().getType() == Material.IRON_LEGGINGS) {
+            if (event.getItem() != null && event.getItem().getType() == Material.IRON_LEGGINGS) {
                 user.setShowCloakedPlayers(!user.showCloakedPlayers());
             }
 
@@ -300,7 +300,8 @@ public class WarsGameListener implements Listener {
 
         resetDurability(event.getPlayer());
 
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getClickedBlock().getType() != Material.OBSIDIAN) {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || (event.getClickedBlock().getType() != Material.OBSIDIAN &&
+                event.getClickedBlock().getType() != Material.ENDER_CHEST)) {
             PlayerClassHandler classHandler = user.getPlayerClassHandler();
 
             if (classHandler.onInteract(new UserInteractWorldEvent(user, event))) event.setCancelled(true);
@@ -309,7 +310,30 @@ public class WarsGameListener implements Listener {
 
         event.setCancelled(true);
 
-        user.openShopInventory(event.getClickedBlock().getLocation());
+        switch(event.getClickedBlock().getType()){
+            case OBSIDIAN:
+                user.openShopInventory(event.getClickedBlock().getLocation());
+                break;
+            case ENDER_CHEST:
+                int amount = 5000 + plugin.getRandom().nextInt(20) * 1000;
+
+                user.getTeam().messageLocale("ender-chest.found", user.getFormattedName());
+                user.addPlayerCash(amount);
+
+                user.sendLocale("money.balance.user.add", amount);
+                user.sendLocale("money.balance.user.new", user.getPlayerCash());
+
+                amount *= 2f/3f;
+
+                user.getTeam().addTeamCash(amount);
+                user.getTeam().messageLocale("money.balance.team.add", amount);
+                user.getTeam().messageLocale("money.balance.team.new", user.getTeam().getTeamCash());
+
+                event.getClickedBlock().setType(Material.AIR);
+                break;
+
+        }
+
     }
 
     @EventHandler

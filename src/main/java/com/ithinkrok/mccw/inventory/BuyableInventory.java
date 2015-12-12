@@ -57,12 +57,12 @@ public class BuyableInventory implements InventoryHandler {
     private void tryBuyItem(Buyable item, Building building, User user, Team team) {
         if (item.buyWithTeamMoney()) {
             if (!InventoryUtils.hasTeamCash(item.getCost(), team, user)) {
-                user.sendMessage(ChatColor.RED + "Your Team and you do not have enough money to purchase this item!");
+                user.sendLocale("purchase.team.no-money");
                 return;
             }
         } else {
             if (!user.hasPlayerCash(item.getCost())) {
-                user.sendMessage(ChatColor.RED + "You do not have enough money to purchase this item!");
+                user.sendLocale("purchase.no-money");
                 return;
             }
         }
@@ -81,7 +81,7 @@ public class BuyableInventory implements InventoryHandler {
             }
 
             if (freeSlots < requiredSlots) {
-                user.sendMessage(ChatColor.RED + "You do not have enough free slots in your inventory!");
+                user.sendLocale("purchase.no-slots");
                 return;
             }
         }
@@ -89,7 +89,7 @@ public class BuyableInventory implements InventoryHandler {
         ItemPurchaseEvent event = new ItemPurchaseEvent(building, user, team);
 
         if (!item.canBuy(event)) {
-            user.sendMessage(ChatColor.RED + "You cannot buy this item!");
+            user.sendLocale("purchase.cant");
             user.redoShopInventory();
             return;
         }

@@ -77,6 +77,9 @@ spectators.game.wait-next=&6You can play when the current game ends
 spectators.players.chose=&6Choose a player to spectate from your inventory
 spectators.player.name=&dSpectate %s
 
+#enderchest
+ender-chest.found=%s &6found an ender chest!
+
 #showdown
 showdown.escape=&cYou cannot escape the showdown arena!
 showdown.shrinking=&6The showdown arena will now shrink slowly until it is 10x10!
@@ -176,8 +179,18 @@ money.exchange.too-expensive=&cYou do not have that amount of money
 money.exchange.team-transfer=%s &3transferred &a$%s &eto your team's account!
 money.exchange.user-transfer=%s &3transferred &a$%s &eto %s&e's account!
 money.balance.team.new=&eYour Team's new Balance is\: &a$%s&e!
+money.balance.team.deduct=&c$%s &ewere deducted from your Team's Account!
+money.balance.team.add=&a$%s &ewere added to your Team's Account!
 money.balance.user.new=&eYour new Balance is: &a$%s!
 money.balance.user.deduct=&c$%s &ewere deducted from your Account!
+money.balance.user.add=&a$%s &ewere added to your Account!
+
+#purchase
+purchase.no-slots=&cYou do not have enough free slots in your inventory!
+purchase.no-money=&cYou do not have enough money to purchase this item!
+purchase.team.no-money=&cYour Team and you do not have enough money to purchase this item!
+purchase.cant=&cYou cannot buy this item!
+purchase.team-failed=&ePaid &c$%s &eusing your own money as your team did not have enough!
 
 #game
 game.player.killed=&6%s &6was killed by %s

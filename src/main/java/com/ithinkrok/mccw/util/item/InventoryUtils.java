@@ -93,8 +93,7 @@ public class InventoryUtils {
 
         if(teamAmount > 0) team.subtractTeamCash(teamAmount);
 
-        if (playerAmount > 0) user.sendMessage("Paid " + ChatColor.RED + "$" + playerAmount +
-                ChatColor.YELLOW + " using your own money as your Team did not have enough!");
+        if (playerAmount > 0) user.sendLocale("purchase.team-failed", playerAmount);
 
         return true;
     }

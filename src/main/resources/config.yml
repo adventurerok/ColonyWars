@@ -156,6 +156,7 @@ costs:
     ender2: 1600
     healing: 1350
     harming: 400
+    strength: 2000
   peasant:
     sharpness1: 1350
     sharpness2: 1600

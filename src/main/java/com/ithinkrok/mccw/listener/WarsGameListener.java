@@ -51,6 +51,7 @@ public class WarsGameListener implements Listener {
     static {
         GOOD_POTIONS.put(PotionEffectType.HEAL, true);
         GOOD_POTIONS.put(PotionEffectType.HARM, false);
+        GOOD_POTIONS.put(PotionEffectType.INCREASE_DAMAGE, true);
         //Add more potions if required
 
         DEATH_MESSAGE_ENDINGS.put(EntityDamageEvent.DamageCause.FALL, ".falling");

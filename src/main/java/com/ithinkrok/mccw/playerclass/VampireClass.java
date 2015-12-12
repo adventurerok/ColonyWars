@@ -95,7 +95,7 @@ public class VampireClass extends ClassItemClassHandler {
                 user.getPlayer().setAllowFlight(allowFlight = false);
             } else {
                 float exp = user.getPlayer().getExp();
-                exp = Math.min(exp + 0.003f, 1);
+                exp = Math.min(exp + 0.001f, 1);
                 user.getPlayer().setExp(exp);
 
                 if(exp > 0.1f && !allowFlight) user.getPlayer().setAllowFlight(allowFlight = true);

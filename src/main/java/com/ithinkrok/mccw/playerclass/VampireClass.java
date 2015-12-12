@@ -146,7 +146,7 @@ public class VampireClass extends ClassItemClassHandler {
                 if (exp > 0.2f && !allowFlight) {
                     user.getPlayer().setAllowFlight(allowFlight = true);
                     user.sendLocale("cooldowns.bat.finished");
-                    user.getPlayer().setFlySpeed(0.05f);
+                    user.getPlayer().setFlySpeed(0.03f);
                 }
 
                 if (bat) {

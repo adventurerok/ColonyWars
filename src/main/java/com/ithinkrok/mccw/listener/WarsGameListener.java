@@ -354,7 +354,7 @@ public class WarsGameListener implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         if (plugin.getGameState() != GameState.SHOWDOWN) return;
-        if (event.getPlayer().getAllowFlight()) return;
+        if (!plugin.getUser(event.getPlayer()).isInGame()) return;
 
         User user = plugin.getUser(event.getPlayer());
         if (user == null) return;

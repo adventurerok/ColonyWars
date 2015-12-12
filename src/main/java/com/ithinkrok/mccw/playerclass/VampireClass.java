@@ -97,6 +97,7 @@ public class VampireClass extends ClassItemClassHandler {
             if (!mageTower) {
                 if (user.getTeam().getBuildingCount(Buildings.MAGETOWER) < 1) return;
                 mageTower = true;
+                user.getPlayer().setExp(1f);
                 user.sendLocale("unlock.bat-flight.message");
             }
 
@@ -133,9 +134,9 @@ public class VampireClass extends ClassItemClassHandler {
         private float flightDecreaseAmount(int level) {
             switch(level) {
                 case 1:
-                    return 0.005f;
+                    return 0.006f;
                 case 2:
-                    return (1f/300f);
+                    return 0.004f;
                 default:
                     return 0.01f;
             }

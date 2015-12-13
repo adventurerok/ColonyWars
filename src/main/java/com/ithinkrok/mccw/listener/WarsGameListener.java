@@ -65,6 +65,8 @@ public class WarsGameListener implements Listener {
         DEATH_MESSAGE_ENDINGS.put(EntityDamageEvent.DamageCause.DROWNING, ".drowned");
         DEATH_MESSAGE_ENDINGS.put(EntityDamageEvent.DamageCause.FIRE, ".fire");
         DEATH_MESSAGE_ENDINGS.put(EntityDamageEvent.DamageCause.FIRE_TICK, ".fire");
+        DEATH_MESSAGE_ENDINGS.put(EntityDamageEvent.DamageCause.LIGHTNING, ".lightning");
+        DEATH_MESSAGE_ENDINGS.put(EntityDamageEvent.DamageCause.LAVA, ".lava");
 
 
     }

@@ -11,8 +11,8 @@ team.join.success=&6You will be in the %s &6Team in the next game!
 class.join.success=&6You will be a %s &6in the next game!
 lobby.chooser.team.desc=Choose your team
 lobby.chooser.class.desc=Choose your class
-lobby.info.choose-class=&2Source Code\: https\://github.com/adventurerok/Colony-Wars
-lobby.info.map-info=&2Resource pack\: https\://files.ithinkrok.com/CWRP.zip
+lobby.info.choose-class=&2Source Code\: github.com/adventurerok/Colony-Wars
+lobby.info.map-info=&2Resource pack\: files.ithinkrok.com/CWRP.zip
 lobby.info.not-enough-players=&7Not enough Players Online for Game to start!
 
 #map-descriptions
@@ -207,6 +207,7 @@ game.player.killed=&6%s &6was killed by %s
 game.player.killed.explosion=&6%s &6was blown up by %s
 game.player.killed.shot=&6%s &6was shot by %s
 game.player.killed.fire=&6%s &6was burned to death by %s
+game.player.killed.lightning=&6%s &6was struck by lightning by %s
 
 game.player.died-fighting=&6%s &6died while fighting %s&6!
 game.player.died-fighting.falling=&6%s &6fell to their death while fighting %s&6!
@@ -215,6 +216,8 @@ game.player.died-fighting.shot=&6%s &6got shot while fighting %s&6!
 # suppress inspection "UnusedProperty"
 game.player.died-fighting.drowned=&6%s &6drowned while fighting %s&6!
 game.player.died-fighting.fire=&6%s &6burned to death while fighting %s&6!
+game.player.died-fighting.lightning=&6%s &6was struck by lightning while fighting %s
+game.player.died-fighting.lava=&6%s &6melted while fighting %s
 
 game.player.death=&6%s &6died!
 game.player.death.falling=&6%s &6fell to their death!
@@ -223,9 +226,11 @@ game.player.death.shot=&6%s &6was shot to death by a monster!
 # suppress inspection "UnusedProperty"
 game.player.death.drowned=&6%s &6drowned!
 game.player.death.fire=&6%s &6burned to death!
+game.player.death.lightning=&6%s &6was struck by lightning!
+game.player.death.lava=&6%s &6melted in lava!
 
 game.player.respawn=%s &6was revived by the gods!
-game.player.no-respawn=%s &6did not respawn!
+game.player.no-respawn=%s &6was not revived!
 game.player.all-dead=&6Oh dear. Everyone is dead!
 game.team.winner=&6The %s &6Team has won the game!
 game.start.team=&6You are playing on the %s &6Team

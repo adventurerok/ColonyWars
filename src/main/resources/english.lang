@@ -11,7 +11,7 @@ team.join.success=&6You will be in the %s &6Team in the next game!
 class.join.success=&6You will be a %s &6in the next game!
 lobby.chooser.team.desc=Choose your team
 lobby.chooser.class.desc=Choose your class
-lobby.info.choose-class=&2Choose your team/class or it is chosen randomly
+lobby.info.choose-class=&2Source Code\: https\://github.com/adventurerok/Colony-Wars
 lobby.info.map-info=&2Resource pack\: https\://files.ithinkrok.com/CWRP.zip
 lobby.info.not-enough-players=&7Not enough Players Online for Game to start!
 

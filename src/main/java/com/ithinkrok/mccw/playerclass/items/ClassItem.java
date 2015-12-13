@@ -11,6 +11,7 @@ import com.ithinkrok.mccw.util.io.LangFile;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
@@ -180,7 +181,7 @@ public class ClassItem {
     private ItemStack createItemFromUpgradeLevels(Map<String, Integer> upgradeLevels) {
         List<String> lore = new ArrayList<>();
 
-        if(descriptionLocale != null) {
+        if (descriptionLocale != null) {
             lore.add(langFile.getLocale(descriptionLocale));
         }
 
@@ -267,7 +268,8 @@ public class ClassItem {
     }
 
     public void onUserAttack(UserAttackEvent event) {
-        if (weaponModifier != null) attackWithWeaponModifier(event);
+        if (event.getDamageCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK && weaponModifier != null)
+            attackWithWeaponModifier(event);
 
         if (attackAction == null) return;
 

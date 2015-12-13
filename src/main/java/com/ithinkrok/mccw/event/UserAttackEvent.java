@@ -5,6 +5,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -52,6 +53,10 @@ public class UserAttackEvent extends UserInteractEvent{
 
     public void setDamage(double damage){
         event.setDamage(damage);
+    }
+
+    public EntityDamageEvent.DamageCause getDamageCause() {
+        return event.getCause();
     }
 
     @Override

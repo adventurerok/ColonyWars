@@ -423,9 +423,7 @@ public class WarsGameListener implements Listener {
             }
         }
 
-        if (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
-            userAttack(new UserAttackEvent(damagerInfo, targetInfo, event));
-        }
+        userAttack(new UserAttackEvent(damagerInfo, targetInfo, event));
 
         if (targetInfo == null) return;
         plugin.onUserAttacked();
@@ -439,9 +437,8 @@ public class WarsGameListener implements Listener {
     private void userAttack(UserAttackEvent event) {
         ItemStack weapon = event.getItem();
 
-        if (weapon == null) return;
-
-        if (event.getTargetUser() != null && weapon.containsEnchantment(Enchantment.FIRE_ASPECT)) {
+        if (event.getDamageCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK && event.getTargetUser() != null &&
+                weapon != null && weapon.containsEnchantment(Enchantment.FIRE_ASPECT)) {
             event.getTargetUser().setFireAttacker(event.getUser());
         }
 

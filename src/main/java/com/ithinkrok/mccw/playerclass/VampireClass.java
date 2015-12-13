@@ -17,6 +17,7 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -40,7 +41,8 @@ public class VampireClass extends ClassItemClassHandler {
                 new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "vampire", new LinearCalculator(0, 1)));
 
         vampireSword.withAttackAction(event -> {
-            if (event.getFinalDamage() < 1) return;
+            if (event.getFinalDamage() < 1 || event.getDamageCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK)
+                return;
             PotionEffect effect = new PotionEffect(PotionEffectType.REGENERATION, 20, 1, false, true);
             event.getUser().getPlayer().addPotionEffect(effect);
         });
@@ -61,7 +63,8 @@ public class VampireClass extends ClassItemClassHandler {
 
     @Override
     public void onUserAttack(UserAttackEvent event) {
-        if (event.getUser().getPlayer().isFlying()) {
+        if (event.getDamageCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK &&
+                event.getUser().getPlayer().isFlying()) {
             event.setCancelled(true);
             return;
         }
@@ -115,10 +118,10 @@ public class VampireClass extends ClassItemClassHandler {
             double newHealth = user.getPlayer().getHealth();
             float change = 0f;
 
-            if(newHealth < oldHealth) change = -0.07f;
-            else if(user.getPlayer().hasPotionEffect(PotionEffectType.REGENERATION)) change = 0.001f;
+            if (newHealth < oldHealth) change = -0.07f;
+            else if (user.getPlayer().hasPotionEffect(PotionEffectType.REGENERATION)) change = 0.001f;
 
-            if(change != 0) {
+            if (change != 0) {
                 float exp = user.getPlayer().getExp();
                 exp = Math.max(Math.min(exp + change, 1f), 0f);
                 user.getPlayer().setExp(exp);
@@ -145,7 +148,7 @@ public class VampireClass extends ClassItemClassHandler {
                 float exp = user.getPlayer().getExp();
                 exp = Math.min(exp + 0.001f, 1);
                 user.getPlayer().setExp(exp);
-                if(wasFlying) user.getPlayer().setFlying(false);
+                if (wasFlying) user.getPlayer().setFlying(false);
 
                 wasFlying = false;
 
@@ -163,7 +166,7 @@ public class VampireClass extends ClassItemClassHandler {
         }
 
         private float flightDecreaseAmount(int level) {
-            switch(level) {
+            switch (level) {
                 case 1:
                     return 0.006f;
                 case 2:

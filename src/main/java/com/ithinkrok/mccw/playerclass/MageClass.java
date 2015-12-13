@@ -2,6 +2,7 @@ package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
+import com.ithinkrok.mccw.event.UserAttackEvent;
 import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.event.UserTeamBuildingBuiltEvent;
 import com.ithinkrok.mccw.inventory.ItemBuyable;
@@ -15,6 +16,7 @@ import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.LightningStrike;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionType;
@@ -70,6 +72,15 @@ public class MageClass extends ClassItemClassHandler {
             event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.SHOOT_ARROW, 1.0f, 1.0f);
 
             return true;
+        }
+    }
+
+    @Override
+    public void onUserAttack(UserAttackEvent event) {
+        super.onUserAttack(event);
+
+        if(event.getDamageCause() == EntityDamageEvent.DamageCause.LIGHTNING) {
+            event.setDamage(event.getDamage() * 2);
         }
     }
 

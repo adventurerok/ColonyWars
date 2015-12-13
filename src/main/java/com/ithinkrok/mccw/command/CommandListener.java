@@ -1,10 +1,6 @@
 package com.ithinkrok.mccw.command;
 
 import com.ithinkrok.mccw.WarsPlugin;
-import com.ithinkrok.mccw.command.TestExecutor;
-import com.ithinkrok.mccw.command.WarsCommandExecutor;
-import com.ithinkrok.mccw.command.WarsCommandSender;
-import com.ithinkrok.mccw.command.WarsConsoleSender;
 import com.ithinkrok.mccw.command.executors.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

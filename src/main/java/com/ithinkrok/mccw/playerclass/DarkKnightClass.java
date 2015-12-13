@@ -5,11 +5,9 @@ import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.event.UserBeginGameEvent;
 import com.ithinkrok.mccw.playerclass.items.ArrayCalculator;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
-import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.item.TeamCompass;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 

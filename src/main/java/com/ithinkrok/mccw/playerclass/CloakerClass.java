@@ -2,7 +2,9 @@ package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
-import com.ithinkrok.mccw.event.*;
+import com.ithinkrok.mccw.event.UserAbilityCooldownEvent;
+import com.ithinkrok.mccw.event.UserBeginGameEvent;
+import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.playerclass.items.ArrayCalculator;
 import com.ithinkrok.mccw.playerclass.items.Calculator;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;

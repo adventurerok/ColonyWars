@@ -1,8 +1,8 @@
 package com.ithinkrok.mccw.inventory;
 
 import com.ithinkrok.mccw.event.ItemPurchaseEvent;
-import com.ithinkrok.mccw.util.item.InventoryUtils;
 import com.ithinkrok.mccw.util.io.LangFile;
+import com.ithinkrok.mccw.util.item.InventoryUtils;
 import org.bukkit.Material;
 
 /**

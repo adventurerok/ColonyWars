@@ -1,7 +1,6 @@
 package com.ithinkrok.mccw.util.io;
 
 import com.ithinkrok.mccw.WarsPlugin;
-import com.ithinkrok.mccw.util.io.ResourceHandler;
 import org.bukkit.Color;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.Configuration;
@@ -10,7 +9,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by paul on 28/11/15.

@@ -1,16 +1,10 @@
 package com.ithinkrok.mccw.playerclass;
 
-import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.inventory.Buyable;
 import com.ithinkrok.mccw.inventory.BuyableInventory;
-import com.ithinkrok.mccw.playerclass.items.ArrayCalculator;
-import com.ithinkrok.mccw.playerclass.items.Calculator;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
-import com.ithinkrok.mccw.util.io.WarsConfig;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.*;
 

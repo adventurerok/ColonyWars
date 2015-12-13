@@ -1,7 +1,6 @@
 package com.ithinkrok.mccw.data;
 
 import com.ithinkrok.mccw.WarsPlugin;
-import com.ithinkrok.mccw.handler.GameInstance;
 import com.ithinkrok.mccw.util.BoundingBox;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;

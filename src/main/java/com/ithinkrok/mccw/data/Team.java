@@ -6,8 +6,6 @@ import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.building.CannonTowerHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -3,12 +3,11 @@ package com.ithinkrok.mccw.inventory;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.event.ItemPurchaseEvent;
 import com.ithinkrok.mccw.strings.Buildings;
+import com.ithinkrok.mccw.util.building.SchematicBuilder;
+import com.ithinkrok.mccw.util.io.LangFile;
 import com.ithinkrok.mccw.util.io.WarsConfig;
 import com.ithinkrok.mccw.util.item.InventoryUtils;
-import com.ithinkrok.mccw.util.io.LangFile;
-import com.ithinkrok.mccw.util.building.SchematicBuilder;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionType;
 

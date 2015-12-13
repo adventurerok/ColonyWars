@@ -2,6 +2,7 @@ package com.ithinkrok.mccw.playerclass;
 
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
+import com.ithinkrok.mccw.event.UserAttackedEvent;
 import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.inventory.ItemBuyable;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
@@ -29,8 +30,8 @@ public class InfernoClass extends ClassItemClassHandler {
                 new ClassItem(plugin, playerClass.getName(), Material.DIAMOND_HELMET, "items.flame-sword.name")
                         .withUpgradeBuildings(Buildings.BLACKSMITH).withUnlockOnBuildingBuild(true).withWeaponModifier(
                         new ClassItem.WeaponModifier("flame").withDamageCalculator(new LinearCalculator(1, 1.5))
-                                .withFireCalculator(new LinearCalculator(4, 0))).withUpgradables(
-                        new ClassItem.Upgradable("flame", "upgrades.flame-sword.name", 2)),
+                                .withFireCalculator(new LinearCalculator(4, 0)))
+                        .withUpgradables(new ClassItem.Upgradable("flame", "upgrades.flame-sword.name", 2)),
                 TeamCompass.createTeamCompass(plugin));
 
         addExtraBuyables(new ItemBuyable(new ItemStack(Material.TNT, 16), Buildings.BLACKSMITH,
@@ -64,11 +65,20 @@ public class InfernoClass extends ClassItemClassHandler {
         }
     }
 
+    @Override
+    public void onUserAttacked(UserAttackedEvent event) {
+        switch (event.getDamageCause()) {
+            case BLOCK_EXPLOSION:
+            case ENTITY_EXPLOSION:
+                event.setDamage(event.getDamage() / 2d);
+        }
+    }
+
     private static class ExplosionWand implements ClassItem.InteractAction {
 
         @Override
         public boolean onInteractWorld(UserInteractEvent event) {
-            if(!event.isRightClick() || event.getBlockFace() == null) return false;
+            if (!event.isRightClick() || event.getBlockFace() == null) return false;
             Block target = event.getUser().rayTraceBlocks(200);
             if (target == null) return true;
 

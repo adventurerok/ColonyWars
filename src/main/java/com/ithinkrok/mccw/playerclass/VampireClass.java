@@ -16,12 +16,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Monster;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import pgDev.bukkit.DisguiseCraft.disguise.DisguiseType;
 
 /**
  * Created by paul on 05/12/15.
@@ -135,7 +132,7 @@ public class VampireClass extends ClassItemClassHandler {
                 user.getPlayer().setExp(exp);
 
                 if (!bat) {
-                    Disguises.disguise(user, DisguiseType.Bat);
+                    Disguises.disguise(user, EntityType.BAT);
                     bat = true;
                 }
 

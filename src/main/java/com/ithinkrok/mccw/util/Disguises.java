@@ -1,6 +1,7 @@
 package com.ithinkrok.mccw.util;
 
 import com.ithinkrok.mccw.data.User;
+import org.bukkit.entity.EntityType;
 import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
 import pgDev.bukkit.DisguiseCraft.api.DisguiseCraftAPI;
 import pgDev.bukkit.DisguiseCraft.disguise.Disguise;
@@ -16,8 +17,9 @@ public class Disguises {
     private static DisguiseCraftAPI dcAPI = DisguiseCraft.getAPI();
 
 
-    public static void disguise(User user, DisguiseType type) {
-        Disguise disguise = new Disguise(dcAPI.newEntityID(), type);
+    public static void disguise(User user, EntityType type) {
+        //Uses a hack that will convert most EntityTypes to DisguiseTypes. DOES NOT WORK FOR ALL (e.g. TNT)
+        Disguise disguise = new Disguise(dcAPI.newEntityID(), DisguiseType.fromString(type.name().replace("_", "")));
 
         if(dcAPI.isDisguised(user.getPlayer())) dcAPI.changePlayerDisguise(user.getPlayer(), disguise);
         else dcAPI.disguisePlayer(user.getPlayer(), disguise);

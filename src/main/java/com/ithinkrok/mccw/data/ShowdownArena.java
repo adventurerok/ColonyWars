@@ -97,26 +97,26 @@ public class ShowdownArena {
             checkUserMove(user, user.getPlayer().getLocation());
         }
 
-        ItemStack potion = InventoryUtils.createPotion(PotionType.INSTANT_HEAL, 1, true, false, 1);
-
-        if(radiusX == 5 && radiusZ == 5) {
-            plugin.messageAllLocale("showdown.potions-gone");
-        }
-
-        for(User user : plugin.getUsers()) {
-            if(!user.isInGame()) continue;
-
-            PlayerInventory inv = user.getPlayerInventory();
-
-            for(int index = 0; index < inv.getSize(); ++index) {
-                if(inv.getItem(index) == null || !inv.getItem(index).isSimilar(potion)) continue;
-
-                inv.setItem(index, null);
-                if(radiusX + radiusZ > 10) {
-                    user.sendLocale("showdown.potion-leech");
-                    break;
-                }
-            }
-        }
+//        ItemStack potion = InventoryUtils.createPotion(PotionType.INSTANT_HEAL, 1, true, false, 1);
+//
+//        if(radiusX == 5 && radiusZ == 5) {
+//            plugin.messageAllLocale("showdown.potions-gone");
+//        }
+//
+//        for(User user : plugin.getUsers()) {
+//            if(!user.isInGame()) continue;
+//
+//            PlayerInventory inv = user.getPlayerInventory();
+//
+//            for(int index = 0; index < inv.getSize(); ++index) {
+//                if(inv.getItem(index) == null || !inv.getItem(index).isSimilar(potion)) continue;
+//
+//                inv.setItem(index, null);
+//                if(radiusX + radiusZ > 10) {
+//                    user.sendLocale("showdown.potion-leech");
+//                    break;
+//                }
+//            }
+//        }
     }
 }

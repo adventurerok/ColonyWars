@@ -91,7 +91,6 @@ public class VampireClass extends ClassItemClassHandler {
         private boolean allowFlight = false;
         private boolean mageTower = false;
         private double oldHealth = 0;
-        private boolean wasFlying = false;
 
         private UserFlyingChanger(User user) {
             this.user = user;
@@ -101,7 +100,7 @@ public class VampireClass extends ClassItemClassHandler {
 
         @Override
         public void run() {
-            if (!user.isInGame()) Bukkit.getScheduler().cancelTask(taskId);
+            if (!user.isInGame() || user.getTeam() == null) Bukkit.getScheduler().cancelTask(taskId);
 
             if (!mageTower) {
                 if (user.getTeam().getBuildingCount(Buildings.MAGETOWER) < 1) return;
@@ -126,7 +125,7 @@ public class VampireClass extends ClassItemClassHandler {
 
             oldHealth = newHealth;
 
-            if (user.getPlayer().isFlying() && !user.getPlayer().getLocation().getBlock().isLiquid()) {
+            if (user.getPlayer().isFlying() && !user.getPlayer().getLocation().add(0, 1, 0).getBlock().isLiquid()) {
                 float exp = user.getPlayer().getExp();
                 exp = Math.max(exp - flightDecreaseAmount(user.getUpgradeLevel("bat")), 0);
                 user.getPlayer().setExp(exp);
@@ -136,23 +135,23 @@ public class VampireClass extends ClassItemClassHandler {
                     bat = true;
                 }
 
-                wasFlying = true;
-
                 if (exp > 0) return;
                 user.getPlayer().setAllowFlight(allowFlight = false);
                 user.sendLocale("timeouts.batting.finished");
             } else {
-                float exp = user.getPlayer().getExp();
-                exp = Math.min(exp + 0.001f, 1);
-                user.getPlayer().setExp(exp);
-                if (wasFlying) user.getPlayer().setFlying(false);
+                user.getPlayer().setFlying(false);
 
-                wasFlying = false;
+                if (user.getPlayer().isOnGround()) {
+                    float exp = user.getPlayer().getExp();
+                    exp = Math.min(exp + 0.001f, 1);
+                    user.getPlayer().setExp(exp);
 
-                if (exp > 0.2f && !allowFlight) {
-                    user.getPlayer().setAllowFlight(allowFlight = true);
-                    user.sendLocale("cooldowns.bat.finished");
-                    user.getPlayer().setFlySpeed(0.05f);
+
+                    if (exp > 0.2f && !allowFlight) {
+                        user.getPlayer().setAllowFlight(allowFlight = true);
+                        user.sendLocale("cooldowns.bat.finished");
+                        user.getPlayer().setFlySpeed(0.05f);
+                    }
                 }
 
                 if (bat) {

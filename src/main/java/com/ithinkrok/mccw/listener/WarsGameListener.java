@@ -9,6 +9,7 @@ import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.enumeration.GameState;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.event.UserAttackEvent;
+import com.ithinkrok.mccw.event.UserAttackedEvent;
 import com.ithinkrok.mccw.event.UserInteractWorldEvent;
 import com.ithinkrok.mccw.event.UserRightClickEntityEvent;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
@@ -424,14 +425,24 @@ public class WarsGameListener implements Listener {
         }
 
         userAttack(new UserAttackEvent(damagerInfo, targetInfo, event));
+        if(event.isCancelled()) return;
 
         if (targetInfo == null) return;
+
+        userAttacked(new UserAttackedEvent(targetInfo, damagerInfo, event));
+        if(event.isCancelled()) return;
+
         plugin.onUserAttacked();
 
         if (targetInfo.getPlayer().getHealth() - event.getFinalDamage() < 1) {
             event.setCancelled(true);
             playerDeath(targetInfo, damagerInfo, event.getCause(), true);
         }
+    }
+
+    private void userAttacked(UserAttackedEvent event) {
+        PlayerClassHandler classHandler = event.getUser().getPlayerClassHandler();
+        if (!event.isCancelled()) classHandler.onUserAttacked(event);
     }
 
     private void userAttack(UserAttackEvent event) {

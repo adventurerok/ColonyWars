@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Created by paul on 14/11/15.
  *
- * Sent to the attacker's PlayerClassHandler when they attack an entity by left clicking on them
+ * Sent to the attacker's PlayerClassHandler when they attack an entity
  */
 public class UserAttackEvent extends UserInteractEvent{
 

@@ -92,6 +92,11 @@ public class ClassItemClassHandler extends BuyableInventory implements PlayerCla
     }
 
     @Override
+    public void onUserAttacked(UserAttackedEvent event) {
+        //Ignore for the moment. Subclasses can override this
+    }
+
+    @Override
     public void onAbilityCooldown(UserAbilityCooldownEvent event) {
         for (ClassItem item : classItemHashMap.values()) {
             item.onAbilityCooldown(event);

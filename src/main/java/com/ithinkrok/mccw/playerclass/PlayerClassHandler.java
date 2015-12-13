@@ -46,6 +46,12 @@ public interface PlayerClassHandler extends InventoryHandler {
      */
     void onUserAttack(UserAttackEvent event);
 
+    /**
+     * Called when the user is attacked by an entity
+     *
+     * @param event The event object describing this event
+     */
+    void onUserAttacked(UserAttackedEvent event);
 
     /**
      * Called when an ability of the user has cooled down

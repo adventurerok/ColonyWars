@@ -312,7 +312,7 @@ public class WarsGameListener implements Listener {
 
         event.setCancelled(true);
 
-        switch(event.getClickedBlock().getType()){
+        switch (event.getClickedBlock().getType()) {
             case OBSIDIAN:
                 user.openShopInventory(event.getClickedBlock().getLocation());
                 break;
@@ -325,7 +325,7 @@ public class WarsGameListener implements Listener {
                 user.sendLocale("money.balance.user.add", amount);
                 user.sendLocale("money.balance.user.new", user.getPlayerCash());
 
-                amount *= 2f/3f;
+                amount *= 2f / 3f;
 
                 user.getTeam().addTeamCash(amount);
                 user.getTeam().messageLocale("money.balance.team.add", amount);
@@ -406,7 +406,7 @@ public class WarsGameListener implements Listener {
             return;
         }
 
-        if(damagerTeam == null || targetTeam == null) {
+        if (damagerTeam == null || targetTeam == null) {
             event.setCancelled(true);
             return;
         }
@@ -414,7 +414,7 @@ public class WarsGameListener implements Listener {
         resetDurability(damagerInfo.getPlayer());
 
         User targetInfo = null;
-        if(event.getEntity() instanceof Player) targetInfo = plugin.getUser((Player) event.getEntity());
+        if (event.getEntity() instanceof Player) targetInfo = plugin.getUser((Player) event.getEntity());
 
         if (damagerTeam == targetTeam) {
             if (!(event.getDamager() instanceof TNTPrimed) || damagerInfo != targetInfo) {
@@ -427,15 +427,14 @@ public class WarsGameListener implements Listener {
             userAttack(new UserAttackEvent(damagerInfo, targetInfo, event));
         }
 
-        if(targetInfo == null) return;
+        if (targetInfo == null) return;
         plugin.onUserAttacked();
 
         if (targetInfo.getPlayer().getHealth() - event.getFinalDamage() < 1) {
             event.setCancelled(true);
-            playerDeath(targetInfo.getPlayer(), damagerInfo.getPlayer(), event.getCause(), true);
+            playerDeath(targetInfo, damagerInfo, event.getCause(), true);
         }
     }
-
 
     private void userAttack(UserAttackEvent event) {
         ItemStack weapon = event.getItem();
@@ -451,12 +450,11 @@ public class WarsGameListener implements Listener {
         if (!event.isCancelled()) classHandler.onUserAttack(event);
     }
 
-    public void playerDeath(Player died, Player killer, EntityDamageEvent.DamageCause cause, boolean intentionally) {
+    public void playerDeath(User died, User killer, EntityDamageEvent.DamageCause cause, boolean intentionally) {
         if (plugin.getGameState() == GameState.AFTERMATH) return;
-        User diedInfo = plugin.getUser(died);
 
-        if (!diedInfo.isInGame()) {
-            diedInfo.resetPlayerStats(true);
+        if (!died.isInGame()) {
+            died.resetPlayerStats(true);
 
             died.teleport(plugin.getMapSpawn(null));
             return;
@@ -465,39 +463,38 @@ public class WarsGameListener implements Listener {
         plugin.getGameInstance().onUserDeath();
 
         removeEntityTargets(died);
-        Disguises.unDisguise(diedInfo);
+        Disguises.unDisguise(died);
 
-        User killerInfo = killer == null ? null : plugin.getUser(killer);
-        if (killerInfo != null) killerInfo.getStatsHolder().addKill();
+        if (killer != null) killer.getStatsHolder().addKill();
 
-        displayDeathMessage(diedInfo, killerInfo, cause, intentionally);
+        displayDeathMessage(died, killer, cause, intentionally);
 
-        diedInfo.getStatsHolder().addDeath();
+        died.getStatsHolder().addDeath();
 
-        Team diedTeam = diedInfo.getTeam();
+        Team diedTeam = died.getTeam();
         boolean respawn = plugin.getGameState() != GameState.SHOWDOWN &&
                 plugin.getRandom().nextFloat() < (diedTeam.getRespawnChance() / 100f);
 
         if (respawn) {
-            plugin.messageAllLocale("game.player.respawn", diedInfo.getFormattedName());
+            plugin.messageAllLocale("game.player.respawn", died.getFormattedName());
 
             diedTeam.setRespawnChance(diedTeam.getRespawnChance() - 15);
             diedTeam.respawnPlayer(died);
 
-            diedInfo.resetPlayerStats(false);
+            died.resetPlayerStats(false);
         } else {
-            plugin.messageAllLocale("game.player.no-respawn", diedInfo.getFormattedName());
-            diedInfo.removeFromGame();
-            diedInfo.setSpectator();
+            plugin.messageAllLocale("game.player.no-respawn", died.getFormattedName());
+            died.removeFromGame();
+            died.setSpectator();
         }
     }
 
-    private void removeEntityTargets(Player player) {
-        for (Entity e : player.getWorld().getEntities()) {
+    private void removeEntityTargets(User user) {
+        for (Entity e : user.getPlayer().getWorld().getEntities()) {
             if (!(e instanceof Creature)) continue;
 
             Creature creature = (Creature) e;
-            if (creature.getTarget() == null || creature.getTarget() != player) continue;
+            if (creature.getTarget() == null || creature.getTarget() != user.getPlayer()) continue;
             creature.setTarget(null);
         }
     }
@@ -520,6 +517,48 @@ public class WarsGameListener implements Listener {
         if (ending != null) locale += ending;
 
         plugin.messageAllLocale(locale, args);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onEntityDamaged(EntityDamageEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
+
+        User target = plugin.getUser((Player) event.getEntity());
+
+        if (event.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION)
+            new FixExecutor().onCommand(target, null, "fix", new String[0]);
+
+        if (!target.isInGame()) {
+            //Prevent spectators from being damaged
+            event.setCancelled(true);
+            return;
+        }
+
+        if (target.getPlayer().getHealth() - event.getFinalDamage() < 1) {
+            event.setCancelled(true);
+
+            User killer = null;
+
+            switch (event.getCause()) {
+                case FIRE_TICK:
+                    killer = target.getFireAttacker();
+                    break;
+                case WITHER:
+                    killer = target.getWitherAttacker();
+                    break;
+            }
+
+            boolean intentionally = true;
+
+            if (killer == null) {
+                intentionally = false;
+                killer = target.getLastAttacker();
+            }
+
+            playerDeath(target, killer, event.getCause(), intentionally);
+        } else if (target.isCloaked()) {
+            target.getPlayer().getWorld().playSound(target.getPlayer().getLocation(), Sound.HURT_FLESH, 1.0f, 1.0f);
+        }
     }
 
     @EventHandler
@@ -557,45 +596,6 @@ public class WarsGameListener implements Listener {
                 event.setIntensity(ent, event.getIntensity(ent) * user.getPotionStrengthModifier());
                 user.setPotionStrengthModifier(Math.max(user.getPotionStrengthModifier() - 0.05d, 0.5d));
             }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onEntityDamaged(EntityDamageEvent event) {
-        if (!(event.getEntity() instanceof Player)) return;
-
-        User target = plugin.getUser((Player) event.getEntity());
-
-        if (event.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION)
-            new FixExecutor().onCommand(target, null, "fix", new String[0]);
-
-        if (!target.isInGame()) {
-            //Prevent spectators from being damaged
-            event.setCancelled(true);
-            return;
-        }
-
-        if (target.getPlayer().getHealth() - event.getFinalDamage() < 1) {
-            event.setCancelled(true);
-
-            User killer = null;
-
-            switch (event.getCause()) {
-                case FIRE_TICK:
-                    killer = target.getFireAttacker();
-                    break;
-                case WITHER:
-                    killer = target.getWitherAttacker();
-                    break;
-            }
-
-            if (killer == null) {
-                if (target.getLastAttacker() != null)
-                    playerDeath(target.getPlayer(), target.getLastAttacker().getPlayer(), event.getCause(), false);
-                else playerDeath(target.getPlayer(), null, event.getCause(), false);
-            } else playerDeath(target.getPlayer(), killer.getPlayer(), event.getCause(), true);
-        } else if (target.isCloaked()) {
-            target.getPlayer().getWorld().playSound(target.getPlayer().getLocation(), Sound.HURT_FLESH, 1.0f, 1.0f);
         }
     }
 

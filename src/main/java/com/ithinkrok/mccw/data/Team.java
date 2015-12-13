@@ -224,14 +224,14 @@ public class Team {
         return users.size();
     }
 
-    public void respawnPlayer(Player died) {
+    public void respawnPlayer(User died) {
         Location loc;
         if(churchLocations.size() > 0) loc = churchLocations.get(plugin.getRandom().nextInt(churchLocations.size()));
         else loc = baseLocation;
 
-        died.teleport(loc, PlayerTeleportEvent.TeleportCause.PLUGIN);
+        died.teleport(loc);
 
-        plugin.getUser(died).decloak();
+        died.decloak();
     }
 
     public void eliminate() {

@@ -412,7 +412,7 @@ public class WarsGameListener implements Listener {
             return;
         }
 
-        if (damagerTeam == null || targetTeam == null) {
+        if (damagerTeam == null) {
             event.setCancelled(true);
             return;
         }

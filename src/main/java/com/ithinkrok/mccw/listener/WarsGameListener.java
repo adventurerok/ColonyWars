@@ -465,7 +465,7 @@ public class WarsGameListener implements Listener {
         removeEntityTargets(died);
         Disguises.unDisguise(died);
 
-        if (killer != null) killer.getStatsHolder().addKill();
+        if (killer != null && killer != died) killer.getStatsHolder().addKill();
 
         displayDeathMessage(died, killer, cause, intentionally);
 

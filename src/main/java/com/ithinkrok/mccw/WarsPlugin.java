@@ -19,7 +19,7 @@ import com.ithinkrok.mccw.lobby.LobbyMinigame;
 import com.ithinkrok.mccw.lobby.ParcourMinigame;
 import com.ithinkrok.mccw.lobby.WoolHeadMinigame;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
-import com.ithinkrok.mccw.util.Disguises;
+import com.ithinkrok.mccw.util.disguisecraft.Disguises;
 import com.ithinkrok.mccw.util.InvisiblePlayerAttacker;
 import com.ithinkrok.mccw.util.Persistence;
 import com.ithinkrok.mccw.util.io.LangFile;

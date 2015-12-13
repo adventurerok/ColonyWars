@@ -1,4 +1,4 @@
-package com.ithinkrok.mccw.util;
+package com.ithinkrok.mccw.util.disguisecraft;
 
 import com.ithinkrok.mccw.data.User;
 import org.bukkit.entity.EntityType;
@@ -8,16 +8,15 @@ import pgDev.bukkit.DisguiseCraft.disguise.Disguise;
 import pgDev.bukkit.DisguiseCraft.disguise.DisguiseType;
 
 /**
- * Created by paul on 12/12/15.
+ * Created by paul on 13/12/15.
  *
- *
+ * Handles disguises
  */
-public class Disguises {
+public class DisguisesController {
 
-    private static DisguiseCraftAPI dcAPI = DisguiseCraft.getAPI();
+    private DisguiseCraftAPI dcAPI = DisguiseCraft.getAPI();
 
-
-    public static void disguise(User user, EntityType type) {
+    public void disguise(User user, EntityType type) {
         //Uses a hack that will convert most EntityTypes to DisguiseTypes. DOES NOT WORK FOR ALL (e.g. TNT)
         Disguise disguise = new Disguise(dcAPI.newEntityID(), DisguiseType.fromString(type.name().replace("_", "")));
 
@@ -25,7 +24,7 @@ public class Disguises {
         else dcAPI.disguisePlayer(user.getPlayer(), disguise);
     }
 
-    public static void unDisguise(User user) {
+    public void unDisguise(User user) {
         if(dcAPI.isDisguised(user.getPlayer())){
             dcAPI.undisguisePlayer(user.getPlayer());
         }

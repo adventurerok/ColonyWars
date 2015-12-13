@@ -15,7 +15,7 @@ import com.ithinkrok.mccw.event.UserRightClickEntityEvent;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.mccw.strings.Buildings;
-import com.ithinkrok.mccw.util.Disguises;
+import com.ithinkrok.mccw.util.disguisecraft.Disguises;
 import com.ithinkrok.mccw.util.EntityUtils;
 import com.ithinkrok.mccw.util.TreeFeller;
 import com.ithinkrok.mccw.util.building.Facing;

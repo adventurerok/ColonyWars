@@ -10,7 +10,7 @@ import com.ithinkrok.mccw.inventory.UpgradeBuyable;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
 import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
-import com.ithinkrok.mccw.util.Disguises;
+import com.ithinkrok.mccw.util.disguisecraft.Disguises;
 import com.ithinkrok.mccw.util.item.InventoryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

@@ -93,8 +93,8 @@ public class PriestClass extends ClassItemClassHandler {
                     if(!other.isInGame()) continue;
                     else if(other.getTeamColor() != event.getUser().getTeamColor()) {
                         ((LivingEntity) near).damage(10);
+                        other.setLastAttacker(event.getUser());
                     }
-                    other.setLastAttacker(event.getUser());
                 }
 
                 riders.add((LivingEntity) near);

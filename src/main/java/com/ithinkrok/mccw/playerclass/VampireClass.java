@@ -130,9 +130,10 @@ public class VampireClass extends ClassItemClassHandler {
             oldHealth = newHealth;
 
             Block block = user.getPlayer().getLocation().getBlock();
+            boolean inWater = block.getRelative(0, 1, 0).isLiquid() ||
+                    (block.isLiquid() && block.getRelative(0, -1, 0).isLiquid());
 
-            if (user.getPlayer().isFlying() && !block.getRelative(0, 1, 0).isLiquid() &&
-                    (!block.isLiquid() || !block.getRelative(0, -1, 0).isLiquid())) {
+            if (user.getPlayer().isFlying() && !inWater) {
                 float exp = user.getPlayer().getExp();
                 exp = Math.max(exp - flightDecreaseAmount(user.getUpgradeLevel("bat")), 0);
                 user.getPlayer().setExp(exp);
@@ -142,24 +143,38 @@ public class VampireClass extends ClassItemClassHandler {
                     bat = true;
                 }
 
-                if (exp > 0) return;
+                if (exp > 0) {
+                    int yMod = 0;
+
+                    while(yMod + block.getLocation().getBlockY() > 1) {
+                        --yMod;
+
+                        if(block.getRelative(0, yMod, 0).getType().isSolid()) break;
+                    }
+
+                    yMod += 10;
+                    if(yMod < 0){
+                        user.teleport(user.getPlayer().getLocation().add(0, yMod, 0));
+                    }
+
+                    return;
+                }
                 user.getPlayer().setAllowFlight(allowFlight = false);
                 user.sendLocale("timeouts.batting.finished");
             } else {
-                user.getPlayer().setFlying(false);
+                if (inWater) user.getPlayer().setFlying(false);
 
-                if (user.getPlayer().isOnGround()) {
-                    float exp = user.getPlayer().getExp();
-                    exp = Math.min(exp + 0.001f, 1);
-                    user.getPlayer().setExp(exp);
+                float exp = user.getPlayer().getExp();
+                exp = Math.min(exp + 0.001f, 1);
+                user.getPlayer().setExp(exp);
 
 
-                    if (exp > 0.2f && !allowFlight) {
-                        user.getPlayer().setAllowFlight(allowFlight = true);
-                        user.sendLocale("cooldowns.bat.finished");
-                        user.getPlayer().setFlySpeed(0.05f);
-                    }
+                if (exp > 0.2f && !allowFlight && user.getPlayer().isOnGround()) {
+                    user.getPlayer().setAllowFlight(allowFlight = true);
+                    user.sendLocale("cooldowns.bat.finished");
+                    user.getPlayer().setFlySpeed(0.05f);
                 }
+
 
                 if (bat) {
                     Disguises.unDisguise(user);

@@ -104,7 +104,10 @@ public class VampireClass extends ClassItemClassHandler {
 
         @Override
         public void run() {
-            if (!user.isInGame() || user.getTeam() == null) Bukkit.getScheduler().cancelTask(taskId);
+            if (!user.isInGame() || user.getTeam() == null){
+                Bukkit.getScheduler().cancelTask(taskId);
+                return;
+            }
 
             if (!mageTower) {
                 if (user.getTeam().getBuildingCount(Buildings.MAGETOWER) < 1) return;

@@ -2,7 +2,11 @@ package com.ithinkrok.mccw.data;
 
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.util.BoundingBox;
+import com.ithinkrok.mccw.util.item.InventoryUtils;
 import org.bukkit.Location;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.potion.PotionType;
 import org.bukkit.util.Vector;
 
 /**
@@ -89,6 +93,22 @@ public class ShowdownArena {
             if(!user.isInGame()) continue;
 
             checkUserMove(user, user.getPlayer().getLocation());
+        }
+
+        ItemStack potion = InventoryUtils.createPotion(PotionType.INSTANT_HEAL, 1, true, false, 1);
+
+        for(User user : plugin.getUsers()) {
+            if(!user.isInGame()) continue;
+
+            PlayerInventory inv = user.getPlayerInventory();
+
+            for(int index = 0; index < inv.getSize(); ++index) {
+                if(inv.getItem(index) == null || !inv.getItem(index).isSimilar(potion)) continue;
+
+                inv.setItem(index, null);
+                user.sendLocale("showdown.potion-leech");
+                break;
+            }
         }
     }
 }

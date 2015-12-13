@@ -84,6 +84,7 @@ ender-chest.found=%s &6found an ender chest!
 showdown.escape=&cYou cannot escape the showdown arena!
 showdown.shrinking=&6The showdown arena will now shrink slowly until it is 10x10!
 showdown.tele-center=%s &6was teleported back to the center!
+showdown.potion-leech=&cThe gods grow tired of your fighting and steal a potion from you!
 
 #buildings
 building.shop.name=&a%s Shop

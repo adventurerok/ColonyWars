@@ -86,6 +86,8 @@ public class ShowdownArena {
     }
 
     public void shrinkArena(WarsPlugin plugin) {
+        if(radiusX == 5 && radiusZ == 5) return;
+
         if(radiusX > 5) radiusX -= 1;
         if(radiusZ > 5) radiusZ -= 1;
 
@@ -97,6 +99,10 @@ public class ShowdownArena {
 
         ItemStack potion = InventoryUtils.createPotion(PotionType.INSTANT_HEAL, 1, true, false, 1);
 
+        if(radiusX == 5 && radiusZ == 5) {
+            plugin.messageAllLocale("showdown.potions-gone");
+        }
+
         for(User user : plugin.getUsers()) {
             if(!user.isInGame()) continue;
 
@@ -106,8 +112,10 @@ public class ShowdownArena {
                 if(inv.getItem(index) == null || !inv.getItem(index).isSimilar(potion)) continue;
 
                 inv.setItem(index, null);
-                user.sendLocale("showdown.potion-leech");
-                break;
+                if(radiusX + radiusZ > 10) {
+                    user.sendLocale("showdown.potion-leech");
+                    break;
+                }
             }
         }
     }

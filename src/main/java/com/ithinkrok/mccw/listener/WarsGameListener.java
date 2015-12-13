@@ -420,7 +420,13 @@ public class WarsGameListener implements Listener {
         resetDurability(damagerInfo.getPlayer());
 
         User targetInfo = null;
-        if (event.getEntity() instanceof Player) targetInfo = plugin.getUser((Player) event.getEntity());
+        if (event.getEntity() instanceof Player){
+            targetInfo = plugin.getUser((Player) event.getEntity());
+            if(!targetInfo.isInGame()) {
+                event.setCancelled(true);
+                return;
+            }
+        }
 
         if (damagerTeam == targetTeam) {
             if (!(event.getDamager() instanceof TNTPrimed) || damagerInfo != targetInfo) {

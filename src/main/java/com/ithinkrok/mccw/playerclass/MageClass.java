@@ -80,7 +80,7 @@ public class MageClass extends ClassItemClassHandler {
         super.onUserAttack(event);
 
         if(event.getDamageCause() == EntityDamageEvent.DamageCause.LIGHTNING) {
-            event.setDamage(event.getDamage() * 2);
+            event.setDamage(event.getDamage() * 4);
         }
     }
 

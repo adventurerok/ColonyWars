@@ -8,7 +8,7 @@ import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
 import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
-import com.ithinkrok.mccw.util.PlayerUtils;
+import com.ithinkrok.mccw.util.EntityUtils;
 import com.ithinkrok.mccw.util.item.TeamCompass;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -88,7 +88,7 @@ public class PriestClass extends ClassItemClassHandler {
                 if (!(near instanceof LivingEntity)) continue;
 
 
-                User other = PlayerUtils.getUserFromEntity(event.getUser().getPlugin(), near);
+                User other = EntityUtils.getUserFromEntity(event.getUser().getPlugin(), near);
                 if(other != null) {
                     if(!other.isInGame()) continue;
                     else if(other.getTeamColor() != event.getUser().getTeamColor()) {

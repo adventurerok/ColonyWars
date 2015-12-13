@@ -2,6 +2,7 @@ package com.ithinkrok.mccw.util;
 
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.User;
+import com.ithinkrok.mccw.enumeration.TeamColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -16,7 +17,7 @@ import java.util.UUID;
  *
  * Utilities for players
  */
-public class PlayerUtils {
+public class EntityUtils {
 
 
     public static Player getPlayerFromEntity(WarsPlugin plugin, Entity entity) {
@@ -47,5 +48,14 @@ public class PlayerUtils {
     public static User getUserFromEntity(WarsPlugin plugin, Entity entity) {
         Player player = getPlayerFromEntity(plugin, entity);
         return player == null ? null : plugin.getUser(player);
+    }
+
+    public static TeamColor getTeamFromEntity(WarsPlugin plugin, Entity entity) {
+        User user = getUserFromEntity(plugin, entity);
+        if(user != null) return user.getTeamColor();
+
+        if(!entity.hasMetadata("team")) return null;
+
+        return (TeamColor) entity.getMetadata("team").get(0).value();
     }
 }

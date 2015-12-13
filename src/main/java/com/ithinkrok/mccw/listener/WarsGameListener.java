@@ -7,6 +7,7 @@ import com.ithinkrok.mccw.data.Schematic;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.enumeration.GameState;
+import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.event.UserAttackEvent;
 import com.ithinkrok.mccw.event.UserInteractWorldEvent;
 import com.ithinkrok.mccw.event.UserRightClickEntityEvent;
@@ -14,7 +15,7 @@ import com.ithinkrok.mccw.inventory.InventoryHandler;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.Disguises;
-import com.ithinkrok.mccw.util.PlayerUtils;
+import com.ithinkrok.mccw.util.EntityUtils;
 import com.ithinkrok.mccw.util.TreeFeller;
 import com.ithinkrok.mccw.util.building.Facing;
 import com.ithinkrok.mccw.util.building.SchematicBuilder;
@@ -393,101 +394,55 @@ public class WarsGameListener implements Listener {
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        Player damager = PlayerUtils.getPlayerFromEntity(plugin, event.getDamager());
-        if (damager == null) {
-            Entity ent = event.getDamager();
-            if (!ent.hasMetadata("team")) return;
+        TeamColor damagerTeam = EntityUtils.getTeamFromEntity(plugin, event.getDamager());
+        TeamColor targetTeam = EntityUtils.getTeamFromEntity(plugin, event.getEntity());
 
-            User hurt = plugin.getUser(PlayerUtils.getPlayerFromEntity(plugin, event.getEntity()));
-            if (hurt == null) return;
+        User damagerInfo = EntityUtils.getUserFromEntity(plugin, event.getDamager());
 
-            if (ent.getMetadata("team").get(0).value() == hurt.getTeamColor()) {
+        if (damagerInfo == null) {
+            if (damagerTeam == targetTeam) {
                 event.setCancelled(true);
             } else plugin.onUserAttacked();
             return;
         }
 
-        User damagerInfo = plugin.getUser(damager);
-
-        if (!damagerInfo.isInGame()) {
+        if(damagerTeam == null || targetTeam == null) {
             event.setCancelled(true);
             return;
         }
 
-        resetDurability(damager);
+        resetDurability(damagerInfo.getPlayer());
 
-        if (!(event.getEntity() instanceof Player)) {
-            if (event.getEntity() instanceof Tameable) {
-                Tameable tameable = (Tameable) event.getEntity();
-                if (onPlayerAttackTameable(event, damagerInfo, tameable)) {
-                    event.setCancelled(true);
-                    return;
-                }
-            }
+        User targetInfo = null;
+        if(event.getEntity() instanceof Player) targetInfo = plugin.getUser((Player) event.getEntity());
 
-            if (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK)
-                userAttackNonUser(new UserAttackEvent(damagerInfo, null, event));
-            return;
-        }
-
-        Player target = (Player) event.getEntity();
-        User targetInfo = plugin.getUser(target);
-
-        if (damagerInfo.getTeamColor() == targetInfo.getTeamColor()) {
+        if (damagerTeam == targetTeam) {
             if (!(event.getDamager() instanceof TNTPrimed) || damagerInfo != targetInfo) {
                 event.setCancelled(true);
                 return;
             }
         }
 
+        if (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
+            userAttack(new UserAttackEvent(damagerInfo, targetInfo, event));
+        }
+
+        if(targetInfo == null) return;
         plugin.onUserAttacked();
 
-        if (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
-            userAttackUser(new UserAttackEvent(damagerInfo, targetInfo, event));
-        }
-
-
-        if (target.getHealth() - event.getFinalDamage() < 1) {
-            if (event.getDamager() instanceof Tameable) {
-                Creature creature = (Creature) event.getDamager();
-                creature.setTarget(null);
-            }
-
+        if (targetInfo.getPlayer().getHealth() - event.getFinalDamage() < 1) {
             event.setCancelled(true);
-            playerDeath(target, damager, event.getCause(), true);
+            playerDeath(targetInfo.getPlayer(), damagerInfo.getPlayer(), event.getCause(), true);
         }
     }
 
 
-    public boolean onPlayerAttackTameable(EntityDamageByEntityEvent event, User player, Tameable tameable) {
-        if (tameable.getOwner() != null && tameable.getOwner() instanceof Player) {
-            User owner = plugin.getUser((Player) tameable.getOwner());
-
-            if (!owner.isInGame()) {
-                event.getEntity().remove();
-                return true;
-            }
-
-            if (owner.getTeamColor() == player.getTeamColor()) return true;
-        }
-
-        return false;
-    }
-
-    private void userAttackNonUser(UserAttackEvent event) {
-        if (event.getItem() == null) return;
-
-        PlayerClassHandler classHandler = event.getUser().getPlayerClassHandler();
-        classHandler.onInteract(event);
-        if (!event.isCancelled()) classHandler.onUserAttack(event);
-    }
-
-    private void userAttackUser(UserAttackEvent event) {
+    private void userAttack(UserAttackEvent event) {
         ItemStack weapon = event.getItem();
 
         if (weapon == null) return;
 
-        if (weapon.containsEnchantment(Enchantment.FIRE_ASPECT)) {
+        if (event.getTargetUser() != null && weapon.containsEnchantment(Enchantment.FIRE_ASPECT)) {
             event.getTargetUser().setFireAttacker(event.getUser());
         }
 

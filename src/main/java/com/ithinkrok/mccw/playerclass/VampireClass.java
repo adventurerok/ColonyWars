@@ -143,22 +143,7 @@ public class VampireClass extends ClassItemClassHandler {
                     bat = true;
                 }
 
-                if (exp > 0) {
-                    int yMod = 0;
-
-                    while(yMod + block.getLocation().getBlockY() > 1) {
-                        --yMod;
-
-                        if(block.getRelative(0, yMod, 0).getType().isSolid()) break;
-                    }
-
-                    yMod += 10;
-                    if(yMod < 0){
-                        user.teleport(user.getPlayer().getLocation().add(0, yMod, 0));
-                    }
-
-                    return;
-                }
+                if (exp > 0) return;
                 user.getPlayer().setAllowFlight(allowFlight = false);
                 user.sendLocale("timeouts.batting.finished");
             } else {

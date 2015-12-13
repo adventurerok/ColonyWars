@@ -12,6 +12,7 @@ import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
 import com.ithinkrok.mccw.util.disguisecraft.Disguises;
 import com.ithinkrok.mccw.util.item.InventoryUtils;
+import com.ithinkrok.mccw.util.item.TeamCompass;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -50,6 +51,8 @@ public class VampireClass extends ClassItemClassHandler {
         vampireSword.withUpgradables(new ClassItem.Upgradable("vampire", "upgrades.vampire.name", 2));
 
         addExtraClassItems(vampireSword);
+
+        addExtraClassItems(TeamCompass.createTeamCompass(plugin));
 
         for (int level = 1; level <= 2; ++level) {
             addExtraBuyables(new UpgradeBuyable(InventoryUtils

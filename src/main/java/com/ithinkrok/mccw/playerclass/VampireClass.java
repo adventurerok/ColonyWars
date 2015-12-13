@@ -14,6 +14,7 @@ import com.ithinkrok.mccw.util.disguisecraft.Disguises;
 import com.ithinkrok.mccw.util.item.InventoryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -125,7 +126,10 @@ public class VampireClass extends ClassItemClassHandler {
 
             oldHealth = newHealth;
 
-            if (user.getPlayer().isFlying() && !user.getPlayer().getLocation().add(0, 1, 0).getBlock().isLiquid()) {
+            Block block = user.getPlayer().getLocation().getBlock();
+
+            if (user.getPlayer().isFlying() && !block.getRelative(0, 1, 0).isLiquid() &&
+                    (!block.isLiquid() || !block.getRelative(0, -1, 0).isLiquid())) {
                 float exp = user.getPlayer().getExp();
                 exp = Math.max(exp - flightDecreaseAmount(user.getUpgradeLevel("bat")), 0);
                 user.getPlayer().setExp(exp);

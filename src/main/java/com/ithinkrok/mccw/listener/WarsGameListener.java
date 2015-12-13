@@ -297,6 +297,7 @@ public class WarsGameListener implements Listener {
         if (!user.isInGame()) {
             if (event.getItem() != null && event.getItem().getType() == Material.IRON_LEGGINGS) {
                 user.setShowCloakedPlayers(!user.showCloakedPlayers());
+                plugin.getGameInstance().setupSpectatorInventory(user.getPlayer());
             }
 
             event.setCancelled(true);

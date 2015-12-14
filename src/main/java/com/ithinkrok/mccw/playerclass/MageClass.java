@@ -39,7 +39,7 @@ public class MageClass extends ClassItemClassHandler {
                 new ClassItem(plugin, playerClass.getName(), Material.DIAMOND_LEGGINGS, "items.lightning-wand.name")
                         .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
                         .withRightClickAction(new LightningWand(plugin))
-                        .withRightClickCooldown("lightning", "lightning", new LinearCalculator(45, -15),
+                        .withRightClickCooldown("lightning", "lightning", new LinearCalculator(50, -20),
                                 "cooldowns.lightning.finished").withUpgradables(
                         new ClassItem.Upgradable("lightning", "upgrades.lightning-wand.name", 2)),
                 TeamCompass.createTeamCompass(plugin));

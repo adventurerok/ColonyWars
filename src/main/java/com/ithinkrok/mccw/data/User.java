@@ -24,6 +24,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.util.Vector;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -72,6 +73,18 @@ public class User implements WarsCommandSender {
 
         if(statsHolder != null) this.statsHolder = statsHolder;
         else this.statsHolder = new StatsHolder(this);
+    }
+
+    public boolean isOnGround() {
+        return getPlayer().isOnGround();
+    }
+
+    public Vector getVelocity() {
+        return getPlayer().getVelocity();
+    }
+
+    public void setVelocity(Vector velocity) {
+        getPlayer().setVelocity(velocity);
     }
 
     public PlayerClass getLastPlayerClass() {

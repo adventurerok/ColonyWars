@@ -22,6 +22,8 @@ public class FixExecutor implements WarsCommandExecutor {
 
         User user = (User) sender;
 
+        if(!user.isOnGround()) return true;
+
         if (!user.startCoolDown("fix", 1, sender.getPlugin().getLocale("cooldowns.fix.finished"))) return true;
         if (user.getPlayer().getVelocity().lengthSquared() > 0.3d) return true;
 

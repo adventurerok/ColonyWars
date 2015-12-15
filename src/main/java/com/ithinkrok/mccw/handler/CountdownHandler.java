@@ -98,7 +98,7 @@ public class CountdownHandler {
             if (countDown < 10) return;
             User randomUser = plugin.getTeam(plugin.getGameInstance().getWinningTeam()).getRandomUser();
             if (randomUser == null) return;
-            Location loc = randomUser.getPlayer().getLocation();
+            Location loc = randomUser.getLocation();
             Firework firework = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
 
             Color color = Color.fromRGB(random.nextInt(255), random.nextInt(255), random.nextInt(255));

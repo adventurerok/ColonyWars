@@ -52,7 +52,7 @@ public class MembersExecutor implements WarsCommandExecutor {
 
                 for (TeamColor teamColor : TeamColor.values()) {
                     Location loc = sender.getPlugin().getMapSpawn(teamColor);
-                    double distSquared = loc.distanceSquared(other.getPlayer().getLocation());
+                    double distSquared = loc.distanceSquared(other.getLocation());
 
                     if (distSquared < smallestDistSquared) {
                         smallestDistSquared = distSquared;
@@ -60,7 +60,7 @@ public class MembersExecutor implements WarsCommandExecutor {
                     }
                 }
 
-                if (sender.getPlugin().getMapSpawn(null).distanceSquared(other.getPlayer().getLocation()) <
+                if (sender.getPlugin().getMapSpawn(null).distanceSquared(other.getLocation()) <
                         smallestDistSquared) {
                     nearestBase = sender.getPlugin().getLocale("commands.members.near-showdown", nearestBase);
                 }

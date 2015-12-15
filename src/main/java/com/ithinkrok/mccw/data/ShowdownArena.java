@@ -94,7 +94,7 @@ public class ShowdownArena {
         for(User user : plugin.getUsers()){
             if(!user.isInGame()) continue;
 
-            checkUserMove(user, user.getPlayer().getLocation());
+            checkUserMove(user, user.getLocation());
         }
 
 //        ItemStack potion = InventoryUtils.createPotion(PotionType.INSTANT_HEAL, 1, true, false, 1);

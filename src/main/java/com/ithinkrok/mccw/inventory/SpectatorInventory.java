@@ -32,7 +32,7 @@ public class SpectatorInventory implements InventoryHandler {
         for (User info : plugin.getUsers()) {
             if (!info.getPlayer().getName().equals(owner)) continue;
 
-            user.getPlayer().teleport(info.getPlayer().getLocation());
+            user.getPlayer().teleport(info.getLocation());
             return true;
         }
 

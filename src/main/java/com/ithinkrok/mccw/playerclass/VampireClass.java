@@ -132,7 +132,7 @@ public class VampireClass extends ClassItemClassHandler {
 
             oldHealth = newHealth;
 
-            Block block = user.getPlayer().getLocation().getBlock();
+            Block block = user.getLocation().getBlock();
             boolean inWater = block.getRelative(0, 1, 0).isLiquid() ||
                     (block.isLiquid() && block.getRelative(0, -1, 0).isLiquid());
 
@@ -147,20 +147,20 @@ public class VampireClass extends ClassItemClassHandler {
                 }
 
                 if (exp > 0) return;
-                user.getPlayer().setAllowFlight(allowFlight = false);
+                user.setAllowFlight(allowFlight = false);
                 user.sendLocale("timeouts.batting.finished");
             } else {
-                if (inWater) user.getPlayer().setFlying(false);
+                if (inWater) user.setFlying(false);
 
                 float exp = user.getPlayer().getExp();
                 exp = Math.min(exp + 0.001f, 1);
                 user.getPlayer().setExp(exp);
 
 
-                if (exp > 0.2f && !allowFlight && user.getPlayer().isOnGround()) {
-                    user.getPlayer().setAllowFlight(allowFlight = true);
+                if (exp > 0.2f && !allowFlight && user.isOnGround()) {
+                    user.setAllowFlight(allowFlight = true);
                     user.sendLocale("cooldowns.bat.finished");
-                    user.getPlayer().setFlySpeed(0.05f);
+                    user.setFlySpeed(0.05f);
                 }
 
 

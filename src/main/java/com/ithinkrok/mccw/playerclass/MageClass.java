@@ -69,7 +69,7 @@ public class MageClass extends ClassItemClassHandler {
         @Override
         public boolean onInteractWorld(UserInteractEvent event) {
             event.getPlayer().launchProjectile(EnderPearl.class);
-            event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.SHOOT_ARROW, 1.0f, 1.0f);
+            event.getPlayer().playSound(event.getUser().getLocation(), Sound.SHOOT_ARROW, 1.0f, 1.0f);
 
             return true;
         }
@@ -96,7 +96,7 @@ public class MageClass extends ClassItemClassHandler {
         public boolean onInteractWorld(UserInteractEvent event) {
             Block target = event.getUser().rayTraceBlocks(200);
             if (target == null) return false;
-            LightningStrike strike = event.getPlayer().getLocation().getWorld().strikeLightning(target.getLocation());
+            LightningStrike strike = event.getUser().getLocation().getWorld().strikeLightning(target.getLocation());
 
             strike.setMetadata("striker", new FixedMetadataValue(plugin, event.getPlayer().getUniqueId()));
             return true;

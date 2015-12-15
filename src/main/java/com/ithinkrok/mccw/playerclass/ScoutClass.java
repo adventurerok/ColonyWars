@@ -75,12 +75,12 @@ public class ScoutClass extends ClassItemClassHandler {
                 for (User info : plugin.getUsers()) {
                     if (!info.isInGame() || info.getTeamColor() == exclude) continue;
 
-                    double dist = event.getPlayer().getLocation().distanceSquared(info.getPlayer().getLocation());
+                    double dist = event.getUser().getLocation().distanceSquared(info.getLocation());
 
                     if (dist < minDist) {
                         minDist = dist;
-                        closest = info.getPlayer().getLocation();
-                        closestName = info.getPlayer().getName();
+                        closest = info.getLocation();
+                        closestName = info.getName();
                     }
                 }
 

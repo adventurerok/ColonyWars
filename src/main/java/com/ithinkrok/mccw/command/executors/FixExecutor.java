@@ -27,7 +27,7 @@ public class FixExecutor implements WarsCommandExecutor {
         if (!user.startCoolDown("fix", 1, sender.getPlugin().getLocale("cooldowns.fix.finished"))) return true;
         if (user.getPlayer().getVelocity().lengthSquared() > 0.3d) return true;
 
-        Block base = user.getPlayer().getLocation().clone().add(0, 1, 0).getBlock();
+        Block base = user.getLocation().add(0, 1, 0).getBlock();
         Block block;
 
         for (int radius = 0; radius < 5; ++radius) {

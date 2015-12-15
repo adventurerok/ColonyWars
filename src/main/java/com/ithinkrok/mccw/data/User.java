@@ -706,6 +706,23 @@ public class User implements WarsCommandSender {
         this.trappedTicks = trappedTicks;
     }
 
+    public void setFlySpeed(float flySpeed) {
+        getPlayer().setFlySpeed(flySpeed);
+    }
+
+    public void setAllowFlight(boolean allowFlight) {
+        getPlayer().setAllowFlight(allowFlight);
+    }
+
+    public void setFlying(boolean flying) {
+        getPlayer().setFlying(flying);
+    }
+
+    public Location getLocation() {
+        return player.getLocation();
+    }
+
+
     private static class Metadata {
         public Object data;
         public boolean wipeOnGameEnd;

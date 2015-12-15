@@ -72,8 +72,8 @@ public class CloakerClass extends ClassItemClassHandler {
 
 
             int swirlTask = plugin.getGameInstance().scheduleRepeatingTask(
-                    () -> event.getPlayer().getLocation().getWorld()
-                            .playEffect(event.getPlayer().getLocation(), Effect.POTION_SWIRL, 0), 20, 20);
+                    () -> event.getUser().getLocation().getWorld()
+                            .playEffect(event.getUser().getLocation(), Effect.POTION_SWIRL, 0), 20, 20);
 
             event.getUser().setMetadata("swirlTask", swirlTask, true);
 

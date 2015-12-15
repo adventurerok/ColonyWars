@@ -144,7 +144,7 @@ public class PriestClass extends ClassItemClassHandler {
             if(bentObject == null || !(bentObject instanceof BentEarth)) return true;
             BentEarth bent = (BentEarth) bentObject;
             if (event.getUser().getUpgradeLevel("bending") > 4) return true;
-            Vector add = event.getPlayer().getLocation().getDirection();
+            Vector add = event.getUser().getLocation().getDirection();
             bent.addVelocity(add);
             bent.playKnockSound(event.getPlayer());
             event.getUser().setUpgradeLevel("bending", event.getUser().getUpgradeLevel("bending") + 1);

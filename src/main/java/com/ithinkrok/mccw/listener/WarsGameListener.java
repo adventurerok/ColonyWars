@@ -539,7 +539,7 @@ public class WarsGameListener implements Listener {
 
         User target = plugin.getUser((Player) event.getEntity());
 
-        if (event.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION)
+        if (event.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION && target.isOnGround())
             new FixExecutor().onCommand(target, null, "fix", new String[0]);
 
         if (!target.isInGame()) {

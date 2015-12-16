@@ -170,7 +170,7 @@ public class WarsGameListener implements Listener {
     private void giveCashPerItem(PlayerPickupItemEvent event, int playerCash, int teamCash) {
         User user = plugin.getUser(event.getPlayer());
 
-        user.addPlayerCash(playerCash * event.getItem().getItemStack().getAmount());
+        user.addPlayerCash(playerCash * event.getItem().getItemStack().getAmount(), false);
         event.getPlayer().playSound(event.getItem().getLocation(), Sound.ORB_PICKUP, 1.0f,
                 0.8f + (plugin.getRandom().nextFloat()) * 0.4f);
 
@@ -326,10 +326,8 @@ public class WarsGameListener implements Listener {
                 int amount = 5000 + plugin.getRandom().nextInt(20) * 1000;
 
                 user.getTeam().messageLocale("ender-chest.found", user.getFormattedName());
-                user.addPlayerCash(amount);
+                user.addPlayerCash(amount, true);
 
-                user.sendLocale("money.balance.user.add", amount);
-                user.sendLocale("money.balance.user.new", user.getPlayerCash());
 
                 amount *= 2f / 3f;
 
@@ -420,9 +418,9 @@ public class WarsGameListener implements Listener {
         resetDurability(damagerInfo.getPlayer());
 
         User targetInfo = null;
-        if (event.getEntity() instanceof Player){
+        if (event.getEntity() instanceof Player) {
             targetInfo = plugin.getUser((Player) event.getEntity());
-            if(!targetInfo.isInGame()) {
+            if (!targetInfo.isInGame()) {
                 event.setCancelled(true);
                 return;
             }
@@ -436,12 +434,12 @@ public class WarsGameListener implements Listener {
         }
 
         userAttack(new UserAttackEvent(damagerInfo, targetInfo, event));
-        if(event.isCancelled()) return;
+        if (event.isCancelled()) return;
 
         if (targetInfo == null) return;
 
         userAttacked(new UserAttackedEvent(targetInfo, damagerInfo, event));
-        if(event.isCancelled()) return;
+        if (event.isCancelled()) return;
 
         plugin.onUserAttacked();
 
@@ -449,11 +447,6 @@ public class WarsGameListener implements Listener {
             event.setCancelled(true);
             playerDeath(targetInfo, damagerInfo, event.getCause(), true);
         }
-    }
-
-    private void userAttacked(UserAttackedEvent event) {
-        PlayerClassHandler classHandler = event.getUser().getPlayerClassHandler();
-        if (!event.isCancelled()) classHandler.onUserAttacked(event);
     }
 
     private void userAttack(UserAttackEvent event) {
@@ -467,6 +460,11 @@ public class WarsGameListener implements Listener {
         PlayerClassHandler classHandler = event.getUser().getPlayerClassHandler();
         classHandler.onInteract(event);
         if (!event.isCancelled()) classHandler.onUserAttack(event);
+    }
+
+    private void userAttacked(UserAttackedEvent event) {
+        PlayerClassHandler classHandler = event.getUser().getPlayerClassHandler();
+        if (!event.isCancelled()) classHandler.onUserAttacked(event);
     }
 
     public void playerDeath(User died, User killer, EntityDamageEvent.DamageCause cause, boolean intentionally) {

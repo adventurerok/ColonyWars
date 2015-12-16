@@ -19,6 +19,7 @@ permissions:
       mccw.list: true
       mccw.teamchat: true
       mccw.leaderboard: true
+      mccw.togglemoneymessage: true
     default: "op"
   mccw.test:
     description: "Allows use of the test command"
@@ -46,6 +47,9 @@ permissions:
     default: true
   mccw.leaderboard:
     description: "Allows use of the leaderboard command"
+    default: true
+  mccw.togglemoneymessage:
+    description: "Allows use of the togglemoneymessage command"
     default: true
 commands:
   transfer:
@@ -99,3 +103,8 @@ commands:
     aliases: ["lb", "leaders", "board"]
     usage: "/leaderboard [category]"
     permission: "mccw.leaderboard"
+  togglemoneymessage:
+    description: "Toggles messages about balance changes"
+    aliases: ["tmm", "togglemoney", "togglebalance", "tbm", "togglebalancemessage", "togglemoneymsg"]
+    usage: "/togglemoneymessage"
+    permission: "mccw.togglemoneymessage"

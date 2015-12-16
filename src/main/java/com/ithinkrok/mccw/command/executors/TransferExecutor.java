@@ -43,7 +43,7 @@ public class TransferExecutor implements WarsCommandExecutor {
         try {
             int amount = Integer.parseInt(args[0]);
 
-            if (!user.subtractPlayerCash(amount)) {
+            if (!user.subtractPlayerCash(amount, false)) {
                 user.sendLocale("money.exchange.too-expensive");
                 return true;
             }
@@ -55,7 +55,7 @@ public class TransferExecutor implements WarsCommandExecutor {
                 team.messageLocale("money.exchange.team-transfer", user.getFormattedName(), amount);
                 team.messageLocale("money.balance.team.new", team.getTeamCash());
             } else {
-                target.addPlayerCash(amount);
+                target.addPlayerCash(amount, false);
 
                 user.getTeam().messageLocale("money.exchange.user-transfer", user.getFormattedName(), amount,
                         target.getFormattedName());

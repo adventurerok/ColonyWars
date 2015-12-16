@@ -64,7 +64,7 @@ public class ParcourMinigame implements LobbyMinigame {
 
         if (amount <= 0) user.sendLocale("minigames.parcour.capped");
         else {
-            user.addPlayerCash(amount);
+            user.addPlayerCash(amount, false);
             if (advanced) plugin.messageAllLocale("minigames.parcour.advanced", user.getFormattedName(), amount);
             else plugin.messageAllLocale("minigames.parcour.winner", user.getFormattedName(), amount);
         }

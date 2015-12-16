@@ -65,6 +65,7 @@ public class User implements WarsCommandSender {
     private int trappedTicks;
     private double potionStrengthModifier;
     private boolean showCloakedPlayers = false;
+    private boolean moneyMessagesEnabled = true;
 
 
     public User(WarsPlugin plugin, Player player, StatsHolder statsHolder) {
@@ -236,16 +237,21 @@ public class User implements WarsCommandSender {
         return player.getTargetBlock(SEE_THROUGH, distance);
     }
 
-    public void addPlayerCash(int cash) {
+    public void addPlayerCash(int cash, boolean message) {
         playerCash += cash;
         updateScoreboard();
         statsHolder.addTotalMoney(cash);
+
+        if(message && moneyMessagesEnabled) {
+            sendLocale("money.balance.user.add", cash);
+            sendLocale("money.balance.user.new", getPlayerCash());
+        }
     }
 
     public void updateScoreboard() {
         Scoreboard scoreboard = player.getScoreboard();
-        if (scoreboard == Bukkit.getScoreboardManager().getMainScoreboard()) {
-            scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        if (scoreboard == plugin.getServer().getScoreboardManager().getMainScoreboard()) {
+            scoreboard = plugin.getServer().getScoreboardManager().getNewScoreboard();
             player.setScoreboard(scoreboard);
         }
 
@@ -416,14 +422,16 @@ public class User implements WarsCommandSender {
         return plugin.getPlayerClassHandler(playerClass);
     }
 
-    public boolean subtractPlayerCash(int cash) {
+    public boolean subtractPlayerCash(int cash, boolean message) {
         if (cash > playerCash) return false;
         playerCash -= cash;
 
         updateScoreboard();
 
-        sendLocale("money.balance.user.deduct", cash);
-        sendLocale("money.balance.user.new", playerCash);
+        if(message && moneyMessagesEnabled) {
+            sendLocale("money.balance.user.deduct", cash);
+            sendLocale("money.balance.user.new", playerCash);
+        }
 
         return true;
     }
@@ -720,6 +728,18 @@ public class User implements WarsCommandSender {
 
     public Location getLocation() {
         return player.getLocation();
+    }
+
+    public void toggleMoneyMessagesEnabled() {
+        setMoneyMessagesEnabled(!getMoneyMessagesEnabled());
+    }
+
+    public void setMoneyMessagesEnabled(boolean moneyMessagesEnabled) {
+        this.moneyMessagesEnabled = moneyMessagesEnabled;
+    }
+
+    public boolean getMoneyMessagesEnabled() {
+        return moneyMessagesEnabled;
     }
 
 

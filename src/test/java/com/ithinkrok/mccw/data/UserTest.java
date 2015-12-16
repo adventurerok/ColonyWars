@@ -11,12 +11,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.verification.VerificationMode;
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
-import static org.fest.assertions.api.Assertions.*;
 
 /**
  * Created by paul on 13/11/15.
@@ -26,23 +25,61 @@ import static org.fest.assertions.api.Assertions.*;
 @RunWith(JUnitParamsRunner.class)
 public class UserTest {
 
+
     @Mock
     WarsPlugin plugin;
 
     @Mock
-    Player player;
+    public Player player;
 
     @Mock
-    StatsHolder statsHolder;
+    public StatsHolder statsHolder;
 
-    User user;
+    public User user;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        user = new User(plugin, player, statsHolder);
+        user = spy(new User(plugin, player, statsHolder));
 
+        doNothing().when(user).updateScoreboard();
+    }
+
+    @Test
+    @Parameters({"true", "false"})
+    public void toggleMoneyMessageShouldToggleMoneyMessage(boolean enabledByDefault) throws Exception {
+        user.setMoneyMessagesEnabled(enabledByDefault);
+
+        user.toggleMoneyMessagesEnabled();
+
+        assertThat(user.getMoneyMessagesEnabled()).isNotEqualTo(enabledByDefault);
+
+        user.toggleMoneyMessagesEnabled();
+
+        assertThat(user.getMoneyMessagesEnabled()).isEqualTo(enabledByDefault);
+    }
+
+    @Test
+    public void moneyMessagesEnabledShouldBeTrueByDefault() {
+        assertThat(user.getMoneyMessagesEnabled()).isTrue();
+    }
+
+    @Test
+    @Parameters({"true, true, true", "true, false, false", "false, true, false", "false, false, false"})
+    public void subtractPlayerCashShouldMessageOnlyIfMessageTrue(boolean message, boolean moneyMessagesEnabled,
+                                                                 boolean expectedResult) {
+        int SMALL_AMOUNT = 100;
+        int BIG_AMOUNT = 1000;
+
+        user.setMoneyMessagesEnabled(moneyMessagesEnabled);
+        user.addPlayerCash(BIG_AMOUNT, false);
+
+        user.subtractPlayerCash(SMALL_AMOUNT, message);
+
+        VerificationMode verificationMode = expectedResult ? atLeastOnce() : never();
+
+        verify(user, verificationMode).sendLocale(anyString(), any());
     }
 
     @Test

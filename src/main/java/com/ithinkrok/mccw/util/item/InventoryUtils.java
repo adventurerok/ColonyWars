@@ -89,7 +89,7 @@ public class InventoryUtils {
         int teamAmount = Math.min(team.getTeamCash(), amount);
         int playerAmount = amount - teamAmount;
 
-        if (playerAmount > 0 && !user.subtractPlayerCash(playerAmount)) return false;
+        if (playerAmount > 0 && !user.subtractPlayerCash(playerAmount, true)) return false;
 
         if(teamAmount > 0) team.subtractTeamCash(teamAmount);
 

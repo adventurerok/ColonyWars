@@ -323,11 +323,10 @@ public class WarsGameListener implements Listener {
                 user.openShopInventory(event.getClickedBlock().getLocation());
                 break;
             case ENDER_CHEST:
-                int amount = 5000 + plugin.getRandom().nextInt(20) * 1000;
+                int amount = 6000 + plugin.getRandom().nextInt(9) * 3000;
 
                 user.getTeam().messageLocale("ender-chest.found", user.getFormattedName());
                 user.addPlayerCash(amount, true);
-
 
                 amount *= 2f / 3f;
 

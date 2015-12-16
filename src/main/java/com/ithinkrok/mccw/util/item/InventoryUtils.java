@@ -91,7 +91,7 @@ public class InventoryUtils {
 
         if (playerAmount > 0 && !user.subtractPlayerCash(playerAmount, true)) return false;
 
-        if(teamAmount > 0) team.subtractTeamCash(teamAmount);
+        if(teamAmount > 0) team.subtractTeamCash(teamAmount, true);
 
         if (playerAmount > 0) user.sendLocale("purchase.team-failed", playerAmount);
 

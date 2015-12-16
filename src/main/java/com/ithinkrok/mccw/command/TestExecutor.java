@@ -89,9 +89,8 @@ public class TestExecutor implements WarsCommandExecutor {
 
     private boolean handleMoneySubcommand(User user) {
         user.addPlayerCash(10000, true);
-        user.getTeam().addTeamCash(10000);
+        user.getTeam().addTeamCash(10000, true);
 
-        user.sendLocale("commands.test.money", 10000);
         return true;
     }
 

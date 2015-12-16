@@ -99,10 +99,22 @@ public class Team {
         return teamCash;
     }
 
-    public void addTeamCash(int cash){
+    public void addTeamCash(int cash, boolean message){
         teamCash += cash;
 
         updatePlayerScoreboards();
+
+        updatePlayerScoreboards();
+
+        if(message) messageMoneyChanged("money.balance.team.add", cash);
+    }
+
+    private void messageMoneyChanged(String locale, int cashChange) {
+        for (User user : users) {
+            if(!user.getMoneyMessagesEnabled()) continue;
+            user.sendLocale(locale, cashChange);
+            user.sendLocale("money.balance.team.new", teamCash);
+        }
     }
 
     public int getRespawnChance() {
@@ -122,14 +134,13 @@ public class Team {
         return buildingsConstructingNow;
     }
 
-    public boolean subtractTeamCash(int cash){
+    public boolean subtractTeamCash(int cash, boolean message){
         if(cash > teamCash) return false;
         teamCash -= cash;
 
         updatePlayerScoreboards();
 
-        messageLocale("money.balance.team.deduct", cash);
-        messageLocale("money.balance.team.new", teamCash);
+        if(message) messageMoneyChanged("money.balance.team.deduct", cash);
 
         return true;
     }

@@ -175,7 +175,7 @@ public class WarsGameListener implements Listener {
                 0.8f + (plugin.getRandom().nextFloat()) * 0.4f);
 
         Team team = user.getTeam();
-        team.addTeamCash(teamCash * event.getItem().getItemStack().getAmount());
+        team.addTeamCash(teamCash * event.getItem().getItemStack().getAmount(), false);
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -331,9 +331,7 @@ public class WarsGameListener implements Listener {
 
                 amount *= 2f / 3f;
 
-                user.getTeam().addTeamCash(amount);
-                user.getTeam().messageLocale("money.balance.team.add", amount);
-                user.getTeam().messageLocale("money.balance.team.new", user.getTeam().getTeamCash());
+                user.getTeam().addTeamCash(amount, true);
 
                 event.getClickedBlock().setType(Material.AIR);
                 break;

@@ -50,7 +50,7 @@ public class TransferExecutor implements WarsCommandExecutor {
 
             if (target == null) {
                 Team team = user.getTeam();
-                team.addTeamCash(amount);
+                team.addTeamCash(amount, false);
 
                 team.messageLocale("money.exchange.team-transfer", user.getFormattedName(), amount);
                 team.messageLocale("money.balance.team.new", team.getTeamCash());

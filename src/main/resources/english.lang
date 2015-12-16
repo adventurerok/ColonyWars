@@ -279,6 +279,8 @@ commands.list.title=&6&lPlayers connected to the server &8(&7%s&8/&7%s&8)&6\:
 commands.list.line=%s&6\: %s
 commands.list.spectator=&dSpectator
 commands.fix.failed=&cWe failed to fix you, so we teleported you to your team spawn!
+commands.togglemoneymessage.enabled=&6Your money messages are now &aenabled&6!
+commands.togglemoneymessage.disabled=&6Your money messages are now &cdisabled&6!
 
 #--SCORE--
 score.gain=&6You gained &a%s &6points!

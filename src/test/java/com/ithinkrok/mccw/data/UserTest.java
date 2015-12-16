@@ -61,6 +61,16 @@ public class UserTest {
     }
 
     @Test
+    @Parameters({"true", "false"})
+    public void toggleMoneyMessageShouldSendLocale(boolean enabledByDefault) {
+        user.setMoneyMessagesEnabled(enabledByDefault);
+
+        user.toggleMoneyMessagesEnabled();
+
+        verify(user, times(1)).sendLocale(anyString(), anyVararg());
+    }
+
+    @Test
     public void moneyMessagesEnabledShouldBeTrueByDefault() {
         assertThat(user.getMoneyMessagesEnabled()).isTrue();
     }

@@ -732,6 +732,9 @@ public class User implements WarsCommandSender {
 
     public void toggleMoneyMessagesEnabled() {
         setMoneyMessagesEnabled(!getMoneyMessagesEnabled());
+
+        if(getMoneyMessagesEnabled()) sendLocale("commands.togglemoneymessage.enabled");
+        else sendLocale("commands.togglemoneymessage.disabled");
     }
 
     public void setMoneyMessagesEnabled(boolean moneyMessagesEnabled) {

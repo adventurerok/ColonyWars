@@ -9,6 +9,7 @@ map-list:
   - "hills_and_lakes"
   - "jungle_valley"
   - "oasis"
+  - "nether"
   - "random"
 
 persistence: true

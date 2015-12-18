@@ -3,6 +3,7 @@ package com.ithinkrok.mccw.util.io;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.util.Vector;
 
@@ -71,6 +72,12 @@ public class WarsConfig {
 
     public String getMapFolder(String mapName) {
         return config().getString("maps." + mapName + ".folder");
+    }
+
+    public World.Environment getMapEnvironment(String mapName) {
+        String envName = config().getString("maps." + mapName + ".environment", "normal").toUpperCase();
+
+        return World.Environment.valueOf(envName);
     }
 
     public int getBuildingCost(String buildingName) {

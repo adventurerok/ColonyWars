@@ -181,7 +181,9 @@ public class GameInstance {
             e.printStackTrace();
         }
 
-        Bukkit.createWorld(new WorldCreator(plugin.getPlayingWorldName()));
+        World.Environment environment = plugin.getWarsConfig().getMapEnvironment(map);
+
+        Bukkit.createWorld(new WorldCreator(plugin.getPlayingWorldName()).environment(environment));
 
         plugin.changeListener(new WarsGameListener(plugin));
         setupPlayers();

@@ -148,14 +148,23 @@ public class WarsPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        warsConfig = new WarsConfig(this);
+        warsConfig = new WarsConfig(this::getMapConfig);
 
         saveDefaultConfig();
 
         if (warsConfig.hasPersistence()) persistence = new Persistence(this);
         commandListener = new CommandListener(this);
 
-        mapList = getWarsConfig().getMapList();
+        TeamColor.initialise(getWarsConfig().getTeamCount());
+
+        mapList = new ArrayList<>();
+
+        for(String mapName : getWarsConfig().getMapList()) {
+            WarsMap warsMap = new WarsMap(this, mapName);
+
+            if(!warsMap.supportsTeamCount()) continue;
+            mapList.add(warsMap.getName());
+        }
 
         String languageFile = getWarsConfig().getLanguageName() + ".lang";
         langFile = new LangFile(ResourceHandler.getPropertiesResource(this, languageFile));
@@ -168,8 +177,6 @@ public class WarsPlugin extends JavaPlugin {
         currentListener = new WarsLobbyListener(this);
         getServer().getPluginManager().registerEvents(new WarsBaseListener(this), this);
         getServer().getPluginManager().registerEvents(currentListener, this);
-
-        TeamColor.initialise(getWarsConfig().getTeamCount());
 
         resetTeams();
 

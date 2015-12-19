@@ -1,6 +1,5 @@
 package com.ithinkrok.mccw.util.io;
 
-import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import org.bukkit.World;
@@ -16,10 +15,14 @@ import java.util.List;
  */
 public class WarsConfig {
 
-    private WarsPlugin plugin;
+    public interface ConfigAccessor {
+        ConfigurationSection getConfig();
+    }
 
-    public WarsConfig(WarsPlugin plugin) {
-        this.plugin = plugin;
+    private ConfigAccessor configAccessor;
+
+    public WarsConfig(ConfigAccessor configAccessor) {
+        this.configAccessor = configAccessor;
     }
 
     public String getRandomMapName() {
@@ -27,7 +30,7 @@ public class WarsConfig {
     }
 
     private ConfigurationSection config() {
-        return plugin.getMapConfig();
+        return configAccessor.getConfig();
     }
 
     public List<String> getMapList() {

@@ -20,6 +20,7 @@ permissions:
       mccw.teamchat: true
       mccw.leaderboard: true
       mccw.togglemoneymessage: true
+      mccw.teamcount: true
     default: "op"
   mccw.test:
     description: "Allows use of the test command"
@@ -51,6 +52,8 @@ permissions:
   mccw.togglemoneymessage:
     description: "Allows use of the togglemoneymessage command"
     default: true
+  mccw.teamcount:
+    description: "Allows use of the teamcount command"
 commands:
   transfer:
     description: "Transfers money from you to your team or a player in your team"
@@ -108,3 +111,7 @@ commands:
     aliases: ["tmm", "togglemoney", "togglebalance", "tbm", "togglebalancemessage", "togglemoneymsg"]
     usage: "/togglemoneymessage"
     permission: "mccw.togglemoneymessage"
+  teamcount:
+    description: "Changes the number of teams active"
+    usage: "/teamcount <teamcount>"
+    permission: "mccw.teamcount"

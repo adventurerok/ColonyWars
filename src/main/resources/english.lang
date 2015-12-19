@@ -281,6 +281,8 @@ commands.list.spectator=&dSpectator
 commands.fix.failed=&cWe failed to fix you, so we teleported you to your team spawn!
 commands.togglemoneymessage.enabled=&6Your money messages are now &aenabled&6!
 commands.togglemoneymessage.disabled=&6Your money messages are now &cdisabled&6!
+commands.teamcount.invalid=&cInvalid team count
+commands.teamcount.changed=&eTeamcount changed to &3%s&e!
 
 #--SCORE--
 score.gain=&6You gained &a%s &6points!

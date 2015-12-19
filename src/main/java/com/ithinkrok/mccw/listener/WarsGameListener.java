@@ -433,12 +433,14 @@ public class WarsGameListener implements Listener {
         userAttack(new UserAttackEvent(damagerInfo, targetInfo, event));
         if (event.isCancelled()) return;
 
-        if (targetInfo == null) return;
+        if (targetInfo == null || !targetInfo.isInGame()) return;
 
         userAttacked(new UserAttackedEvent(targetInfo, damagerInfo, event));
         if (event.isCancelled()) return;
 
         plugin.onUserAttacked();
+
+        targetInfo.setLastAttacker(damagerInfo);
 
         if (targetInfo.getPlayer().getHealth() - event.getFinalDamage() < 1) {
             event.setCancelled(true);

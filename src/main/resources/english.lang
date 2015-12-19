@@ -22,6 +22,7 @@ maps.cavern.desc=Team bases are in caverns, with tunnels between them.
 maps.hills_and_lakes.desc=Hills and lakes...
 maps.jungle_valley.desc=A jungle valley map
 maps.oasis.desc=A desert oasis
+maps.nether.desc=A cross of canyon and cavern, in the nether...
 maps.random.desc=Vote for a random map
 
 #class-descriptions
@@ -84,8 +85,6 @@ ender-chest.found=%s &6found an ender chest!
 showdown.escape=&cYou cannot escape the showdown arena!
 showdown.shrinking=&6The showdown arena will now shrink slowly until it is 10x10!
 showdown.tele-center=%s &6was teleported back to the center!
-showdown.potion-leech=&cThe gods grow tired of your fighting and steal some potions from you!
-showdown.potions-gone=&4&lThe gods grow tired of the fight, stealing everyone's potions!
 
 #buildings
 building.shop.name=&a%s Shop

@@ -61,6 +61,9 @@ public class User implements WarsCommandSender {
     private UUID fireAttacker;
     private UUID witherAttacker;
     private UUID lastAttacker;
+    private int fireAttackerTimer;
+    private int witherAttackerTimer;
+    private int lastAttackerTimer;
     private String mapVote;
     private int trappedTicks;
     private double potionStrengthModifier;
@@ -200,7 +203,13 @@ public class User implements WarsCommandSender {
     }
 
     public void setFireAttacker(User fireAttacker) {
-        this.fireAttacker = fireAttacker.getPlayer().getUniqueId();
+        if(fireAttacker != null) {
+            this.fireAttacker = fireAttacker.getPlayer().getUniqueId();
+            this.fireAttackerTimer = plugin.getWarsConfig().getLastAttackerTimer();
+        } else {
+            this.fireAttacker = null;
+            this.fireAttackerTimer = 0;
+        }
     }
 
     public Player getPlayer() {
@@ -212,7 +221,13 @@ public class User implements WarsCommandSender {
     }
 
     public void setWitherAttacker(User witherAttacker) {
-        this.witherAttacker = witherAttacker.getPlayer().getUniqueId();
+        if(witherAttacker != null) {
+            this.witherAttacker = witherAttacker.getPlayer().getUniqueId();
+            this.witherAttackerTimer = plugin.getWarsConfig().getLastAttackerTimer();
+        } else {
+            this.witherAttacker = null;
+            this.witherAttackerTimer = 0;
+        }
     }
 
     public User getLastAttacker() {
@@ -220,16 +235,22 @@ public class User implements WarsCommandSender {
     }
 
     public void setLastAttacker(User lastAttacker) {
-        this.lastAttacker = lastAttacker.getPlayer().getUniqueId();
+        if(lastAttacker != null) {
+            this.lastAttacker = lastAttacker.getPlayer().getUniqueId();
+            this.lastAttackerTimer = plugin.getWarsConfig().getLastAttackerTimer();
+        } else {
+            this.lastAttacker = null;
+            this.lastAttackerTimer = 0;
+        }
     }
 
     public void setFireTicks(User attacker, int ticks) {
-        fireAttacker = attacker.getPlayer().getUniqueId();
+        setFireAttacker(attacker);
         player.setFireTicks(ticks);
     }
 
     public void setWitherTicks(User attacker, int ticks) {
-        witherAttacker = attacker.getPlayer().getUniqueId();
+        setWitherAttacker(attacker);
         player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, ticks, 0, false, true), true);
     }
 

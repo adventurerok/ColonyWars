@@ -152,4 +152,8 @@ public class WarsConfig {
     public int getParkourMoney(String type) {
         return config().getInt("parkour." + type);
     }
+
+    public int getLastAttackerTimer() {
+        return config().getInt("last-attacker-timer");
+    }
 }

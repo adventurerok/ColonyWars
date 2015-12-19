@@ -22,10 +22,17 @@ public class FixExecutor implements WarsCommandExecutor {
 
         User user = (User) sender;
 
-        if(!user.isOnGround()) return true;
+        if(user.getPlayer().isInsideVehicle()) return true;
+
+        //if(!user.isOnGround()) return true;
+//        if(!user.isOnGround()) user.sendMessage("Not on ground");
 
         if (!user.startCoolDown("fix", 1, sender.getPlugin().getLocale("cooldowns.fix.finished"))) return true;
-        if (user.getPlayer().getVelocity().lengthSquared() > 0.3d) return true;
+//        if (user.getPlayer().getVelocity().lengthSquared() > 0.3d){
+//            user.sendMessage("Moving too fast. Velocity squared is " + user.getVelocity().lengthSquared());
+//            user.sendMessage("Velocity: " + user.getVelocity());
+//            return true;
+//        }
 
         Block base = user.getLocation().add(0, 1, 0).getBlock();
         Block block;

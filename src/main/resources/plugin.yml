@@ -101,7 +101,7 @@ commands:
   leaderboard:
     description: "Shows the leaderboard"
     aliases: ["lb", "leaders", "board"]
-    usage: "/leaderboard [category]"
+    usage: "/leaderboard [count] [category]"
     permission: "mccw.leaderboard"
   togglemoneymessage:
     description: "Toggles messages about balance changes"

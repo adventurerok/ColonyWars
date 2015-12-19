@@ -21,12 +21,24 @@ public class LeaderboardExecutor implements WarsCommandExecutor {
             return true;
         }
 
+
+
+        int count = 10;
+        if(args.length > 0) {
+            try{
+                count = Math.min(Math.max(Integer.parseInt(args[0]), 3), 100);
+            } catch (NumberFormatException e) {
+                sender.sendLocale("commands.leaderboard.bad-count");
+                return true;
+            }
+        }
+
         String category = "total";
-        if (args.length > 0) category = args[0];
+        if (args.length > 1) category = args[1];
 
         sender.sendLocale("commands.leaderboard.category", category);
 
-        sender.getPlugin().getPersistence().getUserCategoryStatsByScore(category, 10, statsByScore -> {
+        sender.getPlugin().getPersistence().getUserCategoryStatsByScore(category, count, statsByScore -> {
             Bukkit.getScheduler().scheduleSyncDelayedTask(sender.getPlugin(), () -> {
                 for (int index = 0; index < statsByScore.size(); ++index) {
                     sender.sendLocaleDirect("commands.leaderboard.listing", index + 1,

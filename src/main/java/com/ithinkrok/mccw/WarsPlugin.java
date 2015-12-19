@@ -146,15 +146,7 @@ public class WarsPlugin extends JavaPlugin {
         persistence.saveUserCategoryStats(stats);
     }
 
-    @Override
-    public void onEnable() {
-        warsConfig = new WarsConfig(this::getMapConfig);
-
-        saveDefaultConfig();
-
-        if (warsConfig.hasPersistence()) persistence = new Persistence(this);
-        commandListener = new CommandListener(this);
-
+    public void changeTeamCount(int teamCount) {
         TeamColor.initialise(getWarsConfig().getTeamCount());
 
         mapList = new ArrayList<>();
@@ -165,6 +157,19 @@ public class WarsPlugin extends JavaPlugin {
             if(!warsMap.supportsTeamCount()) continue;
             mapList.add(warsMap.getName());
         }
+
+
+        changeGameState(GameState.LOBBY);
+    }
+
+    @Override
+    public void onEnable() {
+        warsConfig = new WarsConfig(this::getMapConfig);
+
+        saveDefaultConfig();
+
+        if (warsConfig.hasPersistence()) persistence = new Persistence(this);
+        commandListener = new CommandListener(this);
 
         String languageFile = getWarsConfig().getLanguageName() + ".lang";
         langFile = new LangFile(ResourceHandler.getPropertiesResource(this, languageFile));
@@ -178,9 +183,6 @@ public class WarsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new WarsBaseListener(this), this);
         getServer().getPluginManager().registerEvents(currentListener, this);
 
-        resetTeams();
-
-
         buildingInventoryHandler = new OmniInventory(this, getWarsConfig());
         spectatorInventoryHandler = new SpectatorInventory(this);
 
@@ -191,7 +193,7 @@ public class WarsPlugin extends JavaPlugin {
 
         countdownHandler = new CountdownHandler(this);
 
-
+        changeTeamCount(warsConfig.getTeamCount());
     }
 
     /**
@@ -395,6 +397,8 @@ public class WarsPlugin extends JavaPlugin {
             for (User user : getUsers()) {
                 playerJoinLobby(user.getPlayer());
             }
+
+            resetTeams();
 
             countdownHandler.startLobbyCountdown();
         }

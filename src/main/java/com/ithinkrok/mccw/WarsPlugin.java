@@ -154,7 +154,7 @@ public class WarsPlugin extends JavaPlugin {
         for(String mapName : getWarsConfig().getMapList()) {
             WarsMap warsMap = new WarsMap(this, mapName);
 
-            if(!warsMap.supportsTeamCount()) continue;
+            if(!warsMap.supportsTeamCount() && !mapName.equals(getWarsConfig().getRandomMapName())) continue;
             mapList.add(warsMap.getName());
         }
 

@@ -1,0 +1,46 @@
+maps:
+  snow_hills:
+    folder: "snow_hills"
+    center:
+      x: 0
+      y: 76
+      z: 0
+    showdown-size:
+      x: 30
+      z: 30
+    red:
+      base:
+        x: 200
+        y: 84
+        z: 200
+      spawn:
+        x: 199.5
+        y: 84
+        z: 199.5
+    green:
+      base:
+        x: 200
+        y: 84
+        z: -200
+      spawn:
+        x: 199.5
+        y: 84
+        z: -198.5
+    blue:
+      base:
+        x: -200
+        y: 84
+        z: -200
+      spawn:
+        x: -198.5
+        y: 84
+        z: -198.5
+    yellow:
+      base:
+        x: -200
+        y: 84
+        z: 200
+      spawn:
+        x: -198.5
+        y: 84
+        z: 199.5

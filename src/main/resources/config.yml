@@ -10,6 +10,7 @@ map-list:
   - "jungle_valley"
   - "oasis"
   - "nether"
+  - "snow_hills"
   - "random"
 
 persistence: true

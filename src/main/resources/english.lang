@@ -23,6 +23,7 @@ maps.hills_and_lakes.desc=Hills and lakes...
 maps.jungle_valley.desc=A jungle valley map
 maps.oasis.desc=A desert oasis
 maps.nether.desc=A cross of canyon and cavern, in the nether...
+maps.snow_hills.desc=Snowy hills. What more were you expecting?!
 maps.random.desc=Vote for a random map
 
 #class-descriptions

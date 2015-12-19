@@ -147,7 +147,7 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public void changeTeamCount(int teamCount) {
-        TeamColor.initialise(getWarsConfig().getTeamCount());
+        TeamColor.initialise(teamCount);
 
         mapList = new ArrayList<>();
 

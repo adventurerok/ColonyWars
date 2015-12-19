@@ -212,8 +212,17 @@ public class GameInstance {
         }, 20, 20);
 
         startPotionStrengthTask();
+        startDecrementAttackerTask();
 
         checkVictory(false);
+    }
+
+    private void startDecrementAttackerTask() {
+        int ticks = 20;
+
+        scheduleRepeatingTask(() -> {
+            plugin.getUsers().forEach(User::decrementAttackerTimers);
+        }, ticks, ticks);
     }
 
     private void startPotionStrengthTask() {

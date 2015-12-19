@@ -162,6 +162,23 @@ public class User implements WarsCommandSender {
         }
     }
 
+    public void decrementAttackerTimers() {
+        if(lastAttackerTimer > 0) {
+            --lastAttackerTimer;
+            if(lastAttackerTimer == 0) setLastAttacker(null);
+        }
+
+        if(witherAttackerTimer > 0) {
+            --witherAttackerTimer;
+            if(witherAttackerTimer == 0) setWitherAttacker(null);
+        }
+
+        if(fireAttackerTimer > 0) {
+            --fireAttackerTimer;
+            if(fireAttackerTimer == 0) setFireAttacker(null);
+        }
+    }
+
     public double getPotionStrengthModifier() {
         return potionStrengthModifier;
     }

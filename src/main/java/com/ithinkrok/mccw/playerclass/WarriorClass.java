@@ -3,6 +3,7 @@ package com.ithinkrok.mccw.playerclass;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.event.UserInteractEvent;
+import com.ithinkrok.mccw.playerclass.items.ArrayCalculator;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
 import com.ithinkrok.mccw.playerclass.items.LinearCalculator;
 import com.ithinkrok.mccw.strings.Buildings;
@@ -25,7 +26,7 @@ public class WarriorClass extends ClassItemClassHandler {
         super(new ClassItem(plugin, playerClass.getName(), Material.IRON_SWORD).withUpgradeBuildings(Buildings.BLACKSMITH)
                         .withUnlockOnBuildingBuild(true).withEnchantmentEffects(
                         new ClassItem.EnchantmentEffect(Enchantment.DAMAGE_ALL, "sharpness",
-                                new LinearCalculator(0, 1)),
+                                new ArrayCalculator(0, 1, 3)),
                         new ClassItem.EnchantmentEffect(Enchantment.KNOCKBACK, "knockback", new LinearCalculator(0, 1)))
                         .withUpgradables(new ClassItem.Upgradable("sharpness", "upgrades.sharpness.name", 2),
                                 new ClassItem.Upgradable("knockback", "upgrades.knockback.name", 2)),

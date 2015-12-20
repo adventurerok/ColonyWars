@@ -24,6 +24,8 @@ maps.jungle_valley.desc=A jungle valley map
 maps.oasis.desc=A desert oasis
 maps.nether.desc=A cross of canyon and cavern, in the nether...
 maps.snow_hills.desc=Snowy hills. What more were you expecting?!
+maps.jungle_mountain.desc=A mountain in a jungle.
+maps.mega_taiga.desc=The mega taiga biome brought to life in MCCW!
 maps.random.desc=Vote for a random map
 
 #class-descriptions

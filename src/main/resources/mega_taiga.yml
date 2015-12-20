@@ -1,0 +1,46 @@
+maps:
+  mega_taiga:
+    folder: "mega_taiga"
+    center:
+      x: 0
+      y: 71
+      z: 0
+    showdown-size:
+      x: 30
+      z: 30
+    red:
+      base:
+        x: 200
+        y: 68
+        z: 200
+      spawn:
+        x: 199.5
+        y: 68
+        z: 199.5
+    green:
+      base:
+        x: 200
+        y: 68
+        z: -200
+      spawn:
+        x: 199.5
+        y: 68
+        z: -198.5
+    blue:
+      base:
+        x: -200
+        y: 68
+        z: -200
+      spawn:
+        x: -198.5
+        y: 68
+        z: -198.5
+    yellow:
+      base:
+        x: -200
+        y: 68
+        z: 200
+      spawn:
+        x: -198.5
+        y: 68
+        z: 199.5

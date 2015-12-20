@@ -143,7 +143,9 @@ public class WarsLobbyListener implements Listener {
     }
 
     private void showMapChooser(Player player) {
-        Inventory shopInv = Bukkit.createInventory(player, 9, plugin.getLocale("lobby.chooser.map.name"));
+        int slots = ((plugin.getMapList().size() + 9) / 9) * 9;
+
+        Inventory shopInv = Bukkit.createInventory(player, slots, plugin.getLocale("lobby.chooser.map.name"));
 
         for (String map : plugin.getMapList()) {
             shopInv.addItem(InventoryUtils

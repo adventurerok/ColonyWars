@@ -11,6 +11,8 @@ map-list:
   - "oasis"
   - "nether"
   - "snow_hills"
+  - "jungle_mountain"
+  - "mega_taiga"
   - "random"
 
 persistence: true

@@ -13,6 +13,7 @@ map-list:
   - "snow_hills"
   - "jungle_mountain"
   - "mega_taiga"
+  - "12canyon"
   - "random"
 
 persistence: true

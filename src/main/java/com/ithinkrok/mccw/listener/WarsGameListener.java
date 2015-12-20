@@ -36,6 +36,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
+import org.bukkit.util.Vector;
 
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -356,6 +357,14 @@ public class WarsGameListener implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
+        if(event.getTo().getBlockY() > 250) {
+            if(event.getPlayer().isInsideVehicle()) {
+                event.getPlayer().getVehicle().setVelocity(new Vector(0, -1, 0));
+            } else {
+                event.getPlayer().setVelocity(new Vector(0, -1, 0));
+            }
+        }
+
         if (plugin.getGameState() != GameState.SHOWDOWN) return;
         if (!plugin.getUser(event.getPlayer()).isInGame()) return;
 

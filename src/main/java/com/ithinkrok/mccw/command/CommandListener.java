@@ -37,6 +37,7 @@ public class CommandListener implements CommandExecutor {
         executorHashMap.put("test", new TestExecutor());
         executorHashMap.put("togglemoneymessage", new ToggleMoneyMessageExecutor());
         executorHashMap.put("teamcount", new TeamCountExecutor());
+        executorHashMap.put("cwreload", new ReloadExecutor());
     }
 
     @Override

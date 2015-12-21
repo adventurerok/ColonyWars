@@ -21,6 +21,7 @@ permissions:
       mccw.leaderboard: true
       mccw.togglemoneymessage: true
       mccw.teamcount: true
+      mccw.reload: true
     default: "op"
   mccw.test:
     description: "Allows use of the test command"
@@ -54,6 +55,8 @@ permissions:
     default: true
   mccw.teamcount:
     description: "Allows use of the teamcount command"
+  mccw.reload:
+    description: "Allows use of the cwreload command"
 commands:
   transfer:
     description: "Transfers money from you to your team or a player in your team"
@@ -115,3 +118,7 @@ commands:
     description: "Changes the number of teams active"
     usage: "/teamcount <teamcount>"
     permission: "mccw.teamcount"
+  cwreload:
+    description: "Reloads the MCCW config"
+    usage: "/cwreload"
+    permission: "mccw.reload"

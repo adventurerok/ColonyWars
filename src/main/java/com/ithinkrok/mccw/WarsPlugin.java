@@ -162,6 +162,20 @@ public class WarsPlugin extends JavaPlugin {
         changeGameState(GameState.LOBBY);
     }
 
+    public void reload() {
+        reloadConfig();
+
+        String languageFile = getWarsConfig().getLanguageName() + ".lang";
+        langFile = new LangFile(ResourceHandler.getPropertiesResource(this, languageFile));
+
+        handbookMeta = Handbook.loadHandbookMeta(this);
+        handbook = null;
+
+        buildingInventoryHandler = new OmniInventory(this, getWarsConfig());
+
+        changeTeamCount(warsConfig.getTeamCount());
+    }
+
     @Override
     public void onEnable() {
         warsConfig = new WarsConfig(this::getMapConfig);
@@ -171,11 +185,6 @@ public class WarsPlugin extends JavaPlugin {
         if (warsConfig.hasPersistence()) persistence = new Persistence(this);
         commandListener = new CommandListener(this);
 
-        String languageFile = getWarsConfig().getLanguageName() + ".lang";
-        langFile = new LangFile(ResourceHandler.getPropertiesResource(this, languageFile));
-
-        handbookMeta = Handbook.loadHandbookMeta(this);
-
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
         InvisiblePlayerAttacker.enablePlayerAttacker(this, protocolManager);
 
@@ -183,7 +192,6 @@ public class WarsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new WarsBaseListener(this), this);
         getServer().getPluginManager().registerEvents(currentListener, this);
 
-        buildingInventoryHandler = new OmniInventory(this, getWarsConfig());
         spectatorInventoryHandler = new SpectatorInventory(this);
 
         lobbyMinigames.add(new WoolHeadMinigame(this));
@@ -193,7 +201,7 @@ public class WarsPlugin extends JavaPlugin {
 
         countdownHandler = new CountdownHandler(this);
 
-        changeTeamCount(warsConfig.getTeamCount());
+        reload();
     }
 
     /**

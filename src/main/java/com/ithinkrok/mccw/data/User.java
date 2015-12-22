@@ -836,7 +836,11 @@ public class User implements WarsCommandSender {
     }
 
     public boolean teleport(Location location) {
-        return getEntity().teleport(location);
+        boolean success = getEntity().teleport(location);
+
+        if(!isPlayer()) revalidateZombie();
+
+        return success;
     }
 
     public void updateTeamArmor() {

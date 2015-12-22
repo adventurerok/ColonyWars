@@ -499,7 +499,7 @@ public class WarsGameListener implements Listener {
         died.getStatsHolder().addDeath();
 
         Team diedTeam = died.getTeam();
-        boolean respawn = plugin.getGameState() != GameState.SHOWDOWN &&
+        boolean respawn = died.isPlayer() && plugin.getGameState() != GameState.SHOWDOWN &&
                 plugin.getRandom().nextFloat() < (diedTeam.getRespawnChance() / 100f);
 
         if (respawn) {

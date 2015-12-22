@@ -213,8 +213,16 @@ public class GameInstance {
 
         startPotionStrengthTask();
         startDecrementAttackerTask();
+        startZombieRevalidationTask();
 
         checkVictory(false);
+    }
+
+    private void startZombieRevalidationTask() {
+        int ticks = 20;
+
+        scheduleRepeatingTask(() -> plugin.getUsers().forEach(User::revalidateZombie), ticks, ticks);
+
     }
 
     private void startDecrementAttackerTask() {

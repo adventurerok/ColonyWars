@@ -165,23 +165,7 @@ public class User implements WarsCommandSender {
     public void becomeZombie() {
         if(!isPlayer()) return;
 
-        zombie = (Zombie) getWorld().spawnEntity(getLocation(), EntityType.ZOMBIE);
-
-        zombie.setBaby(false);
-        zombie.setVillager(false);
-
-        zombie.setMetadata("striker", new FixedMetadataValue(plugin, uniqueId));
-
-        zombie.getEquipment().setArmorContents(player.getEquipment().getArmorContents());
-        zombie.getEquipment().setItemInHand(player.getItemInHand());
-        zombie.setMaxHealth(player.getMaxHealth());
-        zombie.setHealth(player.getHealth());
-        zombie.setCustomName(getFormattedName());
-        zombie.setFireTicks(player.getFireTicks());
-
-        for(PotionEffect effect : player.getActivePotionEffects()) {
-            zombie.addPotionEffect(effect, true);
-        }
+        zombie = makeZombieFromEntity(player);
 
         zombieInventory = new ZombieInventory(zombie, player.getInventory().getContents());
         zombieStats = new ZombieStats(player);
@@ -189,8 +173,44 @@ public class User implements WarsCommandSender {
         player = null;
     }
 
+    private Zombie makeZombieFromEntity(LivingEntity entity) {
+        zombie = (Zombie) getWorld().spawnEntity(getLocation(), EntityType.ZOMBIE);
+
+        zombie.setBaby(false);
+        zombie.setVillager(false);
+
+        zombie.setMetadata("striker", new FixedMetadataValue(plugin, uniqueId));
+
+        zombie.getEquipment().setArmorContents(entity.getEquipment().getArmorContents());
+        zombie.getEquipment().setItemInHand(entity.getEquipment().getItemInHand());
+        zombie.setMaxHealth(entity.getMaxHealth());
+        zombie.setHealth(entity.getHealth());
+        zombie.setCustomName(getFormattedName());
+        zombie.setFireTicks(entity.getFireTicks());
+
+        zombie.setRemoveWhenFarAway(false);
+
+        for(PotionEffect effect : entity.getActivePotionEffects()) {
+            zombie.addPotionEffect(effect, true);
+        }
+
+        return zombie;
+    }
+
+    public void revalidateZombie() {
+        if(isPlayer() || zombie.isValid()) return;
+
+        zombie = makeZombieFromEntity(zombie);
+
+        zombieInventory = new ZombieInventory(zombie, zombieInventory.getContents());
+
+    }
+
     public void becomePlayer(Player player) {
         if(isPlayer()) return;
+
+        System.out.println(zombie.isDead());
+        System.out.println(zombie.isValid());
 
         player.getInventory().setContents(zombieInventory.getContents());
         player.getEquipment().setArmorContents(zombie.getEquipment().getArmorContents());

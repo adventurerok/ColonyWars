@@ -167,6 +167,9 @@ public class User implements WarsCommandSender {
 
         zombie = (Zombie) getWorld().spawnEntity(getLocation(), EntityType.ZOMBIE);
 
+        zombie.setBaby(false);
+        zombie.setVillager(false);
+
         zombie.setMetadata("striker", new FixedMetadataValue(plugin, uniqueId));
 
         zombie.getEquipment().setArmorContents(player.getEquipment().getArmorContents());

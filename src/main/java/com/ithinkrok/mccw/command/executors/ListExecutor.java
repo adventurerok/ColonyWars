@@ -44,6 +44,7 @@ public class ListExecutor implements WarsCommandExecutor {
             StringBuilder names = new StringBuilder();
 
             for (User user : entry.getValue()) {
+                if(!user.isPlayer()) continue;
                 if (names.length() != 0) names.append(ChatColor.GOLD).append(", ");
 
                 names.append(user.getFormattedName());

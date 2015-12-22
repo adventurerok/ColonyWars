@@ -43,7 +43,7 @@ public class VampireClass extends ClassItemClassHandler {
             if (event.getFinalDamage() < 1 || event.getDamageCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK)
                 return;
             PotionEffect effect = new PotionEffect(PotionEffectType.REGENERATION, 20, 1, false, true);
-            event.getUser().getPlayer().addPotionEffect(effect);
+            event.getUser().addPotionEffect(effect);
         });
 
         vampireSword.withDescriptionLocale("items.vampire-sword.desc");
@@ -65,7 +65,7 @@ public class VampireClass extends ClassItemClassHandler {
     @Override
     public void onUserAttack(UserAttackEvent event) {
         if (event.getDamageCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK &&
-                event.getUser().getPlayer().isFlying()) {
+                event.getUser().isFlying()) {
             event.setCancelled(true);
             return;
         }
@@ -74,7 +74,7 @@ public class VampireClass extends ClassItemClassHandler {
 
     @Override
     public boolean onInteract(UserInteractEvent event) {
-        return event.getUser().getPlayer().isFlying() || super.onInteract(event);
+        return event.getUser().isFlying() || super.onInteract(event);
 
     }
 
@@ -99,7 +99,7 @@ public class VampireClass extends ClassItemClassHandler {
         private UserFlyingChanger(User user) {
             this.user = user;
 
-            user.getPlayer().setExp(0f);
+            user.setExp(0f);
         }
 
         @Override
@@ -112,22 +112,22 @@ public class VampireClass extends ClassItemClassHandler {
             if (!mageTower) {
                 if (user.getTeam().getBuildingCount(Buildings.MAGETOWER) < 1) return;
                 mageTower = true;
-                user.getPlayer().setExp(1f);
+                user.setExp(1f);
                 user.sendLocale("unlock.bat-flight.message");
 
-                oldHealth = user.getPlayer().getHealth();
+                oldHealth = user.getHealth();
             }
 
-            double newHealth = user.getPlayer().getHealth();
+            double newHealth = user.getHealth();
             float change = 0f;
 
             if (newHealth < oldHealth) change = -0.07f;
-            else if (user.getPlayer().hasPotionEffect(PotionEffectType.REGENERATION)) change = 0.001f;
+            else if (user.hasPotionEffect(PotionEffectType.REGENERATION)) change = 0.001f;
 
             if (change != 0) {
-                float exp = user.getPlayer().getExp();
+                float exp = user.getExp();
                 exp = Math.max(Math.min(exp + change, 1f), 0f);
-                user.getPlayer().setExp(exp);
+                user.setExp(exp);
             }
 
             oldHealth = newHealth;
@@ -136,10 +136,10 @@ public class VampireClass extends ClassItemClassHandler {
             boolean inWater = block.getRelative(0, 1, 0).isLiquid() ||
                     (block.isLiquid() && block.getRelative(0, -1, 0).isLiquid());
 
-            if (user.getPlayer().isFlying() && !inWater) {
-                float exp = user.getPlayer().getExp();
+            if (user.isFlying() && !inWater) {
+                float exp = user.getExp();
                 exp = Math.max(exp - flightDecreaseAmount(user.getUpgradeLevel("bat")), 0);
-                user.getPlayer().setExp(exp);
+                user.setExp(exp);
 
                 if (!bat) {
                     Disguises.disguise(user, EntityType.BAT);
@@ -152,9 +152,9 @@ public class VampireClass extends ClassItemClassHandler {
             } else {
                 if (inWater) user.setFlying(false);
 
-                float exp = user.getPlayer().getExp();
+                float exp = user.getExp();
                 exp = Math.min(exp + 0.001f, 1);
-                user.getPlayer().setExp(exp);
+                user.setExp(exp);
 
 
                 if (exp > 0.2f && !allowFlight && user.isOnGround()) {

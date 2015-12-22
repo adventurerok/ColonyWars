@@ -17,6 +17,8 @@ public class DisguisesController {
     private DisguiseCraftAPI dcAPI = DisguiseCraft.getAPI();
 
     public void disguise(User user, EntityType type) {
+        if(!user.isPlayer()) return;
+
         //Uses a hack that will convert most EntityTypes to DisguiseTypes. DOES NOT WORK FOR ALL (e.g. TNT)
         Disguise disguise = new Disguise(dcAPI.newEntityID(), DisguiseType.fromString(type.name().replace("_", "")));
 
@@ -25,6 +27,8 @@ public class DisguisesController {
     }
 
     public void unDisguise(User user) {
+        if(!user.isPlayer()) return;
+
         if(dcAPI.isDisguised(user.getPlayer())){
             dcAPI.undisguisePlayer(user.getPlayer());
         }

@@ -32,14 +32,9 @@ public class WarsBaseListener implements Listener {
 
         user.sendLocale("server.welcome");
 
-        user.getPlayer().getInventory().clear();
+        user.getPlayerInventory().clear();
 
-        for(User other : plugin.getUsers()){
-            if(other == user) continue;
-            if(!other.isCloaked()) continue;
-
-            user.getPlayer().hidePlayer(other.getPlayer());
-        }
+        user.setShowCloakedPlayers(false);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

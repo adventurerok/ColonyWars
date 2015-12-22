@@ -2,6 +2,7 @@ package com.ithinkrok.mccw.event;
 
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -28,10 +29,10 @@ public abstract class UserEvent {
     }
 
     public PlayerInventory getUserInventory() {
-        return user.getPlayer().getInventory();
+        return user.getPlayerInventory();
     }
 
-    public Player getPlayer(){
-        return user.getPlayer();
+    public Entity getEntity() {
+        return user.getEntity();
     }
 }

@@ -26,12 +26,12 @@ public class CloakerClass extends ClassItemClassHandler {
 
     public CloakerClass(WarsPlugin plugin, PlayerClass playerClass) {
         super(new ClassItem(plugin, playerClass.getName(), Material.IRON_LEGGINGS, "items.cloak.name")
-                .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
-                .withRightClickAction(new Cloak(plugin, cloakDurationCalculator()))
-                .withRightClickCooldown("cloak", "cloak", new LinearCalculator(25, 10), "cooldowns.cloak.finished")
-                .withRightClickTimeout(new Decloak(plugin), "cloak", "cloaking", "lore.timeout.cloak",
-                        "timeouts.cloaking.finished", cloakDurationCalculator()).withUpgradables(
-                        new ClassItem.Upgradable("cloak", "upgrades.cloak.name", 2)),
+                        .withUpgradeBuildings(Buildings.MAGETOWER).withUnlockOnBuildingBuild(true)
+                        .withRightClickAction(new Cloak(plugin, cloakDurationCalculator()))
+                        .withRightClickCooldown("cloak", "cloak", new LinearCalculator(25, 10), "cooldowns.cloak.finished")
+                        .withRightClickTimeout(new Decloak(plugin), "cloak", "cloaking", "lore.timeout.cloak",
+                                "timeouts.cloaking.finished", cloakDurationCalculator())
+                        .withUpgradables(new ClassItem.Upgradable("cloak", "upgrades.cloak.name", 2)),
                 TeamCompass.createTeamCompass(plugin));
     }
 
@@ -43,9 +43,9 @@ public class CloakerClass extends ClassItemClassHandler {
     @Override
     public void onUserBeginGame(UserBeginGameEvent event) {
         super.onUserBeginGame(event);
-        event.getPlayer()
+        event.getUser()
                 .addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0, false, false), false);
-        event.getPlayer()
+        event.getUser()
                 .addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 3, false, false), false);
     }
 
@@ -66,7 +66,7 @@ public class CloakerClass extends ClassItemClassHandler {
             int cloakLevel = event.getUser().getUpgradeLevel("cloak");
             int cloakDuration = (int) this.cloakDuration.calculate(cloakLevel);
 
-            event.getPlayer()
+            event.getUser()
                     .addPotionEffect(new PotionEffect(PotionEffectType.SPEED, cloakDuration * 20, 1, false, true),
                             true);
 
@@ -96,7 +96,7 @@ public class CloakerClass extends ClassItemClassHandler {
             if (swirlTask == null || !(swirlTask instanceof Integer)) return false;
 
             plugin.getGameInstance().cancelTask((Integer) swirlTask);
-            event.getPlayer()
+            event.getUser()
                     .addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0, false, false),
                             true);
 

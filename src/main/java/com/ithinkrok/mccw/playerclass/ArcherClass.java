@@ -66,7 +66,7 @@ public class ArcherClass extends ClassItemClassHandler {
     public void onUserBeginGame(UserBeginGameEvent event) {
         super.onUserBeginGame(event);
 
-        event.getPlayer()
+        event.getUser()
                 .addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0, false, false), false);
     }
 

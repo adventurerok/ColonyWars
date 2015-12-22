@@ -62,7 +62,7 @@ public class PriestClass extends ClassItemClassHandler {
         @Override
         public boolean onInteractWorld(UserInteractEvent event) {
             for (User user : event.getTeam().getUsers()) {
-                user.getPlayer().setHealth(plugin.getMaxHealth());
+                user.setHealth(plugin.getMaxHealth());
             }
 
             return true;
@@ -92,8 +92,8 @@ public class PriestClass extends ClassItemClassHandler {
                 if(other != null) {
                     if(!other.isInGame()) continue;
                     else if(other.getTeamColor() != event.getUser().getTeamColor()) {
-                        if(other.getPlayer() == near) other.setLastAttacker(event.getUser());
-                        ((LivingEntity) near).damage(10, event.getUser().getPlayer());
+                        if(other.getEntity() == near) other.setLastAttacker(event.getUser());
+                        ((LivingEntity) near).damage(10, event.getUser().getEntity());
                     }
                 }
 
@@ -146,7 +146,7 @@ public class PriestClass extends ClassItemClassHandler {
             if (event.getUser().getUpgradeLevel("bending") > 4) return true;
             Vector add = event.getUser().getLocation().getDirection();
             bent.addVelocity(add);
-            bent.playKnockSound(event.getPlayer());
+            bent.playKnockSound(event.getUser());
             event.getUser().setUpgradeLevel("bending", event.getUser().getUpgradeLevel("bending") + 1);
 
             return true;

@@ -244,8 +244,8 @@ public class WarsPlugin extends JavaPlugin {
         mapVotes.put(map, votes);
     }
 
-    public void playerTeleportLobby(Player player) {
-        player.teleport(getLobbySpawn());
+    public void playerTeleportLobby(User user) {
+        user.teleport(getLobbySpawn());
     }
 
     public Location getLobbySpawn() {
@@ -403,7 +403,7 @@ public class WarsPlugin extends JavaPlugin {
             getLobbyMinigames().forEach(LobbyMinigame::resetMinigame);
 
             for (User user : getUsers()) {
-                playerJoinLobby(user.getPlayer());
+                userJoinLobby(user);
             }
 
             resetTeams();
@@ -446,13 +446,11 @@ public class WarsPlugin extends JavaPlugin {
         return playerInfoHashMap.values();
     }
 
-    public void playerJoinLobby(Player player) {
-        User user = getUser(player);
-
+    public void userJoinLobby(User user) {
         Disguises.unDisguise(user);
 
         user.setInGame(false);
-        user.getPlayer().setGameMode(GameMode.ADVENTURE);
+        user.setGameMode(GameMode.ADVENTURE);
         user.unsetSpectator();
         user.resetPlayerStats(true);
         user.clearArmor();
@@ -460,7 +458,7 @@ public class WarsPlugin extends JavaPlugin {
         user.setTeamColor(null);
         user.setMapVote(null);
 
-        PlayerInventory inv = player.getInventory();
+        PlayerInventory inv = user.getPlayerInventory();
 
         inv.clear();
 
@@ -480,9 +478,9 @@ public class WarsPlugin extends JavaPlugin {
 
         user.sendMessage(getLocale("lobby.info.map-info"));
 
-        player.teleport(getLobbySpawn());
+        user.teleport(getLobbySpawn());
 
-        givePlayerHandbook(player);
+        giveUserHandbook(user);
 
         for (LobbyMinigame minigame : getLobbyMinigames()) {
             minigame.onUserJoinLobby(user);
@@ -501,8 +499,8 @@ public class WarsPlugin extends JavaPlugin {
         return playerInfoHashMap.get(player.getUniqueId());
     }
 
-    public void givePlayerHandbook(Player player) {
-        PlayerInventory inv = player.getInventory();
+    public void giveUserHandbook(User player) {
+        PlayerInventory inv = player.getPlayerInventory();
         if (getHandbook() == null) {
             String meta = getHandbookMeta();
 

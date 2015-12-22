@@ -51,7 +51,7 @@ public class BentEarth {
         }
     }
 
-    public void playKnockSound(Player priest) {
+    public void playKnockSound(User priest) {
         priest.playSound(priest.getLocation(), Sound.WITHER_SHOOT, 1.0f, 1.5f);
 
         for(FallingBlock block : blocks) {

@@ -32,7 +32,7 @@ public class DarkKnightClass extends ClassItemClassHandler {
     public void onUserBeginGame(UserBeginGameEvent event) {
         super.onUserBeginGame(event);
 
-        event.getPlayer()
+        event.getUser()
                 .addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1, false, false),
                         true);
     }

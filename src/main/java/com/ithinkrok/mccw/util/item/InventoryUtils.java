@@ -106,8 +106,8 @@ public class InventoryUtils {
 
     }
 
-    public static void playBuySound(Player player) {
-        player.playSound(player.getLocation(), Sound.BLAZE_HIT, 1.0f, 1.0f);
+    public static void playBuySound(User user) {
+        user.playSound(user.getLocation(), Sound.BLAZE_HIT, 1.0f, 1.0f);
     }
 
     public static void replaceItem(Inventory inventory, ItemStack stack) {

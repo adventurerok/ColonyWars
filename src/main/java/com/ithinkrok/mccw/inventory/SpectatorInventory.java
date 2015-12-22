@@ -30,9 +30,9 @@ public class SpectatorInventory implements InventoryHandler {
         String owner = ((SkullMeta) item.getItemMeta()).getOwner();
 
         for (User info : plugin.getUsers()) {
-            if (!info.getPlayer().getName().equals(owner)) continue;
+            if (!info.getName().equals(owner)) continue;
 
-            user.getPlayer().teleport(info.getLocation());
+            user.teleport(info.getLocation());
             return true;
         }
 
@@ -51,7 +51,7 @@ public class SpectatorInventory implements InventoryHandler {
 
             SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
 
-            skullMeta.setOwner(info.getPlayer().getName());
+            skullMeta.setOwner(info.getName());
             head.setItemMeta(skullMeta);
 
             inventory.add(head);

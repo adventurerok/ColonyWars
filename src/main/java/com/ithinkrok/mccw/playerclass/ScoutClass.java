@@ -49,7 +49,7 @@ public class ScoutClass extends ClassItemClassHandler {
     @Override
     public void onUserBeginGame(UserBeginGameEvent event) {
         super.onUserBeginGame(event);
-        event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1), true);
+        event.getUser().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1), true);
     }
 
 
@@ -84,7 +84,7 @@ public class ScoutClass extends ClassItemClassHandler {
                     }
                 }
 
-                if (closest != null) event.getPlayer().setCompassTarget(closest);
+                if (closest != null) event.getUser().setCompassTarget(closest);
                 else closestName = plugin.getLocale("items.player-compass.no-player");
 
                 int compassIndex = event.getUserInventory().first(Material.COMPASS);
@@ -104,7 +104,7 @@ public class ScoutClass extends ClassItemClassHandler {
 
         @Override
         public boolean onInteractWorld(UserInteractEvent event) {
-            event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 200,
+            event.getUser().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 200,
                     event.getUser().getUpgradeLevel("regen") * 2 + 1));
 
             return true;

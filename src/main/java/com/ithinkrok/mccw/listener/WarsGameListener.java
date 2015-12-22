@@ -105,7 +105,7 @@ public class WarsGameListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         User user = plugin.getUser(event.getPlayer());
 
-        user.getPlayer().teleport(plugin.getMapSpawn(null));
+        user.teleport(plugin.getMapSpawn(null));
         user.setSpectator();
 
         user.sendLocale("spectators.game.in-progress");
@@ -218,7 +218,7 @@ public class WarsGameListener implements Listener {
             return;
         }
 
-        resetDurability(event.getPlayer());
+        resetDurability(user);
 
         if (event.getBlock().getType() != Material.OBSIDIAN) return;
 
@@ -246,13 +246,13 @@ public class WarsGameListener implements Listener {
         plugin.getGameInstance().scheduleTask(building::explode, 60);
     }
 
-    private void resetDurability(Player player) {
-        ItemStack item = player.getItemInHand();
+    private void resetDurability(User user) {
+        ItemStack item = user.getPlayerInventory().getItemInHand();
 
         if (item == null) return;
         if (item.getDurability() != 0 && item.getType().getMaxDurability() != 0) {
             item.setDurability((short) 0);
-            player.setItemInHand(item);
+            user.getPlayerInventory().setItemInHand(item);
         }
     }
 
@@ -300,14 +300,14 @@ public class WarsGameListener implements Listener {
         if (!user.isInGame()) {
             if (event.getItem() != null && event.getItem().getType() == Material.IRON_LEGGINGS) {
                 user.setShowCloakedPlayers(!user.showCloakedPlayers());
-                plugin.getGameInstance().setupSpectatorInventory(user.getPlayer());
+                plugin.getGameInstance().setupSpectatorInventory(user);
             }
 
             event.setCancelled(true);
             return;
         }
 
-        resetDurability(event.getPlayer());
+        resetDurability(user);
 
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK || (event.getClickedBlock().getType() != Material.OBSIDIAN &&
                 event.getClickedBlock().getType() != Material.ENDER_CHEST)) {
@@ -349,7 +349,7 @@ public class WarsGameListener implements Listener {
             return;
         }
 
-        resetDurability(event.getPlayer());
+        resetDurability(user);
 
         PlayerClassHandler classHandler = user.getPlayerClassHandler();
         if (classHandler.onInteract(new UserRightClickEntityEvent(user, event))) event.setCancelled(true);
@@ -388,7 +388,7 @@ public class WarsGameListener implements Listener {
     public void onEntityShootBow(EntityShootBowEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
 
-        resetDurability((Player) event.getEntity());
+        resetDurability(plugin.getUser((Player) event.getEntity()));
     }
 
     @EventHandler
@@ -421,7 +421,7 @@ public class WarsGameListener implements Listener {
             return;
         }
 
-        resetDurability(damagerInfo.getPlayer());
+        resetDurability(damagerInfo);
 
         User targetInfo = null;
         if (event.getEntity() instanceof Player) {
@@ -451,7 +451,7 @@ public class WarsGameListener implements Listener {
 
         targetInfo.setLastAttacker(damagerInfo);
 
-        if (targetInfo.getPlayer().getHealth() - event.getFinalDamage() < 1) {
+        if (targetInfo.getHealth() - event.getFinalDamage() < 1) {
             event.setCancelled(true);
             playerDeath(targetInfo, damagerInfo, event.getCause(), true);
         }
@@ -515,11 +515,11 @@ public class WarsGameListener implements Listener {
     }
 
     private void removeEntityTargets(User user) {
-        for (Entity e : user.getPlayer().getWorld().getEntities()) {
+        for (Entity e : user.getWorld().getEntities()) {
             if (!(e instanceof Creature)) continue;
 
             Creature creature = (Creature) e;
-            if (creature.getTarget() == null || creature.getTarget() != user.getPlayer()) continue;
+            if (creature.getTarget() == null || creature.getTarget() != user.getEntity()) continue;
             creature.setTarget(null);
         }
     }
@@ -559,7 +559,7 @@ public class WarsGameListener implements Listener {
             return;
         }
 
-        if (target.getPlayer().getHealth() - event.getFinalDamage() < 1) {
+        if (target.getHealth() - event.getFinalDamage() < 1) {
             event.setCancelled(true);
 
             User killer = null;

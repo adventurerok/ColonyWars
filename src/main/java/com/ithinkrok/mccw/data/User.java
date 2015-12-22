@@ -11,9 +11,7 @@ import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.mccw.util.Persistence;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -79,16 +77,20 @@ public class User implements WarsCommandSender {
         else this.statsHolder = new StatsHolder(this);
     }
 
+    public LivingEntity getEntity() {
+        return player;
+    }
+
     public boolean isOnGround() {
-        return getPlayer().isOnGround();
+        return getEntity().isOnGround();
     }
 
     public Vector getVelocity() {
-        return getPlayer().getVelocity();
+        return getEntity().getVelocity();
     }
 
     public void setVelocity(Vector velocity) {
-        getPlayer().setVelocity(velocity);
+        getEntity().setVelocity(velocity);
     }
 
     public PlayerClass getLastPlayerClass() {
@@ -145,8 +147,8 @@ public class User implements WarsCommandSender {
 
             if(!u.isCloaked()) continue;
 
-            if(showCloakedPlayers) getPlayer().showPlayer(u.getPlayer());
-            else getPlayer().hidePlayer(u.getPlayer());
+            if(showCloakedPlayers) showPlayer(u);
+            else hidePlayer(u);
         }
     }
 
@@ -158,8 +160,16 @@ public class User implements WarsCommandSender {
 
             if(u.showCloakedPlayers()) continue;
 
-            u.getPlayer().hidePlayer(player);
+            u.hidePlayer(this);
         }
+    }
+
+    private void hidePlayer(User other) {
+        player.hidePlayer(other.player);
+    }
+
+    private void showPlayer(User other) {
+        player.showPlayer(other.player);
     }
 
     public void decrementAttackerTimers() {
@@ -221,7 +231,7 @@ public class User implements WarsCommandSender {
 
     public void setFireAttacker(User fireAttacker) {
         if(fireAttacker != null) {
-            this.fireAttacker = fireAttacker.getPlayer().getUniqueId();
+            this.fireAttacker = fireAttacker.getUniqueId();
             this.fireAttackerTimer = plugin.getWarsConfig().getLastAttackerTimer();
         } else {
             this.fireAttacker = null;
@@ -239,7 +249,7 @@ public class User implements WarsCommandSender {
 
     public void setWitherAttacker(User witherAttacker) {
         if(witherAttacker != null) {
-            this.witherAttacker = witherAttacker.getPlayer().getUniqueId();
+            this.witherAttacker = witherAttacker.getUniqueId();
             this.witherAttackerTimer = plugin.getWarsConfig().getLastAttackerTimer();
         } else {
             this.witherAttacker = null;
@@ -253,7 +263,7 @@ public class User implements WarsCommandSender {
 
     public void setLastAttacker(User lastAttacker) {
         if(lastAttacker != null) {
-            this.lastAttacker = lastAttacker.getPlayer().getUniqueId();
+            this.lastAttacker = lastAttacker.getUniqueId();
             this.lastAttackerTimer = plugin.getWarsConfig().getLastAttackerTimer();
         } else {
             this.lastAttacker = null;
@@ -628,7 +638,7 @@ public class User implements WarsCommandSender {
         player.spigot().setCollidesWithEntities(false);
         clearArmor();
 
-        plugin.getGameInstance().setupSpectatorInventory(player);
+        plugin.getGameInstance().setupSpectatorInventory(this);
 
         updateScoreboard();
     }
@@ -640,13 +650,17 @@ public class User implements WarsCommandSender {
         decloak();
     }
 
+    public void setCollidesWithEntities(boolean collides) {
+        player.spigot().setCollidesWithEntities(collides);
+    }
+
     public void decloak() {
         setCloaked(false);
 
         for (User u : plugin.getUsers()) {
             if (this == u) continue;
 
-            u.getPlayer().showPlayer(player);
+            u.showPlayer(this);
         }
     }
 
@@ -753,15 +767,27 @@ public class User implements WarsCommandSender {
     }
 
     public void setFlySpeed(float flySpeed) {
-        getPlayer().setFlySpeed(flySpeed);
+        player.setFlySpeed(flySpeed);
     }
 
     public void setAllowFlight(boolean allowFlight) {
-        getPlayer().setAllowFlight(allowFlight);
+        player.setAllowFlight(allowFlight);
+    }
+
+    public double getHealth() {
+        return getEntity().getHealth();
+    }
+
+    public World getWorld() {
+        return getEntity().getWorld();
+    }
+
+    public void closeInventory() {
+        player.closeInventory();
     }
 
     public void setFlying(boolean flying) {
-        getPlayer().setFlying(flying);
+        player.setFlying(flying);
     }
 
     public Location getLocation() {
@@ -781,6 +807,76 @@ public class User implements WarsCommandSender {
 
     public boolean getMoneyMessagesEnabled() {
         return moneyMessagesEnabled;
+    }
+
+    public void setGameMode(GameMode gameMode) {
+        player.setGameMode(gameMode);
+    }
+
+    public boolean isPlayer() {
+        return player != null;
+    }
+
+    public void playSound(Location location, Sound sound, float volume, float pitch) {
+        if(!isPlayer()) return;
+
+        player.playSound(location, sound, volume, pitch);
+    }
+
+    public boolean isInsideVehicle() {
+        return getEntity().isInsideVehicle();
+    }
+
+    public Entity getVehicle() {
+        return getEntity().getVehicle();
+    }
+
+    public void setExp(float exp) {
+        if(!isPlayer()) return;
+
+        player.setExp(exp);
+    }
+
+    public float getExp() {
+        if(!isPlayer()) return 0;
+
+        return player.getExp();
+    }
+
+    public boolean hasPotionEffect(PotionEffectType potionEffectType) {
+        return getEntity().hasPotionEffect(potionEffectType);
+    }
+
+    public boolean isFlying() {
+        return isPlayer() && player.isFlying();
+    }
+
+    public void addPotionEffect(PotionEffect effect) {
+        getEntity().addPotionEffect(effect);
+    }
+
+    public void addPotionEffect(PotionEffect effect, boolean force) {
+        getEntity().addPotionEffect(effect, force);
+    }
+
+    public <T extends Projectile> T launchProjectile(Class<? extends T> projectileClass) {
+        return getEntity().launchProjectile(projectileClass);
+    }
+
+    public void setHealth(double health) {
+        getEntity().setHealth(health);
+    }
+
+    public void setCompassTarget(Location location) {
+        if(!isPlayer()) return;
+
+        player.setCompassTarget(location);
+    }
+
+    public void setLevel(int level) {
+        if(!isPlayer()) return;
+
+        player.setLevel(level);
     }
 
 

@@ -45,7 +45,7 @@ public class TeamCompass implements ClassItem.InteractAction {
 
         event.getUser().setMetadata("team-compass", target, true);
 
-        if (targetLocation != null) event.getPlayer().setCompassTarget(targetLocation);
+        if (targetLocation != null) event.getUser().setCompassTarget(targetLocation);
 
         int compassIndex = event.getUserInventory().first(Material.COMPASS);
         ItemStack newCompass = event.getUserInventory().getItem(compassIndex);

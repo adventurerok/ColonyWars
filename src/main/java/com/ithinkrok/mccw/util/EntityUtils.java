@@ -20,34 +20,29 @@ import java.util.UUID;
 public class EntityUtils {
 
 
-    public static Player getPlayerFromEntity(WarsPlugin plugin, Entity entity) {
+    public static User getUserFromEntity(WarsPlugin plugin, Entity entity) {
 
         if (!(entity instanceof Player)) {
             if (entity instanceof Projectile) {
                 Projectile arrow = (Projectile) entity;
 
                 if (!(arrow.getShooter() instanceof Player)) return null;
-                return (Player) arrow.getShooter();
+                return plugin.getUser((Player) arrow.getShooter());
             } else if (entity instanceof Tameable) {
                 Tameable tameable = (Tameable) entity;
                 if (tameable.getOwner() == null || !(tameable.getOwner() instanceof Player)) return null;
-                return (Player) tameable.getOwner();
+                return plugin.getUser((Player) tameable.getOwner());
             } else {
                 List<MetadataValue> values = entity.getMetadata("striker");
                 if (values == null || values.isEmpty()) return null;
 
                 User user = plugin.getUser((UUID) values.get(0).value());
                 if (user == null) return null;
-                return user.getPlayer();
+                return user;
             }
         } else {
-            return (Player) entity;
+            return plugin.getUser((Player) entity);
         }
-    }
-
-    public static User getUserFromEntity(WarsPlugin plugin, Entity entity) {
-        Player player = getPlayerFromEntity(plugin, entity);
-        return player == null ? null : plugin.getUser(player);
     }
 
     public static TeamColor getTeamFromEntity(WarsPlugin plugin, Entity entity) {

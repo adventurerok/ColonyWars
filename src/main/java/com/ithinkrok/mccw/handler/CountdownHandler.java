@@ -63,7 +63,7 @@ public class CountdownHandler {
             --countDown;
 
             for (User p : plugin.getUsers()) {
-                p.getPlayer().setLevel(countDown);
+                p.setLevel(countDown);
             }
 
             if (during != null) during.run();
@@ -140,7 +140,7 @@ public class CountdownHandler {
         countdownType = null;
 
         for (User p : plugin.getUsers()) {
-            p.getPlayer().setLevel(0);
+            p.setLevel(0);
         }
     }
 }

@@ -69,7 +69,7 @@ public class BuyableInventory implements InventoryHandler {
         int requiredSlots = item.getMinFreeSlots();
 
         if (requiredSlots > 0) {
-            PlayerInventory inventory = user.getPlayer().getInventory();
+            PlayerInventory inventory = user.getPlayerInventory();
             int freeSlots = 0;
 
             for (int i = 0; i < inventory.getSize(); ++i) {
@@ -99,7 +99,7 @@ public class BuyableInventory implements InventoryHandler {
             InventoryUtils.payWithTeamCash(item.getCost(), team, user);
         } else user.subtractPlayerCash(item.getCost(), true);
 
-        InventoryUtils.playBuySound(user.getPlayer());
+        InventoryUtils.playBuySound(user);
         item.onPurchase(event);
     }
 

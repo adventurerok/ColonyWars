@@ -36,18 +36,14 @@ public class WarsLobbyListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        plugin.playerJoinLobby(event.getPlayer());
+        plugin.userJoinLobby(plugin.getUser(event.getPlayer()));
 
-        String name = getPlayerNameColor(event.getPlayer()) + event.getPlayer().getName();
+        String name = ChatColor.YELLOW + event.getPlayer().getName();
         String online = Integer.toString(plugin.getPlayerCount());
         String max = Integer.toString(plugin.getServer().getMaxPlayers());
         event.setJoinMessage(plugin.getLocale("server.players.join", name, online, max));
 
         if (!plugin.getCountdownHandler().isCountingDown()) plugin.getCountdownHandler().startLobbyCountdown();
-    }
-
-    private ChatColor getPlayerNameColor(Player player) {
-        return player.isOp() ? ChatColor.DARK_RED : ChatColor.YELLOW;
     }
 
     @EventHandler
@@ -197,7 +193,7 @@ public class WarsLobbyListener implements Listener {
 
                 user.sendMessage(plugin.getLocale("team.join.success", teamColor.getFormattedName()));
 
-                user.getPlayer().closeInventory();
+                user.closeInventory();
             } else if (plugin.getLocale("lobby.chooser.class.name").equals(event.getInventory().getTitle())) {
                 PlayerClass playerClass = PlayerClass.fromChooserMaterial(event.getCurrentItem().getType());
                 if (playerClass == null) {
@@ -209,7 +205,7 @@ public class WarsLobbyListener implements Listener {
 
                 user.sendMessage(plugin.getLocale("class.join.success", playerClass.getFormattedName()));
 
-                user.getPlayer().closeInventory();
+                user.closeInventory();
             } else if (plugin.getLocale("lobby.chooser.map.name").equals(event.getInventory().getTitle())) {
                 String mapName = event.getCurrentItem().getItemMeta().getDisplayName();
 
@@ -223,7 +219,7 @@ public class WarsLobbyListener implements Listener {
                 user.setMapVote(mapName);
                 user.sendMessage(plugin.getLocale("voting.maps.success", mapName));
 
-                String playerName = getPlayerNameColor(user.getPlayer()) + user.getFormattedName();
+                String playerName = ChatColor.YELLOW + user.getFormattedName();
 
                 if (oldVote == null) {
                     plugin.messageAll(plugin.getLocale("voting.maps.player-voted", playerName, mapName));
@@ -231,7 +227,7 @@ public class WarsLobbyListener implements Listener {
                     plugin.messageAll(plugin.getLocale("voting.maps.player-transfer", playerName, oldVote, mapName));
                 }
 
-                user.getPlayer().closeInventory();
+                user.closeInventory();
             }
         } catch (IllegalArgumentException ignored) {
         }
@@ -257,7 +253,7 @@ public class WarsLobbyListener implements Listener {
             minigame.onUserQuitLobby(user);
         }
 
-        String name = getPlayerNameColor(event.getPlayer()) + event.getPlayer().getName();
+        String name = ChatColor.YELLOW + event.getPlayer().getName();
         String online = Integer.toString(plugin.getPlayerCount() - 1);
         String max = Integer.toString(plugin.getServer().getMaxPlayers());
         event.setQuitMessage(plugin.getLocale("server.players.quit", name, online, max));

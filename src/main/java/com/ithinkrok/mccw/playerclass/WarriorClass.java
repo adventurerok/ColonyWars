@@ -44,6 +44,7 @@ public class WarriorClass extends ClassItemClassHandler {
         @Override
         public boolean onInteractWorld(UserInteractEvent event) {
             if (!event.hasBlock()) return false;
+            if(!event.getUser().isPlayer()) return false;
 
             Location target = event.getClickedBlock().getLocation();
             BlockFace face = event.getBlockFace();
@@ -51,7 +52,7 @@ public class WarriorClass extends ClassItemClassHandler {
 
             Wolf wolf = (Wolf) target.getWorld().spawnEntity(target, EntityType.WOLF);
             wolf.setCollarColor(event.getUser().getTeamColor().getDyeColor());
-            wolf.setOwner(event.getPlayer());
+            wolf.setOwner(event.getUser().getPlayer());
             wolf.setHealth(wolf.getMaxHealth());
 
             return true;

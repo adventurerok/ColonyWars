@@ -120,7 +120,7 @@ public class GameInstance {
         oldTasks.forEach(this::cancelTask);
 
         for (User user : plugin.getUsers()) {
-            plugin.playerTeleportLobby(user.getPlayer());
+            plugin.playerTeleportLobby(user);
         }
 
         plugin.getUsers().forEach(User::decloak);
@@ -268,26 +268,26 @@ public class GameInstance {
             info.setPlayerClass(assignPlayerClass());
         }
 
-        info.getPlayer().teleport(getMapSpawn(info.getTeamColor()));
+        info.teleport(getMapSpawn(info.getTeamColor()));
 
-        info.getPlayer().setGameMode(GameMode.SURVIVAL);
-        info.getPlayer().setAllowFlight(false);
-        info.getPlayer().spigot().setCollidesWithEntities(true);
+        info.setGameMode(GameMode.SURVIVAL);
+        info.setAllowFlight(false);
+        info.setCollidesWithEntities(true);
 
         info.resetPlayerStats(true);
 
         info.setInGame(true);
 
-        info.getPlayer().getInventory().clear();
+        info.getPlayerInventory().clear();
         info.updateTeamArmor();
-        info.getPlayer().getInventory().addItem(new ItemStack(Material.DIAMOND_PICKAXE));
+        info.getPlayerInventory().addItem(new ItemStack(Material.DIAMOND_PICKAXE));
 
         info.updateScoreboard();
 
         PlayerClassHandler classHandler = info.getPlayerClassHandler();
         classHandler.onUserBeginGame(new UserBeginGameEvent(info));
 
-        plugin.givePlayerHandbook(info.getPlayer());
+        plugin.giveUserHandbook(info);
 
         info.sendLocale("game.start.team", info.getTeamColor().getFormattedName());
 
@@ -433,7 +433,7 @@ public class GameInstance {
             teleport.setY(teleport.getY() + offsetY);
             teleport.setZ(teleport.getZ() + offsetZ);
 
-            user.getPlayer().teleport(teleport);
+            user.teleport(teleport);
         }
 
         changeGameState(GameState.SHOWDOWN);
@@ -484,14 +484,14 @@ public class GameInstance {
         for (User info : plugin.getUsers()) {
             if (info.isInGame() && info.getTeamColor() != null) continue;
 
-            setupSpectatorInventory(info.getPlayer());
+            setupSpectatorInventory(info);
         }
     }
 
-    public void setupSpectatorInventory(Player player) {
-        player.closeInventory();
+    public void setupSpectatorInventory(User user) {
+        user.closeInventory();
 
-        PlayerInventory inv = player.getInventory();
+        PlayerInventory inv = user.getPlayerInventory();
         inv.clear();
 
         inv.setItem(0, InventoryUtils.setItemNameAndLore(new ItemStack(Material.IRON_LEGGINGS),
@@ -500,7 +500,7 @@ public class GameInstance {
         int slot = 9;
 
         List<ItemStack> items = new ArrayList<>();
-        plugin.getSpectatorInventoryHandler().addInventoryItems(items, null, plugin.getUser(player), null);
+        plugin.getSpectatorInventoryHandler().addInventoryItems(items, null, user, null);
 
         for (ItemStack item : items) {
             inv.setItem(slot++, item);

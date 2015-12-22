@@ -34,6 +34,7 @@ public class TeamChatExecutor implements WarsCommandExecutor {
         }
 
         User user = (User) sender;
+        if(!user.isPlayer()) return true;
 
         TeamColor teamColor = user.getTeamColor();
 
@@ -41,6 +42,7 @@ public class TeamChatExecutor implements WarsCommandExecutor {
 
         for (User other : user.getPlugin().getUsers()) {
             if (other.getTeamColor() != teamColor) continue;
+            if(!other.isPlayer()) continue;
 
             receivers.add(other.getPlayer());
         }

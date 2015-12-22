@@ -22,7 +22,7 @@ public class FixExecutor implements WarsCommandExecutor {
 
         User user = (User) sender;
 
-        if(user.getPlayer().isInsideVehicle()) return true;
+        if(user.isInsideVehicle()) return true;
 
         //if(!user.isOnGround()) return true;
 //        if(!user.isOnGround()) user.sendMessage("Not on ground");
@@ -56,7 +56,7 @@ public class FixExecutor implements WarsCommandExecutor {
                         }
 
                         user.teleport(block.getLocation().clone().add(0.5, 2.0, 0.5));
-                        user.getPlayer().setVelocity(new Vector(0, -1, 0));
+                        user.setVelocity(new Vector(0, -1, 0));
                         return true;
                     }
                 }

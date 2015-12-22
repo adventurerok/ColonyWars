@@ -38,12 +38,13 @@ public class TreeFeller {
             addSurrounding(locations, pos);
         }
 
-        for(int i = ingotsToSpawn.size() - 1; i >= 0; --i){
-            Location pos = ingotsToSpawn.get(i);
-            pos.getWorld().dropItemNaturally(pos, new ItemStack(Material.GOLD_INGOT, 1));
-        }
+        double part1 = ingotsToSpawn.size() + (Math.log(ingotsToSpawn.size()) / Math.log(1.5d));
 
-        return (int) (Math.log(ingotsToSpawn.size()) / Math.log(1.5d));
+        double part2 = Math.sqrt(Math.pow(ingotsToSpawn.size(), 3) / 500d);
+
+        double total = part1 - Math.min(part2, Math.pow(ingotsToSpawn.size(), 0.9d));
+
+        return (int) total;
     }
 
     private static void addSurrounding(List<Location> locations, Location l){

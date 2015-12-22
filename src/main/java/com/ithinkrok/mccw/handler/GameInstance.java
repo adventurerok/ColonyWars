@@ -375,6 +375,11 @@ public class GameInstance {
     }
 
     public void checkVictory(boolean checkShowdown) {
+        if(plugin.getNonZombiePlayersInGame() == 0) {
+            changeGameState(GameState.AFTERMATH);
+            return;
+        }
+
         if (isInAftermath()) return;
         Set<TeamColor> teamsInGame = new HashSet<>();
 

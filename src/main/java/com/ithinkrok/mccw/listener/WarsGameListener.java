@@ -637,6 +637,11 @@ public class WarsGameListener implements Listener {
     }
 
     @EventHandler
+    public void onEntityTargetLivingEntity(EntityTargetLivingEntityEvent event) {
+        if(event.getEntity() instanceof Zombie) event.setCancelled(true);
+    }
+
+    @EventHandler
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
 

@@ -633,7 +633,7 @@ public class WarsGameListener implements Listener {
 
         user.becomeZombie();
 
-        plugin.getGameInstance().checkVictory(true);
+        if(user.isInGame()) plugin.getGameInstance().checkVictory(true);
     }
 
     @EventHandler

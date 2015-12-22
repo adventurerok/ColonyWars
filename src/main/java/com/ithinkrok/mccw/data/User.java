@@ -213,6 +213,8 @@ public class User implements WarsCommandSender {
         zombie.remove();
         zombie = null;
         zombieStats = null;
+
+        if(isCloaked()) cloak();
     }
 
     public void cloak() {

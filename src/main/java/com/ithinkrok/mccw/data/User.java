@@ -12,6 +12,7 @@ import com.ithinkrok.mccw.util.Persistence;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -67,11 +68,16 @@ public class User implements WarsCommandSender {
     private double potionStrengthModifier;
     private boolean showCloakedPlayers = false;
     private boolean moneyMessagesEnabled = true;
+    private UUID uniqueId;
+    private String name;
 
 
     public User(WarsPlugin plugin, Player player, StatsHolder statsHolder) {
         this.plugin = plugin;
         this.player = player;
+
+        this.uniqueId = player.getUniqueId();
+        this.name = player.getName();
 
         if(statsHolder != null) this.statsHolder = statsHolder;
         else this.statsHolder = new StatsHolder(this);
@@ -165,10 +171,12 @@ public class User implements WarsCommandSender {
     }
 
     private void hidePlayer(User other) {
+        if(!isPlayer() || !other.isPlayer()) return;
         player.hidePlayer(other.player);
     }
 
     private void showPlayer(User other) {
+        if(!isPlayer() || !other.isPlayer()) return;
         player.showPlayer(other.player);
     }
 
@@ -202,22 +210,24 @@ public class User implements WarsCommandSender {
     }
 
     public UUID getUniqueId() {
-        return player.getUniqueId();
+        return uniqueId;
     }
 
     @Override
     public void sendMessageDirect(String message) {
+        if(!isPlayer()) return;
         player.sendMessage(message);
     }
 
     @Override
     public void sendLocaleDirect(String locale, Object... args) {
+        if(!isPlayer()) return;
         player.sendMessage(plugin.getLocale(locale, args));
     }
 
     @Override
     public String getName() {
-        return player.getName();
+        return name;
     }
 
     @Override
@@ -273,16 +283,16 @@ public class User implements WarsCommandSender {
 
     public void setFireTicks(User attacker, int ticks) {
         setFireAttacker(attacker);
-        player.setFireTicks(ticks);
+        getEntity().setFireTicks(ticks);
     }
 
     public void setWitherTicks(User attacker, int ticks) {
         setWitherAttacker(attacker);
-        player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, ticks, 0, false, true), true);
+        addPotionEffect(new PotionEffect(PotionEffectType.WITHER, ticks, 0, false, true), true);
     }
 
     public Block rayTraceBlocks(int distance) {
-        return player.getTargetBlock(SEE_THROUGH, distance);
+        return getEntity().getTargetBlock(SEE_THROUGH, distance);
     }
 
     public void addPlayerCash(int cash, boolean message) {
@@ -431,7 +441,7 @@ public class User implements WarsCommandSender {
 
         if (message == null) return;
         sendMessage(ChatColor.GREEN + message);
-        player.playSound(player.getLocation(), Sound.ZOMBIE_UNFECT, 1.0f, 2.0f);
+        playSound(getLocation(), Sound.ZOMBIE_UNFECT, 1.0f, 2.0f);
     }
 
     public boolean isInGame() {
@@ -517,11 +527,11 @@ public class User implements WarsCommandSender {
     }
 
     public void redoShopInventory() {
-        if (shopBlock == null) return;
+        if (shopBlock == null || !isPlayer()) return;
 
         Building building = plugin.getGameInstance().getBuildingInfo(shopBlock);
         if (building == null || shopBlock.getBlock().getType() != Material.OBSIDIAN) {
-            if (shopInventory != null) player.closeInventory();
+            if (shopInventory != null) closeInventory();
             return;
         }
 
@@ -531,7 +541,7 @@ public class User implements WarsCommandSender {
         if (shopInventory != null) shopInventory.clear();
         else {
             int slots = 9 * ((contents.size() + 9) / 9);
-            shopInventory = Bukkit.createInventory(player, slots, building.getBuildingName());
+            shopInventory = Bukkit.createInventory(getPlayer(), slots, building.getBuildingName());
         }
 
         for (ItemStack item : contents) {
@@ -565,8 +575,10 @@ public class User implements WarsCommandSender {
             getTeam().addUser(this);
         }
 
-        player.setPlayerListName(getFormattedName());
-        player.setDisplayName(getFormattedName());
+        if(isPlayer()) {
+            player.setPlayerListName(getFormattedName());
+            player.setDisplayName(getFormattedName());
+        }
 
         if (teamColor != null) updateTeamArmor();
         else clearArmor();
@@ -597,20 +609,42 @@ public class User implements WarsCommandSender {
     }
 
     public void resetPlayerStats(boolean removePotionEffects) {
-        player.setMaxHealth(plugin.getMaxHealth());
-        player.setHealth(plugin.getMaxHealth());
-        player.setFoodLevel(20);
-        player.setSaturation(5);
-        player.setTotalExperience(0);
-        player.setFlySpeed(0.1f);
+        setMaxHealth(plugin.getMaxHealth());
+        setHealth(plugin.getMaxHealth());
+        setFoodLevel(20);
+        setSaturation(5);
+        setTotalExperience(0);
+        setFlySpeed(0.1f);
 
         if (removePotionEffects) removePotionEffects();
+    }
+
+    private void setTotalExperience(int totalExperience) {
+        if(!isPlayer()) return;
+
+        getPlayer().setTotalExperience(totalExperience);
+    }
+
+    private void setSaturation(float saturation) {
+        if(!isPlayer()) return;
+
+        getPlayer().setSaturation(saturation);
+    }
+
+    private void setFoodLevel(int foodLevel) {
+        if(!isPlayer()) return;
+
+        getPlayer().setFoodLevel(foodLevel);
+    }
+
+    private void setMaxHealth(double maxHealth) {
+        getEntity().setMaxHealth(maxHealth);
     }
 
     public void createPlayerExplosion(Location loc, float power, boolean fire, int fuse) {
         TNTPrimed tnt = (TNTPrimed) loc.getWorld().spawnEntity(loc, EntityType.PRIMED_TNT);
 
-        tnt.setMetadata("striker", new FixedMetadataValue(plugin, player.getUniqueId()));
+        tnt.setMetadata("striker", new FixedMetadataValue(plugin, getUniqueId()));
 
         tnt.setIsIncendiary(fire);
         tnt.setYield(power);
@@ -619,13 +653,13 @@ public class User implements WarsCommandSender {
     }
 
     public void removePotionEffects() {
-        List<PotionEffect> effects = new ArrayList<>(player.getActivePotionEffects());
+        List<PotionEffect> effects = new ArrayList<>(getEntity().getActivePotionEffects());
 
         for (PotionEffect effect : effects) {
-            player.removePotionEffect(effect.getType());
+            getEntity().removePotionEffect(effect.getType());
         }
 
-        player.setFireTicks(0);
+        getEntity().setFireTicks(0);
     }
 
     public void setSpectator() {
@@ -651,6 +685,8 @@ public class User implements WarsCommandSender {
     }
 
     public void setCollidesWithEntities(boolean collides) {
+        if(!isPlayer()) return;
+
         player.spigot().setCollidesWithEntities(collides);
     }
 
@@ -676,18 +712,18 @@ public class User implements WarsCommandSender {
     }
 
     public String getFormattedName() {
-        if (teamColor == null) return player.getName();
+        if (teamColor == null) return getName();
 
-        return teamColor.getChatColor() + player.getName();
+        return teamColor.getChatColor() + getName();
     }
 
     public void clearArmor() {
-        PlayerInventory inv = player.getInventory();
+        EntityEquipment equipment = getEntity().getEquipment();
 
-        inv.setHelmet(null);
-        inv.setChestplate(null);
-        inv.setLeggings(null);
-        inv.setBoots(null);
+        equipment.setHelmet(null);
+        equipment.setChestplate(null);
+        equipment.setLeggings(null);
+        equipment.setBoots(null);
     }
 
     public boolean teleport(Location location) {
@@ -710,12 +746,12 @@ public class User implements WarsCommandSender {
         setArmorColor(leggings);
         setArmorColor(boots);
 
-        PlayerInventory inv = player.getInventory();
+        EntityEquipment equipment = getEntity().getEquipment();
 
-        inv.setHelmet(helmet);
-        inv.setChestplate(chestplate);
-        inv.setLeggings(leggings);
-        inv.setBoots(boots);
+        equipment.setHelmet(helmet);
+        equipment.setChestplate(chestplate);
+        equipment.setLeggings(leggings);
+        equipment.setBoots(boots);
     }
 
     private void setArmorColor(ItemStack armor) {
@@ -767,10 +803,12 @@ public class User implements WarsCommandSender {
     }
 
     public void setFlySpeed(float flySpeed) {
+        if(!isPlayer()) return;
         player.setFlySpeed(flySpeed);
     }
 
     public void setAllowFlight(boolean allowFlight) {
+        if(!isPlayer()) return;
         player.setAllowFlight(allowFlight);
     }
 
@@ -783,15 +821,17 @@ public class User implements WarsCommandSender {
     }
 
     public void closeInventory() {
+        if(!isPlayer()) return;
         player.closeInventory();
     }
 
     public void setFlying(boolean flying) {
+        if(!isPlayer()) return;
         player.setFlying(flying);
     }
 
     public Location getLocation() {
-        return player.getLocation();
+        return getEntity().getLocation();
     }
 
     public void toggleMoneyMessagesEnabled() {
@@ -810,6 +850,7 @@ public class User implements WarsCommandSender {
     }
 
     public void setGameMode(GameMode gameMode) {
+        if(!isPlayer()) return;
         player.setGameMode(gameMode);
     }
 

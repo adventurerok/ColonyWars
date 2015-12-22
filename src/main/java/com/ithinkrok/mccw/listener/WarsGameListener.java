@@ -454,7 +454,7 @@ public class WarsGameListener implements Listener {
         targetInfo.setLastAttacker(damagerInfo);
 
         if (targetInfo.getHealth() - event.getFinalDamage() < 1) {
-            event.setCancelled(true);
+            if(targetInfo.isPlayer()) event.setCancelled(true);
             playerDeath(targetInfo, damagerInfo, event.getCause(), true);
         }
     }
@@ -563,7 +563,7 @@ public class WarsGameListener implements Listener {
         }
 
         if (target.getHealth() - event.getFinalDamage() < 1) {
-            event.setCancelled(true);
+            if(target.isPlayer()) event.setCancelled(true);
 
             User killer = null;
 

@@ -181,6 +181,10 @@ public class WarsPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        World lobby = Bukkit.getWorlds().get(0);
+        lobby.setAutoSave(false);
+        lobby.setKeepSpawnInMemory(false);
+
         warsConfig = new WarsConfig(this::getMapConfig);
 
         saveDefaultConfig();

@@ -30,12 +30,18 @@ public class ListExecutor implements WarsCommandExecutor {
             teams.put(teamColor, new ArrayList<>());
         }
 
+        int zombieCount = 0;
+
         for (User user : sender.getPlugin().getUsers()) {
+            if(!user.isPlayer()){
+                ++zombieCount;
+                continue;
+            }
             if (!user.isInGame()) teams.get(null).add(user);
             else teams.get(user.getTeamColor()).add(user);
         }
 
-        sender.sendLocale("commands.list.title", sender.getPlugin().getUsers().size(),
+        sender.sendLocale("commands.list.title", sender.getPlugin().getNonZombiePlayersInGame(),
                 Bukkit.getServer().getMaxPlayers());
 
         for (Map.Entry<TeamColor, List<User>> entry : teams.entrySet()) {
@@ -44,7 +50,6 @@ public class ListExecutor implements WarsCommandExecutor {
             StringBuilder names = new StringBuilder();
 
             for (User user : entry.getValue()) {
-                if(!user.isPlayer()) continue;
                 if (names.length() != 0) names.append(ChatColor.GOLD).append(", ");
 
                 names.append(user.getFormattedName());
@@ -57,6 +62,11 @@ public class ListExecutor implements WarsCommandExecutor {
             //send a message directly to player to avoid Colony Wars prefix
             sender.sendLocaleDirect("commands.list.line", teamName, names);
         }
+
+        if(zombieCount != 0) {
+            sender.sendLocaleDirect("commands.list.zombies", zombieCount);
+        }
+
         return true;
     }
 }

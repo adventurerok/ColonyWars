@@ -534,11 +534,29 @@ public class User implements WarsCommandSender {
             shopBlock = null;
             playerCash = 0;
             oldBuildingNows.clear();
+
+            if(!isPlayer()) {
+                removeZombie();
+            }
         } else {
             showCloakedPlayers = false;
         }
 
         updateScoreboard();
+    }
+
+    public void removeZombie() {
+        removeFromGame();
+
+        zombie.remove();
+        zombie = null;
+        zombieInventory = null;
+        zombieStats = null;
+
+        getStatsHolder().saveStats();
+        onDisconnect();
+
+        plugin.setUser(getUniqueId(), null);
     }
 
     public PlayerClassHandler getPlayerClassHandler() {
@@ -731,6 +749,7 @@ public class User implements WarsCommandSender {
 
     public void setSpectator() {
         if (isInGame()) throw new RuntimeException("You cannot be a spectator when you are already in a game");
+        if(!isPlayer()) return;
 
         cloak();
         resetPlayerStats(true);
@@ -794,7 +813,7 @@ public class User implements WarsCommandSender {
     }
 
     public boolean teleport(Location location) {
-        return player.teleport(location);
+        return getEntity().teleport(location);
     }
 
     public void updateTeamArmor() {

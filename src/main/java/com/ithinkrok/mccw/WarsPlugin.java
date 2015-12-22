@@ -294,8 +294,12 @@ public class WarsPlugin extends JavaPlugin {
     }
 
     public void setUser(Player player, User user) {
-        if (user == null) playerInfoHashMap.remove(player.getUniqueId());
-        else playerInfoHashMap.put(player.getUniqueId(), user);
+        setUser(player.getUniqueId(), user);
+    }
+
+    public void setUser(UUID uniqueId, User user) {
+        if (user == null) playerInfoHashMap.remove(uniqueId);
+        else playerInfoHashMap.put(uniqueId, user);
     }
 
     public User createUser(Player player) {
@@ -453,6 +457,8 @@ public class WarsPlugin extends JavaPlugin {
         Disguises.unDisguise(user);
 
         user.setInGame(false);
+        if(!user.isPlayer()) return;
+
         user.setGameMode(GameMode.ADVENTURE);
         user.unsetSpectator();
         user.resetPlayerStats(true);

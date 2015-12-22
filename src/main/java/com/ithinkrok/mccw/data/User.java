@@ -74,7 +74,7 @@ public class User implements WarsCommandSender {
 
     private Zombie zombie;
     private ZombieInventory zombieInventory;
-
+    private ZombieStats zombieStats;
 
     public User(WarsPlugin plugin, Player player, StatsHolder statsHolder) {
         this.plugin = plugin;
@@ -174,12 +174,14 @@ public class User implements WarsCommandSender {
         zombie.setMaxHealth(player.getMaxHealth());
         zombie.setHealth(player.getHealth());
         zombie.setCustomName(getFormattedName());
+        zombie.setFireTicks(player.getFireTicks());
 
         for(PotionEffect effect : player.getActivePotionEffects()) {
             zombie.addPotionEffect(effect, true);
         }
 
         zombieInventory = new ZombieInventory(zombie, player.getInventory().getContents());
+        zombieStats = new ZombieStats(player);
 
         player = null;
     }
@@ -195,17 +197,22 @@ public class User implements WarsCommandSender {
 
         player.setDisplayName(getFormattedName());
 
+        player.setFireTicks(zombie.getFireTicks());
+
         for(PotionEffect effect : zombie.getActivePotionEffects()) {
             player.addPotionEffect(effect, true);
         }
 
         player.teleport(getLocation());
 
+        zombieStats.applyTo(player);
+
         this.player = player;
 
         zombieInventory = null;
         zombie.remove();
         zombie = null;
+        zombieStats = null;
     }
 
     public void cloak() {

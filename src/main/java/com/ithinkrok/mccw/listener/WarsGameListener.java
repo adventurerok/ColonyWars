@@ -630,10 +630,11 @@ public class WarsGameListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         User user = plugin.getUser(event.getPlayer());
+        if(!user.isInGame()) return;
 
         user.becomeZombie();
 
-        if(user.isInGame()) plugin.getGameInstance().checkVictory(true);
+        plugin.getGameInstance().checkVictory(true);
     }
 
     @EventHandler

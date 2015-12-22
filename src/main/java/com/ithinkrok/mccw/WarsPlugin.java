@@ -149,41 +149,9 @@ public class WarsPlugin extends JavaPlugin {
         persistence.saveUserCategoryStats(stats);
     }
 
-    public void changeTeamCount(int teamCount) {
-        TeamColor.initialise(teamCount);
-
-        mapList = new ArrayList<>();
-
-        for(String mapName : getWarsConfig().getMapList()) {
-            WarsMap warsMap = new WarsMap(this, mapName);
-
-            if(!warsMap.supportsTeamCount() && !mapName.equals(getWarsConfig().getRandomMapName())) continue;
-            mapList.add(warsMap.getName());
-        }
-
-
-        changeGameState(GameState.LOBBY);
-    }
-
-    public void reload() {
-        reloadConfig();
-
-        String languageFile = getWarsConfig().getLanguageName() + ".lang";
-        langFile = new LangFile(ResourceHandler.getPropertiesResource(this, languageFile));
-
-        handbookMeta = Handbook.loadHandbookMeta(this);
-        handbook = null;
-
-        buildingInventoryHandler = new OmniInventory(this, getWarsConfig());
-
-        changeTeamCount(warsConfig.getTeamCount());
-    }
-
     @Override
     public void onEnable() {
-        World lobby = Bukkit.getWorlds().get(0);
-        lobby.setAutoSave(false);
-        lobby.setKeepSpawnInMemory(false);
+        configureWorlds();
 
         warsConfig = new WarsConfig(this::getMapConfig);
 
@@ -211,16 +179,10 @@ public class WarsPlugin extends JavaPlugin {
         reload();
     }
 
-    /**
-     * @return The {@code WarsConfig} to access known configuration values
-     */
-    public WarsConfig getWarsConfig() {
-        return warsConfig;
-    }
-
-    public void resetTeams() {
-        for (TeamColor c : TeamColor.values()) {
-            teamInfoEnumMap.put(c, new Team(this, c));
+    private void configureWorlds() {
+        for (World world : Bukkit.getWorlds()) {
+            world.setAutoSave(false);
+            world.setKeepSpawnInMemory(false);
         }
     }
 
@@ -228,184 +190,41 @@ public class WarsPlugin extends JavaPlugin {
         return lobbyMinigames;
     }
 
-    /**
-     * @return The configuration for the current map
-     */
-    public ConfigurationSection getMapConfig() {
-        if (gameInstance != null) return gameInstance.getMapConfig();
-        else return getBaseConfig();
+    public void reload() {
+        reloadConfig();
+
+        String languageFile = getWarsConfig().getLanguageName() + ".lang";
+        langFile = new LangFile(ResourceHandler.getPropertiesResource(this, languageFile));
+
+        handbookMeta = Handbook.loadHandbookMeta(this);
+        handbook = null;
+
+        buildingInventoryHandler = new OmniInventory(this, getWarsConfig());
+
+        changeTeamCount(warsConfig.getTeamCount());
     }
 
     /**
-     * @return The base configuration, ignoring the current map configuration
+     * @return The {@code WarsConfig} to access known configuration values
      */
-    public FileConfiguration getBaseConfig() {
-        return super.getConfig();
+    public WarsConfig getWarsConfig() {
+        return warsConfig;
     }
 
-    public List<String> getMapList() {
-        return mapList;
-    }
+    public void changeTeamCount(int teamCount) {
+        TeamColor.initialise(teamCount);
 
-    public void setMapVotes(String map, int votes) {
-        mapVotes.put(map, votes);
-    }
+        mapList = new ArrayList<>();
 
-    public void playerTeleportLobby(User user) {
-        user.teleport(getLobbySpawn());
-    }
+        for (String mapName : getWarsConfig().getMapList()) {
+            WarsMap warsMap = new WarsMap(this, mapName);
 
-    public Location getLobbySpawn() {
-        return Bukkit.getWorld(getLobbyWorldName()).getSpawnLocation();
-    }
-
-    public String getLobbyWorldName() {
-        return getWarsConfig().getLobbyMapFolder();
-    }
-
-    public String getPlayingWorldName() {
-        return getWarsConfig().getGameMapFolder();
-    }
-
-    public Location getMapSpawn(TeamColor teamColorOrNull) {
-        if (gameInstance == null) return getLobbySpawn();
-        return gameInstance.getMapSpawn(teamColorOrNull);
-    }
-
-    public Building getBuildingInfo(Location centerBlock) {
-        return gameInstance.getBuildingInfo(centerBlock);
-    }
-
-    public boolean isInBuilding(Location blockLocation) {
-        return gameInstance.isInBuilding(blockLocation);
-    }
-
-    public void handleSpectatorInventory(InventoryClickEvent event) {
-        gameInstance.handleSpectatorInventory(event);
-    }
-
-    public ShowdownArena getShowdownArena() {
-        return gameInstance.getShowdownArena();
-    }
-
-    public void onUserAttacked() {
-        if (gameInstance == null) return;
-        gameInstance.onUserAttacked();
-    }
-
-    public InventoryHandler getBuildingInventoryHandler() {
-        return buildingInventoryHandler;
-    }
-
-    public void setUser(Player player, User user) {
-        setUser(player.getUniqueId(), user);
-    }
-
-    public void setUser(UUID uniqueId, User user) {
-        if (user == null) playerInfoHashMap.remove(uniqueId);
-        else playerInfoHashMap.put(uniqueId, user);
-    }
-
-    public User createUser(Player player) {
-        StatsHolder statsHolder = statsHolderMap.get(player.getUniqueId());
-
-        User user = new User(this, player, statsHolder);
-
-        statsHolderMap.put(user.getUniqueId(), user.getStatsHolder());
-
-
-        setUser(player, user);
-
-        return user;
-    }
-
-    public Random getRandom() {
-        return random;
-    }
-
-    public Team getTeam(TeamColor teamColor) {
-        return teamInfoEnumMap.get(teamColor);
-    }
-
-    public PlayerClassHandler getPlayerClassHandler(PlayerClass playerClass) {
-        PlayerClassHandler classHandler = classHandlerMap.get(playerClass);
-        if (classHandler == null) {
-            classHandler = playerClass.createPlayerClassHandler(this);
-
-            classHandlerMap.put(playerClass, classHandler);
+            if (!warsMap.supportsTeamCount() && !mapName.equals(getWarsConfig().getRandomMapName())) continue;
+            mapList.add(warsMap.getName());
         }
 
-        return classHandler;
-    }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        return commandListener.onCommand(sender, command, label, args);
-    }
-
-    public CountdownHandler getCountdownHandler() {
-        return countdownHandler;
-    }
-
-    public GameInstance getGameInstance() {
-        return gameInstance;
-    }
-
-    public void messageAllLocale(String locale, Object... args) {
-        messageAll(getLocale(locale, args));
-    }
-
-    public void messageAll(String message) {
-        getServer().getConsoleSender().sendMessage(CHAT_PREFIX + message);
-        for (User p : playerInfoHashMap.values()) {
-            p.sendMessage(message);
-        }
-    }
-
-    public String getLocale(String name, Object... params) {
-        return langFile.getLocale(name, params);
-    }
-
-    public double getMaxHealth() {
-        return (double) 40;
-    }
-
-    public Schematic getSchematicData(String buildingName) {
-        return gameInstance.getSchematicData(buildingName);
-    }
-
-    public User getUser(UUID uniqueId) {
-        if (uniqueId == null) return null;
-        return playerInfoHashMap.get(uniqueId);
-    }
-
-    public int getPlayerCount() {
-        return playerInfoHashMap.size();
-    }
-
-    public int getPlayersInGame() {
-        int count = 0;
-
-        for (Team team : teamInfoEnumMap.values()) {
-            count += team.getUserCount();
-        }
-
-        return count;
-    }
-
-    public int getNonZombiePlayersInGame() {
-        int count = 0;
-
-        for(User user : getUsers()) {
-            if(!user.isInGame() || !user.isPlayer()) continue;
-            ++count;
-        }
-
-        return count;
-    }
-
-    public SpectatorInventory getSpectatorInventoryHandler() {
-        return spectatorInventoryHandler;
+        changeGameState(GameState.LOBBY);
     }
 
     public void changeGameState(GameState state) {
@@ -472,7 +291,7 @@ public class WarsPlugin extends JavaPlugin {
         Disguises.unDisguise(user);
 
         user.setInGame(false);
-        if(!user.isPlayer()) return;
+        if (!user.isPlayer()) return;
 
         user.setGameMode(GameMode.ADVENTURE);
         user.unsetSpectator();
@@ -511,6 +330,12 @@ public class WarsPlugin extends JavaPlugin {
         }
     }
 
+    public void resetTeams() {
+        for (TeamColor c : TeamColor.values()) {
+            teamInfoEnumMap.put(c, new Team(this, c));
+        }
+    }
+
     public int getMapVotes(String map) {
         Integer result = mapVotes.get(map);
 
@@ -518,16 +343,19 @@ public class WarsPlugin extends JavaPlugin {
         return result;
     }
 
-    public User getUser(Player player) {
-        if (player == null) return null;
-        return playerInfoHashMap.get(player.getUniqueId());
+    public void messageAll(String message) {
+        getServer().getConsoleSender().sendMessage(CHAT_PREFIX + message);
+        for (User p : playerInfoHashMap.values()) {
+            p.sendMessage(message);
+        }
     }
 
-    public User getUser(LivingEntity livingEntity) {
-        if(livingEntity instanceof Player) return getUser((Player)livingEntity);
-        else if(!(livingEntity instanceof Zombie)) return null;
+    public String getLocale(String name, Object... params) {
+        return langFile.getLocale(name, params);
+    }
 
-        return EntityUtils.getUserFromEntity(this, livingEntity);
+    public Location getLobbySpawn() {
+        return Bukkit.getWorld(getLobbyWorldName()).getSpawnLocation();
     }
 
     public void giveUserHandbook(User player) {
@@ -550,6 +378,10 @@ public class WarsPlugin extends JavaPlugin {
         } else inv.addItem(getHandbook().clone());
     }
 
+    public String getLobbyWorldName() {
+        return getWarsConfig().getLobbyMapFolder();
+    }
+
     public ItemStack getHandbook() {
         return handbook;
     }
@@ -560,6 +392,179 @@ public class WarsPlugin extends JavaPlugin {
 
     public void setHandbook(ItemStack handbook) {
         this.handbook = handbook;
+    }
+
+    /**
+     * @return The configuration for the current map
+     */
+    public ConfigurationSection getMapConfig() {
+        if (gameInstance != null) return gameInstance.getMapConfig();
+        else return getBaseConfig();
+    }
+
+    /**
+     * @return The base configuration, ignoring the current map configuration
+     */
+    public FileConfiguration getBaseConfig() {
+        return super.getConfig();
+    }
+
+    public List<String> getMapList() {
+        return mapList;
+    }
+
+    public void setMapVotes(String map, int votes) {
+        mapVotes.put(map, votes);
+    }
+
+    public void playerTeleportLobby(User user) {
+        user.teleport(getLobbySpawn());
+    }
+
+    public String getPlayingWorldName() {
+        return getWarsConfig().getGameMapFolder();
+    }
+
+    public Location getMapSpawn(TeamColor teamColorOrNull) {
+        if (gameInstance == null) return getLobbySpawn();
+        return gameInstance.getMapSpawn(teamColorOrNull);
+    }
+
+    public Building getBuildingInfo(Location centerBlock) {
+        return gameInstance.getBuildingInfo(centerBlock);
+    }
+
+    public boolean isInBuilding(Location blockLocation) {
+        return gameInstance.isInBuilding(blockLocation);
+    }
+
+    public void handleSpectatorInventory(InventoryClickEvent event) {
+        gameInstance.handleSpectatorInventory(event);
+    }
+
+    public ShowdownArena getShowdownArena() {
+        return gameInstance.getShowdownArena();
+    }
+
+    public void onUserAttacked() {
+        if (gameInstance == null) return;
+        gameInstance.onUserAttacked();
+    }
+
+    public InventoryHandler getBuildingInventoryHandler() {
+        return buildingInventoryHandler;
+    }
+
+    public User createUser(Player player) {
+        StatsHolder statsHolder = statsHolderMap.get(player.getUniqueId());
+
+        User user = new User(this, player, statsHolder);
+
+        statsHolderMap.put(user.getUniqueId(), user.getStatsHolder());
+
+
+        setUser(player, user);
+
+        return user;
+    }
+
+    public void setUser(Player player, User user) {
+        setUser(player.getUniqueId(), user);
+    }
+
+    public void setUser(UUID uniqueId, User user) {
+        if (user == null) playerInfoHashMap.remove(uniqueId);
+        else playerInfoHashMap.put(uniqueId, user);
+    }
+
+    public Random getRandom() {
+        return random;
+    }
+
+    public Team getTeam(TeamColor teamColor) {
+        return teamInfoEnumMap.get(teamColor);
+    }
+
+    public PlayerClassHandler getPlayerClassHandler(PlayerClass playerClass) {
+        PlayerClassHandler classHandler = classHandlerMap.get(playerClass);
+        if (classHandler == null) {
+            classHandler = playerClass.createPlayerClassHandler(this);
+
+            classHandlerMap.put(playerClass, classHandler);
+        }
+
+        return classHandler;
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        return commandListener.onCommand(sender, command, label, args);
+    }
+
+    public CountdownHandler getCountdownHandler() {
+        return countdownHandler;
+    }
+
+    public GameInstance getGameInstance() {
+        return gameInstance;
+    }
+
+    public void messageAllLocale(String locale, Object... args) {
+        messageAll(getLocale(locale, args));
+    }
+
+    public double getMaxHealth() {
+        return (double) 40;
+    }
+
+    public Schematic getSchematicData(String buildingName) {
+        return gameInstance.getSchematicData(buildingName);
+    }
+
+    public User getUser(UUID uniqueId) {
+        if (uniqueId == null) return null;
+        return playerInfoHashMap.get(uniqueId);
+    }
+
+    public int getPlayerCount() {
+        return playerInfoHashMap.size();
+    }
+
+    public int getPlayersInGame() {
+        int count = 0;
+
+        for (Team team : teamInfoEnumMap.values()) {
+            count += team.getUserCount();
+        }
+
+        return count;
+    }
+
+    public int getNonZombiePlayersInGame() {
+        int count = 0;
+
+        for (User user : getUsers()) {
+            if (!user.isInGame() || !user.isPlayer()) continue;
+            ++count;
+        }
+
+        return count;
+    }
+
+    public SpectatorInventory getSpectatorInventoryHandler() {
+        return spectatorInventoryHandler;
+    }
+
+    public User getUser(LivingEntity livingEntity) {
+        if (livingEntity instanceof Player) return getUser((Player) livingEntity);
+        else if (!(livingEntity instanceof Zombie)) return null;
+
+        return EntityUtils.getUserFromEntity(this, livingEntity);
+    }
+
+    public User getUser(Player player) {
+        if (player == null) return null;
+        return playerInfoHashMap.get(player.getUniqueId());
     }
 
     public GameState getGameState() {

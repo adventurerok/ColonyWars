@@ -215,8 +215,17 @@ public class GameInstance {
         startPotionStrengthTask();
         startDecrementAttackerTask();
         startZombieRevalidationTask();
+        startLobbyUnloadTask();
 
         checkVictory(false);
+    }
+
+    private void startLobbyUnloadTask() {
+        scheduleTask(() -> {
+            for(Chunk chunk : Bukkit.getWorld(plugin.getWarsConfig().getLobbyMapFolder()).getLoadedChunks()) {
+                chunk.unload(false);
+            }
+        }, 200);
     }
 
     private void startZombieRevalidationTask() {

@@ -45,6 +45,7 @@ public class User implements WarsCommandSender {
 
     private StatsHolder statsHolder;
     private Player player;
+    private Zombie zombie;
     private TeamColor teamColor;
     private WarsPlugin plugin;
     private Location shopBlock;
@@ -84,7 +85,7 @@ public class User implements WarsCommandSender {
     }
 
     public LivingEntity getEntity() {
-        return player;
+        return isPlayer() ? player : zombie;
     }
 
     public boolean isOnGround() {
@@ -156,6 +157,25 @@ public class User implements WarsCommandSender {
             if(showCloakedPlayers) showPlayer(u);
             else hidePlayer(u);
         }
+    }
+
+    public void becomeZombie() {
+        if(!isPlayer()) return;
+
+        zombie = (Zombie) getWorld().spawnEntity(getLocation(), EntityType.ZOMBIE);
+
+        zombie.setMetadata("striker", new FixedMetadataValue(plugin, uniqueId));
+
+        zombie.getEquipment().setArmorContents(player.getEquipment().getArmorContents());
+        zombie.setMaxHealth(player.getMaxHealth());
+        zombie.setHealth(player.getHealth());
+        zombie.setCustomName(getFormattedName());
+
+        player = null;
+    }
+
+    public void becomePlayer(Player player) {
+        if(isPlayer()) return;
     }
 
     public void cloak() {

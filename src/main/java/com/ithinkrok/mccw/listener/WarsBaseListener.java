@@ -28,22 +28,17 @@ public class WarsBaseListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        User user = plugin.createUser(event.getPlayer());
+        User user = plugin.getUser(event.getPlayer());
 
-        user.sendLocale("server.welcome");
-
-        user.getPlayerInventory().clear();
+        if(user != null) {
+            user.becomePlayer(event.getPlayer());
+        } else {
+            user = plugin.createUser(event.getPlayer());
+            user.sendLocale("server.welcome");
+            user.getPlayerInventory().clear();
+        }
 
         user.setShowCloakedPlayers(false);
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        User oldUser = plugin.getUser(event.getPlayer());
-
-        oldUser.getStatsHolder().saveStats();
-        oldUser.onDisconnect();
-        plugin.setUser(event.getPlayer(), null);
     }
 
     @EventHandler

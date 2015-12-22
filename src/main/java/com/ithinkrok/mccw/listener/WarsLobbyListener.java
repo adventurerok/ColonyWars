@@ -257,6 +257,11 @@ public class WarsLobbyListener implements Listener {
         String online = Integer.toString(plugin.getPlayerCount() - 1);
         String max = Integer.toString(plugin.getServer().getMaxPlayers());
         event.setQuitMessage(plugin.getLocale("server.players.quit", name, online, max));
+
+        //Old code from WBL, now moved to this class
+        user.getStatsHolder().saveStats();
+        user.onDisconnect();
+        plugin.setUser(event.getPlayer(), null);
     }
 
     @EventHandler

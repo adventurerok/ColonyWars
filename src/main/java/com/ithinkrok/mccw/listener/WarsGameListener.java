@@ -627,10 +627,13 @@ public class WarsGameListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         User diedInfo = plugin.getUser(event.getPlayer());
-        Team diedTeam = diedInfo.getTeam();
-        if (diedTeam == null) return;
 
-        diedInfo.removeFromGame();
+//        Team diedTeam = diedInfo.getTeam();
+//        if (diedTeam == null) return;
+//
+//        diedInfo.removeFromGame();
+
+        diedInfo.becomeZombie();
     }
 
     @EventHandler

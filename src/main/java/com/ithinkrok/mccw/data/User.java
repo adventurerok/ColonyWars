@@ -487,6 +487,8 @@ public class User implements WarsCommandSender {
     }
 
     public void sendMessage(String message) {
+        if(!isPlayer()) return;
+
         player.sendMessage(WarsPlugin.CHAT_PREFIX + message);
     }
 
@@ -554,6 +556,8 @@ public class User implements WarsCommandSender {
     }
 
     public void sendLocale(String locale, Object... objects) {
+        if(!isPlayer()) return;
+
         sendMessage(plugin.getLocale(locale, objects));
     }
 

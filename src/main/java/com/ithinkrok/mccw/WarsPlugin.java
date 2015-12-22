@@ -389,6 +389,17 @@ public class WarsPlugin extends JavaPlugin {
         return count;
     }
 
+    public int getNonZombiePlayersInGame() {
+        int count = 0;
+
+        for(User user : getUsers()) {
+            if(!user.isInGame() || !user.isPlayer()) continue;
+            ++count;
+        }
+
+        return count;
+    }
+
     public SpectatorInventory getSpectatorInventoryHandler() {
         return spectatorInventoryHandler;
     }

@@ -407,7 +407,7 @@ public class GameInstance {
     public void checkShowdownStart(int teamsInGame) {
         if (isInShowdown() || countdownHandler.getCountdownType() == CountdownType.SHOWDOWN) return;
         if (teamsInGame > plugin.getWarsConfig().getShowdownStartTeams() &&
-                plugin.getPlayersInGame() > plugin.getWarsConfig().getShowdownStartPlayers()) return;
+                plugin.getNonZombiePlayersInGame() > plugin.getWarsConfig().getShowdownStartPlayers()) return;
 
         countdownHandler.startShowdownCountdown();
     }

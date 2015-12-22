@@ -215,6 +215,8 @@ public class User implements WarsCommandSender {
         zombieStats = null;
 
         if(isCloaked()) cloak();
+
+        updateScoreboard();
     }
 
     public void cloak() {
@@ -366,6 +368,8 @@ public class User implements WarsCommandSender {
     }
 
     public void updateScoreboard() {
+        if(!isPlayer()) return;
+
         Scoreboard scoreboard = player.getScoreboard();
         if (scoreboard == plugin.getServer().getScoreboardManager().getMainScoreboard()) {
             scoreboard = plugin.getServer().getScoreboardManager().getNewScoreboard();

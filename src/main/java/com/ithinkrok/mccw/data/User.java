@@ -45,7 +45,7 @@ public class User implements WarsCommandSender {
 
     private StatsHolder statsHolder;
     private Player player;
-    private Zombie zombie;
+
     private TeamColor teamColor;
     private WarsPlugin plugin;
     private Location shopBlock;
@@ -71,6 +71,9 @@ public class User implements WarsCommandSender {
     private boolean moneyMessagesEnabled = true;
     private UUID uniqueId;
     private String name;
+
+    private Zombie zombie;
+    private ZombieInventory zombieInventory;
 
 
     public User(WarsPlugin plugin, Player player, StatsHolder statsHolder) {
@@ -131,7 +134,7 @@ public class User implements WarsCommandSender {
     }
 
     public PlayerInventory getPlayerInventory() {
-        return player.getInventory();
+        return isPlayer() ? player.getInventory() : zombieInventory;
     }
 
     public boolean isCloaked() {
@@ -167,15 +170,42 @@ public class User implements WarsCommandSender {
         zombie.setMetadata("striker", new FixedMetadataValue(plugin, uniqueId));
 
         zombie.getEquipment().setArmorContents(player.getEquipment().getArmorContents());
+        zombie.getEquipment().setItemInHand(player.getItemInHand());
         zombie.setMaxHealth(player.getMaxHealth());
         zombie.setHealth(player.getHealth());
         zombie.setCustomName(getFormattedName());
+
+        for(PotionEffect effect : player.getActivePotionEffects()) {
+            zombie.addPotionEffect(effect, true);
+        }
+
+        zombieInventory = new ZombieInventory(zombie, player.getInventory().getContents());
 
         player = null;
     }
 
     public void becomePlayer(Player player) {
         if(isPlayer()) return;
+
+        player.getInventory().setContents(zombieInventory.getContents());
+        player.getEquipment().setArmorContents(zombie.getEquipment().getArmorContents());
+
+        player.setMaxHealth(zombie.getMaxHealth());
+        player.setHealth(zombie.getHealth());
+
+        player.setDisplayName(getFormattedName());
+
+        for(PotionEffect effect : zombie.getActivePotionEffects()) {
+            player.addPotionEffect(effect, true);
+        }
+
+        player.teleport(getLocation());
+
+        this.player = player;
+
+        zombieInventory = null;
+        zombie.remove();
+        zombie = null;
     }
 
     public void cloak() {

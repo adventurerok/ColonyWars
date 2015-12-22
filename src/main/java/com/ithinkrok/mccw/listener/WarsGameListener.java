@@ -105,6 +105,8 @@ public class WarsGameListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         User user = plugin.getUser(event.getPlayer());
 
+        if(user.isInGame()) return;
+
         user.teleport(plugin.getMapSpawn(null));
         user.setSpectator();
 

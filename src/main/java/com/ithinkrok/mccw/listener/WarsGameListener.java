@@ -426,9 +426,9 @@ public class WarsGameListener implements Listener {
         resetDurability(damagerInfo);
 
         User targetInfo = null;
-        if (event.getEntity() instanceof Player) {
-            targetInfo = plugin.getUser((Player) event.getEntity());
-            if (!targetInfo.isInGame()) {
+        if (event.getEntity() instanceof LivingEntity) {
+            targetInfo = plugin.getUser((LivingEntity) event.getEntity());
+            if (targetInfo != null && !targetInfo.isInGame()) {
                 event.setCancelled(true);
                 return;
             }
@@ -548,9 +548,10 @@ public class WarsGameListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityDamaged(EntityDamageEvent event) {
-        if (!(event.getEntity() instanceof Player)) return;
+        if (!(event.getEntity() instanceof LivingEntity)) return;
 
-        User target = plugin.getUser((Player) event.getEntity());
+        User target = plugin.getUser((LivingEntity) event.getEntity());
+        if(target == null) return;
 
         if (event.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION && target.isOnGround())
             new FixExecutor().onCommand(target, null, "fix", new String[0]);

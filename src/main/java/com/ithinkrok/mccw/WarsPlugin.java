@@ -19,6 +19,7 @@ import com.ithinkrok.mccw.lobby.LobbyMinigame;
 import com.ithinkrok.mccw.lobby.ParcourMinigame;
 import com.ithinkrok.mccw.lobby.WoolHeadMinigame;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
+import com.ithinkrok.mccw.util.EntityUtils;
 import com.ithinkrok.mccw.util.disguisecraft.Disguises;
 import com.ithinkrok.mccw.util.InvisiblePlayerAttacker;
 import com.ithinkrok.mccw.util.Persistence;
@@ -32,7 +33,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -497,6 +500,13 @@ public class WarsPlugin extends JavaPlugin {
     public User getUser(Player player) {
         if (player == null) return null;
         return playerInfoHashMap.get(player.getUniqueId());
+    }
+
+    public User getUser(LivingEntity livingEntity) {
+        if(livingEntity instanceof Player) return getUser((Player)livingEntity);
+        else if(!(livingEntity instanceof Zombie)) return null;
+
+        return EntityUtils.getUserFromEntity(this, livingEntity);
     }
 
     public void giveUserHandbook(User player) {

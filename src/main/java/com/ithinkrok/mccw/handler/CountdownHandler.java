@@ -96,6 +96,8 @@ public class CountdownHandler {
 
         startCountdown(15, CountdownType.LOBBY, () -> plugin.changeGameState(GameState.LOBBY), () -> {
             if (countDown < 10) return;
+            if(plugin.getGameInstance().getWinningTeam() == null) return;
+
             User randomUser = plugin.getTeam(plugin.getGameInstance().getWinningTeam()).getRandomUser();
             if (randomUser == null) return;
             Location loc = randomUser.getLocation();

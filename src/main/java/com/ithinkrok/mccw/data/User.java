@@ -165,7 +165,7 @@ public class User implements WarsCommandSender {
     public void becomeZombie() {
         if(!isPlayer()) return;
 
-        zombie = makeZombieFromEntity(player);
+        zombie = makeZombieFromEntity(player, player.getLocation());
 
         zombieInventory = new ZombieInventory(zombie, player.getInventory().getContents());
         zombieStats = new ZombieStats(player);
@@ -173,8 +173,8 @@ public class User implements WarsCommandSender {
         player = null;
     }
 
-    private Zombie makeZombieFromEntity(LivingEntity entity) {
-        zombie = (Zombie) getWorld().spawnEntity(getLocation(), EntityType.ZOMBIE);
+    private Zombie makeZombieFromEntity(LivingEntity entity, Location location) {
+        zombie = (Zombie) getWorld().spawnEntity(location, EntityType.ZOMBIE);
 
         zombie.setBaby(false);
         zombie.setVillager(false);
@@ -188,7 +188,7 @@ public class User implements WarsCommandSender {
         zombie.setCustomName(getFormattedName());
         zombie.setFireTicks(entity.getFireTicks());
 
-        zombie.setRemoveWhenFarAway(false);
+        zombie.setRemoveWhenFarAway(true);
 
         for(PotionEffect effect : entity.getActivePotionEffects()) {
             zombie.addPotionEffect(effect, true);
@@ -198,11 +198,19 @@ public class User implements WarsCommandSender {
     }
 
     public void revalidateZombie() {
+        revalidateZombie(getLocation());
+    }
+
+    public void revalidateZombie(Location location) {
         if(isPlayer() || zombie.isValid()) return;
 
-        zombie = makeZombieFromEntity(zombie);
+        Zombie oldZombie = zombie;
+
+        zombie = makeZombieFromEntity(zombie, location);
 
         zombieInventory = new ZombieInventory(zombie, zombieInventory.getContents());
+
+        oldZombie.remove();
 
     }
 
@@ -838,7 +846,7 @@ public class User implements WarsCommandSender {
     public boolean teleport(Location location) {
         boolean success = getEntity().teleport(location);
 
-        if(!isPlayer()) revalidateZombie();
+        if(!isPlayer()) revalidateZombie(location);
 
         return success;
     }

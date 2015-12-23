@@ -236,6 +236,7 @@ public class User implements WarsCommandSender {
         player.setHealth(zombie.getHealth());
 
         player.setPlayerListName(getFormattedName());
+        player.setDisplayName(getFormattedName());
 
         player.setFireTicks(zombie.getFireTicks());
 

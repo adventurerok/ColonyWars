@@ -41,7 +41,7 @@ public class ListExecutor implements WarsCommandExecutor {
             else teams.get(user.getTeamColor()).add(user);
         }
 
-        sender.sendLocale("commands.list.title", sender.getPlugin().getNonZombiePlayersInGame(),
+        sender.sendLocale("commands.list.title", sender.getPlugin().getUsers().size() - zombieCount,
                 Bukkit.getServer().getMaxPlayers());
 
         for (Map.Entry<TeamColor, List<User>> entry : teams.entrySet()) {

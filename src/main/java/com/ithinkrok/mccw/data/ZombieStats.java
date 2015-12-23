@@ -1,5 +1,6 @@
 package com.ithinkrok.mccw.data;
 
+import com.ithinkrok.mccw.WarsPlugin;
 import org.bukkit.entity.Player;
 
 /**
@@ -20,11 +21,13 @@ public class ZombieStats {
         level = loadFrom.getLevel();
     }
 
-    public void applyTo(Player player) {
-        player.setAllowFlight(allowFlight);
-        player.setFlySpeed(flySpeed);
+    public void applyTo(WarsPlugin plugin, Player player) {
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+            player.setAllowFlight(allowFlight);
+            player.setFlySpeed(flySpeed);
 
-        player.setExp(exp);
-        player.setLevel(level);
+            player.setExp(exp);
+            player.setLevel(level);
+        }, 2);
     }
 }

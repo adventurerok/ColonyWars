@@ -236,7 +236,7 @@ public class User implements WarsCommandSender {
 
         player.teleport(getLocation());
 
-        zombieStats.applyTo(player);
+        zombieStats.applyTo(plugin, player);
 
         this.player = player;
 

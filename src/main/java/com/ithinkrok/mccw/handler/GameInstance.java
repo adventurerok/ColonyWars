@@ -172,8 +172,8 @@ public class GameInstance {
         Block block;
         
         for(int x = bounds.min.getBlockX(); x <= bounds.max.getBlockX(); ++x) {
-            for(int y = bounds.min.getBlockX(); y <= bounds.max.getBlockX(); ++y) {
-                for(int z = bounds.min.getBlockX(); z <= bounds.max.getBlockX(); ++z) {
+            for(int y = bounds.min.getBlockY(); y <= bounds.max.getBlockY(); ++y) {
+                for(int z = bounds.min.getBlockZ(); z <= bounds.max.getBlockZ(); ++z) {
                     block = world.getBlockAt(x, y, z);
                     if(block.getType() == Material.BEDROCK || block.getType() == Material.BARRIER) return false;
                 }

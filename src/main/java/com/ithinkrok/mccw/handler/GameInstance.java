@@ -19,6 +19,7 @@ import com.ithinkrok.mccw.util.io.DirectoryUtils;
 import com.ithinkrok.mccw.util.io.MapConfig;
 import com.ithinkrok.mccw.util.item.InventoryUtils;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -165,7 +166,21 @@ public class GameInstance {
             if (!building.canBuild(bounds)) return false;
         }
 
-        return !bounds.interceptsXZ(showdownArena.getBounds());
+        if(bounds.interceptsXZ(showdownArena.getBounds())) return false;
+
+        World world = plugin.getServer().getWorld(plugin.getPlayingWorldName());
+        Block block;
+        
+        for(int x = bounds.min.getBlockX(); x <= bounds.max.getBlockX(); ++x) {
+            for(int y = bounds.min.getBlockX(); y <= bounds.max.getBlockX(); ++y) {
+                for(int z = bounds.min.getBlockX(); z <= bounds.max.getBlockX(); ++z) {
+                    block = world.getBlockAt(x, y, z);
+                    if(block.getType() == Material.BEDROCK || block.getType() == Material.BARRIER) return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     public Building getBuildingInfo(Location center) {

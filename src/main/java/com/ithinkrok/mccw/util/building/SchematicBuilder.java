@@ -60,10 +60,6 @@ public class SchematicBuilder {
 
                     oldState = l.getBlock().getState();
                     if (oldState.getType() == Material.LAPIS_ORE) oldState.setType(Material.AIR);
-                    else if (oldState.getType() == Material.BEDROCK || oldState.getType() == Material.BARRIER) {
-                        //prevent building over map boundaries
-                        return false;
-                    }
 
                     int bId = schem.getBlock(x, y, z);
                     if (bId == 0) continue;

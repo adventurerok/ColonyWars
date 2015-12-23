@@ -2,6 +2,7 @@ package com.ithinkrok.mccw.data;
 
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.command.WarsCommandSender;
+import com.ithinkrok.mccw.enumeration.GameState;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.event.UserAbilityCooldownEvent;
@@ -199,6 +200,10 @@ public class User implements WarsCommandSender {
 
     public void revalidateZombie() {
         revalidateZombie(getLocation());
+
+        if(plugin.getGameState() == GameState.SHOWDOWN && !plugin.getShowdownArena().isInBounds(getLocation())){
+            teleport(plugin.getMapSpawn(null));
+        }
     }
 
     public void revalidateZombie(Location location) {
@@ -216,9 +221,6 @@ public class User implements WarsCommandSender {
 
     public void becomePlayer(Player player) {
         if(isPlayer()) return;
-
-        System.out.println(zombie.isDead());
-        System.out.println(zombie.isValid());
 
         player.getInventory().setContents(zombieInventory.getContents());
         player.getEquipment().setArmorContents(zombie.getEquipment().getArmorContents());

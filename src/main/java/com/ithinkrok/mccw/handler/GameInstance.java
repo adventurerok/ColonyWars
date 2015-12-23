@@ -244,7 +244,7 @@ public class GameInstance {
     }
 
     private void startZombieRevalidationTask() {
-        int ticks = 20;
+        int ticks = 80;
 
         scheduleRepeatingTask(() -> plugin.getUsers().forEach(User::revalidateZombie), ticks, ticks);
 

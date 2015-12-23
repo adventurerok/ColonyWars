@@ -198,11 +198,18 @@ public class User implements WarsCommandSender {
         return zombie;
     }
 
-    public void revalidateZombie() {
+    public void updateZombie() {
         revalidateZombie(getLocation());
 
-        if(plugin.getGameState() == GameState.SHOWDOWN && !plugin.getShowdownArena().isInBounds(getLocation())){
-            teleport(plugin.getMapSpawn(null));
+        if(plugin.getGameState() == GameState.SHOWDOWN) {
+
+            //Burn zombies to death
+            if(21 < zombie.getFireTicks()) zombie.setFireTicks(21);
+
+            //Prevent zombies escaping showdown arena
+            if(!plugin.getShowdownArena().isInBounds(getLocation())){
+                teleport(plugin.getMapSpawn(null));
+            }
         }
     }
 

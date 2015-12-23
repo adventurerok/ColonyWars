@@ -166,7 +166,7 @@ public class User implements WarsCommandSender {
     public void becomeZombie() {
         if(!isPlayer()) return;
 
-        zombie = makeZombieFromEntity(player, player.getLocation());
+        makeZombieFromEntity(player, player.getLocation());
 
         zombieInventory = new ZombieInventory(zombie, player.getInventory().getContents());
         zombieStats = new ZombieStats(player);
@@ -174,7 +174,7 @@ public class User implements WarsCommandSender {
         player = null;
     }
 
-    private Zombie makeZombieFromEntity(LivingEntity entity, Location location) {
+    private void makeZombieFromEntity(LivingEntity entity, Location location) {
         zombie = (Zombie) getWorld().spawnEntity(location, EntityType.ZOMBIE);
 
         zombie.setBaby(false);
@@ -194,8 +194,6 @@ public class User implements WarsCommandSender {
         for(PotionEffect effect : entity.getActivePotionEffects()) {
             zombie.addPotionEffect(effect, true);
         }
-
-        return zombie;
     }
 
     public void updateZombie() {
@@ -220,7 +218,7 @@ public class User implements WarsCommandSender {
 
         Zombie oldZombie = zombie;
 
-        zombie = makeZombieFromEntity(zombie, location);
+        makeZombieFromEntity(zombie, location);
 
         zombieInventory = new ZombieInventory(zombie, zombieInventory.getContents());
 
@@ -843,7 +841,10 @@ public class User implements WarsCommandSender {
     public String getFormattedName() {
         if (teamColor == null) return getName();
 
-        return teamColor.getChatColor() + getName();
+        String name = teamColor.getChatColor() + getName();
+        if(zombie == null) return name;
+
+        return plugin.getLocale("zombie.name", name);
     }
 
     public void clearArmor() {

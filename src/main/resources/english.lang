@@ -240,6 +240,8 @@ game.start.team=&6You are playing on the %s &6Team
 game.start.class=&6You are playing as the class&3 %s
 game.revival-chance=&6Your revival chance is now&3 %s
 
+zombie.name=%s&f's zombie
+
 #--COMMANDS--
 command.no-console=&cYou must be a player to execute this command.
 

@@ -64,8 +64,7 @@ public class VampireClass extends ClassItemClassHandler {
 
     @Override
     public void onUserAttack(UserAttackEvent event) {
-        if (event.getDamageCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK &&
-                event.getUser().isFlying()) {
+        if (event.getDamageCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK && event.getUser().isFlying()) {
             event.setCancelled(true);
             return;
         }
@@ -104,7 +103,7 @@ public class VampireClass extends ClassItemClassHandler {
 
         @Override
         public void run() {
-            if (!user.isInGame() || user.getTeam() == null){
+            if (!user.isInGame() || user.getTeam() == null) {
                 Bukkit.getScheduler().cancelTask(taskId);
                 return;
             }
@@ -172,14 +171,30 @@ public class VampireClass extends ClassItemClassHandler {
         }
 
         private float flightDecreaseAmount(int level) {
+            float base;
+
             switch (level) {
                 case 1:
-                    return 0.006f;
+                    base = 0.006f;
+                    break;
                 case 2:
-                    return 0.004f;
+                    base = 0.004f;
+                    break;
                 default:
-                    return 0.01f;
+                    base = 0.01f;
+                    break;
             }
+
+            int yMod = 0;
+            Block block = user.getLocation().getBlock();
+            while (block.getLocation().getBlockY() - yMod > 1) {
+                ++yMod;
+
+                if (block.getRelative(0, -yMod, 0).getType().isSolid()) break;
+            }
+
+            if(yMod >= 10) return base * (yMod / 10f);
+            else return base;
         }
 
         public void startTask(WarsPlugin plugin) {

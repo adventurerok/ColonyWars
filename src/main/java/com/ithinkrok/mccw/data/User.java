@@ -199,6 +199,8 @@ public class User implements WarsCommandSender {
     }
 
     public void updateZombie() {
+        if(isPlayer()) return;
+
         revalidateZombie(getLocation());
 
         if(plugin.getGameState() == GameState.SHOWDOWN) {

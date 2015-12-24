@@ -182,9 +182,7 @@ public class WarsLobbyListener implements Listener {
                     return;
                 }
 
-                int teamSize = plugin.getTeam(teamColor).getUserCount();
-
-                if (!checkTeamJoinAllowed(teamSize)) {
+                if (!checkTeamJoinAllowed(teamColor, user.getTeamColor())) {
                     user.sendMessage(plugin.getLocale("team.join.full", teamColor.getFormattedName()));
                     return;
                 }
@@ -233,11 +231,16 @@ public class WarsLobbyListener implements Listener {
         }
     }
 
-    public boolean checkTeamJoinAllowed(int players) {
+    public boolean checkTeamJoinAllowed(TeamColor newTeam, TeamColor oldTeam) {
+        int players = plugin.getTeam(newTeam).getUserCount();
+
         if (players < (plugin.getPlayerCount() / TeamColor.values().size())) return true;
 
         for (TeamColor teamColor : TeamColor.values()) {
-            if (plugin.getTeam(teamColor).getUserCount() < players) return false;
+            int count = plugin.getTeam(teamColor).getUserCount();
+            if(teamColor.equals(oldTeam)) --count;
+
+            if (count < players) return false;
         }
 
         return true;

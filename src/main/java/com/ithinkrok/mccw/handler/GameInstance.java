@@ -166,16 +166,16 @@ public class GameInstance {
             if (!building.canBuild(bounds)) return false;
         }
 
-        if(bounds.interceptsXZ(showdownArena.getBounds())) return false;
+        if (bounds.interceptsXZ(showdownArena.getBounds())) return false;
 
         World world = plugin.getServer().getWorld(plugin.getPlayingWorldName());
         Block block;
-        
-        for(int x = bounds.min.getBlockX(); x <= bounds.max.getBlockX(); ++x) {
-            for(int y = bounds.min.getBlockY(); y <= bounds.max.getBlockY(); ++y) {
-                for(int z = bounds.min.getBlockZ(); z <= bounds.max.getBlockZ(); ++z) {
+
+        for (int x = bounds.min.getBlockX(); x <= bounds.max.getBlockX(); ++x) {
+            for (int y = bounds.min.getBlockY(); y <= bounds.max.getBlockY(); ++y) {
+                for (int z = bounds.min.getBlockZ(); z <= bounds.max.getBlockZ(); ++z) {
                     block = world.getBlockAt(x, y, z);
-                    if(block.getType() == Material.BEDROCK || block.getType() == Material.BARRIER) return false;
+                    if (block.getType() == Material.BEDROCK || block.getType() == Material.BARRIER) return false;
                 }
             }
         }
@@ -237,7 +237,7 @@ public class GameInstance {
 
     private void startLobbyUnloadTask() {
         scheduleTask(() -> {
-            for(Chunk chunk : Bukkit.getWorld(plugin.getWarsConfig().getLobbyMapFolder()).getLoadedChunks()) {
+            for (Chunk chunk : Bukkit.getWorld(plugin.getWarsConfig().getLobbyMapFolder()).getLoadedChunks()) {
                 chunk.unload(false);
             }
         }, 200);
@@ -400,7 +400,7 @@ public class GameInstance {
     }
 
     public void checkVictory(boolean checkShowdown) {
-        if(plugin.getNonZombiePlayersInGame() == 0) {
+        if (plugin.getNonZombiePlayersInGame() == 0) {
             changeGameState(GameState.AFTERMATH);
             return;
         }
@@ -444,8 +444,13 @@ public class GameInstance {
 
     public void checkShowdownStart(int teamsInGame) {
         if (isInShowdown() || countdownHandler.getCountdownType() == CountdownType.SHOWDOWN) return;
-        if (teamsInGame > plugin.getWarsConfig().getShowdownStartTeams() &&
-                plugin.getNonZombiePlayersInGame() > plugin.getWarsConfig().getShowdownStartPlayers()) return;
+
+        boolean teamCheck =
+                teamsInGame > plugin.getWarsConfig().getShowdownStartTeams() || TeamColor.values().size() < 3;
+
+        boolean playerCheck = plugin.getNonZombiePlayersInGame() > plugin.getWarsConfig().getShowdownStartPlayers();
+
+        if (teamCheck && playerCheck) return;
 
         countdownHandler.startShowdownCountdown();
     }

@@ -42,7 +42,7 @@ public class CannonTowerHandler {
             }
         }
 
-        return plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+        return plugin.getGameInstance().scheduleRepeatingTask( () -> {
             boolean player = false;
             for(Entity e : building.getCenterBlock().getWorld().getNearbyEntities(building.getCenterBlock(), 35, 35,
                     35)) {

@@ -95,6 +95,7 @@ public class VampireClass extends ClassItemClassHandler {
         private boolean mageTower = false;
         private double oldHealth = 0;
         private int blocksAboveGround = 0;
+        private int maxBlocksAboveGround = 0;
 
         private UserFlyingChanger(User user) {
             this.user = user;
@@ -153,7 +154,11 @@ public class VampireClass extends ClassItemClassHandler {
                 user.sendLocale("timeouts.batting.finished");
             } else {
                 if (inWater) user.setFlying(false);
-                if(blocksAboveGround > 2) user.setAllowFlight(allowFlight = false);
+
+                if(!user.isOnGround()) {
+                    if(blocksAboveGround > maxBlocksAboveGround) maxBlocksAboveGround = blocksAboveGround;
+                    else if(maxBlocksAboveGround > 3 && blocksAboveGround < 2) user.setAllowFlight(allowFlight = false);
+                }
 
                 float exp = user.getExp();
                 exp = Math.min(exp + 0.001f, 1);
@@ -162,10 +167,11 @@ public class VampireClass extends ClassItemClassHandler {
 
                 if (exp > 0.2f && !allowFlight && user.isOnGround()) {
                     user.setAllowFlight(allowFlight = true);
-                    user.sendLocale("cooldowns.bat.finished");
+                    if(maxBlocksAboveGround == 0) user.sendLocale("cooldowns.bat.finished");
                     user.setFlySpeed(0.05f);
                 }
 
+                if(user.isOnGround()) maxBlocksAboveGround = 0;
 
                 if (bat) {
                     Disguises.unDisguise(user);

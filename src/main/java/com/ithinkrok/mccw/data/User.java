@@ -230,6 +230,9 @@ public class User implements WarsCommandSender {
     public void becomePlayer(Player player) {
         if(isPlayer()) return;
 
+        Zombie zombie = this.zombie;
+        this.zombie = null;
+
         player.getInventory().setContents(zombieInventory.getContents());
         player.getEquipment().setArmorContents(zombie.getEquipment().getArmorContents());
 
@@ -253,7 +256,6 @@ public class User implements WarsCommandSender {
 
         zombieInventory = null;
         zombie.remove();
-        zombie = null;
         zombieStats = null;
 
         if(isCloaked()) cloak();

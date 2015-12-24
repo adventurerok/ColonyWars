@@ -94,6 +94,7 @@ public class VampireClass extends ClassItemClassHandler {
         private boolean allowFlight = false;
         private boolean mageTower = false;
         private double oldHealth = 0;
+        private int blocksAboveGround = 0;
 
         private UserFlyingChanger(User user) {
             this.user = user;
@@ -116,6 +117,8 @@ public class VampireClass extends ClassItemClassHandler {
 
                 oldHealth = user.getHealth();
             }
+
+            blocksAboveGround = calculateBlocksAboveGround();
 
             double newHealth = user.getHealth();
             float change = 0f;
@@ -150,6 +153,7 @@ public class VampireClass extends ClassItemClassHandler {
                 user.sendLocale("timeouts.batting.finished");
             } else {
                 if (inWater) user.setFlying(false);
+                if(blocksAboveGround > 2) user.setAllowFlight(allowFlight = false);
 
                 float exp = user.getExp();
                 exp = Math.min(exp + 0.001f, 1);
@@ -170,6 +174,18 @@ public class VampireClass extends ClassItemClassHandler {
             }
         }
 
+        public int calculateBlocksAboveGround() {
+            int yMod = 0;
+            Block block = user.getLocation().getBlock();
+            while (block.getLocation().getBlockY() - yMod > 1) {
+                ++yMod;
+
+                if (block.getRelative(0, -yMod, 0).getType().isSolid()) break;
+            }
+
+            return yMod;
+        }
+
         private float flightDecreaseAmount(int level) {
             float base;
 
@@ -185,15 +201,7 @@ public class VampireClass extends ClassItemClassHandler {
                     break;
             }
 
-            int yMod = 0;
-            Block block = user.getLocation().getBlock();
-            while (block.getLocation().getBlockY() - yMod > 1) {
-                ++yMod;
-
-                if (block.getRelative(0, -yMod, 0).getType().isSolid()) break;
-            }
-
-            if(yMod >= 10) return base * (yMod / 10f);
+            if(blocksAboveGround >= 10) return base * (blocksAboveGround / 10f);
             else return base;
         }
 

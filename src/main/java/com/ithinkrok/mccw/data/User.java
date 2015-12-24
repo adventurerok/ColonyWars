@@ -172,6 +172,7 @@ public class User implements WarsCommandSender {
         zombieStats = new ZombieStats(player);
 
         player = null;
+        shopInventory = null;
     }
 
     private void makeZombieFromEntity(LivingEntity entity, Location location) {

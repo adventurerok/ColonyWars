@@ -243,9 +243,7 @@ public class WarsPlugin extends JavaPlugin {
 
             getLobbyMinigames().forEach(LobbyMinigame::resetMinigame);
 
-            for (User user : getUsers()) {
-                userJoinLobby(user);
-            }
+            getUsers().forEach(this::userJoinLobby);
 
             resetTeams();
 

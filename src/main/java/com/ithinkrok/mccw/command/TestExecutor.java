@@ -138,7 +138,7 @@ public class TestExecutor implements WarsCommandExecutor {
     }
 
     private boolean handleRejoinSubcommand(User user) {
-        user.getPlugin().getGameInstance().setupUser(user);
+        user.getPlugin().getGameInstance().rejoinUser(user);
         return true;
     }
 }

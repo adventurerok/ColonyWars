@@ -455,6 +455,10 @@ public class GameInstance {
         countdownHandler.startShowdownCountdown();
     }
 
+    public void rejoinUser(User user) {
+        setupUser(user);
+    }
+
     public boolean isInShowdown() {
         return gameState == GameState.SHOWDOWN;
     }

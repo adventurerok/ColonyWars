@@ -1057,6 +1057,10 @@ public class User implements WarsCommandSender {
         player.setLevel(level);
     }
 
+    public void setFallDistance(float fallDistance) {
+        getEntity().setFallDistance(fallDistance);
+    }
+
 
     private static class Metadata {
         public Object data;

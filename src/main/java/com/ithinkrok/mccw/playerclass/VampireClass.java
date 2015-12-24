@@ -143,6 +143,7 @@ public class VampireClass extends ClassItemClassHandler {
                 float exp = user.getExp();
                 exp = Math.max(exp - flightDecreaseAmount(user.getUpgradeLevel("bat")), 0);
                 user.setExp(exp);
+                user.setFallDistance(0);
 
                 if (!bat) {
                     Disguises.disguise(user, EntityType.BAT);

@@ -248,7 +248,7 @@ public class User implements WarsCommandSender {
             player.addPotionEffect(effect, true);
         }
 
-        player.teleport(getLocation());
+        player.teleport(zombie.getLocation());
 
         zombieStats.applyTo(plugin, player);
 

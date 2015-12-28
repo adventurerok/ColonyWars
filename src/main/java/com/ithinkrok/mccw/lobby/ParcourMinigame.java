@@ -2,6 +2,7 @@ package com.ithinkrok.mccw.lobby;
 
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.User;
+import com.ithinkrok.mccw.event.UserInteractEvent;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 
@@ -39,11 +40,12 @@ public class ParcourMinigame implements LobbyMinigame {
     }
 
     @Override
-    public boolean onUserInteractEntity(User user, Entity entity) {
-        return false;
+    public boolean onUserInteract(UserInteractEvent event) {
+        return event.hasBlock() && event.isRightClick() &&
+                onUserInteractWorld(event.getUser(), event.getClickedBlock());
+
     }
 
-    @Override
     public boolean onUserInteractWorld(User user, Block block) {
         switch (block.getType()) {
             case ENDER_CHEST:

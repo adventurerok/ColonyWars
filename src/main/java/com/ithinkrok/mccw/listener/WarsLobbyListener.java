@@ -4,6 +4,10 @@ import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.mccw.event.UserAttackEvent;
+import com.ithinkrok.mccw.event.UserInteractEvent;
+import com.ithinkrok.mccw.event.UserInteractWorldEvent;
+import com.ithinkrok.mccw.event.UserRightClickEntityEvent;
 import com.ithinkrok.mccw.lobby.LobbyMinigame;
 import com.ithinkrok.mccw.util.item.InventoryUtils;
 import org.bukkit.Bukkit;
@@ -15,6 +19,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -82,10 +87,10 @@ public class WarsLobbyListener implements Listener {
 
         User user = plugin.getUser(event.getPlayer());
 
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            for (LobbyMinigame minigame : plugin.getLobbyMinigames()) {
-                minigame.onUserInteractWorld(user, event.getClickedBlock());
-            }
+        UserInteractEvent userInteractEvent = new UserInteractWorldEvent(user, event);
+
+        for(LobbyMinigame minigame : plugin.getLobbyMinigames()) {
+            if(minigame.onUserInteract(userInteractEvent)) break;
         }
 
         if (event.getItem() == null || !event.getItem().hasItemMeta() ||
@@ -153,8 +158,25 @@ public class WarsLobbyListener implements Listener {
 
     @EventHandler
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+        UserInteractEvent userInteractEvent = new UserRightClickEntityEvent(plugin.getUser(event.getPlayer()), event);
+
         for (LobbyMinigame minigame : plugin.getLobbyMinigames()) {
-            if (minigame.onUserInteractEntity(plugin.getUser(event.getPlayer()), event.getRightClicked())) break;
+            if (minigame.onUserInteract(userInteractEvent)) break;
+        }
+    }
+
+    @EventHandler
+    public void onEntityDamagedByEntity(EntityDamageByEntityEvent event) {
+        if(!(event.getDamager() instanceof Player)) return;
+
+        User attacker = plugin.getUser((Player)event.getEntity());
+        User target = null;
+        if(event.getEntity() instanceof Player) target = plugin.getUser((Player) event.getEntity());
+
+        UserInteractEvent userInteractEvent = new UserAttackEvent(attacker, target, event);
+
+        for(LobbyMinigame minigame : plugin.getLobbyMinigames()) {
+            if(minigame.onUserInteract(userInteractEvent)) break;
         }
     }
 

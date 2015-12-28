@@ -2,6 +2,7 @@ package com.ithinkrok.mccw.lobby;
 
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.User;
+import com.ithinkrok.mccw.event.UserInteractEvent;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -71,6 +72,10 @@ public class WoolHeadMinigame implements LobbyMinigame {
     }
 
     @Override
+    public boolean onUserInteract(UserInteractEvent event) {
+        return event.hasEntity() && onUserInteractEntity(event.getUser(), event.getClickedEntity());
+    }
+
     public boolean onUserInteractEntity(User user, Entity entity) {
         if(user.getUniqueId() != woolUserUniqueId || !(entity instanceof Player)) return false;
 
@@ -85,8 +90,5 @@ public class WoolHeadMinigame implements LobbyMinigame {
         return true;
     }
 
-    @Override
-    public boolean onUserInteractWorld(User user, Block block) {
-        return false;
-    }
+
 }

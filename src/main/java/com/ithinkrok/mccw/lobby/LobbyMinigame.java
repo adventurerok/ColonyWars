@@ -1,9 +1,7 @@
 package com.ithinkrok.mccw.lobby;
 
 import com.ithinkrok.mccw.data.User;
-import com.ithinkrok.mccw.event.UserInteractEvent;
-import com.ithinkrok.mccw.event.UserJoinLobbyEvent;
-import com.ithinkrok.mccw.event.UserQuitLobbyEvent;
+import com.ithinkrok.mccw.event.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 
@@ -40,5 +38,18 @@ public interface LobbyMinigame {
      */
     boolean onUserInteract(UserInteractEvent event);
 
+    /**
+     * Called when a User breaks a block while in the lobby.
+     * These events are cancelled by default and can be uncancelled by the LobbyMinigame
+     * @param event The event object describing this event
+     */
+    void onUserBreakBlock(UserBreakBlockEvent event);
+
+    /**
+     * Called when a User is damaged.
+     * These events are cancelled by default and can be uncancelled by the LobbyMinigame
+     * @param event The event object describing this event
+     */
+    void onUserDamaged(UserDamagedEvent event);
 
 }

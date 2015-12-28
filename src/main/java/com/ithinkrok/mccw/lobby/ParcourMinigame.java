@@ -13,7 +13,7 @@ import org.bukkit.entity.Entity;
  * <p>
  * Handles the parcour minigame
  */
-public class ParcourMinigame implements LobbyMinigame {
+public class ParcourMinigame extends LobbyMinigameAdapter {
 
     WarsPlugin plugin;
     private int basicParkourMoney, advancedParkourMoney, maxParkourMoney;
@@ -24,21 +24,6 @@ public class ParcourMinigame implements LobbyMinigame {
         basicParkourMoney = plugin.getWarsConfig().getParkourMoney("basic");
         advancedParkourMoney = plugin.getWarsConfig().getParkourMoney("advanced");
         maxParkourMoney = plugin.getWarsConfig().getParkourMoney("cap");
-    }
-
-    @Override
-    public void resetMinigame() {
-
-    }
-
-    @Override
-    public void onUserJoinLobby(UserJoinLobbyEvent event) {
-
-    }
-
-    @Override
-    public void onUserQuitLobby(UserQuitLobbyEvent event) {
-
     }
 
     @Override

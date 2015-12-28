@@ -67,11 +67,27 @@ public class WarsLobbyListener implements Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         event.setCancelled(true);
+
+        User user = plugin.getUser(event.getPlayer());
+        UserBreakBlockEvent userBreakBlockEvent = new UserBreakBlockEvent(user, event);
+
+        for(LobbyMinigame minigame : plugin.getLobbyMinigames()) {
+            minigame.onUserBreakBlock(userBreakBlockEvent);
+        }
     }
 
     @EventHandler
     public void onEntityDamaged(EntityDamageEvent event) {
         event.setCancelled(true);
+
+        if(!(event.getEntity() instanceof Player)) return;
+
+        User user = plugin.getUser((Player)event.getEntity());
+        UserDamagedEvent userDamagedEvent = new UserDamagedEvent(user, event);
+
+        for(LobbyMinigame minigame : plugin.getLobbyMinigames()) {
+            minigame.onUserDamaged(userDamagedEvent);
+        }
     }
 
     @EventHandler

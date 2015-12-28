@@ -19,7 +19,7 @@ import java.util.UUID;
  * <p>
  * Handles the wool minigame
  */
-public class WoolHeadMinigame implements LobbyMinigame {
+public class WoolHeadMinigame extends LobbyMinigameAdapter {
 
     private WarsPlugin plugin;
     private UUID woolUserUniqueId;

@@ -3,6 +3,8 @@ package com.ithinkrok.mccw.lobby;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.event.UserInteractEvent;
+import com.ithinkrok.mccw.event.UserJoinLobbyEvent;
+import com.ithinkrok.mccw.event.UserQuitLobbyEvent;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 
@@ -30,12 +32,12 @@ public class ParcourMinigame implements LobbyMinigame {
     }
 
     @Override
-    public void onUserJoinLobby(User user) {
+    public void onUserJoinLobby(UserJoinLobbyEvent event) {
 
     }
 
     @Override
-    public void onUserQuitLobby(User user) {
+    public void onUserQuitLobby(UserQuitLobbyEvent event) {
 
     }
 

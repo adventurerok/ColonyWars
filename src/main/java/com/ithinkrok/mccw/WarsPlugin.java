@@ -8,6 +8,7 @@ import com.ithinkrok.mccw.data.*;
 import com.ithinkrok.mccw.enumeration.GameState;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.mccw.event.UserJoinLobbyEvent;
 import com.ithinkrok.mccw.handler.CountdownHandler;
 import com.ithinkrok.mccw.handler.GameInstance;
 import com.ithinkrok.mccw.inventory.InventoryHandler;
@@ -323,8 +324,10 @@ public class WarsPlugin extends JavaPlugin {
 
         giveUserHandbook(user);
 
+        UserJoinLobbyEvent userJoinLobbyEvent = new UserJoinLobbyEvent(user);
+
         for (LobbyMinigame minigame : getLobbyMinigames()) {
-            minigame.onUserJoinLobby(user);
+            minigame.onUserJoinLobby(userJoinLobbyEvent);
         }
     }
 

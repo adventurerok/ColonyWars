@@ -4,10 +4,7 @@ import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
-import com.ithinkrok.mccw.event.UserAttackEvent;
-import com.ithinkrok.mccw.event.UserInteractEvent;
-import com.ithinkrok.mccw.event.UserInteractWorldEvent;
-import com.ithinkrok.mccw.event.UserRightClickEntityEvent;
+import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.lobby.LobbyMinigame;
 import com.ithinkrok.mccw.util.item.InventoryUtils;
 import org.bukkit.Bukkit;
@@ -274,8 +271,10 @@ public class WarsLobbyListener implements Listener {
         user.setTeamColor(null);
         user.setMapVote(null);
 
+        UserQuitLobbyEvent userQuitLobbyEvent = new UserQuitLobbyEvent(user);
+
         for (LobbyMinigame minigame : plugin.getLobbyMinigames()) {
-            minigame.onUserQuitLobby(user);
+            minigame.onUserQuitLobby(userQuitLobbyEvent);
         }
 
         String name = ChatColor.YELLOW + event.getPlayer().getName();

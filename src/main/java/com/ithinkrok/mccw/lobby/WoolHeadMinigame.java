@@ -3,6 +3,8 @@ package com.ithinkrok.mccw.lobby;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.event.UserInteractEvent;
+import com.ithinkrok.mccw.event.UserJoinLobbyEvent;
+import com.ithinkrok.mccw.event.UserQuitLobbyEvent;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -32,25 +34,25 @@ public class WoolHeadMinigame implements LobbyMinigame {
     }
 
     @Override
-    public void onUserJoinLobby(User user) {
+    public void onUserJoinLobby(UserJoinLobbyEvent event) {
         if (woolUserUniqueId != null) return;
 
-        user.getPlayerInventory().setHelmet(new ItemStack(Material.WOOL, 1, DyeColor.PINK.getWoolData()));
-        woolUserUniqueId = user.getUniqueId();
+        event.getUserInventory().setHelmet(new ItemStack(Material.WOOL, 1, DyeColor.PINK.getWoolData()));
+        woolUserUniqueId = event.getUser().getUniqueId();
 
-        plugin.messageAllLocale("minigames.wool.initial", user.getFormattedName());
-        user.sendLocale("minigames.wool.given");
+        plugin.messageAllLocale("minigames.wool.initial", event.getUser().getFormattedName());
+        event.getUser().sendLocale("minigames.wool.given");
     }
 
     @Override
-    public void onUserQuitLobby(User user) {
-        if (!user.getUniqueId().equals(woolUserUniqueId)) return;
-        if (plugin.getUsers().size() == 1) {
+    public void onUserQuitLobby(UserQuitLobbyEvent event) {
+        if (!event.getUser().getUniqueId().equals(woolUserUniqueId)) return;
+        if (plugin.getUsers().size() <= 1) {
             woolUserUniqueId = null;
             return;
         }
 
-        while (user.getUniqueId().equals(woolUserUniqueId)) {
+        while (event.getUser().getUniqueId().equals(woolUserUniqueId)) {
             int index = plugin.getRandom().nextInt(plugin.getUsers().size());
 
             for (User next : plugin.getUsers()) {

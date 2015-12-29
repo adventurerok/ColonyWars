@@ -74,6 +74,8 @@ public class WarsLobbyListener implements Listener {
         for(LobbyMinigame minigame : plugin.getLobbyMinigames()) {
             minigame.onUserBreakBlock(userBreakBlockEvent);
         }
+
+        if(!event.isCancelled()) event.getBlock().setType(Material.AIR);
     }
 
     @EventHandler

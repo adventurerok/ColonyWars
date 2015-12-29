@@ -2,10 +2,7 @@ package com.ithinkrok.mccw.lobby;
 
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.User;
-import com.ithinkrok.mccw.event.UserBreakBlockEvent;
-import com.ithinkrok.mccw.event.UserDamagedEvent;
-import com.ithinkrok.mccw.event.UserInteractEvent;
-import com.ithinkrok.mccw.event.UserQuitLobbyEvent;
+import com.ithinkrok.mccw.event.*;
 import com.ithinkrok.mccw.util.BoundingBox;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -33,6 +30,7 @@ public class SpleefMinigame extends LobbyMinigameAdapter {
 
     private List<UUID> usersInSpleef = new ArrayList<>();
     private LinkedHashSet<UUID> queue = new LinkedHashSet<>();
+    private int extraRadius;
 
     public SpleefMinigame(WarsPlugin plugin) {
         this.plugin = plugin;
@@ -41,6 +39,7 @@ public class SpleefMinigame extends LobbyMinigameAdapter {
         spawnLocations = plugin.getWarsConfig().getSpleefSpawnLocations();
         exitLocation = plugin.getWarsConfig().getSpleefExitLocation();
         snowBounds = plugin.getWarsConfig().getSpleefSnowBounds();
+        extraRadius = plugin.getWarsConfig().getSpleefExtraRadius();
     }
 
     @Override
@@ -60,6 +59,19 @@ public class SpleefMinigame extends LobbyMinigameAdapter {
                     world.getBlockAt(x, y, z).setType(Material.SNOW_BLOCK);
                 }
             }
+        }
+    }
+
+    @Override
+    public void onUserMove(UserMoveEvent event) {
+        if(!usersInSpleef.contains(event.getUser().getUniqueId())) return;
+
+        double x = event.getUser().getLocation().getX();
+        double z = event.getUser().getLocation().getZ();
+
+        if(x + extraRadius < snowBounds.min.getX() || x - extraRadius > snowBounds.max.getX() || z + extraRadius <
+                snowBounds.min.getZ() || z - extraRadius > snowBounds.max.getZ()) {
+            removeUserFromSpleef(event.getUser());
         }
     }
 

@@ -18,22 +18,22 @@ import java.util.Map;
  */
 public class WarsConfig {
 
-    public interface ConfigAccessor {
-        ConfigurationSection getConfig();
-    }
-
     private ConfigAccessor configAccessor;
 
     public WarsConfig(ConfigAccessor configAccessor) {
         this.configAccessor = configAccessor;
     }
 
-    public String getRandomMapName() {
-        return config().getString("random-map");
+    public int getSpleefExtraRadius() {
+        return config().getInt("lobby-games.spleef.extra-radius");
     }
 
     private ConfigurationSection config() {
         return configAccessor.getConfig();
+    }
+
+    public String getRandomMapName() {
+        return config().getString("random-map");
     }
 
     public List<String> getMapList() {
@@ -110,49 +110,49 @@ public class WarsConfig {
         return config().getInt("amounts." + buildingName + "." + item);
     }
 
+    public Vector getShowdownSize(String mapName) {
+        return getVector("maps." + mapName + ".showdown-size");
+    }
+
     public Vector getVector(String path) {
         return new Vector(config().getDouble(path + ".x"), config().getDouble(path + ".y"),
                 config().getDouble(path + ".z"));
     }
 
-    public Vector getShowdownSize(String mapName){
-        return getVector("maps." + mapName + ".showdown-size");
-    }
-
-    public Vector getBaseLocation(String mapName, TeamColor team){
+    public Vector getBaseLocation(String mapName, TeamColor team) {
         return getVector("maps." + mapName + "." + team.getName() + ".base");
     }
 
-    public Vector getTeamSpawnLocation(String mapName, TeamColor team){
+    public Vector getTeamSpawnLocation(String mapName, TeamColor team) {
         return getVector("maps." + mapName + "." + team.getName() + ".spawn");
     }
 
-    public Vector getMapCenter(String mapName){
+    public Vector getMapCenter(String mapName) {
         return getVector("maps." + mapName + ".center");
     }
 
-    public boolean hasPersistence(){
+    public boolean hasPersistence() {
         return config().getBoolean("persistence");
     }
 
-    public int getDeathScoreModifier(){
+    public int getDeathScoreModifier() {
         return getScoreModifier("death");
     }
 
-    public int getKillScoreModifier(){
+    public int getScoreModifier(String event) {
+        return config().getInt("score." + event);
+    }
+
+    public int getKillScoreModifier() {
         return getScoreModifier("kill");
     }
 
-    public int getWinScoreModifier(){
+    public int getWinScoreModifier() {
         return getScoreModifier("win");
     }
 
-    public int getLossScoreModifier(){
+    public int getLossScoreModifier() {
         return getScoreModifier("loss");
-    }
-
-    public int getScoreModifier(String event){
-        return config().getInt("score." + event);
     }
 
     public int getParkourMoney(String type) {
@@ -163,9 +163,34 @@ public class WarsConfig {
         return config().getInt("last-attacker-timer");
     }
 
-
     public List<Vector> getSpleefQueueButtonLocations() {
         return getVectorList("lobby-games.spleef.queue-buttons");
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<Vector> getVectorList(String path) {
+        List<Map<?, ?>> list = (List<Map<?, ?>>) config().getList(path);
+
+        List<Vector> result = new ArrayList<>();
+        if (list == null) return result;
+
+        for (Map<?, ?> vecMap : list) {
+            Vector vec = fromMap(vecMap);
+            if (vec != null) result.add(vec);
+        }
+
+        return result;
+    }
+
+    private Vector fromMap(Map<?, ?> vecMap) {
+        try {
+            double x = ((Number) vecMap.get("x")).doubleValue();
+            double y = ((Number) vecMap.get("y")).doubleValue();
+            double z = ((Number) vecMap.get("z")).doubleValue();
+            return new Vector(x, y, z);
+        } catch (ClassCastException | NullPointerException e) {
+            return null;
+        }
     }
 
     public List<Vector> getSpleefSpawnLocations() {
@@ -184,33 +209,11 @@ public class WarsConfig {
         Vector min = getVector(path + ".min");
         Vector max = getVector(path + ".max");
 
-        if(min == null || max == null) return null;
+        if (min == null || max == null) return null;
         return new BoundingBox(min, max);
     }
 
-    @SuppressWarnings("unchecked")
-    private List<Vector> getVectorList(String path) {
-        List<Map<?, ?>> list = (List<Map<?, ?>>) config().getList(path);
-
-        List<Vector> result = new ArrayList<>();
-        if(list == null) return result;
-
-        for(Map<?, ?> vecMap : list) {
-            Vector vec = fromMap(vecMap);
-            if(vec != null) result.add(vec);
-        }
-
-        return result;
-    }
-
-    private Vector fromMap(Map<?, ?> vecMap) {
-        try {
-            double x = ((Number) vecMap.get("x")).doubleValue();
-            double y = ((Number) vecMap.get("y")).doubleValue();
-            double z = ((Number) vecMap.get("z")).doubleValue();
-            return new Vector(x, y, z);
-        } catch(ClassCastException | NullPointerException e) {
-            return null;
-        }
+    public interface ConfigAccessor {
+        ConfigurationSection getConfig();
     }
 }

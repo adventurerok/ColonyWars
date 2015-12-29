@@ -73,6 +73,8 @@ lobby-games:
         x: 325
         y: 63
         z: 37
+    # The radius outside the snow bounds which is still considered to be part of the arena
+    extra-radius: 3
 
 # When to force showdown start
 force-showdown:

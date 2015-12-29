@@ -43,10 +43,17 @@ public interface LobbyMinigame {
     void onUserBreakBlock(UserBreakBlockEvent event);
 
     /**
-     * Called when a User is damaged.
+     * Called when a User is damaged while in the lobby.
      * These events are cancelled by default and can be uncancelled by the LobbyMinigame
      * @param event The event object describing this event
      */
     void onUserDamaged(UserDamagedEvent event);
+
+
+    /**
+     * Called when a User moves while in the lobby
+     * @param event The event object describing this event
+     */
+    void onUserMove(UserMoveEvent event);
 
 }

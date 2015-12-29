@@ -36,4 +36,9 @@ public abstract  class LobbyMinigameAdapter implements LobbyMinigame {
     public void onUserDamaged(UserDamagedEvent event) {
 
     }
+
+    @Override
+    public void onUserMove(UserMoveEvent event) {
+
+    }
 }

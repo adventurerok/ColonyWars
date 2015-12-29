@@ -79,6 +79,16 @@ public class WarsLobbyListener implements Listener {
     }
 
     @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        User user = plugin.getUser(event.getPlayer());
+        UserMoveEvent userMoveEvent = new UserMoveEvent(user, event);
+
+        for(LobbyMinigame minigame : plugin.getLobbyMinigames()) {
+            minigame.onUserMove(userMoveEvent);
+        }
+    }
+
+    @EventHandler
     public void onEntityDamaged(EntityDamageEvent event) {
         event.setCancelled(true);
 

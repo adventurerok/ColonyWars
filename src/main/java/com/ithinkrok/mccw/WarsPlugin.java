@@ -18,6 +18,7 @@ import com.ithinkrok.mccw.listener.WarsBaseListener;
 import com.ithinkrok.mccw.listener.WarsLobbyListener;
 import com.ithinkrok.mccw.lobby.LobbyMinigame;
 import com.ithinkrok.mccw.lobby.ParcourMinigame;
+import com.ithinkrok.mccw.lobby.SpleefMinigame;
 import com.ithinkrok.mccw.lobby.WoolHeadMinigame;
 import com.ithinkrok.mccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.mccw.util.EntityUtils;
@@ -172,6 +173,7 @@ public class WarsPlugin extends JavaPlugin {
 
         lobbyMinigames.add(new WoolHeadMinigame(this));
         lobbyMinigames.add(new ParcourMinigame(this));
+        lobbyMinigames.add(new SpleefMinigame(this));
 
         getLobbyMinigames().forEach(LobbyMinigame::resetMinigame);
 

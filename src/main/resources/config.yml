@@ -37,14 +37,42 @@ team-count: 4
 # Time in seconds that a death of a player with a natural cause will be registered as a kill from the last attacker
 last-attacker-timer: 30
 
-# Parkour gold amounts
-parkour:
-  # Amount for right clicking an ender chest
-  basic: 500
-  # Amount for right clicking an off redstone lamp
-  advanced: 2000
-  # Money cap
-  cap: 4001
+lobby-games:
+  parkour:
+    # Amount for right clicking an ender chest
+    basic: 500
+    # Amount for right clicking an off redstone lamp
+    advanced: 2000
+    # Money cap
+    cap: 4001
+  spleef:
+    queue-buttons:
+      - x: 312
+        y: 64
+        z: 34
+      - x: 328
+        y: 64
+        z: 34
+    spawn-locations:
+      - x: 325
+        y: 65
+        z: 34
+      - x: 315
+        y: 65
+        z: 34
+    exit-location:
+      x: 320
+      y: 65
+      z: 42
+    snow:
+      min:
+        x: 315
+        y: 63
+        z: 31
+      max:
+        x: 325
+        y: 63
+        z: 37
 
 # When to force showdown start
 force-showdown:

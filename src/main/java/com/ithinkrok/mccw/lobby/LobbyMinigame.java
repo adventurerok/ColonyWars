@@ -1,9 +1,6 @@
 package com.ithinkrok.mccw.lobby;
 
-import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.event.*;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
 
 /**
  * Created by paul on 18/11/15.

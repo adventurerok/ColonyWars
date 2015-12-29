@@ -2,11 +2,14 @@ package com.ithinkrok.mccw.util.io;
 
 import com.ithinkrok.mccw.enumeration.PlayerClass;
 import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.mccw.util.BoundingBox;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by paul on 28/11/15.
@@ -153,10 +156,61 @@ public class WarsConfig {
     }
 
     public int getParkourMoney(String type) {
-        return config().getInt("parkour." + type);
+        return config().getInt("lobby-games.parkour." + type);
     }
 
     public int getLastAttackerTimer() {
         return config().getInt("last-attacker-timer");
+    }
+
+
+    public List<Vector> getSpleefQueueButtonLocations() {
+        return getVectorList("lobby-games.spleef.queue-buttons");
+    }
+
+    public List<Vector> getSpleefSpawnLocations() {
+        return getVectorList("lobby-games.spleef.spawn-locations");
+    }
+
+    public Vector getSpleefExitLocation() {
+        return getVector("lobby-games.spleef.exit-location");
+    }
+
+    public BoundingBox getSpleefSnowBounds() {
+        return getBounds("lobby-games.spleef.snow");
+    }
+
+    private BoundingBox getBounds(String path) {
+        Vector min = getVector(path + ".min");
+        Vector max = getVector(path + ".max");
+
+        if(min == null || max == null) return null;
+        return new BoundingBox(min, max);
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<Vector> getVectorList(String path) {
+        List<Map<?, ?>> list = (List<Map<?, ?>>) config().getList(path);
+
+        List<Vector> result = new ArrayList<>();
+        if(list == null) return result;
+
+        for(Map<?, ?> vecMap : list) {
+            Vector vec = fromMap(vecMap);
+            if(vec != null) result.add(vec);
+        }
+
+        return result;
+    }
+
+    private Vector fromMap(Map<?, ?> vecMap) {
+        try {
+            double x = ((Number) vecMap.get("x")).doubleValue();
+            double y = ((Number) vecMap.get("y")).doubleValue();
+            double z = ((Number) vecMap.get("z")).doubleValue();
+            return new Vector(x, y, z);
+        } catch(ClassCastException | NullPointerException e) {
+            return null;
+        }
     }
 }

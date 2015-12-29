@@ -57,6 +57,9 @@ minigames.wool.given=&dYou now have the wool. Right click someone to transfer it
 minigames.parcour.winner=&3%s &6has completed the parkour and will start next game with $%s extra!
 minigames.parcour.advanced=&3%s &6has completed the advanced parkour and will start next game with $%s extra!
 minigames.parcour.capped=&cYou have already earned all the money you can from this parkour run!
+minigames.spleef.queue.join=&aYou have joined the spleef queue!
+minigames.spleef.queue.already-joined=&cYou are already in the spleef queue!
+minigames.spleef.queue.need-more=&a%s &eplayers in spleef queue! Need &c%s more to start!
 
 #--COUNTDOWNS--
 countdowns.game.warning.minutes=&7Game starting in&6 %s &7Minutes..

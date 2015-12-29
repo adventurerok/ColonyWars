@@ -4,10 +4,14 @@ import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.event.UserBreakBlockEvent;
 import com.ithinkrok.mccw.event.UserInteractEvent;
+import com.ithinkrok.mccw.playerclass.InfernoClass;
 import com.ithinkrok.mccw.util.BoundingBox;
+import com.ithinkrok.mccw.util.item.InventoryUtils;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import java.util.*;
@@ -89,7 +93,10 @@ public class SpleefMinigame extends LobbyMinigameAdapter {
         user.sendLocale("minigames.spleef.queue.join");
 
         if(!usersInSpleef.isEmpty() || queue.size() < spawnLocations.size()) return;
+        startGame();
+    }
 
+    private void startGame() {
         World world = plugin.getServer().getWorld(plugin.getLobbyWorldName());
 
         Iterator<UUID> iterator = queue.iterator();
@@ -103,6 +110,8 @@ public class SpleefMinigame extends LobbyMinigameAdapter {
                     new Location(world, spawn.getX(), spawn.getY(), spawn.getZ(), joining.getLocation().getYaw(), 0);
 
             joining.teleport(teleport);
+            joining.getPlayerInventory().addItem(new ItemStack(Material.STONE_SPADE));
+            joining.setGameMode(GameMode.SURVIVAL);
             usersInSpleef.add(joining.getUniqueId());
         }
     }

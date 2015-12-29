@@ -194,7 +194,7 @@ public class WarsLobbyListener implements Listener {
     public void onEntityDamagedByEntity(EntityDamageByEntityEvent event) {
         if(!(event.getDamager() instanceof Player)) return;
 
-        User attacker = plugin.getUser((Player)event.getEntity());
+        User attacker = plugin.getUser((Player)event.getDamager());
         User target = null;
         if(event.getEntity() instanceof Player) target = plugin.getUser((Player) event.getEntity());
 

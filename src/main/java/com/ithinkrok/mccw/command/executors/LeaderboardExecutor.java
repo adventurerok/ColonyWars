@@ -42,7 +42,7 @@ public class LeaderboardExecutor implements WarsCommandExecutor {
             Bukkit.getScheduler().scheduleSyncDelayedTask(sender.getPlugin(), () -> {
                 for (int index = 0; index < statsByScore.size(); ++index) {
                     sender.sendLocaleDirect("commands.leaderboard.listing", index + 1,
-                            Bukkit.getOfflinePlayer(UUID.fromString(statsByScore.get(index).getPlayerUUID())).getName(),
+                            statsByScore.get(index).getName(),
                             statsByScore.get(index).getScore());
                 }
             });

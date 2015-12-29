@@ -110,6 +110,8 @@ public class SpleefMinigame extends LobbyMinigameAdapter {
         user.getPlayerInventory().remove(SPADE);
 
         user.setGameMode(GameMode.ADVENTURE);
+
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> user.setFireTicks(null, 0), 1);
     }
 
     private Location getExitLocation() {

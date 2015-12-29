@@ -105,7 +105,7 @@ public class WarsGameListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         User user = plugin.getUser(event.getPlayer());
 
-        if(user.isInGame()) return;
+        if (user.isInGame()) return;
 
         user.teleport(plugin.getMapSpawn(null));
         user.setSpectator();
@@ -270,21 +270,21 @@ public class WarsGameListener implements Listener {
         switch (event.getBlock().getType()) {
             case QUARTZ_ORE:
             case GOLD_ORE:
-                event.getBlock().getWorld()
-                        .dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, 6));
+                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation().add(0.5, 0.5, 0.5),
+                        new ItemStack(Material.GOLD_INGOT, 6));
                 break;
             case LOG:
             case LOG_2:
                 if (plugin.isInBuilding(event.getBlock().getLocation())) break;
                 int count = 1 + TreeFeller.fellTree(plugin.getGameInstance(), event.getBlock().getLocation());
                 Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> event.getBlock().getWorld()
-                                .dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, count)),
-                        1);
+                        .dropItemNaturally(event.getBlock().getLocation().add(0.5, 0.5, 0.5),
+                                new ItemStack(Material.GOLD_INGOT, count)), 1);
 
                 break;
             case DIAMOND_ORE:
-                event.getBlock().getWorld()
-                        .dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.DIAMOND, 1));
+                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation().add(0.5, 0.5, 0.5),
+                        new ItemStack(Material.DIAMOND, 1));
         }
 
         event.getBlock().setType(Material.AIR);
@@ -359,8 +359,8 @@ public class WarsGameListener implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        if(event.getTo().getBlockY() > 250) {
-            if(event.getPlayer().isInsideVehicle()) {
+        if (event.getTo().getBlockY() > 250) {
+            if (event.getPlayer().isInsideVehicle()) {
                 event.getPlayer().getVehicle().setVelocity(new Vector(0, -1, 0));
             } else {
                 event.getPlayer().setVelocity(new Vector(0, -1, 0));
@@ -454,7 +454,7 @@ public class WarsGameListener implements Listener {
         targetInfo.setLastAttacker(damagerInfo);
 
         if (targetInfo.getHealth() - event.getFinalDamage() < 1) {
-            if(targetInfo.isPlayer()) event.setCancelled(true);
+            if (targetInfo.isPlayer()) event.setCancelled(true);
             playerDeath(targetInfo, damagerInfo, event.getCause(), true);
         }
     }
@@ -551,7 +551,7 @@ public class WarsGameListener implements Listener {
         if (!(event.getEntity() instanceof LivingEntity)) return;
 
         User target = plugin.getUser((LivingEntity) event.getEntity());
-        if(target == null) return;
+        if (target == null) return;
 
         if (event.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION && target.isOnGround())
             new FixExecutor().onCommand(target, null, "fix", new String[0]);
@@ -563,7 +563,7 @@ public class WarsGameListener implements Listener {
         }
 
         if (target.getHealth() - event.getFinalDamage() < 1) {
-            if(target.isPlayer()) event.setCancelled(true);
+            if (target.isPlayer()) event.setCancelled(true);
 
             User killer = null;
 
@@ -630,7 +630,7 @@ public class WarsGameListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         User user = plugin.getUser(event.getPlayer());
-        if(!user.isInGame()) {
+        if (!user.isInGame()) {
             user.getStatsHolder().saveStats();
             user.onDisconnect();
             plugin.setUser(event.getPlayer(), null);
@@ -642,7 +642,7 @@ public class WarsGameListener implements Listener {
 
     @EventHandler
     public void onEntityTargetLivingEntity(EntityTargetLivingEntityEvent event) {
-        if(event.getEntity() instanceof Zombie) event.setCancelled(true);
+        if (event.getEntity() instanceof Zombie) event.setCancelled(true);
     }
 
     @EventHandler

@@ -19,7 +19,7 @@ import java.util.*;
  */
 public class SpleefMinigame extends LobbyMinigameAdapter {
 
-    private static final Material SPADE = Material.DIAMOND_SPADE;
+    private static final Material SPADE = Material.IRON_SPADE;
 
     private final WarsPlugin plugin;
 
@@ -71,7 +71,7 @@ public class SpleefMinigame extends LobbyMinigameAdapter {
 
         if(x + extraRadius < snowBounds.min.getX() || x - extraRadius > snowBounds.max.getX() || z + extraRadius <
                 snowBounds.min.getZ() || z - extraRadius > snowBounds.max.getZ()) {
-            removeUserFromSpleef(event.getUser());
+            spleefUserKilled(event.getUser(), false);
         }
     }
 
@@ -79,33 +79,33 @@ public class SpleefMinigame extends LobbyMinigameAdapter {
     public void onUserDamaged(UserDamagedEvent event) {
         if(event.getDamageCause() != EntityDamageEvent.DamageCause.LAVA) return;
 
-        spleefUserKilled(event.getUser());
+        spleefUserKilled(event.getUser(), true);
     }
 
     @Override
     public void onUserQuitLobby(UserQuitLobbyEvent event) {
         queue.remove(event.getUser().getUniqueId());
-        spleefUserKilled(event.getUser());
+        spleefUserKilled(event.getUser(), true);
     }
 
-    private void spleefUserKilled(User user) {
+    private void spleefUserKilled(User user, boolean teleport) {
         if(!usersInSpleef.remove(user.getUniqueId())) return;
 
-        removeUserFromSpleef(user);
+        removeUserFromSpleef(user, teleport);
         plugin.messageAllLocale("minigames.spleef.loser", user.getFormattedName());
 
         if(usersInSpleef.size() == 1) {
             User winner = plugin.getUser(usersInSpleef.remove(0));
 
-            removeUserFromSpleef(winner);
+            removeUserFromSpleef(winner, true);
             plugin.messageAllLocale("minigames.spleef.winner", winner.getFormattedName());
 
             tryStartGame();
         }
     }
 
-    private void removeUserFromSpleef(User user) {
-        user.teleport(getExitLocation());
+    private void removeUserFromSpleef(User user, boolean teleport) {
+        if(teleport) user.teleport(getExitLocation());
 
         user.getPlayerInventory().remove(SPADE);
 

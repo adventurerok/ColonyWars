@@ -19,7 +19,7 @@ import java.util.*;
  */
 public class SpleefMinigame extends LobbyMinigameAdapter {
 
-    private static final Material SPADE = Material.STONE_SPADE;
+    private static final Material SPADE = Material.DIAMOND_SPADE;
 
     private final WarsPlugin plugin;
 

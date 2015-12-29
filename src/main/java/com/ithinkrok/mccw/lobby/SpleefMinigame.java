@@ -3,14 +3,15 @@ package com.ithinkrok.mccw.lobby;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.event.UserBreakBlockEvent;
+import com.ithinkrok.mccw.event.UserDamagedEvent;
 import com.ithinkrok.mccw.event.UserInteractEvent;
-import com.ithinkrok.mccw.playerclass.InfernoClass;
+import com.ithinkrok.mccw.event.UserQuitLobbyEvent;
 import com.ithinkrok.mccw.util.BoundingBox;
-import com.ithinkrok.mccw.util.item.InventoryUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -20,6 +21,8 @@ import java.util.*;
  * Created by paul on 29/12/15.
  */
 public class SpleefMinigame extends LobbyMinigameAdapter {
+
+    private static final Material SPADE = Material.STONE_SPADE;
 
     private final WarsPlugin plugin;
 
@@ -61,6 +64,49 @@ public class SpleefMinigame extends LobbyMinigameAdapter {
     }
 
     @Override
+    public void onUserDamaged(UserDamagedEvent event) {
+        if(event.getDamageCause() != EntityDamageEvent.DamageCause.LAVA) return;
+
+        spleefUserKilled(event.getUser());
+    }
+
+    @Override
+    public void onUserQuitLobby(UserQuitLobbyEvent event) {
+        queue.remove(event.getUser().getUniqueId());
+        spleefUserKilled(event.getUser());
+    }
+
+    private void spleefUserKilled(User user) {
+        if(!usersInSpleef.remove(user.getUniqueId())) return;
+
+        removeUserFromSpleef(user);
+        plugin.messageAllLocale("minigames.spleef.loser", user.getFormattedName());
+
+        if(usersInSpleef.size() == 1) {
+            User winner = plugin.getUser(usersInSpleef.remove(0));
+
+            removeUserFromSpleef(winner);
+            plugin.messageAllLocale("minigames.spleef.winner", winner.getFormattedName());
+
+            tryStartGame();
+        }
+    }
+
+    private void removeUserFromSpleef(User user) {
+        user.teleport(getExitLocation());
+
+        user.getPlayerInventory().remove(SPADE);
+
+        user.setGameMode(GameMode.ADVENTURE);
+    }
+
+    private Location getExitLocation() {
+        World world = plugin.getServer().getWorld(plugin.getLobbyWorldName());
+
+        return new Location(world, exitLocation.getX(), exitLocation.getY(), exitLocation.getZ());
+    }
+
+    @Override
     public void onUserBreakBlock(UserBreakBlockEvent event) {
         if (event.getBlock().getType() == Material.SNOW_BLOCK) event.setCancelled(false);
     }
@@ -92,11 +138,14 @@ public class SpleefMinigame extends LobbyMinigameAdapter {
 
         user.sendLocale("minigames.spleef.queue.join");
 
-        if(!usersInSpleef.isEmpty() || queue.size() < spawnLocations.size()) return;
-        startGame();
+        tryStartGame();
     }
 
-    private void startGame() {
+    private void tryStartGame() {
+        if(!usersInSpleef.isEmpty() || queue.size() < spawnLocations.size()) return;
+
+        resetArena();
+
         World world = plugin.getServer().getWorld(plugin.getLobbyWorldName());
 
         Iterator<UUID> iterator = queue.iterator();
@@ -110,9 +159,11 @@ public class SpleefMinigame extends LobbyMinigameAdapter {
                     new Location(world, spawn.getX(), spawn.getY(), spawn.getZ(), joining.getLocation().getYaw(), 0);
 
             joining.teleport(teleport);
-            joining.getPlayerInventory().addItem(new ItemStack(Material.STONE_SPADE));
+            joining.getPlayerInventory().addItem(new ItemStack(SPADE));
             joining.setGameMode(GameMode.SURVIVAL);
             usersInSpleef.add(joining.getUniqueId());
         }
+
+        plugin.messageAllLocale("minigames.spleef.begin");
     }
 }

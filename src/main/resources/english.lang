@@ -60,6 +60,9 @@ minigames.parcour.capped=&cYou have already earned all the money you can from th
 minigames.spleef.queue.join=&aYou have joined the spleef queue!
 minigames.spleef.queue.already-joined=&cYou are already in the spleef queue!
 minigames.spleef.queue.need-more=&a%s &eplayers in spleef queue! Need &c%s more to start!
+minigames.spleef.winner=%s &6has won the game of spleef!
+minigames.spleef.loser=%s &6was eliminated from the spleef game!
+minigames.spleef.begin=&6A new spleef game has started!
 
 #--COUNTDOWNS--
 countdowns.game.warning.minutes=&7Game starting in&6 %s &7Minutes..

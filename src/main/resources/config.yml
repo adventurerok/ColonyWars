@@ -54,12 +54,12 @@ lobby-games:
         y: 64
         z: 34
     spawn-locations:
-      - x: 325
+      - x: 325.5
         y: 65
         z: 34
-      - x: 315
+      - x: 315.5
         y: 65
-        z: 34
+        z: 34.5
     exit-location:
       x: 320
       y: 65

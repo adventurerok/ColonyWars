@@ -16,11 +16,14 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Created by paul on 31/12/15.
  */
-public abstract class GameGroup<U extends User, T extends Team, G extends GameGroup, M extends Minigame> {
+public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>, M extends Minigame<U, T, G, M>> {
 
     private ConcurrentMap<UUID, U> usersInGroup = new ConcurrentHashMap<>();
     private Map<TeamColor, T> teamsInGroup = new HashMap<>();
     private M minigame;
+
+    private Map<String, GameState<U>> gameStates = new HashMap<>();
+    private GameState<U> gameState;
 
     private Constructor<T> teamConstructor;
 
@@ -29,6 +32,16 @@ public abstract class GameGroup<U extends User, T extends Team, G extends GameGr
     public GameGroup(M minigame, Constructor<T> teamConstructor) {
         this.minigame = minigame;
         this.teamConstructor = teamConstructor;
+
+        boolean hasDefault = false;
+        for (GameState<U> gs : minigame.getGameStates()) {
+            if(!hasDefault){
+                this.gameState = gs;
+                hasDefault = true;
+            }
+
+            this.gameStates.put(gs.getName(), gs);
+        }
     }
 
     private T createTeam(TeamColor teamColor) {
@@ -41,13 +54,15 @@ public abstract class GameGroup<U extends User, T extends Team, G extends GameGr
 
     public void eventUserJoinedAsPlayer(UserJoinEvent<U> event) {
         usersInGroup.put(event.getUser().getUuid(), event.getUser());
+
+        gameState.getHandler().eventUserJoinedAsPlayer(event);
     }
 
     public void eventBlockBreak(UserBreakBlockEvent<U> event) {
-        event.setCancelled(false);
+        gameState.getHandler().eventBlockBreak(event);
     }
 
     public void eventBlockPlace(UserPlaceBlockEvent<U> event) {
-        event.setCancelled(false);
+        gameState.getHandler().eventBlockPlace(event);
     }
 }

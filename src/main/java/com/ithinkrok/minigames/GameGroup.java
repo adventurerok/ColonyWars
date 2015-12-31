@@ -36,4 +36,8 @@ public abstract class GameGroup<U extends User, T extends Team, G extends GameGr
         }
     }
 
+    public void userJoinedAsPlayer(U user) {
+
+    }
+
 }

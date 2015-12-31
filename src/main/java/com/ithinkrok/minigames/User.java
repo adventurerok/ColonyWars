@@ -22,4 +22,8 @@ public abstract class User<U extends User, T extends Team, G extends GameGroup, 
         this.uuid = uuid;
         this.entity = entity;
     }
+
+    public G getGameGroup() {
+        return gameGroup;
+    }
 }

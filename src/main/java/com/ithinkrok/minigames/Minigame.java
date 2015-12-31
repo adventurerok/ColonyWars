@@ -2,6 +2,7 @@ package com.ithinkrok.minigames;
 
 import com.ithinkrok.minigames.listeners.MinigameListener;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Constructor;
@@ -9,13 +10,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by paul on 31/12/15.
  */
-public abstract class Minigame<U extends User, T extends Team, G extends GameGroup, M extends Minigame> {
+public abstract class Minigame<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>, M extends Minigame<U, T, G, M>> {
 
-    private List<U> usersInServer = new ArrayList<>();
+    private ConcurrentMap<UUID, U> usersInServer = new ConcurrentHashMap<>();
     private List<G> gameGroups = new ArrayList<>();
 
     private Constructor<G> gameGroupConstructor;
@@ -39,6 +42,7 @@ public abstract class Minigame<U extends User, T extends Team, G extends GameGro
         }
 
         spawnGameGroup = createGameGroup();
+        gameGroups.add(spawnGameGroup);
     }
 
 
@@ -52,7 +56,9 @@ public abstract class Minigame<U extends User, T extends Team, G extends GameGro
 
     private U createUser(G gameGroup, T team, UUID uuid, LivingEntity entity) {
         try {
-            return userConstructor.newInstance(this, gameGroup, team, uuid, entity);
+            U user = userConstructor.newInstance(this, gameGroup, team, uuid, entity);
+            usersInServer.put(uuid, user);
+            return user;
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("Failed to construct User", e);
         }
@@ -62,6 +68,23 @@ public abstract class Minigame<U extends User, T extends Team, G extends GameGro
         MinigameListener<U, T, G> listener = new MinigameListener<>(this);
 
         plugin.getServer().getPluginManager().registerEvents(listener, plugin);
+    }
+
+    public void playerJoined(Player player) {
+        U user = getUser(player.getUniqueId());
+        G gameGroup = spawnGameGroup;
+
+        if(user != null) {
+            gameGroup = user.getGameGroup();
+        } else {
+            user = createUser(gameGroup, null, player.getUniqueId(), player);
+        }
+
+        gameGroup.userJoinedAsPlayer(user);
+    }
+
+    private U getUser(UUID uuid) {
+        return usersInServer.get(uuid);
     }
 
 

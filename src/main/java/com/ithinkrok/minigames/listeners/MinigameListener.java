@@ -22,7 +22,9 @@ public class MinigameListener<U extends User, T extends Team, G extends GameGrou
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+        event.setJoinMessage(null);
 
+        minigame.playerJoined(event.getPlayer());
     }
 
 }

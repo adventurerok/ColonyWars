@@ -1,8 +1,13 @@
 package com.ithinkrok.minigames;
 
-import com.ithinkrok.minigames.listeners.MinigameListener;
+import com.ithinkrok.minigames.event.UserBreakBlockEvent;
+import com.ithinkrok.minigames.event.UserJoinEvent;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Constructor;
@@ -16,7 +21,8 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Created by paul on 31/12/15.
  */
-public abstract class Minigame<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>, M extends Minigame<U, T, G, M>> {
+public abstract class Minigame<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>,
+        M extends Minigame<U, T, G, M>> implements Listener {
 
     private ConcurrentMap<UUID, U> usersInServer = new ConcurrentHashMap<>();
     private List<G> gameGroups = new ArrayList<>();
@@ -65,12 +71,15 @@ public abstract class Minigame<U extends User<U, T, G, M>, T extends Team<U, T, 
     }
 
     public void registerListeners() {
-        MinigameListener<U, T, G> listener = new MinigameListener<>(this);
-
-        plugin.getServer().getPluginManager().registerEvents(listener, plugin);
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    public void playerJoined(Player player) {
+    @EventHandler
+    public void eventPlayerJoined(PlayerJoinEvent event) {
+        event.setJoinMessage(null);
+
+        Player player = event.getPlayer();
+
         U user = getUser(player.getUniqueId());
         G gameGroup = spawnGameGroup;
 
@@ -80,7 +89,13 @@ public abstract class Minigame<U extends User<U, T, G, M>, T extends Team<U, T, 
             user = createUser(gameGroup, null, player.getUniqueId(), player);
         }
 
-        gameGroup.userJoinedAsPlayer(user);
+        gameGroup.eventUserJoinedAsPlayer(new UserJoinEvent<>(user));
+    }
+
+    @EventHandler
+    public void eventBlockBreak(BlockBreakEvent event) {
+        U user = getUser(event.getPlayer().getUniqueId());
+        user.getGameGroup().eventBlockBreak(new UserBreakBlockEvent<>(user, event));
     }
 
     private U getUser(UUID uuid) {

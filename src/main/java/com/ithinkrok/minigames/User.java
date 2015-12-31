@@ -26,4 +26,8 @@ public abstract class User<U extends User, T extends Team, G extends GameGroup, 
     public G getGameGroup() {
         return gameGroup;
     }
+
+    public UUID getUuid() {
+        return uuid;
+    }
 }

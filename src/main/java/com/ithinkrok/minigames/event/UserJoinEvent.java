@@ -7,7 +7,19 @@ import com.ithinkrok.minigames.User;
  */
 public class UserJoinEvent<U extends User> extends UserEvent<U> {
 
-    public UserJoinEvent(U user) {
+    private final JoinReason reason;
+
+    public UserJoinEvent(U user, JoinReason reason) {
         super(user);
+        this.reason = reason;
+    }
+
+    public JoinReason getReason() {
+        return reason;
+    }
+
+    public enum JoinReason {
+        JOINED_SERVER,
+        CHANGED_GAMESTATE
     }
 }

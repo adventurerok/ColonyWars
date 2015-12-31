@@ -92,7 +92,7 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
             user = createUser(gameGroup, null, player.getUniqueId(), player);
         }
 
-        gameGroup.eventUserJoinedAsPlayer(new UserJoinEvent<>(user));
+        gameGroup.eventUserJoinedAsPlayer(new UserJoinEvent<>(user, UserJoinEvent.JoinReason.JOINED_SERVER));
     }
 
     @EventHandler

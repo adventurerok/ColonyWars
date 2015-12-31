@@ -55,7 +55,7 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
     public void eventUserJoinedAsPlayer(UserJoinEvent<U> event) {
         usersInGroup.put(event.getUser().getUuid(), event.getUser());
 
-        gameState.getHandler().eventUserJoinedAsPlayer(event);
+        gameState.getHandler().eventUserJoin(event);
     }
 
     public void eventBlockBreak(UserBreakBlockEvent<U> event) {

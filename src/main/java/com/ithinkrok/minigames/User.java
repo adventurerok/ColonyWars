@@ -15,6 +15,8 @@ public abstract class User<U extends User, T extends Team, G extends GameGroup, 
     private UUID uuid;
     private LivingEntity entity;
 
+    private boolean isInGame = false;
+
     public User(M minigame, G gameGroup, T team, UUID uuid, LivingEntity entity) {
         this.minigame = minigame;
         this.gameGroup = gameGroup;
@@ -29,5 +31,13 @@ public abstract class User<U extends User, T extends Team, G extends GameGroup, 
 
     public UUID getUuid() {
         return uuid;
+    }
+
+    public boolean isInGame() {
+        return isInGame;
+    }
+
+    public void setInGame(boolean inGame) {
+        isInGame = inGame;
     }
 }

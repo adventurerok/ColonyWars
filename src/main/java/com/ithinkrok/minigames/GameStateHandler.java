@@ -16,7 +16,7 @@ public abstract class GameStateHandler<U extends User> {
 
     }
 
-    public void eventUserJoinedAsPlayer(UserJoinEvent<U> event) {
+    public void eventUserJoin(UserJoinEvent<U> event) {
 
     }
 }

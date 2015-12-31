@@ -24,17 +24,23 @@ public abstract class Minigame<U extends User, T extends Team, G extends GameGro
 
     private Plugin plugin;
 
-    public Minigame(Plugin plugin, Class<G> gameGroupClass, Class<T> teamClass, Class<U> userClass){
+    private G spawnGameGroup;
+
+    public Minigame(Plugin plugin, Class<G> gameGroupClass, Class<T> teamClass, Class<U> userClass) {
         this.plugin = plugin;
 
         try {
             teamConstructor = teamClass.getConstructor(TeamColor.class, gameGroupClass);
-            userConstructor = userClass.getConstructor(gameGroupClass, teamClass, UUID.class, LivingEntity.class);
+            userConstructor =
+                    userClass.getConstructor(getClass(), gameGroupClass, teamClass, UUID.class, LivingEntity.class);
             gameGroupConstructor = gameGroupClass.getConstructor(getClass(), teamConstructor.getClass());
         } catch (NoSuchMethodException e) {
             throw new RuntimeException("Failed to get constructors for data classes", e);
         }
+
+        spawnGameGroup = createGameGroup();
     }
+
 
     private G createGameGroup() {
         try {

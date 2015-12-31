@@ -16,4 +16,8 @@ public class GameState<U extends User> {
     public String getName() {
         return name;
     }
+
+    public GameStateHandler<U> getHandler() {
+        return gameStateHandler;
+    }
 }

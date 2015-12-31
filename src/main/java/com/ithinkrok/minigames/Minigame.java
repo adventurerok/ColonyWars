@@ -53,6 +53,7 @@ public abstract class Minigame<U extends User<U, T, G, M>, T extends Team<U, T, 
         gameGroups.add(spawnGameGroup);
     }
 
+    protected abstract List<GameState<U>> getGameStates();
 
     private G createGameGroup() {
         try {

@@ -12,4 +12,8 @@ public abstract class Team<U extends User, T extends Team, G extends GameGroup> 
     private List<U> usersInTeam = new ArrayList<>();
     private G gameGroup;
 
+    public Team(TeamColor teamColor, G gameGroup) {
+        this.teamColor = teamColor;
+        this.gameGroup = gameGroup;
+    }
 }

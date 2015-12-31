@@ -1,6 +1,7 @@
 package com.ithinkrok.minigames;
 
 import com.ithinkrok.minigames.event.UserBreakBlockEvent;
+import com.ithinkrok.minigames.event.UserInGameChangeEvent;
 import com.ithinkrok.minigames.event.UserJoinEvent;
 import com.ithinkrok.minigames.event.UserPlaceBlockEvent;
 import org.bukkit.World;
@@ -64,5 +65,9 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
 
     public void eventBlockPlace(UserPlaceBlockEvent<U> event) {
         gameState.getHandler().eventBlockPlace(event);
+    }
+
+    public void eventUserInGameChanged(UserInGameChangeEvent<U> event) {
+        gameState.getHandler().eventUserInGameChanged(event);
     }
 }

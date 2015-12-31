@@ -1,5 +1,6 @@
 package com.ithinkrok.minigames;
 
+import com.ithinkrok.minigames.event.UserInGameChangeEvent;
 import org.bukkit.entity.LivingEntity;
 
 import java.util.UUID;
@@ -37,7 +38,10 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         return isInGame;
     }
 
+    @SuppressWarnings("unchecked")
     public void setInGame(boolean inGame) {
         isInGame = inGame;
+
+        gameGroup.eventUserInGameChanged(new UserInGameChangeEvent<>((U) this));
     }
 }

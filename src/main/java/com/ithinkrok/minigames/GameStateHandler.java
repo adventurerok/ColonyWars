@@ -1,6 +1,7 @@
 package com.ithinkrok.minigames;
 
 import com.ithinkrok.minigames.event.UserBreakBlockEvent;
+import com.ithinkrok.minigames.event.UserInGameChangeEvent;
 import com.ithinkrok.minigames.event.UserJoinEvent;
 import com.ithinkrok.minigames.event.UserPlaceBlockEvent;
 
@@ -17,6 +18,10 @@ public abstract class GameStateHandler<U extends User> {
     }
 
     public void eventUserJoin(UserJoinEvent<U> event) {
+
+    }
+
+    public void eventUserInGameChanged(UserInGameChangeEvent<U> event) {
 
     }
 }

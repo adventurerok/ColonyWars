@@ -20,6 +20,7 @@ public class UserJoinEvent<U extends User> extends UserEvent<U> {
 
     public enum JoinReason {
         JOINED_SERVER,
-        CHANGED_GAMESTATE
+        CHANGED_GAMESTATE,
+        CHANGED_GAMEGROUP
     }
 }

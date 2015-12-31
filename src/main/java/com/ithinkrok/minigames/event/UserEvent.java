@@ -5,7 +5,7 @@ import com.ithinkrok.minigames.User;
 /**
  * Created by paul on 31/12/15.
  */
-public class UserEvent<U extends User> {
+public class UserEvent<U extends User>{
 
     private U user;
 

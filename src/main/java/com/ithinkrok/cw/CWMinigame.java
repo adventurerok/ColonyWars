@@ -7,7 +7,7 @@ import com.ithinkrok.minigames.Minigame;
  */
 public class CWMinigame extends Minigame<CWUser, CWTeam, CWGameGroup, CWMinigame> {
 
-    public CWMinigame(Class<CWGameGroup> gameGroupClass, Class<CWTeam> teamClass, Class<CWUser> userClass) {
-        super(gameGroupClass, teamClass, userClass);
+    public CWMinigame() {
+        super(CWGameGroup.class, CWTeam.class, CWUser.class);
     }
 }

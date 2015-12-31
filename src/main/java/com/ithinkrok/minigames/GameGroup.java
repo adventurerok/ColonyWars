@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Created by paul on 31/12/15.
  */
-public class GameGroup<U extends User, T extends Team, G extends GameGroup, M extends Minigame> {
+public abstract class GameGroup<U extends User, T extends Team, G extends GameGroup, M extends Minigame> {
 
     private ConcurrentMap<UUID, U> usersInGroup = new ConcurrentHashMap<>();
     private Map<TeamColor, T> teamsInGroup = new HashMap<>();

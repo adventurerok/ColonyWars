@@ -1,6 +1,7 @@
 package com.ithinkrok.minigames;
 
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -11,7 +12,7 @@ import java.util.UUID;
 /**
  * Created by paul on 31/12/15.
  */
-public class Minigame<U extends User, T extends Team, G extends GameGroup, M extends Minigame> {
+public abstract class Minigame<U extends User, T extends Team, G extends GameGroup, M extends Minigame> {
 
     private List<U> usersInServer = new ArrayList<>();
     private List<G> gameGroups = new ArrayList<>();
@@ -20,7 +21,11 @@ public class Minigame<U extends User, T extends Team, G extends GameGroup, M ext
     private Constructor<T> teamConstructor;
     private Constructor<U> userConstructor;
 
-    public Minigame(Class<G> gameGroupClass, Class<T> teamClass, Class<U> userClass){
+    private Plugin plugin;
+
+    public Minigame(Plugin plugin, Class<G> gameGroupClass, Class<T> teamClass, Class<U> userClass){
+        this.plugin = plugin;
+
         try {
             teamConstructor = teamClass.getConstructor(TeamColor.class, gameGroupClass);
             userConstructor = userClass.getConstructor(gameGroupClass, teamClass, UUID.class, LivingEntity.class);
@@ -44,6 +49,10 @@ public class Minigame<U extends User, T extends Team, G extends GameGroup, M ext
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("Failed to construct User", e);
         }
+    }
+
+    public void registerListeners() {
+
     }
 
 

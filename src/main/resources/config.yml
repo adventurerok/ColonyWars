@@ -39,6 +39,11 @@ last-attacker-timer: 30
 
 lobby-games:
   parkour:
+    runs:
+    - x: 34
+      y: 67
+      z: 97
+      reward: 500
     # Amount for right clicking an ender chest
     basic: 500
     # Amount for right clicking an off redstone lamp

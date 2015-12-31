@@ -3,10 +3,12 @@ package com.ithinkrok.mccw.lobby;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.event.UserInteractEvent;
-import com.ithinkrok.mccw.event.UserJoinLobbyEvent;
-import com.ithinkrok.mccw.event.UserQuitLobbyEvent;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.util.Vector;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by paul on 18/11/15.
@@ -16,14 +18,19 @@ import org.bukkit.entity.Entity;
 public class ParcourMinigame extends LobbyMinigameAdapter {
 
     WarsPlugin plugin;
-    private int basicParkourMoney, advancedParkourMoney, maxParkourMoney;
+    private int maxParkourMoney;
+    private Map<Vector, Integer> parkourRuns = new HashMap<>();
 
     public ParcourMinigame(WarsPlugin plugin) {
         this.plugin = plugin;
 
-        basicParkourMoney = plugin.getWarsConfig().getParkourMoney("basic");
-        advancedParkourMoney = plugin.getWarsConfig().getParkourMoney("advanced");
-        maxParkourMoney = plugin.getWarsConfig().getParkourMoney("cap");
+        maxParkourMoney = plugin.getWarsConfig().getParkourMoneyCap();
+
+        for(ConfigurationSection config : plugin.getWarsConfig().getParkourConfigs()) {
+            Vector loc = new Vector(config.getInt("x"), config.getInt("y"), config.getInt("z"));
+
+            parkourRuns.put(loc, config.getInt("reward"));
+        }
     }
 
     @Override
@@ -34,28 +41,22 @@ public class ParcourMinigame extends LobbyMinigameAdapter {
     }
 
     public boolean onUserInteractWorld(User user, Block block) {
-        switch (block.getType()) {
-            case ENDER_CHEST:
-                addParkourMoney(user, basicParkourMoney, false);
-                return true;
-            case REDSTONE_LAMP_OFF:
-                addParkourMoney(user, advancedParkourMoney, true);
-                return true;
-            default:
-                return false;
-        }
+        Vector location = block.getLocation().toVector();
 
+        Integer reward = parkourRuns.get(location);
+        if(reward == null || reward == 0) return false;
 
+        addParkourMoney(user, reward);
+        return true;
     }
 
-    private void addParkourMoney(User user, int amount, boolean advanced) {
+    private void addParkourMoney(User user, int amount) {
         amount = Math.min(amount, (maxParkourMoney - user.getPlayerCash()) / 2);
 
         if (amount <= 0) user.sendLocale("minigames.parcour.capped");
         else {
             user.addPlayerCash(amount, false);
-            if (advanced) plugin.messageAllLocale("minigames.parcour.advanced", user.getFormattedName(), amount);
-            else plugin.messageAllLocale("minigames.parcour.winner", user.getFormattedName(), amount);
+            plugin.messageAllLocale("minigames.parcour.winner", user.getFormattedName(), amount);
         }
 
         user.teleport(plugin.getLobbySpawn());

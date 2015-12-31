@@ -5,6 +5,7 @@ import com.ithinkrok.mccw.enumeration.TeamColor;
 import com.ithinkrok.mccw.util.BoundingBox;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -155,8 +156,8 @@ public class WarsConfig {
         return getScoreModifier("loss");
     }
 
-    public int getParkourMoney(String type) {
-        return config().getInt("lobby-games.parkour." + type);
+    public int getParkourMoneyCap() {
+        return config().getInt("lobby-games.parkour.cap");
     }
 
     public int getLastAttackerTimer() {
@@ -167,22 +168,40 @@ public class WarsConfig {
         return getVectorList("lobby-games.spleef.queue-buttons");
     }
 
-    @SuppressWarnings("unchecked")
     private List<Vector> getVectorList(String path) {
-        List<Map<?, ?>> list = (List<Map<?, ?>>) config().getList(path);
+        List<Map<?, ?>> list = config().getMapList(path);
 
         List<Vector> result = new ArrayList<>();
         if (list == null) return result;
 
         for (Map<?, ?> vecMap : list) {
-            Vector vec = fromMap(vecMap);
+            Vector vec = vectorFromMap(vecMap);
             if (vec != null) result.add(vec);
         }
 
         return result;
     }
 
-    private Vector fromMap(Map<?, ?> vecMap) {
+    public List<ConfigurationSection> getParkourConfigs() {
+        return getConfigList("lobby-games.parkour.runs");
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<ConfigurationSection> getConfigList(String path) {
+        List<Map<?, ?>> list = config().getMapList(path);
+
+        List<ConfigurationSection> result = new ArrayList<>();
+        if (list == null) return result;
+
+        for (Map<?, ?> vecMap : list) {
+            ConfigurationSection vec = configFromMap((Map<String, Object>) vecMap);
+            if (vec != null) result.add(vec);
+        }
+
+        return result;
+    }
+
+    private Vector vectorFromMap(Map<?, ?> vecMap) {
         try {
             double x = ((Number) vecMap.get("x")).doubleValue();
             double y = ((Number) vecMap.get("y")).doubleValue();
@@ -191,6 +210,13 @@ public class WarsConfig {
         } catch (ClassCastException | NullPointerException e) {
             return null;
         }
+    }
+
+    private ConfigurationSection configFromMap(Map<String, Object> values){
+        MemoryConfiguration memory = new MemoryConfiguration();
+        memory.addDefaults(values);
+
+        return memory;
     }
 
     public List<Vector> getSpleefSpawnLocations() {

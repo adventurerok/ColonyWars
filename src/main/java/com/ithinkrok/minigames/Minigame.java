@@ -1,5 +1,6 @@
 package com.ithinkrok.minigames;
 
+import com.ithinkrok.minigames.listeners.MinigameListener;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.Plugin;
 
@@ -52,7 +53,9 @@ public abstract class Minigame<U extends User, T extends Team, G extends GameGro
     }
 
     public void registerListeners() {
+        MinigameListener<U, T, G> listener = new MinigameListener<>(this);
 
+        plugin.getServer().getPluginManager().registerEvents(listener, plugin);
     }
 
 

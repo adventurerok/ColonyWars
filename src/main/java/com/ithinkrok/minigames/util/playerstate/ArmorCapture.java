@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
  * Created by paul on 31/12/15.
  */
 
-class ArmorCapture implements EntityEquipment {
+public class ArmorCapture implements EntityEquipment {
 
     private ItemStack helmet, chestplate, leggings, boots, holding;
 

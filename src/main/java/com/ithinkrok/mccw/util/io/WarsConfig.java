@@ -1,7 +1,7 @@
 package com.ithinkrok.mccw.util.io;
 
 import com.ithinkrok.mccw.enumeration.PlayerClass;
-import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.minigames.TeamColor;
 import com.ithinkrok.mccw.util.BoundingBox;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;

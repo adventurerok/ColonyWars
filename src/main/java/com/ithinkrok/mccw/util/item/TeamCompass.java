@@ -1,7 +1,7 @@
 package com.ithinkrok.mccw.util.item;
 
 import com.ithinkrok.mccw.WarsPlugin;
-import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.minigames.TeamColor;
 import com.ithinkrok.mccw.event.UserInteractEvent;
 import com.ithinkrok.mccw.playerclass.items.ClassItem;
 import com.ithinkrok.mccw.strings.Buildings;

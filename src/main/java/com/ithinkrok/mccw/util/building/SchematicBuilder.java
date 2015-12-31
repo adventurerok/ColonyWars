@@ -4,7 +4,7 @@ import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.Building;
 import com.ithinkrok.mccw.data.Schematic;
 import com.ithinkrok.mccw.data.SchematicRotation;
-import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.minigames.TeamColor;
 import com.ithinkrok.mccw.util.BoundingBox;
 import de.inventivegames.hologram.Hologram;
 import de.inventivegames.hologram.HologramAPI;

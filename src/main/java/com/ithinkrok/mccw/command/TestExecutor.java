@@ -3,7 +3,7 @@ package com.ithinkrok.mccw.command;
 import com.ithinkrok.mccw.data.Team;
 import com.ithinkrok.mccw.data.User;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
-import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.minigames.TeamColor;
 import com.ithinkrok.mccw.util.item.InventoryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

@@ -3,7 +3,7 @@ package com.ithinkrok.mccw.data;
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.command.WarsCommandSender;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
-import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.minigames.TeamColor;
 import com.ithinkrok.mccw.util.Persistence;
 
 import java.util.UUID;

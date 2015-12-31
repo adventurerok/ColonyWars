@@ -4,7 +4,7 @@ import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.command.WarsCommandSender;
 import com.ithinkrok.mccw.enumeration.GameState;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
-import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.minigames.TeamColor;
 import com.ithinkrok.mccw.event.UserAbilityCooldownEvent;
 import com.ithinkrok.mccw.event.UserUpgradeEvent;
 import com.ithinkrok.mccw.inventory.InventoryHandler;

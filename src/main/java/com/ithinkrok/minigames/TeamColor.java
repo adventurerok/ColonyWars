@@ -1,4 +1,4 @@
-package com.ithinkrok.mccw.enumeration;
+package com.ithinkrok.minigames;
 
 import com.ithinkrok.mccw.util.DyeToChatColorConverter;
 import org.apache.commons.lang.Validate;

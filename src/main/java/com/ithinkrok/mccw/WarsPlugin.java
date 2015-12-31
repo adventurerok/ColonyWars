@@ -7,7 +7,7 @@ import com.ithinkrok.mccw.command.CommandListener;
 import com.ithinkrok.mccw.data.*;
 import com.ithinkrok.mccw.enumeration.GameState;
 import com.ithinkrok.mccw.enumeration.PlayerClass;
-import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.minigames.TeamColor;
 import com.ithinkrok.mccw.event.UserJoinLobbyEvent;
 import com.ithinkrok.mccw.handler.CountdownHandler;
 import com.ithinkrok.mccw.handler.GameInstance;

@@ -2,7 +2,7 @@ package com.ithinkrok.mccw.util;
 
 import com.ithinkrok.mccw.WarsPlugin;
 import com.ithinkrok.mccw.data.User;
-import com.ithinkrok.mccw.enumeration.TeamColor;
+import com.ithinkrok.minigames.TeamColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;

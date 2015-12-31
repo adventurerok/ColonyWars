@@ -7,14 +7,14 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class CWPlugin extends JavaPlugin {
 
-    CWMinigame minigame;
+    CWGame minigame;
 
 
     @Override
     public void onEnable() {
         super.onEnable();
 
-        minigame = new CWMinigame(this);
+        minigame = new CWGame(this);
 
         minigame.registerListeners();
     }

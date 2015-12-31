@@ -7,9 +7,9 @@ import java.lang.reflect.Constructor;
 /**
  * Created by paul on 31/12/15.
  */
-public class CWGameGroup extends GameGroup<CWUser, CWTeam, CWGameGroup, CWMinigame> {
+public class CWGameGroup extends GameGroup<CWUser, CWTeam, CWGameGroup, CWGame> {
 
-    public CWGameGroup(CWMinigame minigame, Constructor<CWTeam> teamConstructor) {
+    public CWGameGroup(CWGame minigame, Constructor<CWTeam> teamConstructor) {
         super(minigame, teamConstructor);
     }
 }

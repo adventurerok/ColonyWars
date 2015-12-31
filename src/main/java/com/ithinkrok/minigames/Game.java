@@ -23,8 +23,8 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Created by paul on 31/12/15.
  */
-public abstract class Minigame<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>,
-        M extends Minigame<U, T, G, M>> implements Listener {
+public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>,
+        M extends Game<U, T, G, M>> implements Listener {
 
     private ConcurrentMap<UUID, U> usersInServer = new ConcurrentHashMap<>();
     private List<G> gameGroups = new ArrayList<>();
@@ -37,7 +37,7 @@ public abstract class Minigame<U extends User<U, T, G, M>, T extends Team<U, T, 
 
     private G spawnGameGroup;
 
-    public Minigame(Plugin plugin, Class<G> gameGroupClass, Class<T> teamClass, Class<U> userClass) {
+    public Game(Plugin plugin, Class<G> gameGroupClass, Class<T> teamClass, Class<U> userClass) {
         this.plugin = plugin;
 
         try {

@@ -40,16 +40,26 @@ last-attacker-timer: 30
 lobby-games:
   parkour:
     runs:
-    - x: 34
-      y: 67
-      z: 97
+    - x: 349
+      y: 84
+      z: 6
       reward: 500
-    # Amount for right clicking an ender chest
-    basic: 500
-    # Amount for right clicking an off redstone lamp
-    advanced: 2000
+    - x: 426
+      y: 74
+      z: 100
+      reward: 1200
+    - x: 425
+      y: 74
+      z: 100
+      reward: 1200
+    - x: 286
+      y: 76
+      z: 106
+      reward: 3000
+
+
     # Money cap
-    cap: 4001
+    cap: 6001
   spleef:
     queue-buttons:
       - x: 312

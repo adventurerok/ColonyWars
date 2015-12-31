@@ -2,6 +2,7 @@ package com.ithinkrok.minigames;
 
 import com.ithinkrok.minigames.event.UserBreakBlockEvent;
 import com.ithinkrok.minigames.event.UserJoinEvent;
+import com.ithinkrok.minigames.event.UserPlaceBlockEvent;
 import org.bukkit.World;
 
 import java.lang.reflect.Constructor;
@@ -43,6 +44,10 @@ public abstract class GameGroup<U extends User, T extends Team, G extends GameGr
     }
 
     public void eventBlockBreak(UserBreakBlockEvent<U> event) {
-        event.setCancelled(true);
+        event.setCancelled(false);
+    }
+
+    public void eventBlockPlace(UserPlaceBlockEvent<U> event) {
+        event.setCancelled(false);
     }
 }

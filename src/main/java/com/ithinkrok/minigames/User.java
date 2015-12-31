@@ -7,7 +7,7 @@ import java.util.UUID;
 /**
  * Created by paul on 31/12/15.
  */
-public abstract class User<U extends User, T extends Team, G extends GameGroup, M extends Game> {
+public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>, M extends Game<U, T, G, M>> {
 
     private M minigame;
     private G gameGroup;

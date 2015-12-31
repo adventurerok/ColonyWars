@@ -71,11 +71,11 @@ public class WarsLobbyListener implements Listener {
         User user = plugin.getUser(event.getPlayer());
         UserBreakBlockEvent userBreakBlockEvent = new UserBreakBlockEvent(user, event);
 
-        for(LobbyMinigame minigame : plugin.getLobbyMinigames()) {
+        for (LobbyMinigame minigame : plugin.getLobbyMinigames()) {
             minigame.onUserBreakBlock(userBreakBlockEvent);
         }
 
-        if(!event.isCancelled()) event.getBlock().setType(Material.AIR);
+        if (!event.isCancelled()) event.getBlock().setType(Material.AIR);
     }
 
     @EventHandler
@@ -83,7 +83,7 @@ public class WarsLobbyListener implements Listener {
         User user = plugin.getUser(event.getPlayer());
         UserMoveEvent userMoveEvent = new UserMoveEvent(user, event);
 
-        for(LobbyMinigame minigame : plugin.getLobbyMinigames()) {
+        for (LobbyMinigame minigame : plugin.getLobbyMinigames()) {
             minigame.onUserMove(userMoveEvent);
         }
     }
@@ -92,12 +92,12 @@ public class WarsLobbyListener implements Listener {
     public void onEntityDamaged(EntityDamageEvent event) {
         event.setCancelled(true);
 
-        if(!(event.getEntity() instanceof Player)) return;
+        if (!(event.getEntity() instanceof Player)) return;
 
-        User user = plugin.getUser((Player)event.getEntity());
+        User user = plugin.getUser((Player) event.getEntity());
         UserDamagedEvent userDamagedEvent = new UserDamagedEvent(user, event);
 
-        for(LobbyMinigame minigame : plugin.getLobbyMinigames()) {
+        for (LobbyMinigame minigame : plugin.getLobbyMinigames()) {
             minigame.onUserDamaged(userDamagedEvent);
         }
     }
@@ -106,7 +106,8 @@ public class WarsLobbyListener implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getItem() != null && event.getItem().getType() == Material.WRITTEN_BOOK) return;
 
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || !isRedstoneControl(event.getClickedBlock().getType())) {
+        if ((event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.PHYSICAL) ||
+                !isRedstoneControl(event.getClickedBlock().getType())) {
             event.setCancelled(true);
         }
 
@@ -114,8 +115,8 @@ public class WarsLobbyListener implements Listener {
 
         UserInteractEvent userInteractEvent = new UserInteractWorldEvent(user, event);
 
-        for(LobbyMinigame minigame : plugin.getLobbyMinigames()) {
-            if(minigame.onUserInteract(userInteractEvent)) break;
+        for (LobbyMinigame minigame : plugin.getLobbyMinigames()) {
+            if (minigame.onUserInteract(userInteractEvent)) break;
         }
 
         if (event.getItem() == null || !event.getItem().hasItemMeta() ||
@@ -136,6 +137,10 @@ public class WarsLobbyListener implements Listener {
             case LEVER:
             case STONE_BUTTON:
             case WOOD_BUTTON:
+            case STONE_PLATE:
+            case WOOD_PLATE:
+            case GOLD_PLATE:
+            case IRON_PLATE:
             case WOOD_DOOR:
             case TRAP_DOOR:
                 return true;
@@ -192,16 +197,16 @@ public class WarsLobbyListener implements Listener {
 
     @EventHandler
     public void onEntityDamagedByEntity(EntityDamageByEntityEvent event) {
-        if(!(event.getDamager() instanceof Player)) return;
+        if (!(event.getDamager() instanceof Player)) return;
 
-        User attacker = plugin.getUser((Player)event.getDamager());
+        User attacker = plugin.getUser((Player) event.getDamager());
         User target = null;
-        if(event.getEntity() instanceof Player) target = plugin.getUser((Player) event.getEntity());
+        if (event.getEntity() instanceof Player) target = plugin.getUser((Player) event.getEntity());
 
         UserInteractEvent userInteractEvent = new UserAttackEvent(attacker, target, event);
 
-        for(LobbyMinigame minigame : plugin.getLobbyMinigames()) {
-            if(minigame.onUserInteract(userInteractEvent)) break;
+        for (LobbyMinigame minigame : plugin.getLobbyMinigames()) {
+            if (minigame.onUserInteract(userInteractEvent)) break;
         }
     }
 
@@ -285,7 +290,7 @@ public class WarsLobbyListener implements Listener {
 
         for (TeamColor teamColor : TeamColor.values()) {
             int count = plugin.getTeam(teamColor).getUserCount();
-            if(teamColor.equals(oldTeam)) --count;
+            if (teamColor.equals(oldTeam)) --count;
 
             if (count < players) return false;
         }

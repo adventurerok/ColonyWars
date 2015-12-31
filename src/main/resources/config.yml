@@ -83,11 +83,11 @@ lobby-games:
       min:
         x: 315
         y: 63
-        z: 31
+        z: 29
       max:
         x: 325
         y: 63
-        z: 37
+        z: 39
     # The radius outside the snow bounds which is still considered to be part of the arena
     extra-radius: 3
 

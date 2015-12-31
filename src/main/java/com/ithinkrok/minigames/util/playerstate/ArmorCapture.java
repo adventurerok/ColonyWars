@@ -1,12 +1,10 @@
 package com.ithinkrok.minigames.util.playerstate;
 
 import com.ithinkrok.minigames.util.InventoryUtils;
+import org.apache.commons.lang.Validate;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by paul on 31/12/15.
@@ -15,6 +13,10 @@ import java.util.List;
 class ArmorCapture implements EntityEquipment {
 
     private ItemStack helmet, chestplate, leggings, boots, holding;
+
+    public ArmorCapture(ItemStack[] armorContents){
+        setArmorContents(armorContents);
+    }
 
     @Override
     public ItemStack getItemInHand() {
@@ -77,27 +79,26 @@ class ArmorCapture implements EntityEquipment {
 
     @Override
     public ItemStack[] getArmorContents() {
-        List<ItemStack> armorList = new ArrayList<>();
-
-        if(helmet != null) armorList.add(helmet);
-        if(chestplate != null) armorList.add(chestplate);
-        if(leggings != null) armorList.add(leggings);
-        if(boots != null) armorList.add(boots);
-
-        ItemStack[] result = new ItemStack[armorList.size()];
-        armorList.toArray(result);
-
-        return result;
+        return new ItemStack[]{boots, leggings, chestplate, helmet};
     }
 
     @Override
     public void setArmorContents(ItemStack[] items) {
+        Validate.notNull(items, "items cannot be null");
+        Validate.isTrue(items.length >= 4, "items must be of length 4");
 
+        setBoots(items[0]);
+        setLeggings(items[1]);
+        setChestplate(items[2]);
+        setHelmet(items[3]);
     }
 
     @Override
     public void clear() {
-
+        setHelmet(null);
+        setChestplate(null);
+        setLeggings(null);
+        setBoots(null);
     }
 
     @Override
@@ -152,6 +153,6 @@ class ArmorCapture implements EntityEquipment {
 
     @Override
     public Entity getHolder() {
-        return null;
+        throw new UnsupportedOperationException("ArmorCapture has no entity");
     }
 }

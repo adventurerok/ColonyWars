@@ -15,6 +15,7 @@ import org.bukkit.plugin.Plugin;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -97,6 +98,7 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     @EventHandler
     public void eventBlockBreak(BlockBreakEvent event) {
+        System.out.println(Arrays.toString(event.getPlayer().getEquipment().getArmorContents()));
         event.setCancelled(true);
 
         U user = getUser(event.getPlayer().getUniqueId());

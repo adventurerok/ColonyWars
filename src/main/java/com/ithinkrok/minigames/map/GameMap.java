@@ -4,19 +4,22 @@ import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.util.DirectoryUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by paul on 01/01/16.
  */
 public class GameMap implements LanguageLookup {
+
+    private static int mapCounter = 0;
 
     private GameMapInfo gameMapInfo;
     private World world;
@@ -30,7 +33,9 @@ public class GameMap implements LanguageLookup {
     }
 
     private void loadMap() {
-        String randomWorldName = gameMapInfo.getName() + "-" + UUID.randomUUID();
+        ++mapCounter;
+
+        String randomWorldName = gameMapInfo.getName() + "-" + String.format("0x%04X", mapCounter);
 
         try {
             DirectoryUtils
@@ -47,6 +52,24 @@ public class GameMap implements LanguageLookup {
         world = creator.createWorld();
         world.setAutoSave(false);
 
+    }
+
+    public void unloadMap() {
+        if(world.getPlayers().size() != 0) System.out.println("There are still players in an unloading map!");
+
+        for(Player player : world.getPlayers()) {
+            player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
+        }
+
+        boolean success = Bukkit.unloadWorld(world, false);
+
+        try {
+            DirectoryUtils.delete(world.getWorldFolder().toPath());
+        } catch (IOException e) {
+            System.out.println("Failed to unload map. When bukkit tried to unload, it returned " + success);
+            System.out.println("Please make sure there are no players in the map before deleting?");
+            e.printStackTrace();
+        }
     }
 
     public void teleportUser(User user) {

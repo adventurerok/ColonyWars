@@ -13,7 +13,7 @@ import com.ithinkrok.oldmccw.listener.WarsGameListener;
 import com.ithinkrok.oldmccw.listener.WarsLobbyListener;
 import com.ithinkrok.oldmccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.oldmccw.strings.Buildings;
-import com.ithinkrok.oldmccw.util.BoundingBox;
+import com.ithinkrok.minigames.util.BoundingBox;
 import com.ithinkrok.oldmccw.util.building.SchematicBuilder;
 import com.ithinkrok.minigames.util.io.DirectoryUtils;
 import com.ithinkrok.oldmccw.util.io.MapConfig;

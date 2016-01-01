@@ -1,6 +1,6 @@
 package com.ithinkrok.oldmccw.data;
 
-import com.ithinkrok.oldmccw.util.BoundingBox;
+import com.ithinkrok.minigames.util.BoundingBox;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 

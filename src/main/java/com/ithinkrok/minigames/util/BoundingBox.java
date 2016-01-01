@@ -1,4 +1,4 @@
-package com.ithinkrok.oldmccw.util;
+package com.ithinkrok.minigames.util;
 
 import org.bukkit.Location;
 import org.bukkit.util.Vector;

@@ -5,7 +5,7 @@ import com.ithinkrok.oldmccw.data.Building;
 import com.ithinkrok.oldmccw.data.Schematic;
 import com.ithinkrok.oldmccw.data.SchematicRotation;
 import com.ithinkrok.minigames.TeamColor;
-import com.ithinkrok.oldmccw.util.BoundingBox;
+import com.ithinkrok.minigames.util.BoundingBox;
 import de.inventivegames.hologram.Hologram;
 import de.inventivegames.hologram.HologramAPI;
 import org.bukkit.Effect;

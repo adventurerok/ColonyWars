@@ -1,16 +1,14 @@
 package com.ithinkrok.oldmccw.util.io;
 
+import com.ithinkrok.minigames.util.ConfigUtils;
 import com.ithinkrok.oldmccw.enumeration.PlayerClass;
 import com.ithinkrok.minigames.TeamColor;
-import com.ithinkrok.oldmccw.util.BoundingBox;
+import com.ithinkrok.minigames.util.BoundingBox;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by paul on 28/11/15.
@@ -169,17 +167,7 @@ public class WarsConfig {
     }
 
     private List<Vector> getVectorList(String path) {
-        List<Map<?, ?>> list = config().getMapList(path);
-
-        List<Vector> result = new ArrayList<>();
-        if (list == null) return result;
-
-        for (Map<?, ?> vecMap : list) {
-            Vector vec = vectorFromMap(vecMap);
-            if (vec != null) result.add(vec);
-        }
-
-        return result;
+        return ConfigUtils.getVectorList(config(), path);
     }
 
     public List<ConfigurationSection> getParkourConfigs() {
@@ -188,36 +176,9 @@ public class WarsConfig {
 
     @SuppressWarnings("unchecked")
     private List<ConfigurationSection> getConfigList(String path) {
-        List<Map<?, ?>> list = config().getMapList(path);
-
-        List<ConfigurationSection> result = new ArrayList<>();
-        if (list == null) return result;
-
-        for (Map<?, ?> vecMap : list) {
-            ConfigurationSection vec = configFromMap((Map<String, Object>) vecMap);
-            if (vec != null) result.add(vec);
-        }
-
-        return result;
+        return ConfigUtils.getConfigList(config(), path);
     }
 
-    private Vector vectorFromMap(Map<?, ?> vecMap) {
-        try {
-            double x = ((Number) vecMap.get("x")).doubleValue();
-            double y = ((Number) vecMap.get("y")).doubleValue();
-            double z = ((Number) vecMap.get("z")).doubleValue();
-            return new Vector(x, y, z);
-        } catch (ClassCastException | NullPointerException e) {
-            return null;
-        }
-    }
-
-    private ConfigurationSection configFromMap(Map<String, Object> values){
-        MemoryConfiguration memory = new MemoryConfiguration();
-        memory.addDefaults(values);
-
-        return memory;
-    }
 
     public List<Vector> getSpleefSpawnLocations() {
         return getVectorList("lobby-games.spleef.spawn-locations");

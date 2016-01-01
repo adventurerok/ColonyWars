@@ -7,4 +7,5 @@ public interface LanguageLookup {
 
     String getLocale(String name);
     String getLocale(String name, Object...args);
+    boolean hasLocale(String name);
 }

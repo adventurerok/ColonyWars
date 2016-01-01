@@ -57,4 +57,10 @@ public class LangFile implements LanguageLookup{
     public String getLocale(String locale, Object...args){
         return String.format(getLocale(locale), args);
     }
+
+    @Override
+    public boolean hasLocale(String name) {
+        String result = languageStrings.get(name);
+        return result != null && !result.equals(name);
+    }
 }

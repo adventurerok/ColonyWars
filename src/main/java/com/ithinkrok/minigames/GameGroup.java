@@ -4,6 +4,7 @@ import com.ithinkrok.minigames.event.UserBreakBlockEvent;
 import com.ithinkrok.minigames.event.UserInGameChangeEvent;
 import com.ithinkrok.minigames.event.UserJoinEvent;
 import com.ithinkrok.minigames.event.UserPlaceBlockEvent;
+import com.ithinkrok.minigames.util.EventExecutor;
 import org.bukkit.World;
 
 import java.lang.reflect.Constructor;
@@ -23,8 +24,8 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
     private Map<TeamColor, T> teamsInGroup = new HashMap<>();
     private M minigame;
 
-    private Map<String, GameState<U>> gameStates = new HashMap<>();
-    private GameState<U> gameState;
+    private Map<String, GameState> gameStates = new HashMap<>();
+    private GameState gameState;
 
     private Constructor<T> teamConstructor;
 
@@ -35,7 +36,7 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
         this.teamConstructor = teamConstructor;
 
         boolean hasDefault = false;
-        for (GameState<U> gs : minigame.getGameStates()) {
+        for (GameState gs : minigame.getGameStates()) {
             if(!hasDefault){
                 this.gameState = gs;
                 hasDefault = true;
@@ -56,18 +57,18 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
     public void eventUserJoinedAsPlayer(UserJoinEvent<U> event) {
         usersInGroup.put(event.getUser().getUuid(), event.getUser());
 
-        gameState.getHandler().eventUserJoin(event);
+        EventExecutor.executeEvent(event, gameState.getListener());
     }
 
     public void eventBlockBreak(UserBreakBlockEvent<U> event) {
-        gameState.getHandler().eventBlockBreak(event);
+        EventExecutor.executeEvent(event, gameState.getListener());
     }
 
     public void eventBlockPlace(UserPlaceBlockEvent<U> event) {
-        gameState.getHandler().eventBlockPlace(event);
+        EventExecutor.executeEvent(event, gameState.getListener());
     }
 
     public void eventUserInGameChanged(UserInGameChangeEvent<U> event) {
-        gameState.getHandler().eventUserInGameChanged(event);
+        EventExecutor.executeEvent(event, gameState.getListener());
     }
 }

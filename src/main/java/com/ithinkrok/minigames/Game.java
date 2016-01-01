@@ -54,7 +54,7 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         gameGroups.add(spawnGameGroup);
     }
 
-    public abstract List<GameState<U>> getGameStates();
+    public abstract List<GameState> getGameStates();
 
     private G createGameGroup() {
         try {

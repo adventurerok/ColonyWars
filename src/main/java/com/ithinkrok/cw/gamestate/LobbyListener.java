@@ -1,28 +1,25 @@
 package com.ithinkrok.cw.gamestate;
 
 import com.ithinkrok.cw.CWUser;
-import com.ithinkrok.minigames.GameStateHandler;
 import com.ithinkrok.minigames.event.UserBreakBlockEvent;
-import com.ithinkrok.minigames.event.UserJoinEvent;
 import com.ithinkrok.minigames.event.UserPlaceBlockEvent;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
 /**
  * Created by paul on 31/12/15.
  */
-public class LobbyHandler extends GameStateHandler<CWUser> {
+public class LobbyListener implements Listener {
 
-    @Override
+    @EventHandler
     public void eventBlockBreak(UserBreakBlockEvent<CWUser> event) {
         event.setCancelled(true);
     }
 
-    @Override
+    @EventHandler
     public void eventBlockPlace(UserPlaceBlockEvent<CWUser> event) {
         event.setCancelled(true);
     }
 
-    @Override
-    public void eventUserJoin(UserJoinEvent<CWUser> event) {
 
-    }
 }

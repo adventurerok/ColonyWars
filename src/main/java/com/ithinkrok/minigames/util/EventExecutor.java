@@ -12,7 +12,7 @@ public class EventExecutor {
 
     private static Map<Class<? extends Listener>, ListenerHandler> listenerHandlerMap = new HashMap<>();
 
-    public static void executeEvent(Event event, Listener... listeners) throws EventException {
+    public static void executeEvent(Event event, Listener... listeners) {
         SortedMap<MethodExecutor, Listener> map = new TreeMap<>();
 
         for(Listener listener : listeners) {
@@ -22,12 +22,16 @@ public class EventExecutor {
         }
 
         for(Map.Entry<MethodExecutor, Listener> entry : map.entrySet()) {
-            entry.getKey().execute(entry.getValue(), event);
+            try {
+                entry.getKey().execute(entry.getValue(), event);
+            } catch (EventException e) {
+                System.out.println("Failed while calling event listener: " + entry.getValue().getClass());
+                e.printStackTrace();
+            }
         }
     }
 
-    private static Collection<MethodExecutor> getMethodExecutors(Listener listener, Event event)
-            throws EventException {
+    private static Collection<MethodExecutor> getMethodExecutors(Listener listener, Event event) {
         ListenerHandler handler = listenerHandlerMap.get(listener.getClass());
 
         if (handler == null) {
@@ -47,8 +51,7 @@ public class EventExecutor {
             this.listenerClass = listenerClass;
         }
 
-        public Collection<MethodExecutor> getMethodExecutors(Event event)
-                throws EventException {
+        public Collection<MethodExecutor> getMethodExecutors(Event event) {
             List<MethodExecutor> eventMethods = eventMethodsMap.get(event.getClass());
 
             if (eventMethods == null) {

@@ -1,23 +1,25 @@
 package com.ithinkrok.minigames;
 
+import org.bukkit.event.Listener;
+
 /**
  * Created by paul on 31/12/15.
  */
-public class GameState<U extends User> {
+public class GameState {
 
     private String name;
-    private GameStateHandler<U> gameStateHandler;
+    private Listener listener;
 
-    public GameState(String name, GameStateHandler<U> gameStateHandler) {
+    public GameState(String name, Listener listener) {
         this.name = name;
-        this.gameStateHandler = gameStateHandler;
+        this.listener = listener;
     }
 
     public String getName() {
         return name;
     }
 
-    public GameStateHandler<U> getHandler() {
-        return gameStateHandler;
+    public Listener getListener() {
+        return listener;
     }
 }

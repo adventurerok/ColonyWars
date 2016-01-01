@@ -1,6 +1,6 @@
 package com.ithinkrok.cw;
 
-import com.ithinkrok.cw.gamestate.LobbyHandler;
+import com.ithinkrok.cw.gamestate.LobbyListener;
 import com.ithinkrok.minigames.GameState;
 import com.ithinkrok.minigames.Game;
 import org.bukkit.plugin.Plugin;
@@ -18,10 +18,10 @@ public class CWGame extends Game<CWUser, CWTeam, CWGameGroup, CWGame> {
     }
 
     @Override
-    public List<GameState<CWUser>> getGameStates() {
-        List<GameState<CWUser>> result = new ArrayList<>();
+    public List<GameState> getGameStates() {
+        List<GameState> result = new ArrayList<>();
 
-        result.add(new GameState<>("lobby", new LobbyHandler()));
+        result.add(new GameState("lobby", new LobbyListener()));
 
         return result;
     }

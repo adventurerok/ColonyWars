@@ -13,15 +13,11 @@ public class EventExecutor {
     private static Map<Class<? extends Listener>, ListenerHandler> listenerHandlerMap = new HashMap<>();
 
     public static void executeEvent(Event event, Listener... listeners) {
-        SortedMap<MethodExecutor, Listener> map = new TreeMap<>();
+        executeListeners(event, getMethodExecutorMap(event, listeners));
+    }
 
-        for(Listener listener : listeners) {
-            for(MethodExecutor methodExecutor : getMethodExecutors(listener, event)) {
-                map.put(methodExecutor, listener);
-            }
-        }
-
-        for(Map.Entry<MethodExecutor, Listener> entry : map.entrySet()) {
+    private static void executeListeners(Event event, SortedMap<MethodExecutor, Listener> map) {
+        for (Map.Entry<MethodExecutor, Listener> entry : map.entrySet()) {
             try {
                 entry.getKey().execute(entry.getValue(), event);
             } catch (EventException e) {
@@ -29,6 +25,18 @@ public class EventExecutor {
                 e.printStackTrace();
             }
         }
+    }
+
+    private static SortedMap<MethodExecutor, Listener> getMethodExecutorMap(Event event, Listener... listeners) {
+        SortedMap<MethodExecutor, Listener> map = new TreeMap<>();
+
+        for (Listener listener : listeners) {
+            for (MethodExecutor methodExecutor : getMethodExecutors(listener, event)) {
+                map.put(methodExecutor, listener);
+            }
+        }
+
+        return map;
     }
 
     private static Collection<MethodExecutor> getMethodExecutors(Listener listener, Event event) {
@@ -40,6 +48,45 @@ public class EventExecutor {
         }
 
         return handler.getMethodExecutors(event);
+    }
+
+    public static void executeEvent(Event event, Collection<Listener> listeners) {
+        executeListeners(event, getMethodExecutorMap(event, listeners));
+    }
+
+    @SafeVarargs
+    public static void executeEvent(Event event, Collection<Listener>... listeners) {
+        executeListeners(event, getMethodExecutorMap(event, listeners));
+    }
+
+
+    private static SortedMap<MethodExecutor, Listener> getMethodExecutorMap(Event event,
+                                                                            Collection<Listener> listeners) {
+        SortedMap<MethodExecutor, Listener> map = new TreeMap<>();
+
+        for (Listener listener : listeners) {
+            for (MethodExecutor methodExecutor : getMethodExecutors(listener, event)) {
+                map.put(methodExecutor, listener);
+            }
+        }
+
+        return map;
+    }
+
+    @SafeVarargs
+    private static SortedMap<MethodExecutor, Listener> getMethodExecutorMap(Event event,
+                                                                            Collection<Listener>... listeners) {
+        SortedMap<MethodExecutor, Listener> map = new TreeMap<>();
+
+        for (Collection<Listener> listenerGroup : listeners) {
+            for(Listener listener : listenerGroup) {
+                for (MethodExecutor methodExecutor : getMethodExecutors(listener, event)) {
+                    map.put(methodExecutor, listener);
+                }
+            }
+        }
+
+        return map;
     }
 
     private static class ListenerHandler {

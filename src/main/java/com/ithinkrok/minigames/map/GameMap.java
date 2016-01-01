@@ -69,7 +69,7 @@ public class GameMap implements LanguageLookup {
     private void loadMap() {
         ++mapCounter;
 
-        String randomWorldName = gameMapInfo.getName() + "-" + String.format("0x%04X", mapCounter);
+        String randomWorldName = gameMapInfo.getName() + "-" + String.format("%04X", mapCounter);
 
         try {
             DirectoryUtils

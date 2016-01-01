@@ -60,8 +60,6 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
             throw new RuntimeException("Failed to get constructors for data classes", e);
         }
 
-        spawnGameGroup = createGameGroup();
-        gameGroups.add(spawnGameGroup);
     }
 
     public abstract List<GameState> getGameStates();
@@ -126,11 +124,17 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         Player player = event.getPlayer();
 
         U user = getUser(player.getUniqueId());
-        G gameGroup = spawnGameGroup;
+        G gameGroup;
 
         if(user != null) {
             gameGroup = user.getGameGroup();
         } else {
+            if(spawnGameGroup == null) {
+                spawnGameGroup = createGameGroup();
+                gameGroups.add(spawnGameGroup);
+            }
+
+            gameGroup = spawnGameGroup;
             user = createUser(gameGroup, null, player.getUniqueId(), player);
         }
 

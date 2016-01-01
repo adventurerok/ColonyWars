@@ -3,6 +3,8 @@ package com.ithinkrok.minigames;
 import com.ithinkrok.minigames.event.UserBreakBlockEvent;
 import com.ithinkrok.minigames.event.UserJoinEvent;
 import com.ithinkrok.minigames.event.UserPlaceBlockEvent;
+import com.ithinkrok.minigames.lang.LanguageLookup;
+import com.ithinkrok.minigames.lang.MultipleLanguageLookup;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -26,7 +28,7 @@ import java.util.concurrent.ConcurrentMap;
  * Created by paul on 31/12/15.
  */
 public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>,
-        M extends Game<U, T, G, M>> implements Listener {
+        M extends Game<U, T, G, M>> implements Listener, LanguageLookup {
 
     private ConcurrentMap<UUID, U> usersInServer = new ConcurrentHashMap<>();
     private List<G> gameGroups = new ArrayList<>();
@@ -38,6 +40,8 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     private Plugin plugin;
 
     private G spawnGameGroup;
+
+    private MultipleLanguageLookup multipleLanguageLookup = new MultipleLanguageLookup();
 
     public Game(Plugin plugin, Class<G> gameGroupClass, Class<T> teamClass, Class<U> userClass) {
         this.plugin = plugin;
@@ -121,5 +125,18 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         return ChatColor.GRAY + "[" + ChatColor.DARK_AQUA + "ColonyWars" + ChatColor.GRAY + "] " + ChatColor.YELLOW;
     }
 
+    @Override
+    public boolean hasLocale(String name) {
+        return multipleLanguageLookup.hasLocale(name);
+    }
 
+    @Override
+    public String getLocale(String name) {
+        return multipleLanguageLookup.getLocale(name);
+    }
+
+    @Override
+    public String getLocale(String name, Object... args) {
+        return multipleLanguageLookup.getLocale(name, args);
+    }
 }

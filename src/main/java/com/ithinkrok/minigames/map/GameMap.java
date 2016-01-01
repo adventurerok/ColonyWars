@@ -2,16 +2,19 @@ package com.ithinkrok.minigames.map;
 
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.User;
+import com.ithinkrok.minigames.event.ConfiguredListener;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.util.io.DirectoryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,6 +33,37 @@ public class GameMap implements LanguageLookup {
         this.gameMapInfo = gameMapInfo;
 
         loadMap();
+        loadListeners();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void loadListeners() {
+        listeners = new ArrayList<>();
+
+        if(!gameMapInfo.getConfig().contains("listeners")) return;
+
+        ConfigurationSection listenersConfig = gameMapInfo.getConfig().getConfigurationSection("listeners");
+
+        for(String key : listenersConfig.getKeys(false)) {
+            ConfigurationSection listenerConfig = listenersConfig.getConfigurationSection(key);
+
+            String className = listenerConfig.getString("class");
+
+            try {
+                Class<? extends Listener> clazz = (Class<? extends Listener>) Class.forName(className);
+
+                Listener listener = clazz.newInstance();
+
+                if(listener instanceof ConfiguredListener && listenerConfig.contains("config")) {
+                    ((ConfiguredListener) listener).configure(listenerConfig.getConfigurationSection("config"));
+                }
+
+                listeners.add(listener);
+            } catch (Exception e) {
+                System.out.println("Failed to load listener for map: " + className);
+                e.printStackTrace();
+            }
+        }
     }
 
     private void loadMap() {

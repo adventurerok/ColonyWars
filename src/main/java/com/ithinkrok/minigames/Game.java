@@ -162,7 +162,7 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         event.setCancelled(true);
 
         U user = getUser(event.getPlayer().getUniqueId());
-        user.getGameGroup().eventBlockBreak(new UserBreakBlockEvent<>(user, event));
+        user.getGameGroup().userEvent(new UserBreakBlockEvent<>(user, event));
     }
 
     @EventHandler
@@ -170,7 +170,7 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         event.setCancelled(true);
 
         U user = getUser(event.getPlayer().getUniqueId());
-        user.getGameGroup().eventBlockPlace(new UserPlaceBlockEvent<>(user, event));
+        user.getGameGroup().userEvent(new UserPlaceBlockEvent<>(user, event));
     }
 
     private U getUser(UUID uuid) {

@@ -1,6 +1,7 @@
 package com.ithinkrok.minigames;
 
 import com.ithinkrok.minigames.event.UserInGameChangeEvent;
+import com.ithinkrok.minigames.event.UserTeleportEvent;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -46,7 +47,7 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     public void setInGame(boolean inGame) {
         isInGame = inGame;
 
-        gameGroup.eventUserInGameChanged(new UserInGameChangeEvent<>((U) this));
+        gameGroup.userEvent(new UserInGameChangeEvent<>((U) this));
     }
 
     public boolean isPlayer(){
@@ -66,8 +67,14 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         sendMessageNoPrefix(game.getChatPrefix() + message);
     }
 
+    @SuppressWarnings("unchecked")
     public boolean teleport(Location location) {
-        return entity.teleport(location);
+        UserTeleportEvent<U> event = new UserTeleportEvent<>((U) this, getLocation(), location);
+
+        gameGroup.userEvent(event);
+
+        if(event.isCancelled()) return false;
+        return entity.teleport(event.getTo());
     }
 
     public Location getLocation() {

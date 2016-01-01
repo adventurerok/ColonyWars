@@ -4,6 +4,7 @@ import com.ithinkrok.minigames.event.UserBreakBlockEvent;
 import com.ithinkrok.minigames.event.UserInGameChangeEvent;
 import com.ithinkrok.minigames.event.UserJoinEvent;
 import com.ithinkrok.minigames.event.UserPlaceBlockEvent;
+import com.ithinkrok.minigames.map.GameMap;
 import com.ithinkrok.minigames.util.EventExecutor;
 import org.bukkit.World;
 
@@ -29,7 +30,7 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
 
     private Constructor<T> teamConstructor;
 
-    private World currentWorld;
+    private GameMap currentMap;
 
     public GameGroup(M minigame, Constructor<T> teamConstructor) {
         this.minigame = minigame;

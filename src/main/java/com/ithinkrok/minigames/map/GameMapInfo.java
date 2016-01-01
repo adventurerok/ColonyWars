@@ -22,5 +22,7 @@ public class GameMapInfo {
         return config;
     }
 
-
+    public String getMapFolder() {
+        return config.getString("folder");
+    }
 }

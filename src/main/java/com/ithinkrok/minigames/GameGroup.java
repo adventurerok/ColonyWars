@@ -10,6 +10,7 @@ import org.bukkit.World;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -62,19 +63,19 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
 
         currentMap.teleportUser(event.getUser());
 
-        EventExecutor.executeEvent(event, gameState.getListener());
+        EventExecutor.executeEvent(event, gameState.getListeners(), currentMap.getListeners());
     }
 
     public void eventBlockBreak(UserBreakBlockEvent<U> event) {
-        EventExecutor.executeEvent(event, gameState.getListener());
+        EventExecutor.executeEvent(event, gameState.getListeners(), currentMap.getListeners());
     }
 
     public void eventBlockPlace(UserPlaceBlockEvent<U> event) {
-        EventExecutor.executeEvent(event, gameState.getListener());
+        EventExecutor.executeEvent(event, gameState.getListeners(), currentMap.getListeners());
     }
 
     public void eventUserInGameChanged(UserInGameChangeEvent<U> event) {
-        EventExecutor.executeEvent(event, gameState.getListener());
+        EventExecutor.executeEvent(event, gameState.getListeners(), currentMap.getListeners());
     }
 
     public void unload() {

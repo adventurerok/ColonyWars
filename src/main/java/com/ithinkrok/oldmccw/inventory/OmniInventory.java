@@ -1,10 +1,10 @@
 package com.ithinkrok.oldmccw.inventory;
 
+import com.ithinkrok.minigames.lang.LangFile;
 import com.ithinkrok.oldmccw.WarsPlugin;
 import com.ithinkrok.oldmccw.event.ItemPurchaseEvent;
 import com.ithinkrok.oldmccw.strings.Buildings;
 import com.ithinkrok.oldmccw.util.building.SchematicBuilder;
-import com.ithinkrok.oldmccw.util.io.LangFile;
 import com.ithinkrok.oldmccw.util.io.WarsConfig;
 import com.ithinkrok.oldmccw.util.item.InventoryUtils;
 import org.bukkit.Material;

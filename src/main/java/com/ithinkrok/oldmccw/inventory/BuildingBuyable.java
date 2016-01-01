@@ -1,7 +1,7 @@
 package com.ithinkrok.oldmccw.inventory;
 
+import com.ithinkrok.minigames.lang.LangFile;
 import com.ithinkrok.oldmccw.event.ItemPurchaseEvent;
-import com.ithinkrok.oldmccw.util.io.LangFile;
 import com.ithinkrok.oldmccw.util.item.InventoryUtils;
 import org.bukkit.Material;
 

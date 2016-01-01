@@ -1,11 +1,11 @@
 package com.ithinkrok.oldmccw.playerclass.items;
 
+import com.ithinkrok.minigames.lang.LangFile;
 import com.ithinkrok.oldmccw.WarsPlugin;
 import com.ithinkrok.oldmccw.data.User;
 import com.ithinkrok.oldmccw.event.*;
 import com.ithinkrok.oldmccw.inventory.Buyable;
 import com.ithinkrok.oldmccw.inventory.UpgradeBuyable;
-import com.ithinkrok.oldmccw.util.io.LangFile;
 import com.ithinkrok.oldmccw.util.io.WarsConfig;
 import com.ithinkrok.oldmccw.util.item.InventoryUtils;
 import org.bukkit.Material;

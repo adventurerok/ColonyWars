@@ -7,7 +7,10 @@ import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.MultipleLanguageLookup;
 import com.ithinkrok.minigames.map.GameMapInfo;
 import com.ithinkrok.minigames.util.ResourceHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -60,6 +63,19 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
             throw new RuntimeException("Failed to get constructors for data classes", e);
         }
 
+        unloadDefaultWorlds();
+    }
+
+    private void unloadDefaultWorlds() {
+        if(Bukkit.getWorlds().size() != 1) System.out.println("You should disable the nether/end worlds to save RAM!");
+
+        for(World world : Bukkit.getWorlds()) {
+            world.setKeepSpawnInMemory(false);
+
+            for(Chunk chunk : world.getLoadedChunks()) {
+                chunk.unload(false, true);
+            }
+        }
     }
 
     public abstract List<GameState> getGameStates();

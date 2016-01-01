@@ -2,6 +2,7 @@ package com.ithinkrok.cw.gamestate;
 
 import com.ithinkrok.cw.CWUser;
 import com.ithinkrok.minigames.event.UserBreakBlockEvent;
+import com.ithinkrok.minigames.event.UserJoinEvent;
 import com.ithinkrok.minigames.event.UserPlaceBlockEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,6 +20,11 @@ public class LobbyListener implements Listener {
     @EventHandler
     public void eventBlockPlace(UserPlaceBlockEvent<CWUser> event) {
         event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void eventUserJoin(UserJoinEvent<CWUser> event) {
+        System.out.println(event.getUser().getUuid() + " joined!");
     }
 
 

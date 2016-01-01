@@ -98,7 +98,6 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     @EventHandler
     public void eventBlockBreak(BlockBreakEvent event) {
-        System.out.println(Arrays.toString(event.getPlayer().getEquipment().getArmorContents()));
         event.setCancelled(true);
 
         U user = getUser(event.getPlayer().getUniqueId());

@@ -58,7 +58,6 @@ public class EventExecutor {
                 eventMethods = new ArrayList<>();
 
                 for (Method method : listenerClass.getMethods()) {
-                    if (!method.isAccessible()) continue;
                     if (method.getParameterCount() != 1) continue;
                     if (!method.isAnnotationPresent(EventHandler.class)) continue;
                     if (!method.getParameterTypes()[0].isInstance(event)) continue;

@@ -12,7 +12,22 @@ public class EventExecutor {
 
     private static Map<Class<? extends Listener>, ListenerHandler> listenerHandlerMap = new HashMap<>();
 
-    public static void executeEvent(Listener listener, Event event) throws EventException {
+    public static void executeEvent(Event event, Listener... listeners) throws EventException {
+        SortedMap<MethodExecutor, Listener> map = new TreeMap<>();
+
+        for(Listener listener : listeners) {
+            for(MethodExecutor methodExecutor : getMethodExecutors(listener, event)) {
+                map.put(methodExecutor, listener);
+            }
+        }
+
+        for(Map.Entry<MethodExecutor, Listener> entry : map.entrySet()) {
+            entry.getKey().execute(entry.getValue(), event);
+        }
+    }
+
+    private static Collection<MethodExecutor> getMethodExecutors(Listener listener, Event event)
+            throws EventException {
         ListenerHandler handler = listenerHandlerMap.get(listener.getClass());
 
         if (handler == null) {
@@ -20,7 +35,7 @@ public class EventExecutor {
             listenerHandlerMap.put(listener.getClass(), handler);
         }
 
-        handler.executeEvent(listener, event);
+        return handler.getMethodExecutors(event);
     }
 
     private static class ListenerHandler {
@@ -32,7 +47,8 @@ public class EventExecutor {
             this.listenerClass = listenerClass;
         }
 
-        public void executeEvent(Listener listener, Event event) throws EventException {
+        public Collection<MethodExecutor> getMethodExecutors(Event event)
+                throws EventException {
             List<MethodExecutor> eventMethods = eventMethodsMap.get(event.getClass());
 
             if (eventMethods == null) {
@@ -51,11 +67,9 @@ public class EventExecutor {
                 Collections.sort(eventMethods);
 
                 eventMethodsMap.put(event.getClass(), eventMethods);
-            } else {
-                for (MethodExecutor method : eventMethods) {
-                    method.execute(listener, event);
-                }
             }
+
+            return eventMethods;
         }
     }
 

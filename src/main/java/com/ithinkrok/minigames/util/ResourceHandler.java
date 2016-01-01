@@ -1,7 +1,7 @@
-package com.ithinkrok.oldmccw.util.io;
+package com.ithinkrok.minigames.util;
 
-import com.ithinkrok.oldmccw.WarsPlugin;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,7 +21,7 @@ public class ResourceHandler {
      * @param name The name of the resource in the plugin's data folder
      * @return The File representing the resource, or {@code null} if the file does not exist
      */
-    public static File getResource(WarsPlugin plugin, String name){
+    public static File getResource(Plugin plugin, String name){
         File file = new File(plugin.getDataFolder(), name);
         if(!file.exists()){
             try {
@@ -39,7 +39,7 @@ public class ResourceHandler {
      * @param name The name of the properties file in the plugin's data folder
      * @return The Properties file, or an empty Properties file if it does not exist
      */
-    public static Properties getPropertiesResource(WarsPlugin plugin, String name){
+    public static Properties getPropertiesResource(Plugin plugin, String name){
         File file = getResource(plugin, name);
 
         Properties properties = new Properties();
@@ -61,7 +61,7 @@ public class ResourceHandler {
      * @param name The name of the config file in the plugin's data folder
      * @return A {@code YamlConfiguration} representing the config, or an empty one if the config does not exist
      */
-    public static YamlConfiguration getConfigResource(WarsPlugin plugin, String name){
+    public static YamlConfiguration getConfigResource(Plugin plugin, String name){
         File file = getResource(plugin, name);
         if(file == null) return new YamlConfiguration();
 

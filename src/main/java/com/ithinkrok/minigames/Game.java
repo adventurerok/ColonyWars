@@ -5,7 +5,9 @@ import com.ithinkrok.minigames.event.UserJoinEvent;
 import com.ithinkrok.minigames.event.UserPlaceBlockEvent;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.MultipleLanguageLookup;
+import com.ithinkrok.minigames.util.ResourceHandler;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -40,6 +42,8 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     private Plugin plugin;
 
     private G spawnGameGroup;
+
+    private ConfigurationSection config;
 
     private MultipleLanguageLookup multipleLanguageLookup = new MultipleLanguageLookup();
 
@@ -81,6 +85,20 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     public void registerListeners() {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+
+    public void reloadConfig() {
+        plugin.reloadConfig();
+
+        config = plugin.getConfig();
+    }
+
+    public ConfigurationSection loadConfig(String path) {
+        return ResourceHandler.getConfigResource(plugin, path);
+    }
+
+    public ConfigurationSection getConfig() {
+        return config;
     }
 
     @EventHandler

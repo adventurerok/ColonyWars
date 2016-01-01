@@ -1,5 +1,6 @@
 package com.ithinkrok.minigames.map;
 
+import com.ithinkrok.minigames.Game;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
@@ -10,8 +11,9 @@ public class GameMapInfo {
     private String name;
     private ConfigurationSection config;
 
-    public GameMapInfo(String name) {
+    public GameMapInfo(Game game, String name) {
         this.name = name;
+        this.config = game.loadConfig("maps/" + name + ".yml");
     }
 
     public String getName() {

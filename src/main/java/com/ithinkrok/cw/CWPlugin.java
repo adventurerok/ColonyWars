@@ -16,6 +16,7 @@ public class CWPlugin extends JavaPlugin {
 
         minigame = new CWGame(this);
 
+        minigame.reloadConfig();
         minigame.registerListeners();
     }
 }

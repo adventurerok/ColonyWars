@@ -26,7 +26,7 @@ import com.ithinkrok.oldmccw.util.EntityUtils;
 import com.ithinkrok.oldmccw.util.InvisiblePlayerAttacker;
 import com.ithinkrok.oldmccw.util.Persistence;
 import com.ithinkrok.oldmccw.util.disguisecraft.Disguises;
-import com.ithinkrok.oldmccw.util.io.ResourceHandler;
+import com.ithinkrok.minigames.util.ResourceHandler;
 import com.ithinkrok.oldmccw.util.io.WarsConfig;
 import com.ithinkrok.oldmccw.util.item.Handbook;
 import com.ithinkrok.oldmccw.util.item.InventoryUtils;

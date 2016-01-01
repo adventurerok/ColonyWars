@@ -1,5 +1,6 @@
 package com.ithinkrok.oldmccw.util.io;
 
+import com.ithinkrok.minigames.util.ResourceHandler;
 import com.ithinkrok.oldmccw.WarsPlugin;
 import org.bukkit.Color;
 import org.bukkit.OfflinePlayer;

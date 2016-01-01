@@ -1,6 +1,7 @@
 package com.ithinkrok.minigames.map;
 
 import com.ithinkrok.minigames.GameGroup;
+import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.util.DirectoryUtils;
 import org.bukkit.World;
@@ -46,6 +47,11 @@ public class GameMap implements LanguageLookup {
         world = creator.createWorld();
         world.setAutoSave(false);
 
+    }
+
+    public void teleportUser(User user) {
+        if(user.getLocation().getWorld().equals(world)) return;
+        user.teleport(world.getSpawnLocation());
     }
 
     @Override

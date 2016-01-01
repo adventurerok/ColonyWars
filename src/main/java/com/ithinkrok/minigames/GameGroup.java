@@ -60,6 +60,8 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
     public void eventUserJoinedAsPlayer(UserJoinEvent<U> event) {
         usersInGroup.put(event.getUser().getUuid(), event.getUser());
 
+        currentMap.teleportUser(event.getUser());
+
         EventExecutor.executeEvent(event, gameState.getListener());
     }
 

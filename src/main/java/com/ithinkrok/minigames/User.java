@@ -1,6 +1,7 @@
 package com.ithinkrok.minigames;
 
 import com.ithinkrok.minigames.event.UserInGameChangeEvent;
+import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -63,5 +64,13 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     public void sendMessage(String message) {
         sendMessageNoPrefix(game.getChatPrefix() + message);
+    }
+
+    public boolean teleport(Location location) {
+        return entity.teleport(location);
+    }
+
+    public Location getLocation() {
+        return entity.getLocation();
     }
 }

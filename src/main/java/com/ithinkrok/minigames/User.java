@@ -2,6 +2,7 @@ package com.ithinkrok.minigames;
 
 import com.ithinkrok.minigames.event.UserInGameChangeEvent;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import java.util.UUID;
@@ -12,7 +13,7 @@ import java.util.UUID;
 public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>, M
         extends Game<U, T, G, M>> implements Listener{
 
-    private M minigame;
+    private M game;
     private G gameGroup;
     private T team;
     private UUID uuid;
@@ -20,8 +21,8 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     private boolean isInGame = false;
 
-    public User(M minigame, G gameGroup, T team, UUID uuid, LivingEntity entity) {
-        this.minigame = minigame;
+    public User(M game, G gameGroup, T team, UUID uuid, LivingEntity entity) {
+        this.game = game;
         this.gameGroup = gameGroup;
         this.team = team;
         this.uuid = uuid;
@@ -45,5 +46,22 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         isInGame = inGame;
 
         gameGroup.eventUserInGameChanged(new UserInGameChangeEvent<>((U) this));
+    }
+
+    public boolean isPlayer(){
+        return entity instanceof Player;
+    }
+
+    protected Player getPlayer(){
+        if(!isPlayer()) throw new RuntimeException("You have no player");
+        return (Player) entity;
+    }
+
+    public void sendMessageNoPrefix(String message) {
+        entity.sendMessage(message);
+    }
+
+    public void sendMessage(String message) {
+        sendMessageNoPrefix(game.getChatPrefix() + message);
     }
 }

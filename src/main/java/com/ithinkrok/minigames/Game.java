@@ -3,6 +3,7 @@ package com.ithinkrok.minigames;
 import com.ithinkrok.minigames.event.UserBreakBlockEvent;
 import com.ithinkrok.minigames.event.UserJoinEvent;
 import com.ithinkrok.minigames.event.UserPlaceBlockEvent;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -114,6 +115,10 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     private U getUser(UUID uuid) {
         return usersInServer.get(uuid);
+    }
+
+    public String getChatPrefix(){
+        return ChatColor.GRAY + "[" + ChatColor.DARK_AQUA + "ColonyWars" + ChatColor.GRAY + "] " + ChatColor.YELLOW;
     }
 
 

@@ -76,4 +76,8 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
     public void eventUserInGameChanged(UserInGameChangeEvent<U> event) {
         EventExecutor.executeEvent(event, gameState.getListener());
     }
+
+    public void unload() {
+        currentMap.unloadMap();
+    }
 }

@@ -179,4 +179,8 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     public String getLocale(String name, Object... args) {
         return multipleLanguageLookup.getLocale(name, args);
     }
+
+    public void unload() {
+        gameGroups.forEach(GameGroup::unload);
+    }
 }

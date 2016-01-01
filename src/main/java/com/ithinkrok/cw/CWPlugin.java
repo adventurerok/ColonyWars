@@ -19,4 +19,9 @@ public class CWPlugin extends JavaPlugin {
         minigame.reloadConfig();
         minigame.registerListeners();
     }
+
+    @Override
+    public void onDisable() {
+        minigame.unload();
+    }
 }

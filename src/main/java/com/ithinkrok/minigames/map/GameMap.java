@@ -70,6 +70,7 @@ public class GameMap implements LanguageLookup {
             System.out.println("Please make sure there are no players in the map before deleting?");
             e.printStackTrace();
         }
+
     }
 
     public void teleportUser(User user) {

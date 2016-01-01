@@ -9,6 +9,6 @@ import org.bukkit.configuration.ConfigurationSection;
 public class SpleefMinigame implements ConfiguredListener {
     @Override
     public void configure(ConfigurationSection config) {
-        System.out.println("Hi");
+        System.out.println("Hi Spleef");
     }
 }

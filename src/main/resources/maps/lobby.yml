@@ -32,3 +32,4 @@ listeners:
           x: 325
           y: 63
           z: 39
+      spade: "IRON_SPADE"

@@ -45,6 +45,8 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
 
             this.gameStates.put(gs.getName(), gs);
         }
+
+        currentMap = new GameMap(this, minigame.getStartMapInfo());
     }
 
     private T createTeam(TeamColor teamColor) {

@@ -1,6 +1,7 @@
 package com.ithinkrok.minigames.map;
 
 import com.ithinkrok.minigames.Game;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
@@ -26,5 +27,11 @@ public class GameMapInfo {
 
     public String getMapFolder() {
         return config.getString("folder");
+    }
+
+    public World.Environment getEnvironment() {
+        String envName = config.getString("environment", "normal").toUpperCase();
+
+        return World.Environment.valueOf(envName);
     }
 }

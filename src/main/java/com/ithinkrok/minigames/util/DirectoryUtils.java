@@ -1,4 +1,4 @@
-package com.ithinkrok.oldmccw.util.io;
+package com.ithinkrok.minigames.util;
 
 import java.io.IOException;
 import java.nio.file.*;

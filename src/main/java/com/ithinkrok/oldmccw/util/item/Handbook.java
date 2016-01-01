@@ -1,7 +1,7 @@
 package com.ithinkrok.oldmccw.util.item;
 
 import com.ithinkrok.oldmccw.WarsPlugin;
-import com.ithinkrok.minigames.util.ResourceHandler;
+import com.ithinkrok.minigames.util.io.ResourceHandler;
 
 import java.io.*;
 

@@ -15,7 +15,7 @@ import com.ithinkrok.oldmccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.oldmccw.strings.Buildings;
 import com.ithinkrok.oldmccw.util.BoundingBox;
 import com.ithinkrok.oldmccw.util.building.SchematicBuilder;
-import com.ithinkrok.minigames.util.DirectoryUtils;
+import com.ithinkrok.minigames.util.io.DirectoryUtils;
 import com.ithinkrok.oldmccw.util.io.MapConfig;
 import com.ithinkrok.oldmccw.util.item.InventoryUtils;
 import org.bukkit.*;

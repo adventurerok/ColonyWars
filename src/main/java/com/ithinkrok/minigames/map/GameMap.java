@@ -3,7 +3,7 @@ package com.ithinkrok.minigames.map;
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.lang.LanguageLookup;
-import com.ithinkrok.minigames.util.DirectoryUtils;
+import com.ithinkrok.minigames.util.io.DirectoryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;

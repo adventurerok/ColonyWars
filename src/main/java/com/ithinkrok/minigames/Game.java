@@ -6,7 +6,7 @@ import com.ithinkrok.minigames.event.UserPlaceBlockEvent;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.MultipleLanguageLookup;
 import com.ithinkrok.minigames.map.GameMapInfo;
-import com.ithinkrok.minigames.util.ResourceHandler;
+import com.ithinkrok.minigames.util.io.ResourceHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;

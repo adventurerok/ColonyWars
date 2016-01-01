@@ -5,6 +5,7 @@ import com.ithinkrok.minigames.event.UserJoinEvent;
 import com.ithinkrok.minigames.event.UserPlaceBlockEvent;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.MultipleLanguageLookup;
+import com.ithinkrok.minigames.map.GameMapInfo;
 import com.ithinkrok.minigames.util.ResourceHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -19,10 +20,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -46,6 +44,9 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     private ConfigurationSection config;
 
     private MultipleLanguageLookup multipleLanguageLookup = new MultipleLanguageLookup();
+
+    private Map<String, GameMapInfo> maps = new HashMap<>();
+    private String startMapName;
 
     public Game(Plugin plugin, Class<G> gameGroupClass, Class<T> teamClass, Class<U> userClass) {
         this.plugin = plugin;
@@ -91,6 +92,23 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         plugin.reloadConfig();
 
         config = plugin.getConfig();
+
+        reloadMaps();
+    }
+
+    private void reloadMaps() {
+        maps.clear();
+
+        startMapName = config.getString("start_map");
+        loadMapInfo(startMapName);
+    }
+
+    private void loadMapInfo(String mapName) {
+        maps.put(mapName, new GameMapInfo(this, mapName));
+    }
+
+    public GameMapInfo getStartMapInfo(){
+        return maps.get(startMapName);
     }
 
     public ConfigurationSection loadConfig(String path) {

@@ -42,39 +42,17 @@ public class InventoryUtils {
     }
 
     public static ItemStack enchantItem(ItemStack item, Object... enchantments) {
-        for (int i = 0; i < enchantments.length; i += 2) {
-            int level = (int) enchantments[i + 1];
-            if (level == 0) continue;
-
-            item.addUnsafeEnchantment((Enchantment) enchantments[i], level);
-        }
-
-        return item;
+        return com.ithinkrok.minigames.util.InventoryUtils.enchantItem(item, enchantments);
     }
 
-    public static ItemStack createPotion(PotionType type, int level, boolean splash, boolean extended, int amount){
-        Potion pot = new Potion(type, level);
-        pot.setSplash(splash);
-        if(extended) pot.setHasExtendedDuration(true);
-
-        return pot.toItemStack(amount);
-    }
-
-    public static ItemStack setItemNameAndLore(ItemStack item, String name, String... lore) {
-        ItemMeta im = item.getItemMeta();
-        if (name != null) im.setDisplayName(name);
-        im.setLore(Arrays.asList(lore));
-        item.setItemMeta(im);
-        return item;
+    public static ItemStack createPotion(PotionType type, int level, boolean splash, boolean extended, int amount) {
+        return com.ithinkrok.minigames.util.InventoryUtils.createPotion(type, level, splash, extended, amount);
     }
 
     public static ItemStack createItemWithEnchantments(Material mat, int amount, int damage, String name, String desc,
                                                        Object... enchantments) {
-        ItemStack stack;
-        if (desc != null) stack = createItemWithNameAndLore(mat, amount, damage, name, desc);
-        else stack = createItemWithNameAndLore(mat, amount, damage, name);
-
-        return enchantItem(stack, enchantments);
+        return com.ithinkrok.minigames.util.InventoryUtils
+                .createItemWithEnchantments(mat, amount, damage, name, desc, enchantments);
     }
 
     public static ItemStack createItemWithNameAndLore(Material mat, int amount, int damage, String name,
@@ -84,13 +62,17 @@ public class InventoryUtils {
         return setItemNameAndLore(stack, name, lore);
     }
 
+    public static ItemStack setItemNameAndLore(ItemStack item, String name, String... lore) {
+        return com.ithinkrok.minigames.util.InventoryUtils.setItemNameAndLore(item, name, lore);
+    }
+
     public static boolean payWithTeamCash(int amount, Team team, User user) {
         int teamAmount = Math.min(team.getTeamCash(), amount);
         int playerAmount = amount - teamAmount;
 
         if (playerAmount > 0 && !user.subtractPlayerCash(playerAmount, true)) return false;
 
-        if(teamAmount > 0) team.subtractTeamCash(teamAmount, true);
+        if (teamAmount > 0) team.subtractTeamCash(teamAmount, true);
 
         if (playerAmount > 0) user.sendLocale("purchase.team-failed", playerAmount);
 
@@ -110,9 +92,6 @@ public class InventoryUtils {
     }
 
     public static void replaceItem(Inventory inventory, ItemStack stack) {
-        int first = inventory.first(stack.getType());
-
-        if (first == -1) inventory.addItem(stack);
-        else inventory.setItem(first, stack);
+        com.ithinkrok.minigames.util.InventoryUtils.replaceItem(inventory, stack);
     }
 }

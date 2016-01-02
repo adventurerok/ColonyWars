@@ -9,9 +9,9 @@ import com.ithinkrok.minigames.item.ClickableItem;
  */
 public class UserViewItemEvent<U extends User> extends UserEvent<U> {
 
-    private final ClickableItem item;
+    private final ClickableItem<U> item;
 
-    public UserViewItemEvent(U user, ClickableItem item) {
+    public UserViewItemEvent(U user, ClickableItem<U> item) {
         super(user);
         this.item = item;
     }

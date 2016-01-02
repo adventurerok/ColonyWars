@@ -12,10 +12,10 @@ import org.bukkit.event.inventory.ClickType;
  */
 public class UserClickItemEvent<U extends User> extends UserEvent<U> {
 
-    private final ClickableItem clicked;
+    private final ClickableItem<U> clicked;
     private final ClickType clickType;
 
-    public UserClickItemEvent(U user, ClickableItem clicked, ClickType clickType) {
+    public UserClickItemEvent(U user, ClickableItem<U> clicked, ClickType clickType) {
         super(user);
         this.clicked = clicked;
         this.clickType = clickType;

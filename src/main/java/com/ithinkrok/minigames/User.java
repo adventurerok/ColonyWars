@@ -8,10 +8,13 @@ import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskList;
 import com.ithinkrok.minigames.task.TaskScheduler;
 import com.ithinkrok.minigames.util.playerstate.PlayerState;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.Vector;
 
@@ -197,5 +200,11 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     @Override
     public void cancelAllTasks() {
         userTaskList.cancelAllTasks();
+    }
+
+    public Inventory createInventory(int size, String title) {
+        size = ((size / 9) + 1) * 9;
+
+        return Bukkit.createInventory((InventoryHolder) entity, size, title);
     }
 }

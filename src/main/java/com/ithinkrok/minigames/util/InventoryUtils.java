@@ -1,7 +1,6 @@
 package com.ithinkrok.minigames.util;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
@@ -78,21 +77,22 @@ public class InventoryUtils {
         if (first == -1) inventory.addItem(stack);
         else inventory.setItem(first, stack);
     }
-    private static String generateIdString(int itemId) {
+
+    public static String generateIdentifierString(int identifier) {
         StringBuilder result = new StringBuilder(ID_START);
 
         for(int i = 12; i >= 0; i -= 4) {
-            result.append(ChatColor.getByChar(Integer.toHexString((itemId >> i) & 0xf)));
+            result.append(ChatColor.getByChar(Integer.toHexString((identifier >> i) & 0xf)));
         }
 
         return result.append(ID_START).toString();
     }
 
-    private static boolean isIdString(String test) {
-        return test.length() == 16 && test.startsWith(ID_START);
+    public static boolean isIdentifierString(String test) {
+        return test.startsWith(ID_START);
     }
 
-    private static int getIdFromIdString(String idString) {
+    public static int getIdentifierFromString(String idString) {
         idString = idString.substring(4, 12).replace("§", "");
 
         return Integer.parseInt(idString, 16);
@@ -105,7 +105,7 @@ public class InventoryUtils {
         if(im.hasLore()) lore = im.getLore();
         else lore = new ArrayList<>();
 
-        lore.add(generateIdString(identifier));
+        lore.add(generateIdentifierString(identifier));
 
         im.setLore(lore);
         item.setItemMeta(im);
@@ -121,7 +121,7 @@ public class InventoryUtils {
         List<String> lore = im.getLore();
 
         for(String s : lore) {
-            if(isIdString(s)) return getIdFromIdString(s);
+            if(isIdentifierString(s)) return getIdentifierFromString(s);
         }
 
         return -1;

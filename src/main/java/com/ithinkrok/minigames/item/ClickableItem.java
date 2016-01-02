@@ -3,6 +3,7 @@ package com.ithinkrok.minigames.item;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.item.event.UserClickItemEvent;
 import com.ithinkrok.minigames.item.event.UserViewItemEvent;
+import com.ithinkrok.minigames.util.InventoryUtils;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -13,10 +14,14 @@ public abstract class ClickableItem<U extends User> {
     private static int clickableItemCount = 0;
 
     private ItemStack display;
-    private int clickableItemId = clickableItemCount++;
+    private int identifier = clickableItemCount++;
 
     public ClickableItem(ItemStack display) {
-        this.display = display;
+        this.display = InventoryUtils.addIdentifier(display, identifier);
+    }
+
+    public int getIdentifier() {
+        return identifier;
     }
 
     public ItemStack getDisplayItemStack() {

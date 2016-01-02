@@ -1,6 +1,6 @@
 package com.ithinkrok.minigames;
 
-import com.ithinkrok.minigames.event.*;
+import com.ithinkrok.minigames.event.user.*;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.MultipleLanguageLookup;
 import com.ithinkrok.minigames.map.GameMapInfo;

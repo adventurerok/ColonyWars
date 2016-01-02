@@ -2,10 +2,10 @@ package com.ithinkrok.cw.lobbygames;
 
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.*;
+import com.ithinkrok.minigames.event.user.*;
 import com.ithinkrok.minigames.util.BoundingBox;
 import com.ithinkrok.minigames.util.ConfigUtils;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;

@@ -1,7 +1,7 @@
 package com.ithinkrok.minigames;
 
-import com.ithinkrok.minigames.event.UserInGameChangeEvent;
-import com.ithinkrok.minigames.event.UserTeleportEvent;
+import com.ithinkrok.minigames.event.user.UserInGameChangeEvent;
+import com.ithinkrok.minigames.event.user.UserTeleportEvent;
 import com.ithinkrok.minigames.util.playerstate.PlayerState;
 import org.bukkit.GameMode;
 import org.bukkit.Location;

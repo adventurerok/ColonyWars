@@ -1,13 +1,12 @@
 package com.ithinkrok.minigames;
 
-import com.ithinkrok.minigames.event.*;
+import com.ithinkrok.minigames.event.user.UserEvent;
+import com.ithinkrok.minigames.event.user.UserJoinEvent;
 import com.ithinkrok.minigames.map.GameMap;
 import com.ithinkrok.minigames.util.EventExecutor;
-import org.bukkit.World;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;

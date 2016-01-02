@@ -1,9 +1,9 @@
 package com.ithinkrok.cw.gamestate;
 
 import com.ithinkrok.cw.CWUser;
-import com.ithinkrok.minigames.event.UserBreakBlockEvent;
-import com.ithinkrok.minigames.event.UserJoinEvent;
-import com.ithinkrok.minigames.event.UserPlaceBlockEvent;
+import com.ithinkrok.minigames.event.user.UserBreakBlockEvent;
+import com.ithinkrok.minigames.event.user.UserJoinEvent;
+import com.ithinkrok.minigames.event.user.UserPlaceBlockEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;

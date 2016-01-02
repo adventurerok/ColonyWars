@@ -1,4 +1,4 @@
-package com.ithinkrok.minigames.event;
+package com.ithinkrok.minigames.event.user;
 
 import com.ithinkrok.minigames.User;
 import org.bukkit.event.Event;

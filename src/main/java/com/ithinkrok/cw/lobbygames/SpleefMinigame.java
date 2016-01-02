@@ -122,12 +122,14 @@ public class SpleefMinigame implements Listener {
             gameLookups.remove(user.getUuid());
 
             removeUserFromSpleef(user, teleport);
+            user.getGameGroup().sendLocale("spleef.loser", user.getFormattedName());
+
             if(usersInSpleef.size() == 1) {
                 User winner = user.getOther(usersInSpleef.remove(0));
                 gameLookups.remove(winner.getUuid());
 
                 removeUserFromSpleef(winner, true);
-                //TODO send message
+                user.getGameGroup().sendLocale("spleef.winner", winner.getFormattedName());
 
                 tryStartGame(user);
             }
@@ -150,14 +152,20 @@ public class SpleefMinigame implements Listener {
             if(gameLookups.containsKey(user.getUuid())) return;
 
             boolean success = queue.add(user.getUuid());
-            if(!success) return;
+            if(!success){
+                user.sendLocale("spleef.queue.need_more");
+                return;
+            }
 
             Arena old = queueLookups.get(user.getUuid());
-            if(old != null) old.queue.remove(user.getUuid());
+            if(old != null){
+                old.queue.remove(user.getUuid());
+                user.sendLocale("spleef.queue.remove");
+            }
 
             queueLookups.put(user.getUuid(), this);
 
-            //TODO message if success or not
+            user.sendLocale("spleef.queue.join");
 
             tryStartGame(user);
         }
@@ -183,7 +191,7 @@ public class SpleefMinigame implements Listener {
                 gameLookups.put(joining.getUuid(), this);
             }
 
-            //TODO message all spleef begin
+            aUser.getGameGroup().sendLocale("spleef.begin");
         }
 
         @SuppressWarnings("unchecked")

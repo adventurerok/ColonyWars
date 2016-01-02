@@ -31,12 +31,16 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     private boolean isInGame = false;
 
+    private String name;
+
     public User(M game, G gameGroup, T team, UUID uuid, LivingEntity entity) {
         this.game = game;
         this.gameGroup = gameGroup;
         this.team = team;
         this.uuid = uuid;
         this.entity = entity;
+
+        this.name = entity.getName();
     }
 
     public G getGameGroup() {
@@ -139,5 +143,13 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
         if (event.isCancelled()) return false;
         return entity.teleport(event.getTo());
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getFormattedName() {
+        return getName();
     }
 }

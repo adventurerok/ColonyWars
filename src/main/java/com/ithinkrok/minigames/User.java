@@ -72,11 +72,19 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     }
 
     public void sendMessage(String message) {
-        sendMessageNoPrefix(game.getChatPrefix() + message);
+        sendMessageNoPrefix(gameGroup.getChatPrefix() + message);
     }
 
     public void sendMessageNoPrefix(String message) {
         entity.sendMessage(message);
+    }
+
+    public void sendLocale(String locale, Object...args) {
+        sendMessage(gameGroup.getLocale(locale, args));
+    }
+
+    public void sendLocaleNoPrefix(String locale, Object...args) {
+        sendMessageNoPrefix(gameGroup.getLocale(locale, args));
     }
 
     public PlayerInventory getInventory() {

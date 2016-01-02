@@ -28,7 +28,7 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
 
     private ConcurrentMap<UUID, U> usersInGroup = new ConcurrentHashMap<>();
     private Map<TeamColor, T> teamsInGroup = new HashMap<>();
-    private M minigame;
+    private M game;
 
     private Map<String, GameState> gameStates = new HashMap<>();
     private GameState gameState;
@@ -37,12 +37,12 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
 
     private GameMap currentMap;
 
-    public GameGroup(M minigame, Constructor<T> teamConstructor) {
-        this.minigame = minigame;
+    public GameGroup(M game, Constructor<T> teamConstructor) {
+        this.game = game;
         this.teamConstructor = teamConstructor;
 
         boolean hasDefault = false;
-        for (GameState gs : minigame.getGameStates()) {
+        for (GameState gs : game.getGameStates()) {
             if (!hasDefault) {
                 changeGameState(gs);
                 hasDefault = true;
@@ -51,7 +51,7 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
             this.gameStates.put(gs.getName(), gs);
         }
 
-        changeMap(minigame.getStartMapInfo());
+        changeMap(game.getStartMapInfo());
     }
 
     @SuppressWarnings("unchecked")
@@ -102,7 +102,7 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
     }
 
     public LangFile loadLangFile(String path) {
-        return minigame.loadLangFile(path);
+        return game.loadLangFile(path);
     }
 
     public void changeGameState(String gameStateName) {
@@ -144,17 +144,39 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
     @Override
     public String getLocale(String name) {
         if(currentMap != null && currentMap.hasLocale(name)) return currentMap.getLocale(name);
-        else return minigame.getLocale(name);
+        else return game.getLocale(name);
     }
 
     @Override
     public boolean hasLocale(String name) {
-        return (currentMap != null && currentMap.hasLocale(name) || minigame.hasLocale(name));
+        return (currentMap != null && currentMap.hasLocale(name) || game.hasLocale(name));
     }
 
     @Override
     public String getLocale(String name, Object...args) {
         if(currentMap != null && currentMap.hasLocale(name)) return currentMap.getLocale(name, args);
-        else return minigame.getLocale(name, args);
+        else return game.getLocale(name, args);
+    }
+
+    public String getChatPrefix() {
+        return game.getChatPrefix();
+    }
+
+    public void sendMessage(String message) {
+        sendMessageNoPrefix(getChatPrefix() + message);
+    }
+
+    public void sendMessageNoPrefix(String message) {
+        for(U user : usersInGroup.values()) {
+            user.sendMessageNoPrefix(message);
+        }
+    }
+
+    public void sendLocale(String locale, Object...args) {
+        sendMessage(getLocale(locale, args));
+    }
+
+    public void sendLocaleNoPrefix(String locale, Object...args) {
+        sendMessageNoPrefix(getLocale(locale, args));
     }
 }

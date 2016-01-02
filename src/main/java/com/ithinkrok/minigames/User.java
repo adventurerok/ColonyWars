@@ -186,4 +186,9 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         userTaskList.addTask(gameTask);
         return gameTask;
     }
+
+    @Override
+    public void cancelAllTasks() {
+        userTaskList.cancelAllTasks();
+    }
 }

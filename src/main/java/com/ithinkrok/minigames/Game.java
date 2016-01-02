@@ -285,4 +285,9 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         gameTask.schedule(plugin, delay, period);
         return gameTask;
     }
+
+    @Override
+    public void cancelAllTasks() {
+        throw new RuntimeException("You cannot cancel all game tasks");
+    }
 }

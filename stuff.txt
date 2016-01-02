@@ -1,6 +1,4 @@
-- Allow maps (like the lobby) to specify their own handlers. This can replace LobbyMinigames
-- Use annotations instead of overrides (to allow Handler to be an interface).
-- Use caching to cache event/annotation execution info for class
-- (Allow users/teams to receive events?)
+- (Allow teams to receive events?)
 - Some kind of kit class
 - Inventory API (Buyables will extend something else)
+- Central index of named ClickableItems/CustomItems (CustomItems are ClassItems)

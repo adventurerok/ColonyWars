@@ -147,5 +147,24 @@ public class EventExecutor {
             return method.getAnnotation(EventHandler.class).priority()
                     .compareTo(o.method.getAnnotation(EventHandler.class).priority());
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            MethodExecutor that = (MethodExecutor) o;
+
+            if (ignoreCancelled != that.ignoreCancelled) return false;
+            return method.equals(that.method);
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = method.hashCode();
+            result = 31 * result + (ignoreCancelled ? 1 : 0);
+            return result;
+        }
     }
 }

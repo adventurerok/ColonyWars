@@ -1,7 +1,7 @@
 package com.ithinkrok.cw.lobbygames;
 
 import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.event.*;
+import com.ithinkrok.minigames.event.game.ListenerEnabledEvent;
 import com.ithinkrok.minigames.event.user.*;
 import com.ithinkrok.minigames.util.BoundingBox;
 import com.ithinkrok.minigames.util.ConfigUtils;
@@ -11,6 +11,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -20,7 +21,7 @@ import java.util.*;
 /**
  * Created by paul on 01/01/16.
  */
-public class SpleefMinigame implements ConfiguredListener {
+public class SpleefMinigame implements Listener {
 
     private Material spadeMaterial;
 
@@ -28,11 +29,11 @@ public class SpleefMinigame implements ConfiguredListener {
     private Map<UUID, Arena> queueLookups = new HashMap<>();
     private Map<UUID, Arena> gameLookups = new HashMap<>();
 
-    @Override
-    public void configure(ConfigurationSection config) {
-        spadeMaterial = Material.matchMaterial(config.getString("spade", "IRON_SPADE"));
+    @EventHandler
+    public void configure(ListenerEnabledEvent event) {
+        spadeMaterial = Material.matchMaterial(event.getConfig().getString("spade", "IRON_SPADE"));
 
-        ConfigurationSection arenasConfig = config.getConfigurationSection("arenas");
+        ConfigurationSection arenasConfig = event.getConfig().getConfigurationSection("arenas");
         for(String key : arenasConfig.getKeys(false)){
             ConfigurationSection arenaConfig = arenasConfig.getConfigurationSection(key);
 

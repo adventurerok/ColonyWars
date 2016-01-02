@@ -2,8 +2,9 @@ package com.ithinkrok.minigames.map;
 
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.event.ConfiguredListener;
+import com.ithinkrok.minigames.event.game.ListenerEnabledEvent;
 import com.ithinkrok.minigames.lang.LanguageLookup;
+import com.ithinkrok.minigames.util.EventExecutor;
 import com.ithinkrok.minigames.util.io.DirectoryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -33,11 +34,11 @@ public class GameMap implements LanguageLookup {
         this.gameMapInfo = gameMapInfo;
 
         loadMap();
-        loadListeners();
+        loadListeners(gameGroup);
     }
 
     @SuppressWarnings("unchecked")
-    private void loadListeners() {
+    private void loadListeners(GameGroup gameGroup) {
         listeners = new ArrayList<>();
 
         if(!gameMapInfo.getConfig().contains("listeners")) return;
@@ -54,9 +55,10 @@ public class GameMap implements LanguageLookup {
 
                 Listener listener = clazz.newInstance();
 
-                if(listener instanceof ConfiguredListener && listenerConfig.contains("config")) {
-                    ((ConfiguredListener) listener).configure(listenerConfig.getConfigurationSection("config"));
-                }
+                ConfigurationSection config = null;
+                if(listenerConfig.contains("config")) config = listenerConfig.getConfigurationSection("config");
+
+                EventExecutor.executeEvent(new ListenerEnabledEvent<>(gameGroup, config), listener);
 
                 listeners.add(listener);
             } catch (Exception e) {

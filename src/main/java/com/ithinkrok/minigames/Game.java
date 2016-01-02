@@ -109,6 +109,15 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         config = plugin.getConfig();
 
         reloadMaps();
+        reloadLangFiles();
+    }
+
+    private void reloadLangFiles() {
+        multipleLanguageLookup = new MultipleLanguageLookup();
+
+        for(String langFile : config.getStringList("lang_files")) {
+            multipleLanguageLookup.addLanguageLookup(loadLangFile(langFile));
+        }
     }
 
     private void reloadMaps() {

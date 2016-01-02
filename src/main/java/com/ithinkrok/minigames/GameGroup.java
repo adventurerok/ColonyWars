@@ -7,6 +7,7 @@ import com.ithinkrok.minigames.event.user.UserEvent;
 import com.ithinkrok.minigames.event.user.UserJoinEvent;
 import com.ithinkrok.minigames.event.user.UserQuitEvent;
 import com.ithinkrok.minigames.lang.LangFile;
+import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.map.GameMap;
 import com.ithinkrok.minigames.map.GameMapInfo;
 import com.ithinkrok.minigames.util.EventExecutor;
@@ -22,7 +23,8 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Created by paul on 31/12/15.
  */
-public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>, M extends Game<U, T, G, M>> {
+public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>,
+        M extends Game<U, T, G, M>> implements LanguageLookup{
 
     private ConcurrentMap<UUID, U> usersInGroup = new ConcurrentHashMap<>();
     private Map<TeamColor, T> teamsInGroup = new HashMap<>();
@@ -137,5 +139,22 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
 
     public void unload() {
         currentMap.unloadMap();
+    }
+
+    @Override
+    public String getLocale(String name) {
+        if(currentMap != null && currentMap.hasLocale(name)) return currentMap.getLocale(name);
+        else return minigame.getLocale(name);
+    }
+
+    @Override
+    public boolean hasLocale(String name) {
+        return (currentMap != null && currentMap.hasLocale(name) || minigame.hasLocale(name));
+    }
+
+    @Override
+    public String getLocale(String name, Object...args) {
+        if(currentMap != null && currentMap.hasLocale(name)) return currentMap.getLocale(name, args);
+        else return minigame.getLocale(name, args);
     }
 }

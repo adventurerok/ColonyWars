@@ -17,6 +17,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.plugin.Plugin;
 
@@ -206,6 +207,12 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
             U user = getUser(event.getEntity().getUniqueId());
             user.getGameGroup().userEvent(new UserDamagedEvent<>(user, event));
         }
+    }
+
+    @EventHandler
+    public void eventPlayerFoodLevelChange(FoodLevelChangeEvent event) {
+        U user = getUser(event.getEntity().getUniqueId());
+        user.getGameGroup().userEvent(new UserFoodLevelChangeEvent<>(user, event));
     }
 
     @EventHandler

@@ -51,6 +51,11 @@ public class LobbyListener implements Listener {
         }
     }
 
+    @EventHandler
+    public void eventUserFoodLevelChange(UserFoodLevelChangeEvent<CWUser> event) {
+        event.setFoodLevel(20);
+    }
+
     private static boolean isRedstoneControl(Material type) {
         switch (type) {
             case LEVER:

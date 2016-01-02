@@ -1,2 +1,6 @@
-
+# The map that will be loaded by new GameGroups
 start_map: "lobby"
+
+# The language files that will be used by default
+lang_files:
+  - "english.lang"

@@ -3,6 +3,7 @@ package com.ithinkrok.minigames;
 import com.ithinkrok.minigames.event.user.game.UserInGameChangeEvent;
 import com.ithinkrok.minigames.event.user.game.UserTeleportEvent;
 import com.ithinkrok.minigames.event.user.inventory.UserInventoryClickEvent;
+import com.ithinkrok.minigames.event.user.inventory.UserInventoryCloseEvent;
 import com.ithinkrok.minigames.item.ClickableInventory;
 import com.ithinkrok.minigames.lang.Messagable;
 import com.ithinkrok.minigames.task.GameRunnable;
@@ -185,6 +186,13 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
                 getClickableInventory().getIdentifier()) return;
 
         getClickableInventory().inventoryClick(event);
+    }
+
+    @EventHandler
+    public void eventInventoryClose(UserInventoryCloseEvent<U> event) {
+        if(!isViewingClickableInventory()) return;
+
+        openInventory = null;
     }
 
     public boolean isViewingClickableInventory() {

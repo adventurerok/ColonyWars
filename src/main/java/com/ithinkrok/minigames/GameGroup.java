@@ -6,6 +6,7 @@ import com.ithinkrok.minigames.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.event.user.UserEvent;
 import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.event.user.game.UserQuitEvent;
+import com.ithinkrok.minigames.event.user.inventory.UserInventoryClickEvent;
 import com.ithinkrok.minigames.lang.LangFile;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.Messagable;
@@ -16,6 +17,7 @@ import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskList;
 import com.ithinkrok.minigames.task.TaskScheduler;
 import com.ithinkrok.minigames.util.EventExecutor;
+import com.ithinkrok.minigames.util.InventoryUtils;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 
@@ -98,6 +100,23 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
 
     public void userEvent(UserEvent<U> event) {
         EventExecutor.executeEvent(event, getListeners());
+    }
+
+    public void userInventoryClickEvent(UserInventoryClickEvent<U> event) {
+        if(doClickableInventoryClick(event)) return;
+
+        userEvent(event);
+    }
+
+    private boolean doClickableInventoryClick(UserInventoryClickEvent<U> event) {
+        if(!event.getUser().isViewingClickableInventory()) return false;
+
+        if(!InventoryUtils.isIdentifierString(event.getInventory().getTitle())) return false;
+        if(InventoryUtils.getIdentifierFromString(event.getInventory().getTitle()) != event.getUser()
+                .getClickableInventory().getIdentifier()) return false;
+
+        event.getUser().getClickableInventory().inventoryClick(event);
+        return true;
     }
 
     public void userQuitEvent(UserQuitEvent<U> event) {

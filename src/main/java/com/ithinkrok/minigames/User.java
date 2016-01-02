@@ -163,6 +163,14 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         return entity.teleport(event.getTo());
     }
 
+    public ClickableInventory<U> getClickableInventory() {
+        return openInventory;
+    }
+
+    public boolean isViewingClickableInventory() {
+        return openInventory != null;
+    }
+
     public String getName() {
         return name;
     }

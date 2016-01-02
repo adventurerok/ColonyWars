@@ -2,25 +2,26 @@ package com.ithinkrok.minigames;
 
 import com.ithinkrok.minigames.event.user.UserInGameChangeEvent;
 import com.ithinkrok.minigames.event.user.UserTeleportEvent;
+import com.ithinkrok.minigames.lang.Messagable;
+import com.ithinkrok.minigames.task.GameRunnable;
+import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskList;
+import com.ithinkrok.minigames.task.TaskScheduler;
 import com.ithinkrok.minigames.util.playerstate.PlayerState;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by paul on 31/12/15.
  */
 public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>, M extends Game<U, T, G, M>>
-        implements Listener {
+        implements Messagable, TaskScheduler {
 
     private M game;
     private G gameGroup;
@@ -36,7 +37,7 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     private String name;
 
-    private TaskList taskList = new TaskList();
+    private TaskList userTaskList = new TaskList();
 
     public User(M game, G gameGroup, T team, UUID uuid, LivingEntity entity) {
         this.game = game;
@@ -80,18 +81,22 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         return entity instanceof Player;
     }
 
+    @Override
     public void sendMessage(String message) {
         sendMessageNoPrefix(gameGroup.getChatPrefix() + message);
     }
 
+    @Override
     public void sendMessageNoPrefix(String message) {
         entity.sendMessage(message);
     }
 
+    @Override
     public void sendLocale(String locale, Object...args) {
         sendMessage(gameGroup.getLocale(locale, args));
     }
 
+    @Override
     public void sendLocaleNoPrefix(String locale, Object...args) {
         sendMessageNoPrefix(gameGroup.getLocale(locale, args));
     }
@@ -156,5 +161,29 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     public String getFormattedName() {
         return getName();
+    }
+
+    @Override
+    public GameTask doInFuture(GameRunnable task) {
+        GameTask gameTask = gameGroup.doInFuture(task);
+
+        userTaskList.addTask(gameTask);
+        return gameTask;
+    }
+
+    @Override
+    public GameTask doInFuture(GameRunnable task, int delay) {
+        GameTask gameTask = gameGroup.doInFuture(task, delay);
+
+        userTaskList.addTask(gameTask);
+        return gameTask;
+    }
+
+    @Override
+    public GameTask repeatInFuture(GameRunnable task, int delay, int period) {
+        GameTask gameTask = gameGroup.repeatInFuture(task, delay, period);
+
+        userTaskList.addTask(gameTask);
+        return gameTask;
     }
 }

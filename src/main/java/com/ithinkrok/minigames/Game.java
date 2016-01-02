@@ -5,6 +5,9 @@ import com.ithinkrok.minigames.lang.LangFile;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.MultipleLanguageLookup;
 import com.ithinkrok.minigames.map.GameMapInfo;
+import com.ithinkrok.minigames.task.GameRunnable;
+import com.ithinkrok.minigames.task.GameTask;
+import com.ithinkrok.minigames.task.TaskScheduler;
 import com.ithinkrok.minigames.util.io.ResourceHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -32,7 +35,7 @@ import java.util.concurrent.ConcurrentMap;
  * Created by paul on 31/12/15.
  */
 public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>,
-        M extends Game<U, T, G, M>> implements Listener, LanguageLookup {
+        M extends Game<U, T, G, M>> implements Listener, LanguageLookup, TaskScheduler {
 
     private ConcurrentMap<UUID, U> usersInServer = new ConcurrentHashMap<>();
     private List<G> gameGroups = new ArrayList<>();
@@ -260,5 +263,26 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     public void unload() {
         gameGroups.forEach(GameGroup::unload);
+    }
+
+    @Override
+    public GameTask doInFuture(GameRunnable task) {
+        return doInFuture(task, 1);
+    }
+
+    @Override
+    public GameTask doInFuture(GameRunnable task, int delay) {
+        GameTask gameTask = new GameTask(task);
+
+        gameTask.schedule(plugin, delay);
+        return gameTask;
+    }
+
+    @Override
+    public GameTask repeatInFuture(GameRunnable task, int delay, int period) {
+        GameTask gameTask = new GameTask(task);
+
+        gameTask.schedule(plugin, delay, period);
+        return gameTask;
     }
 }

@@ -8,8 +8,13 @@ import com.ithinkrok.minigames.event.user.UserJoinEvent;
 import com.ithinkrok.minigames.event.user.UserQuitEvent;
 import com.ithinkrok.minigames.lang.LangFile;
 import com.ithinkrok.minigames.lang.LanguageLookup;
+import com.ithinkrok.minigames.lang.Messagable;
 import com.ithinkrok.minigames.map.GameMap;
 import com.ithinkrok.minigames.map.GameMapInfo;
+import com.ithinkrok.minigames.task.GameRunnable;
+import com.ithinkrok.minigames.task.GameTask;
+import com.ithinkrok.minigames.task.TaskList;
+import com.ithinkrok.minigames.task.TaskScheduler;
 import com.ithinkrok.minigames.util.EventExecutor;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
@@ -24,7 +29,7 @@ import java.util.concurrent.ConcurrentMap;
  * Created by paul on 31/12/15.
  */
 public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>,
-        M extends Game<U, T, G, M>> implements LanguageLookup{
+        M extends Game<U, T, G, M>> implements LanguageLookup, Messagable, TaskScheduler {
 
     private ConcurrentMap<UUID, U> usersInGroup = new ConcurrentHashMap<>();
     private Map<TeamColor, T> teamsInGroup = new HashMap<>();
@@ -36,6 +41,8 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
     private Constructor<T> teamConstructor;
 
     private GameMap currentMap;
+
+    private TaskList gameGroupTaskList;
 
     public GameGroup(M game, Constructor<T> teamConstructor) {
         this.game = game;
@@ -162,21 +169,49 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
         return game.getChatPrefix();
     }
 
+    @Override
     public void sendMessage(String message) {
         sendMessageNoPrefix(getChatPrefix() + message);
     }
 
+    @Override
     public void sendMessageNoPrefix(String message) {
         for(U user : usersInGroup.values()) {
             user.sendMessageNoPrefix(message);
         }
     }
 
+    @Override
     public void sendLocale(String locale, Object...args) {
         sendMessage(getLocale(locale, args));
     }
 
+    @Override
     public void sendLocaleNoPrefix(String locale, Object...args) {
         sendMessageNoPrefix(getLocale(locale, args));
+    }
+
+    @Override
+    public GameTask doInFuture(GameRunnable task) {
+        GameTask gameTask = game.doInFuture(task);
+
+        gameGroupTaskList.addTask(gameTask);
+        return gameTask;
+    }
+
+    @Override
+    public GameTask doInFuture(GameRunnable task, int delay) {
+        GameTask gameTask = game.doInFuture(task, delay);
+
+        gameGroupTaskList.addTask(gameTask);
+        return gameTask;
+    }
+
+    @Override
+    public GameTask repeatInFuture(GameRunnable task, int delay, int period) {
+        GameTask gameTask = game.repeatInFuture(task, delay, period);
+
+        gameGroupTaskList.addTask(gameTask);
+        return gameTask;
     }
 }

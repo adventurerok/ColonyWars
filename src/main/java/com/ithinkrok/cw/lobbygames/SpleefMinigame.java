@@ -11,6 +11,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -65,6 +66,18 @@ public class SpleefMinigame implements ConfiguredListener {
     }
 
     @EventHandler
+    public void onUserDamaged(UserDamagedEvent<User> event) {
+        if(event.getDamageCause() != EntityDamageEvent.DamageCause.LAVA) return;
+
+        Arena arena = gameLookups.get(event.getUser().getUuid());
+        if(arena == null) return;
+
+        event.setCancelled(true);
+
+        arena.spleefUserKilled(event.getUser(), true);
+    }
+
+    @EventHandler
     public void onUserInteractWorld(UserInteractWorldEvent<User> event) {
         if(!event.hasBlock()) return;
 
@@ -78,7 +91,6 @@ public class SpleefMinigame implements ConfiguredListener {
                 Arena arena = queueButtons.get(event.getClickedBlock().getLocation().toVector());
 
                 arena.addUserToQueue(event.getUser());
-                return;
         }
     }
 

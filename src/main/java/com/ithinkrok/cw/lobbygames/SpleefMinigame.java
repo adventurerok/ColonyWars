@@ -153,7 +153,7 @@ public class SpleefMinigame implements Listener {
 
             boolean success = queue.add(user.getUuid());
             if(!success){
-                user.sendLocale("spleef.queue.need_more");
+                user.sendLocale("spleef.queue.already_joined");
                 return;
             }
 

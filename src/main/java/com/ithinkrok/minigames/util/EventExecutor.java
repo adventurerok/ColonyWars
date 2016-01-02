@@ -144,8 +144,12 @@ public class EventExecutor {
 
         @Override
         public int compareTo(MethodExecutor o) {
-            return method.getAnnotation(EventHandler.class).priority()
+            int priorityCompare = method.getAnnotation(EventHandler.class).priority()
                     .compareTo(o.method.getAnnotation(EventHandler.class).priority());
+            if(priorityCompare != 0) return priorityCompare;
+
+            //TODO possible speed improvement here
+            return method.toString().compareTo(o.method.toString());
         }
 
         @Override

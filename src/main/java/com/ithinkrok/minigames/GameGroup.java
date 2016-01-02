@@ -102,23 +102,6 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
         EventExecutor.executeEvent(event, getListeners(event.getUser().getListeners()));
     }
 
-    public void userInventoryClickEvent(UserInventoryClickEvent<U> event) {
-        if(doClickableInventoryClick(event)) return;
-
-        userEvent(event);
-    }
-
-    private boolean doClickableInventoryClick(UserInventoryClickEvent<U> event) {
-        if(!event.getUser().isViewingClickableInventory()) return false;
-
-        if(!InventoryUtils.isIdentifierString(event.getInventory().getTitle())) return false;
-        if(InventoryUtils.getIdentifierFromString(event.getInventory().getTitle()) != event.getUser()
-                .getClickableInventory().getIdentifier()) return false;
-
-        event.getUser().getClickableInventory().inventoryClick(event);
-        return true;
-    }
-
     public void userQuitEvent(UserQuitEvent<U> event) {
         userEvent(event);
 

@@ -2,18 +2,21 @@ package com.ithinkrok.minigames;
 
 import com.ithinkrok.minigames.event.user.game.UserInGameChangeEvent;
 import com.ithinkrok.minigames.event.user.game.UserTeleportEvent;
+import com.ithinkrok.minigames.event.user.inventory.UserInventoryClickEvent;
 import com.ithinkrok.minigames.item.ClickableInventory;
 import com.ithinkrok.minigames.lang.Messagable;
 import com.ithinkrok.minigames.task.GameRunnable;
 import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskList;
 import com.ithinkrok.minigames.task.TaskScheduler;
+import com.ithinkrok.minigames.util.InventoryUtils;
 import com.ithinkrok.minigames.util.playerstate.PlayerState;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -69,10 +72,6 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         return gameGroup;
     }
 
-    public UUID getUuid() {
-        return uuid;
-    }
-
     public U getOther(UUID uuid) {
         return gameGroup.getUser(uuid);
     }
@@ -90,13 +89,9 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         gameGroup.userEvent(new UserInGameChangeEvent<>((U) this));
     }
 
-    protected Player getPlayer() {
-        if (!isPlayer()) throw new RuntimeException("You have no player");
-        return (Player) entity;
-    }
-
-    public boolean isPlayer() {
-        return entity instanceof Player;
+    @Override
+    public void sendLocale(String locale, Object... args) {
+        sendMessage(gameGroup.getLocale(locale, args));
     }
 
     @Override
@@ -110,12 +105,7 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     }
 
     @Override
-    public void sendLocale(String locale, Object...args) {
-        sendMessage(gameGroup.getLocale(locale, args));
-    }
-
-    @Override
-    public void sendLocaleNoPrefix(String locale, Object...args) {
+    public void sendLocaleNoPrefix(String locale, Object... args) {
         sendMessageNoPrefix(gameGroup.getLocale(locale, args));
     }
 
@@ -123,12 +113,21 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         return isPlayer() ? getPlayer().getInventory() : playerState.getInventory();
     }
 
+    public boolean isPlayer() {
+        return entity instanceof Player;
+    }
+
+    protected Player getPlayer() {
+        if (!isPlayer()) throw new RuntimeException("You have no player");
+        return (Player) entity;
+    }
+
     public GameMode getGameMode() {
         return isPlayer() ? getPlayer().getGameMode() : playerState.getGameMode();
     }
 
     public void setGameMode(GameMode gameMode) {
-        if(isPlayer()) getPlayer().setGameMode(gameMode);
+        if (isPlayer()) getPlayer().setGameMode(gameMode);
         else playerState.setGameMode(gameMode);
     }
 
@@ -136,8 +135,13 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         return entity.getFireTicks();
     }
 
+    public void setFireTicks(U fireAttacker, int fireTicks) {
+        setFireAttacker(fireAttacker);
+        entity.setFireTicks(fireTicks);
+    }
+
     public void setFireAttacker(U fireAttacker) {
-        if(fireAttacker != null) {
+        if (fireAttacker != null) {
             this.fireAttacker = fireAttacker.getUuid();
             this.fireAttackerTimer = 30; //TODO get from config
         } else {
@@ -146,9 +150,8 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         }
     }
 
-    public void setFireTicks(U fireAttacker, int fireTicks) {
-        setFireAttacker(fireAttacker);
-        entity.setFireTicks(fireTicks);
+    public UUID getUuid() {
+        return uuid;
     }
 
     public boolean teleport(Vector loc) {
@@ -173,21 +176,28 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         return entity.teleport(event.getTo());
     }
 
-    public ClickableInventory<U> getClickableInventory() {
-        return openInventory;
+    @EventHandler
+    public void eventInventoryClick(UserInventoryClickEvent<U> event) {
+        if (!isViewingClickableInventory()) return;
+
+        if (!InventoryUtils.isIdentifierString(event.getInventory().getTitle())) return;
+        if (InventoryUtils.getIdentifierFromString(event.getInventory().getTitle()) !=
+                getClickableInventory().getIdentifier()) return;
+
+        getClickableInventory().inventoryClick(event);
     }
 
     public boolean isViewingClickableInventory() {
         return openInventory != null;
     }
 
-    public String getName() {
-        return name;
+    public ClickableInventory<U> getClickableInventory() {
+        return openInventory;
     }
 
     @SuppressWarnings("unchecked")
     public void showInventory(ClickableInventory<U> inventory) {
-        if(!isPlayer()) return;
+        if (!isPlayer()) return;
 
         this.openInventory = inventory;
         getPlayer().openInventory(inventory.createInventory((U) this));
@@ -195,6 +205,10 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     public String getFormattedName() {
         return getName();
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void bindTaskToInGame(GameTask task) {

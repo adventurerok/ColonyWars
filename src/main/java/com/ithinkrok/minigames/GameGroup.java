@@ -40,7 +40,7 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
         boolean hasDefault = false;
         for (GameState gs : minigame.getGameStates()) {
             if (!hasDefault) {
-                this.gameState = gs;
+                changeGameState(gs);
                 hasDefault = true;
             }
 

@@ -1,6 +1,7 @@
 package com.ithinkrok.minigames;
 
 import com.ithinkrok.minigames.event.user.*;
+import com.ithinkrok.minigames.lang.LangFile;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.MultipleLanguageLookup;
 import com.ithinkrok.minigames.map.GameMapInfo;
@@ -127,6 +128,10 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     public ConfigurationSection loadConfig(String path) {
         return ResourceHandler.getConfigResource(plugin, path);
+    }
+
+    public LangFile loadLangFile(String path) {
+        return new LangFile(ResourceHandler.getPropertiesResource(plugin, path));
     }
 
     public ConfigurationSection getConfig() {

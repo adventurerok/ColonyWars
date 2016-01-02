@@ -4,6 +4,7 @@ import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.game.ListenerEnabledEvent;
 import com.ithinkrok.minigames.lang.LanguageLookup;
+import com.ithinkrok.minigames.lang.MultipleLanguageLookup;
 import com.ithinkrok.minigames.util.EventExecutor;
 import com.ithinkrok.minigames.util.io.DirectoryUtils;
 import org.bukkit.Bukkit;
@@ -27,14 +28,23 @@ public class GameMap implements LanguageLookup {
 
     private GameMapInfo gameMapInfo;
     private World world;
-    private LanguageLookup languageLookup;
+    private MultipleLanguageLookup languageLookup = new MultipleLanguageLookup();
     private List<Listener> listeners;
 
     public GameMap(GameGroup gameGroup, GameMapInfo gameMapInfo) {
         this.gameMapInfo = gameMapInfo;
 
         loadMap();
+        loadLangFiles(gameGroup);
         loadListeners(gameGroup);
+    }
+
+    private void loadLangFiles(GameGroup gameGroup) {
+        if(!gameMapInfo.getConfig().contains("additional_lang_files")) return;
+
+        for(String additional : gameMapInfo.getConfig().getStringList("additional_lang_files")) {
+            languageLookup.addLanguageLookup(gameGroup.loadLangFile(additional));
+        }
     }
 
     @SuppressWarnings("unchecked")

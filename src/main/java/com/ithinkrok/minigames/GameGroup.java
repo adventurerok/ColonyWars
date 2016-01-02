@@ -6,6 +6,7 @@ import com.ithinkrok.minigames.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.event.user.UserEvent;
 import com.ithinkrok.minigames.event.user.UserJoinEvent;
 import com.ithinkrok.minigames.event.user.UserQuitEvent;
+import com.ithinkrok.minigames.lang.LangFile;
 import com.ithinkrok.minigames.map.GameMap;
 import com.ithinkrok.minigames.map.GameMapInfo;
 import com.ithinkrok.minigames.util.EventExecutor;
@@ -96,6 +97,10 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
             usersInGroup.remove(event.getUser().getUuid());
             //TODO remove user from team
         }
+    }
+
+    public LangFile loadLangFile(String path) {
+        return minigame.loadLangFile(path);
     }
 
     public void changeGameState(String gameStateName) {

@@ -1,5 +1,9 @@
 folder: "mccw_lobby"
+description: "The lobby map for MCCW"
 environment: "normal"
+
+additional_lang_files:
+  - "lang/spleef.lang"
 
 listeners:
   spleef:

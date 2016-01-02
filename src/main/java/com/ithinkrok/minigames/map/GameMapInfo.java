@@ -21,6 +21,10 @@ public class GameMapInfo {
         return name;
     }
 
+    public String getDescription() {
+        return config.getString("description");
+    }
+
     public ConfigurationSection getConfig() {
         return config;
     }
@@ -34,4 +38,5 @@ public class GameMapInfo {
 
         return World.Environment.valueOf(envName);
     }
+
 }

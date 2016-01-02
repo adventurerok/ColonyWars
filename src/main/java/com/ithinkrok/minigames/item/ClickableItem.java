@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Created by paul on 02/01/16.
  */
-public abstract class ClickableItem<U extends User> {
+public abstract class ClickableItem<U extends User> implements Identifiable {
 
     private static int clickableItemCount = 0;
 

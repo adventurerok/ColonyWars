@@ -1,7 +1,9 @@
 package com.ithinkrok.minigames.task;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by paul on 02/01/16.
@@ -11,13 +13,13 @@ import java.util.List;
  */
 public class TaskList {
 
-    private List<GameTask> tasks = new ArrayList<>();
+    private Set<GameTask> tasks = new HashSet<>();
 
     public void addTask(GameTask task) {
         if (task.getTaskState() == GameTask.TaskState.CANCELLED || task.getTaskState() == GameTask.TaskState.FINISHED)
             return;
 
-        tasks.add(task);
+        if(!tasks.add(task)) return;
         task.addedToTaskList(this);
     }
 

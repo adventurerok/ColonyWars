@@ -22,7 +22,6 @@ import java.util.*;
  */
 public class SpleefMinigame implements ConfiguredListener {
 
-    private List<Arena> arenas = new ArrayList<>();
     private Material spadeMaterial;
 
     private Map<Vector, Arena> queueButtons = new HashMap<>();
@@ -38,7 +37,6 @@ public class SpleefMinigame implements ConfiguredListener {
             ConfigurationSection arenaConfig = arenasConfig.getConfigurationSection(key);
 
             Arena arena = new Arena(arenaConfig);
-            arenas.add(arena);
 
             for(Vector button : arena.queueButtons){
                 queueButtons.put(button, arena);

@@ -99,7 +99,7 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
     }
 
     public void userEvent(UserEvent<U> event) {
-        EventExecutor.executeEvent(event, getListeners());
+        EventExecutor.executeEvent(event, getListeners(event.getUser().getListeners()));
     }
 
     public void userInventoryClickEvent(UserInventoryClickEvent<U> event) {

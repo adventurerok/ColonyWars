@@ -14,18 +14,22 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.UUID;
 
 /**
  * Created by paul on 31/12/15.
  */
 public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>, M extends Game<U, T, G, M>>
-        implements Messagable, TaskScheduler {
+        implements Messagable, TaskScheduler, Listener {
 
     private M game;
     private G gameGroup;
@@ -44,6 +48,7 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     private TaskList userTaskList = new TaskList();
     private TaskList inGameTaskList = new TaskList();
     private ClickableInventory<U> openInventory;
+    private Collection<Listener> listeners = new ArrayList<>();
 
     public User(M game, G gameGroup, T team, UUID uuid, LivingEntity entity) {
         this.game = game;
@@ -53,6 +58,11 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         this.entity = entity;
 
         this.name = entity.getName();
+        listeners.add(this);
+    }
+
+    public Collection<Listener> getListeners() {
+        return listeners;
     }
 
     public G getGameGroup() {

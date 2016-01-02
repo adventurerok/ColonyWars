@@ -57,7 +57,7 @@ public class LobbyListener implements Listener {
 
             @Override
             public void onClick(UserClickItemEvent<CWUser> event) {
-
+                event.getUser().sendMessage("No diamonds for you!");
             }
         });
 

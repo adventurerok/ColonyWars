@@ -3,6 +3,7 @@ package com.ithinkrok.minigames;
 import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.event.user.game.UserQuitEvent;
 import com.ithinkrok.minigames.event.user.inventory.UserInventoryClickEvent;
+import com.ithinkrok.minigames.event.user.inventory.UserInventoryCloseEvent;
 import com.ithinkrok.minigames.event.user.state.UserDamagedEvent;
 import com.ithinkrok.minigames.event.user.state.UserFoodLevelChangeEvent;
 import com.ithinkrok.minigames.event.user.world.*;
@@ -28,6 +29,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.plugin.Plugin;
 
@@ -249,6 +251,12 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     public void eventPlayerInventoryClick(InventoryClickEvent event) {
         U user = getUser(event.getWhoClicked().getUniqueId());
         user.getGameGroup().userEvent(new UserInventoryClickEvent<>(user, event));
+    }
+
+    @EventHandler
+    public void eventPlayerInventoryClose(InventoryCloseEvent event) {
+        U user = getUser(event.getPlayer().getUniqueId());
+        user.getGameGroup().userEvent(new UserInventoryCloseEvent<>(user, event));
     }
 
     private U getUser(UUID uuid) {

@@ -1,19 +1,19 @@
 package com.ithinkrok.minigames.event.user.inventory;
 
 import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.event.user.UserEvent;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * Created by paul on 02/01/16.
  */
-public class UserInventoryClickEvent<U extends User> extends UserEvent<U> implements Cancellable{
+public class UserInventoryClickEvent<U extends User> extends UserInventoryEvent<U> implements Cancellable{
 
     private final InventoryClickEvent event;
 
@@ -42,8 +42,14 @@ public class UserInventoryClickEvent<U extends User> extends UserEvent<U> implem
         return event.getAction();
     }
 
+    @Override
     public Inventory getInventory() {
         return event.getInventory();
+    }
+
+    @Override
+    public InventoryView getInventoryView() {
+        return event.getView();
     }
 
     public int getSlot() {

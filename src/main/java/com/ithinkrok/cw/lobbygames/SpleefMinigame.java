@@ -21,12 +21,12 @@ import java.util.*;
  */
 public class SpleefMinigame implements ConfiguredListener {
 
-    private List<Arena> arenas;
+    private List<Arena> arenas = new ArrayList<>();
     private Material spadeMaterial;
 
-    private Map<Vector, Arena> queueButtons;
-    private Map<UUID, Arena> queueLookups;
-    private Map<UUID, Arena> gameLookups;
+    private Map<Vector, Arena> queueButtons = new HashMap<>();
+    private Map<UUID, Arena> queueLookups = new HashMap<>();
+    private Map<UUID, Arena> gameLookups = new HashMap<>();
 
     @Override
     public void configure(ConfigurationSection config) {

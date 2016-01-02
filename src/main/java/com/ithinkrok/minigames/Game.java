@@ -1,6 +1,7 @@
 package com.ithinkrok.minigames;
 
 import com.ithinkrok.minigames.event.UserBreakBlockEvent;
+import com.ithinkrok.minigames.event.UserInteractWorldEvent;
 import com.ithinkrok.minigames.event.UserJoinEvent;
 import com.ithinkrok.minigames.event.UserPlaceBlockEvent;
 import com.ithinkrok.minigames.lang.LanguageLookup;
@@ -18,6 +19,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
 
@@ -158,17 +160,19 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     }
 
     @EventHandler
-    public void eventBlockBreak(BlockBreakEvent event) {
-        event.setCancelled(true);
+    public void eventPlayerInteractWorld(PlayerInteractEvent event) {
+        U user = getUser(event.getPlayer().getUniqueId());
+        user.getGameGroup().userEvent(new UserInteractWorldEvent<U>(user, event));
+    }
 
+    @EventHandler
+    public void eventBlockBreak(BlockBreakEvent event) {
         U user = getUser(event.getPlayer().getUniqueId());
         user.getGameGroup().userEvent(new UserBreakBlockEvent<>(user, event));
     }
 
     @EventHandler
     public void eventBlockPlace(BlockPlaceEvent event) {
-        event.setCancelled(true);
-
         U user = getUser(event.getPlayer().getUniqueId());
         user.getGameGroup().userEvent(new UserPlaceBlockEvent<>(user, event));
     }

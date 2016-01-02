@@ -208,6 +208,12 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         }
     }
 
+    @EventHandler
+    public void eventPlayerInteractEntity(PlayerInteractEntityEvent event) {
+        U user = getUser(event.getPlayer().getUniqueId());
+        user.getGameGroup().userEvent(new UserRightClickEntityEvent<>(user, event));
+    }
+
     private U getUser(UUID uuid) {
         return usersInServer.get(uuid);
     }

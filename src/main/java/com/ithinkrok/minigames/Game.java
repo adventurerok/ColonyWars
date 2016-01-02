@@ -17,8 +17,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Constructor;
@@ -158,9 +160,21 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     }
 
     @EventHandler
+    public void eventPlayerDropItem(PlayerDropItemEvent event) {
+        U user = getUser(event.getPlayer().getUniqueId());
+        user.getGameGroup().userEvent(new UserDropItemEvent<>(user, event));
+    }
+
+    @EventHandler
+    public void eventPlayerPickupItem(PlayerPickupItemEvent event) {
+        U user = getUser(event.getPlayer().getUniqueId());
+        user.getGameGroup().userEvent(new UserPickupItemEvent<>(user, event));
+    }
+
+    @EventHandler
     public void eventPlayerInteractWorld(PlayerInteractEvent event) {
         U user = getUser(event.getPlayer().getUniqueId());
-        user.getGameGroup().userEvent(new UserInteractWorldEvent<U>(user, event));
+        user.getGameGroup().userEvent(new UserInteractWorldEvent<>(user, event));
     }
 
     @EventHandler

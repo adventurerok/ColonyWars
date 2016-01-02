@@ -43,6 +43,7 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
     private GameMap currentMap;
 
     private TaskList gameGroupTaskList;
+    private TaskList gameStateTaskList;
 
     public GameGroup(M game, Constructor<T> teamConstructor) {
         this.game = game;
@@ -137,6 +138,8 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
 
         EventExecutor.executeEvent(event, getListeners(gameState.getListeners()));
 
+        gameStateTaskList.cancelAllTasks();
+
         this.gameState = gameState;
     }
 
@@ -146,6 +149,15 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
 
     public void unload() {
         currentMap.unloadMap();
+    }
+
+    public void bindTaskToCurrentGameState(GameTask task) {
+        gameStateTaskList.addTask(task);
+    }
+
+    public void bindTaskToCurrentMap(GameTask task) {
+        if(currentMap == null) throw new RuntimeException("No GameMap to bind task to");
+        currentMap.bindTaskToMap(task);
     }
 
     @Override

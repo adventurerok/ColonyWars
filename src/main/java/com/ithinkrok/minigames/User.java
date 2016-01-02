@@ -38,6 +38,7 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     private String name;
 
     private TaskList userTaskList = new TaskList();
+    private TaskList inGameTaskList = new TaskList();
 
     public User(M game, G gameGroup, T team, UUID uuid, LivingEntity entity) {
         this.game = game;
@@ -68,6 +69,8 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     @SuppressWarnings("unchecked")
     public void setInGame(boolean inGame) {
         isInGame = inGame;
+
+        inGameTaskList.cancelAllTasks();
 
         gameGroup.userEvent(new UserInGameChangeEvent<>((U) this));
     }
@@ -161,6 +164,10 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     public String getFormattedName() {
         return getName();
+    }
+
+    public void bindTaskToInGame(GameTask task) {
+        inGameTaskList.addTask(task);
     }
 
     @Override

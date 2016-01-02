@@ -5,6 +5,8 @@ import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.game.ListenerEnabledEvent;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.MultipleLanguageLookup;
+import com.ithinkrok.minigames.task.GameTask;
+import com.ithinkrok.minigames.task.TaskList;
 import com.ithinkrok.minigames.util.EventExecutor;
 import com.ithinkrok.minigames.util.io.DirectoryUtils;
 import org.bukkit.Bukkit;
@@ -30,6 +32,8 @@ public class GameMap implements LanguageLookup {
     private World world;
     private MultipleLanguageLookup languageLookup = new MultipleLanguageLookup();
     private List<Listener> listeners;
+
+    private TaskList mapTaskList = new TaskList();
 
     public GameMap(GameGroup gameGroup, GameMapInfo gameMapInfo) {
         this.gameMapInfo = gameMapInfo;
@@ -78,6 +82,10 @@ public class GameMap implements LanguageLookup {
         }
     }
 
+    public void bindTaskToMap(GameTask task) {
+        mapTaskList.addTask(task);
+    }
+
     private void loadMap() {
         ++mapCounter;
 
@@ -101,6 +109,8 @@ public class GameMap implements LanguageLookup {
     }
 
     public void unloadMap() {
+        mapTaskList.cancelAllTasks();
+
         if(world.getPlayers().size() != 0) System.out.println("There are still players in an unloading map!");
 
         for(Player player : world.getPlayers()) {

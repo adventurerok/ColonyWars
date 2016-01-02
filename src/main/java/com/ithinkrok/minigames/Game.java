@@ -185,6 +185,7 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
         if(userEvent.getRemoveUser()) {
             usersInServer.remove(event.getPlayer().getUniqueId());
+            user.cancelAllTasks();
         }
     }
 

@@ -1,18 +1,19 @@
 package com.ithinkrok.minigames;
 
 import com.ithinkrok.minigames.event.game.GameEvent;
+import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.event.user.UserEvent;
 import com.ithinkrok.minigames.event.user.UserJoinEvent;
 import com.ithinkrok.minigames.map.GameMap;
 import com.ithinkrok.minigames.map.GameMapInfo;
 import com.ithinkrok.minigames.util.EventExecutor;
+import org.bukkit.event.Event;
+import org.bukkit.event.Listener;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -49,6 +50,20 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
         changeMap(minigame.getStartMapInfo());
     }
 
+    @SuppressWarnings("unchecked")
+    public void changeMap(GameMapInfo mapInfo) {
+        GameMap newMap = new GameMap(this, mapInfo);
+
+        usersInGroup.values().forEach(newMap::teleportUser);
+
+        Event event = new MapChangedEvent<>((G) this, currentMap, newMap);
+
+        EventExecutor.executeEvent(event, getListeners(newMap.getListeners()));
+
+        if (currentMap != null) currentMap.unloadMap();
+        currentMap = newMap;
+    }
+
     public U getUser(UUID uuid) {
         return usersInGroup.get(uuid);
     }
@@ -70,27 +85,39 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
     }
 
     public void userEvent(UserEvent<U> event) {
-        EventExecutor.executeEvent(event, gameState.getListeners(), currentMap.getListeners());
+        EventExecutor.executeEvent(event, getListeners());
+    }
+
+    public void changeGameState(String gameStateName) {
+        GameState gameState = gameStates.get(gameStateName);
+        if (gameState == null) throw new IllegalArgumentException("Unknown game state name: " + gameStateName);
+
+        changeGameState(gameState);
+    }
+
+    @SafeVarargs
+    private final Collection<Collection<Listener>> getListeners(Collection<Listener>... extras) {
+        Collection<Collection<Listener>> listeners = new ArrayList<>(4);
+        if(gameState != null) listeners.add(gameState.getListeners());
+        if(currentMap != null) listeners.add(currentMap.getListeners());
+        Collections.addAll(listeners, extras);
+
+        return listeners;
     }
 
     @SuppressWarnings("unchecked")
-    public void changeMap(GameMapInfo mapInfo) {
-        GameMap newMap = new GameMap(this, mapInfo);
+    public void changeGameState(GameState gameState) {
+        if (gameState.equals(this.gameState)) return;
 
-        usersInGroup.values().forEach(newMap::teleportUser);
+        Event event = new GameStateChangedEvent<>((G) this, this.gameState, gameState);
 
-        if(currentMap != null) {
-            EventExecutor.executeEvent(new MapChangedEvent<>((G) this, currentMap, newMap), gameState.getListeners(),
-                    currentMap.getListeners(), newMap.getListeners());
-        } else EventExecutor.executeEvent(new MapChangedEvent<>((G) this, null, newMap), gameState.getListeners(),
-                newMap.getListeners());
+        EventExecutor.executeEvent(event, getListeners(gameState.getListeners()));
 
-        if(currentMap != null) currentMap.unloadMap();
-        currentMap = newMap;
+        this.gameState = gameState;
     }
 
     public void gameEvent(GameEvent<G> event) {
-        EventExecutor.executeEvent(event, gameState.getListeners(), currentMap.getListeners());
+        EventExecutor.executeEvent(event, getListeners());
     }
 
     public void unload() {

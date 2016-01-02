@@ -50,27 +50,9 @@ public class EventExecutor {
         return handler.getMethodExecutors(event);
     }
 
-    public static void executeEvent(Event event, Collection<Listener> listeners) {
-        executeListeners(event, getMethodExecutorMap(event, listeners));
-    }
-
     @SafeVarargs
     public static void executeEvent(Event event, Collection<Listener>... listeners) {
         executeListeners(event, getMethodExecutorMap(event, listeners));
-    }
-
-
-    private static SortedMap<MethodExecutor, Listener> getMethodExecutorMap(Event event,
-                                                                            Collection<Listener> listeners) {
-        SortedMap<MethodExecutor, Listener> map = new TreeMap<>();
-
-        for (Listener listener : listeners) {
-            for (MethodExecutor methodExecutor : getMethodExecutors(listener, event)) {
-                map.put(methodExecutor, listener);
-            }
-        }
-
-        return map;
     }
 
     @SafeVarargs
@@ -79,7 +61,26 @@ public class EventExecutor {
         SortedMap<MethodExecutor, Listener> map = new TreeMap<>();
 
         for (Collection<Listener> listenerGroup : listeners) {
-            for(Listener listener : listenerGroup) {
+            for (Listener listener : listenerGroup) {
+                for (MethodExecutor methodExecutor : getMethodExecutors(listener, event)) {
+                    map.put(methodExecutor, listener);
+                }
+            }
+        }
+
+        return map;
+    }
+
+    public static void executeEvent(Event event, Collection<Collection<Listener>> listeners) {
+        executeListeners(event, getMethodExecutorMap(event, listeners));
+    }
+
+    private static SortedMap<MethodExecutor, Listener> getMethodExecutorMap(Event event,
+                                                                            Collection<Collection<Listener>> listeners) {
+        SortedMap<MethodExecutor, Listener> map = new TreeMap<>();
+
+        for (Collection<Listener> listenerGroup : listeners) {
+            for (Listener listener : listenerGroup) {
                 for (MethodExecutor methodExecutor : getMethodExecutors(listener, event)) {
                     map.put(methodExecutor, listener);
                 }

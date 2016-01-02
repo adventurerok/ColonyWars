@@ -1,0 +1,6 @@
+spleef.queue.join=&aYou have joined the spleef queue!
+spleef.queue.already-joined=&cYou are already in the spleef queue!
+spleef.queue.need-more=&a%s &eplayers in spleef queue! Need &c%s more to start!
+spleef.winner=%s &6has won the game of spleef!
+spleef.loser=%s &6was eliminated from the spleef game!
+spleef.begin=&6A new spleef game has started!

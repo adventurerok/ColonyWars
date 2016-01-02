@@ -23,6 +23,10 @@ public class ClickableInventory<U extends User> {
         this.title = InventoryUtils.generateIdentifierString(clickableInventoryId) + title;
     }
 
+    public void addItem(ClickableItem<U> item) {
+        items.add(item);
+    }
+
     public Inventory createInventory(U user) {
         Inventory inventory = user.createInventory(items.size(), title);
 

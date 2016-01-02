@@ -1,6 +1,7 @@
-package com.ithinkrok.minigames.event.user;
+package com.ithinkrok.minigames.event.user.world;
 
 import com.ithinkrok.minigames.User;
+import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;

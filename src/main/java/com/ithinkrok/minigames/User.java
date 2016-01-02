@@ -1,7 +1,7 @@
 package com.ithinkrok.minigames;
 
-import com.ithinkrok.minigames.event.user.UserInGameChangeEvent;
-import com.ithinkrok.minigames.event.user.UserTeleportEvent;
+import com.ithinkrok.minigames.event.user.game.UserInGameChangeEvent;
+import com.ithinkrok.minigames.event.user.game.UserTeleportEvent;
 import com.ithinkrok.minigames.item.ClickableInventory;
 import com.ithinkrok.minigames.lang.Messagable;
 import com.ithinkrok.minigames.task.GameRunnable;

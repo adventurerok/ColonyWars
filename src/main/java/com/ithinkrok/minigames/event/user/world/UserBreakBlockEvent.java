@@ -1,23 +1,24 @@
-package com.ithinkrok.minigames.event.user;
+package com.ithinkrok.minigames.event.user.world;
 
 import com.ithinkrok.minigames.User;
+import com.ithinkrok.minigames.event.user.UserEvent;
 import org.bukkit.block.Block;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.BlockBreakEvent;
 
 /**
  * Created by paul on 31/12/15.
  */
-public class UserPlaceBlockEvent<U extends User> extends UserEvent<U> implements Cancellable {
+public class UserBreakBlockEvent<U extends User> extends UserEvent<U> implements Cancellable {
 
-    private final BlockPlaceEvent event;
+    private BlockBreakEvent event;
 
-    public UserPlaceBlockEvent(U user, BlockPlaceEvent event) {
+    public UserBreakBlockEvent(U user, BlockBreakEvent event) {
         super(user);
         this.event = event;
     }
 
-    public Block getBlock() {
+    public Block getBlock(){
         return event.getBlock();
     }
 

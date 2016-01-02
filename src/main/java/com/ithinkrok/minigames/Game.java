@@ -1,6 +1,10 @@
 package com.ithinkrok.minigames;
 
-import com.ithinkrok.minigames.event.user.*;
+import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
+import com.ithinkrok.minigames.event.user.game.UserQuitEvent;
+import com.ithinkrok.minigames.event.user.state.UserDamagedEvent;
+import com.ithinkrok.minigames.event.user.state.UserFoodLevelChangeEvent;
+import com.ithinkrok.minigames.event.user.world.*;
 import com.ithinkrok.minigames.lang.LangFile;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.MultipleLanguageLookup;

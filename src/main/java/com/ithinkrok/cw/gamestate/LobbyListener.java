@@ -1,14 +1,16 @@
 package com.ithinkrok.cw.gamestate;
 
 import com.ithinkrok.cw.CWUser;
-import com.ithinkrok.minigames.event.user.*;
+import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
+import com.ithinkrok.minigames.event.user.state.UserDamagedEvent;
+import com.ithinkrok.minigames.event.user.state.UserFoodLevelChangeEvent;
+import com.ithinkrok.minigames.event.user.world.*;
 import com.ithinkrok.minigames.item.ClickableInventory;
 import com.ithinkrok.minigames.item.ClickableItem;
 import com.ithinkrok.minigames.item.event.UserClickItemEvent;
 import com.ithinkrok.minigames.item.event.UserViewItemEvent;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 

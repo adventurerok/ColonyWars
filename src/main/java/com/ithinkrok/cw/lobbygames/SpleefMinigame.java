@@ -66,6 +66,8 @@ public class SpleefMinigame implements ConfiguredListener {
 
     @EventHandler
     public void onUserInteractWorld(UserInteractWorldEvent<User> event) {
+        if(!event.hasBlock()) return;
+
         switch(event.getClickedBlock().getType()) {
             case SNOW_BLOCK:
                 if(event.getInteractType() == UserInteractEvent.InteractType.LEFT_CLICK) event.setCancelled(false);

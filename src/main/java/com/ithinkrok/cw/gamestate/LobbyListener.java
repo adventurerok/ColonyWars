@@ -1,9 +1,8 @@
 package com.ithinkrok.cw.gamestate;
 
 import com.ithinkrok.cw.CWUser;
-import com.ithinkrok.minigames.event.user.UserBreakBlockEvent;
-import com.ithinkrok.minigames.event.user.UserJoinEvent;
-import com.ithinkrok.minigames.event.user.UserPlaceBlockEvent;
+import com.ithinkrok.minigames.event.user.*;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -28,9 +27,36 @@ public class LobbyListener implements Listener {
         System.out.println(event.getUser().getUuid() + " joined!");
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void monitorUserJoin(UserJoinEvent<CWUser> event) {
-        System.out.println("Monitored!");
+
+    @EventHandler
+    public void eventUserDamaged(UserDamagedEvent<CWUser> event) {
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void eventUserInteract(UserInteractEvent<CWUser> event) {
+        if(event.hasItem() && event.getItem().getType() == Material.WRITTEN_BOOK) return;
+
+        if(!event.hasBlock() || !isRedstoneControl(event.getClickedBlock().getType())) {
+            event.setCancelled(true);
+        }
+    }
+
+    private static boolean isRedstoneControl(Material type) {
+        switch (type) {
+            case LEVER:
+            case STONE_BUTTON:
+            case WOOD_BUTTON:
+            case STONE_PLATE:
+            case WOOD_PLATE:
+            case GOLD_PLATE:
+            case IRON_PLATE:
+            case WOOD_DOOR:
+            case TRAP_DOOR:
+                return true;
+            default:
+                return false;
+        }
     }
 
 

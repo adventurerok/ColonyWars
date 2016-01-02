@@ -32,6 +32,10 @@ public abstract class UserInteractEvent<U extends User> extends UserEvent<U> imp
         return getClickedEntity() != null;
     }
 
+    public boolean hasItem() {
+        return getItem() != null;
+    }
+
     public enum InteractType {
         LEFT_CLICK,
         RIGHT_CLICK,

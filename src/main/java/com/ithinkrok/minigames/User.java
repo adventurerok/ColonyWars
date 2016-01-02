@@ -2,6 +2,7 @@ package com.ithinkrok.minigames;
 
 import com.ithinkrok.minigames.event.user.UserInGameChangeEvent;
 import com.ithinkrok.minigames.event.user.UserTeleportEvent;
+import com.ithinkrok.minigames.item.ClickableInventory;
 import com.ithinkrok.minigames.lang.Messagable;
 import com.ithinkrok.minigames.task.GameRunnable;
 import com.ithinkrok.minigames.task.GameTask;
@@ -42,6 +43,7 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     private TaskList userTaskList = new TaskList();
     private TaskList inGameTaskList = new TaskList();
+    private ClickableInventory<U> openInventory;
 
     public User(M game, G gameGroup, T team, UUID uuid, LivingEntity entity) {
         this.game = game;
@@ -163,6 +165,14 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     public String getName() {
         return name;
+    }
+
+    @SuppressWarnings("unchecked")
+    public void showInventory(ClickableInventory<U> inventory) {
+        if(!isPlayer()) return;
+
+        this.openInventory = inventory;
+        getPlayer().openInventory(inventory.createInventory((U) this));
     }
 
     public String getFormattedName() {

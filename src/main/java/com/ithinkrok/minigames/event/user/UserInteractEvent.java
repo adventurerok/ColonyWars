@@ -41,4 +41,8 @@ public abstract class UserInteractEvent<U extends User> extends UserEvent<U> imp
         RIGHT_CLICK,
         PHYSICAL
     }
+
+    public interface InteractAction<U extends User> {
+        boolean onUserInteract(UserInteractEvent<U> event);
+    }
 }

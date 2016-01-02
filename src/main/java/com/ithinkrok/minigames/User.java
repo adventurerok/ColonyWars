@@ -2,6 +2,7 @@ package com.ithinkrok.minigames;
 
 import com.ithinkrok.minigames.event.user.UserInGameChangeEvent;
 import com.ithinkrok.minigames.event.user.UserTeleportEvent;
+import com.ithinkrok.minigames.task.TaskList;
 import com.ithinkrok.minigames.util.playerstate.PlayerState;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -11,6 +12,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -32,6 +35,8 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     private boolean isInGame = false;
 
     private String name;
+
+    private TaskList taskList = new TaskList();
 
     public User(M game, G gameGroup, T team, UUID uuid, LivingEntity entity) {
         this.game = game;

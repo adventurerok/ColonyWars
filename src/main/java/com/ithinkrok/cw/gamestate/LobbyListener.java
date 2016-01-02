@@ -2,10 +2,15 @@ package com.ithinkrok.cw.gamestate;
 
 import com.ithinkrok.cw.CWUser;
 import com.ithinkrok.minigames.event.user.*;
+import com.ithinkrok.minigames.item.ClickableInventory;
+import com.ithinkrok.minigames.item.ClickableItem;
+import com.ithinkrok.minigames.item.event.UserClickItemEvent;
+import com.ithinkrok.minigames.item.event.UserViewItemEvent;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Created by paul on 31/12/15.
@@ -40,6 +45,21 @@ public class LobbyListener implements Listener {
     @EventHandler
     public void eventUserDamaged(UserDamagedEvent<CWUser> event) {
         event.setCancelled(true);
+
+        ClickableInventory<CWUser> inventory = new ClickableInventory<>("m8, amazing");
+        inventory.addItem(new ClickableItem<CWUser>(new ItemStack(Material.DIAMOND)) {
+            @Override
+            public boolean isVisible(UserViewItemEvent<CWUser> event) {
+                return true;
+            }
+
+            @Override
+            public void onClick(UserClickItemEvent<CWUser> event) {
+
+            }
+        });
+
+        event.getUser().showInventory(inventory);
     }
 
     @EventHandler

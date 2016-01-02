@@ -42,8 +42,8 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
 
     private GameMap currentMap;
 
-    private TaskList gameGroupTaskList;
-    private TaskList gameStateTaskList;
+    private TaskList gameGroupTaskList = new TaskList();
+    private TaskList gameStateTaskList = new TaskList();
 
     public GameGroup(M game, Constructor<T> teamConstructor) {
         this.game = game;

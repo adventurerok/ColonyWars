@@ -24,4 +24,8 @@ public class EffectsCapture {
     public int getFireTicks() {
         return fireTicks;
     }
+
+    public void setFireTicks(int fireTicks) {
+        this.fireTicks = fireTicks;
+    }
 }

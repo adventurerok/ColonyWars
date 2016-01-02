@@ -33,4 +33,51 @@ public class ModeCapture {
         to.setGameMode(gameMode);
     }
 
+    public float getExp() {
+        return exp;
+    }
+
+    public float getFlySpeed() {
+        return flySpeed;
+    }
+
+    public float getWalkSpeed() {
+        return walkSpeed;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public boolean getAllowFlight() {
+        return allowFlight;
+    }
+
+    public GameMode getGameMode() {
+        return gameMode;
+    }
+
+    public void setExp(float exp) {
+        this.exp = exp;
+    }
+
+    public void setFlySpeed(float flySpeed) {
+        this.flySpeed = flySpeed;
+    }
+
+    public void setWalkSpeed(float walkSpeed) {
+        this.walkSpeed = walkSpeed;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public void setAllowFlight(boolean allowFlight) {
+        this.allowFlight = allowFlight;
+    }
+
+    public void setGameMode(GameMode gameMode) {
+        this.gameMode = gameMode;
+    }
 }

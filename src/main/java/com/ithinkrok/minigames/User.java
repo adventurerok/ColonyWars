@@ -2,24 +2,32 @@ package com.ithinkrok.minigames;
 
 import com.ithinkrok.minigames.event.UserInGameChangeEvent;
 import com.ithinkrok.minigames.event.UserTeleportEvent;
+import com.ithinkrok.minigames.util.playerstate.PlayerState;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.util.Vector;
 
 import java.util.UUID;
 
 /**
  * Created by paul on 31/12/15.
  */
-public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>, M
-        extends Game<U, T, G, M>> implements Listener{
+public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>, M extends Game<U, T, G, M>>
+        implements Listener {
 
     private M game;
     private G gameGroup;
     private T team;
     private UUID uuid;
     private LivingEntity entity;
+    private PlayerState playerState;
+
+    private UUID fireAttacker;
+    private int fireAttackerTimer;
 
     private boolean isInGame = false;
 
@@ -39,6 +47,10 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         return uuid;
     }
 
+    public U getOther(UUID uuid) {
+        return gameGroup.getUser(uuid);
+    }
+
     public boolean isInGame() {
         return isInGame;
     }
@@ -50,21 +62,65 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         gameGroup.userEvent(new UserInGameChangeEvent<>((U) this));
     }
 
-    public boolean isPlayer(){
+    protected Player getPlayer() {
+        if (!isPlayer()) throw new RuntimeException("You have no player");
+        return (Player) entity;
+    }
+
+    public boolean isPlayer() {
         return entity instanceof Player;
     }
 
-    protected Player getPlayer(){
-        if(!isPlayer()) throw new RuntimeException("You have no player");
-        return (Player) entity;
+    public void sendMessage(String message) {
+        sendMessageNoPrefix(game.getChatPrefix() + message);
     }
 
     public void sendMessageNoPrefix(String message) {
         entity.sendMessage(message);
     }
 
-    public void sendMessage(String message) {
-        sendMessageNoPrefix(game.getChatPrefix() + message);
+    public PlayerInventory getInventory() {
+        return isPlayer() ? getPlayer().getInventory() : playerState.getInventory();
+    }
+
+    public GameMode getGameMode() {
+        return isPlayer() ? getPlayer().getGameMode() : playerState.getGameMode();
+    }
+
+    public void setGameMode(GameMode gameMode) {
+        if(isPlayer()) getPlayer().setGameMode(gameMode);
+        else playerState.setGameMode(gameMode);
+    }
+
+    public int getFireTicks() {
+        return entity.getFireTicks();
+    }
+
+    public void setFireAttacker(U fireAttacker) {
+        if(fireAttacker != null) {
+            this.fireAttacker = fireAttacker.getUuid();
+            this.fireAttackerTimer = 30; //TODO get from config
+        } else {
+            this.fireAttacker = null;
+            this.fireAttackerTimer = 0;
+        }
+    }
+
+    public void setFireTicks(U fireAttacker, int fireTicks) {
+        setFireAttacker(fireAttacker);
+        entity.setFireTicks(fireTicks);
+    }
+
+    public boolean teleport(Vector loc) {
+        Location target =
+                new Location(getLocation().getWorld(), loc.getX(), loc.getY(), loc.getZ(), getLocation().getYaw(),
+                        getLocation().getPitch());
+        return teleport(target);
+
+    }
+
+    public Location getLocation() {
+        return entity.getLocation();
     }
 
     @SuppressWarnings("unchecked")
@@ -73,11 +129,7 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
         gameGroup.userEvent(event);
 
-        if(event.isCancelled()) return false;
+        if (event.isCancelled()) return false;
         return entity.teleport(event.getTo());
-    }
-
-    public Location getLocation() {
-        return entity.getLocation();
     }
 }

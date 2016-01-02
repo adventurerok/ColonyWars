@@ -1,6 +1,7 @@
 package com.ithinkrok.minigames.util.playerstate;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.bukkit.GameMode;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -93,8 +94,12 @@ public class PlayerState {
         }
     }
 
-    public ArmorCapture getArmorCapture() {
+    public ArmorCapture getEquipment() {
         return armorCapture;
+    }
+
+    public InventoryCapture getInventory() {
+        return inventoryCapture;
     }
 
     public void restore(LivingEntity entity) {
@@ -107,6 +112,62 @@ public class PlayerState {
 
     public void setPlaceholder(LivingEntity placeholder) {
         this.placeholder = placeholder;
+    }
+
+    public float getExp() {
+        return modeCapture.getExp();
+    }
+
+    public void setExp(float exp) {
+        modeCapture.setExp(exp);
+    }
+
+    public float getFlySpeed() {
+        return modeCapture.getFlySpeed();
+    }
+
+    public void setFlySpeed(float flySpeed) {
+        modeCapture.setFlySpeed(flySpeed);
+    }
+
+    public float getWalkSpeed() {
+        return modeCapture.getWalkSpeed();
+    }
+
+    public void setWalkSpeed(float walkSpeed) {
+        modeCapture.setWalkSpeed(walkSpeed);
+    }
+
+    public int getLevel() {
+        return modeCapture.getLevel();
+    }
+
+    public void setLevel(int level) {
+        modeCapture.setLevel(level);
+    }
+
+    public boolean getAllowFlight() {
+        return modeCapture.getAllowFlight();
+    }
+
+    public void setAllowFlight(boolean allowFlight) {
+        modeCapture.setAllowFlight(allowFlight);
+    }
+
+    public GameMode getGameMode() {
+        return modeCapture.getGameMode();
+    }
+
+    public void setGameMode(GameMode gameMode) {
+        modeCapture.setGameMode(gameMode);
+    }
+
+    public int getFireTicks() {
+        return effectsCapture.getFireTicks();
+    }
+
+    public void setFireTicks(int fireTicks) {
+        effectsCapture.setFireTicks(fireTicks);
     }
 
     public enum CaptureParts {

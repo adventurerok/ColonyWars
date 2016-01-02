@@ -2,7 +2,6 @@ package com.ithinkrok.minigames.util.playerstate;
 
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Zombie;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
@@ -32,7 +31,7 @@ public class InventoryCapture implements PlayerInventory {
     private EntityEquipment equipment(){
         if(playerState == null) return EMPTY_ARMOR;
         if(playerState.getPlaceholder() != null) return playerState.getPlaceholder().getEquipment();
-        if(playerState.getArmorCapture() != null) return playerState.getArmorCapture();
+        if(playerState.getEquipment() != null) return playerState.getEquipment();
 
         return EMPTY_ARMOR;
     }

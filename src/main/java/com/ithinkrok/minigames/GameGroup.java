@@ -5,6 +5,7 @@ import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.event.user.UserEvent;
 import com.ithinkrok.minigames.event.user.UserJoinEvent;
+import com.ithinkrok.minigames.event.user.UserQuitEvent;
 import com.ithinkrok.minigames.map.GameMap;
 import com.ithinkrok.minigames.map.GameMapInfo;
 import com.ithinkrok.minigames.util.EventExecutor;
@@ -86,6 +87,15 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
 
     public void userEvent(UserEvent<U> event) {
         EventExecutor.executeEvent(event, getListeners());
+    }
+
+    public void userQuitEvent(UserQuitEvent<U> event) {
+        userEvent(event);
+
+        if(event.getRemoveUser()) {
+            usersInGroup.remove(event.getUser().getUuid());
+            //TODO remove user from team
+        }
     }
 
     public void changeGameState(String gameStateName) {

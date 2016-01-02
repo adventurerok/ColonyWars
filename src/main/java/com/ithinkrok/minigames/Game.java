@@ -17,10 +17,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Constructor;
@@ -157,6 +154,20 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         }
 
         gameGroup.eventUserJoinedAsPlayer(new UserJoinEvent<>(user, UserJoinEvent.JoinReason.JOINED_SERVER));
+    }
+
+    @EventHandler
+    public void eventPlayerQuit(PlayerQuitEvent event) {
+        event.setQuitMessage(null);
+
+        U user = getUser(event.getPlayer().getUniqueId());
+
+        UserQuitEvent<U> userEvent = new UserQuitEvent<>(user, UserQuitEvent.QuitReason.QUIT_SERVER);
+        user.getGameGroup().userQuitEvent(userEvent);
+
+        if(userEvent.getRemoveUser()) {
+            usersInServer.remove(event.getPlayer().getUniqueId());
+        }
     }
 
     @EventHandler

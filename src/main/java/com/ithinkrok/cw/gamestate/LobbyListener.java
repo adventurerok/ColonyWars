@@ -27,6 +27,15 @@ public class LobbyListener implements Listener {
         System.out.println(event.getUser().getUuid() + " joined!");
     }
 
+    @EventHandler
+    public void eventUserDropItem(UserDropItemEvent<CWUser> event) {
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void eventUserPickupItem(UserPickupItemEvent<CWUser> event) {
+        event.setCancelled(true);
+    }
 
     @EventHandler
     public void eventUserDamaged(UserDamagedEvent<CWUser> event) {

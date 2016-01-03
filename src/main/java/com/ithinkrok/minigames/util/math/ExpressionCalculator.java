@@ -59,9 +59,10 @@ public class ExpressionCalculator implements Calculator {
             if(isNumber(token)) stack.add(new NumberExpression(Double.parseDouble(token)));
             else if(!orderedOperators.contains(token)) stack.add(new VariableExpression(token));
             else {
-                Expression[] expressions = new Expression[2];
-                expressions[1] = stack.removeLast();
-                expressions[0] = stack.removeLast();
+                Expression[] expressions = new Expression[Math.min(2, stack.size())];
+                for(int index = expressions.length - 1; index >= 0; --index) {
+                    expressions[index] = stack.removeLast();
+                }
 
                 stack.add(new OperatorExpression(operatorMap.get(token), expressions));
             }
@@ -143,20 +144,31 @@ public class ExpressionCalculator implements Calculator {
 
     private static List<String> tokenize(String s) throws IOException {
         StreamTokenizer tokenizer = new StreamTokenizer(new StringReader(s));
-        tokenizer.ordinaryChar('-');  // Don't parse minus as part of numbers.
+
         tokenizer.ordinaryChar('/');
+
         List<String> tokBuf = new ArrayList<>();
+        boolean wasNotOperator = false;
+
         while (tokenizer.nextToken() != StreamTokenizer.TT_EOF) {
             switch(tokenizer.ttype) {
                 case StreamTokenizer.TT_NUMBER:
+                    if(wasNotOperator) tokBuf.add("+");
                     tokBuf.add(String.valueOf(tokenizer.nval));
+                    wasNotOperator = true;
                     break;
-                case StreamTokenizer.TT_WORD:
-                    tokBuf.add(tokenizer.sval);
-                    break;
-                default:  // operator
-                    tokBuf.add(String.valueOf((char) tokenizer.ttype));
+                default:  // operator or word
+                    String token;
+                    if(tokenizer.ttype == StreamTokenizer.TT_WORD) token = tokenizer.sval;
+                    else token = String.valueOf((char) tokenizer.ttype);
+
+                    boolean operator = orderedOperators.contains(token) || "(".equals(token);
+                    if(!operator && wasNotOperator && !")".equals(token)) tokBuf.add("+");
+
+                    tokBuf.add(token);
+                    wasNotOperator = !operator;
             }
+
         }
         return tokBuf;
     }

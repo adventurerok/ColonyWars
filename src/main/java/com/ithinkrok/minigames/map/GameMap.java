@@ -2,7 +2,7 @@ package com.ithinkrok.minigames.map;
 
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.event.game.ListenerEnabledEvent;
+import com.ithinkrok.minigames.event.ListenerEnabledEvent;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.MultipleLanguageLookup;
 import com.ithinkrok.minigames.task.GameTask;

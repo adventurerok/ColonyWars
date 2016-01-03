@@ -100,8 +100,8 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         }
     }
 
-    public void registerCustomItem(String name, CustomItem<U> item) {
-        customItemIdentifierMap.put(name, item);
+    public void registerCustomItem(CustomItem<U> item) {
+        customItemIdentifierMap.put(item.getName(), item);
     }
 
     public CustomItem<U> getCustomItem(String name) {

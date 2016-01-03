@@ -1,7 +1,7 @@
 package com.ithinkrok.cw.lobbygames;
 
 import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.event.game.ListenerEnabledEvent;
+import com.ithinkrok.minigames.event.ListenerEnabledEvent;
 import com.ithinkrok.minigames.event.user.game.UserTeleportEvent;
 import com.ithinkrok.minigames.event.user.state.UserDamagedEvent;
 import com.ithinkrok.minigames.event.user.world.UserBreakBlockEvent;

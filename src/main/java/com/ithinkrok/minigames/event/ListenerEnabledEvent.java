@@ -1,20 +1,26 @@
-package com.ithinkrok.minigames.event.game;
+package com.ithinkrok.minigames.event;
 
-import com.ithinkrok.minigames.GameGroup;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 /**
  * Created by paul on 02/01/16.
  *
  * Called on a listener when it is enabled (but not necessarily before it starts receiving events)
  */
-public class ListenerEnabledEvent<G extends GameGroup> extends GameEvent<G> {
+public class ListenerEnabledEvent<C> extends Event{
 
+    private final C creator;
     private final ConfigurationSection config;
 
-    public ListenerEnabledEvent(G gameGroup, ConfigurationSection config) {
-        super(gameGroup);
+    public ListenerEnabledEvent(C creator, ConfigurationSection config) {
+        this.creator = creator;
         this.config = config;
+    }
+
+    public C getCreator() {
+        return creator;
     }
 
     public ConfigurationSection getConfig() {
@@ -23,5 +29,10 @@ public class ListenerEnabledEvent<G extends GameGroup> extends GameEvent<G> {
 
     public boolean hasConfig() {
         return getConfig() != null;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return null;
     }
 }

@@ -24,8 +24,10 @@ public class CustomItem<U extends User> implements Identifiable{
     private ClassItem.TimeoutAction timeoutAction;
     private UserAttackEvent.AttackAction<U> attackAction;
 
+    private String name;
     private String itemDisplayLocale;
     private Material itemMaterial;
+    private int durability;
     private String rightClickCooldownFinishedLocale;
     private Calculator rightClickCooldown;
     private String timeoutAbility;
@@ -35,10 +37,18 @@ public class CustomItem<U extends User> implements Identifiable{
     private String rightClickCooldownAbility;
     private String descriptionLocale;
 
-    public CustomItem(ConfigurationSection config) {
+    public CustomItem(String name, ConfigurationSection config) {
+        this.name = name;
 
+        this.itemDisplayLocale = config.getString("display_name", null);
+        this.descriptionLocale = config.getString("description", null);
+        this.itemMaterial = Material.matchMaterial(config.getString("material"));
+        this.durability = config.getInt("durability", 0);
     }
 
+    public String getName() {
+        return name;
+    }
 
     @Override
     public int getIdentifier() {

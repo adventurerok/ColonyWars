@@ -40,4 +40,5 @@ public class UserAbilityCooldownEvent<U extends User> extends UserEvent<U> {
     public void setCoolDownMessage(String coolDownMessage) {
         this.coolDownMessage = coolDownMessage;
     }
+
 }

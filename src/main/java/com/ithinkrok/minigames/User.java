@@ -5,11 +5,13 @@ import com.ithinkrok.minigames.event.user.game.UserTeleportEvent;
 import com.ithinkrok.minigames.event.user.inventory.UserInventoryClickEvent;
 import com.ithinkrok.minigames.event.user.inventory.UserInventoryCloseEvent;
 import com.ithinkrok.minigames.item.ClickableInventory;
+import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.lang.Messagable;
 import com.ithinkrok.minigames.task.GameRunnable;
 import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskList;
 import com.ithinkrok.minigames.task.TaskScheduler;
+import com.ithinkrok.minigames.user.AttackerTracker;
 import com.ithinkrok.minigames.user.CooldownHandler;
 import com.ithinkrok.minigames.user.UpgradeHandler;
 import com.ithinkrok.minigames.user.UserResolver;
@@ -25,7 +27,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -46,8 +51,9 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     private LivingEntity entity;
     private PlayerState playerState;
 
-    private UUID fireAttacker;
-    private int fireAttackerTimer;
+    private AttackerTracker<U> fireAttacker = new AttackerTracker<>((U) this);
+    private AttackerTracker<U> witherAttacker = new AttackerTracker<>((U) this);
+    private AttackerTracker<U> lastAttacker = new AttackerTracker<>((U) this);
 
     private boolean isInGame = false;
 
@@ -146,8 +152,25 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     }
 
     public void setFireTicks(U fireAttacker, int fireTicks) {
-        setFireAttacker(fireAttacker);
+        this.fireAttacker.setAttacker(fireAttacker, fireTicks);
         entity.setFireTicks(fireTicks);
+    }
+
+    public void setWitherTicks(U witherAttacker, int witherTicks) {
+        setWitherTicks(witherAttacker, witherTicks, 0);
+    }
+
+    /**
+     *
+     * @param witherAmplifier The amplifier for the effect. Level n is amplifier n-1.
+     */
+    public void setWitherTicks(U witherAttacker, int witherTicks, int witherAmplifier) {
+        this.witherAttacker.setAttacker(witherAttacker, witherTicks);
+        entity.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, witherAmplifier, witherAmplifier));
+    }
+
+    public void setLastAttacker(U lastAttacker) {
+        this.lastAttacker.setAttacker(lastAttacker);
     }
 
     public boolean startCoolDown(String ability, int seconds, String coolDownLocale) {
@@ -176,14 +199,12 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         upgradeHandler.setUpgradeLevel(upgrade, level);
     }
 
-    public void setFireAttacker(U fireAttacker) {
-        if (fireAttacker != null) {
-            this.fireAttacker = fireAttacker.getUuid();
-            this.fireAttackerTimer = 30; //TODO get from config
-        } else {
-            this.fireAttacker = null;
-            this.fireAttackerTimer = 0;
-        }
+    public ItemStack createCustomItemForUser(CustomItem<U> item) {
+        return item.createWithVariables(gameGroup, upgradeHandler);
+    }
+
+    public UpgradeHandler<U> getUpgradeLevels() {
+        return upgradeHandler;
     }
 
     public UUID getUuid() {

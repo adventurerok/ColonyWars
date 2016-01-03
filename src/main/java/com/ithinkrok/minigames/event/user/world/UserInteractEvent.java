@@ -6,14 +6,14 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * Created by paul on 01/01/16.
  */
 public abstract class UserInteractEvent<U extends User> extends UserEvent<U> implements Cancellable{
+
+    private boolean cooldown = false;
 
     public UserInteractEvent(U user) {
         super(user);
@@ -45,9 +45,11 @@ public abstract class UserInteractEvent<U extends User> extends UserEvent<U> imp
         PHYSICAL
     }
 
-    public interface InteractAction<U extends User> extends Listener {
+    public boolean getStartCooldownAfterAction() {
+        return cooldown;
+    }
 
-        @EventHandler
-        boolean onUserInteract(UserInteractEvent<U> event);
+    public void setStartCooldownAfterAction(boolean cooldown) {
+        this.cooldown = cooldown;
     }
 }

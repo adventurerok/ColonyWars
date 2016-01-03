@@ -2,6 +2,7 @@ package com.ithinkrok.minigames.user;
 
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.user.game.UserUpgradeEvent;
+import com.ithinkrok.minigames.util.math.Variables;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +10,7 @@ import java.util.Map;
 /**
  * Created by paul on 03/01/16.
  */
-public class UpgradeHandler<U extends User> {
+public class UpgradeHandler<U extends User> implements Variables {
 
     private final U user;
     private final Map<String, Integer> upgradeLevels = new HashMap<>();
@@ -40,4 +41,8 @@ public class UpgradeHandler<U extends User> {
         upgradeLevels.clear();
     }
 
+    @Override
+    public double getVariable(String name) {
+        return getUpgradeLevel(name);
+    }
 }

@@ -4,3 +4,19 @@ start_map: "lobby"
 # The language files that will be used by default
 lang_files:
   - "english.lang"
+
+darkness_sword:
+  display_name: "darkness_sword.name"
+  description: "darkness_sword.desc"
+  material: "IRON_HELMET"
+  listeners:
+    weapon:
+      events: ["attack"]
+      class: "com.ithinkrok.minigames.item.WeaponModifier"
+      config:
+        damage: "array(sword, 1, 2.5, 4)"
+        effects:
+          wither:
+            duration: "array(sword, 3, 6, 10)"
+          confusion:
+            duration: "array(sword, 5, 7, 8)"

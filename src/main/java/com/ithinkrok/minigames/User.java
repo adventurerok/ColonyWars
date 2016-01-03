@@ -1,5 +1,6 @@
 package com.ithinkrok.minigames;
 
+import com.ithinkrok.minigames.event.user.game.UserAbilityCooldownEvent;
 import com.ithinkrok.minigames.event.user.game.UserInGameChangeEvent;
 import com.ithinkrok.minigames.event.user.game.UserTeleportEvent;
 import com.ithinkrok.minigames.event.user.inventory.UserInventoryClickEvent;
@@ -10,11 +11,11 @@ import com.ithinkrok.minigames.task.GameRunnable;
 import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskList;
 import com.ithinkrok.minigames.task.TaskScheduler;
+import com.ithinkrok.minigames.user.CooldownHandler;
 import com.ithinkrok.minigames.util.InventoryUtils;
+import com.ithinkrok.minigames.util.SoundEffect;
 import com.ithinkrok.minigames.util.playerstate.PlayerState;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,10 +25,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by paul on 31/12/15.
@@ -46,6 +44,11 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     private int fireAttackerTimer;
 
     private boolean isInGame = false;
+
+    private Map<String, Integer> upgradeLevels = new HashMap<>();
+
+    @SuppressWarnings("unchecked")
+    private CooldownHandler<U> cooldownHandler = new CooldownHandler<>((U) this);
 
     private String name;
 
@@ -139,6 +142,30 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     public void setFireTicks(U fireAttacker, int fireTicks) {
         setFireAttacker(fireAttacker);
         entity.setFireTicks(fireTicks);
+    }
+
+    public boolean startCoolDown(String ability, int seconds, String coolDownLocale) {
+        return cooldownHandler.startCoolDown(ability, seconds, coolDownLocale);
+    }
+
+    public void stopCoolDown(String ability, String stopLocale) {
+        cooldownHandler.stopCoolDown(ability, stopLocale);
+    }
+
+    public void playSound(Location location, SoundEffect sound) {
+        if(!isPlayer()) return;
+
+        getPlayer().playSound(location, sound.getSound(), sound.getVolume(), sound.getPitch());
+    }
+
+    public boolean isCoolingDown(String ability) {
+        return cooldownHandler.isCoolingDown(ability);
+    }
+
+    public int getUpgradeLevel(String upgrade) {
+        Integer level = upgradeLevels.get(upgrade);
+
+        return level == null ? 0 : level;
     }
 
     public void setFireAttacker(U fireAttacker) {

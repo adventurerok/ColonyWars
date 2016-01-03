@@ -50,7 +50,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 @SuppressWarnings("unchecked")
 public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>, M extends Game<U, T, G, M>>
-        implements Listener, LanguageLookup, TaskScheduler, UserResolver<U> {
+        implements LanguageLookup, TaskScheduler, UserResolver<U> {
 
     private ConcurrentMap<UUID, U> usersInServer = new ConcurrentHashMap<>();
     private List<G> gameGroups = new ArrayList<>();
@@ -107,14 +107,15 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         return customItemIdentifierMap.get(name);
     }
 
-    public CustomItem<U> getCustomItem(int identifer) {
-        return customItemIdentifierMap.get(identifer);
+    public CustomItem<U> getCustomItem(int identifier) {
+        return customItemIdentifierMap.get(identifier);
     }
 
     public abstract List<GameState> getGameStates();
 
     public void registerListeners() {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        Listener listener = new GameListener();
+        plugin.getServer().getPluginManager().registerEvents(listener, plugin);
     }
 
     public void reloadConfig() {
@@ -161,29 +162,6 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         return config;
     }
 
-    @EventHandler
-    public void eventPlayerJoined(PlayerJoinEvent event) {
-        event.setJoinMessage(null);
-
-        Player player = event.getPlayer();
-
-        U user = getUser(player.getUniqueId());
-        G gameGroup;
-
-        if (user != null) {
-            gameGroup = user.getGameGroup();
-        } else {
-            if (spawnGameGroup == null) {
-                spawnGameGroup = createGameGroup();
-                gameGroups.add(spawnGameGroup);
-            }
-
-            gameGroup = spawnGameGroup;
-            user = createUser(gameGroup, null, player.getUniqueId(), player);
-        }
-
-        gameGroup.eventUserJoinedAsPlayer(new UserJoinEvent<>(user, UserJoinEvent.JoinReason.JOINED_SERVER));
-    }
 
     @Override
     public U getUser(UUID uuid) {
@@ -206,90 +184,6 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("Failed to construct User", e);
         }
-    }
-
-    @EventHandler
-    public void eventPlayerQuit(PlayerQuitEvent event) {
-        event.setQuitMessage(null);
-
-        U user = getUser(event.getPlayer().getUniqueId());
-
-        UserQuitEvent<U> userEvent = new UserQuitEvent<>(user, UserQuitEvent.QuitReason.QUIT_SERVER);
-        user.getGameGroup().userQuitEvent(userEvent);
-
-        if (userEvent.getRemoveUser()) {
-            usersInServer.remove(event.getPlayer().getUniqueId());
-            user.cancelAllTasks();
-        }
-    }
-
-    @EventHandler
-    public void eventPlayerDropItem(PlayerDropItemEvent event) {
-        U user = getUser(event.getPlayer().getUniqueId());
-        user.getGameGroup().userEvent(new UserDropItemEvent<>(user, event));
-    }
-
-    @EventHandler
-    public void eventPlayerPickupItem(PlayerPickupItemEvent event) {
-        U user = getUser(event.getPlayer().getUniqueId());
-        user.getGameGroup().userEvent(new UserPickupItemEvent<>(user, event));
-    }
-
-    @EventHandler
-    public void eventPlayerInteractWorld(PlayerInteractEvent event) {
-        U user = getUser(event.getPlayer().getUniqueId());
-        user.getGameGroup().userEvent(new UserInteractWorldEvent<>(user, event));
-    }
-
-    @EventHandler
-    public void eventBlockBreak(BlockBreakEvent event) {
-        U user = getUser(event.getPlayer().getUniqueId());
-        user.getGameGroup().userEvent(new UserBreakBlockEvent<>(user, event));
-    }
-
-    @EventHandler
-    public void eventBlockPlace(BlockPlaceEvent event) {
-        U user = getUser(event.getPlayer().getUniqueId());
-        user.getGameGroup().userEvent(new UserPlaceBlockEvent<>(user, event));
-    }
-
-    @EventHandler
-    public void eventEntityDamaged(EntityDamageEvent event) {
-        U user = EntityUtils.getActualUser(this, event.getEntity());
-        if (user == null) return;
-
-        if (event instanceof EntityDamageByEntityEvent) {
-            User attacker = EntityUtils.getRepresentingUser(user, event.getEntity());
-            user.getGameGroup().userEvent(new UserAttackedEvent<>(user, (EntityDamageByEntityEvent) event, (U) attacker));
-        } else {
-            user.getGameGroup().userEvent(new UserDamagedEvent<>(user, event));
-        }
-
-
-    }
-
-    @EventHandler
-    public void eventPlayerFoodLevelChange(FoodLevelChangeEvent event) {
-        U user = getUser(event.getEntity().getUniqueId());
-        user.getGameGroup().userEvent(new UserFoodLevelChangeEvent<>(user, event));
-    }
-
-    @EventHandler
-    public void eventPlayerInteractEntity(PlayerInteractEntityEvent event) {
-        U user = getUser(event.getPlayer().getUniqueId());
-        user.getGameGroup().userEvent(new UserRightClickEntityEvent<>(user, event));
-    }
-
-    @EventHandler
-    public void eventPlayerInventoryClick(InventoryClickEvent event) {
-        U user = getUser(event.getWhoClicked().getUniqueId());
-        user.getGameGroup().userEvent(new UserInventoryClickEvent<>(user, event));
-    }
-
-    @EventHandler
-    public void eventPlayerInventoryClose(InventoryCloseEvent event) {
-        U user = getUser(event.getPlayer().getUniqueId());
-        user.getGameGroup().userEvent(new UserInventoryCloseEvent<>(user, event));
     }
 
     public String getChatPrefix() {
@@ -339,5 +233,117 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     @Override
     public void cancelAllTasks() {
         throw new RuntimeException("You cannot cancel all game tasks");
+    }
+
+    private class GameListener implements Listener {
+
+        @EventHandler
+        public void eventPlayerJoined(PlayerJoinEvent event) {
+            event.setJoinMessage(null);
+
+            Player player = event.getPlayer();
+
+            U user = getUser(player.getUniqueId());
+            G gameGroup;
+
+            if (user != null) {
+                gameGroup = user.getGameGroup();
+            } else {
+                if (spawnGameGroup == null) {
+                    spawnGameGroup = createGameGroup();
+                    gameGroups.add(spawnGameGroup);
+                }
+
+                gameGroup = spawnGameGroup;
+                user = createUser(gameGroup, null, player.getUniqueId(), player);
+            }
+
+            gameGroup.eventUserJoinedAsPlayer(new UserJoinEvent<>(user, UserJoinEvent.JoinReason.JOINED_SERVER));
+        }
+
+        @EventHandler
+        public void eventPlayerQuit(PlayerQuitEvent event) {
+            event.setQuitMessage(null);
+
+            U user = getUser(event.getPlayer().getUniqueId());
+
+            UserQuitEvent<U> userEvent = new UserQuitEvent<>(user, UserQuitEvent.QuitReason.QUIT_SERVER);
+            user.getGameGroup().userQuitEvent(userEvent);
+
+            if (userEvent.getRemoveUser()) {
+                usersInServer.remove(event.getPlayer().getUniqueId());
+                user.cancelAllTasks();
+            }
+        }
+
+        @EventHandler
+        public void eventPlayerDropItem(PlayerDropItemEvent event) {
+            U user = getUser(event.getPlayer().getUniqueId());
+            user.getGameGroup().userEvent(new UserDropItemEvent<>(user, event));
+        }
+
+        @EventHandler
+        public void eventPlayerPickupItem(PlayerPickupItemEvent event) {
+            U user = getUser(event.getPlayer().getUniqueId());
+            user.getGameGroup().userEvent(new UserPickupItemEvent<>(user, event));
+        }
+
+        @EventHandler
+        public void eventPlayerInteractWorld(PlayerInteractEvent event) {
+            U user = getUser(event.getPlayer().getUniqueId());
+            user.getGameGroup().userEvent(new UserInteractWorldEvent<>(user, event));
+        }
+
+        @EventHandler
+        public void eventBlockBreak(BlockBreakEvent event) {
+            U user = getUser(event.getPlayer().getUniqueId());
+            user.getGameGroup().userEvent(new UserBreakBlockEvent<>(user, event));
+        }
+
+        @EventHandler
+        public void eventBlockPlace(BlockPlaceEvent event) {
+            U user = getUser(event.getPlayer().getUniqueId());
+            user.getGameGroup().userEvent(new UserPlaceBlockEvent<>(user, event));
+        }
+
+        @EventHandler
+        public void eventEntityDamaged(EntityDamageEvent event) {
+            U user = EntityUtils.getActualUser(Game.this, event.getEntity());
+            if (user == null) return;
+
+            if (event instanceof EntityDamageByEntityEvent) {
+                User attacker = EntityUtils.getRepresentingUser(user, event.getEntity());
+                user.getGameGroup()
+                        .userEvent(new UserAttackedEvent<>(user, (EntityDamageByEntityEvent) event, (U) attacker));
+            } else {
+                user.getGameGroup().userEvent(new UserDamagedEvent<>(user, event));
+            }
+
+
+        }
+
+        @EventHandler
+        public void eventPlayerFoodLevelChange(FoodLevelChangeEvent event) {
+            U user = getUser(event.getEntity().getUniqueId());
+            user.getGameGroup().userEvent(new UserFoodLevelChangeEvent<>(user, event));
+        }
+
+        @EventHandler
+        public void eventPlayerInteractEntity(PlayerInteractEntityEvent event) {
+            U user = getUser(event.getPlayer().getUniqueId());
+            user.getGameGroup().userEvent(new UserRightClickEntityEvent<>(user, event));
+        }
+
+        @EventHandler
+        public void eventPlayerInventoryClick(InventoryClickEvent event) {
+            U user = getUser(event.getWhoClicked().getUniqueId());
+            user.getGameGroup().userEvent(new UserInventoryClickEvent<>(user, event));
+        }
+
+        @EventHandler
+        public void eventPlayerInventoryClose(InventoryCloseEvent event) {
+            U user = getUser(event.getPlayer().getUniqueId());
+            user.getGameGroup().userEvent(new UserInventoryCloseEvent<>(user, event));
+        }
     }
 }

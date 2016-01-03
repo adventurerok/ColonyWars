@@ -6,6 +6,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -43,7 +45,9 @@ public abstract class UserInteractEvent<U extends User> extends UserEvent<U> imp
         PHYSICAL
     }
 
-    public interface InteractAction<U extends User> {
+    public interface InteractAction<U extends User> extends Listener {
+
+        @EventHandler
         boolean onUserInteract(UserInteractEvent<U> event);
     }
 }

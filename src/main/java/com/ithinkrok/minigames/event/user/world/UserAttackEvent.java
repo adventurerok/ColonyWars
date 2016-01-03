@@ -80,4 +80,8 @@ public class UserAttackEvent<U extends User> extends UserInteractEvent<U> {
     public void setCancelled(boolean cancel) {
         event.setCancelled(cancel);
     }
+
+    public interface AttackAction<U extends User> {
+        boolean onUserAttack(UserAttackEvent<U> event);
+    }
 }

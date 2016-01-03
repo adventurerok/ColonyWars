@@ -12,6 +12,7 @@ import com.ithinkrok.minigames.task.TaskList;
 import com.ithinkrok.minigames.task.TaskScheduler;
 import com.ithinkrok.minigames.user.CooldownHandler;
 import com.ithinkrok.minigames.user.UpgradeHandler;
+import com.ithinkrok.minigames.user.UserResolver;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import com.ithinkrok.minigames.util.SoundEffect;
 import com.ithinkrok.minigames.util.playerstate.PlayerState;
@@ -36,7 +37,7 @@ import java.util.UUID;
  */
 @SuppressWarnings("unchecked")
 public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>, M extends Game<U, T, G, M>>
-        implements Messagable, TaskScheduler, Listener {
+        implements Messagable, TaskScheduler, Listener, UserResolver<U> {
 
     private M game;
     private G gameGroup;
@@ -80,7 +81,8 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         return gameGroup;
     }
 
-    public U getOther(UUID uuid) {
+    @Override
+    public U getUser(UUID uuid) {
         return gameGroup.getUser(uuid);
     }
 

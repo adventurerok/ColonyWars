@@ -129,7 +129,7 @@ public class SpleefMinigame implements Listener {
             user.getGameGroup().sendLocale("spleef.loser", user.getFormattedName());
 
             if(usersInSpleef.size() == 1) {
-                User winner = user.getOther(usersInSpleef.remove(0));
+                User winner = user.getUser(usersInSpleef.remove(0));
                 gameLookups.remove(winner.getUuid());
 
                 removeUserFromSpleef(winner, true);
@@ -186,7 +186,7 @@ public class SpleefMinigame implements Listener {
 
                 queueLookups.remove(joiningUUID);
 
-                User joining = aUser.getOther(joiningUUID);
+                User joining = aUser.getUser(joiningUUID);
 
                 joining.teleport(spawn);
                 joining.getInventory().addItem(new ItemStack(spadeMaterial));

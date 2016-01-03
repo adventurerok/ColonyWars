@@ -38,4 +38,8 @@ public class UserDamagedEvent<U extends User> extends UserEvent<U> implements Ca
     public double getFinalDamage() {
         return event.getFinalDamage();
     }
+
+    public void setDamage(double damage) {
+        event.setDamage(damage);
+    }
 }

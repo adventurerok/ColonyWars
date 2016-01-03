@@ -4,10 +4,10 @@ import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.event.user.game.UserQuitEvent;
 import com.ithinkrok.minigames.event.user.inventory.UserInventoryClickEvent;
 import com.ithinkrok.minigames.event.user.inventory.UserInventoryCloseEvent;
+import com.ithinkrok.minigames.event.user.state.UserAttackedEvent;
 import com.ithinkrok.minigames.event.user.state.UserDamagedEvent;
 import com.ithinkrok.minigames.event.user.state.UserFoodLevelChangeEvent;
 import com.ithinkrok.minigames.event.user.world.*;
-import com.ithinkrok.minigames.item.ClickableItem;
 import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.item.IdentifierMap;
 import com.ithinkrok.minigames.lang.LangFile;
@@ -17,6 +17,8 @@ import com.ithinkrok.minigames.map.GameMapInfo;
 import com.ithinkrok.minigames.task.GameRunnable;
 import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskScheduler;
+import com.ithinkrok.minigames.user.UserResolver;
+import com.ithinkrok.minigames.util.EntityUtils;
 import com.ithinkrok.minigames.util.io.ResourceHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -29,6 +31,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -45,8 +48,9 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Created by paul on 31/12/15.
  */
-public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>,
-        M extends Game<U, T, G, M>> implements Listener, LanguageLookup, TaskScheduler {
+@SuppressWarnings("unchecked")
+public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>, M extends Game<U, T, G, M>>
+        implements Listener, LanguageLookup, TaskScheduler, UserResolver<U> {
 
     private ConcurrentMap<UUID, U> usersInServer = new ConcurrentHashMap<>();
     private List<G> gameGroups = new ArrayList<>();
@@ -83,6 +87,18 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         unloadDefaultWorlds();
     }
 
+    private void unloadDefaultWorlds() {
+        if (Bukkit.getWorlds().size() != 1) System.out.println("You should disable the nether/end worlds to save RAM!");
+
+        for (World world : Bukkit.getWorlds()) {
+            world.setKeepSpawnInMemory(false);
+
+            for (Chunk chunk : world.getLoadedChunks()) {
+                chunk.unload(false, true);
+            }
+        }
+    }
+
     public void registerCustomItem(String name, CustomItem<U> item) {
         customItemIdentifierMap.put(name, item);
     }
@@ -95,19 +111,84 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         return customItemIdentifierMap.get(identifer);
     }
 
-    private void unloadDefaultWorlds() {
-        if(Bukkit.getWorlds().size() != 1) System.out.println("You should disable the nether/end worlds to save RAM!");
+    public abstract List<GameState> getGameStates();
 
-        for(World world : Bukkit.getWorlds()) {
-            world.setKeepSpawnInMemory(false);
+    public void registerListeners() {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
 
-            for(Chunk chunk : world.getLoadedChunks()) {
-                chunk.unload(false, true);
-            }
+    public void reloadConfig() {
+        plugin.reloadConfig();
+
+        config = plugin.getConfig();
+
+        reloadMaps();
+        reloadLangFiles();
+    }
+
+    private void reloadMaps() {
+        maps.clear();
+
+        startMapName = config.getString("start_map");
+        loadMapInfo(startMapName);
+    }
+
+    private void reloadLangFiles() {
+        multipleLanguageLookup = new MultipleLanguageLookup();
+
+        for (String langFile : config.getStringList("lang_files")) {
+            multipleLanguageLookup.addLanguageLookup(loadLangFile(langFile));
         }
     }
 
-    public abstract List<GameState> getGameStates();
+    private void loadMapInfo(String mapName) {
+        maps.put(mapName, new GameMapInfo(this, mapName));
+    }
+
+    public LangFile loadLangFile(String path) {
+        return new LangFile(ResourceHandler.getPropertiesResource(plugin, path));
+    }
+
+    public GameMapInfo getStartMapInfo() {
+        return maps.get(startMapName);
+    }
+
+    public ConfigurationSection loadConfig(String path) {
+        return ResourceHandler.getConfigResource(plugin, path);
+    }
+
+    public ConfigurationSection getConfig() {
+        return config;
+    }
+
+    @EventHandler
+    public void eventPlayerJoined(PlayerJoinEvent event) {
+        event.setJoinMessage(null);
+
+        Player player = event.getPlayer();
+
+        U user = getUser(player.getUniqueId());
+        G gameGroup;
+
+        if (user != null) {
+            gameGroup = user.getGameGroup();
+        } else {
+            if (spawnGameGroup == null) {
+                spawnGameGroup = createGameGroup();
+                gameGroups.add(spawnGameGroup);
+            }
+
+            gameGroup = spawnGameGroup;
+            user = createUser(gameGroup, null, player.getUniqueId(), player);
+        }
+
+        gameGroup.eventUserJoinedAsPlayer(new UserJoinEvent<>(user, UserJoinEvent.JoinReason.JOINED_SERVER));
+    }
+
+    @Override
+    public U getUser(UUID uuid) {
+        return usersInServer.get(uuid);
+    }
 
     private G createGameGroup() {
         try {
@@ -127,78 +208,6 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         }
     }
 
-    public void registerListeners() {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    }
-
-    public void reloadConfig() {
-        plugin.reloadConfig();
-
-        config = plugin.getConfig();
-
-        reloadMaps();
-        reloadLangFiles();
-    }
-
-    private void reloadLangFiles() {
-        multipleLanguageLookup = new MultipleLanguageLookup();
-
-        for(String langFile : config.getStringList("lang_files")) {
-            multipleLanguageLookup.addLanguageLookup(loadLangFile(langFile));
-        }
-    }
-
-    private void reloadMaps() {
-        maps.clear();
-
-        startMapName = config.getString("start_map");
-        loadMapInfo(startMapName);
-    }
-
-    private void loadMapInfo(String mapName) {
-        maps.put(mapName, new GameMapInfo(this, mapName));
-    }
-
-    public GameMapInfo getStartMapInfo(){
-        return maps.get(startMapName);
-    }
-
-    public ConfigurationSection loadConfig(String path) {
-        return ResourceHandler.getConfigResource(plugin, path);
-    }
-
-    public LangFile loadLangFile(String path) {
-        return new LangFile(ResourceHandler.getPropertiesResource(plugin, path));
-    }
-
-    public ConfigurationSection getConfig() {
-        return config;
-    }
-
-    @EventHandler
-    public void eventPlayerJoined(PlayerJoinEvent event) {
-        event.setJoinMessage(null);
-
-        Player player = event.getPlayer();
-
-        U user = getUser(player.getUniqueId());
-        G gameGroup;
-
-        if(user != null) {
-            gameGroup = user.getGameGroup();
-        } else {
-            if(spawnGameGroup == null) {
-                spawnGameGroup = createGameGroup();
-                gameGroups.add(spawnGameGroup);
-            }
-
-            gameGroup = spawnGameGroup;
-            user = createUser(gameGroup, null, player.getUniqueId(), player);
-        }
-
-        gameGroup.eventUserJoinedAsPlayer(new UserJoinEvent<>(user, UserJoinEvent.JoinReason.JOINED_SERVER));
-    }
-
     @EventHandler
     public void eventPlayerQuit(PlayerQuitEvent event) {
         event.setQuitMessage(null);
@@ -208,7 +217,7 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         UserQuitEvent<U> userEvent = new UserQuitEvent<>(user, UserQuitEvent.QuitReason.QUIT_SERVER);
         user.getGameGroup().userQuitEvent(userEvent);
 
-        if(userEvent.getRemoveUser()) {
+        if (userEvent.getRemoveUser()) {
             usersInServer.remove(event.getPlayer().getUniqueId());
             user.cancelAllTasks();
         }
@@ -246,10 +255,17 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     @EventHandler
     public void eventEntityDamaged(EntityDamageEvent event) {
-        if(event.getEntity() instanceof Player) {
-            U user = getUser(event.getEntity().getUniqueId());
+        U user = EntityUtils.getActualUser(this, event.getEntity());
+        if (user == null) return;
+
+        if (event instanceof EntityDamageByEntityEvent) {
+            User attacker = EntityUtils.getRepresentingUser(user, event.getEntity());
+            user.getGameGroup().userEvent(new UserAttackedEvent<>(user, (EntityDamageByEntityEvent) event, (U) attacker));
+        } else {
             user.getGameGroup().userEvent(new UserDamagedEvent<>(user, event));
         }
+
+
     }
 
     @EventHandler
@@ -276,11 +292,7 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         user.getGameGroup().userEvent(new UserInventoryCloseEvent<>(user, event));
     }
 
-    private U getUser(UUID uuid) {
-        return usersInServer.get(uuid);
-    }
-
-    public String getChatPrefix(){
+    public String getChatPrefix() {
         return ChatColor.GRAY + "[" + ChatColor.DARK_AQUA + "ColonyWars" + ChatColor.GRAY + "] " + ChatColor.YELLOW;
     }
 

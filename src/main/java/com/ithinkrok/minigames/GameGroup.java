@@ -16,6 +16,7 @@ import com.ithinkrok.minigames.task.GameRunnable;
 import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskList;
 import com.ithinkrok.minigames.task.TaskScheduler;
+import com.ithinkrok.minigames.user.UserResolver;
 import com.ithinkrok.minigames.util.EventExecutor;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import org.bukkit.event.Event;
@@ -31,7 +32,7 @@ import java.util.concurrent.ConcurrentMap;
  * Created by paul on 31/12/15.
  */
 public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>,
-        M extends Game<U, T, G, M>> implements LanguageLookup, Messagable, TaskScheduler {
+        M extends Game<U, T, G, M>> implements LanguageLookup, Messagable, TaskScheduler, UserResolver<U> {
 
     private ConcurrentMap<UUID, U> usersInGroup = new ConcurrentHashMap<>();
     private Map<TeamColor, T> teamsInGroup = new HashMap<>();
@@ -78,6 +79,7 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
         currentMap = newMap;
     }
 
+    @Override
     public U getUser(UUID uuid) {
         return usersInGroup.get(uuid);
     }

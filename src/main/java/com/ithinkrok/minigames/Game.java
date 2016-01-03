@@ -28,6 +28,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -306,17 +307,27 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
             user.getGameGroup().userEvent(new UserPlaceBlockEvent<>(user, event));
         }
 
-        @EventHandler
+        @EventHandler(priority = EventPriority.LOW)
+        public void eventEntityDamagedByEntity(EntityDamageByEntityEvent event) {
+            U attacker = EntityUtils.getRepresentingUser(Game.this, event.getDamager());
+            if(attacker == null) return;
+
+            U attacked = EntityUtils.getRepresentingUser(attacker, event.getEntity());
+
+            attacker.getGameGroup().userEvent(new UserAttackEvent<>(attacker, event, attacked));
+        }
+
+        @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
         public void eventEntityDamaged(EntityDamageEvent event) {
-            U user = EntityUtils.getActualUser(Game.this, event.getEntity());
-            if (user == null) return;
+            U attacked = EntityUtils.getActualUser(Game.this, event.getEntity());
+            if (attacked == null) return;
 
             if (event instanceof EntityDamageByEntityEvent) {
-                User attacker = EntityUtils.getRepresentingUser(user, event.getEntity());
-                user.getGameGroup()
-                        .userEvent(new UserAttackedEvent<>(user, (EntityDamageByEntityEvent) event, (U) attacker));
+                U attacker = EntityUtils.getRepresentingUser(attacked, event.getEntity());
+                attacked.getGameGroup()
+                        .userEvent(new UserAttackedEvent<>(attacked, (EntityDamageByEntityEvent) event, attacker));
             } else {
-                user.getGameGroup().userEvent(new UserDamagedEvent<>(user, event));
+                attacked.getGameGroup().userEvent(new UserDamagedEvent<>(attacked, event));
             }
 
 

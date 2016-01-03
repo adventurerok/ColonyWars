@@ -37,7 +37,7 @@ public class ClickableInventory<U extends User> {
         Inventory inventory = user.createInventory(items.size(), title);
 
         for(ClickableItem<U> item : items.values()) {
-            if(!item.isVisible(new UserViewItemEvent<>(user, item))) continue;
+            if(!item.isVisible(new UserViewItemEvent<>(user, this, item))) continue;
 
             inventory.addItem(item.getDisplayItemStack());
         }
@@ -53,6 +53,6 @@ public class ClickableInventory<U extends User> {
 
         ClickableItem<U> item = items.get(identifier);
 
-        item.onClick(new UserClickItemEvent<>(event.getUser(), item, event.getClickType()));
+        item.onClick(new UserClickItemEvent<>(event.getUser(), this, item, event.getClickType()));
     }
 }

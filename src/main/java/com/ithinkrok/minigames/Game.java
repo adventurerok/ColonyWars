@@ -8,6 +8,7 @@ import com.ithinkrok.minigames.event.user.state.UserDamagedEvent;
 import com.ithinkrok.minigames.event.user.state.UserFoodLevelChangeEvent;
 import com.ithinkrok.minigames.event.user.world.*;
 import com.ithinkrok.minigames.item.ClickableItem;
+import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.item.IdentifierMap;
 import com.ithinkrok.minigames.lang.LangFile;
 import com.ithinkrok.minigames.lang.LanguageLookup;
@@ -62,7 +63,7 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     private MultipleLanguageLookup multipleLanguageLookup = new MultipleLanguageLookup();
 
-    private IdentifierMap<ClickableItem<U>> clickableItemIdentifierMap = new IdentifierMap<>();
+    private IdentifierMap<CustomItem<U>> customItemIdentifierMap = new IdentifierMap<>();
 
     private Map<String, GameMapInfo> maps = new HashMap<>();
     private String startMapName;
@@ -82,12 +83,16 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         unloadDefaultWorlds();
     }
 
-    public void registerClickableItem(String name, ClickableItem<U> item) {
-        clickableItemIdentifierMap.put(name, item);
+    public void registerCustomItem(String name, CustomItem<U> item) {
+        customItemIdentifierMap.put(name, item);
     }
 
-    public ClickableItem<U> getClickableItem(String name) {
-        return clickableItemIdentifierMap.get(name);
+    public CustomItem<U> getCustomItem(String name) {
+        return customItemIdentifierMap.get(name);
+    }
+
+    public CustomItem<U> getCustomItem(int identifer) {
+        return customItemIdentifierMap.get(identifer);
     }
 
     private void unloadDefaultWorlds() {

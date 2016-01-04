@@ -21,3 +21,9 @@ custom_items:
               duration: "array(sword, 3, 6, 10)"
             confusion:
               duration: "array(sword, 5, 7, 8)"
+      lightning:
+        events: ["attack", "rightClick"]
+        class: "com.ithinkrok.cw.item.LightningWand"
+        config:
+          max_range: 100
+          damage_multiplier: 2.8

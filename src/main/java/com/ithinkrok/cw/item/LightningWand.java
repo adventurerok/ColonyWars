@@ -29,14 +29,14 @@ public class LightningWand implements Listener {
         if(event.getInteractType() != UserInteractEvent.InteractType.REPRESENTING) return;
 
         if(event.getDamageCause() == EntityDamageEvent.DamageCause.LIGHTNING) {
-            event.setDamage(event.getDamage() * 2.8);
+            event.setDamage(event.getDamage() * lightingMultiplier);
         }
     }
 
     @EventHandler
     public void onUserInteract(UserInteractEvent<? extends User> event) {
         if(event.getInteractType() != UserInteractEvent.InteractType.RIGHT_CLICK) return;
-        Block target = event.getUser().rayTraceBlocks(200);
+        Block target = event.getUser().rayTraceBlocks(maxRange);
         if(target == null) return;
 
         event.setStartCooldownAfterAction(true);

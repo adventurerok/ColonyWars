@@ -1,11 +1,16 @@
 # The map that will be loaded by new GameGroups
 start_map: "lobby"
 
+maps:
+
 # The language files that will be used by default
 lang_files:
   - "english.lang"
+  - "lang/items.lang"
 
 custom_items:
+  map_voter:
+    display_name
   darkness_sword:
     display_name_locale: "darkness_sword.name"
     description_locale: "darkness_sword.desc"

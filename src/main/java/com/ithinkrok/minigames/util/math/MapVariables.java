@@ -1,5 +1,7 @@
 package com.ithinkrok.minigames.util.math;
 
+import org.bukkit.configuration.ConfigurationSection;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +14,14 @@ public class MapVariables implements Variables {
 
     public MapVariables() {
         this(new HashMap<>());
+    }
+
+    public MapVariables(ConfigurationSection config) {
+        this(new HashMap<>());
+
+        for(String name : config.getKeys(true)) {
+            setVariable(name, config.getDouble(name));
+        }
     }
 
     public MapVariables(Map<String, Double> variables) {

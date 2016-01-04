@@ -110,6 +110,9 @@ public class EventExecutor {
                     if (!method.isAnnotationPresent(EventHandler.class)) continue;
                     if (!method.getParameterTypes()[0].isInstance(event)) continue;
 
+                    //Allows the usage of private classes as listeners
+                    method.setAccessible(true);
+
                     eventMethods.add(new MethodExecutor(method,
                             method.getAnnotation(EventHandler.class).ignoreCancelled()));
                 }

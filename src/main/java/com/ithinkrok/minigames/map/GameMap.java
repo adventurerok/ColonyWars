@@ -19,6 +19,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -53,20 +54,28 @@ public class GameMap implements LanguageLookup, ConfigHolder {
         ++mapCounter;
 
         String randomWorldName = gameMapInfo.getName() + "-" + String.format("%04X", mapCounter);
+        String copyFrom = "./" + gameMapInfo.getMapFolder() + "/";
+        String copyTo = "./" + randomWorldName + "/";
 
         try {
             DirectoryUtils
-                    .copy(Paths.get("./" + gameMapInfo.getMapFolder() + "/"), Paths.get("./" + randomWorldName + "/"));
+                    .copy(Paths.get(copyFrom), Paths.get(copyTo));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        File uid = new File(copyTo, "uid.dat");
+        if(uid.exists()) {
+            boolean deleted = uid.delete();
+            if(!deleted) System.out.println("Could not delete uid.dat for world. This could cause errors");
+        }
+
         WorldCreator creator = new WorldCreator(randomWorldName);
 
-        creator.generateStructures(false);
         creator.environment(gameMapInfo.getEnvironment());
 
         world = creator.createWorld();
+        System.out.println(Bukkit.getWorlds());
         world.setAutoSave(false);
 
     }

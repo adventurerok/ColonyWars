@@ -17,6 +17,10 @@ public class ExpressionCalculator implements Calculator {
 
     private static final Map<String, OpInfo> opMap = new HashMap<>();
 
+    public static boolean isOperatorOrFunction(String check) {
+        return opMap.containsKey(check);
+    }
+
     static {
         opMap.put("^", new OpInfo(numbers -> Math.pow(numbers[0], numbers[1]), false, false, 10, 2, 2));
         opMap.put("/", new OpInfo(numbers -> numbers[0] / numbers[1], false, false, 20, 2, 2));

@@ -2,6 +2,7 @@ package com.ithinkrok.minigames.user;
 
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.user.game.UserUpgradeEvent;
+import com.ithinkrok.minigames.util.math.ExpressionCalculator;
 import com.ithinkrok.minigames.util.math.Variables;
 
 import java.util.HashMap;
@@ -27,6 +28,9 @@ public class UpgradeHandler<U extends User> implements Variables {
 
     @SuppressWarnings("unchecked")
     public void setUpgradeLevel(String upgrade, int level) {
+        if(ExpressionCalculator.isOperatorOrFunction(upgrade))
+            throw new RuntimeException(upgrade + " is an operator or function name. It cannot be used for upgrades");
+
         int oldLevel = getUpgradeLevel(upgrade);
         if (oldLevel == level && upgradeLevels.containsKey(upgrade)) return;
 

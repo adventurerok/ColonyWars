@@ -28,6 +28,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -41,6 +42,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Constructor;
@@ -156,7 +158,6 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     }
 
 
-
     private void loadMapInfo(String mapName) {
         maps.put(mapName, new GameMapInfo(this, mapName));
     }
@@ -254,6 +255,10 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         throw new RuntimeException("You cannot cancel all game tasks");
     }
 
+    public void makeEntityRepresentUser(User user, Entity entity) {
+        entity.setMetadata("rep", new FixedMetadataValue(plugin, user.getUuid()));
+    }
+
     private class GameListener implements Listener {
 
         @EventHandler
@@ -328,7 +333,7 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         @EventHandler(priority = EventPriority.LOW)
         public void eventEntityDamagedByEntity(EntityDamageByEntityEvent event) {
             U attacker = EntityUtils.getRepresentingUser(Game.this, event.getDamager());
-            if(attacker == null) return;
+            if (attacker == null) return;
 
             U attacked = EntityUtils.getRepresentingUser(attacker, event.getEntity());
 

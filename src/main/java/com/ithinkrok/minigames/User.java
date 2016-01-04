@@ -24,6 +24,7 @@ import com.ithinkrok.minigames.util.playerstate.PlayerState;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -264,6 +265,10 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     public void bindTaskToInGame(GameTask task) {
         inGameTaskList.addTask(task);
+    }
+
+    public void makeEntityRepresentUser(Entity entity) {
+        gameGroup.getGame().makeEntityRepresentUser(this, entity);
     }
 
     @Override

@@ -211,6 +211,10 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
         return game.getChatPrefix();
     }
 
+    public M getGame() {
+        return game;
+    }
+
     @Override
     public void sendMessage(String message) {
         sendMessageNoPrefix(getChatPrefix() + message);

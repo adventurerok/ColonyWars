@@ -2,6 +2,7 @@
 start_map: "lobby"
 
 maps:
+  - "lobby"
 
 # The language files that will be used by default
 lang_files:

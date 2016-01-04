@@ -1,6 +1,7 @@
-package com.ithinkrok.minigames.util;
+package com.ithinkrok.minigames.util.io;
 
 import com.ithinkrok.minigames.event.ListenerEnabledEvent;
+import com.ithinkrok.minigames.util.EventExecutor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
 

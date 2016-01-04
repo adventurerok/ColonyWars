@@ -8,7 +8,7 @@ import com.ithinkrok.minigames.item.event.CustomItemLoreCalculateEvent;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.util.EventExecutor;
 import com.ithinkrok.minigames.util.InventoryUtils;
-import com.ithinkrok.minigames.util.ListenerLoader;
+import com.ithinkrok.minigames.util.io.ListenerLoader;
 import com.ithinkrok.minigames.util.math.Calculator;
 import com.ithinkrok.minigames.util.math.ExpressionCalculator;
 import com.ithinkrok.minigames.util.math.Variables;

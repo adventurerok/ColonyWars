@@ -8,6 +8,7 @@ import com.ithinkrok.minigames.util.math.MapVariables;
 import com.ithinkrok.minigames.util.math.Variables;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
@@ -34,7 +35,7 @@ public class GiveCustomItemsOnJoin implements Listener {
         items.addAll(itemConfigs.stream().map(CustomItemInfo::new).collect(Collectors.toList()));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onUserJoin(UserJoinEvent event) {
         if(clearInventory) event.getUser().getInventory().clear();
 

@@ -28,11 +28,6 @@ public class LobbyListener implements Listener {
     @EventHandler
     public void eventUserJoin(UserJoinEvent event) {
         System.out.println(event.getUser().getUuid() + " joined!");
-
-        CustomItem customItem = event.getUser().getGameGroup().getCustomItem("darkness_sword");
-        ItemStack item = event.getUser().createCustomItemForUser(customItem);
-
-        event.getUser().getInventory().addItem(item);
     }
 
     @EventHandler

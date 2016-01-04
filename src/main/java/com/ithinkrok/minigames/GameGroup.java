@@ -186,7 +186,7 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
         return item != null ? item : game.getCustomItem(identifier);
     }
 
-    public void gameEvent(GameEvent<GameGroup> event) {
+    public void gameEvent(GameEvent event) {
         EventExecutor.executeEvent(event, getListeners());
     }
 

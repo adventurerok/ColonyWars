@@ -1,6 +1,5 @@
 package com.ithinkrok.minigames.metadata;
 
-import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;
@@ -40,12 +39,12 @@ public class MapVote extends UserMetadata {
     }
 
     @Override
-    public boolean removeOnGameStateChange(GameStateChangedEvent<? extends GameGroup> event) {
+    public boolean removeOnGameStateChange(GameStateChangedEvent event) {
         return false;
     }
 
     @Override
-    public boolean removeOnMapChange(MapChangedEvent<? extends GameGroup> event) {
+    public boolean removeOnMapChange(MapChangedEvent event) {
         return true;
     }
 }

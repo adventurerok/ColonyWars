@@ -347,7 +347,7 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
         }
 
         @EventHandler
-        public void eventGameStateChange(GameStateChangedEvent<GameGroup> event) {
+        public void eventGameStateChange(GameStateChangedEvent event) {
             Iterator<UserMetadata> iterator = metadataMap.values().iterator();
 
             while(iterator.hasNext()) {
@@ -358,7 +358,7 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
         }
 
         @EventHandler
-        public void eventMapChange(MapChangedEvent<GameGroup> event) {
+        public void eventMapChange(MapChangedEvent event) {
             Iterator<UserMetadata> iterator = metadataMap.values().iterator();
 
             while(iterator.hasNext()) {

@@ -7,15 +7,15 @@ import org.bukkit.event.HandlerList;
 /**
  * Created by paul on 02/01/16.
  */
-public class GameEvent<G extends GameGroup> extends Event{
+public class GameEvent extends Event{
 
-    private final G gameGroup;
+    private final GameGroup gameGroup;
 
-    public GameEvent(G gameGroup) {
+    public GameEvent(GameGroup gameGroup) {
         this.gameGroup = gameGroup;
     }
 
-    public G getGameGroup() {
+    public GameGroup getGameGroup() {
         return gameGroup;
     }
 

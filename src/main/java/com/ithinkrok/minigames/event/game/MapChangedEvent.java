@@ -6,12 +6,12 @@ import com.ithinkrok.minigames.map.GameMap;
 /**
  * Created by paul on 02/01/16.
  */
-public class MapChangedEvent<G extends GameGroup> extends GameEvent<G> {
+public class MapChangedEvent extends GameEvent {
 
     private final GameMap oldMap;
     private final GameMap newMap;
 
-    public MapChangedEvent(G gameGroup, GameMap oldMap, GameMap newMap) {
+    public MapChangedEvent(GameGroup gameGroup, GameMap oldMap, GameMap newMap) {
         super(gameGroup);
         this.oldMap = oldMap;
         this.newMap = newMap;

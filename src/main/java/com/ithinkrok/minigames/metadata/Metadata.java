@@ -1,6 +1,5 @@
 package com.ithinkrok.minigames.metadata;
 
-import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;
 
@@ -9,9 +8,9 @@ import com.ithinkrok.minigames.event.game.MapChangedEvent;
  */
 public abstract class Metadata {
 
-    public abstract boolean removeOnGameStateChange(GameStateChangedEvent<? extends GameGroup> event);
+    public abstract boolean removeOnGameStateChange(GameStateChangedEvent event);
 
-    public abstract boolean removeOnMapChange(MapChangedEvent<? extends GameGroup> event);
+    public abstract boolean removeOnMapChange(MapChangedEvent event);
 
     /**
      *

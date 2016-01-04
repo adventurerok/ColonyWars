@@ -32,17 +32,16 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Created by paul on 31/12/15.
  */
-public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>,
-        M extends Game<U, T, G, M>> implements LanguageLookup, Messagable, TaskScheduler, UserResolver<U>, FileLoader {
+public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, UserResolver, FileLoader {
 
-    private ConcurrentMap<UUID, U> usersInGroup = new ConcurrentHashMap<>();
-    private Map<TeamColor, T> teamsInGroup = new HashMap<>();
-    private M game;
+    private ConcurrentMap<UUID, User> usersInGroup = new ConcurrentHashMap<>();
+    private Map<TeamColor, Team> teamsInGroup = new HashMap<>();
+    private Game game;
 
     private Map<String, GameState> gameStates = new HashMap<>();
     private GameState gameState;
 
-    private Constructor<T> teamConstructor;
+    private Constructor<Team> teamConstructor;
 
     private GameMap currentMap;
 
@@ -52,7 +51,7 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
 
     private List<Listener> defaultAndMapListeners = new ArrayList<>();
 
-    public GameGroup(M game, Constructor<T> teamConstructor) {
+    public GameGroup(Game game, Constructor<Team> teamConstructor) {
         this.game = game;
         this.teamConstructor = teamConstructor;
 
@@ -69,6 +68,10 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
         changeMap(game.getStartMapInfo());
     }
 
+    public Collection<User> getUsers() {
+        return usersInGroup.values();
+    }
+
     @SuppressWarnings("unchecked")
     public void changeMap(GameMapInfo mapInfo) {
         GameMap oldMap = currentMap;
@@ -78,7 +81,7 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
 
         currentMap = newMap;
 
-        Event event = new MapChangedEvent<>((G) this, oldMap, newMap);
+        Event event = new MapChangedEvent<>((GameGroup) this, oldMap, newMap);
 
         EventExecutor.executeEvent(event, getListeners(getAllUserListeners(), newMap.getListeners()));
 
@@ -90,7 +93,7 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
     private Collection<Listener> getAllUserListeners() {
         ArrayList<Listener> result = new ArrayList<>(usersInGroup.size());
 
-        for(U user : usersInGroup.values()) {
+        for(User user : usersInGroup.values()) {
             result.addAll(user.getListeners());
         }
 
@@ -98,11 +101,11 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
     }
 
     @Override
-    public U getUser(UUID uuid) {
+    public User getUser(UUID uuid) {
         return usersInGroup.get(uuid);
     }
 
-    private T createTeam(TeamColor teamColor) {
+    private Team createTeam(TeamColor teamColor) {
         try {
             return teamConstructor.newInstance(teamColor, this);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
@@ -110,7 +113,7 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
         }
     }
 
-    public void eventUserJoinedAsPlayer(UserJoinEvent<U> event) {
+    public void eventUserJoinedAsPlayer(UserJoinEvent<User> event) {
         usersInGroup.put(event.getUser().getUuid(), event.getUser());
 
         currentMap.teleportUser(event.getUser());
@@ -118,11 +121,11 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
         userEvent(event);
     }
 
-    public void userEvent(UserEvent<U> event) {
+    public void userEvent(UserEvent<User> event) {
         EventExecutor.executeEvent(event, getListeners(event.getUser().getListeners()));
     }
 
-    public void userQuitEvent(UserQuitEvent<U> event) {
+    public void userQuitEvent(UserQuitEvent<User> event) {
         userEvent(event);
 
         if(event.getRemoveUser()) {
@@ -162,7 +165,7 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
     public void changeGameState(GameState gameState) {
         if (gameState.equals(this.gameState)) return;
 
-        Event event = new GameStateChangedEvent<>((G) this, this.gameState, gameState);
+        Event event = new GameStateChangedEvent<>((GameGroup) this, this.gameState, gameState);
 
         EventExecutor.executeEvent(event, getListeners(getAllUserListeners(), gameState.getListeners()));
 
@@ -183,7 +186,7 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
         return item != null ? item : game.getCustomItem(identifier);
     }
 
-    public void gameEvent(GameEvent<G> event) {
+    public void gameEvent(GameEvent<GameGroup> event) {
         EventExecutor.executeEvent(event, getListeners());
     }
 
@@ -221,7 +224,7 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
         return game.getChatPrefix();
     }
 
-    public M getGame() {
+    public Game getGame() {
         return game;
     }
 
@@ -232,7 +235,7 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
 
     @Override
     public void sendMessageNoPrefix(String message) {
-        for(U user : usersInGroup.values()) {
+        for(User user : usersInGroup.values()) {
             user.sendMessageNoPrefix(message);
         }
     }

@@ -9,13 +9,13 @@ import java.util.UUID;
  */
 public class AttackerTracker<U extends User> {
 
-    private final UserResolver<U> userResolver;
+    private final UserResolver userResolver;
     private final int defaultAttackerTimer = 600;
 
     private UUID attacker;
     private int attackerTimer;
 
-    public AttackerTracker(UserResolver<U> userResolver) {
+    public AttackerTracker(UserResolver userResolver) {
         this.userResolver = userResolver;
     }
 

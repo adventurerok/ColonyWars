@@ -8,13 +8,13 @@ import java.util.List;
 /**
  * Created by paul on 31/12/15.
  */
-public abstract class Team<U extends User, T extends Team, G extends GameGroup> implements Listener {
+public class Team implements Listener {
 
     private TeamColor teamColor;
-    private List<U> usersInTeam = new ArrayList<>();
-    private G gameGroup;
+    private List<User> usersInTeam = new ArrayList<>();
+    private GameGroup gameGroup;
 
-    public Team(TeamColor teamColor, G gameGroup) {
+    public Team(TeamColor teamColor, GameGroup gameGroup) {
         this.teamColor = teamColor;
         this.gameGroup = gameGroup;
     }

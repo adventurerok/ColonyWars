@@ -7,7 +7,7 @@ import java.util.UUID;
 /**
  * Created by paul on 03/01/16.
  */
-public interface UserResolver<U extends User> {
+public interface UserResolver {
 
-    U getUser(UUID uuid);
+    User getUser(UUID uuid);
 }

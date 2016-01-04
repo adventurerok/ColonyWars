@@ -52,19 +52,18 @@ import java.util.concurrent.ConcurrentMap;
  * Created by paul on 31/12/15.
  */
 @SuppressWarnings("unchecked")
-public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>, M extends Game<U, T, G, M>>
-        implements LanguageLookup, TaskScheduler, UserResolver<U>, FileLoader, ConfigHolder {
+public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLoader, ConfigHolder {
 
-    private ConcurrentMap<UUID, U> usersInServer = new ConcurrentHashMap<>();
-    private List<G> gameGroups = new ArrayList<>();
+    private ConcurrentMap<UUID, User> usersInServer = new ConcurrentHashMap<>();
+    private List<GameGroup> gameGroups = new ArrayList<>();
 
-    private Constructor<G> gameGroupConstructor;
-    private Constructor<T> teamConstructor;
-    private Constructor<U> userConstructor;
+    private Constructor<GameGroup> gameGroupConstructor;
+    private Constructor<Team> teamConstructor;
+    private Constructor<User> userConstructor;
 
     private Plugin plugin;
 
-    private G spawnGameGroup;
+    private GameGroup spawnGameGroup;
 
     private ConfigurationSection config;
 
@@ -77,7 +76,7 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     private Map<String, GameMapInfo> maps = new HashMap<>();
     private String startMapName;
 
-    public Game(Plugin plugin, Class<G> gameGroupClass, Class<T> teamClass, Class<U> userClass) {
+    public Game(Plugin plugin, Class<GameGroup> gameGroupClass, Class<Team> teamClass, Class<User> userClass) {
         this.plugin = plugin;
 
         try {
@@ -223,13 +222,13 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
 
     @Override
-    public U getUser(UUID uuid) {
+    public User getUser(UUID uuid) {
         return usersInServer.get(uuid);
     }
 
-    private G createGameGroup() {
+    private GameGroup createGameGroup() {
         try {
-            G gameGroup = gameGroupConstructor.newInstance(this, teamConstructor);
+            GameGroup gameGroup = gameGroupConstructor.newInstance(this, teamConstructor);
             gameGroup.setDefaultListeners((HashMap<String, Listener>) defaultListeners.clone());
             return gameGroup;
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
@@ -237,9 +236,9 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         }
     }
 
-    private U createUser(G gameGroup, T team, UUID uuid, LivingEntity entity) {
+    private User createUser(GameGroup gameGroup, Team team, UUID uuid, LivingEntity entity) {
         try {
-            U user = userConstructor.newInstance(this, gameGroup, team, uuid, entity);
+            User user = userConstructor.newInstance(this, gameGroup, team, uuid, entity);
             usersInServer.put(uuid, user);
             return user;
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
@@ -308,8 +307,8 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
             Player player = event.getPlayer();
 
-            U user = getUser(player.getUniqueId());
-            G gameGroup;
+            User user = getUser(player.getUniqueId());
+            GameGroup gameGroup;
 
             if (user != null) {
                 gameGroup = user.getGameGroup();
@@ -330,9 +329,9 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         public void eventPlayerQuit(PlayerQuitEvent event) {
             event.setQuitMessage(null);
 
-            U user = getUser(event.getPlayer().getUniqueId());
+            User user = getUser(event.getPlayer().getUniqueId());
 
-            UserQuitEvent<U> userEvent = new UserQuitEvent<>(user, UserQuitEvent.QuitReason.QUIT_SERVER);
+            UserQuitEvent<User> userEvent = new UserQuitEvent<>(user, UserQuitEvent.QuitReason.QUIT_SERVER);
             user.getGameGroup().userQuitEvent(userEvent);
 
             if (userEvent.getRemoveUser()) {
@@ -343,40 +342,40 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
         @EventHandler
         public void eventPlayerDropItem(PlayerDropItemEvent event) {
-            U user = getUser(event.getPlayer().getUniqueId());
+            User user = getUser(event.getPlayer().getUniqueId());
             user.getGameGroup().userEvent(new UserDropItemEvent<>(user, event));
         }
 
         @EventHandler
         public void eventPlayerPickupItem(PlayerPickupItemEvent event) {
-            U user = getUser(event.getPlayer().getUniqueId());
+            User user = getUser(event.getPlayer().getUniqueId());
             user.getGameGroup().userEvent(new UserPickupItemEvent<>(user, event));
         }
 
         @EventHandler
         public void eventPlayerInteractWorld(PlayerInteractEvent event) {
-            U user = getUser(event.getPlayer().getUniqueId());
+            User user = getUser(event.getPlayer().getUniqueId());
             user.getGameGroup().userEvent(new UserInteractWorldEvent<>(user, event));
         }
 
         @EventHandler
         public void eventBlockBreak(BlockBreakEvent event) {
-            U user = getUser(event.getPlayer().getUniqueId());
+            User user = getUser(event.getPlayer().getUniqueId());
             user.getGameGroup().userEvent(new UserBreakBlockEvent<>(user, event));
         }
 
         @EventHandler
         public void eventBlockPlace(BlockPlaceEvent event) {
-            U user = getUser(event.getPlayer().getUniqueId());
+            User user = getUser(event.getPlayer().getUniqueId());
             user.getGameGroup().userEvent(new UserPlaceBlockEvent<>(user, event));
         }
 
         @EventHandler(priority = EventPriority.LOW)
         public void eventEntityDamagedByEntity(EntityDamageByEntityEvent event) {
-            U attacker = EntityUtils.getRepresentingUser(Game.this, event.getDamager());
+            User attacker = EntityUtils.getRepresentingUser(Game.this, event.getDamager());
             if (attacker == null) return;
 
-            U attacked = EntityUtils.getRepresentingUser(attacker, event.getEntity());
+            User attacked = EntityUtils.getRepresentingUser(attacker, event.getEntity());
             boolean representing = !attacker.equals(EntityUtils.getActualUser(Game.this, event.getDamager()));
 
             attacker.getGameGroup().userEvent(new UserAttackEvent<>(attacker, event, attacked, representing));
@@ -384,11 +383,11 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
         @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
         public void eventEntityDamaged(EntityDamageEvent event) {
-            U attacked = EntityUtils.getActualUser(Game.this, event.getEntity());
+            User attacked = EntityUtils.getActualUser(Game.this, event.getEntity());
             if (attacked == null) return;
 
             if (event instanceof EntityDamageByEntityEvent) {
-                U attacker = EntityUtils.getRepresentingUser(attacked, event.getEntity());
+                User attacker = EntityUtils.getRepresentingUser(attacked, event.getEntity());
                 attacked.getGameGroup()
                         .userEvent(new UserAttackedEvent<>(attacked, (EntityDamageByEntityEvent) event, attacker));
             } else {
@@ -400,25 +399,25 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
         @EventHandler
         public void eventPlayerFoodLevelChange(FoodLevelChangeEvent event) {
-            U user = getUser(event.getEntity().getUniqueId());
+            User user = getUser(event.getEntity().getUniqueId());
             user.getGameGroup().userEvent(new UserFoodLevelChangeEvent<>(user, event));
         }
 
         @EventHandler
         public void eventPlayerInteractEntity(PlayerInteractEntityEvent event) {
-            U user = getUser(event.getPlayer().getUniqueId());
+            User user = getUser(event.getPlayer().getUniqueId());
             user.getGameGroup().userEvent(new UserRightClickEntityEvent<>(user, event));
         }
 
         @EventHandler
         public void eventPlayerInventoryClick(InventoryClickEvent event) {
-            U user = getUser(event.getWhoClicked().getUniqueId());
+            User user = getUser(event.getWhoClicked().getUniqueId());
             user.getGameGroup().userEvent(new UserInventoryClickEvent<>(user, event));
         }
 
         @EventHandler
         public void eventPlayerInventoryClose(InventoryCloseEvent event) {
-            U user = getUser(event.getPlayer().getUniqueId());
+            User user = getUser(event.getPlayer().getUniqueId());
             user.getGameGroup().userEvent(new UserInventoryCloseEvent<>(user, event));
         }
     }

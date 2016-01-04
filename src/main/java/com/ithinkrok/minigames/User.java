@@ -12,9 +12,7 @@ import com.ithinkrok.minigames.event.user.inventory.UserInventoryCloseEvent;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.item.ClickableInventory;
 import com.ithinkrok.minigames.item.CustomItem;
-import com.ithinkrok.minigames.item.MapVoter;
 import com.ithinkrok.minigames.lang.Messagable;
-import com.ithinkrok.minigames.metadata.MapVote;
 import com.ithinkrok.minigames.metadata.UserMetadata;
 import com.ithinkrok.minigames.task.GameRunnable;
 import com.ithinkrok.minigames.task.GameTask;
@@ -50,8 +48,7 @@ import java.util.*;
  * Created by paul on 31/12/15.
  */
 @SuppressWarnings("unchecked")
-public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>, M extends Game<U, T, G, M>>
-        implements Messagable, TaskScheduler, Listener, UserResolver<U> {
+public class User implements Messagable, TaskScheduler, Listener, UserResolver {
 
     private static final HashSet<Material> SEE_THROUGH = new HashSet<>();
 
@@ -61,22 +58,22 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         SEE_THROUGH.add(Material.STATIONARY_WATER);
     }
 
-    private M game;
-    private G gameGroup;
-    private T team;
+    private Game game;
+    private GameGroup gameGroup;
+    private Team team;
     private UUID uuid;
     private LivingEntity entity;
     private PlayerState playerState;
 
-    private AttackerTracker<U> fireAttacker = new AttackerTracker<>((U) this);
-    private AttackerTracker<U> witherAttacker = new AttackerTracker<>((U) this);
-    private AttackerTracker<U> lastAttacker = new AttackerTracker<>((U) this);
+    private AttackerTracker<User> fireAttacker = new AttackerTracker<>((User) this);
+    private AttackerTracker<User> witherAttacker = new AttackerTracker<>((User) this);
+    private AttackerTracker<User> lastAttacker = new AttackerTracker<>((User) this);
 
     private boolean isInGame = false;
 
-    private UpgradeHandler<U> upgradeHandler = new UpgradeHandler<>((U) this);
+    private UpgradeHandler<User> upgradeHandler = new UpgradeHandler<>((User) this);
 
-    private CooldownHandler<U> cooldownHandler = new CooldownHandler<>((U) this);
+    private CooldownHandler<User> cooldownHandler = new CooldownHandler<>((User) this);
 
     private ClassToInstanceMap<UserMetadata> metadataMap = MutableClassToInstanceMap.create();
 
@@ -84,10 +81,10 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     private TaskList userTaskList = new TaskList();
     private TaskList inGameTaskList = new TaskList();
-    private ClickableInventory<U> openInventory;
+    private ClickableInventory<User> openInventory;
     private Collection<Listener> listeners = new ArrayList<>();
 
-    public User(M game, G gameGroup, T team, UUID uuid, LivingEntity entity) {
+    public User(Game game, GameGroup gameGroup, Team team, UUID uuid, LivingEntity entity) {
         this.game = game;
         this.gameGroup = gameGroup;
         this.team = team;
@@ -102,12 +99,12 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         return listeners;
     }
 
-    public G getGameGroup() {
+    public GameGroup getGameGroup() {
         return gameGroup;
     }
 
     @Override
-    public U getUser(UUID uuid) {
+    public User getUser(UUID uuid) {
         return gameGroup.getUser(uuid);
     }
 
@@ -121,7 +118,7 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
         inGameTaskList.cancelAllTasks();
 
-        gameGroup.userEvent(new UserInGameChangeEvent<>((U) this));
+        gameGroup.userEvent(new UserInGameChangeEvent<>((User) this));
     }
 
     public <B extends UserMetadata> void setMetadata(B metadata) {
@@ -178,12 +175,12 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         return entity.getFireTicks();
     }
 
-    public void setFireTicks(U fireAttacker, int fireTicks) {
+    public void setFireTicks(User fireAttacker, int fireTicks) {
         this.fireAttacker.setAttacker(fireAttacker, fireTicks);
         entity.setFireTicks(fireTicks);
     }
 
-    public void setWitherTicks(U witherAttacker, int witherTicks) {
+    public void setWitherTicks(User witherAttacker, int witherTicks) {
         setWitherTicks(witherAttacker, witherTicks, 0);
     }
 
@@ -191,12 +188,12 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
      *
      * @param witherAmplifier The amplifier for the effect. Level n is amplifier n-1.
      */
-    public void setWitherTicks(U witherAttacker, int witherTicks, int witherAmplifier) {
+    public void setWitherTicks(User witherAttacker, int witherTicks, int witherAmplifier) {
         this.witherAttacker.setAttacker(witherAttacker, witherTicks);
         entity.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, witherAmplifier, witherAmplifier));
     }
 
-    public void setLastAttacker(U lastAttacker) {
+    public void setLastAttacker(User lastAttacker) {
         this.lastAttacker.setAttacker(lastAttacker);
     }
 
@@ -230,7 +227,7 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         return item.createWithVariables(gameGroup, upgradeHandler);
     }
 
-    public UpgradeHandler<U> getUpgradeLevels() {
+    public UpgradeHandler<User> getUpgradeLevels() {
         return upgradeHandler;
     }
 
@@ -252,7 +249,7 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     @SuppressWarnings("unchecked")
     public boolean teleport(Location location) {
-        UserTeleportEvent<U> event = new UserTeleportEvent<>((U) this, getLocation(), location);
+        UserTeleportEvent<User> event = new UserTeleportEvent<>((User) this, getLocation(), location);
 
         gameGroup.userEvent(event);
 
@@ -265,16 +262,16 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         return openInventory != null;
     }
 
-    public ClickableInventory<U> getClickableInventory() {
+    public ClickableInventory<User> getClickableInventory() {
         return openInventory;
     }
 
     @SuppressWarnings("unchecked")
-    public void showInventory(ClickableInventory<U> inventory) {
+    public void showInventory(ClickableInventory<User> inventory) {
         if (!isPlayer()) return;
 
         this.openInventory = inventory;
-        getPlayer().openInventory(inventory.createInventory((U) this));
+        getPlayer().openInventory(inventory.createInventory((User) this));
     }
 
     public String getFormattedName() {
@@ -339,7 +336,7 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     private class UserListener implements Listener {
 
         @EventHandler
-        public void eventInGameChange(UserInGameChangeEvent<U> event) {
+        public void eventInGameChange(UserInGameChangeEvent<User> event) {
             Iterator<UserMetadata> iterator = metadataMap.values().iterator();
 
             while(iterator.hasNext()) {
@@ -350,7 +347,7 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         }
 
         @EventHandler
-        public void eventGameStateChange(GameStateChangedEvent<G> event) {
+        public void eventGameStateChange(GameStateChangedEvent<GameGroup> event) {
             Iterator<UserMetadata> iterator = metadataMap.values().iterator();
 
             while(iterator.hasNext()) {
@@ -361,7 +358,7 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         }
 
         @EventHandler
-        public void eventMapChange(MapChangedEvent<G> event) {
+        public void eventMapChange(MapChangedEvent<GameGroup> event) {
             Iterator<UserMetadata> iterator = metadataMap.values().iterator();
 
             while(iterator.hasNext()) {
@@ -372,21 +369,21 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         }
 
         @EventHandler
-        public void eventInventoryClick(UserInventoryClickEvent<U> event) {
+        public void eventInventoryClick(UserInventoryClickEvent<User> event) {
             if (!isViewingClickableInventory()) return;
 
             getClickableInventory().inventoryClick(event);
         }
 
         @EventHandler
-        public void eventInventoryClose(UserInventoryCloseEvent<U> event) {
+        public void eventInventoryClose(UserInventoryCloseEvent<User> event) {
             if(!isViewingClickableInventory()) return;
 
             openInventory = null;
         }
 
         @EventHandler(priority = EventPriority.HIGH)
-        public void eventInteract(UserInteractEvent<U> event) {
+        public void eventInteract(UserInteractEvent<User> event) {
             ItemStack item = getInventory().getItemInHand();
             int identifier = InventoryUtils.getIdentifier(item);
             if(identifier < 0) return;
@@ -398,7 +395,7 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         }
 
         @EventHandler
-        public void eventAbilityCooldown(UserAbilityCooldownEvent<U> event) {
+        public void eventAbilityCooldown(UserAbilityCooldownEvent<User> event) {
             for(ItemStack item : getInventory()) {
                 int identifier = InventoryUtils.getIdentifier(item);
                 if(identifier < 0) continue;

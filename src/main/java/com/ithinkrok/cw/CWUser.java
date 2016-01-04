@@ -8,7 +8,7 @@ import java.util.UUID;
 /**
  * Created by paul on 31/12/15.
  */
-public class CWUser extends User<CWUser, CWTeam, CWGameGroup, CWGame> {
+public class CWUser extends User {
 
 
     public CWUser(CWGame minigame, CWGameGroup gameGroup, CWTeam team, UUID uuid, LivingEntity entity) {

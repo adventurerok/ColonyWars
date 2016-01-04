@@ -8,9 +8,9 @@ import com.ithinkrok.minigames.event.user.UserEvent;
  *
  * Called after a user changes their isInGame
  */
-public class UserInGameChangeEvent<U extends User> extends UserEvent<U> {
+public class UserInGameChangeEvent extends UserEvent {
 
-    public UserInGameChangeEvent(U user) {
+    public UserInGameChangeEvent(User user) {
         super(user);
     }
 

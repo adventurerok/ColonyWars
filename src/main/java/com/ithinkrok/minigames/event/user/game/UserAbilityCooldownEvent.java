@@ -7,14 +7,14 @@ import com.ithinkrok.minigames.util.SoundEffect;
 /**
  * Created by paul on 03/01/16.
  */
-public class UserAbilityCooldownEvent<U extends User> extends UserEvent<U> {
+public class UserAbilityCooldownEvent extends UserEvent {
 
     private final String ability;
 
     private SoundEffect soundEffect;
     private String coolDownMessage;
 
-    public UserAbilityCooldownEvent(U user, String ability, SoundEffect soundEffect, String coolDownMessage) {
+    public UserAbilityCooldownEvent(User user, String ability, SoundEffect soundEffect, String coolDownMessage) {
         super(user);
         this.ability = ability;
         this.soundEffect = soundEffect;

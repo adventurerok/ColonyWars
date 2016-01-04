@@ -8,11 +8,11 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 /**
  * Created by paul on 02/01/16.
  */
-public class UserFoodLevelChangeEvent<U extends User> extends UserEvent<U> implements Cancellable {
+public class UserFoodLevelChangeEvent extends UserEvent implements Cancellable {
 
     private final FoodLevelChangeEvent event;
 
-    public UserFoodLevelChangeEvent(U user, FoodLevelChangeEvent event) {
+    public UserFoodLevelChangeEvent(User user, FoodLevelChangeEvent event) {
         super(user);
         this.event = event;
     }

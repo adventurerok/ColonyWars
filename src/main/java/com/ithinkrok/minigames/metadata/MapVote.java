@@ -35,7 +35,7 @@ public class MapVote extends UserMetadata {
     }
 
     @Override
-    public boolean removeOnInGameChange(UserInGameChangeEvent<? extends User> event) {
+    public boolean removeOnInGameChange(UserInGameChangeEvent event) {
         return false;
     }
 

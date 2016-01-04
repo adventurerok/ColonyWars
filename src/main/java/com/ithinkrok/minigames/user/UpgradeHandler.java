@@ -38,7 +38,7 @@ public class UpgradeHandler<U extends User> implements Variables {
 
         upgradeLevels.put(upgrade, level);
 
-        UserUpgradeEvent<U> event = new UserUpgradeEvent<>(user, upgrade, oldLevel, level);
+        UserUpgradeEvent event = new UserUpgradeEvent<>(user, upgrade, oldLevel, level);
 
         user.getGameGroup().userEvent(event);
     }

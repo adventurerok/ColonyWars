@@ -331,7 +331,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
             User user = getUser(event.getPlayer().getUniqueId());
 
-            UserQuitEvent<User> userEvent = new UserQuitEvent<>(user, UserQuitEvent.QuitReason.QUIT_SERVER);
+            UserQuitEvent userEvent = new UserQuitEvent<>(user, UserQuitEvent.QuitReason.QUIT_SERVER);
             user.getGameGroup().userQuitEvent(userEvent);
 
             if (userEvent.getRemoveUser()) {

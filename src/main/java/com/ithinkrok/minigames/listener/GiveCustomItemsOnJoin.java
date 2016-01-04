@@ -1,6 +1,5 @@
 package com.ithinkrok.minigames.listener;
 
-import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerEnabledEvent;
 import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.item.CustomItem;
@@ -36,7 +35,7 @@ public class GiveCustomItemsOnJoin implements Listener {
     }
 
     @EventHandler
-    public void onUserJoin(UserJoinEvent<? extends User> event) {
+    public void onUserJoin(UserJoinEvent event) {
         if(clearInventory) event.getUser().getInventory().clear();
 
         for (CustomItemInfo itemInfo : items) {

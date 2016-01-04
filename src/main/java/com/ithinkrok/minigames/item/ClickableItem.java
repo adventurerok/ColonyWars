@@ -28,6 +28,6 @@ public abstract class ClickableItem<U extends User> implements Identifiable {
         return display;
     }
 
-    public abstract boolean isVisible(UserViewItemEvent<U> event);
-    public abstract void onClick(UserClickItemEvent<U> event);
+    public abstract boolean isVisible(UserViewItemEvent event);
+    public abstract void onClick(UserClickItemEvent event);
 }

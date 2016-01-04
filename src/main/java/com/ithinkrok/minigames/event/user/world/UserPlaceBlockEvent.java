@@ -9,11 +9,11 @@ import org.bukkit.event.block.BlockPlaceEvent;
 /**
  * Created by paul on 31/12/15.
  */
-public class UserPlaceBlockEvent<U extends User> extends UserEvent<U> implements Cancellable {
+public class UserPlaceBlockEvent extends UserEvent implements Cancellable {
 
     private final BlockPlaceEvent event;
 
-    public UserPlaceBlockEvent(U user, BlockPlaceEvent event) {
+    public UserPlaceBlockEvent(User user, BlockPlaceEvent event) {
         super(user);
         this.event = event;
     }

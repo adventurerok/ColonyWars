@@ -9,11 +9,11 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 /**
  * Created by paul on 02/01/16.
  */
-public class UserDropItemEvent<U extends User> extends UserEvent<U> implements Cancellable{
+public class UserDropItemEvent extends UserEvent implements Cancellable{
 
     private final PlayerDropItemEvent event;
 
-    public UserDropItemEvent(U user, PlayerDropItemEvent event) {
+    public UserDropItemEvent(User user, PlayerDropItemEvent event) {
         super(user);
         this.event = event;
     }

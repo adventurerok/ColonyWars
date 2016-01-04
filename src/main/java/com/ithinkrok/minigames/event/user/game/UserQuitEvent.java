@@ -6,12 +6,12 @@ import com.ithinkrok.minigames.event.user.UserEvent;
 /**
  * Created by paul on 02/01/16.
  */
-public class UserQuitEvent<U extends User> extends UserEvent<U> {
+public class UserQuitEvent extends UserEvent {
 
     private final QuitReason reason;
     private boolean removeUser = true;
 
-    public UserQuitEvent(U user, QuitReason reason) {
+    public UserQuitEvent(User user, QuitReason reason) {
         super(user);
         this.reason = reason;
     }

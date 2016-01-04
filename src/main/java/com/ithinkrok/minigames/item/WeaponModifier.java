@@ -79,7 +79,7 @@ public class WeaponModifier implements Listener {
 
     @SuppressWarnings("unchecked")
     @EventHandler
-    public void onUserAttack(UserAttackEvent<? extends User> attack) {
+    public void onUserAttack(UserAttackEvent attack) {
         if (attack.getInteractType() == UserInteractEvent.InteractType.REPRESENTING) return;
         if (attack.getDamageCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return;
 
@@ -116,7 +116,7 @@ public class WeaponModifier implements Listener {
 
 
         @SuppressWarnings("unchecked")
-        public <U extends User> void modifyAttack(UserAttackEvent<U> attack) {
+        public <U extends User> void modifyAttack(UserAttackEvent attack) {
             int duration = (int) (durationCalculator.calculate(attack.getUser().getUpgradeLevels()) * TICKS_PER_SECOND);
             int amp = (int) (levelCalculator.calculate(attack.getUser().getUpgradeLevels()) - 1);
 

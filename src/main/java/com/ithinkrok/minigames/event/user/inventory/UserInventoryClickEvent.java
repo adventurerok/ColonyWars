@@ -13,11 +13,11 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Created by paul on 02/01/16.
  */
-public class UserInventoryClickEvent<U extends User> extends UserInventoryEvent<U> implements Cancellable{
+public class UserInventoryClickEvent extends UserInventoryEvent implements Cancellable{
 
     private final InventoryClickEvent event;
 
-    public UserInventoryClickEvent(U user, InventoryClickEvent event) {
+    public UserInventoryClickEvent(User user, InventoryClickEvent event) {
         super(user);
         this.event = event;
     }

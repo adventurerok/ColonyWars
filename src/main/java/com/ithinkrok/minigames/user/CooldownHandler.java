@@ -61,7 +61,7 @@ public class CooldownHandler<U extends User> {
         coolingDown.remove(ability);
 
         //if (!isInGame()) return;
-        UserAbilityCooldownEvent<U> event = new UserAbilityCooldownEvent<>(user, ability, new SoundEffect(Sound
+        UserAbilityCooldownEvent event = new UserAbilityCooldownEvent<>(user, ability, new SoundEffect(Sound
                 .ZOMBIE_UNFECT, 1.0f, 2.0f), user.getGameGroup().getLocale(stopLocale));
 
         user.getGameGroup().userEvent(event);

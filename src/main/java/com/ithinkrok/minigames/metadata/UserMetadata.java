@@ -1,6 +1,5 @@
 package com.ithinkrok.minigames.metadata;
 
-import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.user.game.UserInGameChangeEvent;
 
 /**
@@ -8,7 +7,7 @@ import com.ithinkrok.minigames.event.user.game.UserInGameChangeEvent;
  */
 public abstract class UserMetadata extends Metadata {
 
-    public abstract boolean removeOnInGameChange(UserInGameChangeEvent<? extends User> event);
+    public abstract boolean removeOnInGameChange(UserInGameChangeEvent event);
 
     @Override
     public Class<? extends UserMetadata> getMetadataClass() {

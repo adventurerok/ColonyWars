@@ -8,11 +8,11 @@ import org.bukkit.event.entity.EntityDamageEvent;
 /**
  * Created by paul on 02/01/16.
  */
-public class UserDamagedEvent<U extends User> extends UserEvent<U> implements Cancellable{
+public class UserDamagedEvent extends UserEvent implements Cancellable{
 
     private final EntityDamageEvent event;
 
-    public UserDamagedEvent(U user, EntityDamageEvent event) {
+    public UserDamagedEvent(User user, EntityDamageEvent event) {
         super(user);
         this.event = event;
     }

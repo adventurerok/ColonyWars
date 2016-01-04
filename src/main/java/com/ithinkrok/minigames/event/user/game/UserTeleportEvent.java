@@ -8,14 +8,14 @@ import org.bukkit.event.Cancellable;
 /**
  * Created by paul on 01/01/16.
  */
-public class UserTeleportEvent<U extends User> extends UserEvent<U> implements Cancellable{
+public class UserTeleportEvent extends UserEvent implements Cancellable{
 
     private final Location from;
     private Location to;
 
     private boolean cancelled = false;
 
-    public UserTeleportEvent(U user, Location from, Location to) {
+    public UserTeleportEvent(User user, Location from, Location to) {
         super(user);
         this.from = from;
         this.to = to;

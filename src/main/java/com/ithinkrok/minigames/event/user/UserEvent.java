@@ -7,15 +7,15 @@ import org.bukkit.event.HandlerList;
 /**
  * Created by paul on 31/12/15.
  */
-public class UserEvent<U extends User> extends Event {
+public class UserEvent extends Event {
 
-    private U user;
+    private User user;
 
-    public UserEvent(U user) {
+    public UserEvent(User user) {
         this.user = user;
     }
 
-    public U getUser() {
+    public User getUser() {
         return user;
     }
 

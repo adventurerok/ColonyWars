@@ -1,6 +1,5 @@
 package com.ithinkrok.cw.item;
 
-import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerEnabledEvent;
 import com.ithinkrok.minigames.event.user.world.UserAttackEvent;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
@@ -25,7 +24,7 @@ public class LightningWand implements Listener {
     }
 
     @EventHandler
-    public void onUserAttack(UserAttackEvent<? extends User> event) {
+    public void onUserAttack(UserAttackEvent event) {
         if(event.getInteractType() != UserInteractEvent.InteractType.REPRESENTING) return;
 
         if(event.getDamageCause() == EntityDamageEvent.DamageCause.LIGHTNING) {
@@ -34,7 +33,7 @@ public class LightningWand implements Listener {
     }
 
     @EventHandler
-    public void onUserInteract(UserInteractEvent<? extends User> event) {
+    public void onUserInteract(UserInteractEvent event) {
         if(event.getInteractType() != UserInteractEvent.InteractType.RIGHT_CLICK) return;
         Block target = event.getUser().rayTraceBlocks(maxRange);
         if(target == null) return;

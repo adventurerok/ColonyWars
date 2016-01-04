@@ -6,11 +6,11 @@ import com.ithinkrok.minigames.event.user.UserEvent;
 /**
  * Created by paul on 31/12/15.
  */
-public class UserJoinEvent<U extends User> extends UserEvent<U> {
+public class UserJoinEvent extends UserEvent {
 
     private final JoinReason reason;
 
-    public UserJoinEvent(U user, JoinReason reason) {
+    public UserJoinEvent(User user, JoinReason reason) {
         super(user);
         this.reason = reason;
     }

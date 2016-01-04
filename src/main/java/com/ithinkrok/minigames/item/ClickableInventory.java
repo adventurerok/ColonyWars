@@ -39,7 +39,7 @@ public class ClickableInventory<U extends User> {
         return inventory;
     }
 
-    public void inventoryClick(UserInventoryClickEvent<U> event) {
+    public void inventoryClick(UserInventoryClickEvent event) {
         event.setCancelled(true);
 
         if(InventoryUtils.isEmpty(event.getItemInSlot())) return;

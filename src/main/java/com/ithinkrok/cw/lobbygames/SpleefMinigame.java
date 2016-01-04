@@ -50,7 +50,7 @@ public class SpleefMinigame implements Listener {
     }
 
     @EventHandler
-    public void onUserTeleport(UserTeleportEvent<User> event) {
+    public void onUserTeleport(UserTeleportEvent event) {
         Arena arena = gameLookups.get(event.getUser().getUuid());
 
         if(arena == null) return;
@@ -64,12 +64,12 @@ public class SpleefMinigame implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    public void onUserBreakBlock(UserBreakBlockEvent<User> event){
+    public void onUserBreakBlock(UserBreakBlockEvent event){
         if(event.getBlock().getType() == Material.SNOW_BLOCK) event.setCancelled(false);
     }
 
     @EventHandler
-    public void onUserDamaged(UserDamagedEvent<User> event) {
+    public void onUserDamaged(UserDamagedEvent event) {
         if(event.getDamageCause() != EntityDamageEvent.DamageCause.LAVA) return;
 
         Arena arena = gameLookups.get(event.getUser().getUuid());
@@ -81,7 +81,7 @@ public class SpleefMinigame implements Listener {
     }
 
     @EventHandler
-    public void onUserInteractWorld(UserInteractWorldEvent<User> event) {
+    public void onUserInteractWorld(UserInteractWorldEvent event) {
         if(!event.hasBlock()) return;
 
         switch(event.getClickedBlock().getType()) {

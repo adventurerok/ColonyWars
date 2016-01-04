@@ -8,10 +8,10 @@ import org.bukkit.inventory.InventoryView;
 /**
  * Created by paul on 02/01/16.
  */
-public abstract class UserInventoryEvent<U extends User> extends UserEvent<U> {
+public abstract class UserInventoryEvent extends UserEvent {
 
 
-    public UserInventoryEvent(U user) {
+    public UserInventoryEvent(User user) {
         super(user);
     }
 

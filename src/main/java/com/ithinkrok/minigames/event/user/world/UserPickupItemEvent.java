@@ -4,17 +4,16 @@ import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.user.UserEvent;
 import org.bukkit.entity.Item;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
 /**
  * Created by paul on 02/01/16.
  */
-public class UserPickupItemEvent<U extends User> extends UserEvent<U> implements Cancellable{
+public class UserPickupItemEvent extends UserEvent implements Cancellable{
 
     private final PlayerPickupItemEvent event;
 
-    public UserPickupItemEvent(U user, PlayerPickupItemEvent event) {
+    public UserPickupItemEvent(User user, PlayerPickupItemEvent event) {
         super(user);
         this.event = event;
     }

@@ -113,7 +113,7 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
         }
     }
 
-    public void eventUserJoinedAsPlayer(UserJoinEvent<User> event) {
+    public void eventUserJoinedAsPlayer(UserJoinEvent event) {
         usersInGroup.put(event.getUser().getUuid(), event.getUser());
 
         currentMap.teleportUser(event.getUser());
@@ -121,11 +121,11 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
         userEvent(event);
     }
 
-    public void userEvent(UserEvent<User> event) {
+    public void userEvent(UserEvent event) {
         EventExecutor.executeEvent(event, getListeners(event.getUser().getListeners()));
     }
 
-    public void userQuitEvent(UserQuitEvent<User> event) {
+    public void userQuitEvent(UserQuitEvent event) {
         userEvent(event);
 
         if(event.getRemoveUser()) {

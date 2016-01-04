@@ -107,12 +107,12 @@ public class CustomItem implements Identifiable, Listener {
     }
 
     @EventHandler
-    public void onUserAttack(UserAttackEvent<? extends User> event) {
+    public void onUserAttack(UserAttackEvent event) {
         EventExecutor.executeEvent(event, attackActions);
     }
 
     @EventHandler
-    public void onAbilityCooldown(UserAbilityCooldownEvent<? extends User> event) {
+    public void onAbilityCooldown(UserAbilityCooldownEvent event) {
         if(!event.getAbility().equals(timeoutAbility)) return;
 
         EventExecutor.executeEvent(event, timeoutActions);
@@ -120,7 +120,7 @@ public class CustomItem implements Identifiable, Listener {
     }
 
     @EventHandler
-    public void onInteract(UserInteractEvent<? extends User> event) {
+    public void onInteract(UserInteractEvent event) {
         switch(event.getInteractType()) {
             case PHYSICAL:
             case REPRESENTING:

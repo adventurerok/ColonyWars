@@ -249,7 +249,7 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
 
     @SuppressWarnings("unchecked")
     public boolean teleport(Location location) {
-        UserTeleportEvent<User> event = new UserTeleportEvent<>((User) this, getLocation(), location);
+        UserTeleportEvent event = new UserTeleportEvent<>((User) this, getLocation(), location);
 
         gameGroup.userEvent(event);
 
@@ -336,7 +336,7 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
     private class UserListener implements Listener {
 
         @EventHandler
-        public void eventInGameChange(UserInGameChangeEvent<User> event) {
+        public void eventInGameChange(UserInGameChangeEvent event) {
             Iterator<UserMetadata> iterator = metadataMap.values().iterator();
 
             while(iterator.hasNext()) {
@@ -369,21 +369,21 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
         }
 
         @EventHandler
-        public void eventInventoryClick(UserInventoryClickEvent<User> event) {
+        public void eventInventoryClick(UserInventoryClickEvent event) {
             if (!isViewingClickableInventory()) return;
 
             getClickableInventory().inventoryClick(event);
         }
 
         @EventHandler
-        public void eventInventoryClose(UserInventoryCloseEvent<User> event) {
+        public void eventInventoryClose(UserInventoryCloseEvent event) {
             if(!isViewingClickableInventory()) return;
 
             openInventory = null;
         }
 
         @EventHandler(priority = EventPriority.HIGH)
-        public void eventInteract(UserInteractEvent<User> event) {
+        public void eventInteract(UserInteractEvent event) {
             ItemStack item = getInventory().getItemInHand();
             int identifier = InventoryUtils.getIdentifier(item);
             if(identifier < 0) return;
@@ -395,7 +395,7 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
         }
 
         @EventHandler
-        public void eventAbilityCooldown(UserAbilityCooldownEvent<User> event) {
+        public void eventAbilityCooldown(UserAbilityCooldownEvent event) {
             for(ItemStack item : getInventory()) {
                 int identifier = InventoryUtils.getIdentifier(item);
                 if(identifier < 0) continue;

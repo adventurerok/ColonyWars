@@ -9,12 +9,12 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Created by paul on 03/01/16.
  */
-public class UserAttackedEvent<U extends User> extends UserDamagedEvent<U> {
+public class UserAttackedEvent extends UserDamagedEvent {
 
     private final EntityDamageByEntityEvent event;
-    private final U attacker;
+    private final User attacker;
 
-    public UserAttackedEvent(U user, EntityDamageByEntityEvent event, U attacker) {
+    public UserAttackedEvent(User user, EntityDamageByEntityEvent event, User attacker) {
         super(user, event);
         this.event = event;
         this.attacker = attacker;

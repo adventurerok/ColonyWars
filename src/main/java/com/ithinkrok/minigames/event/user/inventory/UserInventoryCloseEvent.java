@@ -8,11 +8,11 @@ import org.bukkit.inventory.InventoryView;
 /**
  * Created by paul on 02/01/16.
  */
-public class UserInventoryCloseEvent<U extends User> extends UserInventoryEvent<U> {
+public class UserInventoryCloseEvent extends UserInventoryEvent {
 
     private final InventoryCloseEvent event;
 
-    public UserInventoryCloseEvent(U user, InventoryCloseEvent event) {
+    public UserInventoryCloseEvent(User user, InventoryCloseEvent event) {
         super(user);
         this.event = event;
     }

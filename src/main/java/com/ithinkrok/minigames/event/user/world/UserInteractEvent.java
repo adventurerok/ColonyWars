@@ -11,11 +11,11 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Created by paul on 01/01/16.
  */
-public abstract class UserInteractEvent<U extends User> extends UserEvent<U> implements Cancellable{
+public abstract class UserInteractEvent extends UserEvent implements Cancellable{
 
     private boolean cooldown = false;
 
-    public UserInteractEvent(U user) {
+    public UserInteractEvent(User user) {
         super(user);
     }
 

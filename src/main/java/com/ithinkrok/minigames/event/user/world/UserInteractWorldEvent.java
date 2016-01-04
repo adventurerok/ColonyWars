@@ -1,7 +1,6 @@
 package com.ithinkrok.minigames.event.user.world;
 
 import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
@@ -11,11 +10,11 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Created by paul on 01/01/16.
  */
-public class UserInteractWorldEvent<U extends User> extends UserInteractEvent<U> {
+public class UserInteractWorldEvent extends UserInteractEvent {
 
     private final PlayerInteractEvent event;
 
-    public UserInteractWorldEvent(U user, PlayerInteractEvent event) {
+    public UserInteractWorldEvent(User user, PlayerInteractEvent event) {
         super(user);
         this.event = event;
     }

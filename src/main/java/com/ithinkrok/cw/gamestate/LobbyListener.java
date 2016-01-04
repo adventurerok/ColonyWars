@@ -1,15 +1,10 @@
 package com.ithinkrok.cw.gamestate;
 
-import com.ithinkrok.cw.CWUser;
 import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.event.user.state.UserDamagedEvent;
 import com.ithinkrok.minigames.event.user.state.UserFoodLevelChangeEvent;
 import com.ithinkrok.minigames.event.user.world.*;
-import com.ithinkrok.minigames.item.ClickableInventory;
-import com.ithinkrok.minigames.item.ClickableItem;
 import com.ithinkrok.minigames.item.CustomItem;
-import com.ithinkrok.minigames.item.event.UserClickItemEvent;
-import com.ithinkrok.minigames.item.event.UserViewItemEvent;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,17 +16,17 @@ import org.bukkit.inventory.ItemStack;
 public class LobbyListener implements Listener {
 
     @EventHandler
-    public void eventBlockBreak(UserBreakBlockEvent<CWUser> event) {
+    public void eventBlockBreak(UserBreakBlockEvent event) {
         event.setCancelled(true);
     }
 
     @EventHandler
-    public void eventBlockPlace(UserPlaceBlockEvent<CWUser> event) {
+    public void eventBlockPlace(UserPlaceBlockEvent event) {
         event.setCancelled(true);
     }
 
     @EventHandler
-    public void eventUserJoin(UserJoinEvent<CWUser> event) {
+    public void eventUserJoin(UserJoinEvent event) {
         System.out.println(event.getUser().getUuid() + " joined!");
 
         CustomItem customItem = event.getUser().getGameGroup().getCustomItem("darkness_sword");
@@ -41,22 +36,22 @@ public class LobbyListener implements Listener {
     }
 
     @EventHandler
-    public void eventUserDropItem(UserDropItemEvent<CWUser> event) {
+    public void eventUserDropItem(UserDropItemEvent event) {
         event.setCancelled(true);
     }
 
     @EventHandler
-    public void eventUserPickupItem(UserPickupItemEvent<CWUser> event) {
+    public void eventUserPickupItem(UserPickupItemEvent event) {
         event.setCancelled(true);
     }
 
     @EventHandler
-    public void eventUserDamaged(UserDamagedEvent<CWUser> event) {
+    public void eventUserDamaged(UserDamagedEvent event) {
         //event.setCancelled(true);
     }
 
     @EventHandler
-    public void eventUserInteract(UserInteractEvent<CWUser> event) {
+    public void eventUserInteract(UserInteractEvent event) {
         if(event.getInteractType() == UserInteractEvent.InteractType.REPRESENTING) return;
         if(event.hasItem() && event.getItem().getType() == Material.WRITTEN_BOOK) return;
 
@@ -66,7 +61,7 @@ public class LobbyListener implements Listener {
     }
 
     @EventHandler
-    public void eventUserFoodLevelChange(UserFoodLevelChangeEvent<CWUser> event) {
+    public void eventUserFoodLevelChange(UserFoodLevelChangeEvent event) {
         event.setFoodLevel(20);
     }
 

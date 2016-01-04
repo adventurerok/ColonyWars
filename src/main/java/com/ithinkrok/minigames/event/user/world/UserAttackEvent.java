@@ -11,13 +11,13 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Created by paul on 03/01/16.
  */
-public class UserAttackEvent<U extends User> extends UserInteractEvent<U> {
+public class UserAttackEvent extends UserInteractEvent {
 
     private final EntityDamageByEntityEvent event;
-    private final U target;
+    private final User target;
     private final boolean representing;
 
-    public UserAttackEvent(U user, EntityDamageByEntityEvent event, U target, boolean representing) {
+    public UserAttackEvent(User user, EntityDamageByEntityEvent event, User target, boolean representing) {
         super(user);
         this.event = event;
         this.target = target;
@@ -44,7 +44,7 @@ public class UserAttackEvent<U extends User> extends UserInteractEvent<U> {
         return target != null;
     }
 
-    public U getTargetUser() {
+    public User getTargetUser() {
         return target;
     }
 

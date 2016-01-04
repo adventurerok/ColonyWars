@@ -34,7 +34,7 @@ playing-map: "playing"
 # white, gray, pink
 team-count: 4
 
-# Time in seconds that a death of a player with a natural cause will be registered as a kill from the last attacker
+# Time in secondsRemaining that a death of a player with a natural cause will be registered as a kill from the last attacker
 last-attacker-timer: 30
 
 lobby-games:

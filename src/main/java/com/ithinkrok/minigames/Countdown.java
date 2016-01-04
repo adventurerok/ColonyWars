@@ -13,31 +13,43 @@ public class Countdown {
     private final String localeStub;
 
     private GameTask task;
-    private int seconds;
+    private int secondsRemaining;
 
-    public Countdown(String name, String localeStub, int seconds) {
+    public void setSecondsRemaining(int seconds) {
+        this.secondsRemaining = seconds;
+    }
+
+    public int getSecondsRemaining() {
+        return secondsRemaining;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Countdown(String name, String localeStub, int secondsRemaining) {
         this.name = name;
         this.localeStub = localeStub;
-        this.seconds = seconds;
+        this.secondsRemaining = secondsRemaining;
     }
 
     public void start(GameGroup gameGroup) {
         task = gameGroup.repeatInFuture(task -> {
-            --seconds;
+            --secondsRemaining;
 
             doCountdownMessage(gameGroup);
 
             for (User user : gameGroup.getUsers()) {
-                user.setXpLevel(seconds);
+                user.setXpLevel(secondsRemaining);
             }
 
-            if (seconds > 0) return;
+            if (secondsRemaining > 0) return;
 
             CountdownFinishedEvent event = new CountdownFinishedEvent(gameGroup, Countdown.this);
             gameGroup.gameEvent(event);
 
             //The event can change the amount of time left in the countdown
-            if (seconds > 0) return;
+            if (secondsRemaining > 0) return;
 
             task.finish();
         }, 20, 20);
@@ -48,20 +60,20 @@ public class Countdown {
     }
 
     private void doCountdownMessage(Messagable messagable) {
-        if (seconds > 30) {
-            if (seconds % 60 != 0) return;
-            messagable.sendLocale(localeStub + ".minutes", seconds / 60);
+        if (secondsRemaining > 30) {
+            if (secondsRemaining % 60 != 0) return;
+            messagable.sendLocale(localeStub + ".minutes", secondsRemaining / 60);
         } else {
-            switch (seconds) {
+            switch (secondsRemaining) {
                 case 30:
                 case 10:
-                    messagable.sendLocale(localeStub + ".seconds", seconds);
+                    messagable.sendLocale(localeStub + ".seconds", secondsRemaining);
                     return;
                 case 5:
                 case 4:
                 case 3:
                 case 2:
-                    messagable.sendLocale(localeStub + ".final", seconds);
+                    messagable.sendLocale(localeStub + ".final", secondsRemaining);
                     return;
                 case 0:
                     messagable.sendLocale(localeStub + ".now");

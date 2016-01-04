@@ -28,6 +28,8 @@ public class UpgradeHandler<U extends User> implements Variables {
 
     @SuppressWarnings("unchecked")
     public void setUpgradeLevel(String upgrade, int level) {
+        if(ExpressionCalculator.isNumber(upgrade))
+            throw new RuntimeException("Please do not use numbers as upgrade names");
         if(ExpressionCalculator.isOperatorOrFunction(upgrade))
             throw new RuntimeException(upgrade + " is an operator or function name. It cannot be used for upgrades");
 

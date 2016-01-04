@@ -211,7 +211,7 @@ public class ExpressionCalculator implements Calculator {
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private static boolean isNumber(String token) {
+    public static boolean isNumber(String token) {
         try {
             Double.parseDouble(token);
             return true;

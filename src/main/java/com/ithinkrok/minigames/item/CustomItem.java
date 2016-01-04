@@ -5,7 +5,9 @@ import com.ithinkrok.minigames.item.event.CustomItemLoreCalculateEvent;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.util.EventExecutor;
 import com.ithinkrok.minigames.util.InventoryUtils;
+import com.ithinkrok.minigames.util.ListenerLoader;
 import com.ithinkrok.minigames.util.math.Calculator;
+import com.ithinkrok.minigames.util.math.ExpressionCalculator;
 import com.ithinkrok.minigames.util.math.Variables;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -15,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by paul on 02/01/16.
@@ -27,10 +30,11 @@ public class CustomItem<U extends User> implements Identifiable {
 
     private int customItemId = customItemCount++;
 
-    private List<Listener> rightClickActions;
-    private List<Listener> leftClickActions;
-    private List<Listener> timeoutActions;
-    private List<Listener> attackActions;
+    private List<Listener> rightClickActions = new ArrayList<>();
+    private List<Listener> leftClickActions = new ArrayList<>();
+    private List<Listener> timeoutActions = new ArrayList<>();
+    private List<Listener> attackActions = new ArrayList<>();
+    private List<Listener> allListeners = new ArrayList<>();
 
     private String name;
     private String itemDisplayLocale;
@@ -52,11 +56,50 @@ public class CustomItem<U extends User> implements Identifiable {
     public CustomItem(String name, ConfigurationSection config) {
         this.name = name;
 
-        this.itemDisplayLocale = config.getString("display_name", null);
-        this.descriptionLocale = config.getString("description", null);
+        this.itemDisplayLocale = config.getString("display_name_locale", null);
+        this.descriptionLocale = config.getString("description_locale", null);
         this.itemMaterial = Material.matchMaterial(config.getString("material"));
         this.durability = config.getInt("durability", 0);
         this.unbreakable = config.getBoolean("unbreakable", true);
+
+        if (config.contains("right_cooldown")) configureCooldown(config.getConfigurationSection("right_cooldown"));
+        if (config.contains("right_timeout")) configureTimeout(config.getConfigurationSection("right_timeout"));
+        if (config.contains("listeners")) configureListeners(config.getConfigurationSection("listeners"));
+    }
+
+    private void configureCooldown(ConfigurationSection config) {
+        rightClickCooldown = new ExpressionCalculator(config.getString("timer"));
+        rightClickCooldownAbility = config.getString("ability", UUID.randomUUID().toString());
+        rightClickCooldownFinishedLocale = config.getString("finished_locale");
+    }
+
+    private void configureTimeout(ConfigurationSection config) {
+        timeoutCalculator = new ExpressionCalculator("timer");
+        timeoutAbility = config.getString("ability", UUID.randomUUID().toString());
+        timeoutDescriptionLocale = config.getString("description_locale");
+        timeoutFinishedLocale = config.getString("finished_locale");
+    }
+
+    private void configureListeners(ConfigurationSection config) {
+        for(String name : config.getKeys(false)) {
+            ConfigurationSection listenerInfo = config.getConfigurationSection(name);
+            try {
+                Listener listener = ListenerLoader.loadListener(this, listenerInfo);
+
+                List<String> events = null;
+                if(listenerInfo.contains("events")) events = listenerInfo.getStringList("events");
+
+                if(events == null || events.contains("rightClick")) rightClickActions.add(listener);
+                if(events == null || events.contains("leftClick")) leftClickActions.add(listener);
+                if(events == null || events.contains("timeout")) timeoutActions.add(listener);
+                if(events == null || events.contains("attack")) attackActions.add(listener);
+
+                allListeners.add(listener);
+            } catch (Exception e) {
+                System.out.println("Failed while creating CustomItem \"" + this.name + "\" listener for key: " + name);
+                e.printStackTrace();
+            }
+        }
     }
 
     public ItemStack createWithVariables(LanguageLookup languageLookup, Variables variables) {
@@ -67,7 +110,7 @@ public class CustomItem<U extends User> implements Identifiable {
         CustomItemLoreCalculateEvent<U> event =
                 new CustomItemLoreCalculateEvent<>(this, lore, languageLookup, variables);
 
-        EventExecutor.executeEvent(event, rightClickActions, leftClickActions, timeoutActions, attackActions);
+        EventExecutor.executeEvent(event, allListeners);
 
         if (rightClickCooldown != null) {
             double seconds = rightClickCooldown.calculate(variables);
@@ -87,10 +130,10 @@ public class CustomItem<U extends User> implements Identifiable {
         ItemStack item =
                 InventoryUtils.createItemWithNameAndLore(itemMaterial, 1, durability, itemDisplayName, loreArray);
 
-        if(enchantmentEffects != null) {
-            for(EnchantmentEffect enchantmentEffect : enchantmentEffects) {
+        if (enchantmentEffects != null) {
+            for (EnchantmentEffect enchantmentEffect : enchantmentEffects) {
                 int level = (int) enchantmentEffect.levelCalculator.calculate(variables);
-                if(level <= 0) continue;
+                if (level <= 0) continue;
 
                 item.addUnsafeEnchantment(enchantmentEffect.enchantment, level);
             }
@@ -101,6 +144,15 @@ public class CustomItem<U extends User> implements Identifiable {
         return item;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public int getIdentifier() {
+        return customItemId;
+    }
+
     private static class EnchantmentEffect {
         private Enchantment enchantment;
         private Calculator levelCalculator;
@@ -109,15 +161,6 @@ public class CustomItem<U extends User> implements Identifiable {
             this.enchantment = enchantment;
             this.levelCalculator = levelCalculator;
         }
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public int getIdentifier() {
-        return customItemId;
     }
 
 }

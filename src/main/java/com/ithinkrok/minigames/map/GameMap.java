@@ -8,6 +8,7 @@ import com.ithinkrok.minigames.lang.MultipleLanguageLookup;
 import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskList;
 import com.ithinkrok.minigames.util.EventExecutor;
+import com.ithinkrok.minigames.util.ListenerLoader;
 import com.ithinkrok.minigames.util.io.DirectoryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -62,21 +63,10 @@ public class GameMap implements LanguageLookup {
         for(String key : listenersConfig.getKeys(false)) {
             ConfigurationSection listenerConfig = listenersConfig.getConfigurationSection(key);
 
-            String className = listenerConfig.getString("class");
-
             try {
-                Class<? extends Listener> clazz = (Class<? extends Listener>) Class.forName(className);
-
-                Listener listener = clazz.newInstance();
-
-                ConfigurationSection config = null;
-                if(listenerConfig.contains("config")) config = listenerConfig.getConfigurationSection("config");
-
-                EventExecutor.executeEvent(new ListenerEnabledEvent<>(gameGroup, config), listener);
-
-                listeners.add(listener);
+                listeners.add(ListenerLoader.loadListener(gameGroup, listenerConfig));
             } catch (Exception e) {
-                System.out.println("Failed to load listener for map: " + className);
+                System.out.println("Failed while loading listener for key: " + key);
                 e.printStackTrace();
             }
         }

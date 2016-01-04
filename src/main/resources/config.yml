@@ -6,8 +6,8 @@ lang_files:
   - "english.lang"
 
 darkness_sword:
-  display_name: "darkness_sword.name"
-  description: "darkness_sword.desc"
+  display_name_locale: "darkness_sword.name"
+  description_locale: "darkness_sword.desc"
   material: "IRON_HELMET"
   listeners:
     weapon:

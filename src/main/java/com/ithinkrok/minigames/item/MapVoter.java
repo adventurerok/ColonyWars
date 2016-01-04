@@ -54,6 +54,7 @@ public class MapVoter implements Listener {
 
                 @Override
                 public void onClick(UserClickItemEvent event) {
+                    event.getUser().closeInventory();
                     MapVote oldVote = event.getUser().getMetadata(MapVote.class);
                     if (oldVote != null) {
                         if (mapName.equals(oldVote.getMapVote())) {

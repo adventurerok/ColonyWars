@@ -268,10 +268,12 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
 
     @SuppressWarnings("unchecked")
     public void showInventory(ClickableInventory inventory) {
-        if (!isPlayer()) return;
+        doInFuture(task -> {
+            if (!isPlayer()) return;
 
-        this.openInventory = inventory;
-        getPlayer().openInventory(inventory.createInventory(this));
+            this.openInventory = inventory;
+            getPlayer().openInventory(inventory.createInventory(this));
+        });
     }
 
     public String getFormattedName() {
@@ -336,6 +338,15 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
         size = ((size / 9) + 1) * 9;
 
         return Bukkit.createInventory((InventoryHolder) entity, size, title);
+    }
+
+    public void closeInventory() {
+        doInFuture(task -> {
+            if (!isPlayer()) return;
+
+            openInventory = null;
+            getPlayer().closeInventory();
+        });
     }
 
     private class UserListener implements Listener {

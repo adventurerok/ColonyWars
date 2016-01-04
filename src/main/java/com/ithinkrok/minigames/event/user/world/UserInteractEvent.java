@@ -40,9 +40,25 @@ public abstract class UserInteractEvent<U extends User> extends UserEvent<U> imp
     }
 
     public enum InteractType {
-        REPRESENTING, //if this event is due to an entity that we are representing
+
+        /**
+         * If the interaction was not done by the User, but by an Entity that is representing the User.
+         */
+        REPRESENTING,
+
+        /**
+         * If the interaction was via left click (e.g. block breaking or attacking)
+         */
         LEFT_CLICK,
+
+        /**
+         * If the interaction was via right click
+         */
         RIGHT_CLICK,
+
+        /**
+         * If the interaction was physical (e.g. standing on a pressure plate)
+         */
         PHYSICAL
     }
 

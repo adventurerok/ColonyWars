@@ -47,7 +47,7 @@ public class LobbyListener implements Listener {
 
     @EventHandler
     public void eventUserDamaged(UserDamagedEvent event) {
-        //event.setCancelled(true);
+        event.setCancelled(true);
     }
 
     @EventHandler

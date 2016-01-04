@@ -68,7 +68,7 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     private MultipleLanguageLookup multipleLanguageLookup = new MultipleLanguageLookup();
 
-    private IdentifierMap<CustomItem<U>> customItemIdentifierMap = new IdentifierMap<>();
+    private IdentifierMap<CustomItem> customItemIdentifierMap = new IdentifierMap<>();
 
     private Map<String, GameMapInfo> maps = new HashMap<>();
     private String startMapName;
@@ -100,15 +100,15 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         }
     }
 
-    public void registerCustomItem(CustomItem<U> item) {
+    public void registerCustomItem(CustomItem item) {
         customItemIdentifierMap.put(item.getName(), item);
     }
 
-    public CustomItem<U> getCustomItem(String name) {
+    public CustomItem getCustomItem(String name) {
         return customItemIdentifierMap.get(name);
     }
 
-    public CustomItem<U> getCustomItem(int identifier) {
+    public CustomItem getCustomItem(int identifier) {
         return customItemIdentifierMap.get(identifier);
     }
 

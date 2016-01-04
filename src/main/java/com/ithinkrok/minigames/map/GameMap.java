@@ -3,6 +3,8 @@ package com.ithinkrok.minigames.map;
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerEnabledEvent;
+import com.ithinkrok.minigames.item.CustomItem;
+import com.ithinkrok.minigames.item.IdentifierMap;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.MultipleLanguageLookup;
 import com.ithinkrok.minigames.task.GameTask;
@@ -35,6 +37,7 @@ public class GameMap implements LanguageLookup {
     private List<Listener> listeners;
 
     private TaskList mapTaskList = new TaskList();
+    private IdentifierMap<CustomItem> customItemIdentifierMap = new IdentifierMap<>();
 
     public GameMap(GameGroup gameGroup, GameMapInfo gameMapInfo) {
         this.gameMapInfo = gameMapInfo;
@@ -42,38 +45,6 @@ public class GameMap implements LanguageLookup {
         loadMap();
         loadLangFiles(gameGroup);
         loadListeners(gameGroup);
-    }
-
-    private void loadLangFiles(GameGroup gameGroup) {
-        if(!gameMapInfo.getConfig().contains("additional_lang_files")) return;
-
-        for(String additional : gameMapInfo.getConfig().getStringList("additional_lang_files")) {
-            languageLookup.addLanguageLookup(gameGroup.loadLangFile(additional));
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private void loadListeners(GameGroup gameGroup) {
-        listeners = new ArrayList<>();
-
-        if(!gameMapInfo.getConfig().contains("listeners")) return;
-
-        ConfigurationSection listenersConfig = gameMapInfo.getConfig().getConfigurationSection("listeners");
-
-        for(String key : listenersConfig.getKeys(false)) {
-            ConfigurationSection listenerConfig = listenersConfig.getConfigurationSection(key);
-
-            try {
-                listeners.add(ListenerLoader.loadListener(gameGroup, listenerConfig));
-            } catch (Exception e) {
-                System.out.println("Failed while loading listener for key: " + key);
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void bindTaskToMap(GameTask task) {
-        mapTaskList.addTask(task);
     }
 
     private void loadMap() {
@@ -98,12 +69,56 @@ public class GameMap implements LanguageLookup {
 
     }
 
+    private void loadLangFiles(GameGroup gameGroup) {
+        if (!gameMapInfo.getConfig().contains("additional_lang_files")) return;
+
+        for (String additional : gameMapInfo.getConfig().getStringList("additional_lang_files")) {
+            languageLookup.addLanguageLookup(gameGroup.loadLangFile(additional));
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void loadListeners(GameGroup gameGroup) {
+        listeners = new ArrayList<>();
+
+        if (!gameMapInfo.getConfig().contains("listeners")) return;
+
+        ConfigurationSection listenersConfig = gameMapInfo.getConfig().getConfigurationSection("listeners");
+
+        for (String key : listenersConfig.getKeys(false)) {
+            ConfigurationSection listenerConfig = listenersConfig.getConfigurationSection(key);
+
+            try {
+                listeners.add(ListenerLoader.loadListener(gameGroup, listenerConfig));
+            } catch (Exception e) {
+                System.out.println("Failed while loading listener for key: " + key);
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void registerCustomItem(CustomItem item) {
+        customItemIdentifierMap.put(item.getName(), item);
+    }
+
+    public CustomItem getCustomItem(String name) {
+        return customItemIdentifierMap.get(name);
+    }
+
+    public CustomItem getCustomItem(int identifier) {
+        return customItemIdentifierMap.get(identifier);
+    }
+
+    public void bindTaskToMap(GameTask task) {
+        mapTaskList.addTask(task);
+    }
+
     public void unloadMap() {
         mapTaskList.cancelAllTasks();
 
-        if(world.getPlayers().size() != 0) System.out.println("There are still players in an unloading map!");
+        if (world.getPlayers().size() != 0) System.out.println("There are still players in an unloading map!");
 
-        for(Player player : world.getPlayers()) {
+        for (Player player : world.getPlayers()) {
             player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
         }
 
@@ -120,7 +135,7 @@ public class GameMap implements LanguageLookup {
     }
 
     public void teleportUser(User user) {
-        if(user.getLocation().getWorld().equals(world)) return;
+        if (user.getLocation().getWorld().equals(world)) return;
         user.teleport(world.getSpawnLocation());
     }
 

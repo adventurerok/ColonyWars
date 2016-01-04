@@ -6,7 +6,7 @@ import com.ithinkrok.minigames.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.event.user.UserEvent;
 import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.event.user.game.UserQuitEvent;
-import com.ithinkrok.minigames.event.user.inventory.UserInventoryClickEvent;
+import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.lang.LangFile;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.Messagable;
@@ -18,7 +18,6 @@ import com.ithinkrok.minigames.task.TaskList;
 import com.ithinkrok.minigames.task.TaskScheduler;
 import com.ithinkrok.minigames.user.UserResolver;
 import com.ithinkrok.minigames.util.EventExecutor;
-import com.ithinkrok.minigames.util.InventoryUtils;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 
@@ -145,6 +144,18 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
         gameStateTaskList.cancelAllTasks();
 
         this.gameState = gameState;
+    }
+
+    public CustomItem getCustomItem(String name) {
+        CustomItem item = null;
+        if(currentMap != null) item = currentMap.getCustomItem(name);
+        return item != null ? item : game.getCustomItem(name);
+    }
+
+    public CustomItem getCustomItem(int identifier) {
+        CustomItem item = null;
+        if(currentMap != null) item = currentMap.getCustomItem(identifier);
+        return item != null ? item : game.getCustomItem(identifier);
     }
 
     public void gameEvent(GameEvent<G> event) {

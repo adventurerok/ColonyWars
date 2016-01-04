@@ -55,7 +55,7 @@ public class Countdown {
         }, 20, 20);
     }
 
-    public void end() {
+    public void cancel() {
         task.cancel();
     }
 

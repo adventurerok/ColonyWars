@@ -1,5 +1,6 @@
 package com.ithinkrok.minigames;
 
+import com.ithinkrok.minigames.event.game.CountdownFinishedEvent;
 import com.ithinkrok.minigames.event.game.GameEvent;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;
@@ -23,8 +24,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -87,6 +86,10 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
         defaultAndMapListeners = createDefaultAndMapListeners(newMap.getListenerMap());
 
         if (oldMap != null) oldMap.unloadMap();
+    }
+
+    public Countdown getCountdown() {
+        return countdown;
     }
 
     private Collection<Listener> getAllUserListeners() {
@@ -169,6 +172,17 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
         this.gameState = gameState;
     }
 
+    public void startCountdown(String name, String localeStub, int seconds) {
+        if(countdown != null) countdown.cancel();
+
+        countdown = new Countdown(name, localeStub, seconds);
+        countdown.start(this);
+    }
+
+    public void stopCountdown() {
+        countdown.cancel();
+    }
+
     public CustomItem getCustomItem(String name) {
         CustomItem item = null;
         if(currentMap != null) item = currentMap.getCustomItem(name);
@@ -183,6 +197,15 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
 
     public void gameEvent(GameEvent event) {
         EventExecutor.executeEvent(event, getListeners());
+    }
+
+    public void countdownFinishedEvent(CountdownFinishedEvent event) {
+        gameEvent(event);
+
+        if(event.getCountdown().getSecondsRemaining() > 0) return;
+        if(event.getCountdown() != countdown) return;
+
+        countdown = null;
     }
 
     public void unload() {

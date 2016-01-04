@@ -57,11 +57,12 @@ public class LobbyListener implements Listener {
 
     @EventHandler
     public void eventUserInteract(UserInteractEvent<CWUser> event) {
-//        if(event.hasItem() && event.getItem().getType() == Material.WRITTEN_BOOK) return;
-//
-//        if(!event.hasBlock() || !isRedstoneControl(event.getClickedBlock().getType())) {
-//            event.setCancelled(true);
-//        }
+        if(event.getInteractType() == UserInteractEvent.InteractType.REPRESENTING) return;
+        if(event.hasItem() && event.getItem().getType() == Material.WRITTEN_BOOK) return;
+
+        if(!event.hasBlock() || !isRedstoneControl(event.getClickedBlock().getType())) {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler

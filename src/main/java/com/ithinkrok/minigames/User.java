@@ -2,6 +2,8 @@ package com.ithinkrok.minigames;
 
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.MutableClassToInstanceMap;
+import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
+import com.ithinkrok.minigames.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.event.user.game.UserAbilityCooldownEvent;
 import com.ithinkrok.minigames.event.user.game.UserInGameChangeEvent;
 import com.ithinkrok.minigames.event.user.game.UserTeleportEvent;
@@ -39,10 +41,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by paul on 31/12/15.
@@ -331,6 +330,40 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     }
 
     private class UserListener implements Listener {
+
+        @EventHandler
+        public void eventInGameChange(UserInGameChangeEvent<U> event) {
+            Iterator<UserMetadata> iterator = metadataMap.values().iterator();
+
+            while(iterator.hasNext()) {
+                UserMetadata metadata = iterator.next();
+
+                if(metadata.removeOnInGameChange(event)) iterator.remove();
+            }
+        }
+
+        @EventHandler
+        public void eventGameStateChange(GameStateChangedEvent<G> event) {
+            Iterator<UserMetadata> iterator = metadataMap.values().iterator();
+
+            while(iterator.hasNext()) {
+                UserMetadata metadata = iterator.next();
+
+                if(metadata.removeOnGameStateChange(event)) iterator.remove();
+            }
+        }
+
+        @EventHandler
+        public void eventMapChange(MapChangedEvent<G> event) {
+            Iterator<UserMetadata> iterator = metadataMap.values().iterator();
+
+            while(iterator.hasNext()) {
+                UserMetadata metadata = iterator.next();
+
+                if(metadata.removeOnMapChange(event)) iterator.remove();
+            }
+        }
+
         @EventHandler
         public void eventInventoryClick(UserInventoryClickEvent<U> event) {
             if (!isViewingClickableInventory()) return;

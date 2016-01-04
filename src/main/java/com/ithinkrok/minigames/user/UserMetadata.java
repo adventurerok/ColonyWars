@@ -11,9 +11,9 @@ import com.ithinkrok.minigames.event.user.game.UserInGameChangeEvent;
  */
 public abstract class UserMetadata {
 
-    abstract boolean removeOnGameStateChange(GameStateChangedEvent<? extends GameGroup> event);
-    abstract boolean removeOnMapChange(MapChangedEvent<? extends GameGroup> event);
-    abstract boolean removeOnInGameChange(UserInGameChangeEvent<? extends User> event);
+    public abstract boolean removeOnGameStateChange(GameStateChangedEvent<? extends GameGroup> event);
+    public abstract boolean removeOnMapChange(MapChangedEvent<? extends GameGroup> event);
+    public abstract boolean removeOnInGameChange(UserInGameChangeEvent<? extends User> event);
 
     /**
      *

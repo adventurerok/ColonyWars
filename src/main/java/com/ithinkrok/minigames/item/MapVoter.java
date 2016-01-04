@@ -21,12 +21,17 @@ public class MapVoter implements Listener {
 
     private List<String> votable;
     private Material mapMaterial;
+    private String voteLocale, transferLocale, alreadyLocale;
 
     @EventHandler
     public void onListenerEnabled(ListenerEnabledEvent event) {
         ConfigurationSection config = event.getConfig();
 
         votable = config.getStringList("votable_maps");
+        voteLocale = config.getString("vote_locale", "map_voter.vote.player");
+        transferLocale = config.getString("transfer_locale", "map_voter.vote.transfer");
+        alreadyLocale = config.getString("already_voted_locale", "map_voter.vote.already_voted");
+
         mapMaterial = Material.matchMaterial(config.getString("map_material", "EMPTY_MAP"));
     }
 
@@ -49,6 +54,19 @@ public class MapVoter implements Listener {
 
                 @Override
                 public void onClick(UserClickItemEvent event) {
+                    MapVote oldVote = (MapVote) event.getUser().getMetadata(MapVote.class);
+                    if (oldVote != null) {
+                        if (mapName.equals(oldVote.getMapVote())) {
+                            event.getUser().sendLocale(alreadyLocale, mapName);
+                            return;
+                        } else event.getUser().getGameGroup()
+                                .sendLocale(transferLocale, event.getUser().getFormattedName(), oldVote.getMapVote(),
+                                        mapName);
+                    } else {
+
+                        event.getUser().getGameGroup()
+                                .sendLocale(voteLocale, event.getUser().getFormattedName(), mapName);
+                    }
                     event.getUser().setMetadata(new MapVote(event.getUser(), mapName));
                 }
             };

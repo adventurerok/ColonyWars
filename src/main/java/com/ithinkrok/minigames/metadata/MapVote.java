@@ -26,6 +26,14 @@ public class MapVote extends UserMetadata {
 
     }
 
+    public int getVoteWeight() {
+        return voteWeight;
+    }
+
+    public String getMapVote() {
+        return mapVote;
+    }
+
     @Override
     public boolean removeOnInGameChange(UserInGameChangeEvent<? extends User> event) {
         return false;

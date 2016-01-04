@@ -12,7 +12,9 @@ import com.ithinkrok.minigames.event.user.inventory.UserInventoryCloseEvent;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.item.ClickableInventory;
 import com.ithinkrok.minigames.item.CustomItem;
+import com.ithinkrok.minigames.item.MapVoter;
 import com.ithinkrok.minigames.lang.Messagable;
+import com.ithinkrok.minigames.metadata.MapVote;
 import com.ithinkrok.minigames.metadata.UserMetadata;
 import com.ithinkrok.minigames.task.GameRunnable;
 import com.ithinkrok.minigames.task.GameTask;
@@ -126,7 +128,7 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         metadataMap.put(metadata.getMetadataClass(), metadata);
     }
 
-    public <B extends UserMetadata> B getMetadata(Class<B> clazz) {
+    public <B extends UserMetadata> B getMetadata(Class<? extends B> clazz) {
         return metadataMap.getInstance(clazz);
     }
 

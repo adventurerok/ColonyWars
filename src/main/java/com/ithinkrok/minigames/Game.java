@@ -19,6 +19,9 @@ import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskScheduler;
 import com.ithinkrok.minigames.user.UserResolver;
 import com.ithinkrok.minigames.util.EntityUtils;
+import com.ithinkrok.minigames.util.io.ConfigHolder;
+import com.ithinkrok.minigames.util.io.ConfigParser;
+import com.ithinkrok.minigames.util.io.FileLoader;
 import com.ithinkrok.minigames.util.io.ResourceHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -51,7 +54,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 @SuppressWarnings("unchecked")
 public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>, M extends Game<U, T, G, M>>
-        implements LanguageLookup, TaskScheduler, UserResolver<U> {
+        implements LanguageLookup, TaskScheduler, UserResolver<U>, FileLoader, ConfigHolder {
 
     private ConcurrentMap<UUID, U> usersInServer = new ConcurrentHashMap<>();
     private List<G> gameGroups = new ArrayList<>();
@@ -70,6 +73,7 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     private IdentifierMap<CustomItem> customItemIdentifierMap = new IdentifierMap<>();
 
+    private HashMap<String, Listener> defaultListeners = new HashMap<>();
     private Map<String, GameMapInfo> maps = new HashMap<>();
     private String startMapName;
 
@@ -100,7 +104,18 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         }
     }
 
-    public void registerCustomItem(CustomItem item) {
+    @Override
+    public void addListener(String name, Listener listener) {
+        defaultListeners.put(name, listener);
+    }
+
+    @Override
+    public void addLanguageLookup(LanguageLookup languageLookup) {
+        multipleLanguageLookup.addLanguageLookup(languageLookup);
+    }
+
+    @Override
+    public void addCustomItem(CustomItem item) {
         customItemIdentifierMap.put(item.getName(), item);
     }
 
@@ -125,7 +140,12 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         config = plugin.getConfig();
 
         reloadMaps();
-        reloadLangFiles();
+
+        defaultListeners.clear();
+        multipleLanguageLookup = new MultipleLanguageLookup();
+        customItemIdentifierMap.clear();
+
+        ConfigParser.parseConfig(this, this, this, "config.yml", config);
     }
 
     private void reloadMaps() {
@@ -135,18 +155,13 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         loadMapInfo(startMapName);
     }
 
-    private void reloadLangFiles() {
-        multipleLanguageLookup = new MultipleLanguageLookup();
 
-        for (String langFile : config.getStringList("lang_files")) {
-            multipleLanguageLookup.addLanguageLookup(loadLangFile(langFile));
-        }
-    }
 
     private void loadMapInfo(String mapName) {
         maps.put(mapName, new GameMapInfo(this, mapName));
     }
 
+    @Override
     public LangFile loadLangFile(String path) {
         return new LangFile(ResourceHandler.getPropertiesResource(plugin, path));
     }
@@ -155,6 +170,7 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         return maps.get(startMapName);
     }
 
+    @Override
     public ConfigurationSection loadConfig(String path) {
         return ResourceHandler.getConfigResource(plugin, path);
     }
@@ -171,7 +187,9 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     private G createGameGroup() {
         try {
-            return gameGroupConstructor.newInstance(this, teamConstructor);
+            G gameGroup = gameGroupConstructor.newInstance(this, teamConstructor);
+            gameGroup.setDefaultListeners((HashMap<String, Listener>) defaultListeners.clone());
+            return gameGroup;
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("Failed to construct GameGroup", e);
         }

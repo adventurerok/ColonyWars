@@ -19,7 +19,7 @@ public class MultipleLanguageLookup implements LanguageLookup {
     }
 
     public void addLanguageLookup(LanguageLookup add) {
-        languageLookupList.add(add);
+        languageLookupList.add(0, add); //This is only done a few times. ArrayList is used due to faster iteration
     }
 
     public void removeLanguageLookup(LanguageLookup remove) {

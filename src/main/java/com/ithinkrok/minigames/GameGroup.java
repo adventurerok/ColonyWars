@@ -18,6 +18,8 @@ import com.ithinkrok.minigames.task.TaskList;
 import com.ithinkrok.minigames.task.TaskScheduler;
 import com.ithinkrok.minigames.user.UserResolver;
 import com.ithinkrok.minigames.util.EventExecutor;
+import com.ithinkrok.minigames.util.io.FileLoader;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 
@@ -31,7 +33,7 @@ import java.util.concurrent.ConcurrentMap;
  * Created by paul on 31/12/15.
  */
 public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>,
-        M extends Game<U, T, G, M>> implements LanguageLookup, Messagable, TaskScheduler, UserResolver<U> {
+        M extends Game<U, T, G, M>> implements LanguageLookup, Messagable, TaskScheduler, UserResolver<U>, FileLoader {
 
     private ConcurrentMap<UUID, U> usersInGroup = new ConcurrentHashMap<>();
     private Map<TeamColor, T> teamsInGroup = new HashMap<>();
@@ -46,6 +48,9 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
 
     private TaskList gameGroupTaskList = new TaskList();
     private TaskList gameStateTaskList = new TaskList();
+    private HashMap<String, Listener> defaultListeners = new HashMap<>();
+
+    private List<Listener> defaultAndMapListeners = new ArrayList<>();
 
     public GameGroup(M game, Constructor<T> teamConstructor) {
         this.game = game;
@@ -66,16 +71,20 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
 
     @SuppressWarnings("unchecked")
     public void changeMap(GameMapInfo mapInfo) {
+        GameMap oldMap = currentMap;
         GameMap newMap = new GameMap(this, mapInfo);
 
         usersInGroup.values().forEach(newMap::teleportUser);
 
-        Event event = new MapChangedEvent<>((G) this, currentMap, newMap);
+        currentMap = newMap;
+
+        Event event = new MapChangedEvent<>((G) this, oldMap, newMap);
 
         EventExecutor.executeEvent(event, getListeners(newMap.getListeners()));
 
-        if (currentMap != null) currentMap.unloadMap();
-        currentMap = newMap;
+        defaultAndMapListeners = createDefaultAndMapListeners(newMap.getListenerMap());
+
+        if (oldMap != null) oldMap.unloadMap();
     }
 
     @Override
@@ -112,6 +121,12 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
         }
     }
 
+    @Override
+    public ConfigurationSection loadConfig(String name) {
+        return game.loadConfig(name);
+    }
+
+    @Override
     public LangFile loadLangFile(String path) {
         return game.loadLangFile(path);
     }
@@ -127,7 +142,7 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
     private final Collection<Collection<Listener>> getListeners(Collection<Listener>... extras) {
         Collection<Collection<Listener>> listeners = new ArrayList<>(4);
         if(gameState != null) listeners.add(gameState.getListeners());
-        if(currentMap != null) listeners.add(currentMap.getListeners());
+        listeners.add(defaultAndMapListeners);
         Collections.addAll(listeners, extras);
 
         return listeners;
@@ -245,5 +260,24 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
     @Override
     public void cancelAllTasks() {
         gameGroupTaskList.cancelAllTasks();
+    }
+
+    public void setDefaultListeners(HashMap<String, Listener> defaultListeners) {
+        this.defaultListeners = defaultListeners;
+
+        if(currentMap != null) defaultAndMapListeners = createDefaultAndMapListeners(currentMap.getListenerMap());
+        else defaultAndMapListeners = createDefaultAndMapListeners();
+    }
+
+    @SuppressWarnings("unchecked")
+    @SafeVarargs
+    private final List<Listener> createDefaultAndMapListeners(Map<String, Listener>... extra) {
+        HashMap<String, Listener> clone = (HashMap<String, Listener>) defaultListeners.clone();
+
+        for(Map<String, Listener> map : extra) {
+            clone.putAll(map);
+        }
+
+        return new ArrayList<>(clone.values());
     }
 }

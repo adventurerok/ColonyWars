@@ -23,4 +23,9 @@ public class IdentifierMap<I extends Identifiable> {
     public I get(int identifier) {
         return idMap.get(identifier);
     }
+
+    public void clear() {
+        namedMap.clear();
+        idMap.clear();
+    }
 }

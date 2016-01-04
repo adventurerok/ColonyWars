@@ -8,6 +8,8 @@ import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.MultipleLanguageLookup;
 import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskList;
+import com.ithinkrok.minigames.util.io.ConfigHolder;
+import com.ithinkrok.minigames.util.io.ConfigParser;
 import com.ithinkrok.minigames.util.io.ListenerLoader;
 import com.ithinkrok.minigames.util.io.DirectoryUtils;
 import org.bukkit.Bukkit;
@@ -20,19 +22,22 @@ import org.bukkit.event.Listener;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by paul on 01/01/16.
  */
-public class GameMap implements LanguageLookup {
+public class GameMap implements LanguageLookup, ConfigHolder {
 
     private static int mapCounter = 0;
 
     private GameMapInfo gameMapInfo;
     private World world;
     private MultipleLanguageLookup languageLookup = new MultipleLanguageLookup();
-    private List<Listener> listeners;
+    private List<Listener> listeners = new ArrayList<>();
+    private Map<String, Listener> listenerMap = new HashMap<>();
 
     private TaskList mapTaskList = new TaskList();
     private IdentifierMap<CustomItem> customItemIdentifierMap = new IdentifierMap<>();
@@ -41,8 +46,7 @@ public class GameMap implements LanguageLookup {
         this.gameMapInfo = gameMapInfo;
 
         loadMap();
-        loadLangFiles(gameGroup);
-        loadListeners(gameGroup);
+        ConfigParser.parseConfig(gameGroup, this, gameGroup, gameMapInfo.getConfigName(), gameMapInfo.getConfig());
     }
 
     private void loadMap() {
@@ -67,37 +71,6 @@ public class GameMap implements LanguageLookup {
 
     }
 
-    private void loadLangFiles(GameGroup gameGroup) {
-        if (!gameMapInfo.getConfig().contains("lang_files")) return;
-
-        for (String additional : gameMapInfo.getConfig().getStringList("additional_lang_files")) {
-            languageLookup.addLanguageLookup(gameGroup.loadLangFile(additional));
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private void loadListeners(GameGroup gameGroup) {
-        listeners = new ArrayList<>();
-
-        if (!gameMapInfo.getConfig().contains("listeners")) return;
-
-        ConfigurationSection listenersConfig = gameMapInfo.getConfig().getConfigurationSection("listeners");
-
-        for (String key : listenersConfig.getKeys(false)) {
-            ConfigurationSection listenerConfig = listenersConfig.getConfigurationSection(key);
-
-            try {
-                listeners.add(ListenerLoader.loadListener(gameGroup, listenerConfig));
-            } catch (Exception e) {
-                System.out.println("Failed while loading listener for key: " + key);
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void registerCustomItem(CustomItem item) {
-        customItemIdentifierMap.put(item.getName(), item);
-    }
 
     public CustomItem getCustomItem(String name) {
         return customItemIdentifierMap.get(name);
@@ -154,5 +127,25 @@ public class GameMap implements LanguageLookup {
 
     public List<Listener> getListeners() {
         return listeners;
+    }
+
+    @Override
+    public void addListener(String name, Listener listener) {
+        listeners.add(listener);
+        listenerMap.put(name, listener);
+    }
+
+    public Map<String, Listener> getListenerMap() {
+        return listenerMap;
+    }
+
+    @Override
+    public void addCustomItem(CustomItem item) {
+        customItemIdentifierMap.put(item.getName(), item);
+    }
+
+    @Override
+    public void addLanguageLookup(LanguageLookup languageLookup) {
+        this.languageLookup.addLanguageLookup(languageLookup);
     }
 }

@@ -14,11 +14,15 @@ public class GameMapInfo {
 
     public GameMapInfo(Game game, String name) {
         this.name = name;
-        this.config = game.loadConfig("maps/" + name + ".yml");
+        this.config = game.loadConfig(getConfigName());
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getConfigName() {
+        return "maps/" + name + ".yml";
     }
 
     public String getDescription() {

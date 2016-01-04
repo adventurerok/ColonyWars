@@ -1,7 +1,9 @@
 package com.ithinkrok.minigames.item;
 
 import com.ithinkrok.minigames.User;
+import com.ithinkrok.minigames.event.user.game.UserAbilityCooldownEvent;
 import com.ithinkrok.minigames.event.user.world.UserAttackEvent;
+import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.item.event.CustomItemLoreCalculateEvent;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.util.EventExecutor;
@@ -107,6 +109,59 @@ public class CustomItem implements Identifiable {
     @EventHandler
     public void onUserAttack(UserAttackEvent<? extends User> event) {
         EventExecutor.executeEvent(event, attackActions);
+    }
+
+    @EventHandler
+    public void onAbilityCooldown(UserAbilityCooldownEvent<? extends User> event) {
+        if(!event.getAbility().equals(timeoutAbility)) return;
+
+        EventExecutor.executeEvent(event, timeoutActions);
+        startRightClickCooldown(event.getUser());
+    }
+
+    @EventHandler
+    public void onInteract(UserInteractEvent<? extends User> event) {
+        if(event.getInteractType() == UserInteractEvent.InteractType.PHYSICAL) return;
+
+        if(event.getInteractType() == UserInteractEvent.InteractType.LEFT_CLICK) {
+            EventExecutor.executeEvent(event, leftClickActions);
+            return;
+        }
+
+        if(isTimingOut(event.getUser())){
+            event.getUser().sendLocale("timeouts.default.wait");
+            return;
+        }
+        if(isCoolingDown(event.getUser())) {
+            event.getUser().sendLocale("cooldowns.default.wait");
+            return;
+        }
+
+        EventExecutor.executeEvent(event, rightClickActions);
+        if(!event.getStartCooldownAfterAction()) return;
+
+        if(timeoutCalculator != null) {
+            int timeout = (int) timeoutCalculator.calculate(event.getUser().getUpgradeLevels());
+            event.getUser().startCoolDown(timeoutAbility, timeout, timeoutFinishedLocale);
+        } else {
+            startRightClickCooldown(event.getUser());
+        }
+    }
+
+    private void startRightClickCooldown(User user) {
+        if(rightClickCooldown == null) return;
+
+        int cooldown = (int) rightClickCooldown.calculate(user.getUpgradeLevels());
+        user.startCoolDown(rightClickCooldownAbility, cooldown, rightClickCooldownFinishedLocale);
+    }
+
+    private boolean isTimingOut(User user) {
+        return timeoutCalculator != null && user.isCoolingDown(timeoutAbility);
+    }
+
+    private boolean isCoolingDown(User user) {
+        return rightClickCooldown != null && user.isCoolingDown(rightClickCooldownAbility);
+
     }
 
     public ItemStack createWithVariables(LanguageLookup languageLookup, Variables variables) {

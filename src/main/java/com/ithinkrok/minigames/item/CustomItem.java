@@ -121,7 +121,11 @@ public class CustomItem implements Identifiable, Listener {
 
     @EventHandler
     public void onInteract(UserInteractEvent<? extends User> event) {
-        if(event.getInteractType() == UserInteractEvent.InteractType.PHYSICAL) return;
+        switch(event.getInteractType()) {
+            case PHYSICAL:
+            case REPRESENTING:
+                return;
+        }
 
         if(event.getInteractType() == UserInteractEvent.InteractType.LEFT_CLICK) {
             EventExecutor.executeEvent(event, leftClickActions);

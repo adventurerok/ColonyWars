@@ -80,11 +80,21 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
 
         Event event = new MapChangedEvent<>((G) this, oldMap, newMap);
 
-        EventExecutor.executeEvent(event, getListeners(newMap.getListeners()));
+        EventExecutor.executeEvent(event, getListeners(getAllUserListeners(), newMap.getListeners()));
 
         defaultAndMapListeners = createDefaultAndMapListeners(newMap.getListenerMap());
 
         if (oldMap != null) oldMap.unloadMap();
+    }
+
+    private Collection<Listener> getAllUserListeners() {
+        ArrayList<Listener> result = new ArrayList<>(usersInGroup.size());
+
+        for(U user : usersInGroup.values()) {
+            result.addAll(user.getListeners());
+        }
+
+        return result;
     }
 
     @Override
@@ -154,7 +164,7 @@ public abstract class GameGroup<U extends User<U, T, G, M>, T extends Team<U, T,
 
         Event event = new GameStateChangedEvent<>((G) this, this.gameState, gameState);
 
-        EventExecutor.executeEvent(event, getListeners(gameState.getListeners()));
+        EventExecutor.executeEvent(event, getListeners(getAllUserListeners(), gameState.getListeners()));
 
         gameStateTaskList.cancelAllTasks();
 

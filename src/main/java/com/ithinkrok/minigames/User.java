@@ -373,10 +373,6 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         public void eventInventoryClick(UserInventoryClickEvent<U> event) {
             if (!isViewingClickableInventory()) return;
 
-            if (!InventoryUtils.isIdentifierString(event.getInventory().getTitle())) return;
-            if (InventoryUtils.getIdentifierFromString(event.getInventory().getTitle()) !=
-                    getClickableInventory().getIdentifier()) return;
-
             getClickableInventory().inventoryClick(event);
         }
 

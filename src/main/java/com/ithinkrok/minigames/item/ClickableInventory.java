@@ -15,22 +15,16 @@ import java.util.Map;
  */
 public class ClickableInventory<U extends User> {
 
-    private static int clickableInventoryCount = 0;
 
-    private final int clickableInventoryId = clickableInventoryCount++;
     private final String title;
     private Map<Integer, ClickableItem<U>> items = new HashMap<>();
 
     public ClickableInventory(String title) {
-        this.title = InventoryUtils.generateIdentifierString(clickableInventoryId) + title;
+        this.title = title;
     }
 
     public void addItem(ClickableItem<U> item) {
         items.put(item.getIdentifier(), item);
-    }
-
-    public int getIdentifier() {
-        return clickableInventoryId;
     }
 
     public Inventory createInventory(U user) {

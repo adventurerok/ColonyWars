@@ -6,6 +6,7 @@ maps:
 # The language files that will be used by default
 lang_files:
   - "english.lang"
+  - "lang/weapon_modifier.lang"
   - "lang/items.lang"
 
 custom_items:

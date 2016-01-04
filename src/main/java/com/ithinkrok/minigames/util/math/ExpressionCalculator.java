@@ -21,6 +21,7 @@ public class ExpressionCalculator implements Calculator {
         opMap.put("^", new OpInfo(numbers -> Math.pow(numbers[0], numbers[1]), false, 10, 2, 2));
         opMap.put("/", new OpInfo(numbers -> numbers[0] / numbers[1], false, 20, 2, 2));
         opMap.put("*", new OpInfo(numbers -> numbers[0] * numbers[1], false, 20, 2, 2));
+        opMap.put("%", new OpInfo(numbers -> numbers[0] % numbers[1], false, 20, 2, 2));
         opMap.put("+", new OpInfo(numbers -> numbers[0] + numbers[1], false, 30, 2, 2));
         opMap.put("-", new OpInfo(numbers -> numbers[0] - numbers[1], false, 30, 2, 2));
         opMap.put("~", new OpInfo(numbers -> -numbers[0], false, 40, 1, 1));
@@ -30,6 +31,7 @@ public class ExpressionCalculator implements Calculator {
         opMap.put("abs", new OpInfo(numbers -> Math.abs(numbers[0]), true, 0, 1, 1));
         opMap.put("floor", new OpInfo(numbers -> Math.floor(numbers[0]), true, 0, 1, 1));
         opMap.put("ceil", new OpInfo(numbers -> Math.ceil(numbers[0]), true, 0, 1, 1));
+        opMap.put("expression", new OpInfo(numbers -> numbers[0], true, 0, 1, 1));
 
         opMap.put("min", new OpInfo(numbers -> {
             double min = Double.POSITIVE_INFINITY;
@@ -40,6 +42,21 @@ public class ExpressionCalculator implements Calculator {
 
             return min;
         }, true, 0, 1, Integer.MAX_VALUE));
+
+        opMap.put("max", new OpInfo(numbers -> {
+            double min = Double.NEGATIVE_INFINITY;
+
+            for(double num : numbers){
+                if(num > min) min = num;
+            }
+
+            return min;
+        }, true, 0, 1, Integer.MAX_VALUE));
+
+        opMap.put("array", new OpInfo(numbers ->  {
+            int index = (int) (numbers[0] + 1);
+            return numbers[index];
+        }, true, 0, 2, Integer.MAX_VALUE));
     }
 
     private Expression expression;

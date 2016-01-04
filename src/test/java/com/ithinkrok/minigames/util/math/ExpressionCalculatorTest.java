@@ -21,7 +21,7 @@ import static org.mockito.Mockito.mock;
 public class ExpressionCalculatorTest {
 
     @Test
-    @DataProvider({"64.3,64.3", "2+3,5","2^15,32768"})
+    @DataProvider({"64.3,64.3", "2+3,5","2^15,32768", "-(11.3),-11.3"})
     public void shouldHandleBasicSumsCorrectly(String sum, double result) {
         testValues(sum, null, result);
     }
@@ -41,6 +41,12 @@ public class ExpressionCalculatorTest {
     @Test
     @DataProvider(value = {"min(4,7,1,9);1"}, splitBy = ";")
     public void shouldHandleMinCorrectly(String sum, double result) {
+        testValues(sum, null, result);
+    }
+
+    @Test
+    @DataProvider(value = {"array(2, 37, 56, 19, 99);19"}, splitBy = ";")
+    public void shouldHandleArrayCorrectly(String sum, double result) {
         testValues(sum, null, result);
     }
 

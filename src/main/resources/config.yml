@@ -35,3 +35,14 @@ custom_items:
         config:
           max_range: 100
           damage_multiplier: 2.8
+
+listeners:
+  give_on_join:
+    class: "com.ithinkrok.minigames.listener.GiveCustomItemsOnJoin"
+    config:
+      clear_inventory: true
+      items:
+        - name: "map_voter"
+          slot: 0
+        - name: "darkness_sword"
+          slot: 1

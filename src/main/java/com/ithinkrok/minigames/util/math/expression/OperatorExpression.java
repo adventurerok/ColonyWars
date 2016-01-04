@@ -2,6 +2,8 @@ package com.ithinkrok.minigames.util.math.expression;
 
 import com.ithinkrok.minigames.util.math.Variables;
 
+import java.util.List;
+
 /**
  * Created by paul on 03/01/16.
  */
@@ -9,6 +11,15 @@ public class OperatorExpression implements Expression {
 
     private final Expression[] subExpressions;
     private final Operator operator;
+
+    public OperatorExpression(Operator operator, List<Expression> expressions) {
+        this(operator, toArray(expressions));
+    }
+
+    private static Expression[] toArray(List<Expression> expressions) {
+        Expression[] array = new Expression[expressions.size()];
+        return expressions.toArray(array);
+    }
 
     public OperatorExpression(Operator operator, Expression... expressions) {
         subExpressions = expressions;

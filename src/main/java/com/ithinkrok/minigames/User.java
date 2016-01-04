@@ -76,7 +76,7 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         this.entity = entity;
 
         this.name = entity.getName();
-        listeners.add(this);
+        listeners.add(new UserListener());
     }
 
     public Collection<Listener> getListeners() {
@@ -199,7 +199,7 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         upgradeHandler.setUpgradeLevel(upgrade, level);
     }
 
-    public ItemStack createCustomItemForUser(CustomItem<U> item) {
+    public ItemStack createCustomItemForUser(CustomItem item) {
         return item.createWithVariables(gameGroup, upgradeHandler);
     }
 
@@ -233,23 +233,6 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         return entity.teleport(event.getTo());
     }
 
-    @EventHandler
-    public void eventInventoryClick(UserInventoryClickEvent<U> event) {
-        if (!isViewingClickableInventory()) return;
-
-        if (!InventoryUtils.isIdentifierString(event.getInventory().getTitle())) return;
-        if (InventoryUtils.getIdentifierFromString(event.getInventory().getTitle()) !=
-                getClickableInventory().getIdentifier()) return;
-
-        getClickableInventory().inventoryClick(event);
-    }
-
-    @EventHandler
-    public void eventInventoryClose(UserInventoryCloseEvent<U> event) {
-        if(!isViewingClickableInventory()) return;
-
-        openInventory = null;
-    }
 
     public boolean isViewingClickableInventory() {
         return openInventory != null;
@@ -312,5 +295,25 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         size = ((size / 9) + 1) * 9;
 
         return Bukkit.createInventory((InventoryHolder) entity, size, title);
+    }
+
+    private class UserListener implements Listener {
+        @EventHandler
+        public void eventInventoryClick(UserInventoryClickEvent<U> event) {
+            if (!isViewingClickableInventory()) return;
+
+            if (!InventoryUtils.isIdentifierString(event.getInventory().getTitle())) return;
+            if (InventoryUtils.getIdentifierFromString(event.getInventory().getTitle()) !=
+                    getClickableInventory().getIdentifier()) return;
+
+            getClickableInventory().inventoryClick(event);
+        }
+
+        @EventHandler
+        public void eventInventoryClose(UserInventoryCloseEvent<U> event) {
+            if(!isViewingClickableInventory()) return;
+
+            openInventory = null;
+        }
     }
 }

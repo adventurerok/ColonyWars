@@ -15,6 +15,17 @@ custom_items:
     display_name_locale: "map_voter.name"
     description_locale: "map.voter.desc"
     material: "EMPTY_MAP"
+    listeners:
+      vote:
+        events: ["rightClick"]
+        class: "com.ithinkrok.minigames.item.MapVoter"
+        config:
+          votable_maps:
+            - "canyon"
+            - "forest_hills"
+            - "cavern"
+            - "random"
+          map_material: "EMPTY_MAP"
   darkness_sword:
     display_name_locale: "darkness_sword.name"
     description_locale: "darkness_sword.desc"

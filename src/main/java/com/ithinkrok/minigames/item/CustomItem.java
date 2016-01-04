@@ -1,6 +1,7 @@
 package com.ithinkrok.minigames.item;
 
 import com.ithinkrok.minigames.User;
+import com.ithinkrok.minigames.event.user.world.UserAttackEvent;
 import com.ithinkrok.minigames.item.event.CustomItemLoreCalculateEvent;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.util.EventExecutor;
@@ -12,6 +13,7 @@ import com.ithinkrok.minigames.util.math.Variables;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
@@ -24,7 +26,7 @@ import java.util.UUID;
  * <p>
  * An item with custom use or inventory click listeners
  */
-public class CustomItem<U extends User> implements Identifiable {
+public class CustomItem implements Identifiable {
 
     private static int customItemCount = 0;
 
@@ -81,18 +83,18 @@ public class CustomItem<U extends User> implements Identifiable {
     }
 
     private void configureListeners(ConfigurationSection config) {
-        for(String name : config.getKeys(false)) {
+        for (String name : config.getKeys(false)) {
             ConfigurationSection listenerInfo = config.getConfigurationSection(name);
             try {
                 Listener listener = ListenerLoader.loadListener(this, listenerInfo);
 
                 List<String> events = null;
-                if(listenerInfo.contains("events")) events = listenerInfo.getStringList("events");
+                if (listenerInfo.contains("events")) events = listenerInfo.getStringList("events");
 
-                if(events == null || events.contains("rightClick")) rightClickActions.add(listener);
-                if(events == null || events.contains("leftClick")) leftClickActions.add(listener);
-                if(events == null || events.contains("timeout")) timeoutActions.add(listener);
-                if(events == null || events.contains("attack")) attackActions.add(listener);
+                if (events == null || events.contains("rightClick")) rightClickActions.add(listener);
+                if (events == null || events.contains("leftClick")) leftClickActions.add(listener);
+                if (events == null || events.contains("timeout")) timeoutActions.add(listener);
+                if (events == null || events.contains("attack")) attackActions.add(listener);
 
                 allListeners.add(listener);
             } catch (Exception e) {
@@ -102,13 +104,17 @@ public class CustomItem<U extends User> implements Identifiable {
         }
     }
 
+    @EventHandler
+    public void onUserAttack(UserAttackEvent<? extends User> event) {
+        EventExecutor.executeEvent(event, attackActions);
+    }
+
     public ItemStack createWithVariables(LanguageLookup languageLookup, Variables variables) {
         List<String> lore = new ArrayList<>();
 
         if (descriptionLocale != null) lore.add(languageLookup.getLocale(descriptionLocale));
 
-        CustomItemLoreCalculateEvent<U> event =
-                new CustomItemLoreCalculateEvent<>(this, lore, languageLookup, variables);
+        CustomItemLoreCalculateEvent event = new CustomItemLoreCalculateEvent(this, lore, languageLookup, variables);
 
         EventExecutor.executeEvent(event, allListeners);
 

@@ -1,5 +1,7 @@
 package com.ithinkrok.minigames;
 
+import com.google.common.collect.ClassToInstanceMap;
+import com.google.common.collect.MutableClassToInstanceMap;
 import com.ithinkrok.minigames.event.user.game.UserAbilityCooldownEvent;
 import com.ithinkrok.minigames.event.user.game.UserInGameChangeEvent;
 import com.ithinkrok.minigames.event.user.game.UserTeleportEvent;
@@ -13,10 +15,7 @@ import com.ithinkrok.minigames.task.GameRunnable;
 import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskList;
 import com.ithinkrok.minigames.task.TaskScheduler;
-import com.ithinkrok.minigames.user.AttackerTracker;
-import com.ithinkrok.minigames.user.CooldownHandler;
-import com.ithinkrok.minigames.user.UpgradeHandler;
-import com.ithinkrok.minigames.user.UserResolver;
+import com.ithinkrok.minigames.user.*;
 import com.ithinkrok.minigames.util.EventExecutor;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import com.ithinkrok.minigames.util.SoundEffect;
@@ -77,6 +76,8 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     private CooldownHandler<U> cooldownHandler = new CooldownHandler<>((U) this);
 
+    private ClassToInstanceMap<UserMetadata> metadataMap = MutableClassToInstanceMap.create();
+
     private String name;
 
     private TaskList userTaskList = new TaskList();
@@ -119,6 +120,14 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         inGameTaskList.cancelAllTasks();
 
         gameGroup.userEvent(new UserInGameChangeEvent<>((U) this));
+    }
+
+    public <B extends UserMetadata> void setMetadata(B metadata) {
+        metadataMap.put(metadata.getMetadataClass(), metadata);
+    }
+
+    public <B extends UserMetadata> B getMetadata(Class<B> clazz) {
+        return metadataMap.getInstance(clazz);
     }
 
     @Override

@@ -41,8 +41,6 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
     private Map<String, GameState> gameStates = new HashMap<>();
     private GameState gameState;
 
-    private Constructor<Team> teamConstructor;
-
     private GameMap currentMap;
 
     private TaskList gameGroupTaskList = new TaskList();
@@ -51,9 +49,8 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
 
     private List<Listener> defaultAndMapListeners = new ArrayList<>();
 
-    public GameGroup(Game game, Constructor<Team> teamConstructor) {
+    public GameGroup(Game game) {
         this.game = game;
-        this.teamConstructor = teamConstructor;
 
         boolean hasDefault = false;
         for (GameState gs : game.getGameStates()) {
@@ -106,11 +103,7 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
     }
 
     private Team createTeam(TeamColor teamColor) {
-        try {
-            return teamConstructor.newInstance(teamColor, this);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException("Failed to construct Team", e);
-        }
+        return new Team(teamColor, this);
     }
 
     public void eventUserJoinedAsPlayer(UserJoinEvent event) {

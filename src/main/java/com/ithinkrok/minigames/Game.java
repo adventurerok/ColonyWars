@@ -57,10 +57,6 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
     private ConcurrentMap<UUID, User> usersInServer = new ConcurrentHashMap<>();
     private List<GameGroup> gameGroups = new ArrayList<>();
 
-    private Constructor<GameGroup> gameGroupConstructor;
-    private Constructor<Team> teamConstructor;
-    private Constructor<User> userConstructor;
-
     private Plugin plugin;
 
     private GameGroup spawnGameGroup;
@@ -76,17 +72,8 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
     private Map<String, GameMapInfo> maps = new HashMap<>();
     private String startMapName;
 
-    public Game(Plugin plugin, Class<GameGroup> gameGroupClass, Class<Team> teamClass, Class<User> userClass) {
+    public Game(Plugin plugin) {
         this.plugin = plugin;
-
-        try {
-            teamConstructor = teamClass.getConstructor(TeamColor.class, gameGroupClass);
-            userConstructor =
-                    userClass.getConstructor(getClass(), gameGroupClass, teamClass, UUID.class, LivingEntity.class);
-            gameGroupConstructor = gameGroupClass.getConstructor(getClass(), teamConstructor.getClass());
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException("Failed to get constructors for data classes", e);
-        }
 
         unloadDefaultWorlds();
     }
@@ -227,23 +214,11 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
     }
 
     private GameGroup createGameGroup() {
-        try {
-            GameGroup gameGroup = gameGroupConstructor.newInstance(this, teamConstructor);
-            gameGroup.setDefaultListeners((HashMap<String, Listener>) defaultListeners.clone());
-            return gameGroup;
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException("Failed to construct GameGroup", e);
-        }
+        return new GameGroup(this);
     }
 
     private User createUser(GameGroup gameGroup, Team team, UUID uuid, LivingEntity entity) {
-        try {
-            User user = userConstructor.newInstance(this, gameGroup, team, uuid, entity);
-            usersInServer.put(uuid, user);
-            return user;
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException("Failed to construct User", e);
-        }
+        return new User(this, gameGroup, team, uuid, entity);
     }
 
     public String getChatPrefix() {

@@ -1,5 +1,6 @@
 package com.ithinkrok.cw;
 
+import com.ithinkrok.minigames.Game;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -7,14 +8,14 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class CWPlugin extends JavaPlugin {
 
-    CWGame minigame;
+    Game minigame;
 
 
     @Override
     public void onEnable() {
         super.onEnable();
 
-        minigame = new CWGame(this);
+        minigame = new Game(this);
 
         minigame.reloadConfig();
         minigame.registerListeners();

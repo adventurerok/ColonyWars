@@ -46,31 +46,16 @@ public class LobbyListener implements Listener {
 
     @EventHandler
     public void eventUserDamaged(UserDamagedEvent<CWUser> event) {
-        event.setCancelled(true);
-
-        ClickableInventory<CWUser> inventory = new ClickableInventory<>("m8, amazing");
-        inventory.addItem(new ClickableItem<CWUser>(new ItemStack(Material.DIAMOND)) {
-            @Override
-            public boolean isVisible(UserViewItemEvent<CWUser> event) {
-                return true;
-            }
-
-            @Override
-            public void onClick(UserClickItemEvent<CWUser> event) {
-                event.getUser().sendMessage("No diamonds for you!");
-            }
-        });
-
-        event.getUser().showInventory(inventory);
+        //event.setCancelled(true);
     }
 
     @EventHandler
     public void eventUserInteract(UserInteractEvent<CWUser> event) {
-        if(event.hasItem() && event.getItem().getType() == Material.WRITTEN_BOOK) return;
-
-        if(!event.hasBlock() || !isRedstoneControl(event.getClickedBlock().getType())) {
-            event.setCancelled(true);
-        }
+//        if(event.hasItem() && event.getItem().getType() == Material.WRITTEN_BOOK) return;
+//
+//        if(!event.hasBlock() || !isRedstoneControl(event.getClickedBlock().getType())) {
+//            event.setCancelled(true);
+//        }
     }
 
     @EventHandler

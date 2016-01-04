@@ -27,6 +27,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -319,7 +320,7 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
             openInventory = null;
         }
 
-        @EventHandler
+        @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
         public void eventInteract(UserInteractEvent<U> event) {
             ItemStack item = getInventory().getItemInHand();
             int identifier = InventoryUtils.getIdentifier(item);

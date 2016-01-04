@@ -70,7 +70,7 @@ public class GameMap implements LanguageLookup {
     }
 
     private void loadLangFiles(GameGroup gameGroup) {
-        if (!gameMapInfo.getConfig().contains("additional_lang_files")) return;
+        if (!gameMapInfo.getConfig().contains("lang_files")) return;
 
         for (String additional : gameMapInfo.getConfig().getStringList("additional_lang_files")) {
             languageLookup.addLanguageLookup(gameGroup.loadLangFile(additional));

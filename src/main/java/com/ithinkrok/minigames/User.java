@@ -282,6 +282,11 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
         return name;
     }
 
+    public void setXpLevel(int level) {
+        if(isPlayer()) getPlayer().setLevel(level);
+        else playerState.setLevel(level);
+    }
+
     public void bindTaskToInGame(GameTask task) {
         inGameTaskList.addTask(task);
     }

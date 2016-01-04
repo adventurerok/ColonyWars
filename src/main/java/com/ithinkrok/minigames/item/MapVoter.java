@@ -54,7 +54,7 @@ public class MapVoter implements Listener {
 
                 @Override
                 public void onClick(UserClickItemEvent event) {
-                    MapVote oldVote = (MapVote) event.getUser().getMetadata(MapVote.class);
+                    MapVote oldVote = event.getUser().getMetadata(MapVote.class);
                     if (oldVote != null) {
                         if (mapName.equals(oldVote.getMapVote())) {
                             event.getUser().sendLocale(alreadyLocale, mapName);

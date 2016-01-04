@@ -49,6 +49,8 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
 
     private List<Listener> defaultAndMapListeners = new ArrayList<>();
 
+    private Countdown countdown;
+
     public GameGroup(Game game) {
         this.game = game;
 

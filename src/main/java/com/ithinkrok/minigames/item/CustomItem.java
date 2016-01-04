@@ -28,7 +28,7 @@ import java.util.UUID;
  * <p>
  * An item with custom use or inventory click listeners
  */
-public class CustomItem implements Identifiable {
+public class CustomItem implements Identifiable, Listener {
 
     private static int customItemCount = 0;
 

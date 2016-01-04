@@ -7,10 +7,7 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 /**
  * Created by paul on 31/12/15.
@@ -318,7 +315,9 @@ public class InventoryCapture implements PlayerInventory {
 
     @Override
     public ListIterator<ItemStack> iterator() {
-        throw new UnsupportedOperationException();
+        List<ItemStack> list = Arrays.asList(contents);
+
+        return list.listIterator();
     }
 
     @Override

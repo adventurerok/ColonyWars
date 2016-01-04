@@ -1,9 +1,11 @@
 package com.ithinkrok.minigames;
 
+import com.ithinkrok.minigames.event.user.game.UserAbilityCooldownEvent;
 import com.ithinkrok.minigames.event.user.game.UserInGameChangeEvent;
 import com.ithinkrok.minigames.event.user.game.UserTeleportEvent;
 import com.ithinkrok.minigames.event.user.inventory.UserInventoryClickEvent;
 import com.ithinkrok.minigames.event.user.inventory.UserInventoryCloseEvent;
+import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.item.ClickableInventory;
 import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.lang.Messagable;
@@ -15,6 +17,7 @@ import com.ithinkrok.minigames.user.AttackerTracker;
 import com.ithinkrok.minigames.user.CooldownHandler;
 import com.ithinkrok.minigames.user.UpgradeHandler;
 import com.ithinkrok.minigames.user.UserResolver;
+import com.ithinkrok.minigames.util.EventExecutor;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import com.ithinkrok.minigames.util.SoundEffect;
 import com.ithinkrok.minigames.util.playerstate.PlayerState;
@@ -314,6 +317,30 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
             if(!isViewingClickableInventory()) return;
 
             openInventory = null;
+        }
+
+        @EventHandler
+        public void eventInteract(UserInteractEvent<U> event) {
+            ItemStack item = getInventory().getItemInHand();
+            int identifier = InventoryUtils.getIdentifier(item);
+            if(identifier < 0) return;
+
+            CustomItem customItem = gameGroup.getCustomItem(identifier);
+
+            //If event is a UserAttackEvent this will call both event handler methods in CustomItem
+            EventExecutor.executeEvent(event, customItem);
+        }
+
+        @EventHandler
+        public void eventAbilityCooldown(UserAbilityCooldownEvent<U> event) {
+            for(ItemStack item : getInventory()) {
+                int identifier = InventoryUtils.getIdentifier(item);
+                if(identifier < 0) continue;
+
+                CustomItem customItem = gameGroup.getCustomItem(identifier);
+
+                EventExecutor.executeEvent(event, customItem);
+            }
         }
     }
 }

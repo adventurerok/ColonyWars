@@ -340,7 +340,7 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
             openInventory = null;
         }
 
-        @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+        @EventHandler(priority = EventPriority.HIGH)
         public void eventInteract(UserInteractEvent<U> event) {
             ItemStack item = getInventory().getItemInHand();
             int identifier = InventoryUtils.getIdentifier(item);

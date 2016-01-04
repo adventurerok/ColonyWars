@@ -295,6 +295,10 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         return entity.getTargetBlock(SEE_THROUGH, maxDistance);
     }
 
+    public boolean hasPermission(String permission) {
+        return entity.hasPermission(permission);
+    }
+
     @Override
     public GameTask doInFuture(GameRunnable task) {
         GameTask gameTask = gameGroup.doInFuture(task);

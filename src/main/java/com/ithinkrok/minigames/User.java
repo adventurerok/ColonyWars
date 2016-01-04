@@ -13,6 +13,7 @@ import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.item.ClickableInventory;
 import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.lang.Messagable;
+import com.ithinkrok.minigames.metadata.UserMetadata;
 import com.ithinkrok.minigames.task.GameRunnable;
 import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskList;

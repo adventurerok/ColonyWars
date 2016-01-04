@@ -7,6 +7,7 @@ import com.ithinkrok.minigames.event.user.state.UserFoodLevelChangeEvent;
 import com.ithinkrok.minigames.event.user.world.*;
 import com.ithinkrok.minigames.item.ClickableInventory;
 import com.ithinkrok.minigames.item.ClickableItem;
+import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.item.event.UserClickItemEvent;
 import com.ithinkrok.minigames.item.event.UserViewItemEvent;
 import org.bukkit.Material;
@@ -32,6 +33,11 @@ public class LobbyListener implements Listener {
     @EventHandler
     public void eventUserJoin(UserJoinEvent<CWUser> event) {
         System.out.println(event.getUser().getUuid() + " joined!");
+
+        CustomItem customItem = event.getUser().getGameGroup().getCustomItem("darkness_sword");
+        ItemStack item = event.getUser().createCustomItemForUser(customItem);
+
+        event.getUser().getInventory().addItem(item);
     }
 
     @EventHandler

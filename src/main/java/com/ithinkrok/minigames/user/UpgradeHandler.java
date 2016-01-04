@@ -11,12 +11,12 @@ import java.util.Map;
 /**
  * Created by paul on 03/01/16.
  */
-public class UpgradeHandler<U extends User> implements Variables {
+public class UpgradeHandler implements Variables {
 
-    private final U user;
+    private final User user;
     private final Map<String, Integer> upgradeLevels = new HashMap<>();
 
-    public UpgradeHandler(U user) {
+    public UpgradeHandler(User user) {
         this.user = user;
     }
 
@@ -38,7 +38,7 @@ public class UpgradeHandler<U extends User> implements Variables {
 
         upgradeLevels.put(upgrade, level);
 
-        UserUpgradeEvent event = new UserUpgradeEvent<>(user, upgrade, oldLevel, level);
+        UserUpgradeEvent event = new UserUpgradeEvent(user, upgrade, oldLevel, level);
 
         user.getGameGroup().userEvent(event);
     }

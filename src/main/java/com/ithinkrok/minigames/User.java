@@ -65,15 +65,15 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
     private LivingEntity entity;
     private PlayerState playerState;
 
-    private AttackerTracker<User> fireAttacker = new AttackerTracker<>((User) this);
-    private AttackerTracker<User> witherAttacker = new AttackerTracker<>((User) this);
-    private AttackerTracker<User> lastAttacker = new AttackerTracker<>((User) this);
+    private AttackerTracker fireAttacker = new AttackerTracker(this);
+    private AttackerTracker witherAttacker = new AttackerTracker(this);
+    private AttackerTracker lastAttacker = new AttackerTracker(this);
 
     private boolean isInGame = false;
 
-    private UpgradeHandler<User> upgradeHandler = new UpgradeHandler<>((User) this);
+    private UpgradeHandler upgradeHandler = new UpgradeHandler(this);
 
-    private CooldownHandler<User> cooldownHandler = new CooldownHandler<>((User) this);
+    private CooldownHandler cooldownHandler = new CooldownHandler(this);
 
     private ClassToInstanceMap<UserMetadata> metadataMap = MutableClassToInstanceMap.create();
 
@@ -81,7 +81,7 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
 
     private TaskList userTaskList = new TaskList();
     private TaskList inGameTaskList = new TaskList();
-    private ClickableInventory<User> openInventory;
+    private ClickableInventory openInventory;
     private Collection<Listener> listeners = new ArrayList<>();
 
     public User(Game game, GameGroup gameGroup, Team team, UUID uuid, LivingEntity entity) {
@@ -118,7 +118,7 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
 
         inGameTaskList.cancelAllTasks();
 
-        gameGroup.userEvent(new UserInGameChangeEvent<>((User) this));
+        gameGroup.userEvent(new UserInGameChangeEvent(this));
     }
 
     public <B extends UserMetadata> void setMetadata(B metadata) {
@@ -227,7 +227,7 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
         return item.createWithVariables(gameGroup, upgradeHandler);
     }
 
-    public UpgradeHandler<User> getUpgradeLevels() {
+    public UpgradeHandler getUpgradeLevels() {
         return upgradeHandler;
     }
 
@@ -249,7 +249,7 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
 
     @SuppressWarnings("unchecked")
     public boolean teleport(Location location) {
-        UserTeleportEvent event = new UserTeleportEvent<>((User) this, getLocation(), location);
+        UserTeleportEvent event = new UserTeleportEvent(this, getLocation(), location);
 
         gameGroup.userEvent(event);
 
@@ -262,16 +262,16 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
         return openInventory != null;
     }
 
-    public ClickableInventory<User> getClickableInventory() {
+    public ClickableInventory getClickableInventory() {
         return openInventory;
     }
 
     @SuppressWarnings("unchecked")
-    public void showInventory(ClickableInventory<User> inventory) {
+    public void showInventory(ClickableInventory inventory) {
         if (!isPlayer()) return;
 
         this.openInventory = inventory;
-        getPlayer().openInventory(inventory.createInventory((User) this));
+        getPlayer().openInventory(inventory.createInventory(this));
     }
 
     public String getFormattedName() {

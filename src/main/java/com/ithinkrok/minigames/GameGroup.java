@@ -81,7 +81,7 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
 
         currentMap = newMap;
 
-        Event event = new MapChangedEvent<>((GameGroup) this, oldMap, newMap);
+        Event event = new MapChangedEvent(this, oldMap, newMap);
 
         EventExecutor.executeEvent(event, getListeners(getAllUserListeners(), newMap.getListeners()));
 
@@ -165,7 +165,7 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
     public void changeGameState(GameState gameState) {
         if (gameState.equals(this.gameState)) return;
 
-        Event event = new GameStateChangedEvent<>((GameGroup) this, this.gameState, gameState);
+        Event event = new GameStateChangedEvent(this, this.gameState, gameState);
 
         EventExecutor.executeEvent(event, getListeners(getAllUserListeners(), gameState.getListeners()));
 

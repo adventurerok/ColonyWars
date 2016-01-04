@@ -10,16 +10,16 @@ import com.ithinkrok.minigames.item.ClickableItem;
  */
 public class UserViewItemEvent extends UserEvent {
 
-    private final ClickableInventory<User> inventory;
-    private final ClickableItem<User> item;
+    private final ClickableInventory inventory;
+    private final ClickableItem item;
 
-    public UserViewItemEvent(User user, ClickableInventory<User> inventory, ClickableItem<User> item) {
+    public UserViewItemEvent(User user, ClickableInventory inventory, ClickableItem item) {
         super(user);
         this.inventory = inventory;
         this.item = item;
     }
 
-    public ClickableInventory<User> getInventory() {
+    public ClickableInventory getInventory() {
         return inventory;
     }
 

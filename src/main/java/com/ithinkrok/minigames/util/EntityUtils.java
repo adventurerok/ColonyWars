@@ -23,7 +23,7 @@ public class EntityUtils {
      * @param <U> The type of the User class
      * @return The User that is represented by the entity, or null if there is none
      */
-    public static <U extends User> U getRepresentingUser(UserResolver resolver, Entity entity) {
+    public static User getRepresentingUser(UserResolver resolver, Entity entity) {
         if (entity instanceof Player) return getUserFromPlayer(resolver, (Player) entity);
 
         if (entity instanceof Projectile) {
@@ -48,7 +48,7 @@ public class EntityUtils {
         return resolver.getUser(uuid);
     }
 
-    public static <U extends User> U getActualUser(UserResolver resolver, Entity entity) {
+    public static User getActualUser(UserResolver resolver, Entity entity) {
         if (entity instanceof Player) return getUserFromPlayer(resolver, (Player) entity);
 
         List<MetadataValue> values = entity.getMetadata("actual");
@@ -58,7 +58,7 @@ public class EntityUtils {
         return resolver.getUser(uuid);
     }
 
-    private static <U extends User> U getUserFromPlayer(UserResolver resolver, Player player) {
+    private static User getUserFromPlayer(UserResolver resolver, Player player) {
         return resolver.getUser(player.getUniqueId());
     }
 

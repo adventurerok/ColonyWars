@@ -14,13 +14,13 @@ import java.util.Map;
 /**
  * Created by paul on 03/01/16.
  */
-public class CooldownHandler<U extends User> {
+public class CooldownHandler {
 
-    private final U user;
+    private final User user;
     private final Map<String, Long> coolingDown = new HashMap<>();
     private final TaskList coolDownTasks = new TaskList();
 
-    public CooldownHandler(U user) {
+    public CooldownHandler(User user) {
         this.user = user;
     }
 
@@ -36,9 +36,7 @@ public class CooldownHandler<U extends User> {
 
         coolingDown.put(ability, timeInFuture(seconds));
 
-        GameTask task = user.doInFuture(task1 -> {
-            stopCoolDown(ability, coolDownLocale);
-        }, (int) (seconds * 20));
+        GameTask task = user.doInFuture(task1 -> stopCoolDown(ability, coolDownLocale), (int) (seconds * 20));
 
         coolDownTasks.addTask(task);
 
@@ -61,7 +59,7 @@ public class CooldownHandler<U extends User> {
         coolingDown.remove(ability);
 
         //if (!isInGame()) return;
-        UserAbilityCooldownEvent event = new UserAbilityCooldownEvent<>(user, ability, new SoundEffect(Sound
+        UserAbilityCooldownEvent event = new UserAbilityCooldownEvent(user, ability, new SoundEffect(Sound
                 .ZOMBIE_UNFECT, 1.0f, 2.0f), user.getGameGroup().getLocale(stopLocale));
 
         user.getGameGroup().userEvent(event);

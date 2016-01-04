@@ -13,25 +13,25 @@ import java.util.Map;
 /**
  * Created by paul on 02/01/16.
  */
-public class ClickableInventory<U extends User> {
+public class ClickableInventory {
 
 
     private final String title;
-    private Map<Integer, ClickableItem<U>> items = new HashMap<>();
+    private Map<Integer, ClickableItem> items = new HashMap<>();
 
     public ClickableInventory(String title) {
         this.title = title;
     }
 
-    public void addItem(ClickableItem<U> item) {
+    public void addItem(ClickableItem item) {
         items.put(item.getIdentifier(), item);
     }
 
-    public Inventory createInventory(U user) {
+    public Inventory createInventory(User user) {
         Inventory inventory = user.createInventory(items.size(), title);
 
-        for(ClickableItem<U> item : items.values()) {
-            if(!item.isVisible(new UserViewItemEvent<>(user, this, item))) continue;
+        for(ClickableItem item : items.values()) {
+            if(!item.isVisible(new UserViewItemEvent(user, this, item))) continue;
 
             inventory.addItem(item.getDisplayItemStack());
         }
@@ -45,8 +45,8 @@ public class ClickableInventory<U extends User> {
         if(InventoryUtils.isEmpty(event.getItemInSlot())) return;
         int identifier = InventoryUtils.getIdentifier(event.getItemInSlot());
 
-        ClickableItem<U> item = items.get(identifier);
+        ClickableItem item = items.get(identifier);
 
-        item.onClick(new UserClickItemEvent<>(event.getUser(), this, item, event.getClickType()));
+        item.onClick(new UserClickItemEvent(event.getUser(), this, item, event.getClickType()));
     }
 }

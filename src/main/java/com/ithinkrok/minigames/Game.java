@@ -322,7 +322,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
                 user = createUser(gameGroup, null, player.getUniqueId(), player);
             }
 
-            gameGroup.eventUserJoinedAsPlayer(new UserJoinEvent<>(user, UserJoinEvent.JoinReason.JOINED_SERVER));
+            gameGroup.eventUserJoinedAsPlayer(new UserJoinEvent(user, UserJoinEvent.JoinReason.JOINED_SERVER));
         }
 
         @EventHandler
@@ -331,7 +331,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
             User user = getUser(event.getPlayer().getUniqueId());
 
-            UserQuitEvent userEvent = new UserQuitEvent<>(user, UserQuitEvent.QuitReason.QUIT_SERVER);
+            UserQuitEvent userEvent = new UserQuitEvent(user, UserQuitEvent.QuitReason.QUIT_SERVER);
             user.getGameGroup().userQuitEvent(userEvent);
 
             if (userEvent.getRemoveUser()) {
@@ -343,31 +343,31 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         @EventHandler
         public void eventPlayerDropItem(PlayerDropItemEvent event) {
             User user = getUser(event.getPlayer().getUniqueId());
-            user.getGameGroup().userEvent(new UserDropItemEvent<>(user, event));
+            user.getGameGroup().userEvent(new UserDropItemEvent(user, event));
         }
 
         @EventHandler
         public void eventPlayerPickupItem(PlayerPickupItemEvent event) {
             User user = getUser(event.getPlayer().getUniqueId());
-            user.getGameGroup().userEvent(new UserPickupItemEvent<>(user, event));
+            user.getGameGroup().userEvent(new UserPickupItemEvent(user, event));
         }
 
         @EventHandler
         public void eventPlayerInteractWorld(PlayerInteractEvent event) {
             User user = getUser(event.getPlayer().getUniqueId());
-            user.getGameGroup().userEvent(new UserInteractWorldEvent<>(user, event));
+            user.getGameGroup().userEvent(new UserInteractWorldEvent(user, event));
         }
 
         @EventHandler
         public void eventBlockBreak(BlockBreakEvent event) {
             User user = getUser(event.getPlayer().getUniqueId());
-            user.getGameGroup().userEvent(new UserBreakBlockEvent<>(user, event));
+            user.getGameGroup().userEvent(new UserBreakBlockEvent(user, event));
         }
 
         @EventHandler
         public void eventBlockPlace(BlockPlaceEvent event) {
             User user = getUser(event.getPlayer().getUniqueId());
-            user.getGameGroup().userEvent(new UserPlaceBlockEvent<>(user, event));
+            user.getGameGroup().userEvent(new UserPlaceBlockEvent(user, event));
         }
 
         @EventHandler(priority = EventPriority.LOW)
@@ -378,7 +378,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
             User attacked = EntityUtils.getRepresentingUser(attacker, event.getEntity());
             boolean representing = !attacker.equals(EntityUtils.getActualUser(Game.this, event.getDamager()));
 
-            attacker.getGameGroup().userEvent(new UserAttackEvent<>(attacker, event, attacked, representing));
+            attacker.getGameGroup().userEvent(new UserAttackEvent(attacker, event, attacked, representing));
         }
 
         @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -389,9 +389,9 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
             if (event instanceof EntityDamageByEntityEvent) {
                 User attacker = EntityUtils.getRepresentingUser(attacked, event.getEntity());
                 attacked.getGameGroup()
-                        .userEvent(new UserAttackedEvent<>(attacked, (EntityDamageByEntityEvent) event, attacker));
+                        .userEvent(new UserAttackedEvent(attacked, (EntityDamageByEntityEvent) event, attacker));
             } else {
-                attacked.getGameGroup().userEvent(new UserDamagedEvent<>(attacked, event));
+                attacked.getGameGroup().userEvent(new UserDamagedEvent(attacked, event));
             }
 
 
@@ -400,25 +400,25 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         @EventHandler
         public void eventPlayerFoodLevelChange(FoodLevelChangeEvent event) {
             User user = getUser(event.getEntity().getUniqueId());
-            user.getGameGroup().userEvent(new UserFoodLevelChangeEvent<>(user, event));
+            user.getGameGroup().userEvent(new UserFoodLevelChangeEvent(user, event));
         }
 
         @EventHandler
         public void eventPlayerInteractEntity(PlayerInteractEntityEvent event) {
             User user = getUser(event.getPlayer().getUniqueId());
-            user.getGameGroup().userEvent(new UserRightClickEntityEvent<>(user, event));
+            user.getGameGroup().userEvent(new UserRightClickEntityEvent(user, event));
         }
 
         @EventHandler
         public void eventPlayerInventoryClick(InventoryClickEvent event) {
             User user = getUser(event.getWhoClicked().getUniqueId());
-            user.getGameGroup().userEvent(new UserInventoryClickEvent<>(user, event));
+            user.getGameGroup().userEvent(new UserInventoryClickEvent(user, event));
         }
 
         @EventHandler
         public void eventPlayerInventoryClose(InventoryCloseEvent event) {
             User user = getUser(event.getPlayer().getUniqueId());
-            user.getGameGroup().userEvent(new UserInventoryCloseEvent<>(user, event));
+            user.getGameGroup().userEvent(new UserInventoryCloseEvent(user, event));
         }
     }
 }

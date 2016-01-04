@@ -7,7 +7,7 @@ import java.util.UUID;
 /**
  * Created by paul on 03/01/16.
  */
-public class AttackerTracker<U extends User> {
+public class AttackerTracker {
 
     private final UserResolver userResolver;
     private final int defaultAttackerTimer = 600;
@@ -28,11 +28,11 @@ public class AttackerTracker<U extends User> {
         attacker = null;
     }
 
-    public void setAttacker(U attacker) {
+    public void setAttacker(User attacker) {
         setAttacker(attacker, defaultAttackerTimer);
     }
 
-    public void setAttacker(U attacker, int ticks) {
+    public void setAttacker(User attacker, int ticks) {
         if(attacker != null) {
             this.attacker = attacker.getUuid();
             this.attackerTimer = ticks;
@@ -42,7 +42,7 @@ public class AttackerTracker<U extends User> {
         }
     }
 
-    public U getAttacker() {
+    public User getAttacker() {
         if(attacker == null) return null;
         return userResolver.getUser(attacker);
     }

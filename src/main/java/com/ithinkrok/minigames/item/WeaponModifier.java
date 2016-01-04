@@ -9,6 +9,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -55,6 +56,8 @@ public class WeaponModifier implements Listener {
     @SuppressWarnings("unchecked")
     @EventHandler
     public void onUserAttack(UserAttackEvent<? extends User> attack) {
+        if(attack.getDamageCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return;
+
         if(damageCalculator != null) {
             attack.setDamage(damageCalculator.calculate(attack.getUser().getUpgradeLevels()) * HEALTH_PER_HEART);
         }

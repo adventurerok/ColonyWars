@@ -11,7 +11,9 @@ lang_files:
 
 custom_items:
   map_voter:
-    display_name
+    display_name_locale: "map_voter.name"
+    description_locale: "map.voter.desc"
+    material: "EMPTY_MAP"
   darkness_sword:
     display_name_locale: "darkness_sword.name"
     description_locale: "darkness_sword.desc"

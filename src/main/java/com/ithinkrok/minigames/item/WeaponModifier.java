@@ -3,6 +3,7 @@ package com.ithinkrok.minigames.item;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerEnabledEvent;
 import com.ithinkrok.minigames.event.user.world.UserAttackEvent;
+import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.util.math.Calculator;
 import com.ithinkrok.minigames.util.math.ExpressionCalculator;
 import org.bukkit.configuration.ConfigurationSection;
@@ -56,6 +57,7 @@ public class WeaponModifier implements Listener {
     @SuppressWarnings("unchecked")
     @EventHandler
     public void onUserAttack(UserAttackEvent<? extends User> attack) {
+        if(attack.getInteractType() == UserInteractEvent.InteractType.REPRESENTING) return;
         if(attack.getDamageCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return;
 
         if(damageCalculator != null) {

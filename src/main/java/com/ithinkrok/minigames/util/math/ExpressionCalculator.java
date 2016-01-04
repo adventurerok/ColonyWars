@@ -18,20 +18,37 @@ public class ExpressionCalculator implements Calculator {
     private static final Map<String, OpInfo> opMap = new HashMap<>();
 
     static {
-        opMap.put("^", new OpInfo(numbers -> Math.pow(numbers[0], numbers[1]), false, 10, 2, 2));
-        opMap.put("/", new OpInfo(numbers -> numbers[0] / numbers[1], false, 20, 2, 2));
-        opMap.put("*", new OpInfo(numbers -> numbers[0] * numbers[1], false, 20, 2, 2));
-        opMap.put("%", new OpInfo(numbers -> numbers[0] % numbers[1], false, 20, 2, 2));
-        opMap.put("+", new OpInfo(numbers -> numbers[0] + numbers[1], false, 30, 2, 2));
-        opMap.put("-", new OpInfo(numbers -> numbers[0] - numbers[1], false, 30, 2, 2));
-        opMap.put("~", new OpInfo(numbers -> -numbers[0], false, 40, 1, 1));
+        opMap.put("^", new OpInfo(numbers -> Math.pow(numbers[0], numbers[1]), false, false, 10, 2, 2));
+        opMap.put("/", new OpInfo(numbers -> numbers[0] / numbers[1], false, false, 20, 2, 2));
+        opMap.put("*", new OpInfo(numbers -> numbers[0] * numbers[1], false, false, 20, 2, 2));
+        opMap.put("%", new OpInfo(numbers -> numbers[0] % numbers[1], false, false, 20, 2, 2));
+        opMap.put("+", new OpInfo(numbers -> numbers[0] + numbers[1], false, false, 30, 2, 2));
+        opMap.put("-", new OpInfo(numbers -> numbers[0] - numbers[1], false, false, 30, 2, 2));
+        opMap.put("~", new OpInfo(numbers -> -numbers[0], false, false, 40, 1, 1));
 
-        opMap.put("sin", new OpInfo(numbers -> Math.sin(numbers[0]), true, 0, 1, 1));
-        opMap.put("cos", new OpInfo(numbers -> Math.cos(numbers[0]), true, 0, 1, 1));
-        opMap.put("abs", new OpInfo(numbers -> Math.abs(numbers[0]), true, 0, 1, 1));
-        opMap.put("floor", new OpInfo(numbers -> Math.floor(numbers[0]), true, 0, 1, 1));
-        opMap.put("ceil", new OpInfo(numbers -> Math.ceil(numbers[0]), true, 0, 1, 1));
-        opMap.put("expression", new OpInfo(numbers -> numbers[0], true, 0, 1, 1));
+        opMap.put("sin", new OpInfo(numbers -> Math.sin(numbers[0]), true, false, 0, 1, 1));
+        opMap.put("cos", new OpInfo(numbers -> Math.cos(numbers[0]), true, false, 0, 1, 1));
+        opMap.put("tan", new OpInfo(numbers -> Math.tan(numbers[0]), true, false, 0, 1, 1));
+
+        opMap.put("asin", new OpInfo(numbers -> Math.asin(numbers[0]), true, false, 0, 1, 1));
+        opMap.put("acos", new OpInfo(numbers -> Math.acos(numbers[0]), true, false, 0, 1, 1));
+        opMap.put("atan", new OpInfo(numbers -> Math.atan(numbers[0]), true, false, 0, 1, 1));
+        opMap.put("atan2", new OpInfo(numbers -> Math.atan2(numbers[0], numbers[1]), true, false, 0, 2, 2));
+
+        opMap.put("degrees", new OpInfo(numbers -> Math.toDegrees(numbers[0]), true, false, 0, 1, 1));
+        opMap.put("radians", new OpInfo(numbers -> Math.toRadians(numbers[0]), true, false, 0, 1, 1));
+
+        opMap.put("ln", new OpInfo(numbers -> Math.log(numbers[0]), true, false, 0, 1, 1));
+        opMap.put("lg", new OpInfo(numbers -> Math.log(numbers[0]) * 1.44269504089, true, false, 0, 1, 1));
+        opMap.put("log", new OpInfo(numbers -> Math.log10(numbers[0]), true, false, 0, 1, 1));
+        opMap.put("exp", new OpInfo(numbers -> Math.exp(numbers[0]), true, false, 0, 1, 1));
+
+        opMap.put("random", new OpInfo(numbers -> Math.random(), true, true, 0, 0, 0));
+
+        opMap.put("abs", new OpInfo(numbers -> Math.abs(numbers[0]), true, false, 0, 1, 1));
+        opMap.put("floor", new OpInfo(numbers -> Math.floor(numbers[0]), true, false, 0, 1, 1));
+        opMap.put("ceil", new OpInfo(numbers -> Math.ceil(numbers[0]), true, false, 0, 1, 1));
+        opMap.put("expression", new OpInfo(numbers -> numbers[0], true, false, 0, 1, 1));
 
         opMap.put("min", new OpInfo(numbers -> {
             double min = Double.POSITIVE_INFINITY;
@@ -41,7 +58,7 @@ public class ExpressionCalculator implements Calculator {
             }
 
             return min;
-        }, true, 0, 1, Integer.MAX_VALUE));
+        }, true, false, 0, 1, Integer.MAX_VALUE));
 
         opMap.put("max", new OpInfo(numbers -> {
             double min = Double.NEGATIVE_INFINITY;
@@ -51,12 +68,12 @@ public class ExpressionCalculator implements Calculator {
             }
 
             return min;
-        }, true, 0, 1, Integer.MAX_VALUE));
+        }, true, false, 0, 1, Integer.MAX_VALUE));
 
         opMap.put("array", new OpInfo(numbers ->  {
             int index = (int) (numbers[0] + 1);
             return numbers[index];
-        }, true, 0, 2, Integer.MAX_VALUE));
+        }, true, false, 0, 2, Integer.MAX_VALUE));
     }
 
     private Expression expression;
@@ -174,7 +191,7 @@ public class ExpressionCalculator implements Calculator {
                 else if (count < op.minArguments)
                     throw new RuntimeException("Too few arguments for function: " + token);
 
-                stack.add(new OperatorExpression(op.operator, expressions));
+                stack.add(new OperatorExpression(op.operator, op.isDynamic, expressions));
             }
         }
 
@@ -214,15 +231,16 @@ public class ExpressionCalculator implements Calculator {
 
     private static class OpInfo {
         private final OperatorExpression.Operator operator;
-        private final boolean isFunction;
+        private final boolean isFunction, isDynamic;
         private final int maxArguments;
         private final int minArguments;
         private final int precedence;
 
-        public OpInfo(OperatorExpression.Operator operator, boolean isFunction, int precedence, int minArguments,
+        public OpInfo(OperatorExpression.Operator operator, boolean isFunction, boolean isDynamic, int precedence, int minArguments,
                       int maxArguments) {
             this.operator = operator;
             this.isFunction = isFunction;
+            this.isDynamic = isDynamic;
             this.maxArguments = maxArguments;
             this.minArguments = minArguments;
             this.precedence = precedence;

@@ -336,8 +336,9 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
             if (attacker == null) return;
 
             U attacked = EntityUtils.getRepresentingUser(attacker, event.getEntity());
+            boolean representing = !attacker.equals(EntityUtils.getActualUser(Game.this, event.getDamager()));
 
-            attacker.getGameGroup().userEvent(new UserAttackEvent<>(attacker, event, attacked));
+            attacker.getGameGroup().userEvent(new UserAttackEvent<>(attacker, event, attacked, representing));
         }
 
         @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)

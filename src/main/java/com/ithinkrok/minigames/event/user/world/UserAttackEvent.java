@@ -15,11 +15,13 @@ public class UserAttackEvent<U extends User> extends UserInteractEvent<U> {
 
     private final EntityDamageByEntityEvent event;
     private final U target;
+    private final boolean representing;
 
-    public UserAttackEvent(U user, EntityDamageByEntityEvent event, U target) {
+    public UserAttackEvent(U user, EntityDamageByEntityEvent event, U target, boolean representing) {
         super(user);
         this.event = event;
         this.target = target;
+        this.representing = representing;
     }
 
     public double getDamage() {
@@ -58,7 +60,7 @@ public class UserAttackEvent<U extends User> extends UserInteractEvent<U> {
 
     @Override
     public InteractType getInteractType() {
-        return InteractType.LEFT_CLICK;
+        return representing ? InteractType.REPRESENTING : InteractType.LEFT_CLICK;
     }
 
     @Override

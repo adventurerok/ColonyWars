@@ -40,6 +40,7 @@ public abstract class UserInteractEvent<U extends User> extends UserEvent<U> imp
     }
 
     public enum InteractType {
+        REPRESENTING, //if this event is due to an entity that we are representing
         LEFT_CLICK,
         RIGHT_CLICK,
         PHYSICAL

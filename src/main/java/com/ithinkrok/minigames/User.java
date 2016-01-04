@@ -24,6 +24,8 @@ import com.ithinkrok.minigames.util.playerstate.PlayerState;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -40,6 +42,7 @@ import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.UUID;
 
 /**
@@ -48,6 +51,14 @@ import java.util.UUID;
 @SuppressWarnings("unchecked")
 public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, G extends GameGroup<U, T, G, M>, M extends Game<U, T, G, M>>
         implements Messagable, TaskScheduler, Listener, UserResolver<U> {
+
+    private static final HashSet<Material> SEE_THROUGH = new HashSet<>();
+
+    static {
+        SEE_THROUGH.add(Material.AIR);
+        SEE_THROUGH.add(Material.WATER);
+        SEE_THROUGH.add(Material.STATIONARY_WATER);
+    }
 
     private M game;
     private G gameGroup;
@@ -269,6 +280,10 @@ public abstract class User<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
     public void makeEntityRepresentUser(Entity entity) {
         gameGroup.getGame().makeEntityRepresentUser(this, entity);
+    }
+
+    public Block rayTraceBlocks(int maxDistance) {
+        return entity.getTargetBlock(SEE_THROUGH, maxDistance);
     }
 
     @Override

@@ -10,6 +10,14 @@ lang_files:
   - "lang/weapon_modifier.lang"
   - "lang/items.lang"
 
+game_states:
+  lobby:
+    listeners:
+      main:
+        class: "com.ithinkrok.cw.gamestate.LobbyListener"
+
+start_game_state: "lobby"
+
 custom_items:
   map_voter:
     display_name_locale: "map_voter.name"

@@ -19,10 +19,7 @@ import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskScheduler;
 import com.ithinkrok.minigames.user.UserResolver;
 import com.ithinkrok.minigames.util.EntityUtils;
-import com.ithinkrok.minigames.util.io.ConfigHolder;
-import com.ithinkrok.minigames.util.io.ConfigParser;
-import com.ithinkrok.minigames.util.io.FileLoader;
-import com.ithinkrok.minigames.util.io.ResourceHandler;
+import com.ithinkrok.minigames.util.io.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -76,6 +73,7 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
     private IdentifierMap<CustomItem> customItemIdentifierMap = new IdentifierMap<>();
 
     private HashMap<String, Listener> defaultListeners = new HashMap<>();
+    private List<GameState> gameStates = new ArrayList<>();
     private Map<String, GameMapInfo> maps = new HashMap<>();
     private String startMapName;
 
@@ -129,7 +127,9 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
         return customItemIdentifierMap.get(identifier);
     }
 
-    public abstract List<GameState> getGameStates();
+    public List<GameState> getGameStates() {
+        return gameStates;
+    }
 
     public void registerListeners() {
         Listener listener = new GameListener();
@@ -141,6 +141,7 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
         config = plugin.getConfig();
 
+        reloadGameStates();
         reloadMaps();
 
         defaultListeners.clear();
@@ -149,6 +150,46 @@ public abstract class Game<U extends User<U, T, G, M>, T extends Team<U, T, G>, 
 
         ConfigParser.parseConfig(this, this, this, "config.yml", config);
     }
+
+    private void reloadGameStates() {
+        ConfigurationSection gameStatesConfig = config.getConfigurationSection("game_states");
+
+        for(String name : gameStatesConfig.getKeys(false)) {
+            ConfigurationSection gameStateConfig = gameStatesConfig.getConfigurationSection(name);
+            List<Listener> listeners = new ArrayList<>();
+
+            ConfigurationSection listenersConfig = gameStateConfig.getConfigurationSection("listeners");
+
+            for(String listenerName : listenersConfig.getKeys(false)) {
+                ConfigurationSection listenerConfig = listenersConfig.getConfigurationSection(listenerName);
+
+                try {
+                    listeners.add(ListenerLoader.loadListener(this, listenerConfig));
+                } catch (Exception e) {
+                    System.out.println("Failed to create listener: " + listenerName + " for gamestate: " + name);
+                    e.printStackTrace();
+                }
+            }
+            gameStates.add(new GameState(name, listeners));
+        }
+
+        String startGameState = config.getString("start_game_state");
+
+        GameState start = null;
+        for(GameState state : gameStates) {
+            if(state.getName().equals(startGameState)){
+                start = state;
+                break;
+            }
+        }
+
+        if(start == null) throw new RuntimeException("The start game state does not exist");
+
+        //Ensure the start game state is the first in the list
+        gameStates.remove(start);
+        gameStates.add(0, start);
+    }
+
 
     private void reloadMaps() {
         maps.clear();

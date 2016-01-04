@@ -10,14 +10,12 @@ import java.util.Collection;
  */
 public class GameState {
 
-    private String name;
-    private Collection<Listener> listeners;
+    private final String name;
+    private final Collection<Listener> listeners;
 
-    public GameState(String name, Listener listener) {
+    public GameState(String name, Collection<Listener> listeners) {
         this.name = name;
-        this.listeners = new ArrayList<>();
-
-        listeners.add(listener);
+        this.listeners = listeners;
     }
 
     public String getName() {

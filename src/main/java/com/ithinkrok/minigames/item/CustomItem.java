@@ -202,7 +202,7 @@ public class CustomItem implements Identifiable, Listener {
 
         item.getItemMeta().spigot().setUnbreakable(unbreakable);
 
-        return item;
+        return InventoryUtils.addIdentifier(item, customItemId);
     }
 
     public String getName() {

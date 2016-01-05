@@ -16,9 +16,9 @@ game_states:
           start_countdown:
             name: "start"
             locale_stub: "countdowns.start"
-            min_players: 4
+            min_players: 1
             needs_more_players_locale: "countdowns.start.needs_more_players"
-            seconds: 181
+            seconds: 20
           map_voting:
             random_map: "random"
             map_list: &votable_maps
@@ -26,6 +26,11 @@ game_states:
               - "forest_hills"
               - "cavern"
               - "random"
+          next_gamestate: "game"
+  game:
+    listeners:
+      main:
+        class: "com.ithinkrok.cw.gamestate.GameListener"
 
 start_game_state: "lobby"
 

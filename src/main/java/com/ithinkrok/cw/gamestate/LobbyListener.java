@@ -36,9 +36,13 @@ public class LobbyListener implements Listener {
     private String randomMapName;
     private ArrayList<String> mapList;
 
+    private String nextGameState;
+
     @EventHandler
     public void eventListenerLoaded(ListenerLoadedEvent<?> event) {
         ConfigurationSection config = event.getConfig();
+
+        nextGameState = config.getString("next_gamestate");
 
         configureCountdown(config.getConfigurationSection("start_countdown"));
         configureMapVoting(config.getConfigurationSection("map_voting"));
@@ -101,6 +105,7 @@ public class LobbyListener implements Listener {
         }
 
         gameGroup.changeMap(winningVote);
+        gameGroup.changeGameState(nextGameState);
     }
 
     private void resetCountdown(GameGroup gameGroup) {

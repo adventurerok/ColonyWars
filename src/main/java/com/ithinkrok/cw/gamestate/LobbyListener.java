@@ -25,6 +25,7 @@ public class LobbyListener implements Listener {
     private String startCountdownName;
     private String startCountdownLocaleStub;
     private int startCountdownSeconds;
+    private String needsMorePlayersLocale;
     private int minPlayersToStartGame;
 
     private String randomMapName;
@@ -41,7 +42,7 @@ public class LobbyListener implements Listener {
     private void configureMapVoting(ConfigurationSection config) {
         randomMapName = config.getString("random_map");
 
-        mapList = new ArrayList<>(config.getStringList("votable_maps"));
+        mapList = new ArrayList<>(config.getStringList("map_list"));
         mapList.remove(randomMapName);
 
         if(mapList.size() < 1) throw new RuntimeException("The game requires at least one map!");
@@ -52,6 +53,7 @@ public class LobbyListener implements Listener {
         startCountdownLocaleStub = config.getString("locale_stub");
         startCountdownSeconds = config.getInt("seconds");
         minPlayersToStartGame = config.getInt("min_players");
+        needsMorePlayersLocale = config.getString("needs_more_players_locale");
     }
 
     @EventHandler
@@ -75,7 +77,10 @@ public class LobbyListener implements Listener {
     public void eventCountdownFinished(CountdownFinishedEvent event) {
         if(!event.getCountdown().getName().equals(startCountdownName)) return;
 
-        if(event.getGameGroup().getUserCount() < minPlayersToStartGame) {
+        int userCount = event.getGameGroup().getUserCount();
+        if(userCount < 1) return;
+        if(userCount < minPlayersToStartGame) {
+            event.getGameGroup().sendLocale(needsMorePlayersLocale);
             resetCountdown(event.getGameGroup());
             return;
         }

@@ -9,6 +9,8 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public class GameMapInfo {
 
+    public static final String MAPS_FOLDER = "maps";
+
     private String name;
     private ConfigurationSection config;
 
@@ -22,7 +24,7 @@ public class GameMapInfo {
     }
 
     public String getConfigName() {
-        return "maps/" + name + ".yml";
+        return MAPS_FOLDER + "/" + name + ".yml";
     }
 
     public String getDescription() {

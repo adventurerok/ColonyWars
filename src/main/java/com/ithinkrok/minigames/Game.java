@@ -42,6 +42,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -180,8 +181,20 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
     private void reloadMaps() {
         maps.clear();
 
+        File mapsFolder = new File(plugin.getDataFolder(), GameMapInfo.MAPS_FOLDER);
+        if(!mapsFolder.exists() || mapsFolder.isFile()){
+            throw new RuntimeException("Maps directory does not exist!");
+        }
+
+        String[] mapNames = mapsFolder.list((dir, name) -> name.endsWith(".yml"));
+
+        for(String mapNameWithYml : mapNames) {
+            String mapNameWithoutYml = mapNameWithYml.substring(0, mapNameWithYml.length() - 4);
+
+            loadMapInfo(mapNameWithoutYml);
+        }
+
         startMapName = config.getString("start_map");
-        loadMapInfo(startMapName);
     }
 
 

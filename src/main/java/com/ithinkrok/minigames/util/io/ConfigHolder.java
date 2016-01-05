@@ -2,6 +2,7 @@ package com.ithinkrok.minigames.util.io;
 
 import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.lang.LanguageLookup;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
 
 /**
@@ -12,8 +13,12 @@ import org.bukkit.event.Listener;
 public interface ConfigHolder {
 
     void addListener(String name, Listener listener);
+
     void addCustomItem(CustomItem customItem);
+
     void addLanguageLookup(LanguageLookup languageLookup);
+
+    void addSharedObject(String name, ConfigurationSection config);
 
     //TODO Add ClickableInventories/ClickableItems in future
 }

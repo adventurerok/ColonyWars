@@ -1,6 +1,5 @@
 package com.ithinkrok.minigames;
 
-import com.google.common.collect.HashBiMap;
 import com.ithinkrok.minigames.event.map.MapBlockBreakNaturallyEvent;
 import com.ithinkrok.minigames.event.map.MapItemSpawnEvent;
 import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
@@ -49,8 +48,6 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -78,6 +75,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
     private WeakHashMap<String, GameGroup> mapToGameGroup = new WeakHashMap<>();
     private List<GameState> gameStates = new ArrayList<>();
     private Map<String, GameMapInfo> maps = new HashMap<>();
+    private Map<String, ConfigurationSection> sharedObjects = new HashMap<>();
     private String startMapName;
 
     public Game(Plugin plugin) {
@@ -106,6 +104,11 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
     @Override
     public void addLanguageLookup(LanguageLookup languageLookup) {
         multipleLanguageLookup.addLanguageLookup(languageLookup);
+    }
+
+    @Override
+    public void addSharedObject(String name, ConfigurationSection config) {
+        sharedObjects.put(name, config);
     }
 
     @Override
@@ -138,6 +141,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         reloadGameStates();
         reloadMaps();
 
+        sharedObjects.clear();
         defaultListeners.clear();
         multipleLanguageLookup = new MultipleLanguageLookup();
         customItemIdentifierMap.clear();
@@ -202,6 +206,10 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         }
 
         startMapName = config.getString("start_map");
+    }
+
+    public ConfigurationSection getSharedObject(String name) {
+        return sharedObjects.get(name);
     }
 
 

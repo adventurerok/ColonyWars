@@ -10,7 +10,6 @@ import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskList;
 import com.ithinkrok.minigames.util.io.ConfigHolder;
 import com.ithinkrok.minigames.util.io.ConfigParser;
-import com.ithinkrok.minigames.util.io.ListenerLoader;
 import com.ithinkrok.minigames.util.io.DirectoryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -42,6 +41,7 @@ public class GameMap implements LanguageLookup, ConfigHolder {
 
     private TaskList mapTaskList = new TaskList();
     private IdentifierMap<CustomItem> customItemIdentifierMap = new IdentifierMap<>();
+    private HashMap<String, ConfigurationSection> sharedObjects = new HashMap<>();
 
     public World getWorld() {
         return world;
@@ -117,6 +117,10 @@ public class GameMap implements LanguageLookup, ConfigHolder {
 
     }
 
+    public ConfigurationSection getSharedObject(String name) {
+        return sharedObjects.get(name);
+    }
+
     public void teleportUser(User user) {
         if (user.getLocation().getWorld().equals(world)) return;
         user.teleport(world.getSpawnLocation());
@@ -159,5 +163,10 @@ public class GameMap implements LanguageLookup, ConfigHolder {
     @Override
     public void addLanguageLookup(LanguageLookup languageLookup) {
         this.languageLookup.addLanguageLookup(languageLookup);
+    }
+
+    @Override
+    public void addSharedObject(String name, ConfigurationSection config) {
+        sharedObjects.put(name, config);
     }
 }

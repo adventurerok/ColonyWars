@@ -31,6 +31,10 @@ game_states:
     listeners:
       main:
         class: "com.ithinkrok.cw.gamestate.GameListener"
+        config:
+          gold:
+            default:
+
 
 start_game_state: "lobby"
 

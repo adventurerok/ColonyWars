@@ -83,6 +83,12 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
         return currentMap;
     }
 
+    public ConfigurationSection getSharedObject(String name) {
+        ConfigurationSection result = null;
+        if(currentMap != null) result = currentMap.getSharedObject(name);
+        return result != null ? result : game.getSharedObject(name);
+    }
+
     public void changeMap(GameMapInfo mapInfo) {
         GameMap oldMap = currentMap;
         GameMap newMap = new GameMap(this, mapInfo);

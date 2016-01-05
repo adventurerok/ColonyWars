@@ -1,6 +1,7 @@
 package com.ithinkrok.cw.gamestate;
 
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.event.map.MapBlockBreakNaturallyEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -12,5 +13,10 @@ public class GameListener implements Listener {
     @EventHandler
     public void onListenerLoaded(ListenerLoadedEvent<?> event) {
 
+    }
+
+    @EventHandler
+    public void onBlockBreakNaturally(MapBlockBreakNaturallyEvent event) {
+        //event.getMap().
     }
 }

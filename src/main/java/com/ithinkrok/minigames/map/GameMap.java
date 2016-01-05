@@ -75,7 +75,6 @@ public class GameMap implements LanguageLookup, ConfigHolder {
         creator.environment(gameMapInfo.getEnvironment());
 
         world = creator.createWorld();
-        System.out.println(Bukkit.getWorlds());
         world.setAutoSave(false);
 
     }

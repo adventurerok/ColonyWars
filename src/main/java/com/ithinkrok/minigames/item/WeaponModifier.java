@@ -1,7 +1,7 @@
 package com.ithinkrok.minigames.item;
 
 import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.event.ListenerEnabledEvent;
+import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.user.world.UserAttackEvent;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.item.event.CustomItemLoreCalculateEvent;
@@ -37,7 +37,7 @@ public class WeaponModifier implements Listener {
     private List<EffectModifier> effectModifiers = new ArrayList<>();
 
     @EventHandler
-    public void onListenerEnable(ListenerEnabledEvent event) {
+    public void onListenerEnable(ListenerLoadedEvent event) {
         if (!event.hasConfig()) throw new RuntimeException("A WeaponModifier requires a config");
 
         load(event.getConfig());

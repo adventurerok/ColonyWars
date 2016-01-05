@@ -1,6 +1,6 @@
 package com.ithinkrok.minigames.item;
 
-import com.ithinkrok.minigames.event.ListenerEnabledEvent;
+import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.item.event.UserClickItemEvent;
 import com.ithinkrok.minigames.item.event.UserViewItemEvent;
@@ -24,7 +24,7 @@ public class MapVoter implements Listener {
     private String voteLocale, transferLocale, alreadyLocale;
 
     @EventHandler
-    public void onListenerEnabled(ListenerEnabledEvent event) {
+    public void onListenerEnabled(ListenerLoadedEvent event) {
         ConfigurationSection config = event.getConfig();
 
         votable = config.getStringList("votable_maps");

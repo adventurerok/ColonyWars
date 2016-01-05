@@ -9,12 +9,12 @@ import org.bukkit.event.HandlerList;
  *
  * Called on a listener when it is enabled (but not necessarily before it starts receiving events)
  */
-public class ListenerEnabledEvent<C> extends Event{
+public class ListenerLoadedEvent<C> extends Event{
 
     private final C creator;
     private final ConfigurationSection config;
 
-    public ListenerEnabledEvent(C creator, ConfigurationSection config) {
+    public ListenerLoadedEvent(C creator, ConfigurationSection config) {
         this.creator = creator;
         this.config = config;
     }

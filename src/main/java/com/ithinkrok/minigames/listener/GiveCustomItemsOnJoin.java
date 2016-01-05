@@ -1,6 +1,6 @@
 package com.ithinkrok.minigames.listener;
 
-import com.ithinkrok.minigames.event.ListenerEnabledEvent;
+import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.util.ConfigUtils;
@@ -26,7 +26,7 @@ public class GiveCustomItemsOnJoin implements Listener {
     private List<CustomItemInfo> items = new ArrayList<>();
 
     @EventHandler
-    public void onListenerEnabled(ListenerEnabledEvent event) {
+    public void onListenerEnabled(ListenerLoadedEvent event) {
         ConfigurationSection config = event.getConfig();
 
         clearInventory = config.getBoolean("clear_inventory", false);

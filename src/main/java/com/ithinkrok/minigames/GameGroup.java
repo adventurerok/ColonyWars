@@ -315,4 +315,12 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
 
         return new ArrayList<>(clone.values());
     }
+
+    public boolean hasActiveCountdown() {
+        return countdown != null;
+    }
+
+    public boolean hasActiveCountdown(String name) {
+        return countdown != null && countdown.getName().equals(name);
+    }
 }

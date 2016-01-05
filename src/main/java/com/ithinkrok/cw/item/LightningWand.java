@@ -1,6 +1,6 @@
 package com.ithinkrok.cw.item;
 
-import com.ithinkrok.minigames.event.ListenerEnabledEvent;
+import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.user.world.UserAttackEvent;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
 import org.bukkit.block.Block;
@@ -18,7 +18,7 @@ public class LightningWand implements Listener {
     private int maxRange;
 
     @EventHandler
-    public void onListenerEnabled(ListenerEnabledEvent<?> event) {
+    public void onListenerEnabled(ListenerLoadedEvent<?> event) {
         maxRange = event.getConfig().getInt("max_range");
         lightingMultiplier = event.getConfig().getDouble("damage_multiplier");
     }

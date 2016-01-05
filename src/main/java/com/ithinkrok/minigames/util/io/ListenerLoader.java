@@ -1,6 +1,6 @@
 package com.ithinkrok.minigames.util.io;
 
-import com.ithinkrok.minigames.event.ListenerEnabledEvent;
+import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.util.EventExecutor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
@@ -21,7 +21,7 @@ public class ListenerLoader {
         ConfigurationSection config = null;
         if (listenerConfig.contains("config")) config = listenerConfig.getConfigurationSection("config");
 
-        EventExecutor.executeEvent(new ListenerEnabledEvent<>(creator, config), listener);
+        EventExecutor.executeEvent(new ListenerLoadedEvent<>(creator, config), listener);
 
         return listener;
 

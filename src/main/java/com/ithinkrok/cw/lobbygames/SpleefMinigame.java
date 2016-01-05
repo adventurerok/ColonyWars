@@ -1,7 +1,7 @@
 package com.ithinkrok.cw.lobbygames;
 
 import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.event.ListenerEnabledEvent;
+import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.user.game.UserTeleportEvent;
 import com.ithinkrok.minigames.event.user.state.UserDamagedEvent;
 import com.ithinkrok.minigames.event.user.world.UserBreakBlockEvent;
@@ -34,7 +34,7 @@ public class SpleefMinigame implements Listener {
     private Map<UUID, Arena> gameLookups = new HashMap<>();
 
     @EventHandler
-    public void configure(ListenerEnabledEvent event) {
+    public void configure(ListenerLoadedEvent event) {
         spadeMaterial = Material.matchMaterial(event.getConfig().getString("spade", "IRON_SPADE"));
 
         ConfigurationSection arenasConfig = event.getConfig().getConfigurationSection("arenas");

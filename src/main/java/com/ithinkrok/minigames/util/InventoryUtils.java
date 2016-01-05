@@ -40,12 +40,12 @@ public class InventoryUtils {
     }
 
     public static ItemStack parseItem(String itemString) {
-        String[] parts = itemString.split(",");
+        String[] parts = itemString.trim().split(",");
 
-        Material material = Material.matchMaterial(parts[0]);
+        Material material = Material.matchMaterial(parts[0].trim());
 
-        int amount = parts.length >= 1 ? Integer.parseInt(parts[1]) : 1;
-        int durability = parts.length >= 2 ? Integer.parseInt(parts[2]) : 1;
+        int amount = parts.length >= 1 ? Integer.parseInt(parts[1].trim()) : 1;
+        int durability = parts.length >= 2 ? Integer.parseInt(parts[2].trim()) : 1;
 
         return new ItemStack(material, amount, (short) durability);
     }

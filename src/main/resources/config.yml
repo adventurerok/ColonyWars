@@ -11,7 +11,16 @@ lang_files:
 shared_objects:
   gold_config:
     ore_blocks:
-      gold_ore: "GOLD_INGOT,1,1"
+      gold_ore: "GOLD_INGOT,6"
+      quartz_ore: "GOLD_INGOT,6"
+      diamond_ore: "DIAMOND,1"
+    trees:
+      enabled: true
+      item_material: "GOLD_INGOT"
+      item_amount: "1+x+(ln(x)/ln(1.5))-min(sqrt((x^3)/500),x^0.9)"
+      log_materials:
+        - "LOG"
+        - "LOG_2"
 
 game_states:
   lobby:
@@ -38,8 +47,7 @@ game_states:
       main:
         class: "com.ithinkrok.cw.gamestate.GameListener"
         config:
-          gold:
-            default:
+          gold_shared_object: "gold_config"
 
 
 start_game_state: "lobby"

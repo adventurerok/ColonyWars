@@ -42,6 +42,8 @@ public class ExpressionCalculator implements Calculator {
         opMap.put("degrees", new OpInfo(numbers -> Math.toDegrees(numbers[0]), true, false, 0, 1, 1));
         opMap.put("radians", new OpInfo(numbers -> Math.toRadians(numbers[0]), true, false, 0, 1, 1));
 
+
+        opMap.put("sqrt", new OpInfo(numbers -> Math.sqrt(numbers[0]), true, false, 0, 1, 1));
         opMap.put("ln", new OpInfo(numbers -> Math.log(numbers[0]), true, false, 0, 1, 1));
         opMap.put("lg", new OpInfo(numbers -> Math.log(numbers[0]) * 1.44269504089, true, false, 0, 1, 1));
         opMap.put("log", new OpInfo(numbers -> Math.log10(numbers[0]), true, false, 0, 1, 1));
@@ -49,6 +51,7 @@ public class ExpressionCalculator implements Calculator {
 
         opMap.put("random", new OpInfo(numbers -> Math.random(), true, true, 0, 0, 0));
 
+        opMap.put("round", new OpInfo(numbers -> Math.round(numbers[0]), true, false, 0, 1, 1));
         opMap.put("abs", new OpInfo(numbers -> Math.abs(numbers[0]), true, false, 0, 1, 1));
         opMap.put("floor", new OpInfo(numbers -> Math.floor(numbers[0]), true, false, 0, 1, 1));
         opMap.put("ceil", new OpInfo(numbers -> Math.ceil(numbers[0]), true, false, 0, 1, 1));

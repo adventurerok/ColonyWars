@@ -8,6 +8,8 @@ import com.ithinkrok.minigames.event.user.state.UserDamagedEvent;
 import com.ithinkrok.minigames.event.user.state.UserFoodLevelChangeEvent;
 import com.ithinkrok.minigames.event.user.world.*;
 import com.ithinkrok.minigames.item.CustomItem;
+import com.ithinkrok.minigames.item.MapVoter;
+import com.ithinkrok.minigames.metadata.MapVote;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
@@ -16,11 +18,14 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by paul on 31/12/15.
  */
 public class LobbyListener implements Listener {
+
+    private static final Random random = new Random();
 
     private String startCountdownName;
     private String startCountdownLocaleStub;
@@ -85,7 +90,17 @@ public class LobbyListener implements Listener {
             return;
         }
 
-        //TODO start game
+        startGame(event.getGameGroup());
+    }
+
+    private void startGame(GameGroup gameGroup) {
+        String winningVote = MapVote.getWinningVote(gameGroup.getUsers());
+
+        if(winningVote == null || winningVote.equals(randomMapName)) {
+            winningVote = mapList.get(random.nextInt(mapList.size()));
+        }
+
+        gameGroup.changeMap(winningVote);
     }
 
     private void resetCountdown(GameGroup gameGroup) {

@@ -211,6 +211,10 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         return maps.get(startMapName);
     }
 
+    public GameMapInfo getMapInfo(String mapName) {
+        return maps.get(mapName);
+    }
+
     @Override
     public ConfigurationSection loadConfig(String path) {
         return ResourceHandler.getConfigResource(plugin, path);

@@ -20,6 +20,7 @@ import com.ithinkrok.minigames.task.TaskScheduler;
 import com.ithinkrok.minigames.user.UserResolver;
 import com.ithinkrok.minigames.util.EventExecutor;
 import com.ithinkrok.minigames.util.io.FileLoader;
+import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
@@ -70,7 +71,14 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
         return usersInGroup.values();
     }
 
-    @SuppressWarnings("unchecked")
+
+    public void changeMap(String mapName) {
+        GameMapInfo mapInfo = game.getMapInfo(mapName);
+        Validate.notNull(mapInfo, "The map " + mapName + " does not exist");
+
+        changeMap(mapInfo);
+    }
+
     public void changeMap(GameMapInfo mapInfo) {
         GameMap oldMap = currentMap;
         GameMap newMap = new GameMap(this, mapInfo);

@@ -43,6 +43,10 @@ public class GameMap implements LanguageLookup, ConfigHolder {
     private TaskList mapTaskList = new TaskList();
     private IdentifierMap<CustomItem> customItemIdentifierMap = new IdentifierMap<>();
 
+    public World getWorld() {
+        return world;
+    }
+
     public GameMap(GameGroup gameGroup, GameMapInfo gameMapInfo) {
         this.gameMapInfo = gameMapInfo;
 

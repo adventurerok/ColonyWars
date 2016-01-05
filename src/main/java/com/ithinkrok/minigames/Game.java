@@ -1,5 +1,7 @@
 package com.ithinkrok.minigames;
 
+import com.google.common.collect.HashBiMap;
+import com.ithinkrok.minigames.event.map.MapBlockBreakNaturallyEvent;
 import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.event.user.game.UserQuitEvent;
 import com.ithinkrok.minigames.event.user.inventory.UserInventoryClickEvent;
@@ -13,6 +15,7 @@ import com.ithinkrok.minigames.item.IdentifierMap;
 import com.ithinkrok.minigames.lang.LangFile;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.MultipleLanguageLookup;
+import com.ithinkrok.minigames.map.GameMap;
 import com.ithinkrok.minigames.map.GameMapInfo;
 import com.ithinkrok.minigames.task.GameRunnable;
 import com.ithinkrok.minigames.task.GameTask;
@@ -32,6 +35,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockExpEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -69,6 +73,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
     private IdentifierMap<CustomItem> customItemIdentifierMap = new IdentifierMap<>();
 
     private HashMap<String, Listener> defaultListeners = new HashMap<>();
+    private WeakHashMap<String, GameGroup> mapToGameGroup = new WeakHashMap<>();
     private List<GameState> gameStates = new ArrayList<>();
     private Map<String, GameMapInfo> maps = new HashMap<>();
     private String startMapName;
@@ -141,13 +146,13 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
     private void reloadGameStates() {
         ConfigurationSection gameStatesConfig = config.getConfigurationSection("game_states");
 
-        for(String name : gameStatesConfig.getKeys(false)) {
+        for (String name : gameStatesConfig.getKeys(false)) {
             ConfigurationSection gameStateConfig = gameStatesConfig.getConfigurationSection(name);
             List<Listener> listeners = new ArrayList<>();
 
             ConfigurationSection listenersConfig = gameStateConfig.getConfigurationSection("listeners");
 
-            for(String listenerName : listenersConfig.getKeys(false)) {
+            for (String listenerName : listenersConfig.getKeys(false)) {
                 ConfigurationSection listenerConfig = listenersConfig.getConfigurationSection(listenerName);
 
                 try {
@@ -163,14 +168,14 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         String startGameState = config.getString("start_game_state");
 
         GameState start = null;
-        for(GameState state : gameStates) {
-            if(state.getName().equals(startGameState)){
+        for (GameState state : gameStates) {
+            if (state.getName().equals(startGameState)) {
                 start = state;
                 break;
             }
         }
 
-        if(start == null) throw new RuntimeException("The start game state does not exist");
+        if (start == null) throw new RuntimeException("The start game state does not exist");
 
         //Ensure the start game state is the first in the list
         gameStates.remove(start);
@@ -182,13 +187,13 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         maps.clear();
 
         File mapsFolder = new File(plugin.getDataFolder(), GameMapInfo.MAPS_FOLDER);
-        if(!mapsFolder.exists() || mapsFolder.isFile()){
+        if (!mapsFolder.exists() || mapsFolder.isFile()) {
             throw new RuntimeException("Maps directory does not exist!");
         }
 
         String[] mapNames = mapsFolder.list((dir, name) -> name.endsWith(".yml"));
 
-        for(String mapNameWithYml : mapNames) {
+        for (String mapNameWithYml : mapNames) {
             String mapNameWithoutYml = mapNameWithYml.substring(0, mapNameWithYml.length() - 4);
 
             loadMapInfo(mapNameWithoutYml);
@@ -297,6 +302,11 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         entity.setMetadata("rep", new FixedMetadataValue(plugin, user.getUuid()));
     }
 
+    public void setGameGroupForMap(GameGroup gameGroup, String mapName) {
+        mapToGameGroup.values().remove(gameGroup);
+        mapToGameGroup.put(mapName, gameGroup);
+    }
+
     private class GameListener implements Listener {
 
         @EventHandler
@@ -336,6 +346,19 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
                 usersInServer.remove(event.getPlayer().getUniqueId());
                 user.cancelAllTasks();
             }
+        }
+
+        @EventHandler
+        public void eventBlockExp(BlockExpEvent event) {
+            if (event instanceof BlockBreakEvent) return;
+
+            String mapName = event.getBlock().getWorld().getName();
+            GameGroup gameGroup = mapToGameGroup.get(mapName);
+            GameMap map = gameGroup.getCurrentMap();
+            if (!map.getWorld().getName().equals(mapName))
+                throw new RuntimeException("Map still registered to old GameGroup");
+
+            gameGroup.gameEvent(new MapBlockBreakNaturallyEvent(gameGroup, map, event));
         }
 
         @EventHandler

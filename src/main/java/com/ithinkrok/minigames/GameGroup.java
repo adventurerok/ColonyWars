@@ -79,6 +79,10 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
         changeMap(mapInfo);
     }
 
+    public GameMap getCurrentMap() {
+        return currentMap;
+    }
+
     public void changeMap(GameMapInfo mapInfo) {
         GameMap oldMap = currentMap;
         GameMap newMap = new GameMap(this, mapInfo);
@@ -86,6 +90,8 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
         usersInGroup.values().forEach(newMap::teleportUser);
 
         currentMap = newMap;
+
+        game.setGameGroupForMap(this, newMap.getWorld().getName());
 
         Event event = new MapChangedEvent(this, oldMap, newMap);
 

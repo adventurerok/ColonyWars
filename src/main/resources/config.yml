@@ -23,8 +23,8 @@ game_states:
             random_map: "random"
             map_list: &votable_maps
               - "canyon"
-              - "forest_hills"
-              - "cavern"
+#              - "forest_hills"
+#              - "cavern"
               - "random"
           next_gamestate: "game"
   game:

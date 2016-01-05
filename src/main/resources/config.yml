@@ -33,7 +33,7 @@ game_states:
             locale_stub: "countdowns.start"
             min_players: 1
             needs_more_players_locale: "countdowns.start.needs_more_players"
-            seconds: 20
+            seconds: 3
           map_voting:
             random_map: "random"
             map_list: &votable_maps

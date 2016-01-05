@@ -1,5 +1,6 @@
 package com.ithinkrok.minigames.event.user;
 
+import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.User;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -17,6 +18,10 @@ public class UserEvent extends Event {
 
     public User getUser() {
         return user;
+    }
+
+    public GameGroup getUserGameGroup() {
+        return user.getGameGroup();
     }
 
     @Override

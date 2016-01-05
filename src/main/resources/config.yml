@@ -15,6 +15,12 @@ game_states:
     listeners:
       main:
         class: "com.ithinkrok.cw.gamestate.LobbyListener"
+        config:
+          start_countdown:
+            name: "start"
+            locale_stub: "countdowns.game.warning"
+            min_players: 4
+            seconds: 181
 
 start_game_state: "lobby"
 

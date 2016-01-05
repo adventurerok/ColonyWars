@@ -1,11 +1,15 @@
 package com.ithinkrok.cw.gamestate;
 
+import com.ithinkrok.minigames.GameGroup;
+import com.ithinkrok.minigames.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.event.game.CountdownFinishedEvent;
 import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.event.user.state.UserDamagedEvent;
 import com.ithinkrok.minigames.event.user.state.UserFoodLevelChangeEvent;
 import com.ithinkrok.minigames.event.user.world.*;
 import com.ithinkrok.minigames.item.CustomItem;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -14,6 +18,25 @@ import org.bukkit.inventory.ItemStack;
  * Created by paul on 31/12/15.
  */
 public class LobbyListener implements Listener {
+
+    private String startCountdownName;
+    private String startCountdownLocaleStub;
+    private int minPlayersToStartGame;
+    private int startCountdownSeconds;
+
+    @EventHandler
+    public void eventListenerLoaded(ListenerLoadedEvent<?> event) {
+        ConfigurationSection config = event.getConfig();
+
+        configureCountdown(config.getConfigurationSection("start_countdown"));
+    }
+
+    private void configureCountdown(ConfigurationSection config) {
+        startCountdownName = config.getString("name");
+        startCountdownLocaleStub = config.getString("locale_stub");
+        startCountdownSeconds = config.getInt("seconds");
+        minPlayersToStartGame = config.getInt("min_players");
+    }
 
     @EventHandler
     public void eventBlockBreak(UserBreakBlockEvent event) {
@@ -27,7 +50,25 @@ public class LobbyListener implements Listener {
 
     @EventHandler
     public void eventUserJoin(UserJoinEvent event) {
-        System.out.println(event.getUser().getUuid() + " joined!");
+        if(event.getUserGameGroup().hasActiveCountdown()) return;
+
+        resetCountdown(event.getUserGameGroup());
+    }
+
+    @EventHandler
+    public void eventCountdownFinished(CountdownFinishedEvent event) {
+        if(!event.getCountdown().getName().equals(startCountdownName)) return;
+
+        if(event.getGameGroup().getUserCount() < minPlayersToStartGame) {
+            resetCountdown(event.getGameGroup());
+            return;
+        }
+
+        //TODO start game
+    }
+
+    private void resetCountdown(GameGroup gameGroup) {
+        gameGroup.startCountdown(startCountdownName, startCountdownLocaleStub, startCountdownSeconds);
     }
 
     @EventHandler

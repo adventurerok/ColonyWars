@@ -40,9 +40,3 @@ listeners:
               z: 39
           extra_radius: 3
       spade: "IRON_SPADE"
-  countdown_start:
-    class: "com.ithinkrok.minigames.map.StartCountdownOnMapLoad"
-    config:
-      name: "start"
-      locale_stub: "countdowns.game.warning"
-      seconds: 181

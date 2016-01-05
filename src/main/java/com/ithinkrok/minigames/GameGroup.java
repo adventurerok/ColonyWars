@@ -323,4 +323,8 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
     public boolean hasActiveCountdown(String name) {
         return countdown != null && countdown.getName().equals(name);
     }
+
+    public int getUserCount() {
+        return getUsers().size();
+    }
 }

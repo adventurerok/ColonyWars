@@ -39,6 +39,17 @@ public class InventoryUtils {
         return item;
     }
 
+    public static ItemStack parseItem(String itemString) {
+        String[] parts = itemString.split(",");
+
+        Material material = Material.matchMaterial(parts[0]);
+
+        int amount = parts.length >= 1 ? Integer.parseInt(parts[1]) : 1;
+        int durability = parts.length >= 2 ? Integer.parseInt(parts[2]) : 1;
+
+        return new ItemStack(material, amount, (short) durability);
+    }
+
     public static ItemStack createPotion(PotionType type, int level, boolean splash, boolean extended, int amount){
         Potion pot = new Potion(type, level);
         pot.setSplash(splash);

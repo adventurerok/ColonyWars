@@ -7,6 +7,12 @@ lang_files:
   - "lang/weapon_modifier.lang"
   - "lang/items.lang"
 
+# Specifies default shared objects
+shared_objects:
+  gold_config:
+    ore_blocks:
+      gold_ore: "GOLD_INGOT,1,1"
+
 game_states:
   lobby:
     listeners:

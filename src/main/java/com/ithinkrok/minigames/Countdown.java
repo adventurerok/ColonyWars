@@ -73,6 +73,7 @@ public class Countdown {
                 case 4:
                 case 3:
                 case 2:
+                case 1:
                     messagable.sendLocale(localeStub + ".final", secondsRemaining);
                     return;
                 case 0:

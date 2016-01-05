@@ -39,6 +39,12 @@ public class ExpressionCalculatorTest {
     }
 
     @Test
+    @DataProvider(value = {"abs(abs(-4)-10);6", "floor(sin(radians(45)));0"}, splitBy = ";")
+    public void shouldHandleMultipleFunctionsCorrectly(String sum, double result) {
+        testValues(sum, null, result);
+    }
+
+    @Test
     @DataProvider(value = {"min(4,7,1,9);1"}, splitBy = ";")
     public void shouldHandleMinCorrectly(String sum, double result) {
         testValues(sum, null, result);

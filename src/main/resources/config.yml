@@ -21,6 +21,13 @@ game_states:
             locale_stub: "countdowns.game.warning"
             min_players: 4
             seconds: 181
+          map_voting:
+            random_map: "random"
+            map_list: &votable_maps
+              - "canyon"
+              - "forest_hills"
+              - "cavern"
+              - "random"
 
 start_game_state: "lobby"
 
@@ -34,11 +41,7 @@ custom_items:
         events: ["rightClick"]
         class: "com.ithinkrok.minigames.item.MapVoter"
         config:
-          votable_maps:
-            - "canyon"
-            - "forest_hills"
-            - "cavern"
-            - "random"
+          votable_maps: *votable_maps
           map_material: "EMPTY_MAP"
   darkness_sword:
     display_name_locale: "darkness_sword.name"

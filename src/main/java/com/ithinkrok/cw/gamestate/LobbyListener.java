@@ -14,6 +14,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by paul on 31/12/15.
  */
@@ -21,14 +24,27 @@ public class LobbyListener implements Listener {
 
     private String startCountdownName;
     private String startCountdownLocaleStub;
-    private int minPlayersToStartGame;
     private int startCountdownSeconds;
+    private int minPlayersToStartGame;
+
+    private String randomMapName;
+    private ArrayList<String> mapList;
 
     @EventHandler
     public void eventListenerLoaded(ListenerLoadedEvent<?> event) {
         ConfigurationSection config = event.getConfig();
 
         configureCountdown(config.getConfigurationSection("start_countdown"));
+        configureMapVoting(config.getConfigurationSection("map_voting"));
+    }
+
+    private void configureMapVoting(ConfigurationSection config) {
+        randomMapName = config.getString("random_map");
+
+        mapList = new ArrayList<>(config.getStringList("votable_maps"));
+        mapList.remove(randomMapName);
+
+        if(mapList.size() < 1) throw new RuntimeException("The game requires at least one map!");
     }
 
     private void configureCountdown(ConfigurationSection config) {

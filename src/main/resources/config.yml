@@ -6,7 +6,7 @@ maps:
 
 # The language files that will be used by default
 lang_files:
-  - "english.lang"
+  - "colony_wars.lang"
   - "lang/weapon_modifier.lang"
   - "lang/items.lang"
 
@@ -18,8 +18,9 @@ game_states:
         config:
           start_countdown:
             name: "start"
-            locale_stub: "countdowns.game.warning"
+            locale_stub: "countdowns.start"
             min_players: 4
+            needs_more_players_locale: "countdowns.start.needs_more_players"
             seconds: 181
           map_voting:
             random_map: "random"

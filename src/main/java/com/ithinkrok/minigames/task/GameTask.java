@@ -24,6 +24,7 @@ public class GameTask {
 
     public void schedule(Plugin plugin, int delay) {
         if(taskState != TaskState.CREATED) return;
+        taskState = TaskState.SCHEDULED;
 
         bukkitTask = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             finishAllowed = true;
@@ -39,6 +40,7 @@ public class GameTask {
 
     public void schedule(Plugin plugin, int delay, int period) {
         if(taskState != TaskState.CREATED) return;
+        taskState = TaskState.SCHEDULED;
 
         bukkitTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             finishAllowed = true;

@@ -23,10 +23,7 @@ import com.ithinkrok.minigames.task.TaskScheduler;
 import com.ithinkrok.minigames.user.UserResolver;
 import com.ithinkrok.minigames.util.EntityUtils;
 import com.ithinkrok.minigames.util.io.*;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -76,6 +73,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
     private List<GameState> gameStates = new ArrayList<>();
     private Map<String, GameMapInfo> maps = new HashMap<>();
     private Map<String, ConfigurationSection> sharedObjects = new HashMap<>();
+    private List<TeamIdentifier> teamIdentifiers = new ArrayList<>();
     private String startMapName;
 
     public Game(Plugin plugin) {
@@ -138,6 +136,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
         config = plugin.getConfig();
 
+        reloadTeamIdentifiers();
         reloadGameStates();
         reloadMaps();
 
@@ -147,6 +146,33 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         customItemIdentifierMap.clear();
 
         ConfigParser.parseConfig(this, this, this, "config.yml", config);
+    }
+
+    private void reloadTeamIdentifiers() {
+        teamIdentifiers.clear();
+
+        ConfigurationSection teamConfigs = config.getConfigurationSection("team_identifiers");
+
+        for(String name : teamConfigs.getKeys(false)) {
+            ConfigurationSection teamConfig = teamConfigs.getConfigurationSection(name);
+
+            DyeColor dyeColor = DyeColor.valueOf(teamConfig.getString("dye_color").toUpperCase());
+
+            String formattedName = teamConfig.getString("formatted_name", null);
+
+            String armorColorString = teamConfig.getString("armor_color", null);
+            Color armorColor = null;
+            if(armorColorString != null){
+                armorColor = Color.fromRGB(Integer.parseInt(armorColorString.replace("#", "")));
+            }
+            String chatColorString = teamConfig.getString("chat_color", null);
+            ChatColor chatColor = null;
+            if(chatColorString != null) {
+                chatColor = ChatColor.valueOf(chatColorString);
+            }
+
+            teamIdentifiers.add(new TeamIdentifier(name, formattedName, dyeColor, armorColor, chatColor));
+        }
     }
 
     private void reloadGameStates() {

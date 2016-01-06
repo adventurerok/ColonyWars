@@ -25,7 +25,7 @@ public class TeamIdentifier {
     }
 
     public TeamIdentifier(String name, String formattedName, DyeColor dyeColor) {
-        this(name, formattedName, dyeColor, dyeColor.getColor(), DyeToChatColorConverter.convert(dyeColor));
+        this(name, formattedName, dyeColor, null, null);
     }
 
     public TeamIdentifier(String name, String formattedName, DyeColor dyeColor, Color armorColor, ChatColor chatColor) {
@@ -34,9 +34,10 @@ public class TeamIdentifier {
 
         this.name = name;
         this.formattedName = (formattedName != null ? formattedName : chatColor + WordUtils.capitalizeFully(name));
-        this.armorColor = armorColor;
+
         this.dyeColor = dyeColor;
-        this.chatColor = chatColor;
+        this.armorColor = (armorColor != null ? armorColor : dyeColor.getColor());
+        this.chatColor = (chatColor != null ? chatColor : DyeToChatColorConverter.convert(dyeColor));
     }
 
     public ChatColor getChatColor() {

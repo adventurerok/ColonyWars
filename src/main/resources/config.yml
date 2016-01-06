@@ -7,6 +7,16 @@ lang_files:
   - "lang/weapon_modifier.lang"
   - "lang/items.lang"
 
+team_identifiers:
+  red:
+    dye_color: RED
+  blue:
+    dye_color: BLUE
+  green:
+    dye_color: GREEN
+  yellow:
+    dye_color: YELLOW
+
 # Specifies default shared objects. Some shared objects are required by certain Java Classes used in the game.
 shared_objects:
   gold_config:

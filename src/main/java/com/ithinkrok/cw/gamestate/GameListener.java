@@ -81,8 +81,9 @@ public class GameListener implements Listener {
         event.setCancelled(true);
 
         if (goldConfig.allowItemPickup(material)) {
+            int amount = event.getItem().getItemStack().getAmount();
 
-            int userGold = goldConfig.getUserGold(material);
+            int userGold = goldConfig.getUserGold(material) * amount;
             Money userMoney = Money.getOrCreate(event.getUser());
             userMoney.addMoney(userGold, false);
 

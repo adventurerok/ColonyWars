@@ -31,8 +31,6 @@ import java.util.Map;
  */
 public class GameMap implements LanguageLookup, ConfigHolder {
 
-    private static int mapCounter = 0;
-
     private GameMapInfo gameMapInfo;
     private World world;
     private MultipleLanguageLookup languageLookup = new MultipleLanguageLookup();
@@ -55,9 +53,8 @@ public class GameMap implements LanguageLookup, ConfigHolder {
     }
 
     private void loadMap() {
-        ++mapCounter;
 
-        String randomWorldName = gameMapInfo.getName() + "-" + String.format("%04X", mapCounter);
+        String randomWorldName = getRandomWorldName(gameMapInfo.getName());
         String copyFrom = "./" + gameMapInfo.getMapFolder() + "/";
         String copyTo = "./" + randomWorldName + "/";
 
@@ -83,6 +80,15 @@ public class GameMap implements LanguageLookup, ConfigHolder {
 
     }
 
+    private String getRandomWorldName(String mapName) {
+        int count = 0;
+        String randomWorldName;
+        do {
+            randomWorldName = mapName + "-" + String.format("%04X", count++);
+        } while(Bukkit.getWorld(randomWorldName) != null);
+
+        return randomWorldName;
+    }
 
     public CustomItem getCustomItem(String name) {
         return customItemIdentifierMap.get(name);

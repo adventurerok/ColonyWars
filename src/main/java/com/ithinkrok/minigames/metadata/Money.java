@@ -32,10 +32,14 @@ public abstract class Money extends UserMetadata {
     public static Money getOrCreate(MetadataHolder<? super UserMetadata> holder) {
         if(holder.hasMetadata(Money.class)) return holder.getMetadata(Money.class);
 
+        Money money;
         if(holder instanceof User) {
-            return new UserMoney((User) holder);
+            money = new UserMoney((User) holder);
+        } else {
+            throw new RuntimeException("Unsupported MetadataHolder type:" + holder);
         }
 
-        throw new RuntimeException("Unsupported MetadataHolder type:" + holder);
+        ((User) holder).setMetadata(money);
+        return money;
     }
 }

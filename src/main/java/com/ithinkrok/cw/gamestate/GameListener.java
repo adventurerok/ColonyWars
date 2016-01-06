@@ -80,18 +80,19 @@ public class GameListener implements Listener {
 
         event.setCancelled(true);
 
-        if (!goldConfig.allowItemPickup(material)) return;
+        if (goldConfig.allowItemPickup(material)) {
 
-        int userGold = goldConfig.getUserGold(material);
-        Money userMoney = Money.getOrCreate(event.getUser());
-        userMoney.addMoney(userGold, false);
+            int userGold = goldConfig.getUserGold(material);
+            Money userMoney = Money.getOrCreate(event.getUser());
+            userMoney.addMoney(userGold, false);
 
-        //TODO team gold
+            //TODO team gold
 
-        SoundEffect sound = new SoundEffect(goldConfig.getPickupSound(), 1.0f, 0.8f + (random.nextFloat()) * 0.4f);
-        event.getUser().playSound(event.getUser().getLocation(), sound);
+            SoundEffect sound = new SoundEffect(goldConfig.getPickupSound(), 1.0f, 0.8f + (random.nextFloat()) * 0.4f);
+            event.getUser().playSound(event.getUser().getLocation(), sound);
+        }
 
-
+        event.getItem().remove();
     }
 
     @EventHandler

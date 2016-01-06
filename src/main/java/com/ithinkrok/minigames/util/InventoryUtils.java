@@ -1,11 +1,13 @@
 package com.ithinkrok.minigames.util;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionType;
 
@@ -26,6 +28,27 @@ public class InventoryUtils {
 
     public static boolean isMaterial(ItemStack stack, Material material) {
         return stack != null && stack.getType() == material;
+    }
+
+    public static ItemStack createLeatherArmorItem(Material material, Color armorColor) {
+        return setLeatherArmorColor(new ItemStack(material), armorColor);
+    }
+
+    public static ItemStack setUnbreakable(ItemStack itemStack, boolean unbreakable) {
+        ItemMeta meta = itemStack.getItemMeta();
+
+        meta.spigot().setUnbreakable(unbreakable);
+        itemStack.setItemMeta(meta);
+
+        return itemStack;
+    }
+
+    public static ItemStack setLeatherArmorColor(ItemStack armor, Color armorColor) {
+        LeatherArmorMeta meta = (LeatherArmorMeta) armor.getItemMeta();
+
+        meta.setColor(armorColor);
+        armor.setItemMeta(meta);
+        return armor;
     }
 
     public static ItemStack enchantItem(ItemStack item, Object... enchantments) {

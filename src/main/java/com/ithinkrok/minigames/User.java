@@ -15,24 +15,23 @@ import com.ithinkrok.minigames.item.ClickableInventory;
 import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.Messagable;
-import com.ithinkrok.minigames.metadata.MapVote;
 import com.ithinkrok.minigames.metadata.MetadataHolder;
 import com.ithinkrok.minigames.metadata.UserMetadata;
 import com.ithinkrok.minigames.task.GameRunnable;
 import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskList;
 import com.ithinkrok.minigames.task.TaskScheduler;
-import com.ithinkrok.minigames.user.*;
+import com.ithinkrok.minigames.user.AttackerTracker;
+import com.ithinkrok.minigames.user.CooldownHandler;
+import com.ithinkrok.minigames.user.UpgradeHandler;
+import com.ithinkrok.minigames.user.UserResolver;
 import com.ithinkrok.minigames.user.scoreboard.ScoreboardDisplay;
 import com.ithinkrok.minigames.user.scoreboard.ScoreboardHandler;
 import com.ithinkrok.minigames.util.EventExecutor;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import com.ithinkrok.minigames.util.SoundEffect;
 import com.ithinkrok.minigames.util.playerstate.PlayerState;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
@@ -48,6 +47,8 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
+
+import static com.ithinkrok.minigames.util.InventoryUtils.*;
 
 import java.util.*;
 
@@ -409,6 +410,21 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
     @Override
     public ConfigurationSection getSharedObject(String name) {
         return gameGroup.getSharedObject(name);
+    }
+
+    public void giveColoredArmor(Color color, boolean unbreakable) {
+        PlayerInventory inv = getInventory();
+        if(color == null) {
+            inv.setHelmet(null);
+            inv.setChestplate(null);
+            inv.setLeggings(null);
+            inv.setBoots(null);
+        } else {
+            inv.setHelmet(setUnbreakable(createLeatherArmorItem(Material.LEATHER_HELMET, color), unbreakable));
+            inv.setChestplate(setUnbreakable(createLeatherArmorItem(Material.LEATHER_CHESTPLATE, color), unbreakable));
+            inv.setLeggings(setUnbreakable(createLeatherArmorItem(Material.LEATHER_LEGGINGS, color), unbreakable));
+            inv.setBoots(setUnbreakable(createLeatherArmorItem(Material.LEATHER_BOOTS, color), unbreakable));
+        }
     }
 
     private class UserListener implements Listener {

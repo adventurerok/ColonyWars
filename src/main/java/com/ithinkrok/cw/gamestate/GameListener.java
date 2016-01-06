@@ -7,6 +7,7 @@ import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.map.MapBlockBreakNaturallyEvent;
 import com.ithinkrok.minigames.event.map.MapItemSpawnEvent;
+import com.ithinkrok.minigames.event.user.game.UserChangeTeamEvent;
 import com.ithinkrok.minigames.event.user.world.UserBreakBlockEvent;
 import com.ithinkrok.minigames.event.user.world.UserPickupItemEvent;
 import com.ithinkrok.minigames.metadata.Money;
@@ -15,6 +16,7 @@ import com.ithinkrok.minigames.util.SoundEffect;
 import com.ithinkrok.minigames.util.TreeFeller;
 import com.ithinkrok.minigames.util.math.ExpressionCalculator;
 import com.ithinkrok.minigames.util.math.SingleValueVariables;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -71,6 +73,13 @@ public class GameListener implements Listener {
         }
 
         return gold;
+    }
+
+    @EventHandler
+    public void onUserChangeTeam(UserChangeTeamEvent event) {
+
+        Color armorColor = event.getNewTeam() != null ? event.getNewTeam().getArmorColor() : null;
+        event.getUser().giveColoredArmor(armorColor, true);
     }
 
     @EventHandler

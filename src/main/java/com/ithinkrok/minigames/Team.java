@@ -40,6 +40,10 @@ public class Team implements Listener, Messagable, LanguageLookup, SharedObjectA
         this.gameGroup = gameGroup;
     }
 
+    public TeamIdentifier getTeamIdentifier() {
+        return teamIdentifier;
+    }
+
     @Override
     public String getLocale(String name) {
         return gameGroup.getLocale(name);

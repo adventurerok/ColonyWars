@@ -120,6 +120,15 @@ public class GameListener implements Listener {
                 }
             }
 
+            ConfigurationSection items = config.getConfigurationSection("items");
+            for(String matName : items.getKeys(false)) {
+                Material material = Material.matchMaterial(matName);
+                ConfigurationSection matConfig = items.getConfigurationSection(matName);
+
+                userGold.put(material, matConfig.getInt("user"));
+                teamGold.put(material, matConfig.getInt("team"));
+            }
+
             pickupSound = Sound.valueOf(config.getString("pickup_sound").toUpperCase());
 
             ConfigurationSection trees = config.getConfigurationSection("trees");
@@ -156,7 +165,7 @@ public class GameListener implements Listener {
         }
 
         public boolean allowItemPickup(Material material) {
-            return userGold.containsKey(material) || teamGold.containsKey(material);
+            return userGold.containsKey(material);
         }
 
         public int getUserGold(Material material) {

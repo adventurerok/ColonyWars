@@ -53,7 +53,7 @@ public class UserMoney extends Money {
     public void addMoney(int amount, boolean message) {
         money += amount;
 
-        //TODO update scoreboard
+        user.updateScoreboard();
         if(!messageUser(message)) return;
         user.sendLocale(addMoneyLocale, amount);
         user.sendLocale(newMoneyLocale, amount);
@@ -65,7 +65,7 @@ public class UserMoney extends Money {
 
         money -= amount;
 
-        //TODO update scoreboard
+        user.updateScoreboard();
         if(!messageUser(message)) return true;
         user.sendLocale(subtractMoneyLocale, amount);
         user.sendLocale(newMoneyLocale, amount);

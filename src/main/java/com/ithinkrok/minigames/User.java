@@ -110,6 +110,10 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
         }
     }
 
+    public TeamIdentifier getTeamIdentifier() {
+        return team != null ? team.getTeamIdentifier() : null;
+    }
+
     public void setTeam(Team team) {
         if(team == this.team) return;
 

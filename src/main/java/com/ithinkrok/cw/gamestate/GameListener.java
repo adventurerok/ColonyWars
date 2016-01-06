@@ -59,6 +59,10 @@ public class GameListener implements Listener {
 
         GameGroup gameGroup = event.getGameGroup();
         for(User user : gameGroup.getUsers()) {
+
+            //TODO this is just a test
+            user.setTeam(event.getGameGroup().getTeam("red"));
+
             user.setScoreboardHandler(new CWScoreboardHandler(user));
             user.updateScoreboard();
         }

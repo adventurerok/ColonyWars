@@ -111,11 +111,13 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
     }
 
     public void setTeam(Team team) {
+        if(team == this.team) return;
+
         Team oldTeam = this.team;
         Team newTeam = this.team = team;
 
-        oldTeam.removeUser(this);
-        newTeam.addUser(this);
+        if(oldTeam != null) oldTeam.removeUser(this);
+        if(newTeam != null) newTeam.addUser(this);
 
         UserChangeTeamEvent event = new UserChangeTeamEvent(this, oldTeam, newTeam);
         gameGroup.userEvent(event);

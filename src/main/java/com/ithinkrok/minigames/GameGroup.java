@@ -215,14 +215,13 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
     @SuppressWarnings("unchecked")
     public void changeGameState(GameState gameState) {
         if (gameState.equals(this.gameState)) return;
-
-        Event event = new GameStateChangedEvent(this, this.gameState, gameState);
-
-        EventExecutor.executeEvent(event, getListeners(getAllUserListeners(), gameState.getListeners()));
+        GameState oldState = this.gameState;
+        GameState newState = this.gameState = gameState;
 
         gameStateTaskList.cancelAllTasks();
 
-        this.gameState = gameState;
+        Event event = new GameStateChangedEvent(this, oldState, newState);
+        EventExecutor.executeEvent(event, getListeners(getAllUserListeners(), gameState.getListeners()));
     }
 
     public void startCountdown(String name, String localeStub, int seconds) {

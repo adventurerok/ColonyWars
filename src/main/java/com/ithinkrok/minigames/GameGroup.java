@@ -89,6 +89,11 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
         return result != null ? result : game.getSharedObject(name);
     }
 
+    @Override
+    public LanguageLookup getLanguageLookup() {
+        return this;
+    }
+
     public void changeMap(GameMapInfo mapInfo) {
         GameMap oldMap = currentMap;
         GameMap newMap = new GameMap(this, mapInfo);

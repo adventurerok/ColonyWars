@@ -9,4 +9,5 @@ public interface Messagable {
     void sendMessageNoPrefix(String message);
     void sendLocale(String locale, Object... args);
     void sendLocaleNoPrefix(String locale, Object... args);
+    LanguageLookup getLanguageLookup();
 }

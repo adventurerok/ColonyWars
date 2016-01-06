@@ -12,6 +12,7 @@ import com.ithinkrok.minigames.event.user.inventory.UserInventoryCloseEvent;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.item.ClickableInventory;
 import com.ithinkrok.minigames.item.CustomItem;
+import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.Messagable;
 import com.ithinkrok.minigames.metadata.MapVote;
 import com.ithinkrok.minigames.metadata.UserMetadata;
@@ -352,6 +353,11 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
 
     public boolean hasMetadata(Class<? extends UserMetadata> clazz) {
         return metadataMap.containsKey(clazz);
+    }
+
+    @Override
+    public LanguageLookup getLanguageLookup() {
+        return gameGroup.getLanguageLookup();
     }
 
     private class UserListener implements Listener {

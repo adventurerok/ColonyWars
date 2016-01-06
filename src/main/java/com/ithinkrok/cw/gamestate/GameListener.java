@@ -7,10 +7,12 @@ import com.ithinkrok.minigames.event.user.world.UserBreakBlockEvent;
 import com.ithinkrok.minigames.event.user.world.UserPickupItemEvent;
 import com.ithinkrok.minigames.metadata.Money;
 import com.ithinkrok.minigames.util.InventoryUtils;
+import com.ithinkrok.minigames.util.SoundEffect;
 import com.ithinkrok.minigames.util.TreeFeller;
 import com.ithinkrok.minigames.util.math.ExpressionCalculator;
 import com.ithinkrok.minigames.util.math.SingleValueVariables;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
@@ -24,6 +26,8 @@ import java.util.stream.Collectors;
  * Created by paul on 05/01/16.
  */
 public class GameListener implements Listener {
+
+    private Random random = new Random();
 
     private String goldSharedConfig;
     private WeakHashMap<ConfigurationSection, GoldConfig> goldConfigMap = new WeakHashMap<>();
@@ -43,17 +47,31 @@ public class GameListener implements Listener {
         gold.onBlockBreak(event.getBlock());
     }
 
+    private GoldConfig getGoldConfig(ConfigurationSection config) {
+        GoldConfig gold = goldConfigMap.get(config);
+
+        if (gold == null) {
+            gold = new GoldConfig(config);
+            goldConfigMap.put(config, gold);
+        }
+
+        return gold;
+    }
+
     @EventHandler
     public void onUserPickupItem(UserPickupItemEvent event) {
         GoldConfig goldConfig = getGoldConfig(event.getUserGameGroup().getSharedObject(goldSharedConfig));
         Material material = event.getItem().getItemStack().getType();
 
-        if(goldConfig.allowItemPickup(material)){
+        if (goldConfig.allowItemPickup(material)) {
             int userGold = goldConfig.getUserGold(material);
             Money userMoney = Money.getOrCreate(event.getUser());
             userMoney.addMoney(userGold, false);
 
             //TODO team gold
+
+            SoundEffect sound = new SoundEffect(goldConfig.getPickupSound(), 1.0f, 0.8f + (random.nextFloat()) * 0.4f);
+            event.getUser().playSound(event.getUser().getLocation(), sound);
         } else {
             event.setCancelled(true);
         }
@@ -66,7 +84,7 @@ public class GameListener implements Listener {
         ConfigurationSection goldShared = event.getGameGroup().getSharedObject(goldSharedConfig);
         GoldConfig gold = getGoldConfig(goldShared);
 
-        if(!gold.allowItemPickup(event.getItem().getItemStack().getType())){
+        if (!gold.allowItemPickup(event.getItem().getItemStack().getType())) {
             event.setCancelled(true);
         }
     }
@@ -77,17 +95,6 @@ public class GameListener implements Listener {
         GoldConfig gold = getGoldConfig(goldShared);
 
         gold.onBlockBreak(event.getBlock());
-    }
-
-    private GoldConfig getGoldConfig(ConfigurationSection config) {
-        GoldConfig gold = goldConfigMap.get(config);
-
-        if (gold == null) {
-            gold = new GoldConfig(config);
-            goldConfigMap.put(config, gold);
-        }
-
-        return gold;
     }
 
     private static class GoldConfig {
@@ -101,6 +108,8 @@ public class GameListener implements Listener {
         ExpressionCalculator treeItemAmount;
         Set<Material> logMaterials = new HashSet<>();
 
+        Sound pickupSound;
+
         public GoldConfig(ConfigurationSection config) {
             ConfigurationSection ores = config.getConfigurationSection("ore_blocks");
             if (ores != null) {
@@ -110,6 +119,8 @@ public class GameListener implements Listener {
                     oreBlocks.put(material, item);
                 }
             }
+
+            pickupSound = Sound.valueOf(config.getString("pickup_sound").toUpperCase());
 
             ConfigurationSection trees = config.getConfigurationSection("trees");
             treesEnabled = trees != null && trees.getBoolean("enabled");
@@ -138,6 +149,10 @@ public class GameListener implements Listener {
 
             if (drop == null) return;
             block.getWorld().dropItemNaturally(block.getLocation().add(0.5d, 0.1d, 0.5d), drop);
+        }
+
+        public Sound getPickupSound() {
+            return pickupSound;
         }
 
         public boolean allowItemPickup(Material material) {

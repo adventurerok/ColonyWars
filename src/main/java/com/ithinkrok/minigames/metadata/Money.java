@@ -1,6 +1,5 @@
 package com.ithinkrok.minigames.metadata;
 
-import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.event.user.game.UserInGameChangeEvent;
 
@@ -12,7 +11,7 @@ public abstract class Money extends UserMetadata {
     public abstract int getMoney();
     public abstract boolean hasMoney(int amount);
     public abstract void addMoney(int amount, boolean message);
-    public abstract void subtractMoney(int amount, boolean message);
+    public abstract boolean subtractMoney(int amount, boolean message);
 
     @Override
     public boolean removeOnInGameChange(UserInGameChangeEvent event) {
@@ -20,12 +19,12 @@ public abstract class Money extends UserMetadata {
     }
 
     @Override
-    public boolean removeOnGameStateChange(GameStateChangedEvent event) {
+    public boolean removeOnMapChange(MapChangedEvent event) {
         return false;
     }
 
     @Override
-    public boolean removeOnMapChange(MapChangedEvent event) {
-        return false;
+    public Class<? extends UserMetadata> getMetadataClass() {
+        return Money.class;
     }
 }

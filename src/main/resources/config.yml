@@ -7,7 +7,7 @@ lang_files:
   - "lang/weapon_modifier.lang"
   - "lang/items.lang"
 
-# Specifies default shared objects
+# Specifies default shared objects. Some shared objects are required by certain Java Classes used in the game.
 shared_objects:
   gold_config:
     ore_blocks:
@@ -21,6 +21,12 @@ shared_objects:
       log_materials:
         - "LOG"
         - "LOG_2"
+  # Required for UserMoney.java
+  user_money_metadata:
+    remove_gamestate: "aftermath"
+    add_locale: "money.balance.user.add"
+    subtract_locale: "money.balance.user.subtract"
+    new_locale: "money.balance.user.new"
 
 game_states:
   lobby:

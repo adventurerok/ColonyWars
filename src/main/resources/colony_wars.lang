@@ -3,3 +3,13 @@ countdowns.start.seconds=&7Game starting in&6 %s &7Seconds..
 countdowns.start.final=&6%s&7!
 countdowns.start.now=&7Game starting &6NOW&7!
 countdowns.start.needs_more_players=&7Not enough Players Online for Game to start!
+
+money.transfer.too_expensive=&cYou do not have that amount of money
+money.transfer.team=%s &3transferred &a$%s &eto your team's account!
+money.transfer.user=%s &3transferred &a$%s &eto %s&e's account!
+money.balance.team.new=&eYour Team's new Balance is\: &a$%s&e!
+money.balance.team.subtract=&c$%s &ewas deducted from your Team's Account!
+money.balance.team.add=&a$%s &ewas added to your Team's Account!
+money.balance.user.new=&eYour new Balance is: &a$%s!
+money.balance.user.subtract=&c$%s &ewas deducted from your Account!
+money.balance.user.add=&a$%s &ewas added to your Account!

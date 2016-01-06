@@ -28,7 +28,7 @@ public class ScoreboardDisplay {
     private Scoreboard scoreboard;
     private Objective objective;
 
-    private String displayName;
+    private String displayName = "Set display name";
 
     private List<Team> fakeTeams = new ArrayList<>();
 

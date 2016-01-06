@@ -25,4 +25,8 @@ public class GameState {
     public Collection<Listener> getListeners() {
         return listeners;
     }
+
+    public boolean isGameStateListener(Listener listener) {
+        return listeners.contains(listener);
+    }
 }

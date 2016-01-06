@@ -1,6 +1,10 @@
 package com.ithinkrok.cw.gamestate;
 
+import com.ithinkrok.cw.scoreboard.CWScoreboardHandler;
+import com.ithinkrok.minigames.GameGroup;
+import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.map.MapBlockBreakNaturallyEvent;
 import com.ithinkrok.minigames.event.map.MapItemSpawnEvent;
 import com.ithinkrok.minigames.event.user.world.UserBreakBlockEvent;
@@ -45,6 +49,17 @@ public class GameListener implements Listener {
         GoldConfig gold = getGoldConfig(goldShared);
 
         gold.onBlockBreak(event.getBlock());
+    }
+
+    @EventHandler
+    public void onGameStateChange(GameStateChangedEvent event) {
+        if(!event.getNewGameState().isGameStateListener(this)) return;
+
+        GameGroup gameGroup = event.getGameGroup();
+        for(User user : gameGroup.getUsers()) {
+            user.setScoreboardHandler(new CWScoreboardHandler(user));
+            user.updateScoreboard();
+        }
     }
 
     private GoldConfig getGoldConfig(ConfigurationSection config) {

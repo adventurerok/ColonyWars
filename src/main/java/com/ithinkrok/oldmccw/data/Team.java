@@ -1,7 +1,6 @@
 package com.ithinkrok.oldmccw.data;
 
 import com.ithinkrok.oldmccw.WarsPlugin;
-import com.ithinkrok.minigames.TeamColor;
 import com.ithinkrok.oldmccw.strings.Buildings;
 import com.ithinkrok.oldmccw.util.building.CannonTowerHandler;
 import org.bukkit.ChatColor;

@@ -1,6 +1,6 @@
 package com.ithinkrok.oldmccw.enumeration;
 
-import com.ithinkrok.minigames.TeamColor;
+import com.ithinkrok.oldmccw.data.TeamColor;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

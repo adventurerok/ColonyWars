@@ -7,7 +7,7 @@ import com.ithinkrok.oldmccw.data.Schematic;
 import com.ithinkrok.oldmccw.data.Team;
 import com.ithinkrok.oldmccw.data.User;
 import com.ithinkrok.oldmccw.enumeration.GameState;
-import com.ithinkrok.minigames.TeamColor;
+import com.ithinkrok.oldmccw.data.TeamColor;
 import com.ithinkrok.oldmccw.event.UserAttackEvent;
 import com.ithinkrok.oldmccw.event.UserAttackedEvent;
 import com.ithinkrok.oldmccw.event.UserInteractWorldEvent;

@@ -3,7 +3,7 @@ package com.ithinkrok.oldmccw.playerclass;
 import com.ithinkrok.oldmccw.WarsPlugin;
 import com.ithinkrok.oldmccw.data.User;
 import com.ithinkrok.oldmccw.enumeration.PlayerClass;
-import com.ithinkrok.minigames.TeamColor;
+import com.ithinkrok.oldmccw.data.TeamColor;
 import com.ithinkrok.oldmccw.event.UserBeginGameEvent;
 import com.ithinkrok.oldmccw.event.UserInteractEvent;
 import com.ithinkrok.oldmccw.playerclass.items.ClassItem;

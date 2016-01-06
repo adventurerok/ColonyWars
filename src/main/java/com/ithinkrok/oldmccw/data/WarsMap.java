@@ -1,7 +1,6 @@
 package com.ithinkrok.oldmccw.data;
 
 import com.ithinkrok.oldmccw.WarsPlugin;
-import com.ithinkrok.minigames.TeamColor;
 import com.ithinkrok.oldmccw.util.io.MapConfig;
 import com.ithinkrok.oldmccw.util.io.WarsConfig;
 import org.bukkit.World;

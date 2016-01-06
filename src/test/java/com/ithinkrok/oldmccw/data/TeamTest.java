@@ -1,7 +1,6 @@
 package com.ithinkrok.oldmccw.data;
 
 import com.ithinkrok.oldmccw.WarsPlugin;
-import com.ithinkrok.minigames.TeamColor;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;

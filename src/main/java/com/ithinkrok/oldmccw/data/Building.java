@@ -1,7 +1,6 @@
 package com.ithinkrok.oldmccw.data;
 
 import com.ithinkrok.oldmccw.WarsPlugin;
-import com.ithinkrok.minigames.TeamColor;
 import com.ithinkrok.minigames.util.BoundingBox;
 import de.inventivegames.hologram.Hologram;
 import de.inventivegames.hologram.HologramAPI;

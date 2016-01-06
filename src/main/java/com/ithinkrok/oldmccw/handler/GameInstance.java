@@ -5,7 +5,7 @@ import com.ithinkrok.oldmccw.data.*;
 import com.ithinkrok.oldmccw.enumeration.CountdownType;
 import com.ithinkrok.oldmccw.enumeration.GameState;
 import com.ithinkrok.oldmccw.enumeration.PlayerClass;
-import com.ithinkrok.minigames.TeamColor;
+import com.ithinkrok.oldmccw.data.TeamColor;
 import com.ithinkrok.oldmccw.event.UserBeginGameEvent;
 import com.ithinkrok.oldmccw.event.UserTeamBuildingBuiltEvent;
 import com.ithinkrok.oldmccw.event.UserUpgradeEvent;

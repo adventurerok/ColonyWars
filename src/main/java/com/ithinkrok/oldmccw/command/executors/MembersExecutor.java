@@ -4,7 +4,7 @@ import com.ithinkrok.oldmccw.command.WarsCommandExecutor;
 import com.ithinkrok.oldmccw.command.WarsCommandSender;
 import com.ithinkrok.oldmccw.data.Team;
 import com.ithinkrok.oldmccw.data.User;
-import com.ithinkrok.minigames.TeamColor;
+import com.ithinkrok.oldmccw.data.TeamColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 

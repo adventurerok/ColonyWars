@@ -1,4 +1,4 @@
-package com.ithinkrok.minigames;
+package com.ithinkrok.oldmccw.data;
 
 import com.ithinkrok.oldmccw.util.DyeToChatColorConverter;
 import org.apache.commons.lang.Validate;

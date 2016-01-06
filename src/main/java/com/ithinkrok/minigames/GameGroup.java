@@ -37,6 +37,8 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
         SharedObjectAccessor {
 
     private ConcurrentMap<UUID, User> usersInGroup = new ConcurrentHashMap<>();
+
+    private Map<String, TeamIdentifier> teamIdentifiers = new HashMap<>();
     private Map<TeamIdentifier, Team> teamsInGroup = new HashMap<>();
     private Game game;
 
@@ -95,6 +97,29 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
     @Override
     public LanguageLookup getLanguageLookup() {
         return this;
+    }
+
+    public void recreateTeamObjects() {
+        for(User user : getUsers()) {
+            user.setTeam(null);
+        }
+
+        teamsInGroup.clear();
+        for(TeamIdentifier teamIdentifier : teamIdentifiers.values()) {
+            teamsInGroup.put(teamIdentifier, createTeam(teamIdentifier));
+        }
+    }
+
+    public TeamIdentifier getTeamIdentifier(String name) {
+        return teamIdentifiers.get(name);
+    }
+
+    public Team getTeam(String name) {
+        return getTeam(getTeamIdentifier(name));
+    }
+
+    public Team getTeam(TeamIdentifier identifier) {
+        return teamsInGroup.get(identifier);
     }
 
     public void changeMap(GameMapInfo mapInfo) {

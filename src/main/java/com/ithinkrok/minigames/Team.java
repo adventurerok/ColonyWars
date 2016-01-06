@@ -11,6 +11,9 @@ import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskList;
 import com.ithinkrok.minigames.task.TaskScheduler;
 import com.ithinkrok.minigames.user.UserResolver;
+import org.bukkit.ChatColor;
+import org.bukkit.Color;
+import org.bukkit.DyeColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
 
@@ -42,6 +45,26 @@ public class Team implements Listener, Messagable, LanguageLookup, SharedObjectA
 
     public TeamIdentifier getTeamIdentifier() {
         return teamIdentifier;
+    }
+
+    public String getName() {
+        return teamIdentifier.getName();
+    }
+
+    public String getFormattedName() {
+        return teamIdentifier.getFormattedName();
+    }
+
+    public ChatColor getChatColor() {
+        return teamIdentifier.getChatColor();
+    }
+
+    public Color getArmorColor() {
+        return teamIdentifier.getArmorColor();
+    }
+
+    public DyeColor getDyeColor() {
+        return teamIdentifier.getDyeColor();
     }
 
     @Override

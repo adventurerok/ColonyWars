@@ -4,6 +4,8 @@ import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.map.MapBlockBreakNaturallyEvent;
 import com.ithinkrok.minigames.event.map.MapItemSpawnEvent;
 import com.ithinkrok.minigames.event.user.world.UserBreakBlockEvent;
+import com.ithinkrok.minigames.event.user.world.UserPickupItemEvent;
+import com.ithinkrok.minigames.metadata.Money;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import com.ithinkrok.minigames.util.TreeFeller;
 import com.ithinkrok.minigames.util.math.ExpressionCalculator;
@@ -42,11 +44,31 @@ public class GameListener implements Listener {
     }
 
     @EventHandler
+    public void onUserPickupItem(UserPickupItemEvent event) {
+        GoldConfig goldConfig = getGoldConfig(event.getUserGameGroup().getSharedObject(goldSharedConfig));
+        Material material = event.getItem().getItemStack().getType();
+
+        if(goldConfig.allowItemPickup(material)){
+            int userGold = goldConfig.getUserGold(material);
+            Money userMoney = Money.getOrCreate(event.getUser());
+            userMoney.addMoney(userGold, false);
+
+            //TODO team gold
+        } else {
+            event.setCancelled(true);
+        }
+
+
+    }
+
+    @EventHandler
     public void onItemSpawn(MapItemSpawnEvent event) {
         ConfigurationSection goldShared = event.getGameGroup().getSharedObject(goldSharedConfig);
         GoldConfig gold = getGoldConfig(goldShared);
 
-        gold.onItemSpawn(event);
+        if(!gold.allowItemPickup(event.getItem().getItemStack().getType())){
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
@@ -70,7 +92,9 @@ public class GameListener implements Listener {
 
     private static class GoldConfig {
         HashMap<Material, ItemStack> oreBlocks = new HashMap<>();
-        Set<Material> dropMaterials = new HashSet<>();
+
+        HashMap<Material, Integer> userGold = new HashMap<>();
+        HashMap<Material, Integer> teamGold = new HashMap<>();
 
         boolean treesEnabled;
         Material treeItemMaterial;
@@ -84,7 +108,6 @@ public class GameListener implements Listener {
                     Material material = Material.matchMaterial(matName);
                     ItemStack item = InventoryUtils.parseItem(ores.getString(matName));
                     oreBlocks.put(material, item);
-                    dropMaterials.add(item.getType());
                 }
             }
 
@@ -94,7 +117,6 @@ public class GameListener implements Listener {
             if (!treesEnabled) return;
 
             treeItemMaterial = Material.matchMaterial(trees.getString("item_material"));
-            dropMaterials.add(treeItemMaterial);
 
             treeItemAmount = new ExpressionCalculator(trees.getString("item_amount"));
 
@@ -118,11 +140,18 @@ public class GameListener implements Listener {
             block.getWorld().dropItemNaturally(block.getLocation().add(0.5d, 0.1d, 0.5d), drop);
         }
 
-        public void onItemSpawn(MapItemSpawnEvent event) {
-            Material mat = event.getItem().getItemStack().getType();
+        public boolean allowItemPickup(Material material) {
+            return userGold.containsKey(material) || teamGold.containsKey(material);
+        }
 
-            if(dropMaterials.contains(mat)) return;
-            event.setCancelled(true);
+        public int getUserGold(Material material) {
+            Integer result = userGold.get(material);
+            return result == null ? 0 : result;
+        }
+
+        public int getTeamGold(Material material) {
+            Integer result = teamGold.get(material);
+            return result == null ? 0 : result;
         }
     }
 }

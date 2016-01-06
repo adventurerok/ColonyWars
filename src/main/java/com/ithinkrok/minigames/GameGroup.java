@@ -32,7 +32,8 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Created by paul on 31/12/15.
  */
-public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, UserResolver, FileLoader {
+public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, UserResolver, FileLoader,
+        SharedObjectAccessor {
 
     private ConcurrentMap<UUID, User> usersInGroup = new ConcurrentHashMap<>();
     private Map<TeamColor, Team> teamsInGroup = new HashMap<>();
@@ -83,6 +84,7 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
         return currentMap;
     }
 
+    @Override
     public ConfigurationSection getSharedObject(String name) {
         ConfigurationSection result = null;
         if(currentMap != null) result = currentMap.getSharedObject(name);

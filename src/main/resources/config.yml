@@ -21,6 +21,13 @@ shared_objects:
       log_materials:
         - "LOG"
         - "LOG_2"
+    items:
+      gold_ingot:
+        user: 60
+        team: 40
+      diamond:
+        user: 1200
+        team: 800
   # Required for UserMoney.java
   user_money_metadata:
     remove_gamestate: "aftermath"

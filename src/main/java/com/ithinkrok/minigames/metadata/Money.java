@@ -1,5 +1,6 @@
 package com.ithinkrok.minigames.metadata;
 
+import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.event.user.game.UserInGameChangeEvent;
 
@@ -26,5 +27,15 @@ public abstract class Money extends UserMetadata {
     @Override
     public Class<? extends UserMetadata> getMetadataClass() {
         return Money.class;
+    }
+
+    public static Money getOrCreate(MetadataHolder<? super UserMetadata> holder) {
+        if(holder.hasMetadata(Money.class)) return holder.getMetadata(Money.class);
+
+        if(holder instanceof User) {
+            return new UserMoney((User) holder);
+        }
+
+        throw new RuntimeException("Unsupported MetadataHolder type:" + holder);
     }
 }

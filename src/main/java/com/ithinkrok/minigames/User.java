@@ -15,6 +15,7 @@ import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.Messagable;
 import com.ithinkrok.minigames.metadata.MapVote;
+import com.ithinkrok.minigames.metadata.MetadataHolder;
 import com.ithinkrok.minigames.metadata.UserMetadata;
 import com.ithinkrok.minigames.task.GameRunnable;
 import com.ithinkrok.minigames.task.GameTask;
@@ -30,6 +31,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -50,7 +52,8 @@ import java.util.*;
  * Created by paul on 31/12/15.
  */
 @SuppressWarnings("unchecked")
-public class User implements Messagable, TaskScheduler, Listener, UserResolver {
+public class User implements Messagable, TaskScheduler, Listener, UserResolver, MetadataHolder<UserMetadata>,
+        SharedObjectAccessor {
 
     private static final HashSet<Material> SEE_THROUGH = new HashSet<>();
 
@@ -123,10 +126,12 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
         gameGroup.userEvent(new UserInGameChangeEvent(this));
     }
 
+    @Override
     public <B extends UserMetadata> void setMetadata(B metadata) {
         metadataMap.put(metadata.getMetadataClass(), metadata);
     }
 
+    @Override
     public <B extends UserMetadata> B getMetadata(Class<? extends B> clazz) {
         return metadataMap.getInstance(clazz);
     }
@@ -187,7 +192,6 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
     }
 
     /**
-     *
      * @param witherAmplifier The amplifier for the effect. Level n is amplifier n-1.
      */
     public void setWitherTicks(User witherAttacker, int witherTicks, int witherAmplifier) {
@@ -208,7 +212,7 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
     }
 
     public void playSound(Location location, SoundEffect sound) {
-        if(!isPlayer()) return;
+        if (!isPlayer()) return;
 
         getPlayer().playSound(location, sound.getSound(), sound.getVolume(), sound.getPitch());
     }
@@ -278,6 +282,14 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
         });
     }
 
+    @Override
+    public GameTask doInFuture(GameRunnable task) {
+        GameTask gameTask = gameGroup.doInFuture(task);
+
+        userTaskList.addTask(gameTask);
+        return gameTask;
+    }
+
     public String getFormattedName() {
         return getName();
     }
@@ -287,7 +299,7 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
     }
 
     public void setXpLevel(int level) {
-        if(isPlayer()) getPlayer().setLevel(level);
+        if (isPlayer()) getPlayer().setLevel(level);
         else playerState.setLevel(level);
     }
 
@@ -305,14 +317,6 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
 
     public boolean hasPermission(String permission) {
         return entity.hasPermission(permission);
-    }
-
-    @Override
-    public GameTask doInFuture(GameRunnable task) {
-        GameTask gameTask = gameGroup.doInFuture(task);
-
-        userTaskList.addTask(gameTask);
-        return gameTask;
     }
 
     @Override
@@ -351,6 +355,7 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
         });
     }
 
+    @Override
     public boolean hasMetadata(Class<? extends UserMetadata> clazz) {
         return metadataMap.containsKey(clazz);
     }
@@ -360,16 +365,21 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
         return gameGroup.getLanguageLookup();
     }
 
+    @Override
+    public ConfigurationSection getSharedObject(String name) {
+        return gameGroup.getSharedObject(name);
+    }
+
     private class UserListener implements Listener {
 
         @EventHandler
         public void eventInGameChange(UserInGameChangeEvent event) {
             Iterator<UserMetadata> iterator = metadataMap.values().iterator();
 
-            while(iterator.hasNext()) {
+            while (iterator.hasNext()) {
                 UserMetadata metadata = iterator.next();
 
-                if(metadata.removeOnInGameChange(event)) iterator.remove();
+                if (metadata.removeOnInGameChange(event)) iterator.remove();
             }
         }
 
@@ -377,10 +387,10 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
         public void eventGameStateChange(GameStateChangedEvent event) {
             Iterator<UserMetadata> iterator = metadataMap.values().iterator();
 
-            while(iterator.hasNext()) {
+            while (iterator.hasNext()) {
                 UserMetadata metadata = iterator.next();
 
-                if(metadata.removeOnGameStateChange(event)) iterator.remove();
+                if (metadata.removeOnGameStateChange(event)) iterator.remove();
             }
         }
 
@@ -388,10 +398,10 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
         public void eventMapChange(MapChangedEvent event) {
             Iterator<UserMetadata> iterator = metadataMap.values().iterator();
 
-            while(iterator.hasNext()) {
+            while (iterator.hasNext()) {
                 UserMetadata metadata = iterator.next();
 
-                if(metadata.removeOnMapChange(event)) iterator.remove();
+                if (metadata.removeOnMapChange(event)) iterator.remove();
             }
         }
 
@@ -404,7 +414,7 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
 
         @EventHandler
         public void eventInventoryClose(UserInventoryCloseEvent event) {
-            if(!isViewingClickableInventory()) return;
+            if (!isViewingClickableInventory()) return;
 
             openInventory = null;
         }
@@ -413,7 +423,7 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
         public void eventInteract(UserInteractEvent event) {
             ItemStack item = getInventory().getItemInHand();
             int identifier = InventoryUtils.getIdentifier(item);
-            if(identifier < 0) return;
+            if (identifier < 0) return;
 
             CustomItem customItem = gameGroup.getCustomItem(identifier);
 
@@ -423,9 +433,9 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver {
 
         @EventHandler
         public void eventAbilityCooldown(UserAbilityCooldownEvent event) {
-            for(ItemStack item : getInventory()) {
+            for (ItemStack item : getInventory()) {
                 int identifier = InventoryUtils.getIdentifier(item);
-                if(identifier < 0) continue;
+                if (identifier < 0) continue;
 
                 CustomItem customItem = gameGroup.getCustomItem(identifier);
 

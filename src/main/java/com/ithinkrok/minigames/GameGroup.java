@@ -380,4 +380,11 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
     public int getUserCount() {
         return getUsers().size();
     }
+
+    public void setTeamIdentifiers(List<TeamIdentifier> identifiers) {
+        for(TeamIdentifier identifier : identifiers) {
+            teamIdentifiers.put(identifier.getName(), identifier);
+        }
+        recreateTeamObjects();
+    }
 }

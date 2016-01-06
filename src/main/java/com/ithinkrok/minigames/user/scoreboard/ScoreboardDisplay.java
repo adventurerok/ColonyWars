@@ -93,7 +93,7 @@ public class ScoreboardDisplay {
     public void resetAndDisplay() {
         remove();
 
-        if(scoreboard == Bukkit.getScoreboardManager().getMainScoreboard()) {
+        if(scoreboard == null || scoreboard == Bukkit.getScoreboardManager().getMainScoreboard()) {
             scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
             player.setScoreboard(scoreboard);
         }

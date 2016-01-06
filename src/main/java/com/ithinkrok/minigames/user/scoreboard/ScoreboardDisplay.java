@@ -23,8 +23,6 @@ public class ScoreboardDisplay {
     public ScoreboardDisplay(User user, Player player) {
         this.user = user;
         this.player = player;
-
-        reset();
     }
 
     private Scoreboard scoreboard;
@@ -39,6 +37,10 @@ public class ScoreboardDisplay {
         if(objective != null) objective.setDisplayName(displayName);
     }
 
+    public boolean isDisplaying() {
+        return objective != null;
+    }
+
     public void setTextLine(int line, String text) {
         if(line >= fakeTeams.size()){
             throw new RuntimeException("Wrong scoreboard mode or invalid line number: " + line);
@@ -50,6 +52,10 @@ public class ScoreboardDisplay {
 
     public void setTextLocale(int line, String locale, Object...args) {
         setTextLine(line, user.getLanguageLookup().getLocale(locale, args));
+    }
+
+    public int getTextLineCount() {
+        return fakeTeams.size();
     }
 
     public void setTextLineCount(int lineCount) {
@@ -80,10 +86,11 @@ public class ScoreboardDisplay {
     public void remove() {
         if(objective != null) {
             objective.unregister();
+            objective = null;
         }
     }
 
-    public void reset() {
+    public void resetAndDisplay() {
         remove();
 
         if(scoreboard == Bukkit.getScoreboardManager().getMainScoreboard()) {

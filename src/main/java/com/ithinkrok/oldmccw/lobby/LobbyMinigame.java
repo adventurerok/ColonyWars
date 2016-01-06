@@ -10,7 +10,7 @@ import com.ithinkrok.oldmccw.event.*;
 public interface LobbyMinigame {
 
     /**
-     * Called when the server is first started and when a game ends to reset the lobby minigame.
+     * Called when the server is first started and when a game ends to resetAndDisplay the lobby minigame.
      */
     void resetMinigame();
 

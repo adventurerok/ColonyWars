@@ -1,6 +1,5 @@
 package com.ithinkrok.minigames;
 
-import com.ithinkrok.oldmccw.data.TeamColor;
 import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
@@ -11,12 +10,12 @@ import java.util.List;
  */
 public class Team implements Listener {
 
-    private TeamColor teamColor;
+    private TeamIdentifier teamIdentifier;
     private List<User> usersInTeam = new ArrayList<>();
     private GameGroup gameGroup;
 
-    public Team(TeamColor teamColor, GameGroup gameGroup) {
-        this.teamColor = teamColor;
+    public Team(TeamIdentifier teamIdentifier, GameGroup gameGroup) {
+        this.teamIdentifier = teamIdentifier;
         this.gameGroup = gameGroup;
     }
 }

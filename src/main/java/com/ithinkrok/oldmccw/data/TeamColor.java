@@ -1,6 +1,6 @@
 package com.ithinkrok.oldmccw.data;
 
-import com.ithinkrok.oldmccw.util.DyeToChatColorConverter;
+import com.ithinkrok.minigames.util.DyeToChatColorConverter;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;

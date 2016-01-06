@@ -147,7 +147,10 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
 
     public void setScoreboardHandler(ScoreboardHandler scoreboardHandler) {
         this.scoreboardHandler = scoreboardHandler;
-        if(scoreboardHandler == null && scoreboardDisplay != null) scoreboardDisplay.remove();
+        if(scoreboardDisplay != null) {
+            if(scoreboardHandler == null) scoreboardDisplay.remove();
+            else scoreboardHandler.setupScoreboard(this, scoreboardDisplay);
+        }
     }
 
     public void updateScoreboard() {

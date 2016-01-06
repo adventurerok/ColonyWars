@@ -11,11 +11,15 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public class CWScoreboardHandler implements ScoreboardHandler {
 
+    private String displayName;
     private String userBalanceDisplay;
     private String teamBalanceDisplay;
 
     public CWScoreboardHandler(User user) {
         ConfigurationSection config = user.getSharedObject("colony_wars_scoreboard");
+
+        String displayNameLocale = config.getString("title");
+        displayName = user.getLanguageLookup().getLocale(displayNameLocale);
 
         String userBalanceLocale = config.getString("user_balance");
         userBalanceDisplay = user.getLanguageLookup().getLocale(userBalanceLocale);
@@ -29,5 +33,11 @@ public class CWScoreboardHandler implements ScoreboardHandler {
         if(!scoreboard.isDisplaying()) scoreboard.resetAndDisplay();
 
         scoreboard.setScore(userBalanceDisplay, Money.getOrCreate(user).getMoney());
+    }
+
+    @Override
+    public void setupScoreboard(User user, ScoreboardDisplay scoreboard) {
+        scoreboard.setDisplayName(displayName);
+        scoreboard.resetAndDisplay();
     }
 }

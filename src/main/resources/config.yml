@@ -37,6 +37,7 @@ shared_objects:
     new_locale: "money.balance.user.new"
   # Required for CWScoreboardHandler.java
   colony_wars_scoreboard:
+    title: "scoreboard.title"
     user_balance: "scoreboard.user_balance"
     team_balance: "scoreboard.team_balance"
 

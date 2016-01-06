@@ -8,5 +8,6 @@ import com.ithinkrok.minigames.User;
 public interface ScoreboardHandler {
 
     void updateScoreboard(User user, ScoreboardDisplay scoreboard);
+    void setupScoreboard(User user, ScoreboardDisplay scoreboard);
 
 }

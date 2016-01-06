@@ -49,6 +49,14 @@ public class Team implements Listener, Messagable, LanguageLookup, SharedObjectA
         return gameGroup.getLocale(name);
     }
 
+    void addUser(User user) {
+        usersInTeam.put(user.getUuid(), user);
+    }
+
+    void removeUser(User user) {
+        usersInTeam.remove(user.getUuid());
+    }
+
     @Override
     public boolean hasLocale(String name) {
         return gameGroup.hasLocale(name);

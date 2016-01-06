@@ -5,6 +5,7 @@ import com.google.common.collect.MutableClassToInstanceMap;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.event.user.game.UserAbilityCooldownEvent;
+import com.ithinkrok.minigames.event.user.game.UserChangeTeamEvent;
 import com.ithinkrok.minigames.event.user.game.UserInGameChangeEvent;
 import com.ithinkrok.minigames.event.user.game.UserTeleportEvent;
 import com.ithinkrok.minigames.event.user.inventory.UserInventoryClickEvent;
@@ -107,6 +108,17 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
         if(isPlayer()) {
             scoreboardDisplay = new ScoreboardDisplay(this, getPlayer());
         }
+    }
+
+    public void setTeam(Team team) {
+        Team oldTeam = this.team;
+        Team newTeam = this.team = team;
+
+        oldTeam.removeUser(this);
+        newTeam.addUser(this);
+
+        UserChangeTeamEvent event = new UserChangeTeamEvent(this, oldTeam, newTeam);
+        gameGroup.userEvent(event);
     }
 
     public Collection<Listener> getListeners() {

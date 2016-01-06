@@ -63,18 +63,18 @@ public class GameListener implements Listener {
         GoldConfig goldConfig = getGoldConfig(event.getUserGameGroup().getSharedObject(goldSharedConfig));
         Material material = event.getItem().getItemStack().getType();
 
-        if (goldConfig.allowItemPickup(material)) {
-            int userGold = goldConfig.getUserGold(material);
-            Money userMoney = Money.getOrCreate(event.getUser());
-            userMoney.addMoney(userGold, false);
+        event.setCancelled(true);
 
-            //TODO team gold
+        if (!goldConfig.allowItemPickup(material)) return;
 
-            SoundEffect sound = new SoundEffect(goldConfig.getPickupSound(), 1.0f, 0.8f + (random.nextFloat()) * 0.4f);
-            event.getUser().playSound(event.getUser().getLocation(), sound);
-        } else {
-            event.setCancelled(true);
-        }
+        int userGold = goldConfig.getUserGold(material);
+        Money userMoney = Money.getOrCreate(event.getUser());
+        userMoney.addMoney(userGold, false);
+
+        //TODO team gold
+
+        SoundEffect sound = new SoundEffect(goldConfig.getPickupSound(), 1.0f, 0.8f + (random.nextFloat()) * 0.4f);
+        event.getUser().playSound(event.getUser().getLocation(), sound);
 
 
     }
@@ -121,7 +121,7 @@ public class GameListener implements Listener {
             }
 
             ConfigurationSection items = config.getConfigurationSection("items");
-            for(String matName : items.getKeys(false)) {
+            for (String matName : items.getKeys(false)) {
                 Material material = Material.matchMaterial(matName);
                 ConfigurationSection matConfig = items.getConfigurationSection(matName);
 

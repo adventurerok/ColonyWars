@@ -22,6 +22,8 @@ import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskList;
 import com.ithinkrok.minigames.task.TaskScheduler;
 import com.ithinkrok.minigames.user.*;
+import com.ithinkrok.minigames.user.scoreboard.ScoreboardDisplay;
+import com.ithinkrok.minigames.user.scoreboard.ScoreboardHandler;
 import com.ithinkrok.minigames.util.EventExecutor;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import com.ithinkrok.minigames.util.SoundEffect;
@@ -70,6 +72,9 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
     private LivingEntity entity;
     private PlayerState playerState;
 
+    private ScoreboardDisplay scoreboardDisplay;
+    private ScoreboardHandler scoreboardHandler;
+
     private AttackerTracker fireAttacker = new AttackerTracker(this);
     private AttackerTracker witherAttacker = new AttackerTracker(this);
     private AttackerTracker lastAttacker = new AttackerTracker(this);
@@ -98,6 +103,10 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
 
         this.name = entity.getName();
         listeners.add(new UserListener());
+
+        if(isPlayer()) {
+            scoreboardDisplay = new ScoreboardDisplay(this, getPlayer());
+        }
     }
 
     public Collection<Listener> getListeners() {
@@ -134,6 +143,17 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
     @Override
     public <B extends UserMetadata> B getMetadata(Class<? extends B> clazz) {
         return metadataMap.getInstance(clazz);
+    }
+
+    public void setScoreboardHandler(ScoreboardHandler scoreboardHandler) {
+        this.scoreboardHandler = scoreboardHandler;
+        if(scoreboardHandler == null && scoreboardDisplay != null) scoreboardDisplay.remove();
+    }
+
+    public void updateScoreboard() {
+        if(scoreboardDisplay == null || scoreboardHandler == null) return;
+
+        scoreboardHandler.updateScoreboard(this, scoreboardDisplay);
     }
 
     @Override

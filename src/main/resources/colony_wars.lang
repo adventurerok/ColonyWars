@@ -13,3 +13,6 @@ money.balance.team.add=&a$%s &ewas added to your Team's Account!
 money.balance.user.new=&eYour new Balance is: &a$%s!
 money.balance.user.subtract=&c$%s &ewas deducted from your Account!
 money.balance.user.add=&a$%s &ewas added to your Account!
+
+scoreboard.user_balance=&eBalance\:
+scoreboard.team_balance=&eTeam Balance\:

@@ -9,7 +9,6 @@ import de.inventivegames.hologram.HologramAPI;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
-import org.bukkit.event.Listener;
 
 import java.text.DecimalFormat;
 import java.util.*;
@@ -53,7 +52,7 @@ public class SchematicPaster {
                     int bId = schem.getBlock(x, y, z);
                     if (bId == 0) continue;
 
-                    if (bId == options.centerBlockType.getId()) centerBlock = l;
+                    if (bId == options.getCenterBlockType().getId()) centerBlock = l;
 
                     locations.add(l);
 
@@ -71,15 +70,17 @@ public class SchematicPaster {
 
         PastedSchematic result =
                 new PastedSchematic(schemData.getName(), centerBlock, bounds, rotation, locations, oldBlocks);
-        result.addListeners(options.defaultListeners);
+        result.addListeners(options.getDefaultListeners());
 
         SchematicBuilderTask builderTask = new SchematicBuilderTask(loc, result, schem, options);
 
         if (taskScheduler != null) {
             result.setBuildTask(builderTask.schedule(taskScheduler));
         } else {
-            options.buildSpeed = -1;
+            int oldBuildSpeed = options.getBuildSpeed();
+            options.withBuildSpeed(-1);
             builderTask.run(null);
+            options.withBuildSpeed(oldBuildSpeed);
         }
 
         return result;
@@ -119,72 +120,6 @@ public class SchematicPaster {
         boolean canPaste(BoundingBox bounds);
     }
 
-    public static class SchematicOptions {
-        private Material centerBlockType;
-        private boolean progressHologram = false;
-        private int buildSpeed = 2;
-
-        private Map<Material, Material> replaceMaterials = new HashMap<>();
-        private DyeColor overrideDyeColor;
-        private List<Listener> defaultListeners = new ArrayList<>();
-
-
-        public Material getCenterBlockType() {
-            return this.centerBlockType;
-        }
-
-        public SchematicOptions withCenterBlockType(Material centerBlockType) {
-            this.centerBlockType = centerBlockType;
-            return this;
-        }
-
-        public boolean getProgressHologram() {
-            return this.progressHologram;
-        }
-
-        public SchematicOptions withProgressHologram(boolean progressHologram) {
-            this.progressHologram = progressHologram;
-            return this;
-        }
-
-        public int getBuildSpeed() {
-            return this.buildSpeed;
-        }
-
-        public SchematicOptions withBuildSpeed(int buildSpeed) {
-            this.buildSpeed = buildSpeed;
-            return this;
-        }
-
-        public Map<Material, Material> getReplaceMaterials() {
-            return this.replaceMaterials;
-        }
-
-        public SchematicOptions withReplaceMaterials(Map<Material, Material> replaceMaterials) {
-            this.replaceMaterials.putAll(replaceMaterials);
-            return this;
-        }
-
-        public SchematicOptions withReplaceMaterial(Material from, Material to) {
-            this.replaceMaterials.put(from, to);
-            return this;
-        }
-
-        public DyeColor getOverrideDyeColor() {
-            return this.overrideDyeColor;
-        }
-
-        public SchematicOptions withOverrideDyeColor(DyeColor overrideDyeColor) {
-            this.overrideDyeColor = overrideDyeColor;
-            return this;
-        }
-
-        public SchematicOptions withDefaultListener(Listener defaultListener) {
-            this.defaultListeners.add(defaultListener);
-            return this;
-        }
-    }
-
     private static class SchematicBuilderTask implements GameRunnable {
 
         int index = 0;
@@ -204,7 +139,7 @@ public class SchematicPaster {
             this.schem = schem;
             this.options = options;
 
-            if (options.progressHologram) {
+            if (options.getProgressHologram()) {
                 Location holoLoc;
                 if (building.getCenterBlock() != null)
                     holoLoc = building.getCenterBlock().clone().add(0.5d, 1.5d, 0.5d);
@@ -243,13 +178,13 @@ public class SchematicPaster {
                 Block block = loc.getBlock();
 
 
-                Material replaceWith = options.replaceMaterials.get(mat);
+                Material replaceWith = options.getReplaceMaterials().get(mat);
                 if (replaceWith != null) mat = replaceWith;
 
-                if (options.overrideDyeColor != null) {
+                if (options.getOverrideDyeColor() != null) {
                     if (mat == Material.WOOL || mat == Material.STAINED_CLAY || mat == Material.STAINED_GLASS ||
                             mat == Material.STAINED_GLASS_PANE) {
-                        bData = options.overrideDyeColor.getWoolData();
+                        bData = options.getOverrideDyeColor().getWoolData();
                     }
                 }
 
@@ -258,9 +193,9 @@ public class SchematicPaster {
                 ++index;
 
                 ++count;
-                if (options.buildSpeed != -1 && count > options.buildSpeed) {
+                if (options.getBuildSpeed() != -1 && count > options.getBuildSpeed()) {
                     loc.getWorld().playEffect(loc, Effect.STEP_SOUND, mat);
-                    if (options.progressHologram) {
+                    if (options.getProgressHologram()) {
                         hologram.setText(
                                 "Building: " + percentFormat.format((double) index / (double) locations.size()));
                     }
@@ -271,7 +206,7 @@ public class SchematicPaster {
             building.setBuildTask(null);
             if (task != null) task.finish();
 
-            if (options.progressHologram) {
+            if (options.getProgressHologram()) {
                 HologramAPI.removeHologram(hologram);
                 building.removeHologram(hologram);
             }

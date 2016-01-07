@@ -62,6 +62,8 @@ shared_objects:
     title: "scoreboard.title"
     user_balance: "scoreboard.user_balance"
     team_balance: "scoreboard.team_balance"
+  schematic_options:
+
 
 game_states:
   lobby:

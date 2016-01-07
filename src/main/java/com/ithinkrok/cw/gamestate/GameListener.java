@@ -15,6 +15,7 @@ import com.ithinkrok.minigames.event.user.world.UserPlaceBlockEvent;
 import com.ithinkrok.minigames.metadata.Money;
 import com.ithinkrok.minigames.schematic.Facing;
 import com.ithinkrok.minigames.schematic.Schematic;
+import com.ithinkrok.minigames.schematic.SchematicOptions;
 import com.ithinkrok.minigames.schematic.SchematicPaster;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import com.ithinkrok.minigames.util.SoundEffect;
@@ -121,18 +122,22 @@ public class GameListener implements Listener {
     public void onUserPlaceBlock(UserPlaceBlockEvent event) {
         if (event.getBlock().getType() != Material.LAPIS_ORE) return;
 
+        event.getBlock().setType(Material.AIR);
+
         int rotation = Facing.getFacing(event.getUser().getLocation().getYaw());
 
-        SchematicPaster.SchematicOptions options =
+        SchematicOptions options =
                 createSchematicOptions(event.getUserGameGroup(), event.getUser().getTeamIdentifier());
 
         Schematic schem = event.getUserGameGroup().getSchematic("base");
         SchematicPaster.pasteSchematic(schem, event.getBlock().getLocation(), bounds -> true, name -> null, rotation,
                 options);
+
+
     }
 
-    public SchematicPaster.SchematicOptions createSchematicOptions(GameGroup gameGroup, TeamIdentifier team) {
-        SchematicPaster.SchematicOptions options = new SchematicPaster.SchematicOptions();
+    public SchematicOptions createSchematicOptions(GameGroup gameGroup, TeamIdentifier team) {
+        SchematicOptions options = new SchematicOptions();
 
         options.withBuildSpeed(2).withCenterBlockType(Material.OBSIDIAN).withProgressHologram(true);
         options.withOverrideDyeColor(team.getDyeColor());

@@ -1,5 +1,7 @@
 package com.ithinkrok.minigames;
 
+import com.google.common.collect.ClassToInstanceMap;
+import com.google.common.collect.MutableClassToInstanceMap;
 import com.ithinkrok.minigames.event.game.CountdownFinishedEvent;
 import com.ithinkrok.minigames.event.game.GameEvent;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
@@ -13,6 +15,8 @@ import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.Messagable;
 import com.ithinkrok.minigames.map.GameMap;
 import com.ithinkrok.minigames.map.GameMapInfo;
+import com.ithinkrok.minigames.metadata.Metadata;
+import com.ithinkrok.minigames.metadata.MetadataHolder;
 import com.ithinkrok.minigames.schematic.Schematic;
 import com.ithinkrok.minigames.task.GameRunnable;
 import com.ithinkrok.minigames.task.GameTask;
@@ -36,7 +40,7 @@ import java.util.concurrent.ConcurrentMap;
  * Created by paul on 31/12/15.
  */
 public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, UserResolver, FileLoader,
-        SharedObjectAccessor {
+        SharedObjectAccessor, MetadataHolder<Metadata> {
 
     private ConcurrentMap<UUID, User> usersInGroup = new ConcurrentHashMap<>();
 
@@ -54,6 +58,8 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
     private HashMap<String, Listener> defaultListeners = new HashMap<>();
 
     private List<Listener> defaultAndMapListeners = new ArrayList<>();
+
+    private ClassToInstanceMap<Metadata> metadataMap = MutableClassToInstanceMap.create();
 
     private Countdown countdown;
 
@@ -398,5 +404,20 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
             teamIdentifiers.put(identifier.getName(), identifier);
         }
         recreateTeamObjects();
+    }
+
+    @Override
+    public <B extends Metadata> B getMetadata(Class<? extends B> clazz) {
+        return metadataMap.getInstance(clazz);
+    }
+
+    @Override
+    public <B extends Metadata> void setMetadata(B metadata) {
+        metadataMap.put(metadata.getMetadataClass(), metadata);
+    }
+
+    @Override
+    public boolean hasMetadata(Class<? extends Metadata> clazz) {
+        return metadataMap.containsKey(clazz);
     }
 }

@@ -1,4 +1,4 @@
-package com.ithinkrok.oldmccw.util.building;
+package com.ithinkrok.minigames.schematic;
 
 /**
  * Created by paul on 07/11/15.

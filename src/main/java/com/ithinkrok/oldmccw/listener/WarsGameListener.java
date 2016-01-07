@@ -18,7 +18,7 @@ import com.ithinkrok.oldmccw.strings.Buildings;
 import com.ithinkrok.oldmccw.util.disguisecraft.Disguises;
 import com.ithinkrok.oldmccw.util.EntityUtils;
 import com.ithinkrok.oldmccw.util.TreeFeller;
-import com.ithinkrok.oldmccw.util.building.Facing;
+import com.ithinkrok.minigames.schematic.Facing;
 import com.ithinkrok.oldmccw.util.building.SchematicBuilder;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;

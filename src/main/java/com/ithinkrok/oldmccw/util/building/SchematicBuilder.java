@@ -1,5 +1,7 @@
 package com.ithinkrok.oldmccw.util.building;
 
+import com.ithinkrok.minigames.schematic.Facing;
+import com.ithinkrok.minigames.schematic.SchematicPaster;
 import com.ithinkrok.oldmccw.WarsPlugin;
 import com.ithinkrok.oldmccw.data.Building;
 import com.ithinkrok.oldmccw.data.Schematic;
@@ -105,32 +107,7 @@ public class SchematicBuilder {
     }
 
     private static byte rotateData(Material type, int rotation, byte data) {
-        switch (type) {
-            case ACACIA_STAIRS:
-            case BIRCH_WOOD_STAIRS:
-            case BRICK_STAIRS:
-            case COBBLESTONE_STAIRS:
-            case DARK_OAK_STAIRS:
-            case JUNGLE_WOOD_STAIRS:
-            case NETHER_BRICK_STAIRS:
-            case QUARTZ_STAIRS:
-            case RED_SANDSTONE_STAIRS:
-            case SANDSTONE_STAIRS:
-            case SMOOTH_STAIRS:
-            case SPRUCE_WOOD_STAIRS:
-            case WOOD_STAIRS:
-                return (byte) ((data & 0x4) | Facing.rotateStairs(data & 3, rotation));
-            case LADDER:
-            case CHEST:
-            case TRAPPED_CHEST:
-            case FURNACE:
-                return (byte) Facing.rotateLadderFurnaceChest(data, rotation);
-            case LOG:
-            case LOG_2:
-                return (byte) ((data & 3) | Facing.rotateLogs(data & 12, rotation));
-            default:
-                return data;
-        }
+        return SchematicPaster.rotateData(type, rotation, data);
 
     }
 

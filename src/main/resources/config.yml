@@ -18,6 +18,9 @@ team_identifiers:
   yellow:
     dye_color: YELLOW
 
+kits:
+#TODO kits and KitChangeEvent
+
 schematics:
   base:
     file: "schematics/mccw_base.schematic"

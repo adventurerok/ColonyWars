@@ -75,6 +75,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
     private Map<String, GameMapInfo> maps = new HashMap<>();
     private Map<String, Schematic> schematicMap = new HashMap<>();
     private Map<String, ConfigurationSection> sharedObjects = new HashMap<>();
+    private Map<String, Kit> kitMap = new HashMap<>();
     private List<TeamIdentifier> teamIdentifiers = new ArrayList<>();
     private String startMapName;
 
@@ -145,6 +146,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
         reloadTeamIdentifiers();
         reloadGameStates();
+        reloadKits();
         reloadMaps();
 
         sharedObjects.clear();
@@ -183,6 +185,8 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
     }
 
     private void reloadGameStates() {
+        gameStates.clear();
+
         ConfigurationSection gameStatesConfig = config.getConfigurationSection("game_states");
 
         for (String name : gameStatesConfig.getKeys(false)) {
@@ -219,6 +223,40 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         //Ensure the start game state is the first in the list
         gameStates.remove(start);
         gameStates.add(0, start);
+    }
+
+
+
+    private void reloadKits() {
+        kitMap.clear();
+
+        ConfigurationSection kitsConfig = config.getConfigurationSection("kits");
+
+        for (String name : kitsConfig.getKeys(false)) {
+            ConfigurationSection gameStateConfig = kitsConfig.getConfigurationSection(name);
+            List<Listener> listeners = new ArrayList<>();
+
+            String formattedName = gameStateConfig.getString("formatted_name", null);
+
+            ConfigurationSection listenersConfig = gameStateConfig.getConfigurationSection("listeners");
+
+            for (String listenerName : listenersConfig.getKeys(false)) {
+                ConfigurationSection listenerConfig = listenersConfig.getConfigurationSection(listenerName);
+
+                try {
+                    listeners.add(ListenerLoader.loadListener(this, listenerConfig));
+                } catch (Exception e) {
+                    System.out.println("Failed to create listener: " + listenerName + " for kit: " + name);
+                    e.printStackTrace();
+                }
+            }
+            kitMap.put(name, new Kit(name, formattedName, listeners));
+        }
+
+    }
+
+    public Kit getKit(String name) {
+        return kitMap.get(name);
     }
 
 

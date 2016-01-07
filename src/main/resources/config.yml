@@ -63,7 +63,12 @@ shared_objects:
     user_balance: "scoreboard.user_balance"
     team_balance: "scoreboard.team_balance"
   schematic_options:
-
+    progress_hologram: true
+    build_speed: 2
+    center_block_material: "OBSIDIAN"
+    replace_materials:
+      BARRIER: "AIR"
+      DIAMOND_ORE: "GOLD_ORE"
 
 game_states:
   lobby:
@@ -91,6 +96,7 @@ game_states:
         class: "com.ithinkrok.cw.gamestate.GameListener"
         config:
           gold_shared_object: "gold_config"
+          schematic_options_shared_object: "schematic_options"
 
 
 start_game_state: "lobby"

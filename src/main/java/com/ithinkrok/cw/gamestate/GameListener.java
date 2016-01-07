@@ -42,6 +42,7 @@ public class GameListener implements Listener {
     private Random random = new Random();
 
     private String goldSharedConfig;
+    private String schematicSharedConfig;
     private WeakHashMap<ConfigurationSection, GoldConfig> goldConfigMap = new WeakHashMap<>();
 
 
@@ -50,6 +51,7 @@ public class GameListener implements Listener {
         ConfigurationSection config = event.getConfig();
 
         goldSharedConfig = config.getString("gold_shared_object");
+        schematicSharedConfig = config.getString("schematic_options_shared_object");
     }
 
     @EventHandler
@@ -137,12 +139,8 @@ public class GameListener implements Listener {
     }
 
     public SchematicOptions createSchematicOptions(GameGroup gameGroup, TeamIdentifier team) {
-        SchematicOptions options = new SchematicOptions();
-
-        options.withBuildSpeed(2).withCenterBlockType(Material.OBSIDIAN).withProgressHologram(true);
+        SchematicOptions options = new SchematicOptions(gameGroup.getSharedObject(schematicSharedConfig));
         options.withOverrideDyeColor(team.getDyeColor());
-        options.withReplaceMaterial(Material.BARRIER, Material.AIR);
-        options.withReplaceMaterial(Material.DIAMOND_ORE, Material.GOLD_ORE);
 
         //TODO GameGroup listeners
 

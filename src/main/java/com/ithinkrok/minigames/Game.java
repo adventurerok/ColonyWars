@@ -17,6 +17,7 @@ import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.MultipleLanguageLookup;
 import com.ithinkrok.minigames.map.GameMap;
 import com.ithinkrok.minigames.map.GameMapInfo;
+import com.ithinkrok.minigames.schematic.Schematic;
 import com.ithinkrok.minigames.task.GameRunnable;
 import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskScheduler;
@@ -72,6 +73,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
     private WeakHashMap<String, GameGroup> mapToGameGroup = new WeakHashMap<>();
     private List<GameState> gameStates = new ArrayList<>();
     private Map<String, GameMapInfo> maps = new HashMap<>();
+    private Map<String, Schematic> schematicMap = new HashMap<>();
     private Map<String, ConfigurationSection> sharedObjects = new HashMap<>();
     private List<TeamIdentifier> teamIdentifiers = new ArrayList<>();
     private String startMapName;
@@ -107,6 +109,11 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
     @Override
     public void addSharedObject(String name, ConfigurationSection config) {
         sharedObjects.put(name, config);
+    }
+
+    @Override
+    public void addSchematic(Schematic schematic) {
+        schematicMap.put(schematic.getName(), schematic);
     }
 
     @Override
@@ -153,7 +160,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
         ConfigurationSection teamConfigs = config.getConfigurationSection("team_identifiers");
 
-        for(String name : teamConfigs.getKeys(false)) {
+        for (String name : teamConfigs.getKeys(false)) {
             ConfigurationSection teamConfig = teamConfigs.getConfigurationSection(name);
 
             DyeColor dyeColor = DyeColor.valueOf(teamConfig.getString("dye_color").toUpperCase());
@@ -162,12 +169,12 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
             String armorColorString = teamConfig.getString("armor_color", null);
             Color armorColor = null;
-            if(armorColorString != null){
+            if (armorColorString != null) {
                 armorColor = Color.fromRGB(Integer.parseInt(armorColorString.replace("#", "")));
             }
             String chatColorString = teamConfig.getString("chat_color", null);
             ChatColor chatColor = null;
-            if(chatColorString != null) {
+            if (chatColorString != null) {
                 chatColor = ChatColor.valueOf(chatColorString);
             }
 
@@ -234,18 +241,26 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         startMapName = config.getString("start_map");
     }
 
-    public ConfigurationSection getSharedObject(String name) {
-        return sharedObjects.get(name);
-    }
-
-
     private void loadMapInfo(String mapName) {
         maps.put(mapName, new GameMapInfo(this, mapName));
+    }
+
+    public ConfigurationSection getSharedObject(String name) {
+        return sharedObjects.get(name);
     }
 
     @Override
     public LangFile loadLangFile(String path) {
         return new LangFile(ResourceHandler.getPropertiesResource(plugin, path));
+    }
+
+    @Override
+    public File getDataFolder() {
+        return plugin.getDataFolder();
+    }
+
+    public Schematic getSchematic(String name) {
+        return schematicMap.get(name);
     }
 
     public GameMapInfo getStartMapInfo() {

@@ -2,6 +2,7 @@ package com.ithinkrok.minigames.util.io;
 
 import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.lang.LanguageLookup;
+import com.ithinkrok.minigames.schematic.Schematic;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
 
@@ -19,6 +20,8 @@ public interface ConfigHolder {
     void addLanguageLookup(LanguageLookup languageLookup);
 
     void addSharedObject(String name, ConfigurationSection config);
+
+    void addSchematic(Schematic schematic);
 
     //TODO Add ClickableInventories/ClickableItems in future
 }

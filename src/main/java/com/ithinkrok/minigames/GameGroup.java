@@ -13,6 +13,7 @@ import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.Messagable;
 import com.ithinkrok.minigames.map.GameMap;
 import com.ithinkrok.minigames.map.GameMapInfo;
+import com.ithinkrok.minigames.schematic.Schematic;
 import com.ithinkrok.minigames.task.GameRunnable;
 import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskList;
@@ -26,6 +27,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 
+import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -195,6 +197,11 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
         return game.loadLangFile(path);
     }
 
+    @Override
+    public File getDataFolder() {
+        return game.getDataFolder();
+    }
+
     public void changeGameState(String gameStateName) {
         GameState gameState = gameStates.get(gameStateName);
         if (gameState == null) throw new IllegalArgumentException("Unknown game state name: " + gameStateName);
@@ -245,6 +252,12 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
         CustomItem item = null;
         if(currentMap != null) item = currentMap.getCustomItem(identifier);
         return item != null ? item : game.getCustomItem(identifier);
+    }
+
+    public Schematic getSchematic(String name) {
+        Schematic schem = null;
+        if(currentMap != null) schem = currentMap.getSchematic(name);
+        return schem != null ? schem : game.getSchematic(name);
     }
 
     public void gameEvent(GameEvent event) {

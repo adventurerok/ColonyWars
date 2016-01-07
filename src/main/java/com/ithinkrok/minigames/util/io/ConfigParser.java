@@ -1,6 +1,7 @@
 package com.ithinkrok.minigames.util.io;
 
 import com.ithinkrok.minigames.item.CustomItem;
+import com.ithinkrok.minigames.schematic.Schematic;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
 
@@ -38,18 +39,28 @@ public class ConfigParser {
         if (config.contains("lang_files")) loadLangFiles(config.getStringList("lang_files"));
         if (config.contains("custom_items")) loadCustomItems(config.getConfigurationSection("custom_items"));
         if (config.contains("listeners")) loadListeners(config.getConfigurationSection("listeners"));
-        if(config.contains("shared_objects")) loadSharedObjects(config.getConfigurationSection("shared_objects"));
+        if(config.contains("schematics")) loadSchematics(config.getConfigurationSection("schematics"));
+        if (config.contains("shared_objects")) loadSharedObjects(config.getConfigurationSection("shared_objects"));
         if (config.contains("additional_configs")) loadAdditionalConfigs(config.getStringList("additional_configs"));
     }
 
-    private void loadSharedObjects(ConfigurationSection config) {
+    private void loadSchematics(ConfigurationSection config) {
         for(String name : config.getKeys(false)) {
+            ConfigurationSection schemConfig = config.getConfigurationSection(name);
+            Schematic schem = new Schematic(name, loader.getDataFolder(), schemConfig);
+
+            holder.addSchematic(schem);
+        }
+    }
+
+    private void loadSharedObjects(ConfigurationSection config) {
+        for (String name : config.getKeys(false)) {
             holder.addSharedObject(name, config.getConfigurationSection(name));
         }
     }
 
     private void loadListeners(ConfigurationSection config) {
-        for(String name : config.getKeys(false)) {
+        for (String name : config.getKeys(false)) {
             ConfigurationSection listenerConfig = config.getConfigurationSection(name);
 
             try {

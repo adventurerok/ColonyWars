@@ -6,6 +6,7 @@ import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.item.IdentifierMap;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.MultipleLanguageLookup;
+import com.ithinkrok.minigames.schematic.Schematic;
 import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskList;
 import com.ithinkrok.minigames.util.io.ConfigHolder;
@@ -36,6 +37,7 @@ public class GameMap implements LanguageLookup, ConfigHolder {
     private MultipleLanguageLookup languageLookup = new MultipleLanguageLookup();
     private List<Listener> listeners = new ArrayList<>();
     private Map<String, Listener> listenerMap = new HashMap<>();
+    private Map<String, Schematic> schematicMap = new HashMap<>();
 
     private TaskList mapTaskList = new TaskList();
     private IdentifierMap<CustomItem> customItemIdentifierMap = new IdentifierMap<>();
@@ -174,5 +176,14 @@ public class GameMap implements LanguageLookup, ConfigHolder {
     @Override
     public void addSharedObject(String name, ConfigurationSection config) {
         sharedObjects.put(name, config);
+    }
+
+    @Override
+    public void addSchematic(Schematic schematic) {
+        schematicMap.put(schematic.getName(), schematic);
+    }
+
+    public Schematic getSchematic(String name) {
+        return schematicMap.get(name);
     }
 }

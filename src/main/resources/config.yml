@@ -7,6 +7,7 @@ lang_files:
   - "lang/weapon_modifier.lang"
   - "lang/items.lang"
 
+# Specifies identifiers for teams to be created
 team_identifiers:
   red:
     dye_color: RED
@@ -16,6 +17,9 @@ team_identifiers:
     dye_color: GREEN
   yellow:
     dye_color: YELLOW
+
+schematics:
+
 
 # Specifies default shared objects. Some shared objects are required by certain Java Classes used in the game.
 shared_objects:

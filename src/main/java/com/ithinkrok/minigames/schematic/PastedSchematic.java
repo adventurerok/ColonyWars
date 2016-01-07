@@ -22,7 +22,11 @@ import java.util.Random;
  */
 public class PastedSchematic implements SchematicPaster.BoundsChecker {
 
+    private static long nextIdentifier = 0;
+
     private static Random random = new Random();
+
+    private final long identifier = nextIdentifier++;
 
     private String name;
     private List<Location> buildingBlocks;
@@ -134,5 +138,33 @@ public class PastedSchematic implements SchematicPaster.BoundsChecker {
 
     public void setBuildTask(GameTask buildTask) {
         this.buildTask = buildTask;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PastedSchematic that = (PastedSchematic) o;
+
+        if (identifier != that.identifier) return false;
+        return name.equals(that.name);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (identifier ^ (identifier >>> 32));
+        result = 31 * result + name.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "PastedSchematic{" +
+                "name='" + name + '\'' +
+                ", identifier=" + identifier +
+                ", finished=" + finished +
+                '}';
     }
 }

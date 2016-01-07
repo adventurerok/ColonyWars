@@ -9,6 +9,7 @@ import de.inventivegames.hologram.HologramAPI;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.event.Listener;
 
 import java.text.DecimalFormat;
 import java.util.*;
@@ -31,6 +32,7 @@ public class SchematicPaster {
         
         private Map<Material, Material> replaceMaterials = new HashMap<>();
         private DyeColor overrideDyeColor;
+        private List<Listener> defaultListeners = new ArrayList<>();
 
 
         public Material getCenterBlockType() {
@@ -80,6 +82,11 @@ public class SchematicPaster {
 
         public SchematicOptions withOverrideDyeColor(DyeColor overrideDyeColor) {
             this.overrideDyeColor = overrideDyeColor;
+            return this;
+        }
+
+        public SchematicOptions withDefaultListener(Listener defaultListener) {
+            this.defaultListeners.add(defaultListener);
             return this;
         }
     }
@@ -133,6 +140,7 @@ public class SchematicPaster {
 
         PastedSchematic result = new PastedSchematic(schemData.getName(), centerBlock, bounds, rotation, locations,
                 oldBlocks);
+        result.addListeners(options.defaultListeners);
 
         SchematicBuilderTask builderTask = new SchematicBuilderTask(loc, result, schem, options);
 
@@ -272,8 +280,7 @@ public class SchematicPaster {
                 building.getCenterBlock().getWorld().playSound(building.getCenterBlock(), Sound.LEVEL_UP, 1.0f, 1.0f);
             }
 
-            building.setFinished(true);
-            //TODO plugin.getGameInstance().finishBuilding(building);
+            building.setFinished();
 
             building = null;
         }

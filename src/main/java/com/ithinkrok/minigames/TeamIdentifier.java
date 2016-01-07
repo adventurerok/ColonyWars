@@ -38,7 +38,7 @@ public class TeamIdentifier {
         this.armorColor = (armorColor != null ? armorColor : dyeColor.getColor());
         this.chatColor = (chatColor != null ? chatColor : DyeToChatColorConverter.convert(dyeColor));
 
-        this.formattedName = (formattedName != null ? formattedName : chatColor + WordUtils.capitalizeFully(name));
+        this.formattedName = (formattedName != null ? formattedName : this.chatColor + WordUtils.capitalizeFully(name));
     }
 
     public ChatColor getChatColor() {

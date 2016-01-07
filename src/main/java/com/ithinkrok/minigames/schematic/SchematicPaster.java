@@ -21,6 +21,100 @@ public class SchematicPaster {
 
     private static final DecimalFormat percentFormat = new DecimalFormat("00%");
 
+    public static PastedSchematic pasteSchematic(Schematic schemData, Location loc, BoundsChecker boundsChecker,
+                                                 SchematicResolver schematicResolver, int rotation,
+                                                 SchematicOptions options) {
+        return buildSchematic(schemData, loc, boundsChecker, null, schematicResolver, rotation, options);
+    }
+
+    public static PastedSchematic buildSchematic(Schematic schemData, Location loc, BoundsChecker boundsChecker,
+                                                 TaskScheduler taskScheduler, SchematicResolver schematicResolver, int rotation,
+                                                 SchematicOptions options) {
+        SchematicRotation schem = schemData.getSchematicRotation(rotation);
+
+        BoundingBox bounds = schem.calcBounds(schematicResolver, loc);
+
+        if (!boundsChecker.canPaste(bounds)) return null;
+
+        List<Location> locations = new ArrayList<>();
+        Location centerBlock = null;
+        HashMap<Location, BlockState> oldBlocks = new HashMap<>();
+
+        BlockState oldState;
+
+        for (int x = 0; x < schem.getWidth(); ++x) {
+            for (int y = 0; y < schem.getHeight(); ++y) {
+                for (int z = 0; z < schem.getLength(); ++z) {
+                    Location l = new Location(loc.getWorld(), x + loc.getX() + schem.getOffsetX(),
+                            y + loc.getY() + schem.getOffsetY(), z + loc.getZ() + schem.getOffsetZ());
+
+                    oldState = l.getBlock().getState();
+
+                    int bId = schem.getBlock(x, y, z);
+                    if (bId == 0) continue;
+
+                    if (bId == options.centerBlockType.getId()) centerBlock = l;
+
+                    locations.add(l);
+
+                    oldBlocks.put(l, oldState);
+                }
+            }
+        }
+
+        Collections.sort(locations, (o1, o2) -> {
+            if (o1.getY() != o2.getY()) return Double.compare(o1.getY(), o2.getY());
+            if (o1.getX() != o2.getX()) return Double.compare(o1.getX(), o2.getX());
+
+            return Double.compare(o1.getZ(), o2.getZ());
+        });
+
+        PastedSchematic result =
+                new PastedSchematic(schemData.getName(), centerBlock, bounds, rotation, locations, oldBlocks);
+        result.addListeners(options.defaultListeners);
+
+        SchematicBuilderTask builderTask = new SchematicBuilderTask(loc, result, schem, options);
+
+        if (taskScheduler != null) {
+            result.setBuildTask(builderTask.schedule(taskScheduler));
+        } else {
+            options.buildSpeed = -1;
+            builderTask.run(null);
+        }
+
+        return result;
+    }
+
+    public static byte rotateData(Material type, int rotation, byte data) {
+        switch (type) {
+            case ACACIA_STAIRS:
+            case BIRCH_WOOD_STAIRS:
+            case BRICK_STAIRS:
+            case COBBLESTONE_STAIRS:
+            case DARK_OAK_STAIRS:
+            case JUNGLE_WOOD_STAIRS:
+            case NETHER_BRICK_STAIRS:
+            case QUARTZ_STAIRS:
+            case RED_SANDSTONE_STAIRS:
+            case SANDSTONE_STAIRS:
+            case SMOOTH_STAIRS:
+            case SPRUCE_WOOD_STAIRS:
+            case WOOD_STAIRS:
+                return (byte) ((data & 0x4) | Facing.rotateStairs(data & 3, rotation));
+            case LADDER:
+            case CHEST:
+            case TRAPPED_CHEST:
+            case FURNACE:
+                return (byte) Facing.rotateLadderFurnaceChest(data, rotation);
+            case LOG:
+            case LOG_2:
+                return (byte) ((data & 3) | Facing.rotateLogs(data & 12, rotation));
+            default:
+                return data;
+        }
+
+    }
+
     public interface BoundsChecker {
         boolean canPaste(BoundingBox bounds);
     }
@@ -29,7 +123,7 @@ public class SchematicPaster {
         private Material centerBlockType;
         private boolean progressHologram = false;
         private int buildSpeed = 2;
-        
+
         private Map<Material, Material> replaceMaterials = new HashMap<>();
         private DyeColor overrideDyeColor;
         private List<Listener> defaultListeners = new ArrayList<>();
@@ -91,99 +185,6 @@ public class SchematicPaster {
         }
     }
 
-    public static PastedSchematic pasteSchematic(Schematic schemData, Location loc, BoundsChecker boundsChecker,
-                                         SchematicResolver schematicResolver, int rotation, SchematicOptions options) {
-        return doSchematic(schemData, loc, boundsChecker, schematicResolver, rotation, options, null);
-    }
-
-    private static PastedSchematic doSchematic(Schematic schemData, Location loc, BoundsChecker boundsChecker, SchematicResolver
-            schematicResolver, int rotation, SchematicOptions options,
-                                               TaskScheduler taskScheduler) {
-        SchematicRotation schem = schemData.getSchematicRotation(rotation);
-
-        BoundingBox bounds = schem.calcBounds(schematicResolver, loc);
-
-        if(!boundsChecker.canPaste(bounds)) return null;
-
-        List<Location> locations = new ArrayList<>();
-        Location centerBlock = null;
-        HashMap<Location, BlockState> oldBlocks = new HashMap<>();
-
-        BlockState oldState;
-
-        for (int x = 0; x < schem.getWidth(); ++x) {
-            for (int y = 0; y < schem.getHeight(); ++y) {
-                for (int z = 0; z < schem.getLength(); ++z) {
-                    Location l = new Location(loc.getWorld(), x + loc.getX() + schem.getOffsetX(),
-                            y + loc.getY() + schem.getOffsetY(), z + loc.getZ() + schem.getOffsetZ());
-
-                    oldState = l.getBlock().getState();
-
-                    int bId = schem.getBlock(x, y, z);
-                    if (bId == 0) continue;
-
-                    if (bId == options.centerBlockType.getId()) centerBlock = l;
-
-                    locations.add(l);
-
-                    oldBlocks.put(l, oldState);
-                }
-            }
-        }
-
-        Collections.sort(locations, (o1, o2) -> {
-            if (o1.getY() != o2.getY()) return Double.compare(o1.getY(), o2.getY());
-            if (o1.getX() != o2.getX()) return Double.compare(o1.getX(), o2.getX());
-
-            return Double.compare(o1.getZ(), o2.getZ());
-        });
-
-        PastedSchematic result = new PastedSchematic(schemData.getName(), centerBlock, bounds, rotation, locations,
-                oldBlocks);
-        result.addListeners(options.defaultListeners);
-
-        SchematicBuilderTask builderTask = new SchematicBuilderTask(loc, result, schem, options);
-
-        if(taskScheduler != null) {
-            result.setBuildTask(builderTask.schedule(taskScheduler));
-        } else {
-            options.buildSpeed = -1;
-            builderTask.run(null);
-        }
-
-        return result;
-    }
-
-    public static byte rotateData(Material type, int rotation, byte data) {
-        switch (type) {
-            case ACACIA_STAIRS:
-            case BIRCH_WOOD_STAIRS:
-            case BRICK_STAIRS:
-            case COBBLESTONE_STAIRS:
-            case DARK_OAK_STAIRS:
-            case JUNGLE_WOOD_STAIRS:
-            case NETHER_BRICK_STAIRS:
-            case QUARTZ_STAIRS:
-            case RED_SANDSTONE_STAIRS:
-            case SANDSTONE_STAIRS:
-            case SMOOTH_STAIRS:
-            case SPRUCE_WOOD_STAIRS:
-            case WOOD_STAIRS:
-                return (byte) ((data & 0x4) | Facing.rotateStairs(data & 3, rotation));
-            case LADDER:
-            case CHEST:
-            case TRAPPED_CHEST:
-            case FURNACE:
-                return (byte) Facing.rotateLadderFurnaceChest(data, rotation);
-            case LOG:
-            case LOG_2:
-                return (byte) ((data & 3) | Facing.rotateLogs(data & 12, rotation));
-            default:
-                return data;
-        }
-
-    }
-
     private static class SchematicBuilderTask implements GameRunnable {
 
         int index = 0;
@@ -206,9 +207,10 @@ public class SchematicPaster {
 
             this.buildSpeed = options.buildSpeed;
 
-            if(options.progressHologram) {
+            if (options.progressHologram) {
                 Location holoLoc;
-                if (building.getCenterBlock() != null) holoLoc = building.getCenterBlock().clone().add(0.5d, 1.5d, 0.5d);
+                if (building.getCenterBlock() != null)
+                    holoLoc = building.getCenterBlock().clone().add(0.5d, 1.5d, 0.5d);
                 else holoLoc = origin.clone().add(0.5d, 1.5d, 0.5d);
 
                 hologram = HologramAPI.createHologram(holoLoc, "Building: 0%");
@@ -245,11 +247,11 @@ public class SchematicPaster {
 
 
                 Material replaceWith = options.replaceMaterials.get(mat);
-                if(replaceWith != null) mat = replaceWith;
+                if (replaceWith != null) mat = replaceWith;
 
-                if(options.overrideDyeColor != null) {
-                    if(mat == Material.WOOL || mat == Material.STAINED_CLAY || mat == Material.STAINED_GLASS || mat
-                            == Material.STAINED_GLASS_PANE) {
+                if (options.overrideDyeColor != null) {
+                    if (mat == Material.WOOL || mat == Material.STAINED_CLAY || mat == Material.STAINED_GLASS ||
+                            mat == Material.STAINED_GLASS_PANE) {
                         bData = options.overrideDyeColor.getWoolData();
                     }
                 }
@@ -261,17 +263,18 @@ public class SchematicPaster {
                 ++count;
                 if (buildSpeed != -1 && count > buildSpeed) {
                     loc.getWorld().playEffect(loc, Effect.STEP_SOUND, mat);
-                    if(options.progressHologram) {
-                        hologram.setText("Building: " + percentFormat.format((double) index / (double) locations.size()));
+                    if (options.progressHologram) {
+                        hologram.setText(
+                                "Building: " + percentFormat.format((double) index / (double) locations.size()));
                     }
                     return;
                 }
             }
 
             building.setBuildTask(null);
-            if(task != null) task.finish();
+            if (task != null) task.finish();
 
-            if(options.progressHologram) {
+            if (options.progressHologram) {
                 HologramAPI.removeHologram(hologram);
                 building.removeHologram(hologram);
             }

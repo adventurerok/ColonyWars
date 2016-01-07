@@ -2,6 +2,7 @@ package com.ithinkrok.cw.gamestate;
 
 import com.ithinkrok.cw.scoreboard.CWScoreboardHandler;
 import com.ithinkrok.minigames.GameGroup;
+import com.ithinkrok.minigames.TeamIdentifier;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
@@ -10,7 +11,11 @@ import com.ithinkrok.minigames.event.map.MapItemSpawnEvent;
 import com.ithinkrok.minigames.event.user.game.UserChangeTeamEvent;
 import com.ithinkrok.minigames.event.user.world.UserBreakBlockEvent;
 import com.ithinkrok.minigames.event.user.world.UserPickupItemEvent;
+import com.ithinkrok.minigames.event.user.world.UserPlaceBlockEvent;
 import com.ithinkrok.minigames.metadata.Money;
+import com.ithinkrok.minigames.schematic.Facing;
+import com.ithinkrok.minigames.schematic.Schematic;
+import com.ithinkrok.minigames.schematic.SchematicPaster;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import com.ithinkrok.minigames.util.SoundEffect;
 import com.ithinkrok.minigames.util.TreeFeller;
@@ -38,6 +43,7 @@ public class GameListener implements Listener {
     private String goldSharedConfig;
     private WeakHashMap<ConfigurationSection, GoldConfig> goldConfigMap = new WeakHashMap<>();
 
+
     @EventHandler
     public void onListenerLoaded(ListenerLoadedEvent<?> event) {
         ConfigurationSection config = event.getConfig();
@@ -53,21 +59,6 @@ public class GameListener implements Listener {
         gold.onBlockBreak(event.getBlock());
     }
 
-    @EventHandler
-    public void onGameStateChange(GameStateChangedEvent event) {
-        if(!event.getNewGameState().isGameStateListener(this)) return;
-
-        GameGroup gameGroup = event.getGameGroup();
-        for(User user : gameGroup.getUsers()) {
-
-            //TODO this is just a test
-            user.setTeam(event.getGameGroup().getTeam("red"));
-
-            user.setScoreboardHandler(new CWScoreboardHandler(user));
-            user.updateScoreboard();
-        }
-    }
-
     private GoldConfig getGoldConfig(ConfigurationSection config) {
         GoldConfig gold = goldConfigMap.get(config);
 
@@ -77,6 +68,21 @@ public class GameListener implements Listener {
         }
 
         return gold;
+    }
+
+    @EventHandler
+    public void onGameStateChange(GameStateChangedEvent event) {
+        if (!event.getNewGameState().isGameStateListener(this)) return;
+
+        GameGroup gameGroup = event.getGameGroup();
+        for (User user : gameGroup.getUsers()) {
+
+            //TODO this is just a test
+            user.setTeam(event.getGameGroup().getTeam("red"));
+
+            user.setScoreboardHandler(new CWScoreboardHandler(user));
+            user.updateScoreboard();
+        }
     }
 
     @EventHandler
@@ -100,7 +106,7 @@ public class GameListener implements Listener {
             Money userMoney = Money.getOrCreate(event.getUser());
             userMoney.addMoney(userGold, false);
 
-            int teamGold =  goldConfig.getTeamGold(material) * amount;
+            int teamGold = goldConfig.getTeamGold(material) * amount;
             Money teamMoney = Money.getOrCreate(event.getUser().getTeam());
             teamMoney.addMoney(teamGold, false);
 
@@ -109,6 +115,33 @@ public class GameListener implements Listener {
         }
 
         event.getItem().remove();
+    }
+
+    @EventHandler
+    public void onUserPlaceBlock(UserPlaceBlockEvent event) {
+        if (event.getBlock().getType() != Material.LAPIS_ORE) return;
+
+        int rotation = Facing.getFacing(event.getUser().getLocation().getYaw());
+
+        SchematicPaster.SchematicOptions options =
+                createSchematicOptions(event.getUserGameGroup(), event.getUser().getTeamIdentifier());
+
+        Schematic schem = event.getUserGameGroup().getSchematic("base");
+        SchematicPaster.pasteSchematic(schem, event.getBlock().getLocation(), bounds -> true, name -> null, rotation,
+                options);
+    }
+
+    public SchematicPaster.SchematicOptions createSchematicOptions(GameGroup gameGroup, TeamIdentifier team) {
+        SchematicPaster.SchematicOptions options = new SchematicPaster.SchematicOptions();
+
+        options.withBuildSpeed(2).withCenterBlockType(Material.OBSIDIAN).withProgressHologram(true);
+        options.withOverrideDyeColor(team.getDyeColor());
+        options.withReplaceMaterial(Material.BARRIER, Material.AIR);
+        options.withReplaceMaterial(Material.DIAMOND_ORE, Material.GOLD_ORE);
+
+        //TODO GameGroup listeners
+
+        return options;
     }
 
     @EventHandler

@@ -451,5 +451,27 @@ public class GameGroup
 
             countdown = null;
         }
+
+        @EventHandler
+        public void eventGameStateChange(GameStateChangedEvent event) {
+            Iterator<Metadata> iterator = metadataMap.values().iterator();
+
+            while (iterator.hasNext()) {
+                Metadata metadata = iterator.next();
+
+                if (metadata.removeOnGameStateChange(event)) iterator.remove();
+            }
+        }
+
+        @EventHandler
+        public void eventMapChange(MapChangedEvent event) {
+            Iterator<Metadata> iterator = metadataMap.values().iterator();
+
+            while (iterator.hasNext()) {
+                Metadata metadata = iterator.next();
+
+                if (metadata.removeOnMapChange(event)) iterator.remove();
+            }
+        }
     }
 }

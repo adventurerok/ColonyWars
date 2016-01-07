@@ -33,11 +33,12 @@ public class TeamIdentifier {
         Validate.notNull(dyeColor, "dyeColor cannot be null");
 
         this.name = name;
-        this.formattedName = (formattedName != null ? formattedName : chatColor + WordUtils.capitalizeFully(name));
 
         this.dyeColor = dyeColor;
         this.armorColor = (armorColor != null ? armorColor : dyeColor.getColor());
         this.chatColor = (chatColor != null ? chatColor : DyeToChatColorConverter.convert(dyeColor));
+
+        this.formattedName = (formattedName != null ? formattedName : chatColor + WordUtils.capitalizeFully(name));
     }
 
     public ChatColor getChatColor() {

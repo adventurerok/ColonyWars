@@ -33,6 +33,7 @@ public class CWScoreboardHandler implements ScoreboardHandler {
         if(!scoreboard.isDisplaying()) scoreboard.resetAndDisplay();
 
         scoreboard.setScore(userBalanceDisplay, Money.getOrCreate(user).getMoney());
+        scoreboard.setScore(teamBalanceDisplay, Money.getOrCreate(user.getTeam()).getMoney());
     }
 
     @Override

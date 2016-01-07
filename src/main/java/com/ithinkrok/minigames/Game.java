@@ -385,7 +385,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
                 user = createUser(gameGroup, null, player.getUniqueId(), player);
             }
 
-            gameGroup.eventUserJoinedAsPlayer(new UserJoinEvent(user, UserJoinEvent.JoinReason.JOINED_SERVER));
+            gameGroup.userEvent(new UserJoinEvent(user, UserJoinEvent.JoinReason.JOINED_SERVER));
         }
 
         @EventHandler
@@ -395,7 +395,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
             User user = getUser(event.getPlayer().getUniqueId());
 
             UserQuitEvent userEvent = new UserQuitEvent(user, UserQuitEvent.QuitReason.QUIT_SERVER);
-            user.getGameGroup().userQuitEvent(userEvent);
+            user.getGameGroup().userEvent(userEvent);
 
             if (userEvent.getRemoveUser()) {
                 usersInServer.remove(event.getPlayer().getUniqueId());

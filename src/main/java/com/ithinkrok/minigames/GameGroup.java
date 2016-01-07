@@ -29,6 +29,8 @@ import com.ithinkrok.oldmccw.data.TeamColor;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Event;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import java.io.File;
@@ -210,29 +212,12 @@ public class GameGroup
         return usersInGroup.get(uuid);
     }
 
-    public void eventUserJoinedAsPlayer(UserJoinEvent event) {
-        usersInGroup.put(event.getUser().getUuid(), event.getUser());
-
-        currentMap.teleportUser(event.getUser());
-
-        userEvent(event);
-    }
-
     public void userEvent(UserEvent event) {
         if (event.getUser().getTeam() != null) {
             EventExecutor.executeEvent(event,
                     getListeners(event.getUser().getListeners(), event.getUser().getTeam().getListeners()));
         } else {
             EventExecutor.executeEvent(event, getListeners(event.getUser().getListeners()));
-        }
-    }
-
-    public void userQuitEvent(UserQuitEvent event) {
-        userEvent(event);
-
-        if (event.getRemoveUser()) {
-            usersInGroup.remove(event.getUser().getUuid());
-            //TODO remove user from team
         }
     }
 
@@ -285,15 +270,6 @@ public class GameGroup
         Schematic schem = null;
         if (currentMap != null) schem = currentMap.getSchematic(name);
         return schem != null ? schem : game.getSchematic(name);
-    }
-
-    public void countdownFinishedEvent(CountdownFinishedEvent event) {
-        gameEvent(event);
-
-        if (event.getCountdown().getSecondsRemaining() > 0) return;
-        if (event.getCountdown() != countdown) return;
-
-        countdown = null;
     }
 
     public void gameEvent(GameEvent event) {
@@ -451,5 +427,29 @@ public class GameGroup
 
     private class GameGroupListener implements Listener {
 
+        @EventHandler(priority = EventPriority.LOWEST)
+        public void eventUserJoin(UserJoinEvent event) {
+            if(event.getReason() != UserJoinEvent.JoinReason.JOINED_SERVER) return;
+
+            usersInGroup.put(event.getUser().getUuid(), event.getUser());
+
+            currentMap.teleportUser(event.getUser());
+        }
+
+        @EventHandler(priority = EventPriority.MONITOR)
+        public void eventUserQuit(UserQuitEvent event) {
+            if (event.getRemoveUser()) {
+                event.getUser().setTeam(null);
+                usersInGroup.remove(event.getUser().getUuid());
+            }
+        }
+
+        @EventHandler(priority = EventPriority.MONITOR)
+        public void eventCountdownFinished(CountdownFinishedEvent event) {
+            if (event.getCountdown().getSecondsRemaining() > 0) return;
+            if (event.getCountdown() != countdown) return;
+
+            countdown = null;
+        }
     }
 }

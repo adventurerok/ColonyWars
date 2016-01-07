@@ -46,7 +46,7 @@ public class Countdown {
             if (secondsRemaining > 0) return;
 
             CountdownFinishedEvent event = new CountdownFinishedEvent(gameGroup, Countdown.this);
-            gameGroup.countdownFinishedEvent(event);
+            gameGroup.gameEvent(event);
 
             //The event can change the amount of time left in the countdown
             if (secondsRemaining > 0) return;

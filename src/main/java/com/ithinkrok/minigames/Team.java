@@ -2,6 +2,8 @@ package com.ithinkrok.minigames;
 
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.MutableClassToInstanceMap;
+import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
+import com.ithinkrok.minigames.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.Messagable;
 import com.ithinkrok.minigames.metadata.Metadata;
@@ -15,12 +17,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -196,7 +196,29 @@ public class Team implements Listener, Messagable, LanguageLookup, SharedObjectA
         getUsers().forEach(User::updateScoreboard);
     }
 
-    private static class TeamListener implements Listener {
+    private class TeamListener implements Listener {
 
+
+        @EventHandler
+        public void eventGameStateChange(GameStateChangedEvent event) {
+            Iterator<Metadata> iterator = metadataMap.values().iterator();
+
+            while (iterator.hasNext()) {
+                Metadata metadata = iterator.next();
+
+                if (metadata.removeOnGameStateChange(event)) iterator.remove();
+            }
+        }
+
+        @EventHandler
+        public void eventMapChange(MapChangedEvent event) {
+            Iterator<Metadata> iterator = metadataMap.values().iterator();
+
+            while (iterator.hasNext()) {
+                Metadata metadata = iterator.next();
+
+                if (metadata.removeOnMapChange(event)) iterator.remove();
+            }
+        }
     }
 }

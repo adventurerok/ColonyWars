@@ -100,7 +100,9 @@ public class GameListener implements Listener {
             Money userMoney = Money.getOrCreate(event.getUser());
             userMoney.addMoney(userGold, false);
 
-            //TODO team gold
+            int teamGold =  goldConfig.getTeamGold(material) * amount;
+            Money teamMoney = Money.getOrCreate(event.getUser().getTeam());
+            teamMoney.addMoney(teamGold, false);
 
             SoundEffect sound = new SoundEffect(goldConfig.getPickupSound(), 1.0f, 0.8f + (random.nextFloat()) * 0.4f);
             event.getUser().playSound(event.getUser().getLocation(), sound);

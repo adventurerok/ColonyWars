@@ -43,6 +43,10 @@ public class Team implements Listener, Messagable, LanguageLookup, SharedObjectA
         this.gameGroup = gameGroup;
     }
 
+    public GameGroup getGameGroup() {
+        return gameGroup;
+    }
+
     public int getUserCount() {
         return getUsers().size();
     }
@@ -178,5 +182,9 @@ public class Team implements Listener, Messagable, LanguageLookup, SharedObjectA
     public User getUser(UUID uuid) {
         if (uuid == null) return null;
         return usersInTeam.get(uuid);
+    }
+
+    public void updateUserScoreboards() {
+        getUsers().forEach(User::updateScoreboard);
     }
 }

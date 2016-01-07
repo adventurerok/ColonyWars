@@ -19,7 +19,9 @@ team_identifiers:
     dye_color: YELLOW
 
 schematics:
-
+  base:
+    file: "schematics/mccw_base.schematic"
+    rotation: 0
 
 # Specifies default shared objects. Some shared objects are required by certain Java Classes used in the game.
 shared_objects:

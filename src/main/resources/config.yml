@@ -93,6 +93,21 @@ custom_items:
         config:
           votable_maps: *votable_maps
           map_material: "EMPTY_MAP"
+  team_chooser:
+    display_name_locale: "team_chooser.name"
+    description_locale: "team_chooser.desc"
+    material: "LEATHER_HELMET"
+    listeners:
+      choose:
+        events: ["rightClick"]
+        class: "com.ithinkrok.minigames.item.TeamChooser"
+        config:
+          choosable_teams:
+            - "red"
+            - "blue"
+            - "green"
+            - "yellow"
+          chooser_material: "WOOL"
   darkness_sword:
     display_name_locale: "darkness_sword.name"
     description_locale: "darkness_sword.desc"
@@ -123,5 +138,5 @@ listeners:
       items:
         - name: "map_voter"
           slot: 0
-        - name: "darkness_sword"
+        - name: "team_chooser"
           slot: 1

@@ -90,12 +90,10 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
     private ClassToInstanceMap<UserMetadata> metadataMap = MutableClassToInstanceMap.create();
 
     private String name;
-
     private TaskList userTaskList = new TaskList();
     private TaskList inGameTaskList = new TaskList();
     private ClickableInventory openInventory;
     private Collection<Listener> listeners = new ArrayList<>();
-
     public User(Game game, GameGroup gameGroup, Team team, UUID uuid, LivingEntity entity) {
         this.game = game;
         this.gameGroup = gameGroup;
@@ -106,26 +104,43 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
         this.name = entity.getName();
         listeners.add(new UserListener());
 
-        if(isPlayer()) {
+        if (isPlayer()) {
             scoreboardDisplay = new ScoreboardDisplay(this, getPlayer());
         }
     }
 
-    public TeamIdentifier getTeamIdentifier() {
-        return team != null ? team.getTeamIdentifier() : null;
+    public boolean isPlayer() {
+        return entity instanceof Player;
+    }
+
+    protected Player getPlayer() {
+        if (!isPlayer()) throw new RuntimeException("You have no player");
+        return (Player) entity;
+    }
+
+    public String getTeamName() {
+        return team != null ? team.getName() : null;
+    }
+
+    public Team getTeam() {
+        return team;
     }
 
     public void setTeam(Team team) {
-        if(team == this.team) return;
+        if (team == this.team) return;
 
         Team oldTeam = this.team;
         Team newTeam = this.team = team;
 
-        if(oldTeam != null) oldTeam.removeUser(this);
-        if(newTeam != null) newTeam.addUser(this);
+        if (oldTeam != null) oldTeam.removeUser(this);
+        if (newTeam != null) newTeam.addUser(this);
 
         UserChangeTeamEvent event = new UserChangeTeamEvent(this, oldTeam, newTeam);
         gameGroup.userEvent(event);
+    }
+
+    public TeamIdentifier getTeamIdentifier() {
+        return team != null ? team.getTeamIdentifier() : null;
     }
 
     public Collection<Listener> getListeners() {
@@ -166,14 +181,14 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
 
     public void setScoreboardHandler(ScoreboardHandler scoreboardHandler) {
         this.scoreboardHandler = scoreboardHandler;
-        if(scoreboardDisplay != null) {
-            if(scoreboardHandler == null) scoreboardDisplay.remove();
+        if (scoreboardDisplay != null) {
+            if (scoreboardHandler == null) scoreboardDisplay.remove();
             else scoreboardHandler.setupScoreboard(this, scoreboardDisplay);
         }
     }
 
     public void updateScoreboard() {
-        if(scoreboardDisplay == null || scoreboardHandler == null) return;
+        if (scoreboardDisplay == null || scoreboardHandler == null) return;
 
         scoreboardHandler.updateScoreboard(this, scoreboardDisplay);
     }
@@ -196,19 +211,6 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
     @Override
     public void sendLocaleNoPrefix(String locale, Object... args) {
         sendMessageNoPrefix(gameGroup.getLocale(locale, args));
-    }
-
-    public PlayerInventory getInventory() {
-        return isPlayer() ? getPlayer().getInventory() : playerState.getInventory();
-    }
-
-    public boolean isPlayer() {
-        return entity instanceof Player;
-    }
-
-    protected Player getPlayer() {
-        if (!isPlayer()) throw new RuntimeException("You have no player");
-        return (Player) entity;
     }
 
     public GameMode getGameMode() {
@@ -304,7 +306,6 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
         if (event.isCancelled()) return false;
         return entity.teleport(event.getTo());
     }
-
 
     public boolean isViewingClickableInventory() {
         return openInventory != null;
@@ -414,7 +415,7 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
 
     public void giveColoredArmor(Color color, boolean unbreakable) {
         PlayerInventory inv = getInventory();
-        if(color == null) {
+        if (color == null) {
             inv.setHelmet(null);
             inv.setChestplate(null);
             inv.setLeggings(null);
@@ -425,6 +426,10 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
             inv.setLeggings(setUnbreakable(createLeatherArmorItem(Material.LEATHER_LEGGINGS, color), unbreakable));
             inv.setBoots(setUnbreakable(createLeatherArmorItem(Material.LEATHER_BOOTS, color), unbreakable));
         }
+    }
+
+    public PlayerInventory getInventory() {
+        return isPlayer() ? getPlayer().getInventory() : playerState.getInventory();
     }
 
     private class UserListener implements Listener {

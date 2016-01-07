@@ -43,6 +43,10 @@ public class Team implements Listener, Messagable, LanguageLookup, SharedObjectA
         this.gameGroup = gameGroup;
     }
 
+    public int getUserCount() {
+        return getUsers().size();
+    }
+
     public TeamIdentifier getTeamIdentifier() {
         return teamIdentifier;
     }

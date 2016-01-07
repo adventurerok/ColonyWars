@@ -194,7 +194,6 @@ public class SchematicPaster {
         private PastedSchematic building;
         private SchematicRotation schem;
         private SchematicOptions options;
-        private int buildSpeed;
 
         private boolean clearedOrigin = false;
 
@@ -204,8 +203,6 @@ public class SchematicPaster {
             this.building = building;
             this.schem = schem;
             this.options = options;
-
-            this.buildSpeed = options.buildSpeed;
 
             if (options.progressHologram) {
                 Location holoLoc;
@@ -261,7 +258,7 @@ public class SchematicPaster {
                 ++index;
 
                 ++count;
-                if (buildSpeed != -1 && count > buildSpeed) {
+                if (options.buildSpeed != -1 && count > options.buildSpeed) {
                     loc.getWorld().playEffect(loc, Effect.STEP_SOUND, mat);
                     if (options.progressHologram) {
                         hologram.setText(

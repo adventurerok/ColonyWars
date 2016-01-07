@@ -45,6 +45,12 @@ shared_objects:
     add_locale: "money.balance.user.add"
     subtract_locale: "money.balance.user.subtract"
     new_locale: "money.balance.user.new"
+  # Required for TeamMoney.java
+  team_money_metadata:
+    remove_gamestate: "aftermath"
+    add_locale: "money.balance.team.add"
+    subtract_locale: "money.balance.team.subtract"
+    new_locale: "money.balance.team.new"
   # Required for CWScoreboardHandler.java
   colony_wars_scoreboard:
     title: "scoreboard.title"

@@ -288,8 +288,11 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
     private GameGroup createGameGroup() {
         GameGroup gameGroup = new GameGroup(this);
+
         gameGroup.setDefaultListeners(defaultListeners);
         gameGroup.setTeamIdentifiers(teamIdentifiers);
+
+        gameGroup.start();
 
         return gameGroup;
     }

@@ -58,6 +58,7 @@ public class GameGroup
     private TaskList gameStateTaskList = new TaskList();
     private HashMap<String, Listener> defaultListeners = new HashMap<>();
 
+    private Listener gameGroupListener;
     private List<Listener> defaultAndMapListeners = new ArrayList<>();
 
     private ClassToInstanceMap<Metadata> metadataMap = MutableClassToInstanceMap.create();
@@ -66,6 +67,13 @@ public class GameGroup
 
     public GameGroup(Game game) {
         this.game = game;
+
+        gameGroupListener = new GameGroupListener();
+        defaultAndMapListeners = createDefaultAndMapListeners();
+    }
+
+    public void start() {
+        createDefaultAndMapListeners();
 
         boolean hasDefault = false;
         for (GameState gs : game.getGameStates()) {
@@ -152,7 +160,10 @@ public class GameGroup
             clone.putAll(map);
         }
 
-        return new ArrayList<>(clone.values());
+        List<Listener> result = new ArrayList<>(clone.values());
+        result.add(gameGroupListener);
+
+        return result;
     }
 
     public void changeMap(String mapName) {
@@ -436,5 +447,9 @@ public class GameGroup
     @Override
     public boolean hasMetadata(Class<? extends Metadata> clazz) {
         return metadataMap.containsKey(clazz);
+    }
+
+    private class GameGroupListener implements Listener {
+
     }
 }

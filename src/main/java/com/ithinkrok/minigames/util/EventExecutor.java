@@ -31,6 +31,7 @@ public class EventExecutor {
         SortedMap<MethodExecutor, Listener> map = new TreeMap<>();
 
         for (Listener listener : listeners) {
+            if(listener == null) continue;
             for (MethodExecutor methodExecutor : getMethodExecutors(listener, event)) {
                 map.put(methodExecutor, listener);
             }
@@ -61,11 +62,7 @@ public class EventExecutor {
         SortedMap<MethodExecutor, Listener> map = new TreeMap<>();
 
         for (Collection<Listener> listenerGroup : listeners) {
-            for (Listener listener : listenerGroup) {
-                for (MethodExecutor methodExecutor : getMethodExecutors(listener, event)) {
-                    map.put(methodExecutor, listener);
-                }
-            }
+            addToMethodExecutorMap(event, listenerGroup, map);
         }
 
         return map;
@@ -80,15 +77,22 @@ public class EventExecutor {
         SortedMap<MethodExecutor, Listener> map = new TreeMap<>();
 
         for (Collection<Listener> listenerGroup : listeners) {
-            for (Listener listener : listenerGroup) {
-                for (MethodExecutor methodExecutor : getMethodExecutors(listener, event)) {
-                    map.put(methodExecutor, listener);
-                }
-            }
+            addToMethodExecutorMap(event, listenerGroup, map);
         }
 
         return map;
     }
+
+    private static void addToMethodExecutorMap(Event event, Collection<Listener> listenerGroup,
+                                               SortedMap<MethodExecutor, Listener> map) {
+        for (Listener listener : listenerGroup) {
+            if(listener == null) continue;
+            for (MethodExecutor methodExecutor : getMethodExecutors(listener, event)) {
+                map.put(methodExecutor, listener);
+            }
+        }
+    }
+
 
     private static class ListenerHandler {
         private Class<? extends Listener> listenerClass;

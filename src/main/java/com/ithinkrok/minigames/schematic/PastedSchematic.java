@@ -1,7 +1,10 @@
 package com.ithinkrok.minigames.schematic;
 
+import com.ithinkrok.minigames.schematic.event.SchematicDestroyedEvent;
+import com.ithinkrok.minigames.schematic.event.SchematicFinishedEvent;
 import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.util.BoundingBox;
+import com.ithinkrok.minigames.util.EventExecutor;
 import de.inventivegames.hologram.Hologram;
 import de.inventivegames.hologram.HologramAPI;
 import org.bukkit.Location;
@@ -10,12 +13,10 @@ import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.FallingBlock;
+import org.bukkit.event.Listener;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by paul on 07/01/16.
@@ -36,6 +37,7 @@ public class PastedSchematic implements SchematicPaster.BoundsChecker {
     private boolean finished;
     private int rotation;
 
+    private List<Listener> listeners = new ArrayList<>();
     private List<Hologram> holograms = new ArrayList<>();
     private GameTask buildTask;
 
@@ -61,8 +63,19 @@ public class PastedSchematic implements SchematicPaster.BoundsChecker {
         return finished;
     }
 
-    public void setFinished(boolean finished) {
-        this.finished = finished;
+    public int getRotation() {
+        return rotation;
+    }
+
+    public void addListeners(Collection<Listener> listeners) {
+        this.listeners.addAll(listeners);
+    }
+
+    public void setFinished() {
+        this.finished = true;
+
+        SchematicFinishedEvent destroyedEvent = new SchematicFinishedEvent(this);
+        EventExecutor.executeEvent(destroyedEvent, listeners);
     }
 
     public List<Location> getBuildingBlocks() {
@@ -78,7 +91,7 @@ public class PastedSchematic implements SchematicPaster.BoundsChecker {
         return !this.bounds.interceptsXZ(bounds);
     }
 
-    public void removed() {
+    public void mapUnloaded() {
         if(buildTask != null && buildTask.getTaskState() == GameTask.TaskState.SCHEDULED) buildTask.cancel();
 
         holograms.forEach(HologramAPI::removeHologram);
@@ -118,7 +131,8 @@ public class PastedSchematic implements SchematicPaster.BoundsChecker {
             block.setVelocity(new Vector(xv, yv, zv));
         }
 
-        //plugin.getGameInstance().removeBuilding(this);
+        SchematicDestroyedEvent destroyedEvent = new SchematicDestroyedEvent(this);
+        EventExecutor.executeEvent(destroyedEvent, listeners);
     }
 
     public void remove(){
@@ -128,7 +142,8 @@ public class PastedSchematic implements SchematicPaster.BoundsChecker {
             oldBlocks.get(loc).update(true, false);
         }
 
-        //plugin.getGameInstance().removeBuilding(this);
+        SchematicDestroyedEvent destroyedEvent = new SchematicDestroyedEvent(this);
+        EventExecutor.executeEvent(destroyedEvent, listeners);
         if(centerBlock != null) oldBlocks.get(centerBlock).update(true, false);
     }
 

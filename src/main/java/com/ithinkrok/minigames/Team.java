@@ -38,9 +38,17 @@ public class Team implements Listener, Messagable, LanguageLookup, SharedObjectA
 
     private TaskList teamTaskList = new TaskList();
 
+    private Collection<Listener> listeners = new ArrayList<>();
+
     public Team(TeamIdentifier teamIdentifier, GameGroup gameGroup) {
         this.teamIdentifier = teamIdentifier;
         this.gameGroup = gameGroup;
+
+        listeners.add(new TeamListener());
+    }
+
+    public Collection<Listener> getListeners() {
+        return listeners;
     }
 
     public GameGroup getGameGroup() {
@@ -186,5 +194,9 @@ public class Team implements Listener, Messagable, LanguageLookup, SharedObjectA
 
     public void updateUserScoreboards() {
         getUsers().forEach(User::updateScoreboard);
+    }
+
+    private static class TeamListener implements Listener {
+
     }
 }

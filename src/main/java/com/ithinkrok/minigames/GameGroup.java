@@ -39,8 +39,9 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Created by paul on 31/12/15.
  */
-public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, UserResolver, FileLoader,
-        SharedObjectAccessor, MetadataHolder<Metadata> {
+public class GameGroup
+        implements LanguageLookup, Messagable, TaskScheduler, UserResolver, FileLoader, SharedObjectAccessor,
+        MetadataHolder<Metadata> {
 
     private ConcurrentMap<UUID, User> usersInGroup = new ConcurrentHashMap<>();
 
@@ -79,10 +80,80 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
         changeMap(game.getStartMapInfo());
     }
 
-    public Collection<User> getUsers() {
-        return usersInGroup.values();
+    @SuppressWarnings("unchecked")
+    public void changeGameState(GameState gameState) {
+        if (gameState.equals(this.gameState)) return;
+        GameState oldState = this.gameState;
+        GameState newState = this.gameState = gameState;
+
+        gameStateTaskList.cancelAllTasks();
+
+        Event event = new GameStateChangedEvent(this, oldState, newState);
+        EventExecutor.executeEvent(event,
+                getListeners(getAllUserListeners(), getAllTeamListeners(), gameState.getListeners()));
     }
 
+    public void changeMap(GameMapInfo mapInfo) {
+        GameMap oldMap = currentMap;
+        GameMap newMap = new GameMap(this, mapInfo);
+
+        usersInGroup.values().forEach(newMap::teleportUser);
+
+        currentMap = newMap;
+
+        game.setGameGroupForMap(this, newMap.getWorld().getName());
+
+        Event event = new MapChangedEvent(this, oldMap, newMap);
+
+        EventExecutor
+                .executeEvent(event, getListeners(getAllUserListeners(), getAllTeamListeners(), newMap.getListeners()));
+
+        defaultAndMapListeners = createDefaultAndMapListeners(newMap.getListenerMap());
+
+        if (oldMap != null) oldMap.unloadMap();
+    }
+
+    @SafeVarargs
+    private final Collection<Collection<Listener>> getListeners(Collection<Listener>... extras) {
+        Collection<Collection<Listener>> listeners = new ArrayList<>(4);
+        if (gameState != null) listeners.add(gameState.getListeners());
+        listeners.add(defaultAndMapListeners);
+        Collections.addAll(listeners, extras);
+
+        return listeners;
+    }
+
+    private Collection<Listener> getAllUserListeners() {
+        ArrayList<Listener> result = new ArrayList<>(usersInGroup.size());
+
+        for (User user : usersInGroup.values()) {
+            result.addAll(user.getListeners());
+        }
+
+        return result;
+    }
+
+    private Collection<Listener> getAllTeamListeners() {
+        ArrayList<Listener> result = new ArrayList<>(teamsInGroup.size());
+
+        for (Team team : teamsInGroup.values()) {
+            result.addAll(team.getListeners());
+        }
+
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    @SafeVarargs
+    private final List<Listener> createDefaultAndMapListeners(Map<String, Listener>... extra) {
+        HashMap<String, Listener> clone = (HashMap<String, Listener>) defaultListeners.clone();
+
+        for (Map<String, Listener> map : extra) {
+            clone.putAll(map);
+        }
+
+        return new ArrayList<>(clone.values());
+    }
 
     public void changeMap(String mapName) {
         GameMapInfo mapInfo = game.getMapInfo(mapName);
@@ -98,28 +169,13 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
     @Override
     public ConfigurationSection getSharedObject(String name) {
         ConfigurationSection result = null;
-        if(currentMap != null) result = currentMap.getSharedObject(name);
+        if (currentMap != null) result = currentMap.getSharedObject(name);
         return result != null ? result : game.getSharedObject(name);
     }
 
     @Override
     public LanguageLookup getLanguageLookup() {
         return this;
-    }
-
-    public void recreateTeamObjects() {
-        for(User user : getUsers()) {
-            user.setTeam(null);
-        }
-
-        teamsInGroup.clear();
-        for(TeamIdentifier teamIdentifier : teamIdentifiers.values()) {
-            teamsInGroup.put(teamIdentifier, createTeam(teamIdentifier));
-        }
-    }
-
-    public TeamIdentifier getTeamIdentifier(String name) {
-        return teamIdentifiers.get(name);
     }
 
     public Team getTeam(String name) {
@@ -130,46 +186,17 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
         return teamsInGroup.get(identifier);
     }
 
-    public void changeMap(GameMapInfo mapInfo) {
-        GameMap oldMap = currentMap;
-        GameMap newMap = new GameMap(this, mapInfo);
-
-        usersInGroup.values().forEach(newMap::teleportUser);
-
-        currentMap = newMap;
-
-        game.setGameGroupForMap(this, newMap.getWorld().getName());
-
-        Event event = new MapChangedEvent(this, oldMap, newMap);
-
-        EventExecutor.executeEvent(event, getListeners(getAllUserListeners(), newMap.getListeners()));
-
-        defaultAndMapListeners = createDefaultAndMapListeners(newMap.getListenerMap());
-
-        if (oldMap != null) oldMap.unloadMap();
+    public TeamIdentifier getTeamIdentifier(String name) {
+        return teamIdentifiers.get(name);
     }
 
     public Countdown getCountdown() {
         return countdown;
     }
 
-    private Collection<Listener> getAllUserListeners() {
-        ArrayList<Listener> result = new ArrayList<>(usersInGroup.size());
-
-        for(User user : usersInGroup.values()) {
-            result.addAll(user.getListeners());
-        }
-
-        return result;
-    }
-
     @Override
     public User getUser(UUID uuid) {
         return usersInGroup.get(uuid);
-    }
-
-    private Team createTeam(TeamIdentifier teamIdentifier) {
-        return new Team(teamIdentifier, this);
     }
 
     public void eventUserJoinedAsPlayer(UserJoinEvent event) {
@@ -181,13 +208,18 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
     }
 
     public void userEvent(UserEvent event) {
-        EventExecutor.executeEvent(event, getListeners(event.getUser().getListeners()));
+        if (event.getUser().getTeam() != null) {
+            EventExecutor.executeEvent(event,
+                    getListeners(event.getUser().getListeners(), event.getUser().getTeam().getListeners()));
+        } else {
+            EventExecutor.executeEvent(event, getListeners(event.getUser().getListeners()));
+        }
     }
 
     public void userQuitEvent(UserQuitEvent event) {
         userEvent(event);
 
-        if(event.getRemoveUser()) {
+        if (event.getRemoveUser()) {
             usersInGroup.remove(event.getUser().getUuid());
             //TODO remove user from team
         }
@@ -215,30 +247,8 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
         changeGameState(gameState);
     }
 
-    @SafeVarargs
-    private final Collection<Collection<Listener>> getListeners(Collection<Listener>... extras) {
-        Collection<Collection<Listener>> listeners = new ArrayList<>(4);
-        if(gameState != null) listeners.add(gameState.getListeners());
-        listeners.add(defaultAndMapListeners);
-        Collections.addAll(listeners, extras);
-
-        return listeners;
-    }
-
-    @SuppressWarnings("unchecked")
-    public void changeGameState(GameState gameState) {
-        if (gameState.equals(this.gameState)) return;
-        GameState oldState = this.gameState;
-        GameState newState = this.gameState = gameState;
-
-        gameStateTaskList.cancelAllTasks();
-
-        Event event = new GameStateChangedEvent(this, oldState, newState);
-        EventExecutor.executeEvent(event, getListeners(getAllUserListeners(), gameState.getListeners()));
-    }
-
     public void startCountdown(String name, String localeStub, int seconds) {
-        if(countdown != null) countdown.cancel();
+        if (countdown != null) countdown.cancel();
 
         countdown = new Countdown(name, localeStub, seconds);
         countdown.start(this);
@@ -250,33 +260,33 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
 
     public CustomItem getCustomItem(String name) {
         CustomItem item = null;
-        if(currentMap != null) item = currentMap.getCustomItem(name);
+        if (currentMap != null) item = currentMap.getCustomItem(name);
         return item != null ? item : game.getCustomItem(name);
     }
 
     public CustomItem getCustomItem(int identifier) {
         CustomItem item = null;
-        if(currentMap != null) item = currentMap.getCustomItem(identifier);
+        if (currentMap != null) item = currentMap.getCustomItem(identifier);
         return item != null ? item : game.getCustomItem(identifier);
     }
 
     public Schematic getSchematic(String name) {
         Schematic schem = null;
-        if(currentMap != null) schem = currentMap.getSchematic(name);
+        if (currentMap != null) schem = currentMap.getSchematic(name);
         return schem != null ? schem : game.getSchematic(name);
-    }
-
-    public void gameEvent(GameEvent event) {
-        EventExecutor.executeEvent(event, getListeners());
     }
 
     public void countdownFinishedEvent(CountdownFinishedEvent event) {
         gameEvent(event);
 
-        if(event.getCountdown().getSecondsRemaining() > 0) return;
-        if(event.getCountdown() != countdown) return;
+        if (event.getCountdown().getSecondsRemaining() > 0) return;
+        if (event.getCountdown() != countdown) return;
 
         countdown = null;
+    }
+
+    public void gameEvent(GameEvent event) {
+        EventExecutor.executeEvent(event, getListeners());
     }
 
     public void unload() {
@@ -288,13 +298,13 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
     }
 
     public void bindTaskToCurrentMap(GameTask task) {
-        if(currentMap == null) throw new RuntimeException("No GameMap to bind task to");
+        if (currentMap == null) throw new RuntimeException("No GameMap to bind task to");
         currentMap.bindTaskToMap(task);
     }
 
     @Override
     public String getLocale(String name) {
-        if(currentMap != null && currentMap.hasLocale(name)) return currentMap.getLocale(name);
+        if (currentMap != null && currentMap.hasLocale(name)) return currentMap.getLocale(name);
         else return game.getLocale(name);
     }
 
@@ -303,18 +313,13 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
         return (currentMap != null && currentMap.hasLocale(name) || game.hasLocale(name));
     }
 
-    @Override
-    public String getLocale(String name, Object...args) {
-        if(currentMap != null && currentMap.hasLocale(name)) return currentMap.getLocale(name, args);
-        else return game.getLocale(name, args);
-    }
-
-    public String getChatPrefix() {
-        return game.getChatPrefix();
-    }
-
     public Game getGame() {
         return game;
+    }
+
+    @Override
+    public void sendLocale(String locale, Object... args) {
+        sendMessage(getLocale(locale, args));
     }
 
     @Override
@@ -323,19 +328,24 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
     }
 
     @Override
+    public String getLocale(String name, Object... args) {
+        if (currentMap != null && currentMap.hasLocale(name)) return currentMap.getLocale(name, args);
+        else return game.getLocale(name, args);
+    }
+
+    @Override
     public void sendMessageNoPrefix(String message) {
-        for(User user : usersInGroup.values()) {
+        for (User user : usersInGroup.values()) {
             user.sendMessageNoPrefix(message);
         }
     }
 
-    @Override
-    public void sendLocale(String locale, Object...args) {
-        sendMessage(getLocale(locale, args));
+    public String getChatPrefix() {
+        return game.getChatPrefix();
     }
 
     @Override
-    public void sendLocaleNoPrefix(String locale, Object...args) {
+    public void sendLocaleNoPrefix(String locale, Object... args) {
         sendMessageNoPrefix(getLocale(locale, args));
     }
 
@@ -371,20 +381,8 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
     public void setDefaultListeners(HashMap<String, Listener> defaultListeners) {
         this.defaultListeners = defaultListeners;
 
-        if(currentMap != null) defaultAndMapListeners = createDefaultAndMapListeners(currentMap.getListenerMap());
+        if (currentMap != null) defaultAndMapListeners = createDefaultAndMapListeners(currentMap.getListenerMap());
         else defaultAndMapListeners = createDefaultAndMapListeners();
-    }
-
-    @SuppressWarnings("unchecked")
-    @SafeVarargs
-    private final List<Listener> createDefaultAndMapListeners(Map<String, Listener>... extra) {
-        HashMap<String, Listener> clone = (HashMap<String, Listener>) defaultListeners.clone();
-
-        for(Map<String, Listener> map : extra) {
-            clone.putAll(map);
-        }
-
-        return new ArrayList<>(clone.values());
     }
 
     public boolean hasActiveCountdown() {
@@ -399,11 +397,30 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Use
         return getUsers().size();
     }
 
+    public Collection<User> getUsers() {
+        return usersInGroup.values();
+    }
+
     public void setTeamIdentifiers(List<TeamIdentifier> identifiers) {
-        for(TeamIdentifier identifier : identifiers) {
+        for (TeamIdentifier identifier : identifiers) {
             teamIdentifiers.put(identifier.getName(), identifier);
         }
         recreateTeamObjects();
+    }
+
+    public void recreateTeamObjects() {
+        for (User user : getUsers()) {
+            user.setTeam(null);
+        }
+
+        teamsInGroup.clear();
+        for (TeamIdentifier teamIdentifier : teamIdentifiers.values()) {
+            teamsInGroup.put(teamIdentifier, createTeam(teamIdentifier));
+        }
+    }
+
+    private Team createTeam(TeamIdentifier teamIdentifier) {
+        return new Team(teamIdentifier, this);
     }
 
     @Override

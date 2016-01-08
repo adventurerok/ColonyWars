@@ -29,9 +29,11 @@ listeners:
         - building: "Base"
           team: "red"
           location:
-            x: -363
+            #x: -363
+            x: -170
             y: 94
-            z: -3
+            z: 180
+            #z: -3
         - building: "Base"
           team: "blue"
           location:

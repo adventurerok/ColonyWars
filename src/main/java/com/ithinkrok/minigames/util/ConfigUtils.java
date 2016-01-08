@@ -46,7 +46,13 @@ public class ConfigUtils {
         return result;
     }
 
+    @SuppressWarnings("unchecked")
     private static ConfigurationSection configFromMap(Map<String, Object> values){
+        values.replaceAll((s, o) -> {
+            if(!(o instanceof Map<?, ?>)) return o;
+            return configFromMap((Map<String, Object>) o);
+        });
+
         MemoryConfiguration memory = new MemoryConfiguration();
         memory.addDefaults(values);
 

@@ -12,4 +12,30 @@ public class Building {
     private TeamIdentifier teamIdentifier;
 
     private PastedSchematic schematic;
+
+    public Building(String buildingName, TeamIdentifier teamIdentifier, PastedSchematic schematic) {
+        this.buildingName = buildingName;
+        this.teamIdentifier = teamIdentifier;
+        this.schematic = schematic;
+    }
+
+    public PastedSchematic getSchematic() {
+        return schematic;
+    }
+
+    public String getBuildingName() {
+        return buildingName;
+    }
+
+    public TeamIdentifier getTeamIdentifier() {
+        return teamIdentifier;
+    }
+
+    public void explode() {
+        schematic.explode();
+    }
+
+    public void remove() {
+        schematic.remove();
+    }
 }

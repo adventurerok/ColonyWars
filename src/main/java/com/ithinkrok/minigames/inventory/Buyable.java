@@ -1,5 +1,6 @@
 package com.ithinkrok.minigames.inventory;
 
+import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.inventory.event.BuyablePurchaseEvent;
 import com.ithinkrok.minigames.inventory.event.CalculateItemForUserEvent;
 import com.ithinkrok.minigames.inventory.event.UserClickItemEvent;
@@ -47,6 +48,8 @@ public abstract class Buyable extends ClickableItem {
         Money userMoney = Money.getOrCreate(event.getUser());
         Money teamMoney = null;
 
+        int cost = getCost(event.getUser());
+
         if(team) {
             teamMoney = Money.getOrCreate(event.getUser().getTeam());
             if(userMoney.getMoney() + teamMoney.getMoney() < cost) {
@@ -85,7 +88,7 @@ public abstract class Buyable extends ClickableItem {
         return team;
     }
 
-    public int getCost() {
+    public int getCost(User user) {
         return cost;
     }
 

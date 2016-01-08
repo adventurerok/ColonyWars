@@ -6,9 +6,12 @@ import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.item.IdentifierMap;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.MultipleLanguageLookup;
+import com.ithinkrok.minigames.schematic.PastedSchematic;
 import com.ithinkrok.minigames.schematic.Schematic;
+import com.ithinkrok.minigames.schematic.SchematicPaster;
 import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskList;
+import com.ithinkrok.minigames.util.BoundingBox;
 import com.ithinkrok.minigames.util.io.ConfigHolder;
 import com.ithinkrok.minigames.util.io.ConfigParser;
 import com.ithinkrok.minigames.util.io.DirectoryUtils;
@@ -30,7 +33,7 @@ import java.util.Map;
 /**
  * Created by paul on 01/01/16.
  */
-public class GameMap implements LanguageLookup, ConfigHolder {
+public class GameMap implements LanguageLookup, ConfigHolder, SchematicPaster.BoundsChecker {
 
     private GameMapInfo gameMapInfo;
     private World world;
@@ -43,6 +46,8 @@ public class GameMap implements LanguageLookup, ConfigHolder {
     private IdentifierMap<CustomItem> customItemIdentifierMap = new IdentifierMap<>();
     private HashMap<String, ConfigurationSection> sharedObjects = new HashMap<>();
 
+    private List<PastedSchematic> pastedSchematics = new ArrayList<>();
+
     public World getWorld() {
         return world;
     }
@@ -52,6 +57,14 @@ public class GameMap implements LanguageLookup, ConfigHolder {
 
         loadMap();
         ConfigParser.parseConfig(gameGroup, this, gameGroup, gameMapInfo.getConfigName(), gameMapInfo.getConfig());
+    }
+
+    public void addPastedSchematic(PastedSchematic schematic) {
+        pastedSchematics.add(schematic);
+    }
+
+    public void removePastedSchematic(PastedSchematic schematic) {
+        pastedSchematics.remove(schematic);
     }
 
     private void loadMap() {
@@ -106,6 +119,10 @@ public class GameMap implements LanguageLookup, ConfigHolder {
 
     public void unloadMap() {
         mapTaskList.cancelAllTasks();
+
+        List<PastedSchematic> pastedSchematics = new ArrayList<>(this.pastedSchematics);
+
+        pastedSchematics.forEach(PastedSchematic::removed);
 
         if (world.getPlayers().size() != 0) System.out.println("There are still players in an unloading map!");
 
@@ -185,5 +202,14 @@ public class GameMap implements LanguageLookup, ConfigHolder {
 
     public Schematic getSchematic(String name) {
         return schematicMap.get(name);
+    }
+
+    @Override
+    public boolean canPaste(BoundingBox bounds) {
+        for(PastedSchematic schematic : pastedSchematics) {
+            if(!schematic.canPaste(bounds)) return false;
+        }
+
+        return true;
     }
 }

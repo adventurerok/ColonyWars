@@ -1,5 +1,6 @@
 package com.ithinkrok.minigames.schematic;
 
+import com.ithinkrok.minigames.map.GameMap;
 import com.ithinkrok.minigames.schematic.event.SchematicDestroyedEvent;
 import com.ithinkrok.minigames.schematic.event.SchematicFinishedEvent;
 import com.ithinkrok.minigames.task.GameTask;
@@ -37,18 +38,23 @@ public class PastedSchematic implements SchematicPaster.BoundsChecker {
     private boolean finished;
     private int rotation;
 
+    private GameMap map;
+
     private List<Listener> listeners = new ArrayList<>();
     private List<Hologram> holograms = new ArrayList<>();
     private GameTask buildTask;
 
-    public PastedSchematic(String name, Location centerBlock, BoundingBox bounds, int rotation,
+    public PastedSchematic(String name, GameMap map, Location centerBlock, BoundingBox bounds, int rotation,
                            List<Location> buildingBlocks, Map<Location, BlockState> oldBlocks) {
         this.name = name;
+        this.map = map;
         this.centerBlock = centerBlock;
         this.bounds = bounds;
         this.rotation = rotation;
         this.buildingBlocks = buildingBlocks;
         this.oldBlocks = oldBlocks;
+
+        map.addPastedSchematic(this);
     }
 
     public BoundingBox getBounds() {
@@ -92,6 +98,8 @@ public class PastedSchematic implements SchematicPaster.BoundsChecker {
     }
 
     public void removed() {
+        map.removePastedSchematic(this);
+
         if(buildTask != null && buildTask.getTaskState() == GameTask.TaskState.SCHEDULED) buildTask.cancel();
 
         holograms.forEach(HologramAPI::removeHologram);

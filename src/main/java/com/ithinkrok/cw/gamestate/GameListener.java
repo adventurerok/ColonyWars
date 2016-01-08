@@ -17,6 +17,7 @@ import com.ithinkrok.minigames.event.user.world.UserPlaceBlockEvent;
 import com.ithinkrok.minigames.map.GameMap;
 import com.ithinkrok.minigames.metadata.Money;
 import com.ithinkrok.minigames.schematic.*;
+import com.ithinkrok.minigames.util.ConfigUtils;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import com.ithinkrok.minigames.util.SoundEffect;
 import com.ithinkrok.minigames.util.TreeFeller;
@@ -169,7 +170,7 @@ public class GameListener implements Listener {
             if (ores != null) {
                 for (String matName : ores.getKeys(false)) {
                     Material material = Material.matchMaterial(matName);
-                    ItemStack item = InventoryUtils.parseItem(ores.getString(matName));
+                    ItemStack item = ConfigUtils.getItemStack(ores, matName);
                     oreBlocks.put(material, item);
                 }
             }

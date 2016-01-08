@@ -1,12 +1,13 @@
-package com.ithinkrok.minigames.item;
+package com.ithinkrok.minigames.inventory;
 
 import com.ithinkrok.minigames.Team;
 import com.ithinkrok.minigames.TeamIdentifier;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
-import com.ithinkrok.minigames.item.event.UserClickItemEvent;
-import com.ithinkrok.minigames.item.event.CalculateItemForUserEvent;
+import com.ithinkrok.minigames.inventory.ClickableInventory;
+import com.ithinkrok.minigames.inventory.ClickableItem;
+import com.ithinkrok.minigames.inventory.event.UserClickItemEvent;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;

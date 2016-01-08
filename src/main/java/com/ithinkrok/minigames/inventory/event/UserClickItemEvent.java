@@ -1,9 +1,9 @@
-package com.ithinkrok.minigames.item.event;
+package com.ithinkrok.minigames.inventory.event;
 
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.user.UserEvent;
-import com.ithinkrok.minigames.item.ClickableInventory;
-import com.ithinkrok.minigames.item.ClickableItem;
+import com.ithinkrok.minigames.inventory.ClickableInventory;
+import com.ithinkrok.minigames.inventory.ClickableItem;
 import org.bukkit.event.inventory.ClickType;
 
 /**

@@ -168,7 +168,7 @@ custom_items:
     listeners:
       vote:
         events: ["rightClick"]
-        class: "com.ithinkrok.minigames.item.MapVoter"
+        class: "com.ithinkrok.minigames.inventory.MapVoter"
         config:
           votable_maps: *votable_maps
           map_material: "EMPTY_MAP"
@@ -179,7 +179,7 @@ custom_items:
     listeners:
       choose:
         events: ["rightClick"]
-        class: "com.ithinkrok.minigames.item.TeamChooser"
+        class: "com.ithinkrok.minigames.inventory.TeamChooser"
         config:
           choosable_teams:
             - "red"

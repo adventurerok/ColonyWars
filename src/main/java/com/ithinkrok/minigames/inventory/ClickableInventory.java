@@ -1,9 +1,9 @@
-package com.ithinkrok.minigames.item;
+package com.ithinkrok.minigames.inventory;
 
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.user.inventory.UserInventoryClickEvent;
-import com.ithinkrok.minigames.item.event.UserClickItemEvent;
-import com.ithinkrok.minigames.item.event.CalculateItemForUserEvent;
+import com.ithinkrok.minigames.inventory.event.UserClickItemEvent;
+import com.ithinkrok.minigames.inventory.event.CalculateItemForUserEvent;
 import com.ithinkrok.minigames.util.ConfigUtils;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import org.bukkit.configuration.ConfigurationSection;

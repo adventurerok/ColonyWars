@@ -19,6 +19,7 @@ import com.ithinkrok.minigames.map.GameMapInfo;
 import com.ithinkrok.minigames.metadata.Metadata;
 import com.ithinkrok.minigames.metadata.MetadataHolder;
 import com.ithinkrok.minigames.schematic.Schematic;
+import com.ithinkrok.minigames.schematic.SchematicResolver;
 import com.ithinkrok.minigames.task.GameRunnable;
 import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskList;
@@ -44,7 +45,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class GameGroup
         implements LanguageLookup, Messagable, TaskScheduler, UserResolver, FileLoader, SharedObjectAccessor,
-        MetadataHolder<Metadata> {
+        MetadataHolder<Metadata>, SchematicResolver {
 
     private ConcurrentMap<UUID, User> usersInGroup = new ConcurrentHashMap<>();
 
@@ -283,6 +284,7 @@ public class GameGroup
         return item != null ? item : game.getCustomItem(identifier);
     }
 
+    @Override
     public Schematic getSchematic(String name) {
         Schematic schem = null;
         if (currentMap != null) schem = currentMap.getSchematic(name);

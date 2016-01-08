@@ -42,7 +42,6 @@ public class GameListener implements Listener {
     private Random random = new Random();
 
     private String goldSharedConfig;
-    private String schematicSharedConfig;
     private WeakHashMap<ConfigurationSection, GoldConfig> goldConfigMap = new WeakHashMap<>();
 
 
@@ -51,7 +50,6 @@ public class GameListener implements Listener {
         ConfigurationSection config = event.getConfig();
 
         goldSharedConfig = config.getString("gold_shared_object");
-        schematicSharedConfig = config.getString("schematic_options_shared_object");
     }
 
     @EventHandler
@@ -128,31 +126,12 @@ public class GameListener implements Listener {
 
         int rotation = Facing.getFacing(event.getUser().getLocation().getYaw());
 
-        SchematicOptions options =
-                createSchematicOptions(event.getUserGameGroup(), event.getUser().getTeamIdentifier());
-
-        Schematic schem = event.getUserGameGroup().getSchematic("Base");
-        GameMap map = event.getUserGameGroup().getCurrentMap();
-
-        PastedSchematic pasted = SchematicPaster
-                .pasteSchematic(schem, map, event.getBlock().getLocation(), bounds -> true, name -> null, rotation,
-                        options);
-
-        Building building = new Building("Base", event.getUser().getTeamIdentifier(), pasted);
-
         BuildingController controller = BuildingController.getOrCreate(event.getUserGameGroup());
-
-        controller.addBuilding(building);
+        controller.buildBuilding("Base", event.getUser().getTeamIdentifier(), event.getBlock().getLocation(),
+                rotation, false);
     }
 
-    public SchematicOptions createSchematicOptions(GameGroup gameGroup, TeamIdentifier team) {
-        SchematicOptions options = new SchematicOptions(gameGroup.getSharedObject(schematicSharedConfig));
-        options.withOverrideDyeColor(team.getDyeColor());
 
-        options.withDefaultListener(BuildingController.getOrCreate(gameGroup));
-
-        return options;
-    }
 
     @EventHandler
     public void onItemSpawn(MapItemSpawnEvent event) {

@@ -3,10 +3,15 @@ package com.ithinkrok.cw.metadata;
 import com.ithinkrok.cw.Building;
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.Team;
+import com.ithinkrok.minigames.TeamIdentifier;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;
+import com.ithinkrok.minigames.map.GameMap;
 import com.ithinkrok.minigames.metadata.Metadata;
 import com.ithinkrok.minigames.schematic.PastedSchematic;
+import com.ithinkrok.minigames.schematic.Schematic;
+import com.ithinkrok.minigames.schematic.SchematicOptions;
+import com.ithinkrok.minigames.schematic.SchematicPaster;
 import com.ithinkrok.minigames.schematic.event.SchematicDestroyedEvent;
 import com.ithinkrok.minigames.schematic.event.SchematicFinishedEvent;
 import org.bukkit.Location;
@@ -59,6 +64,35 @@ public class BuildingController extends Metadata implements Listener {
         if(building.getSchematic().isFinished()) {
             onSchematicFinished(new SchematicFinishedEvent(building.getSchematic()));
         }
+    }
+
+    public boolean buildBuilding(String name, TeamIdentifier team, Location location, int rotation, boolean instant) {
+        SchematicOptions options = createSchematicOptions(team, instant);
+
+        Schematic schem = gameGroup.getSchematic(name);
+        GameMap map = gameGroup.getCurrentMap();
+
+        PastedSchematic pasted = SchematicPaster
+                .buildSchematic(schem, map, location, bounds -> true, gameGroup, gameGroup, rotation,
+                        options);
+
+        if(pasted == null) return false;
+
+        Building building = new Building(name, team, pasted);
+        addBuilding(building);
+
+        return true;
+    }
+
+    private SchematicOptions createSchematicOptions(TeamIdentifier team, boolean instant) {
+        SchematicOptions options = new SchematicOptions(gameGroup.getSharedObject("schematic_options"));
+        options.withOverrideDyeColor(team.getDyeColor());
+
+        if(instant) options.withBuildSpeed(-1);
+
+        options.withDefaultListener(BuildingController.getOrCreate(gameGroup));
+
+        return options;
     }
 
     private TeamBuildingStats getTeamBuildingStats(Building building) {

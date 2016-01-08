@@ -65,7 +65,7 @@ public class TeamBuildingStats extends Metadata {
     public void buildingStarted(Building building) {
         buildingsConstructingNow += 1;
 
-        buildingNowCounts.put(building.getBuildingName(), getBuildingCount(building.getBuildingName()) + 1);
+        buildingNowCounts.put(building.getBuildingName(), getBuildingNowCount(building.getBuildingName()) + 1);
 
         team.updateUserScoreboards();
     }

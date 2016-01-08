@@ -6,6 +6,7 @@ import com.ithinkrok.minigames.event.game.CountdownFinishedEvent;
 import com.ithinkrok.minigames.event.game.GameEvent;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;
+import com.ithinkrok.minigames.event.team.TeamEvent;
 import com.ithinkrok.minigames.event.user.UserEvent;
 import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.event.user.game.UserQuitEvent;
@@ -145,6 +146,16 @@ public class GameGroup
         return result;
     }
 
+    private Collection<Listener> getAllUsersInTeamListeners(Team team) {
+        ArrayList<Listener> result = new ArrayList<>(team.getUsers().size());
+
+        for (User user : team.getUsers()) {
+            result.addAll(user.getListeners());
+        }
+
+        return result;
+    }
+
     private Collection<Listener> getAllTeamListeners() {
         ArrayList<Listener> result = new ArrayList<>(teamsInGroup.size());
 
@@ -223,6 +234,10 @@ public class GameGroup
         }
     }
 
+    public void teamEvent(TeamEvent event) {
+        EventExecutor.executeEvent(event, event.getTeam().getListeners(), getAllUsersInTeamListeners(event.getTeam()));
+    }
+
     @Override
     public ConfigurationSection loadConfig(String name) {
         return game.loadConfig(name);
@@ -275,7 +290,7 @@ public class GameGroup
     }
 
     public void gameEvent(GameEvent event) {
-        EventExecutor.executeEvent(event, getListeners());
+        EventExecutor.executeEvent(event, getListeners(getAllUserListeners(), getAllTeamListeners()));
     }
 
     public void unload() {

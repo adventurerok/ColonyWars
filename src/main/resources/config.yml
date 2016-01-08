@@ -27,6 +27,8 @@ schematics:
   Base:
     file: "schematics/mccw_base.schematic"
     rotation: 0
+    upgrades:
+      - "Fortress"
   Fortress:
     file: "schematics/mccw_fortress.schematic"
     rotation: 0
@@ -45,6 +47,8 @@ schematics:
   Church:
     file: "schematics/mccw_church.schematic"
     rotation: 3
+    upgrades:
+      - "Cathedral"
   Cathedral:
     file: "schematics/mccw_cathedral.schematic"
     rotation: 3
@@ -54,6 +58,8 @@ schematics:
   ScoutTower:
     file: "schematics/mccw_scouttower.schematic"
     rotation: 2
+    upgrades:
+      - "CannonTower"
   CannonTower:
     file: "schematics/mccw_cannontower.schematic"
     rotation: 2

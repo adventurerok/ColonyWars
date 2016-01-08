@@ -91,7 +91,7 @@ public class PastedSchematic implements SchematicPaster.BoundsChecker {
         return !this.bounds.interceptsXZ(bounds);
     }
 
-    public void mapUnloaded() {
+    public void removed() {
         if(buildTask != null && buildTask.getTaskState() == GameTask.TaskState.SCHEDULED) buildTask.cancel();
 
         holograms.forEach(HologramAPI::removeHologram);
@@ -106,6 +106,8 @@ public class PastedSchematic implements SchematicPaster.BoundsChecker {
     }
 
     public void explode(){
+        removed();
+
         if(centerBlock != null){
             centerBlock.getWorld().playSound(centerBlock, Sound.EXPLODE, 1.0f, 1.0f);
         }
@@ -136,6 +138,8 @@ public class PastedSchematic implements SchematicPaster.BoundsChecker {
     }
 
     public void remove(){
+        removed();
+
         for(Location loc : buildingBlocks){
             if(loc.equals(centerBlock)) continue;
 

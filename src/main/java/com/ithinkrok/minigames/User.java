@@ -345,6 +345,12 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
         });
     }
 
+    public void redoInventory() {
+        if(this.openInventory == null) return;
+
+        showInventory(this.openInventory);
+    }
+
     @Override
     public GameTask doInFuture(GameRunnable task) {
         GameTask gameTask = gameGroup.doInFuture(task);

@@ -1,3 +1,52 @@
 folder: "mccw_canyon"
 description: "Canyon test for CW Recode"
 environment: "normal"
+
+shared_objects:
+  spawn_locations:
+    red:
+      x: -362
+      y: 94
+      z: -2
+    blue:
+      x: 8
+      y: 94
+      z: -1
+    green:
+      x: 7
+      y: 94
+      z: 369
+    yellow:
+      x: -363
+      y: 94
+      z: 368
+
+listeners:
+  initial_buildings:
+    class: "com.ithinkrok.cw.map.InitialBuildingSpawner"
+    config:
+      initial_buildings:
+        - building: "Base"
+          team: "red"
+          location:
+            x: -363
+            y: 94
+            z: -3
+        - building: "Base"
+          team: "blue"
+          location:
+            x: 9
+            y: 94
+            z: -1
+        - building: "Base"
+          team: "green"
+          location:
+            x: 8
+            y: 94
+            z: 370
+        - building: "Base"
+          team: "yellow"
+          location:
+            x: -364
+            y: 94
+            z: 368

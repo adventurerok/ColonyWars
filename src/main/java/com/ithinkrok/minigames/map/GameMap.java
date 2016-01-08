@@ -16,11 +16,13 @@ import com.ithinkrok.minigames.util.io.ConfigHolder;
 import com.ithinkrok.minigames.util.io.ConfigParser;
 import com.ithinkrok.minigames.util.io.DirectoryUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.io.IOException;
@@ -211,5 +213,9 @@ public class GameMap implements LanguageLookup, ConfigHolder, SchematicPaster.Bo
         }
 
         return true;
+    }
+
+    public Location getLocation(Vector location) {
+        return new Location(world, location.getX(), location.getY(), location.getZ());
     }
 }

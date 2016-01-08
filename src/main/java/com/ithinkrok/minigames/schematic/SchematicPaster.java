@@ -35,7 +35,10 @@ public class SchematicPaster {
 
         BoundingBox bounds = schem.calcBounds(schematicResolver, loc);
 
-        if (!schemData.getAllowOverlap() && !boundsChecker.canPaste(bounds)) return null;
+        if(!schemData.getAllowOverlap()) {
+            if(boundsChecker != null && !boundsChecker.canPaste(bounds)) return null;
+            if(options.doMapBoundsCheck() && !map.canPaste(bounds)) return null;
+        }
 
         List<Location> locations = new ArrayList<>();
         Location centerBlock = null;

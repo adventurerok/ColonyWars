@@ -16,6 +16,7 @@ import java.util.Map;
 public class SchematicOptions {
     private Material centerBlockType;
     private boolean progressHologram = false;
+    private boolean doMapBoundsCheck = true;
     private int buildSpeed = 2;
 
     private Map<Material, Material> replaceMaterials = new HashMap<>();
@@ -28,6 +29,7 @@ public class SchematicOptions {
 
     public SchematicOptions(ConfigurationSection config) {
         progressHologram = config.getBoolean("progress_hologram");
+        doMapBoundsCheck = config.getBoolean("do_map_bounds_check", true);
         buildSpeed = config.getInt("build_speed");
 
         if(config.contains("center_block_material")) {
@@ -43,6 +45,16 @@ public class SchematicOptions {
                 replaceMaterials.put(oldMat, newMat);
             }
         }
+    }
+
+    public boolean doMapBoundsCheck() {
+        return doMapBoundsCheck;
+    }
+
+    public SchematicOptions withMapBoundsCheck(boolean useMapBoundsCheck) {
+        this.doMapBoundsCheck = useMapBoundsCheck;
+
+        return this;
     }
 
     public Material getCenterBlockType() {

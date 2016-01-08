@@ -56,7 +56,7 @@ public class ConfigUtils {
         MemoryConfiguration memory = new MemoryConfiguration();
         memory.addDefaults(values);
 
-        return memory;
+        return memory.getDefaults();
     }
 
     public static List<Vector> getVectorList(ConfigurationSection config, String path) {

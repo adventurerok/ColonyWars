@@ -69,8 +69,13 @@ public class InventoryUtils {
 
         int amount = parts.length >= 2 ? Integer.parseInt(parts[1].trim()) : 1;
         int durability = parts.length >= 3 ? Integer.parseInt(parts[2].trim()) : 0;
+        String name = parts.length >= 4 ? parts[3] : null;
 
-        return new ItemStack(material, amount, (short) durability);
+        String[] lore;
+        if(parts.length >= 5) lore = Arrays.copyOfRange(parts, 4, parts.length - 1);
+        else lore = new String[0];
+
+        return createItemWithNameAndLore(material, amount, durability, name, lore);
     }
 
     public static ItemStack createPotion(PotionType type, int level, boolean splash, boolean extended, int amount){

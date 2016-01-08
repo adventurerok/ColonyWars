@@ -1,9 +1,11 @@
 package com.ithinkrok.minigames.util;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -57,6 +59,23 @@ public class ConfigUtils {
         memory.addDefaults(values);
 
         return memory.getDefaults();
+    }
+
+    public static ItemStack getItemStack(ConfigurationSection config, String path) {
+        if(config.isString(path)) return InventoryUtils.parseItem(config.getString(path));
+        if(!config.isConfigurationSection(path)) return null;
+
+        config = config.getConfigurationSection(path);
+
+        Material mat = Material.matchMaterial(config.getString("type"));
+        int amount = config.getInt("amount", 1);
+        int damage = config.getInt("damage", 0);
+
+        String name = config.getString("name", null);
+
+        //TODO add more options for ItemStack loading
+
+        return InventoryUtils.createItemWithNameAndLore(mat, amount, damage, name);
     }
 
     public static List<Vector> getVectorList(ConfigurationSection config, String path) {

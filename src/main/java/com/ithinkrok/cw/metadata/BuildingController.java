@@ -42,6 +42,7 @@ public class BuildingController extends Metadata implements Listener {
     @EventHandler
     public void onSchematicFinished(SchematicFinishedEvent event) {
         Building building = buildings.get(event.getSchematic());
+        if(building == null) return;
 
         getTeamBuildingStats(building).buildingFinished(building);
     }

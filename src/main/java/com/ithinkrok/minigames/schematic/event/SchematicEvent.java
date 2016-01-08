@@ -9,7 +9,7 @@ import org.bukkit.event.HandlerList;
  */
 public class SchematicEvent extends Event {
 
-    protected final PastedSchematic schematic;
+    private final PastedSchematic schematic;
 
     public SchematicEvent(PastedSchematic schematic) {
         this.schematic = schematic;
@@ -18,5 +18,9 @@ public class SchematicEvent extends Event {
     @Override
     public HandlerList getHandlers() {
         return null;
+    }
+
+    public PastedSchematic getSchematic() {
+        return schematic;
     }
 }

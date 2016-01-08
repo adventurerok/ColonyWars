@@ -8,6 +8,10 @@ import com.ithinkrok.minigames.event.game.MapChangedEvent;
  */
 public abstract class Metadata {
 
+    public void removed() {
+
+    }
+
     public abstract boolean removeOnGameStateChange(GameStateChangedEvent event);
 
     public abstract boolean removeOnMapChange(MapChangedEvent event);

@@ -24,8 +24,44 @@ kits:
 #TODO kits and KitChangeEvent
 
 schematics:
-  base:
+  Base:
     file: "schematics/mccw_base.schematic"
+    rotation: 0
+  Fortress:
+    file: "schematics/mccw_fortress.schematic"
+    rotation: 0
+  Farm:
+    file: "schematics/mccw_farm.schematic"
+    rotation: 0
+  Lumbermill:
+    file: "schematics/mccw_lumbermill.schematic"
+    rotation: 0
+  Blacksmith:
+    file: "schematics/mccw_blacksmith.schematic"
+    rotation: 3
+  MageTower:
+    file: "schematics/mccw_magetower.schematic"
+    rotation: 2
+  Church:
+    file: "schematics/mccw_church.schematic"
+    rotation: 3
+  Cathedral:
+    file: "schematics/mccw_cathedral.schematic"
+    rotation: 3
+  Greenhouse:
+    file: "schematics/mccw_greenhouse.schematic"
+    rotation: 3
+  ScoutTower:
+    file: "schematics/mccw_scouttower.schematic"
+    rotation: 2
+  CannonTower:
+    file: "schematics/mccw_cannontower.schematic"
+    rotation: 2
+  Wall:
+    file: "schematics/mccw_wall.schematic"
+    rotation: 0
+  Landmine:
+    file: "schematics/mccw_mine.schematic"
     rotation: 0
 
 # Specifies default shared objects. Some shared objects are required by certain Java Classes used in the game.

@@ -131,7 +131,7 @@ public class GameListener implements Listener {
         SchematicOptions options =
                 createSchematicOptions(event.getUserGameGroup(), event.getUser().getTeamIdentifier());
 
-        Schematic schem = event.getUserGameGroup().getSchematic("base");
+        Schematic schem = event.getUserGameGroup().getSchematic("Base");
         GameMap map = event.getUserGameGroup().getCurrentMap();
 
         PastedSchematic pasted = SchematicPaster

@@ -3,6 +3,7 @@ package com.ithinkrok.minigames.item;
 import com.ithinkrok.minigames.item.event.UserClickItemEvent;
 import com.ithinkrok.minigames.item.event.CalculateItemForUserEvent;
 import com.ithinkrok.minigames.util.InventoryUtils;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -22,6 +23,8 @@ public abstract class ClickableItem implements Identifiable {
     public ClickableItem(ItemStack baseDisplay) {
         if(baseDisplay != null) this.baseDisplay = InventoryUtils.addIdentifier(baseDisplay, identifier);
     }
+
+    public void configure(ConfigurationSection config) {}
 
     public int getIdentifier() {
         return identifier;

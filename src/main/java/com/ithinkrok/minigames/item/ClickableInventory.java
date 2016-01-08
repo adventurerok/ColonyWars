@@ -4,10 +4,15 @@ import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.user.inventory.UserInventoryClickEvent;
 import com.ithinkrok.minigames.item.event.UserClickItemEvent;
 import com.ithinkrok.minigames.item.event.CalculateItemForUserEvent;
+import com.ithinkrok.minigames.util.ConfigUtils;
 import com.ithinkrok.minigames.util.InventoryUtils;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,6 +23,33 @@ public class ClickableInventory {
 
     private final String title;
     private Map<Integer, ClickableItem> items = new HashMap<>();
+
+    public ClickableInventory(ConfigurationSection config) {
+        this.title = config.getString("title", "Missing Inv Title");
+
+        loadFromConfig(ConfigUtils.getConfigList(config, "items"));
+    }
+
+    @SuppressWarnings("unchecked")
+    public void loadFromConfig(List<ConfigurationSection> items) {
+        for(ConfigurationSection config : items) {
+            String className = config.getString("class");
+            ItemStack display = ConfigUtils.getItemStack(config, "display");
+            try {
+                Class<? extends ClickableItem> itemClass = (Class<? extends ClickableItem>) Class.forName(className);
+
+                Constructor<? extends ClickableItem> constructor = itemClass.getConstructor(ItemStack.class);
+                ClickableItem item = constructor.newInstance(display);
+
+                ConfigurationSection itemConfig = config.getConfigurationSection("config");
+                if(itemConfig != null) item.configure(itemConfig);
+
+                addItem(item);
+            } catch (ReflectiveOperationException | ClassCastException e) {
+                throw new RuntimeException("Failed while loading ClickableItem from config", e);
+            }
+        }
+    }
 
     public ClickableInventory(String title) {
         this.title = title;

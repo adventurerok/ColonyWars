@@ -143,6 +143,14 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
         Kit oldKit = this.kit;
         Kit newKit = this.kit = kit;
 
+        if(oldKit != null) {
+            this.listeners.removeAll(oldKit.getListeners());
+        }
+
+        if(newKit != null) {
+            this.listeners.addAll(newKit.getListeners());
+        }
+
         UserChangeKitEvent event = new UserChangeKitEvent(this, oldKit, newKit);
         gameGroup.userEvent(event);
     }

@@ -48,6 +48,8 @@ public class GameGroup
     private ConcurrentMap<UUID, User> usersInGroup = new ConcurrentHashMap<>();
 
     private Map<String, TeamIdentifier> teamIdentifiers = new HashMap<>();
+    private Map<String, Kit> kits = new HashMap<>();
+
     private Map<TeamIdentifier, Team> teamsInGroup = new HashMap<>();
     private Game game;
 
@@ -406,6 +408,10 @@ public class GameGroup
         }
     }
 
+    public Kit getKit(String name) {
+        return kits.get(name);
+    }
+
     private Team createTeam(TeamIdentifier teamIdentifier) {
         return new Team(teamIdentifier, this);
     }
@@ -423,6 +429,14 @@ public class GameGroup
     @Override
     public boolean hasMetadata(Class<? extends Metadata> clazz) {
         return metadataMap.containsKey(clazz);
+    }
+
+    public void setKits(List<Kit> kits) {
+        this.kits.clear();
+
+        for(Kit kit : kits) {
+            this.kits.put(kit.getName(), kit);
+        }
     }
 
     private class GameGroupListener implements Listener {

@@ -72,10 +72,10 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
     private HashMap<String, Listener> defaultListeners = new HashMap<>();
     private WeakHashMap<String, GameGroup> mapToGameGroup = new WeakHashMap<>();
     private List<GameState> gameStates = new ArrayList<>();
+    private List<Kit> kits = new ArrayList<>();
     private Map<String, GameMapInfo> maps = new HashMap<>();
     private Map<String, Schematic> schematicMap = new HashMap<>();
     private Map<String, ConfigurationSection> sharedObjects = new HashMap<>();
-    private Map<String, Kit> kitMap = new HashMap<>();
     private List<TeamIdentifier> teamIdentifiers = new ArrayList<>();
     private String startMapName;
 
@@ -228,7 +228,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
 
     private void reloadKits() {
-        kitMap.clear();
+        kits.clear();
 
         ConfigurationSection kitsConfig = config.getConfigurationSection("kits");
 
@@ -250,13 +250,9 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
                     e.printStackTrace();
                 }
             }
-            kitMap.put(name, new Kit(name, formattedName, listeners));
+            kits.add(new Kit(name, formattedName, listeners));
         }
 
-    }
-
-    public Kit getKit(String name) {
-        return kitMap.get(name);
     }
 
 
@@ -329,6 +325,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
         gameGroup.setDefaultListeners(defaultListeners);
         gameGroup.setTeamIdentifiers(teamIdentifiers);
+        gameGroup.setKits(kits);
 
         gameGroup.start();
 

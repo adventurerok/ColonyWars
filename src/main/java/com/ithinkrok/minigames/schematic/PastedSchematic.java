@@ -13,6 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.event.Listener;
 import org.bukkit.util.Vector;
@@ -46,9 +47,13 @@ public class PastedSchematic implements SchematicPaster.BoundsChecker {
 
     private boolean allowOverlap = false;
 
-    public PastedSchematic(String name, GameMap map, Location centerBlock, BoundingBox bounds, int rotation,
-                           boolean allowOverlap, List<Location> buildingBlocks, Map<Location, BlockState> oldBlocks) {
+    private Schematic schematic;
+
+    public PastedSchematic(String name, Schematic schematic, GameMap map, Location centerBlock, BoundingBox bounds,
+                           int rotation, boolean allowOverlap, List<Location> buildingBlocks,
+                           Map<Location, BlockState> oldBlocks) {
         this.name = name;
+        this.schematic = schematic;
         this.map = map;
         this.centerBlock = centerBlock;
         this.bounds = bounds;
@@ -59,6 +64,15 @@ public class PastedSchematic implements SchematicPaster.BoundsChecker {
 
         map.addPastedSchematic(this);
     }
+
+    public Schematic getSchematic() {
+        return schematic;
+    }
+
+    public ConfigurationSection getConfig() {
+        return schematic.getConfig();
+    }
+
     public BoundingBox getBounds() {
         return bounds;
     }

@@ -35,9 +35,9 @@ public class SchematicPaster {
 
         BoundingBox bounds = schem.calcBounds(schematicResolver, loc);
 
-        if(!schemData.getAllowOverlap()) {
-            if(boundsChecker != null && !boundsChecker.canPaste(bounds)) return null;
-            if(options.doMapBoundsCheck() && !map.canPaste(bounds)) return null;
+        if (!schemData.getAllowOverlap()) {
+            if (boundsChecker != null && !boundsChecker.canPaste(bounds)) return null;
+            if (options.doMapBoundsCheck() && !map.canPaste(bounds)) return null;
         }
 
         List<Location> locations = new ArrayList<>();
@@ -73,7 +73,7 @@ public class SchematicPaster {
             return Double.compare(o1.getZ(), o2.getZ());
         });
 
-        PastedSchematic result = new PastedSchematic(schemData.getName(), map, centerBlock, bounds, rotation,
+        PastedSchematic result = new PastedSchematic(schemData.getName(), schemData, map, centerBlock, bounds, rotation,
                 schemData.getAllowOverlap(), locations, oldBlocks);
         result.addListeners(options.getDefaultListeners());
 

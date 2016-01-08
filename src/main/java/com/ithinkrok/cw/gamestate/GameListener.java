@@ -1,5 +1,7 @@
 package com.ithinkrok.cw.gamestate;
 
+import com.ithinkrok.cw.Building;
+import com.ithinkrok.cw.metadata.BuildingController;
 import com.ithinkrok.cw.scoreboard.CWScoreboardHandler;
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.TeamIdentifier;
@@ -12,11 +14,9 @@ import com.ithinkrok.minigames.event.user.game.UserChangeTeamEvent;
 import com.ithinkrok.minigames.event.user.world.UserBreakBlockEvent;
 import com.ithinkrok.minigames.event.user.world.UserPickupItemEvent;
 import com.ithinkrok.minigames.event.user.world.UserPlaceBlockEvent;
+import com.ithinkrok.minigames.map.GameMap;
 import com.ithinkrok.minigames.metadata.Money;
-import com.ithinkrok.minigames.schematic.Facing;
-import com.ithinkrok.minigames.schematic.Schematic;
-import com.ithinkrok.minigames.schematic.SchematicOptions;
-import com.ithinkrok.minigames.schematic.SchematicPaster;
+import com.ithinkrok.minigames.schematic.*;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import com.ithinkrok.minigames.util.SoundEffect;
 import com.ithinkrok.minigames.util.TreeFeller;
@@ -132,17 +132,24 @@ public class GameListener implements Listener {
                 createSchematicOptions(event.getUserGameGroup(), event.getUser().getTeamIdentifier());
 
         Schematic schem = event.getUserGameGroup().getSchematic("base");
-        SchematicPaster.pasteSchematic(schem, event.getBlock().getLocation(), bounds -> true, name -> null, rotation,
-                options);
+        GameMap map = event.getUserGameGroup().getCurrentMap();
 
+        PastedSchematic pasted = SchematicPaster
+                .pasteSchematic(schem, map, event.getBlock().getLocation(), bounds -> true, name -> null, rotation,
+                        options);
 
+        Building building = new Building("Base", event.getUser().getTeamIdentifier(), pasted);
+
+        BuildingController controller = BuildingController.getOrCreate(event.getUserGameGroup());
+
+        controller.addBuilding(building);
     }
 
     public SchematicOptions createSchematicOptions(GameGroup gameGroup, TeamIdentifier team) {
         SchematicOptions options = new SchematicOptions(gameGroup.getSharedObject(schematicSharedConfig));
         options.withOverrideDyeColor(team.getDyeColor());
 
-        //TODO GameGroup listeners
+        options.withDefaultListener(BuildingController.getOrCreate(gameGroup));
 
         return options;
     }

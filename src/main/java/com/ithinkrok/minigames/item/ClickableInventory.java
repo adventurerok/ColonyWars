@@ -3,7 +3,7 @@ package com.ithinkrok.minigames.item;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.user.inventory.UserInventoryClickEvent;
 import com.ithinkrok.minigames.item.event.UserClickItemEvent;
-import com.ithinkrok.minigames.item.event.UserViewItemEvent;
+import com.ithinkrok.minigames.item.event.CalculateItemForUserEvent;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import org.bukkit.inventory.Inventory;
 
@@ -31,9 +31,15 @@ public class ClickableInventory {
         Inventory inventory = user.createInventory(items.size(), title);
 
         for(ClickableItem item : items.values()) {
-            if(!item.isVisible(new UserViewItemEvent(user, this, item))) continue;
+            CalculateItemForUserEvent event = new CalculateItemForUserEvent(user, this, item);
 
-            inventory.addItem(item.getDisplayItemStack());
+            item.onCalculateItem(event);
+            if(event.getDisplay() == null) continue;
+            if(InventoryUtils.getIdentifier(event.getDisplay()) == -1) {
+                event.setDisplay(InventoryUtils.addIdentifier(event.getDisplay().clone(), item.getIdentifier()));
+            }
+
+            inventory.addItem(event.getDisplay());
         }
 
         return inventory;

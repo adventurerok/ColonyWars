@@ -6,7 +6,7 @@ import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.item.event.UserClickItemEvent;
-import com.ithinkrok.minigames.item.event.UserViewItemEvent;
+import com.ithinkrok.minigames.item.event.CalculateItemForUserEvent;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
@@ -54,10 +54,6 @@ public class TeamChooser implements Listener {
                     identifier.getFormattedName());
 
             ClickableItem item = new ClickableItem(display) {
-                @Override
-                public boolean isVisible(UserViewItemEvent event) {
-                    return true;
-                }
 
                 @Override
                 public void onClick(UserClickItemEvent event) {

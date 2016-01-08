@@ -1,7 +1,7 @@
 package com.ithinkrok.minigames.item;
 
 import com.ithinkrok.minigames.item.event.UserClickItemEvent;
-import com.ithinkrok.minigames.item.event.UserViewItemEvent;
+import com.ithinkrok.minigames.item.event.CalculateItemForUserEvent;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import org.bukkit.inventory.ItemStack;
 
@@ -12,21 +12,28 @@ public abstract class ClickableItem implements Identifiable {
 
     private static int clickableItemCount = 0;
 
-    private ItemStack display;
+    protected ItemStack baseDisplay;
     private int identifier = clickableItemCount++;
 
-    public ClickableItem(ItemStack display) {
-        this.display = InventoryUtils.addIdentifier(display, identifier);
+    public ClickableItem() {
+        this(null);
+    }
+
+    public ClickableItem(ItemStack baseDisplay) {
+        if(baseDisplay != null) this.baseDisplay = InventoryUtils.addIdentifier(baseDisplay, identifier);
     }
 
     public int getIdentifier() {
         return identifier;
     }
 
-    public ItemStack getDisplayItemStack() {
-        return display;
+    public ItemStack getBaseDisplayStack() {
+        return baseDisplay;
     }
 
-    public abstract boolean isVisible(UserViewItemEvent event);
+    public  void onCalculateItem(CalculateItemForUserEvent event) {
+        //Does nothing by default as the event uses item.getBaseDisplayStack() by default
+    }
+
     public abstract void onClick(UserClickItemEvent event);
 }

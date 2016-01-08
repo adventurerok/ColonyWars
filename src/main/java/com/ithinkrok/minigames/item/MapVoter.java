@@ -3,7 +3,7 @@ package com.ithinkrok.minigames.item;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.item.event.UserClickItemEvent;
-import com.ithinkrok.minigames.item.event.UserViewItemEvent;
+import com.ithinkrok.minigames.item.event.CalculateItemForUserEvent;
 import com.ithinkrok.minigames.metadata.MapVote;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import org.bukkit.Material;
@@ -47,11 +47,6 @@ public class MapVoter implements Listener {
             ItemStack display = InventoryUtils.createItemWithNameAndLore(mapMaterial, 1, 0, mapName);
 
             ClickableItem item = new ClickableItem(display) {
-                @Override
-                public boolean isVisible(UserViewItemEvent event) {
-                    return true; //TODO replace isVisible in ClickableItem with a method to calculate the ItemStack
-                }
-
                 @Override
                 public void onClick(UserClickItemEvent event) {
                     event.getUser().closeInventory();

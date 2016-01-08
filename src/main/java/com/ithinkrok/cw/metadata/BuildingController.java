@@ -95,10 +95,10 @@ public class BuildingController extends Metadata implements Listener {
         return options;
     }
 
-    private TeamBuildingStats getTeamBuildingStats(Building building) {
+    private CWTeamStats getTeamBuildingStats(Building building) {
         Team team = gameGroup.getTeam(building.getTeamIdentifier());
 
-        return TeamBuildingStats.getOrCreate(team);
+        return CWTeamStats.getOrCreate(team);
     }
 
     @EventHandler

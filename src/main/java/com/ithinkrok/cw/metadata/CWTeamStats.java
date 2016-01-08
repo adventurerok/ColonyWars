@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by paul on 08/01/16.
  */
-public class TeamBuildingStats extends Metadata {
+public class CWTeamStats extends Metadata {
 
     private final Team team;
 
@@ -42,7 +42,7 @@ public class TeamBuildingStats extends Metadata {
         return buildingNowCounts;
     }
 
-    public TeamBuildingStats(Team team) {
+    public CWTeamStats(Team team) {
         this.team = team;
     }
 
@@ -118,11 +118,11 @@ public class TeamBuildingStats extends Metadata {
         return true;
     }
 
-    public static TeamBuildingStats getOrCreate(Team team) {
-        TeamBuildingStats stats = team.getMetadata(TeamBuildingStats.class);
+    public static CWTeamStats getOrCreate(Team team) {
+        CWTeamStats stats = team.getMetadata(CWTeamStats.class);
 
         if(stats == null) {
-            stats = new TeamBuildingStats(team);
+            stats = new CWTeamStats(team);
             team.setMetadata(stats);
         }
 

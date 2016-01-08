@@ -1,6 +1,6 @@
 package com.ithinkrok.cw.scoreboard;
 
-import com.ithinkrok.cw.metadata.TeamBuildingStats;
+import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.minigames.Team;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.metadata.Money;
@@ -51,7 +51,7 @@ public class CWScoreboardHandler implements ScoreboardHandler {
         if(user.getTeam() == null) return;
 
         Team team = user.getTeam();
-        TeamBuildingStats buildingStats = TeamBuildingStats.getOrCreate(team);
+        CWTeamStats buildingStats = CWTeamStats.getOrCreate(team);
 
         scoreboard.setScore(userBalanceDisplay, Money.getOrCreate(user).getMoney());
         scoreboard.setScore(teamBalanceDisplay, Money.getOrCreate(team).getMoney());

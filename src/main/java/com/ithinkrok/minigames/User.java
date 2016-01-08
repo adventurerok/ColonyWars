@@ -4,10 +4,7 @@ import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.MutableClassToInstanceMap;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;
-import com.ithinkrok.minigames.event.user.game.UserAbilityCooldownEvent;
-import com.ithinkrok.minigames.event.user.game.UserChangeTeamEvent;
-import com.ithinkrok.minigames.event.user.game.UserInGameChangeEvent;
-import com.ithinkrok.minigames.event.user.game.UserTeleportEvent;
+import com.ithinkrok.minigames.event.user.game.*;
 import com.ithinkrok.minigames.event.user.inventory.UserInventoryClickEvent;
 import com.ithinkrok.minigames.event.user.inventory.UserInventoryCloseEvent;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
@@ -70,6 +67,7 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
     private Game game;
     private GameGroup gameGroup;
     private Team team;
+    private Kit kit;
     private UUID uuid;
     private LivingEntity entity;
     private PlayerState playerState;
@@ -137,6 +135,20 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
 
         UserChangeTeamEvent event = new UserChangeTeamEvent(this, oldTeam, newTeam);
         gameGroup.userEvent(event);
+    }
+
+    public void setKit(Kit kit) {
+        if(kit == this.kit) return;
+
+        Kit oldKit = this.kit;
+        Kit newKit = this.kit = kit;
+
+        UserChangeKitEvent event = new UserChangeKitEvent(this, oldKit, newKit);
+        gameGroup.userEvent(event);
+    }
+
+    public Kit getKit() {
+        return kit;
     }
 
     public TeamIdentifier getTeamIdentifier() {

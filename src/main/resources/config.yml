@@ -19,6 +19,8 @@ team_identifiers:
     dye_color: YELLOW
 
 kits:
+  general:
+    listeners: {}
 #TODO kits and KitChangeEvent
 
 schematics:

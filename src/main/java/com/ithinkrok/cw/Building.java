@@ -2,6 +2,8 @@ package com.ithinkrok.cw;
 
 import com.ithinkrok.minigames.TeamIdentifier;
 import com.ithinkrok.minigames.schematic.PastedSchematic;
+import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 
 /**
  * Created by paul on 08/01/16.
@@ -17,6 +19,14 @@ public class Building {
         this.buildingName = buildingName;
         this.teamIdentifier = teamIdentifier;
         this.schematic = schematic;
+    }
+
+    public ConfigurationSection getConfig() {
+        return schematic.getConfig();
+    }
+
+    public Location getCenterBlock() {
+        return schematic.getCenterBlock();
     }
 
     public PastedSchematic getSchematic() {

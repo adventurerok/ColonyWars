@@ -6,6 +6,7 @@ import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.metadata.Metadata;
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,7 +76,14 @@ public class TeamBuildingStats extends Metadata {
         buildingCounts.put(building.getBuildingName(), getBuildingCount(building.getBuildingName()) + 1);
         hadBuildings.put(building.getBuildingName(), true);
 
-        //TODO setup church, cathedral, base, cannon tower, fortress
+        ConfigurationSection config = building.getSchematic().getConfig();
+        if(config != null) {
+            if(config.contains("base")) baseLocation = building.getCenterBlock();
+            if(config.contains("revival_rate")) {
+                setRespawnChance(Math.max(respawnChance, config.getInt("revival_rate")), true);
+                churchLocations.add(building.getCenterBlock());
+            }
+        }
 
         team.updateUserScoreboards();
     }
@@ -88,6 +96,10 @@ public class TeamBuildingStats extends Metadata {
 
     public void buildingRemoved(Building building) {
         buildingCounts.put(building.getBuildingName(), Math.max(getBuildingCount(building.getBuildingName()) - 1, 0));
+
+        if (churchLocations.remove(building.getCenterBlock())) {
+            if (churchLocations.isEmpty()) setRespawnChance(0, true);
+        }
 
         //TODO stop cannon towers
     }
@@ -111,5 +123,11 @@ public class TeamBuildingStats extends Metadata {
         }
 
         return stats;
+    }
+
+    public void setRespawnChance(int respawnChance, boolean message) {
+        this.respawnChance = respawnChance;
+
+        //TODO message players
     }
 }

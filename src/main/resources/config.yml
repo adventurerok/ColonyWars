@@ -29,9 +29,14 @@ schematics:
     rotation: 0
     upgrades:
       - "Fortress"
+    config:
+      base: true
   Fortress:
     file: "schematics/mccw_fortress.schematic"
     rotation: 0
+    config:
+      base: true
+      cannons: true
   Farm:
     file: "schematics/mccw_farm.schematic"
     rotation: 0
@@ -49,9 +54,13 @@ schematics:
     rotation: 3
     upgrades:
       - "Cathedral"
+    config:
+      revival_rate: 30
   Cathedral:
     file: "schematics/mccw_cathedral.schematic"
     rotation: 3
+    config:
+      revival_rate: 75
   Greenhouse:
     file: "schematics/mccw_greenhouse.schematic"
     rotation: 3
@@ -63,6 +72,8 @@ schematics:
   CannonTower:
     file: "schematics/mccw_cannontower.schematic"
     rotation: 2
+    config:
+      cannons: true
   Wall:
     file: "schematics/mccw_wall.schematic"
     rotation: 0

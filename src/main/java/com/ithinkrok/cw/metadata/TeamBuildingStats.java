@@ -38,6 +38,10 @@ public class TeamBuildingStats extends Metadata {
         return respawnChance;
     }
 
+    public HashMap<String, Integer> getBuildingNowCounts() {
+        return buildingNowCounts;
+    }
+
     public TeamBuildingStats(Team team) {
         this.team = team;
     }

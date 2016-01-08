@@ -17,3 +17,5 @@ money.balance.user.add=&a$%s &ewas added to your Account!
 scoreboard.title=Colony Wars
 scoreboard.user_balance=&eBalance\:
 scoreboard.team_balance=&eTeam Balance\:
+scoreboard.building_now_count=&6Building Now\:
+scoreboard.revival_rate=&bRevival Rate\:

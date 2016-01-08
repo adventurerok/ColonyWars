@@ -2,6 +2,7 @@ package com.ithinkrok.cw.metadata;
 
 import com.ithinkrok.cw.Building;
 import com.ithinkrok.minigames.GameGroup;
+import com.ithinkrok.minigames.Team;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.metadata.Metadata;
@@ -19,10 +20,14 @@ import java.util.HashMap;
  */
 public class BuildingController extends Metadata implements Listener {
 
-    private GameGroup gameGroup;
+    private final GameGroup gameGroup;
 
     private HashMap<PastedSchematic, Building> buildings = new HashMap<>();
     private HashMap<Location, Building> buildingCentres = new HashMap<>();
+
+    public BuildingController(GameGroup gameGroup) {
+        this.gameGroup = gameGroup;
+    }
 
     @Override
     public boolean removeOnGameStateChange(GameStateChangedEvent event) {
@@ -36,7 +41,9 @@ public class BuildingController extends Metadata implements Listener {
 
     @EventHandler
     public void onSchematicFinished(SchematicFinishedEvent event) {
+        Building building = buildings.get(event.getSchematic());
 
+        getTeamBuildingStats(building).buildingFinished(building);
     }
 
     public void addBuilding(Building building) {
@@ -46,14 +53,35 @@ public class BuildingController extends Metadata implements Listener {
             buildingCentres.put(building.getSchematic().getCenterBlock(), building);
         }
 
+        getTeamBuildingStats(building).buildingStarted(building);
+
         if(building.getSchematic().isFinished()) {
             onSchematicFinished(new SchematicFinishedEvent(building.getSchematic()));
         }
+    }
+
+    private TeamBuildingStats getTeamBuildingStats(Building building) {
+        Team team = gameGroup.getTeam(building.getTeamIdentifier());
+
+        return TeamBuildingStats.getOrCreate(team);
     }
 
     @EventHandler
     public void onSchematicDestroyed(SchematicDestroyedEvent event) {
         Building building = buildings.remove(event.getSchematic());
         buildingCentres.values().remove(building);
+
+        getTeamBuildingStats(building).buildingRemoved(building);
+    }
+
+    public static BuildingController getOrCreate(GameGroup gameGroup) {
+        BuildingController result = gameGroup.getMetadata(BuildingController.class);
+
+        if(result == null) {
+            result = new BuildingController(gameGroup);
+            gameGroup.setMetadata(result);
+        }
+
+        return result;
     }
 }

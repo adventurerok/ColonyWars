@@ -29,11 +29,14 @@ public class Schematic {
 
     private List<String> upgradesTo;
 
+    private boolean allowOverlap;
+
     public Schematic(String name, File dataFolder, ConfigurationSection config) {
         this.name = name;
         this.config = config.getConfigurationSection("config");
         this.baseRotation = config.getInt("rotation", 0);
         this.upgradesTo = config.getStringList("upgrades");
+        this.allowOverlap = config.getBoolean("allow_overlap");
         if(this.upgradesTo == null) this.upgradesTo = Collections.emptyList();
 
         Vector baseOffset = ConfigUtils.getVector(config, "offset");
@@ -64,6 +67,10 @@ public class Schematic {
         } catch (IOException e) {
             throw new RuntimeException("Failed to load schematic: " + schematicFile, e);
         }
+    }
+
+    public boolean getAllowOverlap() {
+        return allowOverlap;
     }
 
     public SchematicRotation getSchematicRotation(int rotation) {

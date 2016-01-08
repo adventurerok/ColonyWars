@@ -1,5 +1,6 @@
 package com.ithinkrok.minigames.schematic;
 
+import com.ithinkrok.minigames.map.GameMap;
 import com.ithinkrok.minigames.task.GameRunnable;
 import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskScheduler;
@@ -20,20 +21,21 @@ public class SchematicPaster {
 
     private static final DecimalFormat percentFormat = new DecimalFormat("00%");
 
-    public static PastedSchematic pasteSchematic(Schematic schemData, Location loc, BoundsChecker boundsChecker,
-                                                 SchematicResolver schematicResolver, int rotation,
-                                                 SchematicOptions options) {
-        return buildSchematic(schemData, loc, boundsChecker, null, schematicResolver, rotation, options);
+    public static PastedSchematic pasteSchematic(Schematic schemData, GameMap map, Location loc,
+                                                 BoundsChecker boundsChecker, SchematicResolver schematicResolver,
+                                                 int rotation, SchematicOptions options) {
+        return buildSchematic(schemData, map, loc, boundsChecker, null, schematicResolver, rotation, options);
     }
 
-    public static PastedSchematic buildSchematic(Schematic schemData, Location loc, BoundsChecker boundsChecker,
-                                                 TaskScheduler taskScheduler, SchematicResolver schematicResolver, int rotation,
+    public static PastedSchematic buildSchematic(Schematic schemData, GameMap map, Location loc,
+                                                 BoundsChecker boundsChecker, TaskScheduler taskScheduler,
+                                                 SchematicResolver schematicResolver, int rotation,
                                                  SchematicOptions options) {
         SchematicRotation schem = schemData.getSchematicRotation(rotation);
 
         BoundingBox bounds = schem.calcBounds(schematicResolver, loc);
 
-        if (!boundsChecker.canPaste(bounds)) return null;
+        if (!schemData.getAllowOverlap() && !boundsChecker.canPaste(bounds)) return null;
 
         List<Location> locations = new ArrayList<>();
         Location centerBlock = null;
@@ -68,8 +70,8 @@ public class SchematicPaster {
             return Double.compare(o1.getZ(), o2.getZ());
         });
 
-        PastedSchematic result =
-                new PastedSchematic(schemData.getName(), centerBlock, bounds, rotation, locations, oldBlocks);
+        PastedSchematic result = new PastedSchematic(schemData.getName(), map, centerBlock, bounds, rotation,
+                schemData.getAllowOverlap(), locations, oldBlocks);
         result.addListeners(options.getDefaultListeners());
 
         SchematicBuilderTask builderTask = new SchematicBuilderTask(loc, result, schem, options);

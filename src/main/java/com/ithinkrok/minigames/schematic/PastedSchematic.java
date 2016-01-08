@@ -44,19 +44,21 @@ public class PastedSchematic implements SchematicPaster.BoundsChecker {
     private List<Hologram> holograms = new ArrayList<>();
     private GameTask buildTask;
 
+    private boolean allowOverlap = false;
+
     public PastedSchematic(String name, GameMap map, Location centerBlock, BoundingBox bounds, int rotation,
-                           List<Location> buildingBlocks, Map<Location, BlockState> oldBlocks) {
+                           boolean allowOverlap, List<Location> buildingBlocks, Map<Location, BlockState> oldBlocks) {
         this.name = name;
         this.map = map;
         this.centerBlock = centerBlock;
         this.bounds = bounds;
         this.rotation = rotation;
+        this.allowOverlap = allowOverlap;
         this.buildingBlocks = buildingBlocks;
         this.oldBlocks = oldBlocks;
 
         map.addPastedSchematic(this);
     }
-
     public BoundingBox getBounds() {
         return bounds;
     }
@@ -94,44 +96,36 @@ public class PastedSchematic implements SchematicPaster.BoundsChecker {
 
     @Override
     public boolean canPaste(BoundingBox bounds) {
-        return !this.bounds.interceptsXZ(bounds);
+        return allowOverlap || !this.bounds.intercepts(bounds);
     }
 
-    public void removed() {
-        map.removePastedSchematic(this);
-
-        if(buildTask != null && buildTask.getTaskState() == GameTask.TaskState.SCHEDULED) buildTask.cancel();
-
-        holograms.forEach(HologramAPI::removeHologram);
-    }
-
-    public void addHologram(Hologram hologram){
+    public void addHologram(Hologram hologram) {
         holograms.add(hologram);
     }
 
-    public void removeHologram(Hologram hologram){
+    public void removeHologram(Hologram hologram) {
         holograms.remove(hologram);
     }
 
-    public void explode(){
+    public void explode() {
         removed();
 
-        if(centerBlock != null){
+        if (centerBlock != null) {
             centerBlock.getWorld().playSound(centerBlock, Sound.EXPLODE, 1.0f, 1.0f);
         }
 
-        for(Location loc : buildingBlocks){
-            if(loc.equals(centerBlock)) continue;
+        for (Location loc : buildingBlocks) {
+            if (loc.equals(centerBlock)) continue;
 
             Block b = loc.getBlock();
-            if(b.getType() == Material.AIR) continue;
+            if (b.getType() == Material.AIR) continue;
 
             Material oldType = b.getType();
             byte oldData = b.getData();
 
             b.setType(Material.AIR);
 
-            if(!oldType.isSolid()) continue;
+            if (!oldType.isSolid()) continue;
 
             FallingBlock block = loc.getWorld().spawnFallingBlock(loc, oldType, oldData);
             float xv = -0.3f + (random.nextFloat() * 0.6f);
@@ -145,18 +139,26 @@ public class PastedSchematic implements SchematicPaster.BoundsChecker {
         EventExecutor.executeEvent(destroyedEvent, listeners);
     }
 
-    public void remove(){
+    public void removed() {
+        map.removePastedSchematic(this);
+
+        if (buildTask != null && buildTask.getTaskState() == GameTask.TaskState.SCHEDULED) buildTask.cancel();
+
+        holograms.forEach(HologramAPI::removeHologram);
+    }
+
+    public void remove() {
         removed();
 
-        for(Location loc : buildingBlocks){
-            if(loc.equals(centerBlock)) continue;
+        for (Location loc : buildingBlocks) {
+            if (loc.equals(centerBlock)) continue;
 
             oldBlocks.get(loc).update(true, false);
         }
 
         SchematicDestroyedEvent destroyedEvent = new SchematicDestroyedEvent(this);
         EventExecutor.executeEvent(destroyedEvent, listeners);
-        if(centerBlock != null) oldBlocks.get(centerBlock).update(true, false);
+        if (centerBlock != null) oldBlocks.get(centerBlock).update(true, false);
     }
 
     public GameTask getBuildTask() {

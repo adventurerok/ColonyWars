@@ -11,9 +11,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by paul on 31/12/15.
@@ -166,4 +164,17 @@ public class InventoryUtils {
         return -1;
     }
 
+    public static ItemStack addLore(ItemStack item, String... lore) {
+        ItemMeta im = item.getItemMeta();
+
+        List<String> oldLore;
+        if(im.hasLore()) oldLore = im.getLore();
+        else oldLore = new ArrayList<>();
+
+        Collections.addAll(oldLore, lore);
+
+        if(!oldLore.isEmpty()) im.setLore(oldLore);
+        item.setItemMeta(im);
+        return item;
+    }
 }

@@ -21,6 +21,7 @@ public abstract class Buyable extends ClickableItem {
     private static String teamNoMoneyLocale;
     private static String userNoMoneyLocale;
     private static String cannotBuyLocale;
+    private static String userPayTeamLocale;
 
     public Buyable(ItemStack baseDisplay) {
         super(baseDisplay);
@@ -34,6 +35,7 @@ public abstract class Buyable extends ClickableItem {
         teamNoMoneyLocale = config.getString("team_no_money_locale", "buyable.team.no_money");
         userNoMoneyLocale = config.getString("user_no_money_locale", "buyable.user.no_money");
         cannotBuyLocale = config.getString("cannot_buy_locale", "buyable.cannot_buy");
+        userPayTeamLocale = config.getString("user_pay_team_locale", "buyable.user.pay_team");
     }
 
     @Override
@@ -76,7 +78,10 @@ public abstract class Buyable extends ClickableItem {
             int userAmount = cost - teamAmount;
 
             if(teamAmount > 0) teamMoney.subtractMoney(teamAmount, true);
-            if(userAmount > 0) userMoney.subtractMoney(userAmount, true);
+            if(userAmount > 0){
+                userMoney.subtractMoney(userAmount, true);
+                event.getUser().sendLocale(userPayTeamLocale, userAmount);
+            }
         } else {
             userMoney.subtractMoney(cost, true);
         }

@@ -24,3 +24,6 @@ building.unknown=&Unknown building!
 building.invalid_loc=&cYou cannot build that here!
 building.not_finished=&cPlease wait until the construction has finished.
 building.not_yours=&eThat building does not belong to your team. &lMine this block to destroy it!
+building.destroy.own_team=&cYou cannot destroy your own team's buildings!
+building.destroy.protected=&cYou cannot destroy other team's %ss!
+building.destroy.success=&6%s &6destroyed a &3%s &6of team %s&6!

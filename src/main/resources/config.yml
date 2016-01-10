@@ -31,6 +31,7 @@ schematics:
       - "Fortress"
     config:
       base: true
+      protected: true
       shop:
         - class: "com.ithinkrok.cw.inventory.BuildingBuyable"
           config:
@@ -43,6 +44,7 @@ schematics:
     config:
       base: true
       cannons: true
+      protected: true
   Farm:
     file: "schematics/mccw_farm.schematic"
     rotation: 0
@@ -162,6 +164,7 @@ game_states:
         class: "com.ithinkrok.cw.gamestate.GameListener"
         config:
           gold_shared_object: "gold_config"
+          buil
 
 
 start_game_state: "lobby"

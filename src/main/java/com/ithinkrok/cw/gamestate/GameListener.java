@@ -47,41 +47,54 @@ public class GameListener implements Listener {
     private String buildingNotFinishedLocale;
     private String buildingNotYoursLocale;
 
+    private String cannotDestroyOwnBuildingLocale;
+    private String cannotDestroyLocale;
+    private String buildingDestroyedLocale;
+
+    private int buildingDestroyWait;
+
     @EventHandler
     public void onListenerLoaded(ListenerLoadedEvent<?> event) {
         ConfigurationSection config = event.getConfig();
 
         goldSharedConfig = config.getString("gold_shared_object");
 
-        unknownBuildingLocale = config.getString("building.unknown_locale", "building.unknown");
-        cannotBuildHereLocale = config.getString("building.invalid_location_locale", "building.invalid_loc");
-        buildingNotFinishedLocale = config.getString("building.not_finished_locale", "building.not_finished");
-        buildingNotYoursLocale = config.getString("building.not_yours_locale", "building.not_yours");
+        unknownBuildingLocale = config.getString("buildings.unknown_locale", "building.unknown");
+        cannotBuildHereLocale = config.getString("buildings.invalid_location_locale", "building.invalid_loc");
+        buildingNotFinishedLocale = config.getString("buildings.not_finished_locale", "building.not_finished");
+        buildingNotYoursLocale = config.getString("buildings.not_yours_locale", "building.not_yours");
+
+        cannotDestroyOwnBuildingLocale =
+                config.getString("buildings.destroy_own_team_locale", "building.destroy.own_team");
+        cannotDestroyLocale = config.getString("buildings.destroy_protected_locale", "building.destroy.protected");
+        buildingDestroyedLocale = config.getString("buildings.destroyed_locale", "building.destroy.success");
+
+        buildingDestroyWait = (int) (config.getDouble("buildings.destroy_wait", 3.0d) * 20d);
     }
 
     @EventHandler
     public void onUserInteractWorld(UserInteractWorldEvent event) {
-        if(event.getInteractType() != UserInteractEvent.InteractType.RIGHT_CLICK || !event.hasBlock()) return;
+        if (event.getInteractType() != UserInteractEvent.InteractType.RIGHT_CLICK || !event.hasBlock()) return;
 
-        if(event.getClickedBlock().getType() != Material.OBSIDIAN) return;
+        if (event.getClickedBlock().getType() != Material.OBSIDIAN) return;
 
         BuildingController controller = BuildingController.getOrCreate(event.getUserGameGroup());
 
         Building building = controller.getBuilding(event.getClickedBlock().getLocation());
-        if(building == null) return;
+        if (building == null) return;
 
-        if(!building.getTeamIdentifier().equals(event.getUser().getTeamIdentifier())) {
+        if (!building.getTeamIdentifier().equals(event.getUser().getTeamIdentifier())) {
             event.getUser().sendLocale(buildingNotYoursLocale);
             return;
         }
 
-        if(!building.isFinished()) {
+        if (!building.isFinished()) {
             event.getUser().sendLocale(buildingNotFinishedLocale);
             return;
         }
 
         ClickableInventory shop = building.createShop();
-        if(shop == null) return;
+        if (shop == null) return;
 
         event.getUser().showInventory(shop);
     }
@@ -92,6 +105,25 @@ public class GameListener implements Listener {
         GoldConfig gold = getGoldConfig(goldShared);
 
         gold.onBlockBreak(event.getBlock());
+
+        if (event.getBlock().getType() != Material.OBSIDIAN) return;
+
+        BuildingController controller = BuildingController.getOrCreate(event.getUserGameGroup());
+        Building building = controller.getBuilding(event.getBlock().getLocation());
+
+        if (building == null) return;
+
+        if (building.getTeamIdentifier().equals(event.getUser().getTeamIdentifier())) {
+            event.getUser().sendLocale(cannotDestroyOwnBuildingLocale);
+            event.setCancelled(true);
+        } else if(building.isProtected()) {
+            event.getUser().sendLocale(cannotDestroyLocale, building.getBuildingName());
+            event.setCancelled(true);
+        } else {
+            event.getUserGameGroup().sendLocale(buildingDestroyedLocale, event.getUser().getFormattedName(), building
+                    .getBuildingName(), building.getTeamIdentifier().getFormattedName());
+            event.getUserGameGroup().doInFuture(task -> building.explode(), buildingDestroyWait);
+        }
     }
 
     private GoldConfig getGoldConfig(ConfigurationSection config) {

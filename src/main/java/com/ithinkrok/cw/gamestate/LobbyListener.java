@@ -14,6 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -29,9 +30,6 @@ public class LobbyListener implements Listener {
     private String needsMorePlayersLocale;
     private int minPlayersToStartGame;
 
-    private String randomMapName;
-    private ArrayList<String> mapList;
-
     private String nextGameState;
 
     @EventHandler
@@ -41,17 +39,9 @@ public class LobbyListener implements Listener {
         nextGameState = config.getString("next_gamestate");
 
         configureCountdown(config.getConfigurationSection("start_countdown"));
-        configureMapVoting(config.getConfigurationSection("map_voting"));
     }
 
-    private void configureMapVoting(ConfigurationSection config) {
-        randomMapName = config.getString("random_map");
 
-        mapList = new ArrayList<>(config.getStringList("map_list"));
-        mapList.remove(randomMapName);
-
-        if(mapList.size() < 1) throw new RuntimeException("The game requires at least one map!");
-    }
 
     private void configureCountdown(ConfigurationSection config) {
         startCountdownName = config.getString("name");
@@ -90,19 +80,9 @@ public class LobbyListener implements Listener {
             return;
         }
 
-        startGame(event.getGameGroup());
+        event.getGameGroup().changeGameState(nextGameState);
     }
 
-    private void startGame(GameGroup gameGroup) {
-        String winningVote = MapVote.getWinningVote(gameGroup.getUsers());
-
-        if(winningVote == null || winningVote.equals(randomMapName)) {
-            winningVote = mapList.get(random.nextInt(mapList.size()));
-        }
-
-        gameGroup.changeMap(winningVote);
-        gameGroup.changeGameState(nextGameState);
-    }
 
     private void resetCountdown(GameGroup gameGroup) {
         gameGroup.startCountdown(startCountdownName, startCountdownLocaleStub, startCountdownSeconds);

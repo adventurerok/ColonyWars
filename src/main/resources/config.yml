@@ -150,13 +150,7 @@ game_states:
             min_players: 1
             needs_more_players_locale: "countdowns.start.needs_more_players"
             seconds: 3
-          map_voting:
-            random_map: "random"
-            map_list: &votable_maps
-              - "canyon"
-#              - "forest_hills"
-#              - "cavern"
-              - "random"
+
           next_gamestate: "game"
   game:
     listeners:
@@ -166,6 +160,18 @@ game_states:
           gold_shared_object: "gold_config"
           buildings:
             destroy_wait: 3
+          map_voting:
+            random_map: "random"
+            map_list: &votable_maps
+              - "canyon"
+#              - "forest_hills"
+#              - "cavern"
+              - "random"
+          choosable_teams: &choosable_teams
+            - "red"
+            - "blue"
+            - "green"
+            - "yellow"
 
 
 start_game_state: "lobby"
@@ -191,11 +197,7 @@ custom_items:
         events: ["rightClick"]
         class: "com.ithinkrok.minigames.inventory.TeamChooser"
         config:
-          choosable_teams:
-            - "red"
-            - "blue"
-            - "green"
-            - "yellow"
+          choosable_teams: &choosable_teams
           chooser_material: "WOOL"
   darkness_sword:
     display_name_locale: "darkness_sword.name"

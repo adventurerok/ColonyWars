@@ -12,6 +12,7 @@ import com.ithinkrok.minigames.event.map.MapItemSpawnEvent;
 import com.ithinkrok.minigames.event.user.game.UserChangeTeamEvent;
 import com.ithinkrok.minigames.event.user.world.*;
 import com.ithinkrok.minigames.inventory.ClickableInventory;
+import com.ithinkrok.minigames.metadata.MapVote;
 import com.ithinkrok.minigames.metadata.Money;
 import com.ithinkrok.minigames.schematic.Facing;
 import com.ithinkrok.minigames.util.ConfigUtils;
@@ -53,9 +54,17 @@ public class GameListener implements Listener {
 
     private int buildingDestroyWait;
 
+    private String randomMapName;
+    private List<String> mapList;
+    private List<String> teamList;
+
     @EventHandler
     public void onListenerLoaded(ListenerLoadedEvent<?> event) {
         ConfigurationSection config = event.getConfig();
+
+        teamList = config.getStringList("choosable_teams");
+
+        configureMapVoting(config.getConfigurationSection("map_voting"));
 
         goldSharedConfig = config.getString("gold_shared_object");
 
@@ -70,6 +79,15 @@ public class GameListener implements Listener {
         buildingDestroyedLocale = config.getString("buildings.destroyed_locale", "building.destroy.success");
 
         buildingDestroyWait = (int) (config.getDouble("buildings.destroy_wait", 3.0d) * 20d);
+    }
+
+    private void configureMapVoting(ConfigurationSection config) {
+        randomMapName = config.getString("random_map");
+
+        mapList = new ArrayList<>(config.getStringList("map_list"));
+        mapList.remove(randomMapName);
+
+        if(mapList.size() < 1) throw new RuntimeException("The game requires at least one map!");
     }
 
     @EventHandler
@@ -142,6 +160,8 @@ public class GameListener implements Listener {
     public void onGameStateChange(GameStateChangedEvent event) {
         if (!event.getNewGameState().isGameStateListener(this)) return;
 
+        startGame(event.getGameGroup());
+
         GameGroup gameGroup = event.getGameGroup();
         for (User user : gameGroup.getUsers()) {
 
@@ -151,6 +171,16 @@ public class GameListener implements Listener {
             user.setScoreboardHandler(new CWScoreboardHandler(user));
             user.updateScoreboard();
         }
+    }
+
+    private void startGame(GameGroup gameGroup) {
+        String winningVote = MapVote.getWinningVote(gameGroup.getUsers());
+
+        if(winningVote == null || winningVote.equals(randomMapName)) {
+            winningVote = mapList.get(random.nextInt(mapList.size()));
+        }
+
+        gameGroup.changeMap(winningVote);
     }
 
     @EventHandler

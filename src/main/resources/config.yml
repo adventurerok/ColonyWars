@@ -31,6 +31,12 @@ schematics:
       - "Fortress"
     config:
       base: true
+      shop:
+        - class: "com.ithinkrok.cw.inventory.BuildingBuyable"
+          config:
+            building_name: "Farm"
+            cost: 2000
+            team: true
   Fortress:
     file: "schematics/mccw_fortress.schematic"
     rotation: 0

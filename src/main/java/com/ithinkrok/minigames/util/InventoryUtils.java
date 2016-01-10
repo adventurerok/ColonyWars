@@ -177,4 +177,11 @@ public class InventoryUtils {
         item.setItemMeta(im);
         return item;
     }
+
+    public static String getDisplayName(ItemStack itemPlaced) {
+        ItemMeta meta = itemPlaced.getItemMeta();
+
+        if(!meta.hasDisplayName()) return null;
+        return meta.getDisplayName();
+    }
 }

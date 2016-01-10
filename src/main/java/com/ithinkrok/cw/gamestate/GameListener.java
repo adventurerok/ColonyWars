@@ -1,22 +1,17 @@
 package com.ithinkrok.cw.gamestate;
 
-import com.ithinkrok.cw.Building;
 import com.ithinkrok.cw.metadata.BuildingController;
 import com.ithinkrok.cw.scoreboard.CWScoreboardHandler;
 import com.ithinkrok.minigames.GameGroup;
-import com.ithinkrok.minigames.TeamIdentifier;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.map.MapBlockBreakNaturallyEvent;
 import com.ithinkrok.minigames.event.map.MapItemSpawnEvent;
 import com.ithinkrok.minigames.event.user.game.UserChangeTeamEvent;
-import com.ithinkrok.minigames.event.user.world.UserBreakBlockEvent;
-import com.ithinkrok.minigames.event.user.world.UserPickupItemEvent;
-import com.ithinkrok.minigames.event.user.world.UserPlaceBlockEvent;
-import com.ithinkrok.minigames.map.GameMap;
+import com.ithinkrok.minigames.event.user.world.*;
 import com.ithinkrok.minigames.metadata.Money;
-import com.ithinkrok.minigames.schematic.*;
+import com.ithinkrok.minigames.schematic.Facing;
 import com.ithinkrok.minigames.util.ConfigUtils;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import com.ithinkrok.minigames.util.SoundEffect;
@@ -45,12 +40,18 @@ public class GameListener implements Listener {
     private String goldSharedConfig;
     private WeakHashMap<ConfigurationSection, GoldConfig> goldConfigMap = new WeakHashMap<>();
 
+    private String unknownBuildingLocale;
+    private String cannotBuildHereLocale;
+
 
     @EventHandler
     public void onListenerLoaded(ListenerLoadedEvent<?> event) {
         ConfigurationSection config = event.getConfig();
 
         goldSharedConfig = config.getString("gold_shared_object");
+
+        unknownBuildingLocale = config.getString("unknown_building_locale", "building.unknown");
+        cannotBuildHereLocale = config.getString("building_invalid_location_locale", "building.invalid_loc");
     }
 
     @EventHandler
@@ -125,13 +126,23 @@ public class GameListener implements Listener {
 
         event.getBlock().setType(Material.AIR);
 
+        String buildingType = InventoryUtils.getDisplayName(event.getItemPlaced());
+
+        if (buildingType == null || event.getUserGameGroup().getSchematic(buildingType) == null) {
+            event.getUser().sendLocale(unknownBuildingLocale);
+            return;
+        }
+
         int rotation = Facing.getFacing(event.getUser().getLocation().getYaw());
 
         BuildingController controller = BuildingController.getOrCreate(event.getUserGameGroup());
-        controller.buildBuilding("Base", event.getUser().getTeamIdentifier(), event.getBlock().getLocation(),
-                rotation, false);
-    }
 
+        if (!controller.buildBuilding(buildingType, event.getUser().getTeamIdentifier(), event.getBlock().getLocation(),
+                rotation, false)) {
+            event.getUser().sendLocale(cannotBuildHereLocale);
+            event.setCancelled(true);
+        }
+    }
 
 
     @EventHandler

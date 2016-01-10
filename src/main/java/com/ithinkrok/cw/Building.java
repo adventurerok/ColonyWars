@@ -65,4 +65,8 @@ public class Building {
 
         return inv;
     }
+
+    public boolean isFinished() {
+        return schematic.isFinished();
+    }
 }

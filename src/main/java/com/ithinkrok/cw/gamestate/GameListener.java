@@ -44,7 +44,8 @@ public class GameListener implements Listener {
 
     private String unknownBuildingLocale;
     private String cannotBuildHereLocale;
-
+    private String buildingNotFinishedLocale;
+    private String buildingNotYoursLocale;
 
     @EventHandler
     public void onListenerLoaded(ListenerLoadedEvent<?> event) {
@@ -52,8 +53,10 @@ public class GameListener implements Listener {
 
         goldSharedConfig = config.getString("gold_shared_object");
 
-        unknownBuildingLocale = config.getString("unknown_building_locale", "building.unknown");
-        cannotBuildHereLocale = config.getString("building_invalid_location_locale", "building.invalid_loc");
+        unknownBuildingLocale = config.getString("building.unknown_locale", "building.unknown");
+        cannotBuildHereLocale = config.getString("building.invalid_location_locale", "building.invalid_loc");
+        buildingNotFinishedLocale = config.getString("building.not_finished_locale", "building.not_finished");
+        buildingNotYoursLocale = config.getString("building.not_yours_locale", "building.not_yours");
     }
 
     @EventHandler
@@ -66,6 +69,16 @@ public class GameListener implements Listener {
 
         Building building = controller.getBuilding(event.getClickedBlock().getLocation());
         if(building == null) return;
+
+        if(!building.getTeamIdentifier().equals(event.getUser().getTeamIdentifier())) {
+            event.getUser().sendLocale(buildingNotYoursLocale);
+            return;
+        }
+
+        if(!building.isFinished()) {
+            event.getUser().sendLocale(buildingNotFinishedLocale);
+            return;
+        }
 
         ClickableInventory shop = building.createShop();
         if(shop == null) return;

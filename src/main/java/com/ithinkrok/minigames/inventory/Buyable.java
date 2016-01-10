@@ -40,6 +40,8 @@ public abstract class Buyable extends ClickableItem {
         userNoMoneyLocale = config.getString("user_no_money_locale", "buyable.user.no_money");
         cannotBuyLocale = config.getString("cannot_buy_locale", "buyable.cannot_buy");
         userPayTeamLocale = config.getString("user_pay_team_locale", "buyable.user.pay_team");
+        teamDescriptionLocale = config.getString("team_description_locale", "buyable.team.description");
+        userDescriptionLocale = config.getString("user_description_locale", "buyable.user.description");
     }
 
     @Override

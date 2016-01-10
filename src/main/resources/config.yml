@@ -164,7 +164,8 @@ game_states:
         class: "com.ithinkrok.cw.gamestate.GameListener"
         config:
           gold_shared_object: "gold_config"
-          buil
+          buildings:
+            destroy_wait: 3
 
 
 start_game_state: "lobby"

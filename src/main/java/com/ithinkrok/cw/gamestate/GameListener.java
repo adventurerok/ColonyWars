@@ -1,5 +1,6 @@
 package com.ithinkrok.cw.gamestate;
 
+import com.ithinkrok.cw.Building;
 import com.ithinkrok.cw.metadata.BuildingController;
 import com.ithinkrok.cw.scoreboard.CWScoreboardHandler;
 import com.ithinkrok.minigames.GameGroup;
@@ -10,6 +11,7 @@ import com.ithinkrok.minigames.event.map.MapBlockBreakNaturallyEvent;
 import com.ithinkrok.minigames.event.map.MapItemSpawnEvent;
 import com.ithinkrok.minigames.event.user.game.UserChangeTeamEvent;
 import com.ithinkrok.minigames.event.user.world.*;
+import com.ithinkrok.minigames.inventory.ClickableInventory;
 import com.ithinkrok.minigames.metadata.Money;
 import com.ithinkrok.minigames.schematic.Facing;
 import com.ithinkrok.minigames.util.ConfigUtils;
@@ -52,6 +54,23 @@ public class GameListener implements Listener {
 
         unknownBuildingLocale = config.getString("unknown_building_locale", "building.unknown");
         cannotBuildHereLocale = config.getString("building_invalid_location_locale", "building.invalid_loc");
+    }
+
+    @EventHandler
+    public void onUserInteractWorld(UserInteractWorldEvent event) {
+        if(event.getInteractType() != UserInteractEvent.InteractType.RIGHT_CLICK || !event.hasBlock()) return;
+
+        if(event.getClickedBlock().getType() != Material.OBSIDIAN) return;
+
+        BuildingController controller = BuildingController.getOrCreate(event.getUserGameGroup());
+
+        Building building = controller.getBuilding(event.getClickedBlock().getLocation());
+        if(building == null) return;
+
+        ClickableInventory shop = building.createShop();
+        if(shop == null) return;
+
+        event.getUser().showInventory(shop);
     }
 
     @EventHandler

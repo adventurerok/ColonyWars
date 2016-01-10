@@ -52,6 +52,10 @@ public class BuildingController extends Metadata implements Listener {
         getTeamBuildingStats(building).buildingFinished(building);
     }
 
+    public Building getBuilding(Location center) {
+        return buildingCentres.get(center);
+    }
+
     public void addBuilding(Building building) {
         buildings.put(building.getSchematic(), building);
 

@@ -1,5 +1,6 @@
 package com.ithinkrok.cw.inventory;
 
+import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.inventory.Buyable;
 import com.ithinkrok.minigames.inventory.event.BuyablePurchaseEvent;
 import com.ithinkrok.minigames.util.ConfigUtils;
@@ -26,21 +27,26 @@ public class ItemBuyable extends Buyable{
     public void configure(ConfigurationSection config) {
         super.configure(config);
 
-        if(this.purchase != null) this.purchase = ConfigUtils.getItemStack(config, "item");
+        ItemStack purchase = ConfigUtils.getItemStack(config, "item");
+        if(purchase != null) this.purchase = purchase;
 
         noSpaceLocale = config.getString("no_inventory_space_locale", "item_buyable.no_space");
     }
 
     @Override
     public boolean onPurchase(BuyablePurchaseEvent event) {
-        PlayerInventory inv = event.getUser().getInventory();
+        return giveUserItem(event.getUser(), purchase);
+    }
+
+    protected boolean giveUserItem(User user, ItemStack purchase) {
+        PlayerInventory inv = user.getInventory();
 
         Map<Integer, ItemStack> failedItems = inv.addItem(purchase);
         if(failedItems.isEmpty()) return true;
 
         failedItems.values().forEach(inv::remove);
 
-        event.getUser().sendLocale(noSpaceLocale);
+        user.sendLocale(noSpaceLocale);
         return false;
     }
 }

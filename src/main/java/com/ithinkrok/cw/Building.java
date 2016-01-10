@@ -56,7 +56,7 @@ public class Building {
 
     public ClickableInventory createShop() {
         ConfigurationSection config = getConfig();
-        if(!config.contains("shop")) return null;
+        if(config == null || !config.contains("shop")) return null;
 
         List<ConfigurationSection> shopItems = ConfigUtils.getConfigList(config, "shop");
 

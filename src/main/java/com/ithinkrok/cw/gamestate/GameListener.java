@@ -101,12 +101,13 @@ public class GameListener implements Listener {
 
     @EventHandler
     public void onUserBreakBlock(UserBreakBlockEvent event) {
-        ConfigurationSection goldShared = event.getUserGameGroup().getSharedObject(goldSharedConfig);
-        GoldConfig gold = getGoldConfig(goldShared);
+        if (event.getBlock().getType() != Material.OBSIDIAN){
+            ConfigurationSection goldShared = event.getUserGameGroup().getSharedObject(goldSharedConfig);
+            GoldConfig gold = getGoldConfig(goldShared);
 
-        gold.onBlockBreak(event.getBlock());
-
-        if (event.getBlock().getType() != Material.OBSIDIAN) return;
+            gold.onBlockBreak(event.getBlock());
+            return;
+        }
 
         BuildingController controller = BuildingController.getOrCreate(event.getUserGameGroup());
         Building building = controller.getBuilding(event.getBlock().getLocation());

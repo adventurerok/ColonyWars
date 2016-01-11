@@ -18,7 +18,7 @@ public abstract class ClickableItem implements Identifiable {
     private int identifier = clickableItemCount++;
 
     public ClickableItem(ItemStack baseDisplay) {
-        if(baseDisplay != null) this.baseDisplay = InventoryUtils.addIdentifier(baseDisplay, identifier);
+        if(baseDisplay != null) this.baseDisplay = InventoryUtils.addIdentifier(baseDisplay.clone(), identifier);
     }
 
     public void configure(ConfigurationSection config) {}

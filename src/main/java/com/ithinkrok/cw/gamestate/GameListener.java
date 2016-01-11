@@ -4,6 +4,8 @@ import com.ithinkrok.cw.Building;
 import com.ithinkrok.cw.metadata.BuildingController;
 import com.ithinkrok.cw.scoreboard.CWScoreboardHandler;
 import com.ithinkrok.minigames.GameGroup;
+import com.ithinkrok.minigames.Kit;
+import com.ithinkrok.minigames.Team;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
@@ -22,6 +24,7 @@ import com.ithinkrok.minigames.util.TreeFeller;
 import com.ithinkrok.minigames.util.math.ExpressionCalculator;
 import com.ithinkrok.minigames.util.math.SingleValueVariables;
 import org.bukkit.Color;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -163,14 +166,44 @@ public class GameListener implements Listener {
         startGame(event.getGameGroup());
 
         GameGroup gameGroup = event.getGameGroup();
-        for (User user : gameGroup.getUsers()) {
+        gameGroup.getUsers().forEach(this::setupUser);
+    }
 
-            //TODO this is just a test
-            user.setTeam(event.getGameGroup().getTeam("red"));
+    private void setupUser(User user) {
+        user.decloak();
 
-            user.setScoreboardHandler(new CWScoreboardHandler(user));
-            user.updateScoreboard();
+        if(user.getTeam() == null) {
+            user.setTeam(assignPlayerTeam());
         }
+
+        if(user.getKit() == null) {
+            user.setKit(assignPlayerKit());
+        }
+
+        //TODO teleport to base
+        user.setGameMode(GameMode.SURVIVAL);
+        user.setAllowFlight(false);
+        user.setCollidesWithEntities(true);
+
+        user.resetUserStats(true);
+
+        //TODO give diamond pickaxe
+
+        user.setScoreboardHandler(new CWScoreboardHandler(user));
+        user.updateScoreboard();
+
+        //TODO give handbook
+        //TODO send start locales
+
+        //TODO add a game to stats
+    }
+
+    private Kit assignPlayerKit() {
+        return null;
+    }
+
+    private Team assignPlayerTeam() {
+        return null;
     }
 
     private void startGame(GameGroup gameGroup) {

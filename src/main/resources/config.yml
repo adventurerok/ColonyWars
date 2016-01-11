@@ -137,6 +137,15 @@ shared_objects:
     replace_materials:
       BARRIER: "AIR"
       DIAMOND_ORE: "GOLD_ORE"
+# Required for User.java
+  user:
+    default_stats:
+      max_health: 20
+      health: 20
+      food: 10
+      saturation: 5
+      fly_speed: 0.1
+      walk_speed: 0.1
 
 game_states:
   lobby:

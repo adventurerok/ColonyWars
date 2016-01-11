@@ -22,4 +22,28 @@ public class FoodCapture {
         to.setSaturation(saturation);
         to.setFoodLevel(foodLevel);
     }
+
+    public float getExhaustion() {
+        return exhaustion;
+    }
+
+    public float getSaturation() {
+        return saturation;
+    }
+
+    public int getFoodLevel() {
+        return foodLevel;
+    }
+
+    public void setExhaustion(float exhaustion) {
+        this.exhaustion = exhaustion;
+    }
+
+    public void setSaturation(float saturation) {
+        this.saturation = saturation;
+    }
+
+    public void setFoodLevel(int foodLevel) {
+        this.foodLevel = foodLevel;
+    }
 }

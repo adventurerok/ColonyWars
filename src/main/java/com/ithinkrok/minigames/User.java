@@ -72,6 +72,9 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
     private LivingEntity entity;
     private PlayerState playerState;
 
+    private boolean cloaked = false;
+    private boolean showCloakedPlayers = false;
+
     private ScoreboardDisplay scoreboardDisplay;
     private ScoreboardHandler scoreboardHandler;
 
@@ -104,6 +107,126 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
 
         if (isPlayer()) {
             scoreboardDisplay = new ScoreboardDisplay(this, getPlayer());
+        }
+    }
+
+    public boolean showCloakedPlayers() {
+        return showCloakedPlayers;
+    }
+
+    public void setShowCloakedPlayers(boolean showCloakedPlayers) {
+        this.showCloakedPlayers = showCloakedPlayers;
+
+        for(User u : gameGroup.getUsers()) {
+            if(this == u) continue;
+
+            if(!u.isCloaked()) continue;
+
+            if(showCloakedPlayers) showPlayer(u);
+            else hidePlayer(u);
+        }
+    }
+
+    public void setAllowFlight(boolean allowFlight) {
+        if(isPlayer()) getPlayer().setAllowFlight(allowFlight);
+        else playerState.setAllowFlight(allowFlight);
+    }
+
+    public void setFlySpeed(double flySpeed) {
+        if(isPlayer()) getPlayer().setFlySpeed((float) flySpeed);
+        else playerState.setFlySpeed((float) flySpeed);
+    }
+
+    public void resetUserStats(boolean removePotionEffects) {
+        ConfigurationSection defaultStats = gameGroup.getSharedObject("user").getConfigurationSection("default_stats");
+
+        setMaxHealth(defaultStats.getDouble("max_health") * 2);
+        setHealth(defaultStats.getDouble("health") * 2);
+        setFoodLevel((int)(defaultStats.getDouble("food_level") * 2));
+        setSaturation(defaultStats.getDouble("saturation"));
+        setFlySpeed(defaultStats.getDouble("fly_speed"));
+        setWalkSpeed(defaultStats.getDouble("walk_speed"));
+
+        if(removePotionEffects) removePotionEffects();
+    }
+
+    public void setMaxHealth(double maxHealth) {
+        entity.setMaxHealth(maxHealth);
+    }
+
+    public void setHealth(double health) {
+        entity.setHealth(health);
+    }
+
+    public void setFoodLevel(int foodLevel) {
+        if(isPlayer()) getPlayer().setFoodLevel(foodLevel);
+        else playerState.setFoodLevel(foodLevel);
+    }
+
+    public void setSaturation(double saturation) {
+        if(isPlayer()) getPlayer().setSaturation((float) saturation);
+        else playerState.setSaturation((float) saturation);
+    }
+
+    public void setWalkSpeed(double walkSpeed) {
+        if(isPlayer()) getPlayer().setWalkSpeed((float) walkSpeed);
+        else playerState.setWalkSpeed((float) walkSpeed);
+    }
+
+    public void removePotionEffects() {
+        List<PotionEffect> effects = new ArrayList<>(entity.getActivePotionEffects());
+
+        for (PotionEffect effect : effects) {
+            entity.removePotionEffect(effect.getType());
+        }
+
+        entity.setFireTicks(0);
+    }
+
+    public void setCollidesWithEntities(boolean collides) {
+        if(!isPlayer()) return;
+
+        getPlayer().spigot().setCollidesWithEntities(collides);
+    }
+
+    public void setFlying(boolean flying) {
+        if(!isPlayer()) return;
+        getPlayer().setFlying(flying);
+    }
+
+    public void decloak() {
+        cloaked = false;
+
+        for (User u : gameGroup.getUsers()) {
+            if (this == u) continue;
+
+            u.showPlayer(this);
+        }
+    }
+
+    public boolean isCloaked() {
+        return cloaked;
+    }
+
+    private void hidePlayer(User other) {
+        if(!isPlayer() || !other.isPlayer()) return;
+        getPlayer().hidePlayer(other.getPlayer());
+    }
+
+    private void showPlayer(User other) {
+        if(!isPlayer() || !other.isPlayer()) return;
+        getPlayer().showPlayer(other.getPlayer());
+    }
+
+    public void cloak() {
+        cloaked = true;
+
+        for (User u : gameGroup.getUsers()) {
+            if (this == u) continue;
+
+            if(u.showCloakedPlayers()) continue;
+
+            u.hidePlayer(this);
         }
     }
 

@@ -170,6 +170,14 @@ public class PlayerState {
         effectsCapture.setFireTicks(fireTicks);
     }
 
+    public void setFoodLevel(int foodLevel) {
+        foodCapture.setFoodLevel(foodLevel);
+    }
+
+    public void setSaturation(float saturation) {
+        foodCapture.setSaturation(saturation);
+    }
+
     public enum CaptureParts {
         INVENTORY,
         ARMOR,

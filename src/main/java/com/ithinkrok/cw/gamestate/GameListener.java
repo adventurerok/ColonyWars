@@ -178,11 +178,11 @@ public class GameListener implements Listener {
         user.decloak();
 
         if(user.getTeam() == null) {
-            user.setTeam(assignPlayerTeam());
+            user.setTeam(assignUserTeam(user.getGameGroup()));
         }
 
         if(user.getKit() == null) {
-            user.setKit(assignPlayerKit());
+            user.setKit(assignUserKit());
         }
 
         //TODO teleport to base
@@ -203,12 +203,25 @@ public class GameListener implements Listener {
         //TODO add a game to stats
     }
 
-    private Kit assignPlayerKit() {
+    private Kit assignUserKit() {
         return null;
     }
 
-    private Team assignPlayerTeam() {
-        return null;
+    private Team assignUserTeam(GameGroup gameGroup) {
+        ArrayList<Team> smallest = new ArrayList<>();
+        int leastCount = Integer.MAX_VALUE;
+
+        for(String teamName : teamList) {
+            Team team = gameGroup.getTeam(teamName);
+            if(team.getUserCount() < leastCount) {
+                leastCount = team.getUserCount();
+                smallest.clear();
+            }
+
+            if(team.getUserCount() == leastCount) smallest.add(team);
+        }
+
+        return smallest.get(random.nextInt(smallest.size()));
     }
 
     private void startGame(GameGroup gameGroup) {

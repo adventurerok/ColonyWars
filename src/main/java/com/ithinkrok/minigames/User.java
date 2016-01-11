@@ -140,12 +140,12 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
     public void resetUserStats(boolean removePotionEffects) {
         ConfigurationSection defaultStats = gameGroup.getSharedObject("user").getConfigurationSection("default_stats");
 
-        setMaxHealth(defaultStats.getDouble("max_health") * 2);
-        setHealth(defaultStats.getDouble("health") * 2);
-        setFoodLevel((int)(defaultStats.getDouble("food_level") * 2));
-        setSaturation(defaultStats.getDouble("saturation"));
-        setFlySpeed(defaultStats.getDouble("fly_speed"));
-        setWalkSpeed(defaultStats.getDouble("walk_speed"));
+        setMaxHealth(defaultStats.getDouble("max_health", 10) * 2);
+        setHealth(defaultStats.getDouble("health", 10) * 2);
+        setFoodLevel((int)(defaultStats.getDouble("food_level", 10) * 2));
+        setSaturation(defaultStats.getDouble("saturation", 5.0));
+        setFlySpeed(defaultStats.getDouble("fly_speed", 1.0));
+        setWalkSpeed(defaultStats.getDouble("walk_speed", 1.0));
 
         if(removePotionEffects) removePotionEffects();
     }

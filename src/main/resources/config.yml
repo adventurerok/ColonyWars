@@ -142,10 +142,10 @@ shared_objects:
     default_stats:
       max_health: 20
       health: 20
-      food: 10
+      food_level: 10
       saturation: 5
       fly_speed: 0.1
-      walk_speed: 0.1
+      walk_speed: 1.0
 
 game_states:
   lobby:

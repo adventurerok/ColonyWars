@@ -5,8 +5,10 @@ import com.ithinkrok.minigames.Team;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.metadata.Metadata;
+import com.ithinkrok.minigames.util.ConfigUtils;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +32,8 @@ public class CWTeamStats extends Metadata {
 
     private Location baseLocation;
 
+    private Location spawnLocation;
+
     public Location getBaseLocation() {
         return baseLocation;
     }
@@ -44,6 +48,16 @@ public class CWTeamStats extends Metadata {
 
     public CWTeamStats(Team team) {
         this.team = team;
+
+        ConfigurationSection spawnLocations = team.getSharedObject("spawn_locations");
+
+        Vector spawnLocation = ConfigUtils.getVector(spawnLocations, team.getName());
+        this.spawnLocation = new Location(team.getGameGroup().getCurrentMap().getWorld(), spawnLocation.getX(),
+                spawnLocation.getY(), spawnLocation.getZ());
+    }
+
+    public Location getSpawnLocation() {
+        return spawnLocation;
     }
 
     public int getTotalBuildingNowCount() {

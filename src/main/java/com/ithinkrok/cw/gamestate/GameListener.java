@@ -2,6 +2,7 @@ package com.ithinkrok.cw.gamestate;
 
 import com.ithinkrok.cw.Building;
 import com.ithinkrok.cw.metadata.BuildingController;
+import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.cw.scoreboard.CWScoreboardHandler;
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.Kit;
@@ -185,7 +186,10 @@ public class GameListener implements Listener {
             user.setKit(assignUserKit());
         }
 
-        //TODO teleport to base
+
+        CWTeamStats teamStats = CWTeamStats.getOrCreate(user.getTeam());
+        user.teleport(teamStats.getSpawnLocation());
+
         user.setGameMode(GameMode.SURVIVAL);
         user.setAllowFlight(false);
         user.setCollidesWithEntities(true);

@@ -27,3 +27,6 @@ building.not_yours=&eThat building does not belong to your team. &lMine this blo
 building.destroy.own_team=&cYou cannot destroy your own team's buildings!
 building.destroy.protected=&cYou cannot destroy other team's %ss!
 building.destroy.success=&6%s &6destroyed a &3%s &6of team %s&6!
+
+start_info.team=&6You are playing on the %s &6Team
+start_info.kit=&6You are playing as the class&3 %s

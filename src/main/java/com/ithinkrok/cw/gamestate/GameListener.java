@@ -64,6 +64,8 @@ public class GameListener implements Listener {
     private List<String> teamList;
     private List<String> kitList;
 
+    private String teamInfoLocale, kitInfoLocale;
+
     private GiveCustomItemsOnJoin.CustomItemGiver customItemGiver;
 
     @EventHandler
@@ -90,6 +92,9 @@ public class GameListener implements Listener {
         buildingDestroyWait = (int) (config.getDouble("buildings.destroy_wait", 3.0d) * 20d);
 
         customItemGiver = new GiveCustomItemsOnJoin.CustomItemGiver(config.getConfigurationSection("start_items"));
+
+        teamInfoLocale = config.getString("team_info_locale", "start_info.team");
+        kitInfoLocale = config.getString("kit_info_locale", "start_info.kit");
     }
 
     private void configureMapVoting(ConfigurationSection config) {
@@ -203,8 +208,10 @@ public class GameListener implements Listener {
         user.setScoreboardHandler(new CWScoreboardHandler(user));
         user.updateScoreboard();
 
-        //TODO give handbook
-        //TODO send start locales
+        //TODO give handbook (will be done from configs)
+
+        user.sendLocale(teamInfoLocale, user.getTeamIdentifier().getFormattedName());
+        user.sendLocale(kitInfoLocale, user.getKit().getFormattedName());
 
         //TODO add a game to stats
     }

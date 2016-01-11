@@ -14,6 +14,7 @@ import com.ithinkrok.minigames.event.map.MapItemSpawnEvent;
 import com.ithinkrok.minigames.event.user.game.UserChangeTeamEvent;
 import com.ithinkrok.minigames.event.user.world.*;
 import com.ithinkrok.minigames.inventory.ClickableInventory;
+import com.ithinkrok.minigames.listener.GiveCustomItemsOnJoin;
 import com.ithinkrok.minigames.metadata.MapVote;
 import com.ithinkrok.minigames.metadata.Money;
 import com.ithinkrok.minigames.schematic.Facing;
@@ -61,6 +62,8 @@ public class GameListener implements Listener {
     private List<String> mapList;
     private List<String> teamList;
 
+    private GiveCustomItemsOnJoin.CustomItemGiver customItemGiver;
+
     @EventHandler
     public void onListenerLoaded(ListenerLoadedEvent<?> event) {
         ConfigurationSection config = event.getConfig();
@@ -82,6 +85,8 @@ public class GameListener implements Listener {
         buildingDestroyedLocale = config.getString("buildings.destroyed_locale", "building.destroy.success");
 
         buildingDestroyWait = (int) (config.getDouble("buildings.destroy_wait", 3.0d) * 20d);
+
+        customItemGiver = new GiveCustomItemsOnJoin.CustomItemGiver(config.getConfigurationSection("start_items"));
     }
 
     private void configureMapVoting(ConfigurationSection config) {
@@ -187,7 +192,7 @@ public class GameListener implements Listener {
 
         user.resetUserStats(true);
 
-        //TODO give diamond pickaxe
+        customItemGiver.giveToUser(user);
 
         user.setScoreboardHandler(new CWScoreboardHandler(user));
         user.updateScoreboard();

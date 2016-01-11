@@ -1,5 +1,6 @@
 package com.ithinkrok.minigames.listener;
 
+import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.item.CustomItem;
@@ -21,35 +22,18 @@ import java.util.stream.Collectors;
  */
 public class GiveCustomItemsOnJoin implements Listener {
 
-    private boolean clearInventory = false;
-
-    private List<CustomItemInfo> items = new ArrayList<>();
+    private CustomItemGiver customItemGiver;
 
     @EventHandler
     public void onListenerEnabled(ListenerLoadedEvent event) {
         ConfigurationSection config = event.getConfig();
 
-        clearInventory = config.getBoolean("clear_inventory", false);
-
-        List<ConfigurationSection> itemConfigs = ConfigUtils.getConfigList(config, "items");
-        items.addAll(itemConfigs.stream().map(CustomItemInfo::new).collect(Collectors.toList()));
+        customItemGiver = new CustomItemGiver(config);
     }
 
     @EventHandler(priority = EventPriority.LOW)
     public void onUserJoin(UserJoinEvent event) {
-        if(clearInventory) event.getUser().getInventory().clear();
-
-        for (CustomItemInfo itemInfo : items) {
-            CustomItem item = event.getUser().getGameGroup().getCustomItem(itemInfo.customItem);
-            ItemStack itemStack;
-
-            if (itemInfo.customVariables != null)
-                itemStack = item.createWithVariables(event.getUser().getGameGroup(), itemInfo.customVariables);
-            else itemStack = event.getUser().createCustomItemForUser(item);
-
-            if(itemInfo.slot < 0) event.getUser().getInventory().addItem(itemStack);
-            else event.getUser().getInventory().setItem(itemInfo.slot, itemStack);
-        }
+        customItemGiver.giveToUser(event.getUser());
     }
 
     private static class CustomItemInfo {
@@ -63,6 +47,35 @@ public class GiveCustomItemsOnJoin implements Listener {
 
             if (!config.contains("custom_variables")) return;
             customVariables = new MapVariables(config.getConfigurationSection("custom_variables"));
+        }
+    }
+
+    public static class CustomItemGiver {
+        private boolean clearInventory = false;
+
+        private List<CustomItemInfo> items = new ArrayList<>();
+
+        public CustomItemGiver(ConfigurationSection config) {
+            clearInventory = config.getBoolean("clear_inventory");
+
+            List<ConfigurationSection> itemConfigs = ConfigUtils.getConfigList(config, "items");
+            items.addAll(itemConfigs.stream().map(CustomItemInfo::new).collect(Collectors.toList()));
+        }
+
+        public void giveToUser(User user) {
+            if(clearInventory) user.getInventory().clear();
+
+            for (CustomItemInfo itemInfo : items) {
+                CustomItem item = user.getGameGroup().getCustomItem(itemInfo.customItem);
+                ItemStack itemStack;
+
+                if (itemInfo.customVariables != null)
+                    itemStack = item.createWithVariables(user.getGameGroup(), itemInfo.customVariables);
+                else itemStack = user.createCustomItemForUser(item);
+
+                if(itemInfo.slot < 0) user.getInventory().addItem(itemStack);
+                else user.getInventory().setItem(itemInfo.slot, itemStack);
+            }
         }
     }
 }

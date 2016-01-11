@@ -181,8 +181,11 @@ game_states:
             - "blue"
             - "green"
             - "yellow"
-
-
+          start_items:
+            clear_inventory: true
+            items:
+              - name: "PICKAXE"
+                slot: 0
 start_game_state: "lobby"
 
 custom_items:
@@ -229,7 +232,8 @@ custom_items:
         config:
           max_range: 100
           damage_multiplier: 2.8
-
+  pickaxe:
+    material: "DIAMOND_PICKAXE"
 listeners:
   give_on_join:
     class: "com.ithinkrok.minigames.listener.GiveCustomItemsOnJoin"

@@ -190,7 +190,8 @@ public class CustomItem implements Identifiable, Listener {
         String[] loreArray = new String[lore.size()];
         lore.toArray(loreArray);
 
-        String itemDisplayName = languageLookup.getLocale(itemDisplayLocale);
+        String itemDisplayName = null;
+        if(itemDisplayLocale != null) itemDisplayName = languageLookup.getLocale(itemDisplayLocale);
 
         ItemStack item =
                 InventoryUtils.createItemWithNameAndLore(itemMaterial, 1, durability, itemDisplayName, loreArray);

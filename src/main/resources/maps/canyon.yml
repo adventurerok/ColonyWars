@@ -6,19 +6,19 @@ shared_objects:
   spawn_locations:
     red:
       x: -362
-      y: 94
+      y: 95
       z: -2
     blue:
       x: 8
-      y: 94
+      y: 95
       z: -1
     green:
       x: 7
-      y: 94
+      y: 95
       z: 369
     yellow:
       x: -363
-      y: 94
+      y: 95
       z: 368
 
 listeners:

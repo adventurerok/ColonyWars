@@ -19,7 +19,7 @@ public class Kit {
 
     public Kit(String name, String formattedName, Collection<Listener> listeners) {
         this.name = name;
-        this.formattedName = formattedName;
+        this.formattedName = (formattedName != null) ? formattedName : name;
         this.listeners = listeners;
     }
 

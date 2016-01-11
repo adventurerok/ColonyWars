@@ -483,7 +483,7 @@ public class GameGroup
             countdown = null;
         }
 
-        @EventHandler
+        @EventHandler(priority = EventPriority.LOWEST)
         public void eventGameStateChange(GameStateChangedEvent event) {
             Iterator<Metadata> iterator = metadataMap.values().iterator();
 
@@ -494,7 +494,7 @@ public class GameGroup
             }
         }
 
-        @EventHandler
+        @EventHandler(priority = EventPriority.LOWEST)
         public void eventMapChange(MapChangedEvent event) {
             Iterator<Metadata> iterator = metadataMap.values().iterator();
 

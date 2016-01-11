@@ -12,6 +12,12 @@ team_chooser.choose.chosen=&6You will be in the %s &6Team in the next game!
 team_chooser.choose.full=&cThe %s &cTeam is full. Try another
 team_chooser.choose.already_chosen=&cYou are already in the %s &cTeam
 
+kit_chooser.name=Class Chooser
+kit_chooser.desc=Lets you choose a class!
+kit_chooser.choose.title=Class Chooser
+kit_chooser.choose.already_chosen=&cYou are already going to be a %s
+kit_chooser.choose.chosen=&6You will be a %s &6in the next game!
+
 darkness_sword.name=Darkness Sword
 darkness_sword.desc=The Dark Knights Weapon!
 

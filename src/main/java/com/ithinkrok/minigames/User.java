@@ -581,6 +581,10 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
         return isPlayer() ? getPlayer().getInventory() : playerState.getInventory();
     }
 
+    public String getKitName() {
+        return kit != null ? kit.getName() : null;
+    }
+
     private class UserListener implements Listener {
 
         @EventHandler

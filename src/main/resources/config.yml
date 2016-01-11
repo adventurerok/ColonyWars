@@ -181,6 +181,8 @@ game_states:
             - "blue"
             - "green"
             - "yellow"
+          choosable_kits:
+            - "general"
           start_items:
             clear_inventory: true
             items:
@@ -209,8 +211,19 @@ custom_items:
         events: ["rightClick"]
         class: "com.ithinkrok.minigames.inventory.TeamChooser"
         config:
-          choosable_teams: &choosable_teams
+          choosable_teams: *choosable_teams
           chooser_material: "WOOL"
+  class_chooser:
+    display_name_locale: "kit_chooser.name"
+    description_locale: "kit_chooser.desc"
+    material: "WOOD_SWORD"
+    listeners:
+      choose:
+        events: ["rightClick"]
+        class: "com.ithinkrok.minigames.inventory.KitChooser"
+        config:
+          choosable_kits:
+            general: "DIAMOND_SWORD,1,0,General"
   darkness_sword:
     display_name_locale: "darkness_sword.name"
     description_locale: "darkness_sword.desc"

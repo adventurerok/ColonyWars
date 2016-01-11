@@ -144,8 +144,8 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
         setHealth(defaultStats.getDouble("health", 10) * 2);
         setFoodLevel((int)(defaultStats.getDouble("food_level", 10) * 2));
         setSaturation(defaultStats.getDouble("saturation", 5.0));
-        setFlySpeed(defaultStats.getDouble("fly_speed", 1.0));
-        setWalkSpeed(defaultStats.getDouble("walk_speed", 1.0));
+        setFlySpeed(defaultStats.getDouble("fly_speed", 0.1));
+        setWalkSpeed(defaultStats.getDouble("walk_speed", 0.1));
 
         if(removePotionEffects) removePotionEffects();
     }

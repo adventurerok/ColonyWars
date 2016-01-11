@@ -145,7 +145,7 @@ shared_objects:
       food_level: 10
       saturation: 5
       fly_speed: 0.1
-      walk_speed: 1.0
+      walk_speed: 0.2
 
 game_states:
   lobby:

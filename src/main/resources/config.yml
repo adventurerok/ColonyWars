@@ -184,7 +184,7 @@ game_states:
           start_items:
             clear_inventory: true
             items:
-              - name: "PICKAXE"
+              - name: "pickaxe"
                 slot: 0
 start_game_state: "lobby"
 

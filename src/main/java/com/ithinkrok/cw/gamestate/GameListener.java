@@ -62,6 +62,7 @@ public class GameListener implements Listener {
     private String randomMapName;
     private List<String> mapList;
     private List<String> teamList;
+    private List<String> kitList;
 
     private GiveCustomItemsOnJoin.CustomItemGiver customItemGiver;
 
@@ -70,6 +71,7 @@ public class GameListener implements Listener {
         ConfigurationSection config = event.getConfig();
 
         teamList = config.getStringList("choosable_teams");
+        kitList = config.getStringList("choosable_kits");
 
         configureMapVoting(config.getConfigurationSection("map_voting"));
 
@@ -183,7 +185,7 @@ public class GameListener implements Listener {
         }
 
         if(user.getKit() == null) {
-            user.setKit(assignUserKit());
+            user.setKit(assignUserKit(user.getGameGroup()));
         }
 
 
@@ -207,8 +209,10 @@ public class GameListener implements Listener {
         //TODO add a game to stats
     }
 
-    private Kit assignUserKit() {
-        return null;
+    private Kit assignUserKit(GameGroup gameGroup) {
+        String kitName = kitList.get(random.nextInt(kitList.size()));
+
+        return gameGroup.getKit(kitName);
     }
 
     private Team assignUserTeam(GameGroup gameGroup) {

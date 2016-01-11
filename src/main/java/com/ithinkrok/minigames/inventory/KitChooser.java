@@ -56,7 +56,7 @@ public class KitChooser implements Listener {
                 InventoryUtils.setItemNameAndLore(display, kit.getFormattedName());
             }
 
-            ClickableItem item = new ClickableItem(display) {
+            ClickableItem item = new ClickableItem(display.clone()) {
                 @Override
                 public void onClick(UserClickItemEvent event) {
                     if(kitName.equals(event.getUser().getKitName())) {

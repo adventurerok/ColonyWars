@@ -78,20 +78,12 @@ public class GameGroup
         defaultAndMapListeners = createDefaultAndMapListeners();
     }
 
-    public void start() {
+    public void prepareStart() {
         createDefaultAndMapListeners();
 
-        boolean hasDefault = false;
         for (GameState gs : game.getGameStates()) {
-            if (!hasDefault) {
-                changeGameState(gs);
-                hasDefault = true;
-            }
-
             this.gameStates.put(gs.getName(), gs);
         }
-
-        changeMap(game.getStartMapInfo());
     }
 
     @SuppressWarnings("unchecked")
@@ -407,7 +399,7 @@ public class GameGroup
         return usersInGroup.values();
     }
 
-    public void setTeamIdentifiers(List<TeamIdentifier> identifiers) {
+    public void setTeamIdentifiers(Collection<TeamIdentifier> identifiers) {
         for (TeamIdentifier identifier : identifiers) {
             teamIdentifiers.put(identifier.getName(), identifier);
         }
@@ -448,7 +440,7 @@ public class GameGroup
         return metadataMap.containsKey(clazz);
     }
 
-    public void setKits(List<Kit> kits) {
+    public void setKits(Collection<Kit> kits) {
         this.kits.clear();
 
         for(Kit kit : kits) {

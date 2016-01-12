@@ -71,13 +71,19 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
     private HashMap<String, Listener> defaultListeners = new HashMap<>();
     private WeakHashMap<String, GameGroup> mapToGameGroup = new WeakHashMap<>();
-    private List<GameState> gameStates = new ArrayList<>();
-    private List<Kit> kits = new ArrayList<>();
+
+    private Map<String, GameState> gameStates = new HashMap<>();
+    private Map<String, TeamIdentifier> teamIdentifiers = new HashMap<>();
+    private Map<String, Kit> kits = new HashMap<>();
+
     private Map<String, GameMapInfo> maps = new HashMap<>();
     private Map<String, Schematic> schematicMap = new HashMap<>();
     private Map<String, ConfigurationSection> sharedObjects = new HashMap<>();
-    private List<TeamIdentifier> teamIdentifiers = new ArrayList<>();
+
+
+
     private String startMapName;
+    private String startGameStateName;
 
     public Game(Plugin plugin) {
         this.plugin = plugin;
@@ -130,13 +136,17 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         return customItemIdentifierMap.get(identifier);
     }
 
-    public List<GameState> getGameStates() {
-        return gameStates;
+    public Collection<GameState> getGameStates() {
+        return gameStates.values();
     }
 
     public void registerListeners() {
         Listener listener = new GameListener();
         plugin.getServer().getPluginManager().registerEvents(listener, plugin);
+    }
+
+    public GameGroup getSpawnGameGroup() {
+        return spawnGameGroup;
     }
 
     public void reloadConfig() {
@@ -180,7 +190,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
                 chatColor = ChatColor.valueOf(chatColorString);
             }
 
-            teamIdentifiers.add(new TeamIdentifier(name, formattedName, dyeColor, armorColor, chatColor));
+            teamIdentifiers.put(name, new TeamIdentifier(name, formattedName, dyeColor, armorColor, chatColor));
         }
     }
 
@@ -205,24 +215,11 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
                     e.printStackTrace();
                 }
             }
-            gameStates.add(new GameState(name, listeners));
+            gameStates.put(name, new GameState(name, listeners));
         }
 
-        String startGameState = config.getString("start_game_state");
+        startGameStateName = config.getString("start_game_state");
 
-        GameState start = null;
-        for (GameState state : gameStates) {
-            if (state.getName().equals(startGameState)) {
-                start = state;
-                break;
-            }
-        }
-
-        if (start == null) throw new RuntimeException("The start game state does not exist");
-
-        //Ensure the start game state is the first in the list
-        gameStates.remove(start);
-        gameStates.add(0, start);
     }
 
 
@@ -250,7 +247,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
                     e.printStackTrace();
                 }
             }
-            kits.add(new Kit(name, formattedName, listeners));
+            kits.put(name, new Kit(name, formattedName, listeners));
         }
 
     }
@@ -324,10 +321,12 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         GameGroup gameGroup = new GameGroup(this);
 
         gameGroup.setDefaultListeners(defaultListeners);
-        gameGroup.setTeamIdentifiers(teamIdentifiers);
-        gameGroup.setKits(kits);
+        gameGroup.setTeamIdentifiers(teamIdentifiers.values());
+        gameGroup.setKits(kits.values());
 
-        gameGroup.start();
+        gameGroup.prepareStart();
+        gameGroup.changeGameState(startGameStateName);
+        gameGroup.changeMap(startMapName);
 
         return gameGroup;
     }
@@ -395,6 +394,14 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
     public void setGameGroupForMap(GameGroup gameGroup, String mapName) {
         mapToGameGroup.values().remove(gameGroup);
         mapToGameGroup.put(mapName, gameGroup);
+    }
+
+    public TeamIdentifier getTeamIdentifier(String team) {
+        return teamIdentifiers.get(team);
+    }
+
+    public Kit getKit(String kitName) {
+        return kits.get(kitName);
     }
 
     private class GameListener implements Listener {

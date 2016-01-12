@@ -91,17 +91,17 @@ lobby-games:
     # The radius outside the snow bounds which is still considered to be part of the arena
     extra-radius: 3
 
-# When to force showdown start
+# When to force showdown prepareStart
 force-showdown:
-# The start time is the time after the start if no players are attacked. The attack time is the time after the last
+# The prepareStart time is the time after the prepareStart if no players are attacked. The attack time is the time after the last
 # player was attacked
   times:
     start: 1800
     death: 600
     attack: 180
-# The maximum number of teams left that will cause showdown to start
+# The maximum number of teams left that will cause showdown to prepareStart
   teams: 2
-# The maximum number of players left that will cause showdown to start
+# The maximum number of players left that will cause showdown to prepareStart
   players: 4
 
 score:

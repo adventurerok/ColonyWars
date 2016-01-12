@@ -7,5 +7,5 @@ import com.ithinkrok.minigames.lang.Messagable;
  */
 public interface GameCommandExecutor {
 
-    void onCommand(Messagable sender, GameCommand command);
+    boolean onCommand(Messagable sender, GameCommand command);
 }

@@ -1,6 +1,9 @@
 package com.ithinkrok.cw;
 
 import com.ithinkrok.minigames.Game;
+import com.ithinkrok.minigames.command.GameCommandHandler;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -9,7 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class CWPlugin extends JavaPlugin {
 
     Game minigame;
-
+    GameCommandHandler commandHandler;
 
     @Override
     public void onEnable() {
@@ -19,10 +22,17 @@ public class CWPlugin extends JavaPlugin {
 
         minigame.reloadConfig();
         minigame.registerListeners();
+
+        commandHandler = new GameCommandHandler(minigame);
     }
 
     @Override
     public void onDisable() {
         minigame.unload();
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        return commandHandler.onCommand(sender, command, label, args);
     }
 }

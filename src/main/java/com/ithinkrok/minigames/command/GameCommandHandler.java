@@ -29,6 +29,12 @@ public class GameCommandHandler implements CommandExecutor {
         this.game = game;
     }
 
+    public void addExecutor(GameCommandExecutor executor, String...commandNames) {
+        for(String commandName : commandNames) {
+            executors.put(commandName, executor);
+        }
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!executors.containsKey(command.getName().toLowerCase())) return false;

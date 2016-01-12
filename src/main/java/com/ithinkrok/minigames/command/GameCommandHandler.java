@@ -39,42 +39,9 @@ public class GameCommandHandler implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!executors.containsKey(command.getName().toLowerCase())) return false;
 
-        List<String> correctedArgs = new ArrayList<>();
+        List<String> correctedArgs = mergeArgumentsInQuotes(args);
 
-        StringBuilder currentArg = new StringBuilder();
-
-        boolean inQuote = false;
-
-        for (String arg : args) {
-            currentArg.append(arg.replace("\"", ""));
-
-            int quoteCount = StringUtils.countMatches(arg, "\"");
-            if (((quoteCount & 1) == 1)) inQuote = !inQuote;
-
-            if (!inQuote) {
-                correctedArgs.add(currentArg.toString());
-                currentArg = new StringBuilder();
-            }
-        }
-
-        Map<String, Object> arguments = new HashMap<>();
-
-        String key = null;
-        StringBuilder value = new StringBuilder();
-
-        for (String arg : correctedArgs) {
-            if (arg.startsWith("-") && arg.length() > 1) {
-                key = arg.substring(1);
-
-                if (value.length() > 0) arguments.put(key, parse(value.toString()));
-                value = new StringBuilder();
-            } else {
-                if (value.length() > 0) value.append(' ');
-                value.append(arg);
-            }
-        }
-
-        if (value.length() > 0) arguments.put(key, value.toString());
+        Map<String, Object> arguments = parseArgumentListToMap(correctedArgs);
 
         User user = null;
         GameGroup gameGroup = null;
@@ -115,6 +82,49 @@ public class GameCommandHandler implements CommandExecutor {
         executors.get(command.getName()).onCommand(messagable, gameCommand);
 
         return false;
+    }
+
+    private List<String> mergeArgumentsInQuotes(String[] args) {
+        List<String> correctedArgs = new ArrayList<>();
+
+        StringBuilder currentArg = new StringBuilder();
+
+        boolean inQuote = false;
+
+        for (String arg : args) {
+            currentArg.append(arg.replace("\"", ""));
+
+            int quoteCount = StringUtils.countMatches(arg, "\"");
+            if (((quoteCount & 1) == 1)) inQuote = !inQuote;
+
+            if (!inQuote) {
+                correctedArgs.add(currentArg.toString());
+                currentArg = new StringBuilder();
+            }
+        }
+        return correctedArgs;
+    }
+
+    private Map<String, Object> parseArgumentListToMap(List<String> correctedArgs) {
+        Map<String, Object> arguments = new HashMap<>();
+
+        String key = null;
+        StringBuilder value = new StringBuilder();
+
+        for (String arg : correctedArgs) {
+            if (arg.startsWith("-") && arg.length() > 1) {
+                key = arg.substring(1);
+
+                if (value.length() > 0) arguments.put(key, parse(value.toString()));
+                value = new StringBuilder();
+            } else {
+                if (value.length() > 0) value.append(' ');
+                value.append(arg);
+            }
+        }
+
+        if (value.length() > 0) arguments.put(key, value.toString());
+        return arguments;
     }
 
     private Object parse(String s) {

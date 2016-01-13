@@ -84,6 +84,33 @@ schematics:
   Farm:
     file: "schematics/mccw_farm.schematic"
     rotation: 0
+    config:
+      shop:
+        - class: "com.ithinkrok.minigames.inventory.ItemBuyable"
+          config:
+            item: "POTATO,5"
+            cost: 15
+        - class: "com.ithinkrok.minigames.inventory.ItemBuyable"
+          config:
+            item: "COOKIE,10"
+            cost: 20
+        - class: "com.ithinkrok.minigames.inventory.ItemBuyable"
+          config:
+            item: "RAW_BEEF,5"
+            cost: 30
+        - class: "com.ithinkrok.minigames.inventory.ItemBuyable"
+          config:
+            item: "BAKED_POTATO,10"
+            cost: 60
+        - class: "com.ithinkrok.minigames.inventory.ItemBuyable"
+          config:
+            item: "COOKED_BEEF,10"
+            cost: 100
+        - class: "com.ithinkrok.minigames.inventory.ItemBuyable"
+          config:
+            item: "GOLDEN_APPLE,1"
+            cost: 125
+
   Lumbermill:
     file: "schematics/mccw_lumbermill.schematic"
     rotation: 0

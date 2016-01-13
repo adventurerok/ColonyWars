@@ -4,6 +4,9 @@ import com.ithinkrok.minigames.command.Command;
 import com.ithinkrok.minigames.command.CommandSender;
 import com.ithinkrok.minigames.command.GameCommandExecutor;
 import com.ithinkrok.minigames.metadata.Money;
+import com.ithinkrok.minigames.util.InventoryUtils;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +21,7 @@ public class CWCommand implements GameCommandExecutor {
 
     public CWCommand() {
         subExecutors.put("money", this::moneyCommand);
+        subExecutors.put("building", this::buildingCommand);
     }
 
     @Override
@@ -49,6 +53,25 @@ public class CWCommand implements GameCommandExecutor {
 
         Money teamMoney = Money.getOrCreate(command.getUser().getTeam());
         teamMoney.addMoney(teamAmount, true);
+
+        return true;
+    }
+
+    private boolean buildingCommand(CommandSender sender, Command command) {
+        if(!command.requireUser(sender)) return true;
+        if(!command.requireArgumentCount(sender, 1)) return true;
+
+        String buildingName = command.getStringArg(0, null);
+        if(command.getGameGroup().getSchematic(buildingName) == null) {
+            sender.sendLocale("command.cw.building.unknown", buildingName);
+            return true;
+        }
+
+        int amount = command.getIntArg(1, 16);
+
+        ItemStack item = InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, amount, 0, buildingName);
+
+        command.getUser().getInventory().addItem(item);
 
         return true;
     }

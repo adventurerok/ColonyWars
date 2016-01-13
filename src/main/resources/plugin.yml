@@ -15,12 +15,16 @@ permissions:
     description: "Allows use of the /gamestate command"
     default: false
   mccw.cw:
-    description: "Allows use of all subcommands of /gs"
+    description: "Allows use of all subcommands of /cw"
     default: false
     children:
       mccw.cw.money: true
+      mccw.cw.building: true
   mccw.cw.money:
-    description: "Allows use of /gs money"
+    description: "Allows use of /cw money"
+    default: false
+  mccw.cw.building:
+    description: "Allows use of /cw building"
     default: false
 
 commands:

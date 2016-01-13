@@ -7,4 +7,5 @@ command.requires.permission=&cThis command requires the permission &3%s
 command.gamestate.unknown=&cUnknown GameState %s
 command.gamestate.changed=&aGameState changed to %s
 
-commands.cw.unknown=&cUnknown subcommand %s
+command.cw.unknown=&cUnknown subcommand %s
+command.cw.building.unknown=&cUnknown building %s

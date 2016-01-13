@@ -89,6 +89,8 @@ public class GameGroup
     @SuppressWarnings("unchecked")
     public void changeGameState(GameState gameState) {
         if (gameState.equals(this.gameState)) return;
+        stopCountdown();
+
         GameState oldState = this.gameState;
         GameState newState = this.gameState = gameState;
 

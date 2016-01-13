@@ -10,8 +10,17 @@ permissions:
     description: "Gives all admin command permissions"
     children:
       mccw.gamestate: true
+      mccw.cw: true
   mccw.gamestate:
     description: "Allows use of the /gamestate command"
+    default: false
+  mccw.cw:
+    description: "Allows use of all subcommands of /gs"
+    default: false
+    children:
+      mccw.cw.money: true
+  mccw.cw.money:
+    description: "Allows use of /gs money"
     default: false
 
 commands:
@@ -20,3 +29,7 @@ commands:
     aliases: ["gs", "gstate"]
     permission: "mccw.gamestate"
     usage: "/<command> <gamestate>"
+  colonywars:
+    description: "Various CW testing utils"
+    aliases: ["cw", "cwars", "wars"]
+    usage: "/<command> <subcommand> [sub command args...]"

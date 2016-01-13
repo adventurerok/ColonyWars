@@ -167,4 +167,11 @@ public class Command {
         sender.sendLocale("command.requires.team_identifier");
         return false;
     }
+
+    public static boolean requirePermission(CommandSender sender, String permission) {
+        if(sender.hasPermission(permission)) return true;
+
+        sender.sendLocale("command.requires.permission", permission);
+        return false;
+    }
 }

@@ -1,5 +1,6 @@
 package com.ithinkrok.cw;
 
+import com.ithinkrok.cw.command.CWCommand;
 import com.ithinkrok.cw.command.GameStateCommand;
 import com.ithinkrok.minigames.Game;
 import com.ithinkrok.minigames.command.GameCommandHandler;
@@ -26,6 +27,7 @@ public class CWPlugin extends JavaPlugin {
 
         commandHandler = new GameCommandHandler(minigame);
         commandHandler.addExecutor(new GameStateCommand(), "gamestate");
+        commandHandler.addExecutor(new CWCommand(), "colonywars");
     }
 
     @Override

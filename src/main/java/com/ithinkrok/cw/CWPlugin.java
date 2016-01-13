@@ -1,5 +1,6 @@
 package com.ithinkrok.cw;
 
+import com.ithinkrok.cw.command.GameStateCommand;
 import com.ithinkrok.minigames.Game;
 import com.ithinkrok.minigames.command.GameCommandHandler;
 import org.bukkit.command.Command;
@@ -24,6 +25,7 @@ public class CWPlugin extends JavaPlugin {
         minigame.registerListeners();
 
         commandHandler = new GameCommandHandler(minigame);
+        commandHandler.addExecutor(new GameStateCommand(), "gamestate");
     }
 
     @Override

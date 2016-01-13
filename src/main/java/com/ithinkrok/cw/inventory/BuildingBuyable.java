@@ -14,9 +14,9 @@ public class BuildingBuyable extends ItemBuyable {
 
     protected String buildingName;
 
-    private String displayLoreLocale;
-    private String itemLoreLocale;
-    private String teamPurchaseLocale;
+    protected String displayLoreLocale;
+    protected String itemLoreLocale;
+    protected String teamPurchaseLocale;
 
     public BuildingBuyable(ItemStack baseDisplay) {
         super(baseDisplay);

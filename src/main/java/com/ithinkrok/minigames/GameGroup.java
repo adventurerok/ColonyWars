@@ -6,10 +6,12 @@ import com.ithinkrok.minigames.event.game.CountdownFinishedEvent;
 import com.ithinkrok.minigames.event.game.GameEvent;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;
+import com.ithinkrok.minigames.event.map.MapBlockBreakNaturallyEvent;
 import com.ithinkrok.minigames.event.team.TeamEvent;
 import com.ithinkrok.minigames.event.user.UserEvent;
 import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.event.user.game.UserQuitEvent;
+import com.ithinkrok.minigames.event.user.world.UserBreakBlockEvent;
 import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.lang.LangFile;
 import com.ithinkrok.minigames.lang.LanguageLookup;
@@ -29,6 +31,7 @@ import com.ithinkrok.minigames.util.EventExecutor;
 import com.ithinkrok.minigames.util.io.FileLoader;
 import com.ithinkrok.oldmccw.data.TeamColor;
 import org.apache.commons.lang.Validate;
+import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -480,6 +483,23 @@ public class GameGroup
             if (event.getCountdown() != countdown) return;
 
             countdown = null;
+        }
+
+        @EventHandler
+        public void eventBlockBreakNaturally(MapBlockBreakNaturallyEvent event) {
+            checkInventoryTethers(event.getBlock().getLocation());
+        }
+
+        @EventHandler
+        public void eventUserBreakBlock(UserBreakBlockEvent event) {
+            checkInventoryTethers(event.getBlock().getLocation());
+        }
+
+        private void checkInventoryTethers(Location location) {
+            for(User user : getUsers()) {
+                if(!location.equals(user.getInventoryTether())) continue;
+                user.closeInventory();
+            }
         }
 
         @EventHandler(priority = EventPriority.LOWEST)

@@ -95,6 +95,8 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
     private TaskList inGameTaskList = new TaskList();
     private ClickableInventory openInventory;
     private Collection<Listener> listeners = new ArrayList<>();
+    private Vector inventoryTether;
+
     public User(Game game, GameGroup gameGroup, Team team, UUID uuid, LivingEntity entity) {
         this.game = game;
         this.gameGroup = gameGroup;
@@ -108,6 +110,10 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
         if (isPlayer()) {
             scoreboardDisplay = new ScoreboardDisplay(this, getPlayer());
         }
+    }
+
+    public ClickableInventory getOpenInventory() {
+        return openInventory;
     }
 
     public boolean showCloakedPlayers() {
@@ -459,11 +465,12 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
     }
 
     @SuppressWarnings("unchecked")
-    public void showInventory(ClickableInventory inventory) {
+    public void showInventory(ClickableInventory inventory, Location inventoryTether) {
         doInFuture(task -> {
             if (!isPlayer()) return;
 
             this.openInventory = inventory;
+            this.inventoryTether = inventoryTether.toVector();
             getPlayer().openInventory(inventory.createInventory(this));
         });
     }
@@ -471,7 +478,11 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
     public void redoInventory() {
         if(this.openInventory == null) return;
 
-        showInventory(this.openInventory);
+        showInventory(this.openInventory, getInventoryTether());
+    }
+
+    public Location getInventoryTether() {
+        return gameGroup.getCurrentMap().getLocation(inventoryTether);
     }
 
     @Override
@@ -543,6 +554,7 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
             if (!isPlayer()) return;
 
             openInventory = null;
+            inventoryTether = null;
             getPlayer().closeInventory();
         });
     }

@@ -216,6 +216,7 @@ public class GameMap implements LanguageLookup, ConfigHolder, SchematicPaster.Bo
     }
 
     public Location getLocation(Vector location) {
+        if(location == null) return null;
         return new Location(world, location.getX(), location.getY(), location.getZ());
     }
 }

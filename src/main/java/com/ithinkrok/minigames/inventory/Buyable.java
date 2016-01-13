@@ -34,7 +34,7 @@ public abstract class Buyable extends ClickableItem {
     @Override
     public void configure(ConfigurationSection config) {
         cost = config.getInt("cost");
-        team = config.getBoolean("team_purchase");
+        team = config.getBoolean("team");
 
         teamNoMoneyLocale = config.getString("team_no_money_locale", "buyable.team.no_money");
         userNoMoneyLocale = config.getString("user_no_money_locale", "buyable.user.no_money");

@@ -66,6 +66,7 @@ public class GameCommand {
     }
 
     public String getStringArg(int index, String def) {
+        if(index >= defaultArgs.size()) return def;
         Object o = defaultArgs.get(index);
 
         return o != null ? o.toString() : def;

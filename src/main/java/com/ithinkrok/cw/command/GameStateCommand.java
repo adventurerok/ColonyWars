@@ -11,7 +11,7 @@ import com.ithinkrok.minigames.lang.Messagable;
 public class GameStateCommand implements GameCommandExecutor {
     @Override
     public boolean onCommand(Messagable sender, GameCommand command) {
-        if(!command.requireGameGroup(sender)) return false;
+        if(!command.requireGameGroup(sender) || !command.requireArgumentCount(sender, 1)) return false;
         String gameStateName = command.getStringArg(0, null);
 
         GameState gameState = command.getGameGroup().getGameState(gameStateName);

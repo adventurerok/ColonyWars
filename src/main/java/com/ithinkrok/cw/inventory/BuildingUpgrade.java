@@ -4,7 +4,6 @@ import com.ithinkrok.cw.Building;
 import com.ithinkrok.cw.metadata.BuildingController;
 import com.ithinkrok.minigames.inventory.event.BuyablePurchaseEvent;
 import org.bukkit.Location;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -12,18 +11,10 @@ import org.bukkit.inventory.ItemStack;
  */
 public class BuildingUpgrade extends BuildingBuyable {
 
-    private String upgradeBuilding;
-
     public BuildingUpgrade(ItemStack baseDisplay) {
         super(baseDisplay);
     }
 
-    @Override
-    public void configure(ConfigurationSection config) {
-        upgradeBuilding = config.getString("upgrade_building");
-
-        super.configure(config);
-    }
 
     @Override
     public boolean onPurchase(BuyablePurchaseEvent event) {
@@ -34,7 +25,7 @@ public class BuildingUpgrade extends BuildingBuyable {
         Building old = controller.getBuilding(buildingLoc);
         old.remove();
 
-        controller.buildBuilding(upgradeBuilding, old.getTeamIdentifier(), buildingLoc, old.getSchematic()
+        controller.buildBuilding(buildingName, old.getTeamIdentifier(), buildingLoc, old.getSchematic()
                 .getRotation(), false);
 
         event.getUser().getTeam().sendLocale(teamPurchaseLocale, event.getUser().getFormattedName(), buildingName);

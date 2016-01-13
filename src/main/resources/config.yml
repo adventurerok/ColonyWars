@@ -99,6 +99,13 @@ schematics:
     upgrades:
       - "Cathedral"
     config:
+      shop:
+        - class: "com.ithinkrok.cw.inventory.BuildingUpgrade"
+          config:
+            building_name: "Cathedral"
+            cost: 8000
+            team: true
+    config:
       revival_rate: 30
   Cathedral:
     file: "schematics/mccw_cathedral.schematic"

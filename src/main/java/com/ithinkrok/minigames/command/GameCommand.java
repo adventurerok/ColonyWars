@@ -3,6 +3,8 @@ package com.ithinkrok.minigames.command;
 import com.ithinkrok.minigames.*;
 import com.ithinkrok.minigames.lang.Messagable;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -90,6 +92,19 @@ public class GameCommand {
         } catch (Exception e) {
             return def;
         }
+    }
+
+    public GameCommand subCommand() {
+        if(defaultArgs.size() < 1) return null;
+
+        List<Object> newArgs = new ArrayList<>();
+
+        for(int index = 1; index < defaultArgs.size(); ++index) newArgs.add(defaultArgs.get(index));
+
+        Map<String, Object> newParams = new HashMap<>(params);
+        newParams.put("default", newArgs);
+
+        return new GameCommand(getStringArg(0, null), newParams, gameGroup, user, teamIdentifier, kit);
     }
 
     public boolean getBooleanParam(String name, boolean def) {

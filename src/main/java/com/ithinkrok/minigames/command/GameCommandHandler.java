@@ -106,24 +106,22 @@ public class GameCommandHandler implements CommandExecutor {
     }
 
     private Map<String, Object> parseArgumentListToMap(List<String> correctedArgs) {
+        List<Object> defaultArguments = new ArrayList<>();
         Map<String, Object> arguments = new HashMap<>();
 
         String key = null;
-        StringBuilder value = new StringBuilder();
 
         for (String arg : correctedArgs) {
             if (arg.startsWith("-") && arg.length() > 1) {
                 key = arg.substring(1);
-
-                if (value.length() > 0) arguments.put(key, parse(value.toString()));
-                value = new StringBuilder();
             } else {
-                if (value.length() > 0) value.append(' ');
-                value.append(arg);
+                if(key != null) arguments.put(key, parse(arg));
+                else defaultArguments.add(parse(arg));
+                key = null;
             }
         }
 
-        if (value.length() > 0) arguments.put(key, value.toString());
+        arguments.put("default", defaultArguments);
         return arguments;
     }
 

@@ -448,6 +448,10 @@ public class GameGroup
         }
     }
 
+    public GameState getGameState(String gameStateName) {
+        return gameStates.get(gameStateName);
+    }
+
     private class GameGroupListener implements Listener {
 
         @EventHandler(priority = EventPriority.LOWEST)

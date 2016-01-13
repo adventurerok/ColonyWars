@@ -28,7 +28,10 @@ public class CalculateItemForUserEvent extends UserEvent {
         super(user);
         this.inventory = inventory;
         this.item = item;
-        this.display = item.getBaseDisplayStack().clone();
+
+        if(item.getBaseDisplayStack() != null){
+            this.display = item.getBaseDisplayStack().clone();
+        }
     }
 
     public ClickableInventory getInventory() {

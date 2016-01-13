@@ -5,5 +5,5 @@ package com.ithinkrok.minigames.command;
  */
 public interface GameCommandExecutor {
 
-    boolean onCommand(CommandSender sender, GameCommand command);
+    boolean onCommand(CommandSender sender, Command command);
 }

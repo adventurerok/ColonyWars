@@ -2,11 +2,9 @@ package com.ithinkrok.minigames.command;
 
 import com.ithinkrok.minigames.*;
 import com.ithinkrok.minigames.lang.LanguageLookup;
-import com.ithinkrok.minigames.lang.Messagable;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -36,7 +34,7 @@ public class GameCommandHandler implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
         if (!executors.containsKey(command.getName().toLowerCase())) return false;
 
         List<String> correctedArgs = mergeArgumentsInQuotes(args);
@@ -73,7 +71,7 @@ public class GameCommandHandler implements CommandExecutor {
             kit = game.getKit(arguments.get("k").toString());
         }
 
-        GameCommand gameCommand = new GameCommand(command.getName(), arguments, gameGroup, user, teamIdentifier, kit);
+        Command gameCommand = new Command(command.getName(), arguments, gameGroup, user, teamIdentifier, kit);
 
         com.ithinkrok.minigames.command.CommandSender messagable;
         if(userSender != null) messagable = userSender;

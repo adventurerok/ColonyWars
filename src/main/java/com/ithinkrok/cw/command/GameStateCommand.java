@@ -1,16 +1,16 @@
 package com.ithinkrok.cw.command;
 
 import com.ithinkrok.minigames.GameState;
-import com.ithinkrok.minigames.command.GameCommand;
+import com.ithinkrok.minigames.command.Command;
+import com.ithinkrok.minigames.command.CommandSender;
 import com.ithinkrok.minigames.command.GameCommandExecutor;
-import com.ithinkrok.minigames.lang.Messagable;
 
 /**
  * Created by paul on 13/01/16.
  */
 public class GameStateCommand implements GameCommandExecutor {
     @Override
-    public boolean onCommand(Messagable sender, GameCommand command) {
+    public boolean onCommand(CommandSender sender, Command command) {
         if(!command.requireGameGroup(sender) || !command.requireArgumentCount(sender, 1)) return false;
         String gameStateName = command.getStringArg(0, null);
 

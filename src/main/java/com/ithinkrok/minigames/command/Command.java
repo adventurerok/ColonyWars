@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Created by paul on 12/01/16.
  */
-public class GameCommand {
+public class Command {
 
     private final String command;
     private final Map<String, Object> params;
@@ -23,8 +23,8 @@ public class GameCommand {
     private final Kit kit;
 
     @SuppressWarnings("unchecked")
-    public GameCommand(String command, Map<String, Object> params, GameGroup gameGroup, User user,
-                       TeamIdentifier teamIdentifier, Kit kit) {
+    public Command(String command, Map<String, Object> params, GameGroup gameGroup, User user,
+                   TeamIdentifier teamIdentifier, Kit kit) {
         this.command = command;
         this.params = params;
         this.gameGroup = gameGroup;
@@ -94,7 +94,7 @@ public class GameCommand {
         }
     }
 
-    public GameCommand subCommand() {
+    public Command subCommand() {
         if(defaultArgs.size() < 1) return null;
 
         List<Object> newArgs = new ArrayList<>();
@@ -104,7 +104,7 @@ public class GameCommand {
         Map<String, Object> newParams = new HashMap<>(params);
         newParams.put("default", newArgs);
 
-        return new GameCommand(getStringArg(0, null), newParams, gameGroup, user, teamIdentifier, kit);
+        return new Command(getStringArg(0, null), newParams, gameGroup, user, teamIdentifier, kit);
     }
 
     public boolean getBooleanParam(String name, boolean def) {

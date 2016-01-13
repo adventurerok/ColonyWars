@@ -39,6 +39,41 @@ schematics:
             building_name: "Farm"
             cost: 2000
             team: true
+        - class: "com.ithinkrok.cw.inventory.BuildingBuyableWith"
+          config:
+            building_name: "Lumbermill"
+            cost: 2000
+            team: true
+            with_buildings:
+              - "Farm"
+        - class: "com.ithinkrok.cw.inventory.BuildingBuyableWith"
+          config:
+            building_name: "Blacksmith"
+            cost: 4000
+            team: true
+            with_buildings:
+              - "Farm"
+        - class: "com.ithinkrok.cw.inventory.BuildingBuyableWith"
+          config:
+            building_name: "MageTower"
+            cost: 4000
+            team: true
+            with_buildings:
+              - "Farm"
+        - class: "com.ithinkrok.cw.inventory.BuildingBuyableWith"
+          config:
+            building_name: "Church"
+            cost: 4000
+            team: true
+            with_buildings:
+              - "Farm"
+        - class: "com.ithinkrok.cw.inventory.BuildingBuyableWith"
+          config:
+            building_name: "Greenhouse"
+            cost: 2000
+            team: true
+            with_buildings:
+              - "Farm"
   Fortress:
     file: "schematics/mccw_fortress.schematic"
     rotation: 0

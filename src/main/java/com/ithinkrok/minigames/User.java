@@ -2,6 +2,7 @@ package com.ithinkrok.minigames;
 
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.MutableClassToInstanceMap;
+import com.ithinkrok.minigames.command.CommandSender;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.event.user.game.*;
@@ -53,7 +54,7 @@ import java.util.*;
  * Created by paul on 31/12/15.
  */
 @SuppressWarnings("unchecked")
-public class User implements Messagable, TaskScheduler, Listener, UserResolver, MetadataHolder<UserMetadata>,
+public class User implements CommandSender, TaskScheduler, Listener, UserResolver, MetadataHolder<UserMetadata>,
         SharedObjectAccessor {
 
     private static final HashSet<Material> SEE_THROUGH = new HashSet<>();
@@ -518,6 +519,7 @@ public class User implements Messagable, TaskScheduler, Listener, UserResolver, 
         return entity.getTargetBlock(SEE_THROUGH, maxDistance);
     }
 
+    @Override
     public boolean hasPermission(String permission) {
         return entity.hasPermission(permission);
     }

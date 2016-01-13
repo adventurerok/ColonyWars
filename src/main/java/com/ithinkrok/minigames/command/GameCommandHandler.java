@@ -75,9 +75,9 @@ public class GameCommandHandler implements CommandExecutor {
 
         GameCommand gameCommand = new GameCommand(command.getName(), arguments, gameGroup, user, teamIdentifier, kit);
 
-        Messagable messagable;
+        com.ithinkrok.minigames.command.CommandSender messagable;
         if(userSender != null) messagable = userSender;
-        else messagable = new ConsoleMessagable(game);
+        else messagable = new ConsoleSender(game);
 
         return executors.get(command.getName()).onCommand(messagable, gameCommand);
     }
@@ -146,12 +146,12 @@ public class GameCommandHandler implements CommandExecutor {
         return s;
     }
 
-    private static class ConsoleMessagable implements Messagable {
+    private static class ConsoleSender implements com.ithinkrok.minigames.command.CommandSender {
 
         private static ConsoleCommandSender consoleCommandSender = Bukkit.getConsoleSender();
         private final Game game;
 
-        public ConsoleMessagable(Game game) {
+        public ConsoleSender(Game game) {
             this.game = game;
         }
 
@@ -178,6 +178,11 @@ public class GameCommandHandler implements CommandExecutor {
         @Override
         public LanguageLookup getLanguageLookup() {
             return game;
+        }
+
+        @Override
+        public boolean hasPermission(String name) {
+            return true;
         }
     }
 }

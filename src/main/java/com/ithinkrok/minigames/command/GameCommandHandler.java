@@ -79,9 +79,7 @@ public class GameCommandHandler implements CommandExecutor {
         if(userSender != null) messagable = userSender;
         else messagable = new ConsoleMessagable(game);
 
-        executors.get(command.getName()).onCommand(messagable, gameCommand);
-
-        return false;
+        return executors.get(command.getName()).onCommand(messagable, gameCommand);
     }
 
     private List<String> mergeArgumentsInQuotes(String[] args) {

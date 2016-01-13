@@ -21,6 +21,8 @@ public class BuildingBuyableWith extends BuildingBuyable {
     @Override
     public void configure(ConfigurationSection config) {
         with = config.getStringList("with_buildings");
+
+        super.configure(config);
     }
 
     @Override

@@ -162,6 +162,7 @@ game_states:
             seconds: 181
 
           next_gamestate: "game"
+          lobby_map: "lobby"
   game:
     listeners:
       main:

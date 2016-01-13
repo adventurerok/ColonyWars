@@ -3,6 +3,7 @@ package com.ithinkrok.cw.gamestate;
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.game.CountdownFinishedEvent;
+import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.event.user.state.UserDamagedEvent;
 import com.ithinkrok.minigames.event.user.state.UserFoodLevelChangeEvent;
@@ -30,6 +31,8 @@ public class LobbyListener implements Listener {
     private String needsMorePlayersLocale;
     private int minPlayersToStartGame;
 
+
+    private String lobbyMapName;
     private String nextGameState;
 
     @EventHandler
@@ -39,6 +42,8 @@ public class LobbyListener implements Listener {
         nextGameState = config.getString("next_gamestate");
 
         configureCountdown(config.getConfigurationSection("start_countdown"));
+
+        lobbyMapName = config.getString("lobby_map");
     }
 
 
@@ -66,6 +71,13 @@ public class LobbyListener implements Listener {
         if(event.getUserGameGroup().hasActiveCountdown()) return;
 
         resetCountdown(event.getUserGameGroup());
+    }
+
+    @EventHandler
+    public void eventGameStateChanged(GameStateChangedEvent event) {
+        if(!event.getNewGameState().isGameStateListener(this)) return;
+
+        event.getGameGroup().changeMap(lobbyMapName);
     }
 
     @EventHandler

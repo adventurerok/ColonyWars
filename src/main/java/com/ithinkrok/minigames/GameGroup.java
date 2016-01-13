@@ -263,6 +263,7 @@ public class GameGroup
     }
 
     public void stopCountdown() {
+        if(countdown == null) return;
         countdown.cancel();
     }
 

@@ -130,7 +130,7 @@ public class GameListener implements Listener {
         ClickableInventory shop = building.createShop();
         if (shop == null) return;
 
-        event.getUser().showInventory(shop);
+        event.getUser().showInventory(shop, event.getClickedBlock().getLocation());
     }
 
     @EventHandler

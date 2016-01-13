@@ -73,6 +73,6 @@ public class KitChooser implements Listener {
             inventory.addItem(item);
         }
 
-        user.showInventory(inventory);
+        user.showInventory(inventory, null);
     }
 }

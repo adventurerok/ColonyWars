@@ -71,6 +71,6 @@ public class MapVoter implements Listener {
             inventory.addItem(item);
         }
 
-        event.getUser().showInventory(inventory);
+        event.getUser().showInventory(inventory, null);
     }
 }

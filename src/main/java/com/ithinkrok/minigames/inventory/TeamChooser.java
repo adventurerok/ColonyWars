@@ -79,7 +79,7 @@ public class TeamChooser implements Listener {
             inventory.addItem(item);
         }
 
-        user.showInventory(inventory);
+        user.showInventory(inventory, null);
     }
 
     private boolean checkTeamJoinAllowed(User user, Team team) {

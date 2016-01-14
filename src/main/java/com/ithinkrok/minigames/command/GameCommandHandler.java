@@ -88,6 +88,7 @@ public class GameCommandHandler implements CommandExecutor {
         boolean inQuote = false;
 
         for (String arg : args) {
+            if(currentArg.length() > 0) currentArg.append(' ');
             currentArg.append(arg.replace("\"", ""));
 
             int quoteCount = StringUtils.countMatches(arg, "\"");

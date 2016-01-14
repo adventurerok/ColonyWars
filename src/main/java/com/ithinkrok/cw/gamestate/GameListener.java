@@ -378,7 +378,7 @@ public class GameListener extends BaseGameStateListener {
             } else if (treesEnabled && logMaterials.contains(block.getType())) {
                 int count = TreeFeller.fellTree(block.getLocation(), BuildingController.getOrCreate(gameGroup));
                 count = (int) treeItemAmount.calculate(new SingleValueVariables(count));
-                drop = new ItemStack(treeItemMaterial, count);
+                if(count > 0) drop = new ItemStack(treeItemMaterial, count);
             }
 
             block.setType(Material.AIR);

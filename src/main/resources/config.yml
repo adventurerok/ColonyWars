@@ -380,6 +380,7 @@ custom_items:
     material: "DIAMOND_PICKAXE"
   general_sword:
     material: "DIAMOND_SWORD"
+    upgradable: true
     enchantments:
       DAMAGE_ALL: "1*sword"
       KNOCKBACK: "1"

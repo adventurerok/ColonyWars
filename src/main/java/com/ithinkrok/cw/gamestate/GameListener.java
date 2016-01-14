@@ -1,6 +1,7 @@
 package com.ithinkrok.cw.gamestate;
 
 import com.ithinkrok.cw.Building;
+import com.ithinkrok.cw.event.ShopOpenEvent;
 import com.ithinkrok.cw.metadata.BuildingController;
 import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.cw.scoreboard.CWScoreboardHandler;
@@ -128,7 +129,9 @@ public class GameListener extends BaseGameStateListener {
         }
 
         ClickableInventory shop = building.createShop();
-        if (shop == null) return;
+        if (shop == null) shop = new ClickableInventory(building.getBuildingName());
+
+        event.getUserGameGroup().userEvent(new ShopOpenEvent(event.getUser(), building, shop));
 
         event.getUser().showInventory(shop, event.getClickedBlock().getLocation());
     }

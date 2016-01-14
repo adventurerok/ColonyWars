@@ -1,6 +1,7 @@
 package com.ithinkrok.cw.metadata;
 
 import com.ithinkrok.cw.Building;
+import com.ithinkrok.cw.event.BuildingBuiltEvent;
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.Team;
 import com.ithinkrok.minigames.TeamIdentifier;
@@ -52,6 +53,9 @@ public class BuildingController extends Metadata implements Listener, LocationCh
         if(building == null) return;
 
         getTeamBuildingStats(building).buildingFinished(building);
+
+        Team team = gameGroup.getTeam(building.getTeamIdentifier());
+        gameGroup.teamEvent(new BuildingBuiltEvent(team, building));
     }
 
     public Building getBuilding(Location center) {

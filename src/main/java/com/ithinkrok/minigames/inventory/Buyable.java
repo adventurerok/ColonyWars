@@ -46,6 +46,7 @@ public abstract class Buyable extends ClickableItem {
 
     @Override
     public void onCalculateItem(CalculateItemForUserEvent event) {
+        if(event.getDisplay() == null) return;
         BuyablePurchaseEvent purchaseEvent = new BuyablePurchaseEvent(event.getUser(), event.getInventory(), this);
 
         if (!canBuy(purchaseEvent)) {

@@ -30,7 +30,7 @@ kits:
               custom_items:
                 - "general_sword"
               shop:
-                - class: "com.ithinkrok.minigames.Upgradable"
+                - class: "com.ithinkrok.minigames.inventory.Upgradable"
                   config:
                     upgrade_name: "sword"
                     upgrade_display_locale: "general_sword.upgrade"

@@ -1,6 +1,7 @@
 package com.ithinkrok.minigames;
 
 import com.ithinkrok.minigames.event.map.MapBlockBreakNaturallyEvent;
+import com.ithinkrok.minigames.event.map.MapCreatureSpawnEvent;
 import com.ithinkrok.minigames.event.map.MapItemSpawnEvent;
 import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.event.user.game.UserQuitEvent;
@@ -35,10 +36,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExpEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.ItemSpawnEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
@@ -467,6 +465,17 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
                 throw new RuntimeException("Map still registered to old GameGroup");
 
             gameGroup.gameEvent(new MapItemSpawnEvent(gameGroup, map, event));
+        }
+
+        @EventHandler
+        public void eventCreatureSpawn(CreatureSpawnEvent event) {
+            String mapName = event.getEntity().getWorld().getName();
+            GameGroup gameGroup = mapToGameGroup.get(mapName);
+            GameMap map = gameGroup.getCurrentMap();
+            if (!map.getWorld().getName().equals(mapName))
+                throw new RuntimeException("Map still registered to old GameGroup");
+
+            gameGroup.gameEvent(new MapCreatureSpawnEvent(gameGroup, map, event));
         }
 
         @EventHandler

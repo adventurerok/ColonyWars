@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.Potion;
@@ -190,5 +191,13 @@ public class InventoryUtils {
         if (name != null) im.setDisplayName(name);
         item.setItemMeta(im);
         return item;
+    }
+
+    public static boolean containsIdentifier(Inventory inv, int identifier) {
+        for(ItemStack item : inv) {
+            if(getIdentifier(item) == identifier) return true;
+        }
+
+        return false;
     }
 }

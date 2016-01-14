@@ -4,14 +4,19 @@ import com.ithinkrok.cw.event.BuildingBuiltEvent;
 import com.ithinkrok.cw.event.ShopOpenEvent;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.util.ConfigUtils;
+import com.ithinkrok.minigames.util.InventoryUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -19,9 +24,37 @@ import java.util.stream.Collectors;
  */
 public class KitListener implements Listener {
 
-    @EventHandler
-    public void onListenerLoaded(ListenerLoadedEvent event) {
+    private User owner;
 
+    private Map<String, BuildingConfig> buildingConfigs = new HashMap<>();
+
+    @EventHandler
+    public void onListenerLoaded(ListenerLoadedEvent<User> event) {
+        owner = event.getCreator();
+
+        ConfigurationSection buildings = event.getConfig().getConfigurationSection("buildings");
+
+        for(String buildingName : buildings.getKeys(false)) {
+            ConfigurationSection buildingConfig = buildings.getConfigurationSection(buildingName);
+
+            buildingConfigs.put(buildingName, new BuildingConfig(buildingConfig));
+        }
+    }
+
+    @EventHandler
+    public void onShopOpen(ShopOpenEvent event) {
+        BuildingConfig config = buildingConfigs.get(event.getBuilding().getBuildingName());
+
+        if(config == null) return;
+        config.onShopOpen(event);
+    }
+
+    @EventHandler
+    public void onBuildingBuilt(BuildingBuiltEvent event) {
+        BuildingConfig config = buildingConfigs.get(event.getBuilding().getBuildingName());
+
+        if(config == null) return;
+        config.onBuild(owner, event);
     }
 
     private static class BuildingConfig {
@@ -46,7 +79,18 @@ public class KitListener implements Listener {
         }
 
         public void onBuild(User user, BuildingBuiltEvent event) {
-            //TODO add custom items
+            PlayerInventory inv = user.getInventory();
+
+            for(String customItemName : customItemGives) {
+                CustomItem customItem = user.getGameGroup().getCustomItem(customItemName);
+                if(!InventoryUtils.containsIdentifier(inv, customItem.getIdentifier())) {
+                    inv.addItem(customItem.createForUser(user));
+                }
+            }
+
+            for(ItemStack item : itemStackGives) {
+                inv.addItem(item.clone());
+            }
         }
     }
 }

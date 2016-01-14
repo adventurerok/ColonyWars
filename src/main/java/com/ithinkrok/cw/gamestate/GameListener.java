@@ -139,7 +139,7 @@ public class GameListener extends BaseGameStateListener {
             ConfigurationSection goldShared = event.getUserGameGroup().getSharedObject(goldSharedConfig);
             GoldConfig gold = getGoldConfig(goldShared);
 
-            gold.onBlockBreak(event.getBlock());
+            gold.onBlockBreak(event.getBlock(), event.getUserGameGroup());
             return;
         }
 
@@ -321,7 +321,7 @@ public class GameListener extends BaseGameStateListener {
         ConfigurationSection goldShared = event.getGameGroup().getSharedObject(goldSharedConfig);
         GoldConfig gold = getGoldConfig(goldShared);
 
-        gold.onBlockBreak(event.getBlock());
+        gold.onBlockBreak(event.getBlock(), event.getGameGroup());
     }
 
     private static class GoldConfig {
@@ -371,12 +371,12 @@ public class GameListener extends BaseGameStateListener {
             logMaterials.addAll(logMaterialNames.stream().map(Material::matchMaterial).collect(Collectors.toList()));
         }
 
-        public void onBlockBreak(Block block) {
+        public void onBlockBreak(Block block, GameGroup gameGroup) {
             ItemStack drop = null;
             if (oreBlocks.containsKey(block.getType())) {
                 drop = oreBlocks.get(block.getType()).clone();
             } else if (treesEnabled && logMaterials.contains(block.getType())) {
-                int count = TreeFeller.fellTree(block.getLocation());
+                int count = TreeFeller.fellTree(block.getLocation(), BuildingController.getOrCreate(gameGroup));
                 count = (int) treeItemAmount.calculate(new SingleValueVariables(count));
                 drop = new ItemStack(treeItemMaterial, count);
             }

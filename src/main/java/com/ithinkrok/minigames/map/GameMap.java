@@ -19,6 +19,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -218,5 +219,17 @@ public class GameMap implements LanguageLookup, ConfigHolder, SchematicPaster.Bo
     public Location getLocation(Vector location) {
         if(location == null) return null;
         return new Location(world, location.getX(), location.getY(), location.getZ());
+    }
+
+    public Location getLocation(double x, double y, double z) {
+        return new Location(world, x, y, z);
+    }
+
+    public Block getBlock(Vector location) {
+        return getLocation(location).getBlock();
+    }
+
+    public Block getBlock(int x, int y, int z) {
+        return world.getBlockAt(x, y, z);
     }
 }

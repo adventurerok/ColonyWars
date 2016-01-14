@@ -14,6 +14,8 @@ import com.ithinkrok.minigames.schematic.SchematicOptions;
 import com.ithinkrok.minigames.schematic.SchematicPaster;
 import com.ithinkrok.minigames.schematic.event.SchematicDestroyedEvent;
 import com.ithinkrok.minigames.schematic.event.SchematicFinishedEvent;
+import com.ithinkrok.minigames.util.BoundingBox;
+import com.ithinkrok.minigames.util.LocationChecker;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,7 +25,7 @@ import java.util.HashMap;
 /**
  * Created by paul on 08/01/16.
  */
-public class BuildingController extends Metadata implements Listener {
+public class BuildingController extends Metadata implements Listener, LocationChecker, SchematicPaster.BoundsChecker {
 
     private final GameGroup gameGroup;
 
@@ -77,7 +79,7 @@ public class BuildingController extends Metadata implements Listener {
         GameMap map = gameGroup.getCurrentMap();
 
         PastedSchematic pasted = SchematicPaster
-                .buildSchematic(schem, map, location, bounds -> true, gameGroup, gameGroup, rotation,
+                .buildSchematic(schem, map, location, this, gameGroup, gameGroup, rotation,
                         options);
 
         if(pasted == null) return false;
@@ -91,6 +93,7 @@ public class BuildingController extends Metadata implements Listener {
     private SchematicOptions createSchematicOptions(TeamIdentifier team, boolean instant) {
         SchematicOptions options = new SchematicOptions(gameGroup.getSharedObject("schematic_options"));
         options.withOverrideDyeColor(team.getDyeColor());
+        options.withMapBoundsCheck(false); //we do our own Map bounds check
 
         if(instant) options.withBuildSpeed(-1);
 
@@ -122,5 +125,32 @@ public class BuildingController extends Metadata implements Listener {
         }
 
         return result;
+    }
+
+    @Override
+    /**
+     * Checks if the location is part of a building
+     */
+    public boolean check(Location loc) {
+        return gameGroup.getCurrentMap().canPaste(new BoundingBox(loc.toVector(), loc.toVector()));
+    }
+
+    @Override
+    public boolean canPaste(BoundingBox bounds) {
+        GameMap map = gameGroup.getCurrentMap();
+
+        for(int x = bounds.min.getBlockX(); x <= bounds.max.getBlockX(); ++x) {
+            for(int y = bounds.min.getBlockY(); y <= bounds.max.getBlockY(); ++y) {
+                for(int z = bounds.min.getBlockZ(); z <= bounds.max.getBlockZ(); ++z) {
+                    switch(map.getBlock(x, y, z).getType()) {
+                        case BEDROCK:
+                        case BARRIER:
+                            return false;
+                    }
+                }
+            }
+        }
+
+        return map.canPaste(bounds);
     }
 }

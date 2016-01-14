@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class TreeFeller {
 
-    public static int fellTree(Location location){
+    public static int fellTree(Location location, LocationChecker checker){
         LinkedList<Location> locations = new LinkedList<>();
 
         addSurrounding(locations, location);
@@ -22,6 +22,7 @@ public class TreeFeller {
 
         while(locations.size() > 0){
             Location pos = locations.removeFirst();
+            if(!checker.check(pos)) continue;
 
             Block block = pos.getBlock();
 

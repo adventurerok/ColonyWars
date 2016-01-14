@@ -21,6 +21,8 @@ kit_chooser.choose.chosen=&6You will be a %s &6in the next game!
 darkness_sword.name=Darkness Sword
 darkness_sword.desc=The Dark Knights Weapon!
 
+general_sword.upgrade=Sword Upgrade %s
+
 #ClickableItems
 buyable.team.no_money=&cYour Team and you do not have enough money to purchase this item!
 buyable.user.no_money=&cYou do not have enough money to purchase this item!

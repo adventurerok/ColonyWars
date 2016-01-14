@@ -21,7 +21,22 @@ team_identifiers:
 
 kits:
   general:
-    listeners: {}
+    listeners:
+      kit:
+        class: "com.ithinkrok.cw.kit.KitListener"
+        config:
+          buildings:
+            Blacksmith:
+              custom_items:
+                - "general_sword"
+              shop:
+                - class: "com.ithinkrok.minigames.Upgradable"
+                  config:
+                    upgrade_name: "sword"
+                    upgrade_display_locale: "general_sword.upgrade"
+                    max_level: 2
+                    upgrade_cost: "1100+250*sword"
+                    upgrade_item: "general_sword"
 #TODO kits and KitChangeEvent
 
 schematics:
@@ -363,6 +378,11 @@ custom_items:
           damage_multiplier: 2.8
   pickaxe:
     material: "DIAMOND_PICKAXE"
+  general_sword:
+    material: "DIAMOND_SWORD"
+    enchantments:
+      DAMAGE_ALL: "1*sword"
+      KNOCKBACK: "1"
 listeners:
   give_on_join:
     class: "com.ithinkrok.minigames.listener.GiveCustomItemsOnJoin"

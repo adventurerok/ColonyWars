@@ -229,21 +229,17 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
         for (String name : kitsConfig.getKeys(false)) {
             ConfigurationSection gameStateConfig = kitsConfig.getConfigurationSection(name);
-            List<Listener> listeners = new ArrayList<>();
 
             String formattedName = gameStateConfig.getString("formatted_name", null);
 
             ConfigurationSection listenersConfig = gameStateConfig.getConfigurationSection("listeners");
 
+            Collection<ConfigurationSection> listeners = new ArrayList<>();
+
             for (String listenerName : listenersConfig.getKeys(false)) {
                 ConfigurationSection listenerConfig = listenersConfig.getConfigurationSection(listenerName);
 
-                try {
-                    listeners.add(ListenerLoader.loadListener(this, listenerConfig));
-                } catch (Exception e) {
-                    System.out.println("Failed to create listener: " + listenerName + " for kit: " + name);
-                    e.printStackTrace();
-                }
+                listeners.add(listenerConfig);
             }
             kits.put(name, new Kit(name, formattedName, listeners));
         }

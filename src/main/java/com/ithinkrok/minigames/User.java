@@ -95,7 +95,10 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
     private TaskList userTaskList = new TaskList();
     private TaskList inGameTaskList = new TaskList();
     private ClickableInventory openInventory;
+
     private Collection<Listener> listeners = new ArrayList<>();
+    private Collection<Listener> kitListeners = new ArrayList<>();
+
     private Vector inventoryTether;
 
     public User(Game game, GameGroup gameGroup, Team team, UUID uuid, LivingEntity entity) {
@@ -274,11 +277,11 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         Kit newKit = this.kit = kit;
 
         if(oldKit != null) {
-            this.listeners.removeAll(oldKit.getListeners());
+            this.listeners.removeAll(kitListeners);
         }
 
         if(newKit != null) {
-            this.listeners.addAll(newKit.getListeners());
+            this.listeners.addAll(kitListeners = kit.createListeners(this));
         }
 
         UserChangeKitEvent event = new UserChangeKitEvent(this, oldKit, newKit);

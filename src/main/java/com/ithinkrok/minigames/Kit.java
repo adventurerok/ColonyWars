@@ -1,7 +1,10 @@
 package com.ithinkrok.minigames;
 
+import com.ithinkrok.minigames.util.io.ListenerLoader;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -11,13 +14,9 @@ public class Kit {
 
     private final String name;
     private final String formattedName;
-    private final Collection<Listener> listeners;
+    private final Collection<ConfigurationSection> listeners;
 
-    public Kit(String name, Collection<Listener> listeners) {
-        this(name, name, listeners);
-    }
-
-    public Kit(String name, String formattedName, Collection<Listener> listeners) {
+    public Kit(String name, String formattedName, Collection<ConfigurationSection> listeners) {
         this.name = name;
         this.formattedName = (formattedName != null) ? formattedName : name;
         this.listeners = listeners;
@@ -31,11 +30,18 @@ public class Kit {
         return formattedName;
     }
 
-    public Collection<Listener> getListeners() {
-        return listeners;
-    }
+    public Collection<Listener> createListeners(User user) {
+        Collection<Listener> result = new ArrayList<>();
 
-    public boolean isKitListener(Listener listener) {
-        return listeners.contains(listener);
+        for(ConfigurationSection listenerConfig : listeners) {
+            try {
+                result.add(ListenerLoader.loadListener(user, listenerConfig));
+            } catch (Exception e) {
+                System.out.println("Failed to create listener for kit: " + name);
+                e.printStackTrace();
+            }
+        }
+
+        return result;
     }
 }

@@ -28,7 +28,7 @@ public class ItemBuyable extends Buyable{
         super.configure(config);
 
         ItemStack purchase = ConfigUtils.getItemStack(config, "item");
-        if(purchase != null) this.purchase = purchase;
+        if(purchase != null) this.purchase = this.baseDisplay = purchase;
 
         noSpaceLocale = config.getString("no_inventory_space_locale", "item_buyable.no_space");
     }

@@ -184,4 +184,11 @@ public class InventoryUtils {
         if(!meta.hasDisplayName()) return null;
         return meta.getDisplayName();
     }
+
+    public static ItemStack setItemName(ItemStack item, String name) {
+        ItemMeta im = item.getItemMeta();
+        if (name != null) im.setDisplayName(name);
+        item.setItemMeta(im);
+        return item;
+    }
 }

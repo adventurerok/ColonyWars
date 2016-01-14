@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 /**
  * Created by paul on 05/01/16.
  */
-public class GameListener implements Listener {
+public class GameListener extends BaseGameStateListener {
 
     private Random random = new Random();
 

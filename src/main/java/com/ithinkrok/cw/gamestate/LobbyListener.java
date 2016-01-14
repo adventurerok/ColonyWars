@@ -21,7 +21,7 @@ import java.util.Random;
 /**
  * Created by paul on 31/12/15.
  */
-public class LobbyListener implements Listener {
+public class LobbyListener extends BaseGameStateListener {
 
     private static final Random random = new Random();
 

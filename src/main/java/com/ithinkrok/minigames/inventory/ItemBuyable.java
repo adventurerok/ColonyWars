@@ -1,4 +1,4 @@
-package com.ithinkrok.cw.inventory;
+package com.ithinkrok.minigames.inventory;
 
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.inventory.Buyable;

@@ -1,5 +1,6 @@
 package com.ithinkrok.cw.inventory;
 
+import com.ithinkrok.minigames.inventory.ItemBuyable;
 import com.ithinkrok.minigames.inventory.event.BuyablePurchaseEvent;
 import com.ithinkrok.minigames.inventory.event.CalculateItemForUserEvent;
 import com.ithinkrok.minigames.util.InventoryUtils;

@@ -642,6 +642,28 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         }
 
         @EventHandler
+        public void eventUpgrade(UserUpgradeEvent event) {
+            PlayerInventory inv = getInventory();
+
+            for(int index = 0; index < inv.getSize(); ++index) {
+                ItemStack old = inv.getItem(index);
+
+                int id = InventoryUtils.getIdentifier(old);
+                if(id < 0) continue;
+
+                CustomItem customItem = gameGroup.getCustomItem(id);
+                if(!customItem.replaceOnUpgrade()) continue;
+
+                ItemStack replace = customItem.createForUser(User.this);
+                if(replace.isSimilar(old)) continue;
+
+                replace.setAmount(old.getAmount());
+
+                inv.setItem(index, replace);
+            }
+        }
+
+        @EventHandler
         public void eventInventoryClose(UserInventoryCloseEvent event) {
             if (!isViewingClickableInventory()) return;
 

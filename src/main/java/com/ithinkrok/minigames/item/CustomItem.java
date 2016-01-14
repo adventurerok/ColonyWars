@@ -18,6 +18,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +56,9 @@ public class CustomItem implements Identifiable, Listener {
     private String rightClickCooldownAbility;
     private String descriptionLocale;
 
-    private List<EnchantmentEffect> enchantmentEffects;
+    private boolean replaceOnUpgrade;
+
+    private List<EnchantmentEffect> enchantmentEffects = new ArrayList<>();
 
     public CustomItem(String name, ConfigurationSection config) {
         this.name = name;
@@ -65,10 +68,21 @@ public class CustomItem implements Identifiable, Listener {
         this.itemMaterial = Material.matchMaterial(config.getString("material"));
         this.durability = config.getInt("durability", 0);
         this.unbreakable = config.getBoolean("unbreakable", true);
+        this.replaceOnUpgrade = config.getBoolean("upgradable", false);
 
         if (config.contains("right_cooldown")) configureCooldown(config.getConfigurationSection("right_cooldown"));
         if (config.contains("right_timeout")) configureTimeout(config.getConfigurationSection("right_timeout"));
+        if( config.contains("enchantments")) configureEnchantments(config.getConfigurationSection("enchantments"));
         if (config.contains("listeners")) configureListeners(config.getConfigurationSection("listeners"));
+    }
+
+    private void configureEnchantments(ConfigurationSection enchantments) {
+        for(String enchantmentName : enchantments.getKeys(false)) {
+            Enchantment enchantment = Enchantment.getByName(enchantmentName);
+            Calculator calc = new ExpressionCalculator(enchantments.getString(enchantmentName));
+
+            enchantmentEffects.add(new EnchantmentEffect(enchantment, calc));
+        }
     }
 
     private void configureCooldown(ConfigurationSection config) {
@@ -166,6 +180,14 @@ public class CustomItem implements Identifiable, Listener {
     private boolean isCoolingDown(User user) {
         return rightClickCooldown != null && user.isCoolingDown(rightClickCooldownAbility);
 
+    }
+
+    public ItemStack createForUser(User user) {
+        return createWithVariables(user.getLanguageLookup(), user.getUpgradeLevels());
+    }
+
+    public boolean replaceOnUpgrade() {
+        return replaceOnUpgrade;
     }
 
     public ItemStack createWithVariables(LanguageLookup languageLookup, Variables variables) {

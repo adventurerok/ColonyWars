@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +23,7 @@ public class ClickableInventory {
 
 
     private final String title;
-    private Map<Integer, ClickableItem> items = new HashMap<>();
+    private Map<Integer, ClickableItem> items = new LinkedHashMap<>();
 
     public ClickableInventory(ConfigurationSection config) {
         this.title = config.getString("title", "Missing Inv Title");

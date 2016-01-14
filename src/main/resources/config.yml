@@ -134,7 +134,7 @@ schematics:
       shop:
         - class: "com.ithinkrok.minigames.inventory.ItemBuyable"
           config:
-            item: "POTATO,5"
+            item: "POTATO_ITEM,5"
             cost: 15
         - class: "com.ithinkrok.minigames.inventory.ItemBuyable"
           config:

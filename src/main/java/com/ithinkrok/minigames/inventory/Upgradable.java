@@ -55,6 +55,8 @@ public class Upgradable extends Buyable {
             variables.setVariable(upgradeName, nextLevel);
             display = event.getUserGameGroup().getCustomItem(customItem)
                     .createWithVariables(event.getUser().getLanguageLookup(), variables);
+
+            display = InventoryUtils.removeIdentifier(display);
         }
 
         if (upgradeDisplayLang != null) {

@@ -151,6 +151,24 @@ public class InventoryUtils {
         return item;
     }
 
+    public static ItemStack removeIdentifier(ItemStack item) {
+        ItemMeta im = item.getItemMeta();
+
+        if(!im.hasLore()) return item;
+
+        List<String> lore = im.getLore();
+        Iterator<String> it = lore.iterator();
+
+        while(it.hasNext()) {
+            String loreLine = it.next();
+            if(isIdentifierString(loreLine)) it.remove();
+        }
+
+        im.setLore(lore);
+        item.setItemMeta(im);
+        return item;
+    }
+
     public static int getIdentifier(ItemStack item) {
         if(isEmpty(item)) return -1;
         ItemMeta im = item.getItemMeta();

@@ -17,6 +17,7 @@ import com.ithinkrok.minigames.schematic.event.SchematicDestroyedEvent;
 import com.ithinkrok.minigames.schematic.event.SchematicFinishedEvent;
 import com.ithinkrok.minigames.util.BoundingBox;
 import com.ithinkrok.minigames.util.LocationChecker;
+import com.ithinkrok.minigames.util.math.expression.Expression;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

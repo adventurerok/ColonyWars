@@ -89,6 +89,18 @@ schematics:
             team: true
             with_buildings:
               - "Farm"
+        - class: "com.ithinkrok.cw.inventory.BuildingUpgradeWith"
+          config:
+            building_name: "Fortress"
+            cost: 25000
+            team: true
+            with_buildings:
+              - "Farm"
+              - "Lumbermill"
+              - "Blacksmith"
+              - "MageTower"
+              - "Cathedral"
+              - "Greenhouse"
   Fortress:
     file: "schematics/mccw_fortress.schematic"
     rotation: 0

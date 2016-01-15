@@ -18,6 +18,8 @@ public class BuildingUpgrade extends BuildingBuyable {
 
     @Override
     public boolean onPurchase(BuyablePurchaseEvent event) {
+        event.getUser().closeInventory();
+
         Location buildingLoc = event.getUser().getInventoryTether();
 
         BuildingController controller = BuildingController.getOrCreate(event.getUserGameGroup());

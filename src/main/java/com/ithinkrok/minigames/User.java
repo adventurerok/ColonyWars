@@ -480,9 +480,11 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
     }
 
     public void redoInventory() {
-        if(this.openInventory == null) return;
+        if(this.openInventory == null || !isPlayer()) return;
 
-        showInventory(this.openInventory, getInventoryTether());
+        Inventory viewing = getPlayer().getOpenInventory().getTopInventory();
+        viewing.clear();
+        this.openInventory.populateInventory(viewing, this);
     }
 
     public Location getInventoryTether() {

@@ -474,7 +474,7 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
             if (!isPlayer()) return;
 
             this.openInventory = inventory;
-            this.inventoryTether = inventoryTether.toVector();
+            this.inventoryTether = inventoryTether != null ? inventoryTether.toVector() : null;
             getPlayer().openInventory(inventory.createInventory(this));
         });
     }
@@ -606,7 +606,7 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
 
     private class UserListener implements Listener {
 
-        @EventHandler
+        @EventHandler(priority = EventPriority.LOWEST)
         public void eventInGameChange(UserInGameChangeEvent event) {
             Iterator<UserMetadata> iterator = metadataMap.values().iterator();
 
@@ -617,7 +617,7 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
             }
         }
 
-        @EventHandler
+        @EventHandler(priority = EventPriority.LOWEST)
         public void eventGameStateChange(GameStateChangedEvent event) {
             Iterator<UserMetadata> iterator = metadataMap.values().iterator();
 
@@ -628,7 +628,7 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
             }
         }
 
-        @EventHandler
+        @EventHandler(priority = EventPriority.LOWEST)
         public void eventMapChange(MapChangedEvent event) {
             Iterator<UserMetadata> iterator = metadataMap.values().iterator();
 
@@ -668,7 +668,7 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
             }
         }
 
-        @EventHandler
+        @EventHandler(priority = EventPriority.LOWEST)
         public void eventInventoryClose(UserInventoryCloseEvent event) {
             if (!isViewingClickableInventory()) return;
 

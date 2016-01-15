@@ -18,6 +18,7 @@ import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import java.util.*;
@@ -199,25 +200,29 @@ public class Team implements Listener, Messagable, LanguageLookup, SharedObjectA
     private class TeamListener implements Listener {
 
 
-        @EventHandler
+        @EventHandler(priority = EventPriority.LOWEST)
         public void eventGameStateChange(GameStateChangedEvent event) {
             Iterator<Metadata> iterator = metadataMap.values().iterator();
 
             while (iterator.hasNext()) {
                 Metadata metadata = iterator.next();
 
-                if (metadata.removeOnGameStateChange(event)) iterator.remove();
+                if (metadata.removeOnGameStateChange(event)){
+                    iterator.remove();
+                }
             }
         }
 
-        @EventHandler
+        @EventHandler(priority = EventPriority.LOWEST)
         public void eventMapChange(MapChangedEvent event) {
             Iterator<Metadata> iterator = metadataMap.values().iterator();
 
             while (iterator.hasNext()) {
                 Metadata metadata = iterator.next();
 
-                if (metadata.removeOnMapChange(event)) iterator.remove();
+                if (metadata.removeOnMapChange(event)){
+                    iterator.remove();
+                }
             }
         }
     }

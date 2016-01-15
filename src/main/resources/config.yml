@@ -455,6 +455,13 @@ custom_items:
       team_compass:
         events: ["rightClick"]
         class: "com.ithinkrok.cw.item.TeamCompass"
+  player_compass:
+    display_name_locale: "player_compass.name"
+    material: "COMPASS"
+    listeners:
+      team_compass:
+        events: ["rightClick"]
+        class: "com.ithinkrok.cw.item.PlayerCompass"
 listeners:
   give_on_join:
     class: "com.ithinkrok.minigames.listener.GiveCustomItemsOnJoin"

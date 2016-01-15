@@ -96,6 +96,10 @@ public class InventoryUtils {
         return identifier == -1 ? item : addIdentifier(item, identifier);
     }
 
+    public static ItemStack setItemLore(ItemStack item, String... lore) {
+        return setItemNameAndLore(item, null, lore);
+    }
+
     public static ItemStack createItemWithEnchantments(Material mat, int amount, int damage, String name, String desc,
                                                        Object... enchantments) {
         ItemStack stack;

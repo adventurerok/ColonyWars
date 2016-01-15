@@ -67,5 +67,7 @@ public class TeamCompass implements Listener {
 
         ItemStack item = event.getItem();
         InventoryUtils.setItemNameAndLore(item, compassName, compassOriented);
+
+        event.setStartCooldownAfterAction(true);
     }
 }

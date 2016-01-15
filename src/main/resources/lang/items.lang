@@ -30,6 +30,12 @@ team_compass.name=Team Compass
 team_compass.upgrade=Team Compass
 team_compass.oriented=Oriented at\: %s Team
 
+player_compass.name=Player Compass
+player_compass.upgrade=Player Compass
+player_compass.locating=Locating closest player...
+player_compass.oriented=Oriented at\: %s
+player_compass.no_player=No One
+
 #ClickableItems
 buyable.team.no_money=&cYour Team and you do not have enough money to purchase this item!
 buyable.user.no_money=&cYou do not have enough money to purchase this item!

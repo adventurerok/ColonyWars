@@ -1,8 +1,10 @@
 package com.ithinkrok.cw.command;
 
+import com.ithinkrok.minigames.Team;
 import com.ithinkrok.minigames.command.Command;
 import com.ithinkrok.minigames.command.CommandSender;
 import com.ithinkrok.minigames.command.GameCommandExecutor;
+import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.metadata.Money;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import org.bukkit.Material;
@@ -22,6 +24,8 @@ public class CWCommand implements GameCommandExecutor {
     public CWCommand() {
         subExecutors.put("money", this::moneyCommand);
         subExecutors.put("building", this::buildingCommand);
+        subExecutors.put("team", this::teamCommand);
+        subExecutors.put("custom", this::customCommand);
     }
 
     @Override
@@ -72,6 +76,39 @@ public class CWCommand implements GameCommandExecutor {
         ItemStack item = InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, amount, 0, buildingName);
 
         command.getUser().getInventory().addItem(item);
+
+        return true;
+    }
+
+    private boolean teamCommand(CommandSender sender, Command command) {
+        if(!command.requireUser(sender)) return true;
+        if(!command.requireArgumentCount(sender, 1)) return true;
+
+        Team team = command.getGameGroup().getTeam(command.getStringArg(0, null));
+        if(team == null) {
+            sender.sendLocale("command.cw.team.unknown", command.getStringArg(0, null));
+            return true;
+        }
+
+        command.getUser().setTeam(team);
+        sender.sendLocale("command.cw.team.success", command.getUser().getFormattedName(), team.getFormattedName());
+
+        return true;
+    }
+
+    private boolean customCommand(CommandSender sender, Command command) {
+        if(!command.requireUser(sender)) return true;
+        if(!command.requireArgumentCount(sender, 1)) return true;
+
+        CustomItem item = command.getUser().getGameGroup().getCustomItem(command.getStringArg(0, null));
+        if(item == null) {
+            sender.sendLocale("command.cw.custom.unknown", command.getStringArg(0, null));
+            return true;
+        }
+
+        command.getUser().getInventory().addItem(item.createForUser(command.getUser()));
+        sender.sendLocale("command.cw.custom.success", command.getUser().getFormattedName(), command.getStringArg(0,
+                null));
 
         return true;
     }

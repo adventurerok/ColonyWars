@@ -20,11 +20,19 @@ permissions:
     children:
       mccw.cw.money: true
       mccw.cw.building: true
+      mccw.cw.team: true
+      mccw.cw.custom: true
   mccw.cw.money:
     description: "Allows use of /cw money"
     default: false
   mccw.cw.building:
     description: "Allows use of /cw building"
+    default: false
+  mccw.cw.team:
+    description: "Allows use of /cw team"
+    default: false
+  mccw.cw.custom:
+    description: "Allows use of /cw custom"
     default: false
 
 commands:

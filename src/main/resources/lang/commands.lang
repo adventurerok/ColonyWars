@@ -9,3 +9,7 @@ command.gamestate.changed=&aGameState changed to %s
 
 command.cw.unknown=&cUnknown subcommand %s
 command.cw.building.unknown=&cUnknown building %s
+command.cw.team.unknown=&cUnknown team %s
+command.cw.team.success=%s&a's team changed to %s
+command.cw.custom.unknown=&cUnknown custom item %s
+command.cw.custom.success=&aGiven %s &athe custom item %s

@@ -86,11 +86,14 @@ public class InventoryUtils {
     }
 
     public static ItemStack setItemNameAndLore(ItemStack item, String name, String... lore) {
+        int identifier = getIdentifier(item);
+
         ItemMeta im = item.getItemMeta();
         if (name != null) im.setDisplayName(name);
         im.setLore(Arrays.asList(lore));
         item.setItemMeta(im);
-        return item;
+
+        return identifier == -1 ? item : addIdentifier(item, identifier);
     }
 
     public static ItemStack createItemWithEnchantments(Material mat, int amount, int damage, String name, String desc,

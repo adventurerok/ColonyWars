@@ -12,7 +12,6 @@ import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.inventory.ClickableInventory;
 import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.lang.LanguageLookup;
-import com.ithinkrok.minigames.lang.Messagable;
 import com.ithinkrok.minigames.metadata.MetadataHolder;
 import com.ithinkrok.minigames.metadata.UserMetadata;
 import com.ithinkrok.minigames.task.GameRunnable;
@@ -46,9 +45,10 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import static com.ithinkrok.minigames.util.InventoryUtils.*;
-
 import java.util.*;
+
+import static com.ithinkrok.minigames.util.InventoryUtils.createLeatherArmorItem;
+import static com.ithinkrok.minigames.util.InventoryUtils.setUnbreakable;
 
 /**
  * Created by paul on 31/12/15.
@@ -602,6 +602,15 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
 
     public String getKitName() {
         return kit != null ? kit.getName() : null;
+    }
+
+    public Location getCompassTarget() {
+        if(!isPlayer()) return null;
+        return getPlayer().getCompassTarget();
+    }
+
+    public void setCompassTarget(Location compassTarget) {
+        if(isPlayer()) getPlayer().setCompassTarget(compassTarget);
     }
 
     private class UserListener implements Listener {

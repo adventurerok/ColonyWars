@@ -237,6 +237,13 @@ schematics:
           config:
             item: "POTION,32,16389"
             cost: 500
+        - class: "com.ithinkrok.minigames.inventory.Upgradable"
+          config:
+            upgrade_name: "team_compass"
+            upgrade_display_locale: "team_compass.upgrade"
+            max_level: 1
+            upgrade_cost: 1000
+            upgrade_item: "team_compass"
   Greenhouse:
     file: "schematics/mccw_greenhouse.schematic"
     rotation: 3
@@ -441,6 +448,13 @@ custom_items:
     enchantments:
       DAMAGE_ALL: "1*sword"
       KNOCKBACK: "1"
+  team_compass:
+    display_name_locale: "team_compass.name"
+    material: "COMPASS"
+    listeners:
+      team_compass:
+        events: ["rightClick"]
+        class: "com.ithinkrok.cw.item.TeamCompass"
 listeners:
   give_on_join:
     class: "com.ithinkrok.minigames.listener.GiveCustomItemsOnJoin"

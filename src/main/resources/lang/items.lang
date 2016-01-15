@@ -26,6 +26,10 @@ general_sword.upgrade=Sword Upgrade %s
 mighty_axe.name=Mighty Axe
 mighty_axe.upgrade=Mighty Axe
 
+team_compass.name=Team Compass
+team_compass.upgrade=Team Compass
+team_compass.oriented=Oriented at\: %s Team
+
 #ClickableItems
 buyable.team.no_money=&cYour Team and you do not have enough money to purchase this item!
 buyable.user.no_money=&cYou do not have enough money to purchase this item!

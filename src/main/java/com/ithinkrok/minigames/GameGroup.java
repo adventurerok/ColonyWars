@@ -29,7 +29,6 @@ import com.ithinkrok.minigames.task.TaskScheduler;
 import com.ithinkrok.minigames.user.UserResolver;
 import com.ithinkrok.minigames.util.EventExecutor;
 import com.ithinkrok.minigames.util.io.FileLoader;
-import com.ithinkrok.oldmccw.data.TeamColor;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -456,6 +455,10 @@ public class GameGroup
 
     public GameState getGameState(String gameStateName) {
         return gameStates.get(gameStateName);
+    }
+
+    public Collection<TeamIdentifier> getTeamIdentifiers() {
+        return teamIdentifiers.values();
     }
 
     private class GameGroupListener implements Listener {

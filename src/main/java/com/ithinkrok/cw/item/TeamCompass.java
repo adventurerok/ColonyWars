@@ -8,6 +8,7 @@ import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -24,9 +25,10 @@ public class TeamCompass implements Listener {
 
     @EventHandler
     public void onListenerLoaded(ListenerLoadedEvent event) {
-        if(!event.hasConfig()) return;
+        ConfigurationSection config;
+        if(event.hasConfig()) config = event.getConfig();
+        else config = new MemoryConfiguration();
 
-        ConfigurationSection config = event.getConfig();
         compassNameLocale = config.getString("compass_name_locale", "team_compass.name");
         compassOrientedLocale = config.getString("compass_oriented_locale", "team_compass.oriented");
     }

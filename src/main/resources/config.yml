@@ -178,6 +178,23 @@ schematics:
   Blacksmith:
     file: "schematics/mccw_blacksmith.schematic"
     rotation: 3
+    config:
+      shop:
+        - class: "com.ithinkrok.cw.inventory.BuildingBuyable"
+          config:
+            building_name: "ScoutTower"
+            cost: 2000
+            team: true
+        - class: "com.ithinkrok.cw.inventory.BuildingBuyable"
+          config:
+            building_name: "Wall"
+            cost: 1600
+            team: true
+        - class: "com.ithinkrok.cw.inventory.BuildingBuyable"
+          config:
+            building_name: "Landmine"
+            cost: 200
+            team: true
   MageTower:
     file: "schematics/mccw_magetower.schematic"
     rotation: 2
@@ -194,19 +211,44 @@ schematics:
             building_name: "Cathedral"
             cost: 8000
             team: true
+        - class: "com.ithinkrok.minigames.inventory.ItemBuyable"
+          config:
+            item: "POTION,32,16389"
+            cost: 1250
   Cathedral:
     file: "schematics/mccw_cathedral.schematic"
     rotation: 3
     config:
       revival_rate: 75
+      shop:
+        - class: "com.ithinkrok.minigames.inventory.ItemBuyable"
+          config:
+            item: "POTION,32,16389"
+            cost: 500
   Greenhouse:
     file: "schematics/mccw_greenhouse.schematic"
     rotation: 3
+    config:
+      shop:
+        - class: "com.ithinkrok.minigames.inventory.Upgradable"
+          config:
+            upgrade_name: "axe"
+            upgrade_display_locale: "mighty_axe.upgrade"
+            max_level: 1
+            upgrade_cost: 1600
+            upgrade_item: "mighty_axe"
   ScoutTower:
     file: "schematics/mccw_scouttower.schematic"
     rotation: 2
     upgrades:
       - "CannonTower"
+    config:
+      shop:
+        - class: "com.ithinkrok.cw.inventory.BuildingUpgrade"
+          config:
+            building_name: "CannonTower"
+            cost: 2000
+            team: true
   CannonTower:
     file: "schematics/mccw_cannontower.schematic"
     rotation: 2
@@ -378,6 +420,9 @@ custom_items:
           damage_multiplier: 2.8
   pickaxe:
     material: "DIAMOND_PICKAXE"
+  mighty_axe:
+    display_name_locale: "mighty_axe.name"
+    material: "STONE_AXE"
   general_sword:
     material: "DIAMOND_SWORD"
     upgradable: true

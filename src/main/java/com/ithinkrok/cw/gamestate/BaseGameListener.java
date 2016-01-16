@@ -150,6 +150,8 @@ public class BaseGameListener extends BaseGameStateListener {
     private void removeUserFromGame(User died) {
         Team team = died.getTeam();
 
+        died.setInGame(false);
+
         died.getGameGroup().sendLocale(teamLostPlayerLocale, team.getFormattedName());
         died.getGameGroup().sendLocale(teamPlayersLeftLocale, team.getUserCount(), team.getFormattedName());
 
@@ -159,8 +161,6 @@ public class BaseGameListener extends BaseGameStateListener {
 
         //TODO check victory
         //TODO update spectator inventories
-
-        died.setInGame(false);
     }
 
     public boolean shouldRespawnUser(User user, CWTeamStats teamStats) {

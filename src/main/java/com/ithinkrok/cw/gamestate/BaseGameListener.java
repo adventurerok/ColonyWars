@@ -187,7 +187,7 @@ public class BaseGameListener extends BaseGameStateListener {
         //TODO update spectator inventories
     }
 
-    private void checkVictory(GameGroup gameGroup, boolean checkShowdown) {
+    public void checkVictory(GameGroup gameGroup, boolean checkShowdown) {
         int nonZombieUsersInGame = 0;
 
         for(User user : gameGroup.getUsers()) {

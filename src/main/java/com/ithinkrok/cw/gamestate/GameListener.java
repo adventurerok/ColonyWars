@@ -69,6 +69,8 @@ public class GameListener extends BaseGameListener {
 
         GameGroup gameGroup = event.getGameGroup();
         gameGroup.getUsers().forEach(this::setupUser);
+
+        checkVictory(event.getGameGroup(), true);
     }
 
     @EventHandler

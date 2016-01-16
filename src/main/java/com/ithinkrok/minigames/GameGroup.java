@@ -249,6 +249,10 @@ public class GameGroup
         changeGameState(gameState);
     }
 
+    public GameState getCurrentGameState() {
+        return gameState;
+    }
+
     @SuppressWarnings("unchecked")
     public void changeGameState(GameState gameState) {
         if (gameState.equals(this.gameState)) return;

@@ -1,23 +1,28 @@
 package com.ithinkrok.cw.metadata;
 
 import com.ithinkrok.cw.Building;
-import com.ithinkrok.minigames.team.Team;
+import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.metadata.Metadata;
+import com.ithinkrok.minigames.team.Team;
 import com.ithinkrok.minigames.util.ConfigUtils;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by paul on 08/01/16.
  */
 public class CWTeamStats extends Metadata {
+
+    private final Random random = new Random();
 
     private final Team team;
 
@@ -33,6 +38,9 @@ public class CWTeamStats extends Metadata {
     private Location baseLocation;
 
     private Location spawnLocation;
+
+    private String respawnChanceLocale;
+    private String eliminatedLocale;
 
     public Location getBaseLocation() {
         return baseLocation;
@@ -54,6 +62,12 @@ public class CWTeamStats extends Metadata {
         Vector spawnLocation = ConfigUtils.getVector(spawnLocations, team.getName());
         this.spawnLocation = new Location(team.getGameGroup().getCurrentMap().getWorld(), spawnLocation.getX(),
                 spawnLocation.getY(), spawnLocation.getZ());
+
+        ConfigurationSection metadata = team.getSharedObject("team_stats_metadata");
+        if(metadata == null) metadata = new MemoryConfiguration();
+
+        respawnChanceLocale = metadata.getString("respawn_chance_locale", "respawn.chance");
+        eliminatedLocale = metadata.getString("team_eliminated_locale", "team.eliminated");
     }
 
     public Location getSpawnLocation() {
@@ -146,6 +160,28 @@ public class CWTeamStats extends Metadata {
     public void setRespawnChance(int respawnChance, boolean message) {
         this.respawnChance = respawnChance;
 
-        //TODO message players
+        if(message) team.sendLocale(respawnChanceLocale, respawnChance);
+    }
+
+    public void respawnUser(User died) {
+        Location loc;
+        if(churchLocations.size() > 0) loc = churchLocations.get(random.nextInt(churchLocations.size()));
+        else loc = baseLocation;
+
+        died.teleport(loc);
+
+        died.decloak();
+    }
+
+    public void eliminate() {
+        team.getGameGroup().sendLocale(eliminatedLocale, team.getFormattedName());
+
+        if(baseLocation != null) {
+            BuildingController.getOrCreate(team.getGameGroup()).getBuilding(baseLocation).explode();
+            baseLocation = null;
+        }
+
+        //TODO statsHolder gameLoss
+        //TODO remove statsHolders
     }
 }

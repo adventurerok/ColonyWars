@@ -35,3 +35,11 @@ timeouts.default.wait=&cPlease wait for this ability to cool down!
 cooldowns.default.wait=&cYou are already using this ability!
 
 lore.cooldown=Cooldown\: %s seconds
+
+respawn.success=%s &6was revived by the gods!
+respawn.fail=%s &6was not revived!
+respawn.chance=&6Your revival chance is now&3 %s
+
+team.eliminated=&6The %s &6Team was eliminated
+team.lost_player=&6The %s &6Team has lost a player!
+team.players_left=&6There are now &3%s &6players left on the %s &6Team

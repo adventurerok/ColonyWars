@@ -232,4 +232,8 @@ public class GameMap implements LanguageLookup, ConfigHolder, SchematicPaster.Bo
     public Block getBlock(int x, int y, int z) {
         return world.getBlockAt(x, y, z);
     }
+
+    public Location getSpawn() {
+        return world.getSpawnLocation();
+    }
 }

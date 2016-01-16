@@ -3,14 +3,18 @@ package com.ithinkrok.cw.gamestate;
 import com.ithinkrok.cw.Building;
 import com.ithinkrok.cw.event.ShopOpenEvent;
 import com.ithinkrok.cw.metadata.BuildingController;
+import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.minigames.GameGroup;
+import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.map.MapBlockBreakNaturallyEvent;
 import com.ithinkrok.minigames.event.map.MapItemSpawnEvent;
+import com.ithinkrok.minigames.event.user.state.UserDeathEvent;
 import com.ithinkrok.minigames.event.user.world.*;
 import com.ithinkrok.minigames.inventory.ClickableInventory;
 import com.ithinkrok.minigames.metadata.Money;
 import com.ithinkrok.minigames.schematic.Facing;
+import com.ithinkrok.minigames.team.Team;
 import com.ithinkrok.minigames.util.ConfigUtils;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import com.ithinkrok.minigames.util.SoundEffect;
@@ -44,6 +48,13 @@ public class BaseGameListener extends BaseGameStateListener {
     private String cannotDestroyLocale;
     private String buildingDestroyedLocale;
 
+    private String respawnLocale;
+    private String noRespawnLocale;
+    private int lostRespawnChance;
+
+    private String teamLostPlayerLocale;
+    private String teamPlayersLeftLocale;
+
     private int buildingDestroyWait;
 
     @EventHandler
@@ -62,7 +73,14 @@ public class BaseGameListener extends BaseGameStateListener {
         cannotDestroyLocale = config.getString("buildings.destroy_protected_locale", "building.destroy.protected");
         buildingDestroyedLocale = config.getString("buildings.destroyed_locale", "building.destroy.success");
 
+        respawnLocale = config.getString("respawn_locale", "respawn.success");
+        noRespawnLocale = config.getString("no_respawn_locale", "respawn.fail");
+
+        teamLostPlayerLocale = config.getString("team_lost_player_locale", "team.lost_player");
+        teamPlayersLeftLocale = config.getString("team_players_left_locale", "team.players_left");
+
         buildingDestroyWait = (int) (config.getDouble("buildings.destroy_wait", 3.0d) * 20d);
+        lostRespawnChance = config.getInt("lost_respawn_chance", 15);
     }
 
     @EventHandler
@@ -92,6 +110,61 @@ public class BaseGameListener extends BaseGameStateListener {
         event.getUserGameGroup().userEvent(new ShopOpenEvent(event.getUser(), building, shop));
 
         event.getUser().showInventory(shop, event.getClickedBlock().getLocation());
+    }
+
+    @EventHandler
+    public void onUserDeath(UserDeathEvent event) {
+        User died = event.getUser();
+
+        if(!died.isInGame()) {
+            died.resetUserStats(true);
+
+            died.teleport(died.getGameGroup().getCurrentMap().getSpawn());
+            return;
+        }
+
+        //TODO remove entity targets on the dead player
+        //TODO kill stats
+
+        Team team = died.getTeam();
+        CWTeamStats teamStats = CWTeamStats.getOrCreate(team);
+
+        boolean respawn = shouldRespawnUser(died, teamStats);
+
+        if(respawn) {
+            died.getGameGroup().sendLocale(respawnLocale, died.getFormattedName());
+
+            teamStats.setRespawnChance(teamStats.getRespawnChance() - lostRespawnChance, true);
+
+            teamStats.respawnUser(died);
+            died.resetUserStats(false);
+        } else {
+            died.getGameGroup().sendLocale(noRespawnLocale, died.getFormattedName());
+
+            removeUserFromGame(died);
+
+            died.setSpectator(true);
+        }
+    }
+
+    private void removeUserFromGame(User died) {
+        Team team = died.getTeam();
+
+        died.getGameGroup().sendLocale(teamLostPlayerLocale, team.getFormattedName());
+        died.getGameGroup().sendLocale(teamPlayersLeftLocale, team.getUserCount(), team.getFormattedName());
+
+        if(team.getUserCount() == 0) {
+            CWTeamStats.getOrCreate(team).eliminate();
+        }
+
+        //TODO check victory
+        //TODO update spectator inventories
+
+        died.setInGame(false);
+    }
+
+    public boolean shouldRespawnUser(User user, CWTeamStats teamStats) {
+        return user.isPlayer() && random.nextFloat() < (teamStats.getRespawnChance() / 100f);
     }
 
     @EventHandler

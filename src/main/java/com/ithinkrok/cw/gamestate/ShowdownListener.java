@@ -18,6 +18,8 @@ public class ShowdownListener extends BaseGameListener {
 
     @EventHandler
     public void onListenerLoaded(ListenerLoadedEvent<?> event) {
+        super.onListenerLoaded(event);
+
         ConfigurationSection config = event.getConfig();
         if(config == null) config = new MemoryConfiguration();
 

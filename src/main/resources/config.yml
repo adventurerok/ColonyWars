@@ -43,6 +43,11 @@ kits:
         class: "com.ithinkrok.cw.kit.KitListener"
         config:
           buildings:
+            Base:
+              potion_effects:
+                SPEED: 2
+              upgrades:
+                team_compass: 1 #Prevent buying the team compass
             Lumbermill:
               custom_items:
                 - "scout_sword"

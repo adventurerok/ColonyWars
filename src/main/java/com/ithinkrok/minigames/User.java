@@ -39,10 +39,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
@@ -102,6 +99,7 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
     private Collection<Listener> kitListeners = new ArrayList<>();
 
     private Vector inventoryTether;
+    private boolean spectator;
 
     public User(Game game, GameGroup gameGroup, Team team, UUID uuid, LivingEntity entity) {
         this.game = game;
@@ -324,6 +322,35 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         gameGroup.userEvent(new UserInGameChangeEvent(this));
     }
 
+    public void setSpectator(boolean spectator) {
+        if (spectator == this.spectator) return;
+        if (spectator && isInGame())
+            throw new RuntimeException("You cannot be a spectator when you are already in a game");
+
+        this.spectator = spectator;
+
+        if (!isPlayer()) return;
+
+        if (spectator) {
+            cloak();
+            resetUserStats(true);
+
+            setAllowFlight(true);
+            setCollidesWithEntities(false);
+            getInventory().clear();
+            clearArmor();
+
+            updateScoreboard();
+        } else {
+            setAllowFlight(false);
+            setCollidesWithEntities(true);
+
+            decloak();
+        }
+
+        gameGroup.userEvent(new UserSpectatorChangeEvent(this, spectator));
+    }
+
     @Override
     public <B extends UserMetadata> void setMetadata(B metadata) {
         metadataMap.put(metadata.getMetadataClass(), metadata);
@@ -346,6 +373,15 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         if (scoreboardDisplay == null || scoreboardHandler == null) return;
 
         scoreboardHandler.updateScoreboard(this, scoreboardDisplay);
+    }
+
+    public void clearArmor() {
+        EntityEquipment equipment = entity.getEquipment();
+
+        equipment.setHelmet(null);
+        equipment.setChestplate(null);
+        equipment.setLeggings(null);
+        equipment.setBoots(null);
     }
 
     @Override
@@ -396,10 +432,6 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
     public void setWitherTicks(User witherAttacker, int witherTicks, int witherAmplifier) {
         this.witherAttacker.setAttacker(witherAttacker, witherTicks);
         entity.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, witherAmplifier, witherAmplifier));
-    }
-
-    public void setLastAttacker(User lastAttacker) {
-        this.lastAttacker.setAttacker(lastAttacker);
     }
 
     public boolean startCoolDown(String ability, int seconds, String coolDownLocale) {
@@ -637,6 +669,10 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
 
     public User getLastAttacker() {
         return lastAttacker.getAttacker();
+    }
+
+    public void setLastAttacker(User lastAttacker) {
+        this.lastAttacker.setAttacker(lastAttacker);
     }
 
     private class UserListener implements Listener {

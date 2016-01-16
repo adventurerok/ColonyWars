@@ -195,6 +195,7 @@ public class GameListener extends BaseGameStateListener {
             user.setKit(assignUserKit(user.getGameGroup()));
         }
 
+        user.setInGame(true);
 
         CWTeamStats teamStats = CWTeamStats.getOrCreate(user.getTeam());
         user.teleport(teamStats.getSpawnLocation());

@@ -687,6 +687,18 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         this.lastAttacker.setAttacker(lastAttacker);
     }
 
+    public boolean isInsideVehicle() {
+        return entity.isInsideVehicle();
+    }
+
+    public void setVelocity(Vector velocity) {
+        entity.setVelocity(velocity);
+    }
+
+    public Entity getVehicle() {
+        return entity.getVehicle();
+    }
+
     private class UserListener implements Listener {
 
         @EventHandler(priority = EventPriority.LOWEST)

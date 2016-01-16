@@ -391,6 +391,11 @@ shared_objects:
       saturation: 5
       fly_speed: 0.1
       walk_speed: 0.2
+  showdown_metadata:
+    min_radius: 5
+    shrink_start_time: 180
+    shrink_interval_time: 20
+    shrink_start_locale: "showdown.shrinking"
 
 game_states:
   lobby:
@@ -411,7 +416,7 @@ game_states:
     listeners:
       main:
         class: "com.ithinkrok.cw.gamestate.GameListener"
-        config:
+        config: &base_game_config
           gold_shared_object: "gold_config"
           buildings:
             destroy_wait: 3
@@ -435,6 +440,12 @@ game_states:
             items:
               - name: "pickaxe"
                 slot: 0
+  showdown:
+    listeners:
+      main:
+        class: "com.ithinkrok.cw.gamestate.ShowdownListener"
+        config: *base_game_config
+
 start_game_state: "lobby"
 
 custom_items:

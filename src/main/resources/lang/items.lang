@@ -36,6 +36,13 @@ player_compass.locating=Locating closest player...
 player_compass.oriented=Oriented at\: %s
 player_compass.no_player=No One
 
+scout_sword.upgrade.sharpness=Sharpness Upgrade %s
+scout_sword.upgrade.knockback=Knockback Upgrade %s
+
+regen_ability.name=Regen Ability
+regen_ability.upgrade=Regen Ability Upgrade %s
+regen_ability.cooldown=&aYour regeneration ability has cooled down!
+
 #ClickableItems
 buyable.team.no_money=&cYour Team and you do not have enough money to purchase this item!
 buyable.user.no_money=&cYou do not have enough money to purchase this item!

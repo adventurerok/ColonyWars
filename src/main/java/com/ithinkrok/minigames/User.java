@@ -116,34 +116,39 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         }
     }
 
-    public ClickableInventory getOpenInventory() {
-        return openInventory;
+    public boolean isPlayer() {
+        return entity instanceof Player;
     }
 
-    public boolean showCloakedPlayers() {
-        return showCloakedPlayers;
+    protected Player getPlayer() {
+        if (!isPlayer()) throw new RuntimeException("You have no player");
+        return (Player) entity;
+    }
+
+    public ClickableInventory getOpenInventory() {
+        return openInventory;
     }
 
     public void setShowCloakedPlayers(boolean showCloakedPlayers) {
         this.showCloakedPlayers = showCloakedPlayers;
 
-        for(User u : gameGroup.getUsers()) {
-            if(this == u) continue;
+        for (User u : gameGroup.getUsers()) {
+            if (this == u) continue;
 
-            if(!u.isCloaked()) continue;
+            if (!u.isCloaked()) continue;
 
-            if(showCloakedPlayers) showPlayer(u);
+            if (showCloakedPlayers) showPlayer(u);
             else hidePlayer(u);
         }
     }
 
     public void setAllowFlight(boolean allowFlight) {
-        if(isPlayer()) getPlayer().setAllowFlight(allowFlight);
+        if (isPlayer()) getPlayer().setAllowFlight(allowFlight);
         else playerState.setAllowFlight(allowFlight);
     }
 
     public void setFlySpeed(double flySpeed) {
-        if(isPlayer()) getPlayer().setFlySpeed((float) flySpeed);
+        if (isPlayer()) getPlayer().setFlySpeed((float) flySpeed);
         else playerState.setFlySpeed((float) flySpeed);
     }
 
@@ -152,12 +157,12 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
 
         setMaxHealth(defaultStats.getDouble("max_health", 10) * 2);
         setHealth(defaultStats.getDouble("health", 10) * 2);
-        setFoodLevel((int)(defaultStats.getDouble("food_level", 10) * 2));
+        setFoodLevel((int) (defaultStats.getDouble("food_level", 10) * 2));
         setSaturation(defaultStats.getDouble("saturation", 5.0));
         setFlySpeed(defaultStats.getDouble("fly_speed", 0.1));
         setWalkSpeed(defaultStats.getDouble("walk_speed", 0.1));
 
-        if(removePotionEffects) removePotionEffects();
+        if (removePotionEffects) removePotionEffects();
     }
 
     public void setMaxHealth(double maxHealth) {
@@ -169,17 +174,17 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
     }
 
     public void setFoodLevel(int foodLevel) {
-        if(isPlayer()) getPlayer().setFoodLevel(foodLevel);
+        if (isPlayer()) getPlayer().setFoodLevel(foodLevel);
         else playerState.setFoodLevel(foodLevel);
     }
 
     public void setSaturation(double saturation) {
-        if(isPlayer()) getPlayer().setSaturation((float) saturation);
+        if (isPlayer()) getPlayer().setSaturation((float) saturation);
         else playerState.setSaturation((float) saturation);
     }
 
     public void setWalkSpeed(double walkSpeed) {
-        if(isPlayer()) getPlayer().setWalkSpeed((float) walkSpeed);
+        if (isPlayer()) getPlayer().setWalkSpeed((float) walkSpeed);
         else playerState.setWalkSpeed((float) walkSpeed);
     }
 
@@ -194,13 +199,13 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
     }
 
     public void setCollidesWithEntities(boolean collides) {
-        if(!isPlayer()) return;
+        if (!isPlayer()) return;
 
         getPlayer().spigot().setCollidesWithEntities(collides);
     }
 
     public void setFlying(boolean flying) {
-        if(!isPlayer()) return;
+        if (!isPlayer()) return;
         getPlayer().setFlying(flying);
     }
 
@@ -214,18 +219,13 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         }
     }
 
+    private void showPlayer(User other) {
+        if (!isPlayer() || !other.isPlayer()) return;
+        getPlayer().showPlayer(other.getPlayer());
+    }
+
     public boolean isCloaked() {
         return cloaked;
-    }
-
-    private void hidePlayer(User other) {
-        if(!isPlayer() || !other.isPlayer()) return;
-        getPlayer().hidePlayer(other.getPlayer());
-    }
-
-    private void showPlayer(User other) {
-        if(!isPlayer() || !other.isPlayer()) return;
-        getPlayer().showPlayer(other.getPlayer());
     }
 
     public void cloak() {
@@ -234,19 +234,19 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         for (User u : gameGroup.getUsers()) {
             if (this == u) continue;
 
-            if(u.showCloakedPlayers()) continue;
+            if (u.showCloakedPlayers()) continue;
 
             u.hidePlayer(this);
         }
     }
 
-    public boolean isPlayer() {
-        return entity instanceof Player;
+    public boolean showCloakedPlayers() {
+        return showCloakedPlayers;
     }
 
-    protected Player getPlayer() {
-        if (!isPlayer()) throw new RuntimeException("You have no player");
-        return (Player) entity;
+    private void hidePlayer(User other) {
+        if (!isPlayer() || !other.isPlayer()) return;
+        getPlayer().hidePlayer(other.getPlayer());
     }
 
     public String getTeamName() {
@@ -270,26 +270,26 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         gameGroup.userEvent(event);
     }
 
+    public Kit getKit() {
+        return kit;
+    }
+
     public void setKit(Kit kit) {
-        if(kit == this.kit) return;
+        if (kit == this.kit) return;
 
         Kit oldKit = this.kit;
         Kit newKit = this.kit = kit;
 
-        if(oldKit != null) {
+        if (oldKit != null) {
             this.listeners.removeAll(kitListeners);
         }
 
-        if(newKit != null) {
+        if (newKit != null) {
             this.listeners.addAll(kitListeners = kit.createListeners(this));
         }
 
         UserChangeKitEvent event = new UserChangeKitEvent(this, oldKit, newKit);
         gameGroup.userEvent(event);
-    }
-
-    public Kit getKit() {
-        return kit;
     }
 
     public TeamIdentifier getTeamIdentifier() {
@@ -479,8 +479,16 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         });
     }
 
+    @Override
+    public GameTask doInFuture(GameRunnable task) {
+        GameTask gameTask = gameGroup.doInFuture(task);
+
+        userTaskList.addTask(gameTask);
+        return gameTask;
+    }
+
     public void redoInventory() {
-        if(this.openInventory == null || !isPlayer()) return;
+        if (this.openInventory == null || !isPlayer()) return;
 
         Inventory viewing = getPlayer().getOpenInventory().getTopInventory();
         viewing.clear();
@@ -489,14 +497,6 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
 
     public Location getInventoryTether() {
         return gameGroup.getCurrentMap().getLocation(inventoryTether);
-    }
-
-    @Override
-    public GameTask doInFuture(GameRunnable task) {
-        GameTask gameTask = gameGroup.doInFuture(task);
-
-        userTaskList.addTask(gameTask);
-        return gameTask;
     }
 
     public String getFormattedName() {
@@ -605,12 +605,20 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
     }
 
     public Location getCompassTarget() {
-        if(!isPlayer()) return null;
+        if (!isPlayer()) return null;
         return getPlayer().getCompassTarget();
     }
 
     public void setCompassTarget(Location compassTarget) {
-        if(isPlayer()) getPlayer().setCompassTarget(compassTarget);
+        if (isPlayer()) getPlayer().setCompassTarget(compassTarget);
+    }
+
+    public void addPotionEffect(PotionEffect effect) {
+        entity.addPotionEffect(effect);
+    }
+
+    public void addPotionEffect(PotionEffect effect, boolean force) {
+        entity.addPotionEffect(effect, force);
     }
 
     private class UserListener implements Listener {
@@ -659,17 +667,17 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         public void eventUpgrade(UserUpgradeEvent event) {
             PlayerInventory inv = getInventory();
 
-            for(int index = 0; index < inv.getSize(); ++index) {
+            for (int index = 0; index < inv.getSize(); ++index) {
                 ItemStack old = inv.getItem(index);
 
                 int id = InventoryUtils.getIdentifier(old);
-                if(id < 0) continue;
+                if (id < 0) continue;
 
                 CustomItem customItem = gameGroup.getCustomItem(id);
-                if(!customItem.replaceOnUpgrade()) continue;
+                if (!customItem.replaceOnUpgrade()) continue;
 
                 ItemStack replace = customItem.createForUser(User.this);
-                if(replace.isSimilar(old)) continue;
+                if (replace.isSimilar(old)) continue;
 
                 replace.setAmount(old.getAmount());
 

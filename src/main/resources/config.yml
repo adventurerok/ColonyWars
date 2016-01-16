@@ -37,6 +37,55 @@ kits:
                     max_level: 2
                     upgrade_cost: "1100+250*sword"
                     upgrade_item: "general_sword"
+  scout:
+    listeners:
+      kit:
+        class: "com.ithinkrok.cw.kit.KitListener"
+        config:
+          buildings:
+            Lumbermill:
+              custom_items:
+                - "scout_sword"
+              shop:
+                - class: "com.ithinkrok.minigames.inventory.Upgradable"
+                  config:
+                    upgrade_name: "sharpness"
+                    upgrade_display_locale: "scout_sword.upgrade.sharpness"
+                    max_level: 2
+                    upgrade_cost: "1100+250*sharpness"
+                    upgrade_item: "scout_sword"
+                - class: "com.ithinkrok.minigames.inventory.Upgradable"
+                  config:
+                    upgrade_name: "knockback"
+                    upgrade_display_locale: "scout_sword.upgrade.knockback"
+                    max_level: 2
+                    upgrade_cost: "1100+250*knockback"
+                    upgrade_item: "scout_sword"
+            Church:
+              shop:
+                - class: "com.ithinkrok.minigames.inventory.Upgradable"
+                  config: &player_compass_upgrade
+                    upgrade_name: "player_compass"
+                    upgrade_display_locale: "player_compass.upgrade"
+                    max_level: 1
+                    upgrade_cost: 400
+                    upgrade_item: "player_compass"
+            Cathedral:
+              shop:
+                - class: "com.ithinkrok.minigames.inventory.Upgradable"
+                  config: *player_compass_upgrade
+            MageTower:
+              custom_items:
+                - "regen_ability"
+              shop:
+                - class: "com.ithinkrok.minigames.inventory.Upgradable"
+                  config:
+                    upgrade_name: "regen"
+                    upgrade_display_locale: "regen_ability.upgrade"
+                    max_level: 1
+                    upgrade_cost: "1350+250*regen"
+                    upgrade_item: "regen_ability"
+
 #TODO kits and KitChangeEvent
 
 schematics:
@@ -375,6 +424,7 @@ game_states:
             - "yellow"
           choosable_kits:
             - "general"
+            - "scout"
           start_items:
             clear_inventory: true
             items:
@@ -416,6 +466,7 @@ custom_items:
         config:
           choosable_kits:
             general: "DIAMOND_SWORD,1,0,General"
+            scout: "COMPASS,1, 0,Scout"
   darkness_sword:
     display_name_locale: "darkness_sword.name"
     description_locale: "darkness_sword.desc"
@@ -447,7 +498,7 @@ custom_items:
     upgradable: true
     enchantments:
       DAMAGE_ALL: "1*sword"
-      KNOCKBACK: "1"
+      KNOCKBACK: 1
   team_compass:
     display_name_locale: "team_compass.name"
     material: "COMPASS"
@@ -462,6 +513,29 @@ custom_items:
       team_compass:
         events: ["rightClick"]
         class: "com.ithinkrok.cw.item.PlayerCompass"
+  regen_ability:
+    display_name_locale: "regen_ability.name"
+    material: "CHAINMAIL_HELMET"
+    upgradable: true
+    right_cooldown:
+      ability: "regen"
+      timer: "35-regen*10"
+      finished_locale: "regen_ability.cooldown"
+    listeners:
+      regen_ability:
+        class: "com.ithinkrok.cw.item.PotionAbility"
+        events: ["rightClick"]
+        config:
+          potion_effect: "REGENERATION"
+          duration: 10
+          level: "regen*2+1"
+  scout_sword:
+    material: "WOOD_SWORD"
+    upgradable: true
+    enchantments:
+      DAMAGE_ALL: "1*sharpness"
+      KNOCKBACK: "1*knockback"
+
 listeners:
   give_on_join:
     class: "com.ithinkrok.minigames.listener.GiveCustomItemsOnJoin"

@@ -84,7 +84,7 @@ public class KitListener implements Listener {
                     PotionEffectType potionEffectType = PotionEffectType.getByName(potionName);
 
                     potionEffects
-                            .add(new PotionEffect(potionEffectType, Integer.MAX_VALUE, potions.getInt(potionName)));
+                            .add(new PotionEffect(potionEffectType, Integer.MAX_VALUE, potions.getInt(potionName) - 1));
                 }
             }
 

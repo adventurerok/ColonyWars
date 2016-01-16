@@ -29,6 +29,7 @@ import com.ithinkrok.minigames.task.TaskScheduler;
 import com.ithinkrok.minigames.team.Team;
 import com.ithinkrok.minigames.team.TeamIdentifier;
 import com.ithinkrok.minigames.team.TeamResolver;
+import com.ithinkrok.minigames.team.TeamUserResolver;
 import com.ithinkrok.minigames.user.UserResolver;
 import com.ithinkrok.minigames.util.EventExecutor;
 import com.ithinkrok.minigames.util.io.FileLoader;
@@ -49,8 +50,8 @@ import java.util.concurrent.ConcurrentMap;
  * Created by paul on 31/12/15.
  */
 public class GameGroup
-        implements LanguageLookup, Messagable, TaskScheduler, UserResolver, FileLoader, SharedObjectAccessor,
-        MetadataHolder<Metadata>, SchematicResolver, TeamResolver {
+        implements LanguageLookup, Messagable, TaskScheduler, FileLoader, SharedObjectAccessor,
+        MetadataHolder<Metadata>, SchematicResolver, TeamUserResolver {
 
     private ConcurrentMap<UUID, User> usersInGroup = new ConcurrentHashMap<>();
 

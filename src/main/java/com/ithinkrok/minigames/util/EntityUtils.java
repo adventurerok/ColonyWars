@@ -1,6 +1,8 @@
 package com.ithinkrok.minigames.util;
 
 import com.ithinkrok.minigames.User;
+import com.ithinkrok.minigames.team.Team;
+import com.ithinkrok.minigames.team.TeamUserResolver;
 import com.ithinkrok.minigames.user.UserResolver;
 import org.bukkit.entity.*;
 import org.bukkit.metadata.MetadataValue;
@@ -23,7 +25,8 @@ public class EntityUtils {
      * @return The User that is represented by the entity, or null if there is none
      */
     public static User getRepresentingUser(UserResolver resolver, Entity entity) {
-        if (entity instanceof Player) return getUserFromPlayer(resolver, (Player) entity);
+        User actual = getActualUser(resolver, entity);
+        if(actual != null) return actual;
 
         if (entity instanceof Projectile) {
             Projectile projectile = (Projectile) entity;
@@ -47,6 +50,8 @@ public class EntityUtils {
         return resolver.getUser(uuid);
     }
 
+
+
     public static User getActualUser(UserResolver resolver, Entity entity) {
         if (entity instanceof Player) return getUserFromPlayer(resolver, (Player) entity);
 
@@ -55,6 +60,15 @@ public class EntityUtils {
 
         UUID uuid = (UUID) values.get(0).value();
         return resolver.getUser(uuid);
+    }
+
+    public static Team getRepresentingTeam(TeamUserResolver resolver, Entity entity) {
+        User user = getRepresentingUser(resolver, entity);
+        if(user != null) return user.getTeam();
+
+        if(!entity.hasMetadata("team")) return null;
+
+        return resolver.getTeam(entity.getMetadata("team").get(0).asString());
     }
 
     private static User getUserFromPlayer(UserResolver resolver, Player player) {

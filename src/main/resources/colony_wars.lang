@@ -9,6 +9,7 @@ countdowns.showdown.seconds=&6&lShowdown starts in %s seconds!
 countdowns.showdown.final=&6&lShowdown starts in %s seconds!
 countdowns.showdown.now=&6&lShowdown starts NOW!
 
+countdowns.aftermath.start=&e&lTeleporting back to the lobby in %s seconds!
 countdowns.aftermath.minutes=&e&lGame ending in&c&l %s minutes!
 countdowns.aftermath.seconds=&e&lGame ending in&c&l %s seconds!
 countdowns.aftermath.final=&e&lGame ending in&c&l %s seconds!

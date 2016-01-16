@@ -37,9 +37,9 @@ public class AftermathListener extends BaseGameStateListener {
         ConfigurationSection config = event.getConfig();
         if (config == null) config = new MemoryConfiguration();
 
-        aftermathCountdownName = config.getString("aftermath_countdown.name", "aftermath");
-        aftermathCountdownLocaleStub = config.getString("aftermath_countdown.locale_stub", "countdowns.aftermath");
-        aftermathCountdownSeconds = config.getInt("aftermath_countdown.seconds", 15);
+        aftermathCountdownName = config.getString("countdown.name", "aftermath");
+        aftermathCountdownLocaleStub = config.getString("countdown.locale_stub", "countdowns.aftermath");
+        aftermathCountdownSeconds = config.getInt("countdown.seconds", 15);
 
         lobbyGameState = config.getString("lobby_gamestate", "lobby");
     }

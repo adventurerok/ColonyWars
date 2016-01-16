@@ -35,6 +35,9 @@ public class Countdown {
     }
 
     public void start(GameGroup gameGroup) {
+        String startMessage = gameGroup.getLocale(localeStub + ".start", secondsRemaining - 1);
+        if(startMessage != null) gameGroup.sendMessage(startMessage);
+
         task = gameGroup.repeatInFuture(task -> {
             --secondsRemaining;
 

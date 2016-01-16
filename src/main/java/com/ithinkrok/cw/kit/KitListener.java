@@ -12,6 +12,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +36,7 @@ public class KitListener implements Listener {
 
         ConfigurationSection buildings = event.getConfig().getConfigurationSection("buildings");
 
-        for(String buildingName : buildings.getKeys(false)) {
+        for (String buildingName : buildings.getKeys(false)) {
             ConfigurationSection buildingConfig = buildings.getConfigurationSection(buildingName);
 
             buildingConfigs.put(buildingName, new BuildingConfig(buildingConfig));
@@ -45,7 +47,7 @@ public class KitListener implements Listener {
     public void onShopOpen(ShopOpenEvent event) {
         BuildingConfig config = buildingConfigs.get(event.getBuilding().getBuildingName());
 
-        if(config == null) return;
+        if (config == null) return;
         config.onShopOpen(event);
     }
 
@@ -53,8 +55,8 @@ public class KitListener implements Listener {
     public void onBuildingBuilt(BuildingBuiltEvent event) {
         BuildingConfig config = buildingConfigs.get(event.getBuilding().getBuildingName());
 
-        if(config == null) return;
-        config.onBuild(owner, event);
+        if (config == null) return;
+        config.onBuild(owner);
     }
 
     private static class BuildingConfig {
@@ -62,6 +64,8 @@ public class KitListener implements Listener {
         private List<ConfigurationSection> extraShopItems = new ArrayList<>();
         private List<String> customItemGives = new ArrayList<>();
         private List<ItemStack> itemStackGives = new ArrayList<>();
+        private List<PotionEffect> potionEffects = new ArrayList<>();
+        private Map<String, Integer> upgrades = new HashMap<>();
 
         public BuildingConfig(ConfigurationSection config) {
             if (config.contains("shop")) extraShopItems = ConfigUtils.getConfigList(config, "shop");
@@ -72,24 +76,51 @@ public class KitListener implements Listener {
                 itemStackGives.addAll(items.getKeys(false).stream()
                         .map(unusedName -> ConfigUtils.getItemStack(config, unusedName)).collect(Collectors.toList()));
             }
+
+            if (config.contains("potion_effects")) {
+                ConfigurationSection potions = config.getConfigurationSection("potion_effects");
+
+                for (String potionName : potions.getKeys(false)) {
+                    PotionEffectType potionEffectType = PotionEffectType.getByName(potionName);
+
+                    potionEffects
+                            .add(new PotionEffect(potionEffectType, Integer.MAX_VALUE, potions.getInt(potionName)));
+                }
+            }
+
+            if(config.contains("upgrades")) {
+                ConfigurationSection upgrades = config.getConfigurationSection("upgrades");
+
+                for(String upgradeName : upgrades.getKeys(false)) {
+                    this.upgrades.put(upgradeName, upgrades.getInt(upgradeName));
+                }
+            }
         }
 
         public void onShopOpen(ShopOpenEvent event) {
             event.getShop().loadFromConfig(extraShopItems);
         }
 
-        public void onBuild(User user, BuildingBuiltEvent event) {
+        public void onBuild(User user) {
             PlayerInventory inv = user.getInventory();
 
-            for(String customItemName : customItemGives) {
+            for (String customItemName : customItemGives) {
                 CustomItem customItem = user.getGameGroup().getCustomItem(customItemName);
-                if(!InventoryUtils.containsIdentifier(inv, customItem.getIdentifier())) {
+                if (!InventoryUtils.containsIdentifier(inv, customItem.getIdentifier())) {
                     inv.addItem(customItem.createForUser(user));
                 }
             }
 
-            for(ItemStack item : itemStackGives) {
+            for (ItemStack item : itemStackGives) {
                 inv.addItem(item.clone());
+            }
+
+            potionEffects.forEach(user::addPotionEffect);
+
+            for(Map.Entry<String, Integer> upgrade : upgrades.entrySet()) {
+                if(user.getUpgradeLevel(upgrade.getKey()) >= upgrade.getValue()) continue;
+
+                user.setUpgradeLevel(upgrade.getKey(), upgrade.getValue());
             }
         }
     }

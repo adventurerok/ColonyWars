@@ -69,6 +69,32 @@ public class ShowdownArena extends Metadata {
         return center;
     }
 
+    public void startShrinkTask() {
+        GameTask announceTask =
+                gameGroup.doInFuture(task -> gameGroup.sendLocale(showdownShrinkingLocale), shrinkStartTime);
+        gameGroup.bindTaskToCurrentGameState(announceTask);
+
+        GameTask shrinkTask = gameGroup.repeatInFuture(t -> shrinkArena(), shrinkStartTime, shrinkIntervalTime);
+        gameGroup.bindTaskToCurrentGameState(shrinkTask);
+    }
+
+    public void shrinkArena() {
+        if (radiusX == minRadius && radiusZ == minRadius) return;
+
+        if (radiusX > minRadius) --radiusX;
+        if (radiusZ > minRadius) --radiusZ;
+    }
+
+    public void startCheckTasks() {
+        for (User user : gameGroup.getUsers()) {
+            if (!user.isInGame()) continue;
+
+            GameTask task = user.repeatInFuture(t -> checkUserMove(user, user.getLocation()), 5, 5);
+            user.bindTaskToInGame(task);
+            gameGroup.bindTaskToCurrentGameState(task);
+        }
+    }
+
     public boolean checkUserMove(User user, Location target) {
         if (isInBounds(target)) return false;
 
@@ -86,7 +112,7 @@ public class ShowdownArena extends Metadata {
         velocity.setY(0.1);
         velocity.setZ(velocity.getZ() + zv * 0.25);
 
-        if(!user.isInsideVehicle()) user.setVelocity(velocity);
+        if (!user.isInsideVehicle()) user.setVelocity(velocity);
         else user.getVehicle().setVelocity(velocity);
 
         return true;
@@ -97,28 +123,6 @@ public class ShowdownArena extends Metadata {
         double zd = Math.abs(loc.getZ() - center.getZ());
 
         return !(xd > radiusX || zd > radiusZ);
-    }
-
-    public void startShrinkTask() {
-        gameGroup.doInFuture(task -> gameGroup.sendLocale(showdownShrinkingLocale), shrinkStartTime);
-
-        gameGroup.repeatInFuture(task -> shrinkArena(), shrinkStartTime, shrinkIntervalTime);
-    }
-
-    public void startCheckTasks() {
-        for(User user : gameGroup.getUsers()) {
-            if(!user.isInGame()) continue;
-
-            GameTask task = user.repeatInFuture(t -> checkUserMove(user, user.getLocation()), 5, 5);
-            user.bindTaskToInGame(task);
-        }
-    }
-
-    public void shrinkArena() {
-        if(radiusX == minRadius && radiusZ == minRadius) return;
-
-        if(radiusX > minRadius) --radiusX;
-        if(radiusZ > minRadius) --radiusZ;
     }
 
     @Override

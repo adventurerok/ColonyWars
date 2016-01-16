@@ -4,10 +4,14 @@ countdowns.start.final=&6%s&7!
 countdowns.start.now=&7Game starting &6NOW&7!
 countdowns.start.needs_more_players=&7Not enough Players Online for Game to start!
 
-countdowns.showdown.warning.minutes=&6&lShowdown starts in %s minutes!
-countdowns.showdown.warning.seconds=&6&lShowdown starts in %s seconds!
-countdowns.showdown.warning.final=&6&lShowdown starts in %s seconds!
-countdowns.showdown.warning.now=&6&lShowdown starts NOW!
+countdowns.showdown.minutes=&6&lShowdown starts in %s minutes!
+countdowns.showdown.seconds=&6&lShowdown starts in %s seconds!
+countdowns.showdown.final=&6&lShowdown starts in %s seconds!
+countdowns.showdown.now=&6&lShowdown starts NOW!
+
+countdowns.aftermath.minutes=&e&lGame ending in&c&l %s minutes!
+countdowns.aftermath.seconds=&e&lGame ending in&c&l %s seconds!
+countdowns.aftermath.final=&e&lGame ending in&c&l %s seconds!
 
 money.transfer.too_expensive=&cYou do not have that amount of money
 money.transfer.team=%s &3transferred &a$%s &eto your team's account!

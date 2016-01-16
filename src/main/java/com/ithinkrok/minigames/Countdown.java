@@ -1,6 +1,7 @@
 package com.ithinkrok.minigames;
 
 import com.ithinkrok.minigames.event.game.CountdownFinishedEvent;
+import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.Messagable;
 import com.ithinkrok.minigames.task.GameTask;
 
@@ -30,7 +31,7 @@ public class Countdown {
     public Countdown(String name, String localeStub, int secondsRemaining) {
         this.name = name;
         this.localeStub = localeStub;
-        this.secondsRemaining = secondsRemaining;
+        this.secondsRemaining = secondsRemaining + 1;
     }
 
     public void start(GameGroup gameGroup) {
@@ -60,26 +61,31 @@ public class Countdown {
     }
 
     private void doCountdownMessage(Messagable messagable) {
+        LanguageLookup lookup = messagable.getLanguageLookup();
+        String message = null;
+
         if (secondsRemaining > 30) {
             if (secondsRemaining % 60 != 0) return;
-            messagable.sendLocale(localeStub + ".minutes", secondsRemaining / 60);
+            message = lookup.getLocale(localeStub + ".minutes", secondsRemaining / 60);
         } else {
             switch (secondsRemaining) {
                 case 30:
                 case 10:
-                    messagable.sendLocale(localeStub + ".seconds", secondsRemaining);
-                    return;
+                    message = lookup.getLocale(localeStub + ".seconds", secondsRemaining);
+                    break;
                 case 5:
                 case 4:
                 case 3:
                 case 2:
                 case 1:
-                    messagable.sendLocale(localeStub + ".final", secondsRemaining);
-                    return;
+                    message = lookup.getLocale(localeStub + ".final", secondsRemaining);
+                    break;
                 case 0:
-                    messagable.sendLocale(localeStub + ".now");
+                    message = lookup.getLocale(localeStub + ".now");
             }
         }
+
+        if(message != null) messagable.sendMessage(message);
     }
 
     public boolean isFinished() {

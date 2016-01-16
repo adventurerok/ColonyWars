@@ -2,6 +2,7 @@ package com.ithinkrok.minigames.command;
 
 import com.ithinkrok.minigames.*;
 import com.ithinkrok.minigames.lang.Messagable;
+import com.ithinkrok.minigames.team.TeamIdentifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;

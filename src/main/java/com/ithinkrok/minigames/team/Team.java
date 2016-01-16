@@ -1,7 +1,10 @@
-package com.ithinkrok.minigames;
+package com.ithinkrok.minigames.team;
 
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.MutableClassToInstanceMap;
+import com.ithinkrok.minigames.GameGroup;
+import com.ithinkrok.minigames.SharedObjectAccessor;
+import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.lang.LanguageLookup;
@@ -89,11 +92,11 @@ public class Team implements Listener, Messagable, LanguageLookup, SharedObjectA
         return gameGroup.getLocale(name);
     }
 
-    void addUser(User user) {
+    public void addUser(User user) {
         usersInTeam.put(user.getUuid(), user);
     }
 
-    void removeUser(User user) {
+    public void removeUser(User user) {
         usersInTeam.remove(user.getUuid());
     }
 

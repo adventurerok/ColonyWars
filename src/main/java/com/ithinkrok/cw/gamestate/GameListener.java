@@ -7,7 +7,7 @@ import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.cw.scoreboard.CWScoreboardHandler;
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.Kit;
-import com.ithinkrok.minigames.Team;
+import com.ithinkrok.minigames.team.Team;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
@@ -33,7 +33,6 @@ import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;

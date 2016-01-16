@@ -20,7 +20,6 @@ public class EntityUtils {
      *
      * @param resolver The resolver to resolve UUIDs to Users
      * @param entity The entity to resolve the User from
-     * @param <U> The type of the User class
      * @return The User that is represented by the entity, or null if there is none
      */
     public static User getRepresentingUser(UserResolver resolver, Entity entity) {

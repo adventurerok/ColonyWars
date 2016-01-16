@@ -26,6 +26,9 @@ import com.ithinkrok.minigames.task.GameRunnable;
 import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.task.TaskList;
 import com.ithinkrok.minigames.task.TaskScheduler;
+import com.ithinkrok.minigames.team.Team;
+import com.ithinkrok.minigames.team.TeamIdentifier;
+import com.ithinkrok.minigames.team.TeamResolver;
 import com.ithinkrok.minigames.user.UserResolver;
 import com.ithinkrok.minigames.util.EventExecutor;
 import com.ithinkrok.minigames.util.io.FileLoader;
@@ -47,7 +50,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class GameGroup
         implements LanguageLookup, Messagable, TaskScheduler, UserResolver, FileLoader, SharedObjectAccessor,
-        MetadataHolder<Metadata>, SchematicResolver {
+        MetadataHolder<Metadata>, SchematicResolver, TeamResolver {
 
     private ConcurrentMap<UUID, User> usersInGroup = new ConcurrentHashMap<>();
 
@@ -80,6 +83,21 @@ public class GameGroup
         defaultAndMapListeners = createDefaultAndMapListeners();
     }
 
+    @SuppressWarnings("unchecked")
+    @SafeVarargs
+    private final List<Listener> createDefaultAndMapListeners(Map<String, Listener>... extra) {
+        HashMap<String, Listener> clone = (HashMap<String, Listener>) defaultListeners.clone();
+
+        for (Map<String, Listener> map : extra) {
+            clone.putAll(map);
+        }
+
+        List<Listener> result = new ArrayList<>(clone.values());
+        result.add(gameGroupListener);
+
+        return result;
+    }
+
     public void prepareStart() {
         createDefaultAndMapListeners();
 
@@ -88,19 +106,11 @@ public class GameGroup
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public void changeGameState(GameState gameState) {
-        if (gameState.equals(this.gameState)) return;
-        stopCountdown();
+    public void changeMap(String mapName) {
+        GameMapInfo mapInfo = game.getMapInfo(mapName);
+        Validate.notNull(mapInfo, "The map " + mapName + " does not exist");
 
-        GameState oldState = this.gameState;
-        GameState newState = this.gameState = gameState;
-
-        gameStateTaskList.cancelAllTasks();
-
-        Event event = new GameStateChangedEvent(this, oldState, newState);
-        EventExecutor.executeEvent(event,
-                getListeners(getAllUserListeners(), getAllTeamListeners(), gameState.getListeners()));
+        changeMap(mapInfo);
     }
 
     public void changeMap(GameMapInfo mapInfo) {
@@ -143,16 +153,6 @@ public class GameGroup
         return result;
     }
 
-    private Collection<Listener> getAllUsersInTeamListeners(Team team) {
-        ArrayList<Listener> result = new ArrayList<>(team.getUsers().size());
-
-        for (User user : team.getUsers()) {
-            result.addAll(user.getListeners());
-        }
-
-        return result;
-    }
-
     private Collection<Listener> getAllTeamListeners() {
         ArrayList<Listener> result = new ArrayList<>(teamsInGroup.size());
 
@@ -161,28 +161,6 @@ public class GameGroup
         }
 
         return result;
-    }
-
-    @SuppressWarnings("unchecked")
-    @SafeVarargs
-    private final List<Listener> createDefaultAndMapListeners(Map<String, Listener>... extra) {
-        HashMap<String, Listener> clone = (HashMap<String, Listener>) defaultListeners.clone();
-
-        for (Map<String, Listener> map : extra) {
-            clone.putAll(map);
-        }
-
-        List<Listener> result = new ArrayList<>(clone.values());
-        result.add(gameGroupListener);
-
-        return result;
-    }
-
-    public void changeMap(String mapName) {
-        GameMapInfo mapInfo = game.getMapInfo(mapName);
-        Validate.notNull(mapInfo, "The map " + mapName + " does not exist");
-
-        changeMap(mapInfo);
     }
 
     public GameMap getCurrentMap() {
@@ -201,14 +179,17 @@ public class GameGroup
         return this;
     }
 
+    @Override
     public Team getTeam(String name) {
         return getTeam(getTeamIdentifier(name));
     }
 
+    @Override
     public Team getTeam(TeamIdentifier identifier) {
         return teamsInGroup.get(identifier);
     }
 
+    @Override
     public TeamIdentifier getTeamIdentifier(String name) {
         return teamIdentifiers.get(name);
     }
@@ -235,6 +216,16 @@ public class GameGroup
         EventExecutor.executeEvent(event, event.getTeam().getListeners(), getAllUsersInTeamListeners(event.getTeam()));
     }
 
+    private Collection<Listener> getAllUsersInTeamListeners(Team team) {
+        ArrayList<Listener> result = new ArrayList<>(team.getUsers().size());
+
+        for (User user : team.getUsers()) {
+            result.addAll(user.getListeners());
+        }
+
+        return result;
+    }
+
     @Override
     public ConfigurationSection loadConfig(String name) {
         return game.loadConfig(name);
@@ -257,16 +248,31 @@ public class GameGroup
         changeGameState(gameState);
     }
 
+    @SuppressWarnings("unchecked")
+    public void changeGameState(GameState gameState) {
+        if (gameState.equals(this.gameState)) return;
+        stopCountdown();
+
+        GameState oldState = this.gameState;
+        GameState newState = this.gameState = gameState;
+
+        gameStateTaskList.cancelAllTasks();
+
+        Event event = new GameStateChangedEvent(this, oldState, newState);
+        EventExecutor.executeEvent(event,
+                getListeners(getAllUserListeners(), getAllTeamListeners(), gameState.getListeners()));
+    }
+
+    public void stopCountdown() {
+        if (countdown == null) return;
+        countdown.cancel();
+    }
+
     public void startCountdown(String name, String localeStub, int seconds) {
         if (countdown != null) countdown.cancel();
 
         countdown = new Countdown(name, localeStub, seconds);
         countdown.start(this);
-    }
-
-    public void stopCountdown() {
-        if(countdown == null) return;
-        countdown.cancel();
     }
 
     public CustomItem getCustomItem(String name) {
@@ -404,30 +410,8 @@ public class GameGroup
         return usersInGroup.values();
     }
 
-    public void setTeamIdentifiers(Collection<TeamIdentifier> identifiers) {
-        for (TeamIdentifier identifier : identifiers) {
-            teamIdentifiers.put(identifier.getName(), identifier);
-        }
-        recreateTeamObjects();
-    }
-
-    public void recreateTeamObjects() {
-        for (User user : getUsers()) {
-            user.setTeam(null);
-        }
-
-        teamsInGroup.clear();
-        for (TeamIdentifier teamIdentifier : teamIdentifiers.values()) {
-            teamsInGroup.put(teamIdentifier, createTeam(teamIdentifier));
-        }
-    }
-
     public Kit getKit(String name) {
         return kits.get(name);
-    }
-
-    private Team createTeam(TeamIdentifier teamIdentifier) {
-        return new Team(teamIdentifier, this);
     }
 
     @Override
@@ -448,7 +432,7 @@ public class GameGroup
     public void setKits(Collection<Kit> kits) {
         this.kits.clear();
 
-        for(Kit kit : kits) {
+        for (Kit kit : kits) {
             this.kits.put(kit.getName(), kit);
         }
     }
@@ -461,11 +445,33 @@ public class GameGroup
         return teamIdentifiers.values();
     }
 
+    public void setTeamIdentifiers(Collection<TeamIdentifier> identifiers) {
+        for (TeamIdentifier identifier : identifiers) {
+            teamIdentifiers.put(identifier.getName(), identifier);
+        }
+        recreateTeamObjects();
+    }
+
+    public void recreateTeamObjects() {
+        for (User user : getUsers()) {
+            user.setTeam(null);
+        }
+
+        teamsInGroup.clear();
+        for (TeamIdentifier teamIdentifier : teamIdentifiers.values()) {
+            teamsInGroup.put(teamIdentifier, createTeam(teamIdentifier));
+        }
+    }
+
+    private Team createTeam(TeamIdentifier teamIdentifier) {
+        return new Team(teamIdentifier, this);
+    }
+
     private class GameGroupListener implements Listener {
 
         @EventHandler(priority = EventPriority.LOWEST)
         public void eventUserJoin(UserJoinEvent event) {
-            if(event.getReason() != UserJoinEvent.JoinReason.JOINED_SERVER) return;
+            if (event.getReason() != UserJoinEvent.JoinReason.JOINED_SERVER) return;
 
             usersInGroup.put(event.getUser().getUuid(), event.getUser());
 
@@ -493,16 +499,16 @@ public class GameGroup
             checkInventoryTethers(event.getBlock().getLocation());
         }
 
+        private void checkInventoryTethers(Location location) {
+            for (User user : getUsers()) {
+                if (!location.equals(user.getInventoryTether())) continue;
+                user.closeInventory();
+            }
+        }
+
         @EventHandler
         public void eventUserBreakBlock(UserBreakBlockEvent event) {
             checkInventoryTethers(event.getBlock().getLocation());
-        }
-
-        private void checkInventoryTethers(Location location) {
-            for(User user : getUsers()) {
-                if(!location.equals(user.getInventoryTether())) continue;
-                user.closeInventory();
-            }
         }
 
         @EventHandler(priority = EventPriority.LOWEST)

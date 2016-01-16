@@ -1,7 +1,7 @@
 package com.ithinkrok.cw.map;
 
 import com.ithinkrok.cw.metadata.BuildingController;
-import com.ithinkrok.minigames.TeamIdentifier;
+import com.ithinkrok.minigames.team.TeamIdentifier;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.map.GameMap;

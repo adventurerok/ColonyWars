@@ -1,6 +1,6 @@
 package com.ithinkrok.cw.command;
 
-import com.ithinkrok.minigames.Team;
+import com.ithinkrok.minigames.team.Team;
 import com.ithinkrok.minigames.command.Command;
 import com.ithinkrok.minigames.command.CommandSender;
 import com.ithinkrok.minigames.command.GameCommandExecutor;

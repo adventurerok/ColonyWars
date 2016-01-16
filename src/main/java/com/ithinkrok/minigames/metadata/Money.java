@@ -1,6 +1,6 @@
 package com.ithinkrok.minigames.metadata;
 
-import com.ithinkrok.minigames.Team;
+import com.ithinkrok.minigames.team.Team;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;

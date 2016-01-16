@@ -1,8 +1,8 @@
 package com.ithinkrok.cw.item;
 
 import com.ithinkrok.cw.metadata.CWTeamStats;
-import com.ithinkrok.minigames.Team;
-import com.ithinkrok.minigames.TeamIdentifier;
+import com.ithinkrok.minigames.team.Team;
+import com.ithinkrok.minigames.team.TeamIdentifier;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.util.InventoryUtils;

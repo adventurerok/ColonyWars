@@ -1,6 +1,6 @@
 package com.ithinkrok.minigames.event.team;
 
-import com.ithinkrok.minigames.Team;
+import com.ithinkrok.minigames.team.Team;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 

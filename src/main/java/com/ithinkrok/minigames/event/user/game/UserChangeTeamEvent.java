@@ -1,6 +1,6 @@
 package com.ithinkrok.minigames.event.user.game;
 
-import com.ithinkrok.minigames.Team;
+import com.ithinkrok.minigames.team.Team;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.user.UserEvent;
 

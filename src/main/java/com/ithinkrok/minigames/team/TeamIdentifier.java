@@ -1,4 +1,4 @@
-package com.ithinkrok.minigames;
+package com.ithinkrok.minigames.team;
 
 import com.ithinkrok.minigames.util.DyeToChatColorConverter;
 import org.apache.commons.lang.Validate;

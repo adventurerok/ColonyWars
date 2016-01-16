@@ -30,3 +30,8 @@ building.destroy.success=&6%s &6destroyed a &3%s &6of team %s&6!
 
 start_info.team=&6You are playing on the %s &6Team
 start_info.kit=&6You are playing as the class&3 %s
+
+timeouts.default.wait=&cPlease wait for this ability to cool down!
+cooldowns.default.wait=&cYou are already using this ability!
+
+lore.cooldown=Cooldown\: %s seconds

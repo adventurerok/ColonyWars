@@ -1,12 +1,11 @@
 package com.ithinkrok.cw.gamestate;
 
+import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.cw.metadata.ShowdownArena;
+import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import org.bukkit.Location;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.event.EventHandler;
 
 /**
@@ -14,17 +13,15 @@ import org.bukkit.event.EventHandler;
  */
 public class ShowdownListener extends BaseGameListener {
 
-    private String showdownGameState;
 
-    @EventHandler
-    public void onListenerLoaded(ListenerLoadedEvent<?> event) {
-        super.onListenerLoaded(event);
+    @Override
+    protected void checkShowdownStart(GameGroup gameGroup, int teamsInGame, int nonZombieUsersInGame) {
 
-        ConfigurationSection config = event.getConfig();
-        if(config == null) config = new MemoryConfiguration();
+    }
 
-        showdownGameState = config.getString("showdown_gamestate", "showdown");
-
+    @Override
+    public boolean shouldRespawnUser(User user, CWTeamStats teamStats) {
+        return false;
     }
 
     @EventHandler

@@ -55,6 +55,18 @@ public class BaseGameListener extends BaseGameStateListener {
     private String teamLostPlayerLocale;
     private String teamPlayersLeftLocale;
 
+    private String aftermathGameState;
+    private String teamWinLocale;
+
+    protected String showdownCountdownName;
+    private String showdownCountdownLocaleStub;
+    private int showdownCountdownSeconds;
+
+    protected String showdownGameState;
+
+    private int showdownStartTeams;
+    private int showdownStartPlayers;
+
     private int buildingDestroyWait;
 
     @EventHandler
@@ -78,9 +90,21 @@ public class BaseGameListener extends BaseGameStateListener {
 
         teamLostPlayerLocale = config.getString("team_lost_player_locale", "team.lost_player");
         teamPlayersLeftLocale = config.getString("team_players_left_locale", "team.players_left");
+        teamWinLocale = config.getString("team_win_locale", "team.win");
+
+        aftermathGameState = config.getString("aftermath_gamestate", "aftermath");
+
+        showdownCountdownName = config.getString("showdown_countdown.name", "showdown");
+        showdownCountdownLocaleStub = config.getString("showdown_countdown.locale_stub", "countdowns.showdown");
+        showdownCountdownSeconds = config.getInt("showdown_countdown.seconds", 30);
+
+        showdownStartTeams = config.getInt("showdown_start.teams");
+        showdownStartPlayers = config.getInt("showdown_start.players");
 
         buildingDestroyWait = (int) (config.getDouble("buildings.destroy_wait", 3.0d) * 20d);
         lostRespawnChance = config.getInt("lost_respawn_chance", 15);
+
+        showdownGameState = config.getString("showdown_gamestate", "showdown");
     }
 
     @EventHandler
@@ -159,8 +183,53 @@ public class BaseGameListener extends BaseGameStateListener {
             CWTeamStats.getOrCreate(team).eliminate();
         }
 
-        //TODO check victory
+        checkVictory(died.getGameGroup(), true);
         //TODO update spectator inventories
+    }
+
+    private void checkVictory(GameGroup gameGroup, boolean checkShowdown) {
+        int nonZombieUsersInGame = 0;
+
+        for(User user : gameGroup.getUsers()) {
+            if(user.isInGame() && user.isPlayer()) ++nonZombieUsersInGame;
+        }
+
+        if(nonZombieUsersInGame == 0) {
+            gameGroup.changeGameState(aftermathGameState);
+            return;
+        }
+
+        Set<Team> teamsInGame = new HashSet<>();
+
+        for(User user : gameGroup.getUsers()) {
+            if(!user.isInGame()) continue;
+
+            teamsInGame.add(user.getTeam());
+        }
+
+        if(teamsInGame.size() > 1) {
+            if(!checkShowdown) return;
+
+            checkShowdownStart(gameGroup, teamsInGame.size(), nonZombieUsersInGame);
+            return;
+        }
+
+        Team winner = teamsInGame.iterator().next();
+        gameGroup.sendLocale(teamWinLocale, winner.getFormattedName());
+
+        //TODO add game win and save stats for winning players
+        gameGroup.changeGameState(aftermathGameState);
+    }
+
+    protected void checkShowdownStart(GameGroup gameGroup, int teamsInGame, int nonZombieUsersInGame) {
+        if(gameGroup.hasActiveCountdown(showdownCountdownName)) return;
+
+        boolean teamCheck = teamsInGame > showdownStartTeams || gameGroup.getTeamIdentifiers().size() < 3;
+        boolean playerCheck = nonZombieUsersInGame > showdownStartPlayers;
+
+        if(teamCheck && playerCheck) return;
+
+        gameGroup.startCountdown(showdownCountdownName, showdownCountdownLocaleStub, showdownCountdownSeconds);
     }
 
     public boolean shouldRespawnUser(User user, CWTeamStats teamStats) {

@@ -435,6 +435,9 @@ game_states:
           choosable_kits:
             - "general"
             - "scout"
+          showdown_start:
+            teams: 2
+            players: 4
           start_items:
             clear_inventory: true
             items:
@@ -445,6 +448,10 @@ game_states:
       main:
         class: "com.ithinkrok.cw.gamestate.ShowdownListener"
         config: *base_game_config
+  aftermath:
+    listeners:
+      main:
+        class: "com.ithinkrok.cw.gamestate.AftermathListener"
 
 start_game_state: "lobby"
 

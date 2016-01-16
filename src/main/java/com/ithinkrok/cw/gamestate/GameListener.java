@@ -6,6 +6,7 @@ import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.Kit;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.event.game.CountdownFinishedEvent;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.user.game.UserChangeTeamEvent;
 import com.ithinkrok.minigames.listener.GiveCustomItemsOnJoin;
@@ -62,11 +63,19 @@ public class GameListener extends BaseGameListener {
     @EventHandler
     public void onGameStateChange(GameStateChangedEvent event) {
         if (!event.getNewGameState().isGameStateListener(this)) return;
+        if(event.getOldGameState() != null && event.getOldGameState().getName().equals(showdownGameState)) return;
 
         startGame(event.getGameGroup());
 
         GameGroup gameGroup = event.getGameGroup();
         gameGroup.getUsers().forEach(this::setupUser);
+    }
+
+    @EventHandler
+    public void onCountdownFinished(CountdownFinishedEvent event) {
+        if(!event.getCountdown().getName().equals(showdownCountdownName)) return;
+
+        event.getGameGroup().changeGameState(showdownGameState);
     }
 
     private void setupUser(User user) {

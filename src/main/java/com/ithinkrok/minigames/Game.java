@@ -567,7 +567,10 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
                 attacked.getGameGroup().userEvent(new UserDamagedEvent(attacked, event));
             }
 
-            if(attacked.getHeath() - event.getFinalDamage() > 0) return;
+            if(attacked.getHeath() - event.getFinalDamage() > 0){
+                if(attacker != null) attacked.setLastAttacker(attacker);
+                return;
+            }
             if(attacked.isPlayer()) event.setCancelled(true);
 
             if(attacker == null) {

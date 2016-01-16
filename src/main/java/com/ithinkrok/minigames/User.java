@@ -319,6 +319,18 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
 
         inGameTaskList.cancelAllTasks();
 
+        if(!inGame) {
+            upgradeHandler.clearUpgrades();
+            cooldownHandler.cancelCoolDowns();
+
+            inventoryTether = null;
+            openInventory = null;
+            setKit(null);
+            setTeam(null);
+        } else {
+            showCloakedPlayers = false;
+        }
+
         gameGroup.userEvent(new UserInGameChangeEvent(this));
     }
 

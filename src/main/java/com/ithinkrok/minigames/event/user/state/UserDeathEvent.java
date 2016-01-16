@@ -16,7 +16,7 @@ public class UserDeathEvent extends UserEvent implements Cancellable {
     private final EntityDamageEvent event;
     private final User killer, assist;
 
-    public UserDeathEvent(User user, EntityDamageByEntityEvent event, User killer, User assist) {
+    public UserDeathEvent(User user, EntityDamageEvent event, User killer, User assist) {
         super(user);
         this.event = event;
         this.killer = killer;

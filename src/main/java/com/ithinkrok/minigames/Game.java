@@ -9,6 +9,7 @@ import com.ithinkrok.minigames.event.user.inventory.UserInventoryClickEvent;
 import com.ithinkrok.minigames.event.user.inventory.UserInventoryCloseEvent;
 import com.ithinkrok.minigames.event.user.state.UserAttackedEvent;
 import com.ithinkrok.minigames.event.user.state.UserDamagedEvent;
+import com.ithinkrok.minigames.event.user.state.UserDeathEvent;
 import com.ithinkrok.minigames.event.user.state.UserFoodLevelChangeEvent;
 import com.ithinkrok.minigames.event.user.world.*;
 import com.ithinkrok.minigames.item.CustomItem;
@@ -520,15 +521,33 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
             User attacked = EntityUtils.getActualUser(Game.this, event.getEntity());
             if (attacked == null) return;
 
+            User attacker = null;
             if (event instanceof EntityDamageByEntityEvent) {
-                User attacker = EntityUtils.getRepresentingUser(attacked, event.getEntity());
+                attacker = EntityUtils.getRepresentingUser(attacked, event.getEntity());
                 attacked.getGameGroup()
                         .userEvent(new UserAttackedEvent(attacked, (EntityDamageByEntityEvent) event, attacker));
             } else {
                 attacked.getGameGroup().userEvent(new UserDamagedEvent(attacked, event));
             }
 
+            if(attacked.getHeath() - event.getFinalDamage() > 0) return;
+            if(attacked.isPlayer()) event.setCancelled(true);
 
+            if(attacker == null) {
+                switch(event.getCause()) {
+                    case FIRE_TICK:
+                        attacker = attacked.getFireAttacker();
+                        break;
+                    case WITHER:
+                        attacker = attacked.getWitherAttacker();
+                        break;
+                }
+            }
+
+            User assist = attacked.getLastAttacker();
+            if(assist == attacker) assist = null;
+
+            attacked.getGameGroup().userEvent(new UserDeathEvent(attacked, event, attacker, assist));
         }
 
         @EventHandler

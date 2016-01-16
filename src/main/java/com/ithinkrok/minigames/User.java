@@ -621,6 +621,22 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         entity.addPotionEffect(effect, force);
     }
 
+    public double getHeath() {
+        return entity.getHealth();
+    }
+
+    public User getFireAttacker() {
+        return fireAttacker.getAttacker();
+    }
+
+    public User getWitherAttacker() {
+        return witherAttacker.getAttacker();
+    }
+
+    public User getLastAttacker() {
+        return lastAttacker.getAttacker();
+    }
+
     private class UserListener implements Listener {
 
         @EventHandler(priority = EventPriority.LOWEST)

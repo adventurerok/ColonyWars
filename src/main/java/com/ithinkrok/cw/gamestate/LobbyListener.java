@@ -78,6 +78,8 @@ public class LobbyListener extends BaseGameStateListener {
         if(!event.getNewGameState().isGameStateListener(this)) return;
 
         event.getGameGroup().changeMap(lobbyMapName);
+
+        resetCountdown(event.getGameGroup());
     }
 
     @EventHandler

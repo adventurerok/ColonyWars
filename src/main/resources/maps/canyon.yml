@@ -20,6 +20,14 @@ shared_objects:
       x: -363
       y: 95
       z: 368
+  showdown:
+    center:
+      x: -178
+      y: 95
+      z: 183
+    size:
+      x: 30
+      z: 30
 
 listeners:
   initial_buildings:

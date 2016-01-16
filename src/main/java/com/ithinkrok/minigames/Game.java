@@ -466,6 +466,14 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
             gameGroup.gameEvent(new MapItemSpawnEvent(gameGroup, map, event));
         }
 
+        private GameGroup getGameGroup(Location location) {
+            return getGameGroup(location.getWorld());
+        }
+
+        private GameGroup getGameGroup(World world) {
+            return mapToGameGroup.get(world.getName());
+        }
+
         @EventHandler
         public void eventCreatureSpawn(CreatureSpawnEvent event) {
             String mapName = event.getEntity().getWorld().getName();
@@ -509,13 +517,40 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
         @EventHandler(priority = EventPriority.LOW)
         public void eventEntityDamagedByEntity(EntityDamageByEntityEvent event) {
-            User attacker = EntityUtils.getRepresentingUser(Game.this, event.getDamager());
-            if (attacker == null) return;
+            GameGroup gameGroup = getGameGroup(event.getEntity().getWorld());
 
-            User attacked = EntityUtils.getRepresentingUser(attacker, event.getEntity());
-            boolean representing = !attacker.equals(EntityUtils.getActualUser(Game.this, event.getDamager()));
+            Team attackerTeam = EntityUtils.getRepresentingTeam(gameGroup, event.getDamager());
+            Team targetTeam = EntityUtils.getRepresentingTeam(gameGroup, event.getEntity());
 
-            attacker.getGameGroup().userEvent(new UserAttackEvent(attacker, event, attacked, representing));
+            User attacker = EntityUtils.getRepresentingUser(gameGroup, event.getDamager());
+            if (attacker == null) {
+                if(Objects.equals(attackerTeam, targetTeam)) {
+                    event.setCancelled(true);
+                }
+                return;
+            }
+
+            if(attackerTeam == null) {
+                event.setCancelled(true);
+                return;
+            }
+
+            User target = EntityUtils.getRepresentingUser(attacker, event.getEntity());
+            boolean representing = !attacker.equals(EntityUtils.getActualUser(gameGroup, event.getDamager()));
+
+            if(target != null && !target.isInGame()) {
+                event.setCancelled(true);
+                return;
+            }
+
+            if(attackerTeam.equals(targetTeam)) {
+                if(attacker != target || representing) {
+                    event.setCancelled(true);
+                    return;
+                }
+            }
+
+            gameGroup.userEvent(new UserAttackEvent(attacker, event, target, representing));
         }
 
         @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)

@@ -509,6 +509,15 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         }
 
         @EventHandler
+        public void eventBlockSpread(BlockSpreadEvent event) {
+            String mapName = event.getBlock().getWorld().getName();
+            GameGroup gameGroup = mapToGameGroup.get(mapName);
+            GameMap map = gameGroup.getCurrentMap();
+
+            gameGroup.gameEvent(new MapBlockGrowEvent(gameGroup, map, event));
+        }
+
+        @EventHandler
         public void eventItemSpawn(ItemSpawnEvent event) {
             String mapName = event.getEntity().getWorld().getName();
             GameGroup gameGroup = mapToGameGroup.get(mapName);

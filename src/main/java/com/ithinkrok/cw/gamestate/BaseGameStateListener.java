@@ -8,9 +8,11 @@ import com.ithinkrok.minigames.event.map.MapCreatureSpawnEvent;
 import com.ithinkrok.minigames.event.map.MapItemSpawnEvent;
 import com.ithinkrok.minigames.event.user.game.UserChangeKitEvent;
 import com.ithinkrok.minigames.event.user.game.UserChangeTeamEvent;
+import com.ithinkrok.minigames.event.user.game.UserQuitEvent;
 import com.ithinkrok.minigames.event.user.world.UserDropItemEvent;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
@@ -55,6 +57,17 @@ public class BaseGameStateListener implements Listener {
 
             StatsHolder statsHolder = StatsHolder.getOrCreate(event.getUser());
             statsHolder.setLastTeam(event.getNewTeam().getName());
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void saveStatsOnUserQuit(UserQuitEvent event) {
+        StatsHolder statsHolder = StatsHolder.getOrCreate(event.getUser());
+
+        statsHolder.saveStats();
+
+        if(event.getRemoveUser()) {
+            statsHolder.setUser(null);
         }
     }
 

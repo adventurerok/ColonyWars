@@ -120,7 +120,7 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         return entity instanceof Player;
     }
 
-    protected Player getPlayer() {
+    public Player getPlayer() {
         if (!isPlayer()) throw new RuntimeException("You have no player");
         return (Player) entity;
     }

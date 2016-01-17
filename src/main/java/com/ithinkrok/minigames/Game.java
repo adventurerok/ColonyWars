@@ -443,6 +443,15 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         }
 
         @EventHandler
+        public void eventPlayerChat(AsyncPlayerChatEvent event) {
+            User user = getUser(event.getPlayer().getUniqueId());
+
+            UserChatEvent userEvent = new UserChatEvent(user, event);
+
+            user.getGameGroup().userEvent(userEvent);
+        }
+
+        @EventHandler
         public void eventBlockExp(BlockExpEvent event) {
             if (event instanceof BlockBreakEvent) return;
 

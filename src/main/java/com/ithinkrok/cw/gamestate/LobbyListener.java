@@ -1,6 +1,7 @@
 package com.ithinkrok.cw.gamestate;
 
 import com.ithinkrok.minigames.GameGroup;
+import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.game.CountdownFinishedEvent;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
@@ -8,10 +9,13 @@ import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.event.user.state.UserDamagedEvent;
 import com.ithinkrok.minigames.event.user.state.UserFoodLevelChangeEvent;
 import com.ithinkrok.minigames.event.user.world.*;
+import com.ithinkrok.minigames.listener.GiveCustomItemsOnJoin;
 import com.ithinkrok.minigames.metadata.MapVote;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
@@ -35,6 +39,8 @@ public class LobbyListener extends BaseGameStateListener {
     private String lobbyMapName;
     private String nextGameState;
 
+    private GiveCustomItemsOnJoin.CustomItemGiver giveOnJoin;
+
     @EventHandler
     public void eventListenerLoaded(ListenerLoadedEvent<?> event) {
         ConfigurationSection config = event.getConfig();
@@ -44,6 +50,8 @@ public class LobbyListener extends BaseGameStateListener {
         configureCountdown(config.getConfigurationSection("start_countdown"));
 
         lobbyMapName = config.getString("lobby_map");
+
+        giveOnJoin = new GiveCustomItemsOnJoin.CustomItemGiver(config.getConfigurationSection("give_on_join"));
     }
 
 
@@ -66,11 +74,29 @@ public class LobbyListener extends BaseGameStateListener {
         event.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void eventUserJoin(UserJoinEvent event) {
+        userJoinLobby(event.getUser());
+
         if(event.getUserGameGroup().hasActiveCountdown()) return;
 
         resetCountdown(event.getUserGameGroup());
+    }
+
+    private void userJoinLobby(User user) {
+        user.setInGame(false);
+        if(!user.isPlayer()) return;
+
+        user.setGameMode(GameMode.ADVENTURE);
+        user.setSpectator(false);
+        user.resetUserStats(true);
+
+        user.getInventory().clear();
+        user.clearArmor();
+
+        giveOnJoin.giveToUser(user);
+
+        user.teleport(user.getGameGroup().getCurrentMap().getSpawn());
     }
 
     @EventHandler
@@ -80,6 +106,10 @@ public class LobbyListener extends BaseGameStateListener {
         event.getGameGroup().changeMap(lobbyMapName);
 
         resetCountdown(event.getGameGroup());
+
+        for(User user : event.getGameGroup().getUsers()) {
+            userJoinLobby(user);
+        }
     }
 
     @EventHandler

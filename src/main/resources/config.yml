@@ -412,6 +412,16 @@ game_states:
 
           next_gamestate: "game"
           lobby_map: "lobby"
+          give_on_join:
+            clear_inventory: true
+            items:
+              - name: "map_voter"
+                slot: 0
+              - name: "team_chooser"
+                slot: 1
+              - name: "class_chooser"
+                slot: 2
+
   game:
     listeners:
       main:
@@ -559,15 +569,4 @@ custom_items:
       DAMAGE_ALL: "1*sharpness"
       KNOCKBACK: "1*knockback"
 
-listeners:
-  give_on_join:
-    class: "com.ithinkrok.minigames.listener.GiveCustomItemsOnJoin"
-    config:
-      clear_inventory: true
-      items:
-        - name: "map_voter"
-          slot: 0
-        - name: "team_chooser"
-          slot: 1
-        - name: "class_chooser"
-          slot: 2
+listeners: {}

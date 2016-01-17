@@ -1,4 +1,4 @@
-package com.ithinkrok.oldmccw.data;
+package com.ithinkrok.cw.database;
 
 import javax.persistence.*;
 import java.util.Date;

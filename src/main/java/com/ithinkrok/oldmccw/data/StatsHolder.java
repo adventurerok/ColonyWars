@@ -1,5 +1,6 @@
 package com.ithinkrok.oldmccw.data;
 
+import com.ithinkrok.cw.database.UserCategoryStats;
 import com.ithinkrok.oldmccw.WarsPlugin;
 import com.ithinkrok.oldmccw.command.WarsCommandSender;
 import com.ithinkrok.oldmccw.enumeration.PlayerClass;

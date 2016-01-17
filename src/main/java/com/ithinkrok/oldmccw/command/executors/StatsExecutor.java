@@ -1,10 +1,10 @@
 package com.ithinkrok.oldmccw.command.executors;
 
+import com.ithinkrok.cw.database.UserCategoryStats;
 import com.ithinkrok.oldmccw.command.CommandUtils;
 import com.ithinkrok.oldmccw.command.WarsCommandExecutor;
 import com.ithinkrok.oldmccw.command.WarsCommandSender;
 import com.ithinkrok.oldmccw.data.User;
-import com.ithinkrok.oldmccw.data.UserCategoryStats;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 

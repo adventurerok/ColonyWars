@@ -3,6 +3,7 @@ package com.ithinkrok.oldmccw;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.google.common.collect.MapMaker;
+import com.ithinkrok.cw.database.UserCategoryStats;
 import com.ithinkrok.oldmccw.data.TeamColor;
 import com.ithinkrok.minigames.lang.LangFile;
 import com.ithinkrok.oldmccw.command.CommandListener;

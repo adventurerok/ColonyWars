@@ -1,8 +1,8 @@
 package com.ithinkrok.oldmccw.util;
 
 import com.avaje.ebean.Query;
+import com.ithinkrok.cw.database.UserCategoryStats;
 import com.ithinkrok.oldmccw.WarsPlugin;
-import com.ithinkrok.oldmccw.data.UserCategoryStats;
 
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;

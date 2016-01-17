@@ -30,7 +30,7 @@ public class Persistence extends Thread {
             plugin.getDatabase().find(IntUserValue.class).findRowCount();
         } catch(PersistenceException e) {
             try {
-                Method method = plugin.getClass().getMethod("installDDL");
+                Method method = Plugin.class.getDeclaredMethod("installDDL");
                 method.setAccessible(true);
                 method.invoke(plugin);
             } catch (ReflectiveOperationException e1) {

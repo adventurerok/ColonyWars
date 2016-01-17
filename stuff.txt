@@ -2,8 +2,9 @@ RECODE BUGS:
  - spectators don't have player viewer
  - Good potion / bad potion effect blocking
  - Prevent burning
- Y Can't toggle money messages
- Y Player name not changed to team colour
+ - Prevent dropping custom items
+ - joining/leaving games in progress
+ - teamchat command, transfer/share command, fix command
 
 
 LOW PRIORITY / INVESTIGATE:

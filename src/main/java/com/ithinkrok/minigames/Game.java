@@ -3,6 +3,7 @@ package com.ithinkrok.minigames;
 import com.ithinkrok.minigames.event.map.MapBlockBreakNaturallyEvent;
 import com.ithinkrok.minigames.event.map.MapCreatureSpawnEvent;
 import com.ithinkrok.minigames.event.map.MapItemSpawnEvent;
+import com.ithinkrok.minigames.event.map.MapPotionSplashEvent;
 import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.event.user.game.UserQuitEvent;
 import com.ithinkrok.minigames.event.user.inventory.UserInventoryClickEvent;
@@ -45,6 +46,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.projectiles.ProjectileSource;
 
 import java.io.File;
 import java.util.*;
@@ -444,6 +446,19 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
                 usersInServer.remove(event.getPlayer().getUniqueId());
                 user.cancelAllTasks();
             }
+        }
+
+        @EventHandler
+        public void eventPotionSplash(PotionSplashEvent event) {
+            String mapName = event.getPotion().getWorld().getName();
+            GameGroup gameGroup = mapToGameGroup.get(mapName);
+            GameMap map = gameGroup.getCurrentMap();
+
+            ProjectileSource thrower = event.getPotion().getShooter();
+            User throwerUser = null;
+            if(thrower instanceof Entity) throwerUser = EntityUtils.getRepresentingUser(Game.this, (Entity)thrower);
+
+            gameGroup.gameEvent(new MapPotionSplashEvent(gameGroup, map, event, throwerUser));
         }
 
         @EventHandler

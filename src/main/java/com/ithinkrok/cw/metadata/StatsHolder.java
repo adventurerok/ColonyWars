@@ -90,14 +90,16 @@ public class StatsHolder extends UserMetadata implements Messagable {
         StatsHolder statsHolder = user.getMetadata(StatsHolder.class);
 
         if(statsHolder == null) {
-            for(TeamIdentifier identifier : user.getGameGroup().getTeamIdentifiers()) {
-                Team team = user.getGameGroup().getTeam(identifier);
-                CWTeamStats teamStats = CWTeamStats.getOrCreate(team);
+            if(!user.getGameGroup().getCurrentGameState().getName().equals("lobby")) {
+                for (TeamIdentifier identifier : user.getGameGroup().getTeamIdentifiers()) {
+                    Team team = user.getGameGroup().getTeam(identifier);
+                    CWTeamStats teamStats = CWTeamStats.getOrCreate(team);
 
-                StatsHolder found = teamStats.getStatsHolder(user);
-                if(found == null) continue;
-                statsHolder = found;
-                break;
+                    StatsHolder found = teamStats.getStatsHolder(user);
+                    if (found == null) continue;
+                    statsHolder = found;
+                    break;
+                }
             }
 
             if(statsHolder == null) statsHolder = new StatsHolder(user);

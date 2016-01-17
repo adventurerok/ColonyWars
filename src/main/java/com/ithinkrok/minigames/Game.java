@@ -550,6 +550,8 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         public void eventPlayerInteractWorld(PlayerInteractEvent event) {
             User user = getUser(event.getPlayer().getUniqueId());
             user.getGameGroup().userEvent(new UserInteractWorldEvent(user, event));
+
+            if(event.isCancelled() && event.getItem() != null) event.getPlayer().updateInventory();
         }
 
         @EventHandler

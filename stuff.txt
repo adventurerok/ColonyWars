@@ -4,7 +4,7 @@ RECODE BUGS:
  Y Walls cost $1600 each
  - spectators don't have player viewer
  Y No death messages
- - No team name/class in chat
+ Y No team name/class in chat
  Y No armor when the game starts
  - Cannon towers/Fortresses don't work
  - Destroying a building while it is built does not decrement building now counter

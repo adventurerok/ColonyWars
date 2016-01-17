@@ -22,6 +22,7 @@ import com.ithinkrok.minigames.util.SoundEffect;
 import com.ithinkrok.minigames.util.TreeFeller;
 import com.ithinkrok.minigames.util.math.ExpressionCalculator;
 import com.ithinkrok.minigames.util.math.SingleValueVariables;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -66,6 +67,20 @@ public class BaseGameListener extends BaseGameStateListener {
     private String deathNaturalLocale;
 
     private int buildingDestroyWait;
+
+    @EventHandler
+    public void onUserChat(UserChatEvent event) {
+        if(event.getUser().isInGame()) {
+            String kitName = event.getUser().getKitName();
+            String teamColor = event.getUser().getTeamIdentifier().getChatColor().toString();
+
+            event.setFormat(teamColor + "<" + ChatColor.DARK_GRAY + "[" + ChatColor.GRAY +  kitName + ChatColor
+                    .DARK_GRAY + "] %s" + teamColor + "> " + ChatColor.WHITE + "%s");
+        } else {
+            event.setFormat(ChatColor.LIGHT_PURPLE + "<" + ChatColor.GRAY + "%s" + ChatColor.LIGHT_PURPLE + "> " +
+                    ChatColor.WHITE + "%s");
+        }
+    }
 
     @EventHandler
     public void onListenerLoaded(ListenerLoadedEvent<?> event) {

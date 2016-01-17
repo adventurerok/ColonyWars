@@ -446,6 +446,14 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         public void eventPlayerChat(AsyncPlayerChatEvent event) {
             User user = getUser(event.getPlayer().getUniqueId());
 
+            Iterator<Player> it = event.getRecipients().iterator();
+            while(it.hasNext()) {
+                Player player = it.next();
+                if(user.getUser(player.getUniqueId()) != null) continue;
+
+                it.remove();
+            }
+
             UserChatEvent userEvent = new UserChatEvent(user, event);
 
             user.getGameGroup().userEvent(userEvent);

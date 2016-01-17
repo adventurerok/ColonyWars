@@ -129,7 +129,7 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         return openInventory;
     }
 
-    public void setShowCloakedPlayers(boolean showCloakedPlayers) {
+    public void setShowCloakedUsers(boolean showCloakedPlayers) {
         this.showCloakedPlayers = showCloakedPlayers;
 
         for (User u : gameGroup.getUsers()) {
@@ -234,13 +234,13 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         for (User u : gameGroup.getUsers()) {
             if (this == u) continue;
 
-            if (u.showCloakedPlayers()) continue;
+            if (u.showCloakedUsers()) continue;
 
             u.hidePlayer(this);
         }
     }
 
-    public boolean showCloakedPlayers() {
+    public boolean showCloakedUsers() {
         return showCloakedPlayers;
     }
 

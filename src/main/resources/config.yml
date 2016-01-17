@@ -569,5 +569,11 @@ custom_items:
     enchantments:
       DAMAGE_ALL: "1*sharpness"
       KNOCKBACK: "1*knockback"
+  invisible_user_toggle:
+    display_name_locale: "invisible_user_toggle.name"
+    material: "IRON_LEGGINGS"
+    listeners:
+      invisible_user_toggle:
+        class: "com.ithinkrok.cw.item.InvisibleUserToggle"
 
 listeners: {}

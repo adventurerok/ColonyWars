@@ -39,6 +39,8 @@ public class LobbyListener extends BaseGameStateListener {
     private String lobbyMapName;
     private String nextGameState;
 
+    private String joinLobbyLocaleStub;
+
     private GiveCustomItemsOnJoin.CustomItemGiver giveOnJoin;
 
     @EventHandler
@@ -52,6 +54,8 @@ public class LobbyListener extends BaseGameStateListener {
         lobbyMapName = config.getString("lobby_map");
 
         giveOnJoin = new GiveCustomItemsOnJoin.CustomItemGiver(config.getConfigurationSection("give_on_join"));
+
+        joinLobbyLocaleStub = config.getString("join_lobby_locale_stub", "lobby.info");
     }
 
 
@@ -97,6 +101,16 @@ public class LobbyListener extends BaseGameStateListener {
         giveOnJoin.giveToUser(user);
 
         user.teleport(user.getGameGroup().getCurrentMap().getSpawn());
+
+        String message;
+
+        for(int counter = 0; ; ++counter) {
+            message = user.getGameGroup().getLocale(joinLobbyLocaleStub + "." + counter);
+            if(message == null) break;
+
+            user.sendMessage(message);
+
+        }
     }
 
     @EventHandler

@@ -54,3 +54,6 @@ team.eliminated=&6The %s &6Team was eliminated
 team.lost_player=&6The %s &6Team has lost a player!
 team.players_left=&6There are now &3%s &6players left on the %s &6Team
 team.win=&6The %s &6Team has won the game!
+
+lobby.info.0=&2Source Code\: github.com/adventurerok/Colony-Wars
+lobby.info.1=&2Resource pack\: files.ithinkrok.com/CWRP.zip

@@ -44,7 +44,14 @@ public class ItemBuyable extends Buyable{
         Map<Integer, ItemStack> failedItems = inv.addItem(purchase);
         if(failedItems.isEmpty()) return true;
 
-        failedItems.values().forEach(inv::remove);
+        int removeAmount = purchase.getAmount() - failedItems.get(0).getAmount();
+
+        if(removeAmount != 0) {
+            ItemStack remove = purchase.clone();
+            remove.setAmount(removeAmount);
+
+            inv.removeItem(remove);
+        }
 
         user.sendLocale(noSpaceLocale);
         return false;

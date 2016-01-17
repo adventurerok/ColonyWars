@@ -1,6 +1,6 @@
 RECODE BUGS:
- - No building titles
- - Buying inv full of pots clears inventory
+ Y No building titles
+ Y Buying inv full of pots clears inventory
  - Walls cost $1600 each
  - spectators don't have player viewer
  - No death messages

@@ -493,6 +493,9 @@ public class GameGroup
             if (event.getRemoveUser()) {
                 event.getUser().setTeam(null);
                 usersInGroup.remove(event.getUser().getUuid());
+
+                event.getUser().cancelAllTasks();
+                game.removeUser(event.getUser());
             }
         }
 

@@ -283,6 +283,10 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         return new LangFile(ResourceHandler.getPropertiesResource(plugin, path));
     }
 
+    public void removeUser(User user) {
+        usersInServer.values().remove(user);
+    }
+
     @Override
     public File getDataFolder() {
         return plugin.getDataFolder();
@@ -445,11 +449,6 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
             UserQuitEvent userEvent = new UserQuitEvent(user, UserQuitEvent.QuitReason.QUIT_SERVER);
             user.getGameGroup().userEvent(userEvent);
-
-            if (userEvent.getRemoveUser()) {
-                usersInServer.remove(event.getPlayer().getUniqueId());
-                user.cancelAllTasks();
-            }
         }
 
         @EventHandler

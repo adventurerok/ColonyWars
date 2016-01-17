@@ -1,11 +1,10 @@
 RECODE BUGS:
- - joining/leaving games in progress
  - teamchat command, transfer/share command, fix command, countdown command
- - Zombie save names
+ - Zombie rejoin after death glitch
 
 
 LOW PRIORITY / INVESTIGATE:
  - Prevent fire spread
- - (CANNON TOWER) adventurerok burned to death while fighting adventurerok
  - Destroying a building while it is built does not decrement building now counter
  - eating flicker glitch
+ - Zombie tab list names

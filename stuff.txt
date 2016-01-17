@@ -2,7 +2,7 @@ RECODE BUGS:
  - spectators don't have player viewer
  - Good potion / bad potion effect blocking
  - Prevent burning
- - Can't toggle money messages
+ Y Can't toggle money messages
  Y Player name not changed to team colour
 
 

@@ -11,6 +11,12 @@ permissions:
     children:
       mccw.gamestate: true
       mccw.cw: true
+      mccw.tmm.others: true
+  mccw.user:
+    default: true
+    description: "Gives all user command permission"
+    children:
+      mccw.tmm: true
   mccw.gamestate:
     description: "Allows use of the /gamestate command"
     default: false
@@ -34,6 +40,12 @@ permissions:
   mccw.cw.custom:
     description: "Allows use of /cw custom"
     default: false
+  mccw.tmm:
+    description: "Allows use of /tmm"
+    default: false
+  mccw.tmm.others:
+    description: "Allows changing of money message status for others"
+    default: false
 
 commands:
   gamestate:
@@ -45,3 +57,7 @@ commands:
     description: "Various CW testing utils"
     aliases: ["cw", "cwars", "wars"]
     usage: "/<command> <subcommand> [sub command args...]"
+  togglemoneymessage:
+    description: "Toggles money message status"
+    aliases: ["tmm"]
+    usage: "/<command> [newstatus]"

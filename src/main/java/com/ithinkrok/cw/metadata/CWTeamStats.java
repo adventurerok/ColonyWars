@@ -27,6 +27,8 @@ public class CWTeamStats extends Metadata {
 
     private final Team team;
 
+    private ArrayList<StatsHolder> statsHolders = new ArrayList<>();
+
     private HashMap<String, Integer> buildingCounts = new HashMap<>();
     private HashMap<String, Integer> buildingNowCounts = new HashMap<>();
     private HashMap<String, Boolean> hadBuildings = new HashMap<>();
@@ -42,6 +44,8 @@ public class CWTeamStats extends Metadata {
 
     private String respawnChanceLocale;
     private String eliminatedLocale;
+
+    private String lobbyGameState;
 
     public Location getBaseLocation() {
         return baseLocation;
@@ -69,6 +73,8 @@ public class CWTeamStats extends Metadata {
 
         respawnChanceLocale = metadata.getString("respawn_chance_locale", "respawn.chance");
         eliminatedLocale = metadata.getString("team_eliminated_locale", "team.eliminated");
+
+        lobbyGameState = metadata.getString("lobby_gamestate", "lobby");
     }
 
     public Location getSpawnLocation() {
@@ -89,6 +95,28 @@ public class CWTeamStats extends Metadata {
         Integer integer = buildingNowCounts.get(buildingType);
 
         return integer == null ? 0 : integer;
+    }
+
+    public void addUser(User user) {
+        StatsHolder statsHolder = StatsHolder.getOrCreate(user);
+
+        if(statsHolders.contains(statsHolder)) return;
+        statsHolders.add(statsHolder);
+    }
+
+    public void removeUser(User user) {
+        if(!team.getGameGroup().getCurrentGameState().getName().equals(lobbyGameState)) return;
+        StatsHolder statsHolder = StatsHolder.getOrCreate(user);
+
+        statsHolders.remove(statsHolder);
+    }
+
+    public StatsHolder getStatsHolder(User user) {
+        for(StatsHolder holder : statsHolders) {
+            if(holder.getUniqueId().equals(user.getUuid())) return holder;
+        }
+
+        return null;
     }
 
     public void buildingStarted(Building building) {
@@ -136,8 +164,6 @@ public class CWTeamStats extends Metadata {
         if (churchLocations.remove(building.getCenterBlock())) {
             if (churchLocations.isEmpty()) setRespawnChance(0, true);
         }
-
-        //TODO stop cannon towers
     }
 
     @Override
@@ -185,7 +211,9 @@ public class CWTeamStats extends Metadata {
             baseLocation = null;
         }
 
-        //TODO statsHolder gameLoss
-        //TODO remove statsHolders
+        for(StatsHolder statsHolder : statsHolders) {
+            statsHolder.addGameLoss();
+        }
+        statsHolders.clear();
     }
 }

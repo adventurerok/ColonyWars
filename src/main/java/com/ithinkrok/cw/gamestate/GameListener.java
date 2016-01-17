@@ -164,7 +164,7 @@ public class GameListener extends BaseGameListener {
 
     @EventHandler
     public void onUserChangeTeam(UserChangeTeamEvent event) {
-
+        super.onUserChangeTeam(event);
         Color armorColor = event.getNewTeam() != null ? event.getNewTeam().getArmorColor() : null;
         event.getUser().giveColoredArmor(armorColor, true);
     }

@@ -13,6 +13,8 @@ import com.ithinkrok.minigames.event.user.game.UserInGameChangeEvent;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.lang.Messagable;
 import com.ithinkrok.minigames.metadata.UserMetadata;
+import com.ithinkrok.minigames.team.Team;
+import com.ithinkrok.minigames.team.TeamIdentifier;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 
@@ -35,6 +37,10 @@ public class StatsHolder extends UserMetadata implements Messagable {
     private int deathScoreModifier;
 
     private String lastKit, lastTeam;
+
+    public UUID getUniqueId() {
+        return uniqueId;
+    }
 
     public void setLastKit(String lastKit) {
         this.lastKit = lastKit;
@@ -76,7 +82,19 @@ public class StatsHolder extends UserMetadata implements Messagable {
         StatsHolder statsHolder = user.getMetadata(StatsHolder.class);
 
         if(statsHolder == null) {
-            //TODO query team stats holder for this stats holder
+            for(TeamIdentifier identifier : user.getGameGroup().getTeamIdentifiers()) {
+                Team team = user.getGameGroup().getTeam(identifier);
+                CWTeamStats teamStats = CWTeamStats.getOrCreate(team);
+
+                StatsHolder found = teamStats.getStatsHolder(user);
+                if(found == null) continue;
+                statsHolder = found;
+                break;
+            }
+
+            if(statsHolder == null) statsHolder = new StatsHolder(user);
+            else statsHolder.setUser(user);
+            user.setMetadata(statsHolder);
         }
 
         return statsHolder;

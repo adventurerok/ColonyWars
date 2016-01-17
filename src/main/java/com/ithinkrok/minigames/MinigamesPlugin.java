@@ -1,6 +1,9 @@
 package com.ithinkrok.minigames;
 
+import com.ithinkrok.minigames.database.BooleanUserValue;
+import com.ithinkrok.minigames.database.DoubleUserValue;
 import com.ithinkrok.minigames.database.IntUserValue;
+import com.ithinkrok.minigames.database.StringUserValue;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
@@ -15,6 +18,9 @@ public class MinigamesPlugin extends JavaPlugin {
         List<Class<?>> result = super.getDatabaseClasses();
 
         result.add(IntUserValue.class);
+        result.add(StringUserValue.class);
+        result.add(DoubleUserValue.class);
+        result.add(BooleanUserValue.class);
 
         return result;
     }

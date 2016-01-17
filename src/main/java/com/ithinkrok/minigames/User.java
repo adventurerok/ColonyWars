@@ -162,7 +162,7 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
     }
 
     private void revalidateNonPlayer() {
-        if(entity.isValid()) return;
+        if(isPlayer() || entity.isValid()) return;
 
         LivingEntity oldEntity = entity;
         makeEntityFromEntity(oldEntity, oldEntity.getLocation(), oldEntity.getType());

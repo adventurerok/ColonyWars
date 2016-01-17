@@ -2,6 +2,8 @@ package com.ithinkrok.minigames;
 
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.MutableClassToInstanceMap;
+import com.ithinkrok.minigames.database.DatabaseTask;
+import com.ithinkrok.minigames.database.DatabaseTaskRunner;
 import com.ithinkrok.minigames.event.game.CountdownFinishedEvent;
 import com.ithinkrok.minigames.event.game.GameEvent;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
@@ -28,9 +30,7 @@ import com.ithinkrok.minigames.task.TaskList;
 import com.ithinkrok.minigames.task.TaskScheduler;
 import com.ithinkrok.minigames.team.Team;
 import com.ithinkrok.minigames.team.TeamIdentifier;
-import com.ithinkrok.minigames.team.TeamResolver;
 import com.ithinkrok.minigames.team.TeamUserResolver;
-import com.ithinkrok.minigames.user.UserResolver;
 import com.ithinkrok.minigames.util.EventExecutor;
 import com.ithinkrok.minigames.util.io.FileLoader;
 import org.apache.commons.lang.Validate;
@@ -51,7 +51,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class GameGroup
         implements LanguageLookup, Messagable, TaskScheduler, FileLoader, SharedObjectAccessor,
-        MetadataHolder<Metadata>, SchematicResolver, TeamUserResolver {
+        MetadataHolder<Metadata>, SchematicResolver, TeamUserResolver, DatabaseTaskRunner {
 
     private ConcurrentMap<UUID, User> usersInGroup = new ConcurrentHashMap<>();
 
@@ -112,6 +112,11 @@ public class GameGroup
         Validate.notNull(mapInfo, "The map " + mapName + " does not exist");
 
         changeMap(mapInfo);
+    }
+
+    @Override
+    public void doDatabaseTask(DatabaseTask databaseTask) {
+        game.doDatabaseTask(databaseTask);
     }
 
     public void changeMap(GameMapInfo mapInfo) {

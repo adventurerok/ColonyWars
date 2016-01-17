@@ -1,6 +1,9 @@
 package com.ithinkrok.minigames;
 
 import com.comphenix.protocol.ProtocolLibrary;
+import com.ithinkrok.minigames.database.DatabaseTask;
+import com.ithinkrok.minigames.database.DatabaseTaskRunner;
+import com.ithinkrok.minigames.database.Persistence;
 import com.ithinkrok.minigames.event.map.*;
 import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.event.user.game.UserQuitEvent;
@@ -54,7 +57,7 @@ import java.util.concurrent.ConcurrentMap;
  * Created by paul on 31/12/15.
  */
 @SuppressWarnings("unchecked")
-public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLoader, ConfigHolder {
+public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLoader, ConfigHolder, DatabaseTaskRunner {
 
     private ConcurrentMap<UUID, User> usersInServer = new ConcurrentHashMap<>();
     private List<GameGroup> gameGroups = new ArrayList<>();
@@ -80,13 +83,15 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
     private Map<String, Schematic> schematicMap = new HashMap<>();
     private Map<String, ConfigurationSection> sharedObjects = new HashMap<>();
 
-
+    private Persistence persistence;
 
     private String startMapName;
     private String startGameStateName;
 
     public Game(Plugin plugin) {
         this.plugin = plugin;
+
+        persistence = new Persistence(plugin);
 
         InvisiblePlayerAttacker.enablePlayerAttacker(this, plugin, ProtocolLibrary.getProtocolManager());
 
@@ -361,6 +366,13 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
     public void unload() {
         gameGroups.forEach(GameGroup::unload);
+
+        persistence.onPluginDisabled();
+    }
+
+    @Override
+    public void doDatabaseTask(DatabaseTask task) {
+        persistence.doTask(task);
     }
 
     @Override

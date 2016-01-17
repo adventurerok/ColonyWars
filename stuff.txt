@@ -1,7 +1,5 @@
 RECODE BUGS:
  - teamchat command, transfer/share command, fix command, countdown command
- - Zombie rejoin after death glitch
-
 
 LOW PRIORITY / INVESTIGATE:
  - Prevent fire spread

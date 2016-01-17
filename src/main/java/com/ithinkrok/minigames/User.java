@@ -158,14 +158,16 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         scoreboardDisplay = null;
         openInventory = null;
 
-        revalidateTask = repeatInFuture(task -> {
-            if(entity.isValid()) return;
+        revalidateTask = repeatInFuture(task -> revalidateNonPlayer(), 100, 100);
+    }
 
-            LivingEntity oldEntity = entity;
-            makeEntityFromEntity(oldEntity, oldEntity.getLocation(), oldEntity.getType());
+    private void revalidateNonPlayer() {
+        if(entity.isValid()) return;
 
-            oldEntity.remove();
-        }, 100, 100);
+        LivingEntity oldEntity = entity;
+        makeEntityFromEntity(oldEntity, oldEntity.getLocation(), oldEntity.getType());
+
+        oldEntity.remove();
     }
 
     private void makeEntityFromEntity(LivingEntity from, Location location, EntityType entityType) {
@@ -581,7 +583,11 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         gameGroup.userEvent(event);
 
         if (event.isCancelled()) return false;
-        return entity.teleport(event.getTo());
+        boolean success = entity.teleport(event.getTo());
+
+        revalidateNonPlayer();
+
+        return success;
     }
 
     public boolean isViewingClickableInventory() {

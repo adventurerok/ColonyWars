@@ -1,7 +1,7 @@
 RECODE BUGS:
  - joining/leaving games in progress
- - teamchat command, transfer/share command, fix command
- Y cannon tower fires when allies are near only
+ - teamchat command, transfer/share command, fix command, countdown command
+ - Zombie save names
 
 
 LOW PRIORITY / INVESTIGATE:

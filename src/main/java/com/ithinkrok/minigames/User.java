@@ -114,6 +114,14 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         if (isPlayer()) {
             scoreboardDisplay = new ScoreboardDisplay(this, getPlayer());
         }
+
+        repeatInFuture(task -> decrementAttackerTimers(), 20, 20);
+    }
+
+    private void decrementAttackerTimers() {
+        lastAttacker.decreaseAttackerTimer(20);
+        fireAttacker.decreaseAttackerTimer(20);
+        witherAttacker.decreaseAttackerTimer(20);
     }
 
     public boolean isPlayer() {

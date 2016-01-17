@@ -629,7 +629,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
             User attacker = null;
             if (event instanceof EntityDamageByEntityEvent) {
-                attacker = EntityUtils.getRepresentingUser(attacked, event.getEntity());
+                attacker = EntityUtils.getRepresentingUser(attacked, ((EntityDamageByEntityEvent) event).getDamager());
                 attacked.getGameGroup()
                         .userEvent(new UserAttackedEvent(attacked, (EntityDamageByEntityEvent) event, attacker));
             } else {

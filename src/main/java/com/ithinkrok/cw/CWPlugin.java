@@ -2,6 +2,7 @@ package com.ithinkrok.cw;
 
 import com.ithinkrok.cw.command.CWCommand;
 import com.ithinkrok.cw.command.GameStateCommand;
+import com.ithinkrok.cw.command.StatsCommand;
 import com.ithinkrok.cw.command.ToggleMoneyMessageCommand;
 import com.ithinkrok.cw.database.UserCategoryStats;
 import com.ithinkrok.minigames.Game;
@@ -34,6 +35,7 @@ public class CWPlugin extends MinigamesPlugin {
         commandHandler.addExecutor(new GameStateCommand(), "gamestate");
         commandHandler.addExecutor(new CWCommand(), "colonywars");
         commandHandler.addExecutor(new ToggleMoneyMessageCommand(), "togglemoneymessage");
+        commandHandler.addExecutor(new StatsCommand(), "stats");
     }
 
     @Override

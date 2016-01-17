@@ -38,6 +38,14 @@ public class StatsHolder extends UserMetadata implements Messagable {
 
     private String lastKit, lastTeam;
 
+    public String getLastKit() {
+        return lastKit;
+    }
+
+    public String getLastTeam() {
+        return lastTeam;
+    }
+
     public UUID getUniqueId() {
         return uniqueId;
     }

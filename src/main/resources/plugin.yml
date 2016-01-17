@@ -19,6 +19,7 @@ permissions:
     description: "Gives all user command permission"
     children:
       mccw.tmm: true
+      mccw.stats: true
   mccw.gamestate:
     description: "Allows use of the /gamestate command"
     default: false
@@ -48,6 +49,9 @@ permissions:
   mccw.tmm.others:
     description: "Allows changing of money message status for others"
     default: false
+  mccw.stats:
+    description: "Allows use of /stats"
+    default: false
 
 commands:
   gamestate:
@@ -63,3 +67,6 @@ commands:
     description: "Toggles money message status"
     aliases: ["tmm"]
     usage: "/<command> [newstatus]"
+  stats:
+    description: "Shows your stats"
+    usage: "/<command> [category]"

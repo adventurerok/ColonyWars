@@ -9,6 +9,7 @@ import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.map.*;
+import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.event.user.state.UserDamagedEvent;
 import com.ithinkrok.minigames.event.user.state.UserDeathEvent;
 import com.ithinkrok.minigames.event.user.world.*;
@@ -92,6 +93,8 @@ public class BaseGameListener extends BaseGameStateListener {
     private String deathAssistLocale;
     private String deathNaturalLocale;
 
+    private String spectatorJoinLocaleStub;
+
     private int buildingDestroyWait;
 
     private GiveCustomItemsOnJoin.CustomItemGiver spectatorItems;
@@ -151,6 +154,8 @@ public class BaseGameListener extends BaseGameStateListener {
         deathKillAndAssistLocale = config.getString("death_kill_and_assist_locale", "death.kill_and_assist");
         deathKillLocale = config.getString("death_kill_locale", "death.kill");
         deathNaturalLocale = config.getString("death_natural_locale", "death.natural");
+
+        spectatorJoinLocaleStub = config.getString("spectator_join_locale_stub", "spectator.join");
 
         spectatorItems = new GiveCustomItemsOnJoin.CustomItemGiver(config.getConfigurationSection("spectator_items"));
     }
@@ -274,6 +279,25 @@ public class BaseGameListener extends BaseGameStateListener {
     @EventHandler
     public void onUserDamaged(UserDamagedEvent event) {
         if(!event.getUser().isInGame()) event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onUserJoined(UserJoinEvent event) {
+        if(event.getUser().isInGame()) return;
+
+        event.getUser().teleport(event.getUserGameGroup().getCurrentMap().getSpawn());
+        event.getUser().setSpectator(true);
+
+        spectatorItems.giveToUser(event.getUser());
+
+        for(int counter = 0;;++counter) {
+            String message = event.getUserGameGroup().getLocale(spectatorJoinLocaleStub + "." + counter);
+            if(message == null) break;
+
+            event.getUser().sendMessage(message);
+        }
+
+        event.getUser().doInFuture(task -> event.getUser().setSpectator(true), 2);
     }
 
     @EventHandler

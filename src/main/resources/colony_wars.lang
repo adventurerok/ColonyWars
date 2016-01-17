@@ -60,6 +60,10 @@ team.win=&6The %s &6Team has won the game!
 lobby.info.0=&2Source Code\: github.com/adventurerok/Colony-Wars
 lobby.info.1=&2Resource pack\: files.ithinkrok.com/CWRP.zip
 
+spectator.join.0=&4There is already a game in progress!
+spectator.join.1=&6You can play when the current game ends
+spectator.join.2=&6Choose a player to spectate
+
 death.kill_and_assist=&6%s &6was killed by %s &6and %s&6!
 death.kill_and_assist.entity_explosion=&6%s &6was blown up by %s &6and %s&6!
 death.kill_and_assist.projectile=&6%s &6was shot by %s &6(aided by %s&6)

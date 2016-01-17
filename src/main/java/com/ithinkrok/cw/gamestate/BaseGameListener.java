@@ -230,6 +230,9 @@ public class BaseGameListener extends BaseGameStateListener {
         died.getGameGroup().sendLocale(teamLostPlayerLocale, team.getFormattedName());
         died.getGameGroup().sendLocale(teamPlayersLeftLocale, team.getUserCount(), team.getFormattedName());
 
+        died.setDisplayName(died.getName());
+        died.setTabListName(died.getName());
+
         if (team.getUserCount() == 0) {
             CWTeamStats.getOrCreate(team).eliminate();
         }

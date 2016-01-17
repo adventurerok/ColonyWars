@@ -546,7 +546,8 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
     }
 
     public String getFormattedName() {
-        return getName();
+        String displayName = getDisplayName();
+        return displayName != null ? displayName : getName();
     }
 
     public String getName() {
@@ -564,6 +565,25 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
 
     public void makeEntityRepresentUser(Entity entity) {
         gameGroup.getGame().makeEntityRepresentUser(this, entity);
+    }
+
+    public void setDisplayName(String displayName) {
+        if(!isPlayer()) entity.setCustomName(displayName);
+        else getPlayer().setDisplayName(displayName);
+    }
+
+    public String getDisplayName() {
+        return isPlayer() ? getPlayer().getDisplayName() : entity.getCustomName();
+    }
+
+    public void setTabListName(String tabListName) {
+        if(!isPlayer()) return;
+        getPlayer().setPlayerListName(tabListName);
+    }
+
+    public String getTabListName() {
+        if(!isPlayer()) return null;
+        return getPlayer().getPlayerListName();
     }
 
     public Block rayTraceBlocks(int maxDistance) {

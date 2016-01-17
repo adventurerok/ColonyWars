@@ -95,6 +95,9 @@ public class LobbyListener extends BaseGameStateListener {
         user.setSpectator(false);
         user.resetUserStats(true);
 
+        user.setDisplayName(user.getName());
+        user.setTabListName(user.getName());
+
         user.getInventory().clear();
         user.clearArmor();
 

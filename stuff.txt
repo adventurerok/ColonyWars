@@ -1,11 +1,11 @@
 RECODE BUGS:
  - spectators don't have player viewer
- - Destroying a building while it is built does not decrement building now counter
  - Good potion / bad potion effect blocking
  - Prevent burning
  - Can't toggle money messages
- - Player name not changed to team colour
+ Y Player name not changed to team colour
 
 
-LOW PRIORITY:
+LOW PRIORITY / INVESTIGATE:
  - (CANNON TOWER) adventurerok burned to death while fighting adventurerok
+ - Destroying a building while it is built does not decrement building now counter

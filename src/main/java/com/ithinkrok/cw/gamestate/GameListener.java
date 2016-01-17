@@ -106,6 +106,8 @@ public class GameListener extends BaseGameListener {
         customItemGiver.giveToUser(user);
 
         user.giveColoredArmor(user.getTeam().getArmorColor(), true);
+        user.setDisplayName(user.getTeam().getChatColor() + user.getName());
+        user.setTabListName(user.getTeam().getChatColor() + user.getName());
 
         user.setScoreboardHandler(new CWScoreboardHandler(user));
         user.updateScoreboard();

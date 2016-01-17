@@ -59,3 +59,36 @@ team.win=&6The %s &6Team has won the game!
 
 lobby.info.0=&2Source Code\: github.com/adventurerok/Colony-Wars
 lobby.info.1=&2Resource pack\: files.ithinkrok.com/CWRP.zip
+
+death.kill_and_assist=&6%s &6was killed by %s &6and %s&6!
+death.kill_and_assist.entity_explosion=&6%s &6was blown up by %s &6and %s&6!
+death.kill_and_assist.projectile=&6%s &6was shot by %s &6(aided by %s&6)
+death.kill_and_assist.lightning=&6%s &6was struck by lightning by %s &6(aided by %s&6)
+death.kill_and_assist.fire_tick=&6%s &6was burned to death by %s &6and %s&6!
+
+death.kill=&6%s &6was killed by %s
+death.kill.entity_explosion=&6%s &6was blown up by %s
+death.kill.projectile=&6%s &6was shot by %s
+death.kill.lightning=&6%s &6was struck by lightning by %s
+death.kill.fire_tick=&6%s &6was burned to death by %s
+
+death.assist=&6%s &6died while fighting %s&6!
+death.assist.entity_explosion=&6%s &6blew up while fighting %s&6!
+death.assist.projectile=&6%s &6got shot while fighting %s&6!
+death.assist.fall=&6%s &6fell to their death while fighting %s&6!
+death.assist.lightning=&6%s &6was struck by lightning while fighting %s
+death.assist.drowning=&6%s &6drowned while fighting %s&6!
+death.assist.fire=&6%s &6burned to death while fighting %s&6!
+death.assist.fire_tick=&6%s &6burned to death while fighting %s&6!
+death.assist.lava=&6%s &6melted while fighting %s
+death.assist.void=&6%s &6fell into the void while fighting %s
+
+death.natural=&6%s &6died!
+death.natural.entity_explosion=&6%s &6blew up!
+death.natural.fall=&6%s &6fell to their death!
+death.natural.lightning=&6%s &6was struck by lightning!
+death.natural.drowning=&6%s &6drowned!
+death.natural.fire=&6%s &6burned to death!
+death.natural.fire_tick=&6%s &6burned to death!
+death.natural.lava=&6%s &6melted in lava!
+death.natural.void=&6%s &6fell into the void!

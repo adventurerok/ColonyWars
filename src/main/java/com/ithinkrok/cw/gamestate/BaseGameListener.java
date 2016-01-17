@@ -12,6 +12,7 @@ import com.ithinkrok.minigames.event.map.MapItemSpawnEvent;
 import com.ithinkrok.minigames.event.user.state.UserDeathEvent;
 import com.ithinkrok.minigames.event.user.world.*;
 import com.ithinkrok.minigames.inventory.ClickableInventory;
+import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.metadata.Money;
 import com.ithinkrok.minigames.schematic.Facing;
 import com.ithinkrok.minigames.team.Team;
@@ -36,36 +37,33 @@ import java.util.stream.Collectors;
  */
 public class BaseGameListener extends BaseGameStateListener {
 
+    protected String showdownCountdownName;
+    protected String showdownGameState;
     private String goldSharedConfig;
     private WeakHashMap<ConfigurationSection, GoldConfig> goldConfigMap = new WeakHashMap<>();
-
     private String unknownBuildingLocale;
     private String cannotBuildHereLocale;
     private String buildingNotFinishedLocale;
     private String buildingNotYoursLocale;
-
     private String cannotDestroyOwnBuildingLocale;
     private String cannotDestroyLocale;
     private String buildingDestroyedLocale;
-
     private String respawnLocale;
     private String noRespawnLocale;
     private int lostRespawnChance;
-
     private String teamLostPlayerLocale;
     private String teamPlayersLeftLocale;
-
     private String aftermathGameState;
     private String teamWinLocale;
-
-    protected String showdownCountdownName;
     private String showdownCountdownLocaleStub;
     private int showdownCountdownSeconds;
-
-    protected String showdownGameState;
-
     private int showdownStartTeams;
     private int showdownStartPlayers;
+
+    private String deathKillAndAssistLocale;
+    private String deathKillLocale;
+    private String deathAssistLocale;
+    private String deathNaturalLocale;
 
     private int buildingDestroyWait;
 
@@ -105,11 +103,16 @@ public class BaseGameListener extends BaseGameStateListener {
         lostRespawnChance = config.getInt("lost_respawn_chance", 15);
 
         showdownGameState = config.getString("showdown_gamestate", "showdown");
+
+        deathAssistLocale = config.getString("death_assist_locale", "death.assist");
+        deathKillAndAssistLocale = config.getString("death_kill_and_assist_locale", "death.kill_and_assist");
+        deathKillLocale = config.getString("death_kill_locale", "death.kill");
+        deathNaturalLocale = config.getString("death_natural_locale", "death.natural");
     }
 
     @EventHandler
     public void onUserInteractWorld(UserInteractWorldEvent event) {
-        if(!event.getUser().isInGame()) {
+        if (!event.getUser().isInGame()) {
             event.setCancelled(true);
             return;
         }
@@ -146,7 +149,7 @@ public class BaseGameListener extends BaseGameStateListener {
     public void onUserDeath(UserDeathEvent event) {
         User died = event.getUser();
 
-        if(!died.isInGame()) {
+        if (!died.isInGame()) {
             died.resetUserStats(true);
 
             died.teleport(died.getGameGroup().getCurrentMap().getSpawn());
@@ -154,6 +157,8 @@ public class BaseGameListener extends BaseGameStateListener {
         }
 
         //TODO remove entity targets on the dead player
+
+        displayDeathMessage(event);
         //TODO kill stats
 
         Team team = died.getTeam();
@@ -161,7 +166,7 @@ public class BaseGameListener extends BaseGameStateListener {
 
         boolean respawn = shouldRespawnUser(died, teamStats);
 
-        if(respawn) {
+        if (respawn) {
             died.getGameGroup().sendLocale(respawnLocale, died.getFormattedName());
 
             teamStats.setRespawnChance(teamStats.getRespawnChance() - lostRespawnChance, true);
@@ -177,6 +182,31 @@ public class BaseGameListener extends BaseGameStateListener {
         }
     }
 
+    private void displayDeathMessage(UserDeathEvent event) {
+        String localeEnding = "." + event.getKillCause().toString().toLowerCase();
+
+        if (event.hasKillerUser()) {
+            if (event.hasAssistUser()) {
+                sendDeathMessage(event.getUserGameGroup(), deathKillAndAssistLocale, localeEnding,
+                        event.getUser().getFormattedName(), event.getKillerUser().getFormattedName(),
+                        event.getAssistUser().getFormattedName());
+
+            } else {
+                sendDeathMessage(event.getUserGameGroup(), deathKillLocale, localeEnding, event.getUser()
+                        .getFormattedName(), event.getKillerUser().getFormattedName());
+            }
+        } else if(event.hasAssistUser()) {
+            sendDeathMessage(event.getUserGameGroup(), deathAssistLocale, localeEnding, event.getUser()
+                    .getFormattedName(), event.getAssistUser().getFormattedName());
+        } else {
+            sendDeathMessage(event.getUserGameGroup(), deathNaturalLocale, localeEnding, event.getUser().getFormattedName());
+        }
+    }
+
+    public boolean shouldRespawnUser(User user, CWTeamStats teamStats) {
+        return user.isPlayer() && random.nextFloat() < (teamStats.getRespawnChance() / 100f);
+    }
+
     private void removeUserFromGame(User died) {
         Team team = died.getTeam();
 
@@ -185,7 +215,7 @@ public class BaseGameListener extends BaseGameStateListener {
         died.getGameGroup().sendLocale(teamLostPlayerLocale, team.getFormattedName());
         died.getGameGroup().sendLocale(teamPlayersLeftLocale, team.getUserCount(), team.getFormattedName());
 
-        if(team.getUserCount() == 0) {
+        if (team.getUserCount() == 0) {
             CWTeamStats.getOrCreate(team).eliminate();
         }
 
@@ -193,28 +223,35 @@ public class BaseGameListener extends BaseGameStateListener {
         //TODO update spectator inventories
     }
 
+    private void sendDeathMessage(GameGroup gameGroup, String locale, String ending, Object... args) {
+        String message = gameGroup.getLocale(locale + ending, args);
+        if (message == null) message = gameGroup.getLocale(locale, args);
+
+        gameGroup.sendMessage(message);
+    }
+
     public void checkVictory(GameGroup gameGroup, boolean checkShowdown) {
         int nonZombieUsersInGame = 0;
 
-        for(User user : gameGroup.getUsers()) {
-            if(user.isInGame() && user.isPlayer()) ++nonZombieUsersInGame;
+        for (User user : gameGroup.getUsers()) {
+            if (user.isInGame() && user.isPlayer()) ++nonZombieUsersInGame;
         }
 
-        if(nonZombieUsersInGame == 0) {
+        if (nonZombieUsersInGame == 0) {
             gameGroup.changeGameState(aftermathGameState);
             return;
         }
 
         Set<Team> teamsInGame = new HashSet<>();
 
-        for(User user : gameGroup.getUsers()) {
-            if(!user.isInGame()) continue;
+        for (User user : gameGroup.getUsers()) {
+            if (!user.isInGame()) continue;
 
             teamsInGame.add(user.getTeam());
         }
 
-        if(teamsInGame.size() > 1) {
-            if(!checkShowdown) return;
+        if (teamsInGame.size() > 1) {
+            if (!checkShowdown) return;
 
             checkShowdownStart(gameGroup, teamsInGame.size(), nonZombieUsersInGame);
             return;
@@ -228,28 +265,24 @@ public class BaseGameListener extends BaseGameStateListener {
     }
 
     protected void checkShowdownStart(GameGroup gameGroup, int teamsInGame, int nonZombieUsersInGame) {
-        if(gameGroup.hasActiveCountdown(showdownCountdownName)) return;
+        if (gameGroup.hasActiveCountdown(showdownCountdownName)) return;
 
         boolean teamCheck = teamsInGame > showdownStartTeams || gameGroup.getTeamIdentifiers().size() < 3;
         boolean playerCheck = nonZombieUsersInGame > showdownStartPlayers;
 
-        if(teamCheck && playerCheck) return;
+        if (teamCheck && playerCheck) return;
 
         gameGroup.startCountdown(showdownCountdownName, showdownCountdownLocaleStub, showdownCountdownSeconds);
     }
 
-    public boolean shouldRespawnUser(User user, CWTeamStats teamStats) {
-        return user.isPlayer() && random.nextFloat() < (teamStats.getRespawnChance() / 100f);
-    }
-
     @EventHandler
     public void onUserBreakBlock(UserBreakBlockEvent event) {
-        if(!event.getUser().isInGame()) {
+        if (!event.getUser().isInGame()) {
             event.setCancelled(true);
             return;
         }
 
-        if (event.getBlock().getType() != Material.OBSIDIAN){
+        if (event.getBlock().getType() != Material.OBSIDIAN) {
             ConfigurationSection goldShared = event.getUserGameGroup().getSharedObject(goldSharedConfig);
             GoldConfig gold = getGoldConfig(goldShared);
 
@@ -265,12 +298,13 @@ public class BaseGameListener extends BaseGameStateListener {
         if (building.getTeamIdentifier().equals(event.getUser().getTeamIdentifier())) {
             event.getUser().sendLocale(cannotDestroyOwnBuildingLocale);
             event.setCancelled(true);
-        } else if(building.isProtected()) {
+        } else if (building.isProtected()) {
             event.getUser().sendLocale(cannotDestroyLocale, building.getBuildingName());
             event.setCancelled(true);
         } else {
-            event.getUserGameGroup().sendLocale(buildingDestroyedLocale, event.getUser().getFormattedName(), building
-                    .getBuildingName(), building.getTeamIdentifier().getFormattedName());
+            event.getUserGameGroup()
+                    .sendLocale(buildingDestroyedLocale, event.getUser().getFormattedName(), building.getBuildingName(),
+                            building.getTeamIdentifier().getFormattedName());
             event.getUserGameGroup().doInFuture(task -> building.explode(), buildingDestroyWait);
         }
     }
@@ -288,7 +322,7 @@ public class BaseGameListener extends BaseGameStateListener {
 
     @EventHandler
     public void onUserPickupItem(UserPickupItemEvent event) {
-        if(!event.getUser().isInGame()) {
+        if (!event.getUser().isInGame()) {
             event.setCancelled(true);
             return;
         }
@@ -318,7 +352,7 @@ public class BaseGameListener extends BaseGameStateListener {
 
     @EventHandler
     public void onUserPlaceBlock(UserPlaceBlockEvent event) {
-        if(!event.getUser().isInGame()) {
+        if (!event.getUser().isInGame()) {
             event.setCancelled(true);
             return;
         }
@@ -418,7 +452,7 @@ public class BaseGameListener extends BaseGameStateListener {
             } else if (treesEnabled && logMaterials.contains(block.getType())) {
                 int count = TreeFeller.fellTree(block.getLocation(), BuildingController.getOrCreate(gameGroup));
                 count = (int) treeItemAmount.calculate(new SingleValueVariables(count));
-                if(count > 0) drop = new ItemStack(treeItemMaterial, count);
+                if (count > 0) drop = new ItemStack(treeItemMaterial, count);
             }
 
             block.setType(Material.AIR);

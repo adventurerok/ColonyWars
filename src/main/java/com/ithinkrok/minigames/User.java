@@ -192,6 +192,8 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         revalidateTask.cancel();
 
         playerState.capture(entity);
+
+        player.teleport(entity.getLocation());
         playerState.restore(player);
         playerState.setPlaceholder(null);
 

@@ -11,7 +11,7 @@ public class UserMoney extends Money {
 
     private final User user;
 
-    private int messageLevel = 0;
+    private int messageLevel = 1;
 
     public UserMoney(User user) {
         this.user = user;

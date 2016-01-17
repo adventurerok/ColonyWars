@@ -1,9 +1,11 @@
 RECODE BUGS:
  - spectators don't have player viewer
- Y No death messages
- N Cannon towers/Fortresses don't work
  - Destroying a building while it is built does not decrement building now counter
  - Good potion / bad potion effect blocking
  - Prevent burning
- - No Money messages
+ - Can't toggle money messages
  - Player name not changed to team colour
+
+
+LOW PRIORITY:
+ - (CANNON TOWER) adventurerok burned to death while fighting adventurerok

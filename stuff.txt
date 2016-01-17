@@ -1,12 +1,12 @@
 RECODE BUGS:
- - spectators don't have player viewer
- Y Good potion / bad potion effect blocking
- Y Prevent burning
+ Y spectators don't have player viewer
  Y Prevent dropping custom items
  - joining/leaving games in progress
  - teamchat command, transfer/share command, fix command
+ - cannot buy fortress
 
 
 LOW PRIORITY / INVESTIGATE:
+ - Prevent fire spread
  - (CANNON TOWER) adventurerok burned to death while fighting adventurerok
  - Destroying a building while it is built does not decrement building now counter

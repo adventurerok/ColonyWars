@@ -40,7 +40,7 @@ public class SpectateChooser implements Listener {
         for(User user : event.getUserGameGroup().getUsers()) {
             if(!user.isInGame()) continue;
 
-            ItemStack item = InventoryUtils.createItemWithNameAndLore(Material.SKULL_ITEM, 1, 0, user
+            ItemStack item = InventoryUtils.createItemWithNameAndLore(Material.SKULL_ITEM, 1, 3, user
                     .getFormattedName());
 
             UUID userUUID = user.getUuid();

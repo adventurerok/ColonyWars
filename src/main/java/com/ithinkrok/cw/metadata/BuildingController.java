@@ -17,7 +17,11 @@ import com.ithinkrok.minigames.schematic.event.SchematicDestroyedEvent;
 import com.ithinkrok.minigames.schematic.event.SchematicFinishedEvent;
 import com.ithinkrok.minigames.util.BoundingBox;
 import com.ithinkrok.minigames.util.LocationChecker;
+import de.inventivegames.hologram.Hologram;
+import de.inventivegames.hologram.HologramAPI;
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -33,8 +37,17 @@ public class BuildingController extends Metadata implements Listener, LocationCh
     private HashMap<PastedSchematic, Building> buildings = new HashMap<>();
     private HashMap<Location, Building> buildingCentres = new HashMap<>();
 
+    private String shopLocale;
+    private String shopInfoLocale;
+
     public BuildingController(GameGroup gameGroup) {
         this.gameGroup = gameGroup;
+
+        ConfigurationSection config = gameGroup.getSharedObject("building_controller_metadata");
+        if(config == null) config = new MemoryConfiguration();
+
+        shopLocale = config.getString("shop_name_locale", "building.shop.name");
+        shopInfoLocale = config.getString("shop_description_locale", "building.shop.desc");
     }
 
     @Override
@@ -51,6 +64,17 @@ public class BuildingController extends Metadata implements Listener, LocationCh
     public void onSchematicFinished(SchematicFinishedEvent event) {
         Building building = buildings.get(event.getSchematic());
         if(building == null) return;
+
+        Location holo1 = building.getCenterBlock().clone().add(0.5d, 2.2d, 0.5d);
+        Hologram hologram1 = HologramAPI.createHologram(holo1, gameGroup.getLocale(shopLocale, building
+                .getBuildingName()));
+        hologram1.spawn();
+        building.getSchematic().addHologram(hologram1);
+
+        Location holo2 = building.getCenterBlock().clone().add(0.5d, 1.9d, 0.5d);
+        Hologram hologram2 = HologramAPI.createHologram(holo2, gameGroup.getLocale(shopInfoLocale));
+        hologram2.spawn();
+        building.getSchematic().addHologram(hologram2);
 
         getTeamBuildingStats(building).buildingFinished(building);
 

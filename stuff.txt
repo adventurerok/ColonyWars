@@ -1,8 +1,8 @@
 RECODE BUGS:
  - spectators don't have player viewer
- - Good potion / bad potion effect blocking
- - Prevent burning
- - Prevent dropping custom items
+ Y Good potion / bad potion effect blocking
+ Y Prevent burning
+ Y Prevent dropping custom items
  - joining/leaving games in progress
  - teamchat command, transfer/share command, fix command
 

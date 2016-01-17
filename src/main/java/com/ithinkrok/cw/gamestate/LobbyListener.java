@@ -88,6 +88,11 @@ public class LobbyListener extends BaseGameStateListener {
     }
 
     private void userJoinLobby(User user) {
+        if(!user.isPlayer()) {
+            user.removeNonPlayer();
+            return;
+        }
+
         user.setInGame(false);
         if(!user.isPlayer()) return;
 

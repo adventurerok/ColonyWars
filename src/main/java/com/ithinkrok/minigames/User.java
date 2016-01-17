@@ -33,9 +33,7 @@ import com.ithinkrok.minigames.util.playerstate.PlayerState;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -101,6 +99,8 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
     private Vector inventoryTether;
     private boolean spectator;
 
+    private GameTask revalidateTask;
+
     public User(Game game, GameGroup gameGroup, Team team, UUID uuid, LivingEntity entity) {
         this.game = game;
         this.gameGroup = gameGroup;
@@ -148,6 +148,69 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
             if (showCloakedPlayers) showPlayer(u);
             else hidePlayer(u);
         }
+    }
+
+    public void becomeEntity(EntityType entityType) {
+        if(!isPlayer()) return;
+
+        makeEntityFromEntity(entity, getLocation(), entityType);
+
+        scoreboardDisplay = null;
+        openInventory = null;
+
+        revalidateTask = repeatInFuture(task -> {
+            if(entity.isValid()) return;
+
+            LivingEntity oldEntity = entity;
+            makeEntityFromEntity(oldEntity, oldEntity.getLocation(), oldEntity.getType());
+
+            oldEntity.remove();
+        }, 100, 100);
+    }
+
+    private void makeEntityFromEntity(LivingEntity from, Location location, EntityType entityType) {
+        if(playerState == null) playerState = new PlayerState();
+
+        playerState.capture(from);
+        entity = (LivingEntity) location.getWorld().spawnEntity(location, entityType);
+        playerState.restore(entity);
+        playerState.setPlaceholder(entity);
+
+        if(entity instanceof Zombie) {
+            ((Zombie) entity).setVillager(false);
+            ((Zombie) entity).setBaby(false);
+        }
+
+        gameGroup.getGame().makeEntityActualUser(this, entity);
+
+        entity.setRemoveWhenFarAway(true);
+    }
+
+    public void becomePlayer(Player player) {
+        if(isPlayer()) return;
+
+        revalidateTask.cancel();
+
+        playerState.capture(entity);
+        playerState.restore(player);
+        playerState.setPlaceholder(null);
+
+        entity.remove();
+        entity = player;
+
+        if(isCloaked()) cloak();
+
+        scoreboardDisplay = new ScoreboardDisplay(this, player);
+        updateScoreboard();
+    }
+
+    public void removeNonPlayer() {
+        if(isPlayer()) return;
+        entity.remove();
+
+        revalidateTask.cancel();
+
+        gameGroup.userEvent(new UserQuitEvent(this, UserQuitEvent.QuitReason.NON_PLAYER_REMOVED));
     }
 
     public void setAllowFlight(boolean allowFlight) {

@@ -34,6 +34,7 @@ public class UserQuitEvent extends UserEvent {
 
     public enum QuitReason {
         QUIT_SERVER,
+        NON_PLAYER_REMOVED,
         CHANGED_GAMEGROUP
     }
 }

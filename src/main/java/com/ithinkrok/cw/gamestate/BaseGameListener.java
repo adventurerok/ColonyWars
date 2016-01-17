@@ -10,6 +10,7 @@ import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.map.*;
 import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
+import com.ithinkrok.minigames.event.user.game.UserQuitEvent;
 import com.ithinkrok.minigames.event.user.state.UserDamagedEvent;
 import com.ithinkrok.minigames.event.user.state.UserDeathEvent;
 import com.ithinkrok.minigames.event.user.world.*;
@@ -26,6 +27,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
@@ -274,6 +276,8 @@ public class BaseGameListener extends BaseGameStateListener {
         }
 
         checkVictory(died.getGameGroup(), true);
+
+        if(!died.isPlayer()) died.removeNonPlayer();
     }
 
     @EventHandler
@@ -298,6 +302,19 @@ public class BaseGameListener extends BaseGameStateListener {
         }
 
         event.getUser().doInFuture(task -> event.getUser().setSpectator(true), 2);
+    }
+
+    @EventHandler
+    public void onUserQuit(UserQuitEvent event) {
+        if(event.getReason() != UserQuitEvent.QuitReason.QUIT_SERVER) return;
+
+        if(!event.getUser().isInGame()) {
+            //TODO save stats
+        } else {
+            event.getUser().becomeEntity(EntityType.ZOMBIE);
+            checkVictory(event.getUser().getGameGroup(), true);
+            event.setRemoveUser(false);
+        }
     }
 
     @EventHandler

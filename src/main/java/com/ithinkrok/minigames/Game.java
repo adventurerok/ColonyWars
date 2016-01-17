@@ -389,6 +389,10 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         entity.setMetadata("rep", new FixedMetadataValue(plugin, user.getUuid()));
     }
 
+    public void makeEntityActualUser(User user, Entity entity) {
+        entity.setMetadata("actual", new FixedMetadataValue(plugin, user.getUuid()));
+    }
+
     public void setGameGroupForMap(GameGroup gameGroup, String mapName) {
         mapToGameGroup.values().remove(gameGroup);
         mapToGameGroup.put(mapName, gameGroup);
@@ -419,6 +423,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
             if (user != null) {
                 gameGroup = user.getGameGroup();
+                user.becomePlayer(player);
             } else {
                 if (spawnGameGroup == null) {
                     spawnGameGroup = createGameGroup();

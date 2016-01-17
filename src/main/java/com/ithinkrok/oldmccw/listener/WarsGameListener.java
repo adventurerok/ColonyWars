@@ -55,9 +55,17 @@ public class WarsGameListener implements Listener {
 
     static {
         GOOD_POTIONS.put(PotionEffectType.HEAL, true);
-        GOOD_POTIONS.put(PotionEffectType.HARM, false);
         GOOD_POTIONS.put(PotionEffectType.INCREASE_DAMAGE, true);
-        //Add more potions if required
+        GOOD_POTIONS.put(PotionEffectType.SPEED, true);
+        GOOD_POTIONS.put(PotionEffectType.FAST_DIGGING, true);
+        GOOD_POTIONS.put(PotionEffectType.INVISIBILITY, true);
+        GOOD_POTIONS.put(PotionEffectType.ABSORPTION, true);
+
+
+        GOOD_POTIONS.put(PotionEffectType.HARM, false);
+        GOOD_POTIONS.put(PotionEffectType.CONFUSION, false);
+        GOOD_POTIONS.put(PotionEffectType.BLINDNESS, false);
+        GOOD_POTIONS.put(PotionEffectType.POISON, false);
 
         DEATH_MESSAGE_ENDINGS.put(EntityDamageEvent.DamageCause.FALL, ".falling");
         DEATH_MESSAGE_ENDINGS.put(EntityDamageEvent.DamageCause.BLOCK_EXPLOSION, ".explosion");

@@ -96,3 +96,6 @@ death.natural.fire=&6%s &6burned to death!
 death.natural.fire_tick=&6%s &6burned to death!
 death.natural.lava=&6%s &6melted in lava!
 death.natural.void=&6%s &6fell into the void!
+
+score.gain=&6You gained &a%s &6points!
+score.loss=&6You lost &c%s &6points!

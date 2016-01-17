@@ -45,7 +45,12 @@ public class Persistence extends Thread {
             DatabaseTask task;
 
             while((task = threadTasks.poll()) != null) {
-                task.run(plugin.getDatabase());
+                try {
+                    task.run(plugin.getDatabase());
+                } catch (Exception e) {
+                    System.out.println("Exception while doing DatabaseTask");
+                    e.printStackTrace();
+                }
             }
 
             try {

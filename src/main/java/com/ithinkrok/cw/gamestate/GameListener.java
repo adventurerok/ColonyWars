@@ -8,12 +8,15 @@ import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.game.CountdownFinishedEvent;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
+import com.ithinkrok.minigames.event.map.MapBlockBurnEvent;
+import com.ithinkrok.minigames.event.map.MapBlockGrowEvent;
 import com.ithinkrok.minigames.event.user.game.UserChangeTeamEvent;
 import com.ithinkrok.minigames.listener.GiveCustomItemsOnJoin;
 import com.ithinkrok.minigames.metadata.MapVote;
 import com.ithinkrok.minigames.team.Team;
 import org.bukkit.Color;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
 
@@ -78,6 +81,21 @@ public class GameListener extends BaseGameListener {
         if(!event.getCountdown().getName().equals(showdownCountdownName)) return;
 
         event.getGameGroup().changeGameState(showdownGameState);
+    }
+
+    @EventHandler
+    public void onBlockBurn(MapBlockBurnEvent event) {
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onBlockSpread(MapBlockGrowEvent event) {
+        if(!event.isSpreadEvent()) return;
+        if(event.getNewState().getType() != Material.FIRE) return;
+
+        event.getSpreadSource().setType(Material.AIR);
+
+        event.setCancelled(true);
     }
 
     private void setupUser(User user) {

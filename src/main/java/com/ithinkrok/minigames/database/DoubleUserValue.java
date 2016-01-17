@@ -17,7 +17,7 @@ public class DoubleUserValue {
     private String playerUUID;
 
     @Column
-    private String key;
+    private String property;
 
     @Column
     private double value;
@@ -41,12 +41,12 @@ public class DoubleUserValue {
         this.playerUUID = playerUUID;
     }
 
-    public String getKey() {
-        return key;
+    public String getProperty() {
+        return property;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setProperty(String property) {
+        this.property = property;
     }
 
     public double getValue() {

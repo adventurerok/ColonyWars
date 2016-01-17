@@ -17,6 +17,7 @@ public class PlayerState {
     private ModeCapture modeCapture;
     private HealthCapture healthCapture;
     private FoodCapture foodCapture;
+    private NameCapture nameCapture;
 
     /**
      * The entity that is placeholding for the player. Can be null
@@ -56,6 +57,11 @@ public class PlayerState {
         if (ArrayUtils.contains(captureParts, CaptureParts.FOOD) && (entity instanceof Player)) {
             foodCapture = new FoodCapture((Player) entity);
         }
+
+        if(ArrayUtils.contains(captureParts, CaptureParts.NAME)) {
+            nameCapture = new NameCapture();
+            nameCapture.capture(entity);
+        }
     }
 
     public void restore(LivingEntity entity, CaptureParts... captureParts) {
@@ -91,6 +97,10 @@ public class PlayerState {
 
         if (foodCapture != null && ArrayUtils.contains(captureParts, CaptureParts.FOOD) && (entity instanceof Player)) {
             foodCapture.restore((Player) entity);
+        }
+
+        if(nameCapture != null && ArrayUtils.contains(captureParts, CaptureParts.NAME)) {
+            nameCapture.restore(entity);
         }
     }
 
@@ -178,6 +188,14 @@ public class PlayerState {
         foodCapture.setSaturation(saturation);
     }
 
+    public String getTabListName() {
+        return nameCapture.getTabListName();
+    }
+
+    public void setTabListName(String name) {
+        nameCapture.setTabListName(name);
+    }
+
     public enum CaptureParts {
         INVENTORY,
         ARMOR,
@@ -185,6 +203,7 @@ public class PlayerState {
         MODE,
         HEALTH,
         FOOD,
+        NAME,
         ALL
     }
 

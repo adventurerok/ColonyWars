@@ -661,13 +661,13 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
     }
 
     public void setTabListName(String tabListName) {
-        if(!isPlayer()) return;
-        getPlayer().setPlayerListName(tabListName);
+        if(!isPlayer()) playerState.setTabListName(tabListName);
+        else getPlayer().setPlayerListName(tabListName);
     }
 
     public String getTabListName() {
-        if(!isPlayer()) return null;
-        return getPlayer().getPlayerListName();
+        if(!isPlayer()) return playerState.getTabListName();
+        else return getPlayer().getPlayerListName();
     }
 
     public Block rayTraceBlocks(int maxDistance) {

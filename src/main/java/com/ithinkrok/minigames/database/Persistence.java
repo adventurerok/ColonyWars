@@ -1,6 +1,7 @@
 package com.ithinkrok.minigames.database;
 
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.persistence.PersistenceException;
 import java.lang.reflect.Method;
@@ -30,7 +31,7 @@ public class Persistence extends Thread {
             plugin.getDatabase().find(IntUserValue.class).findRowCount();
         } catch(PersistenceException e) {
             try {
-                Method method = Plugin.class.getDeclaredMethod("installDDL");
+                Method method = JavaPlugin.class.getDeclaredMethod("installDDL");
                 method.setAccessible(true);
                 method.invoke(plugin);
             } catch (ReflectiveOperationException e1) {

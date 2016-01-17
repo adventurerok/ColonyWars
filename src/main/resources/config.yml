@@ -454,6 +454,13 @@ game_states:
             items:
               - name: "pickaxe"
                 slot: 0
+          spectator_items:
+            clear_inventory: true
+            items:
+              - name: "spectate_chooser"
+                slot: 0
+              - name: "invisible_user_toggle"
+                slot: 1
   showdown:
     listeners:
       main:

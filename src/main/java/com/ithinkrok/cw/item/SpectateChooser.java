@@ -29,7 +29,7 @@ public class SpectateChooser implements Listener {
         ConfigurationSection config = event.getConfig();
         if(config == null) config = new MemoryConfiguration();
 
-        titleLocale = config.getString("title_locale");
+        titleLocale = config.getString("title_locale", "spectate_chooser.title");
     }
 
     @EventHandler

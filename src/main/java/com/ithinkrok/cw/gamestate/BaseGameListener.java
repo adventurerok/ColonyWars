@@ -12,6 +12,7 @@ import com.ithinkrok.minigames.event.map.*;
 import com.ithinkrok.minigames.event.user.state.UserDeathEvent;
 import com.ithinkrok.minigames.event.user.world.*;
 import com.ithinkrok.minigames.inventory.ClickableInventory;
+import com.ithinkrok.minigames.listener.GiveCustomItemsOnJoin;
 import com.ithinkrok.minigames.metadata.Money;
 import com.ithinkrok.minigames.schematic.Facing;
 import com.ithinkrok.minigames.team.Team;
@@ -92,6 +93,8 @@ public class BaseGameListener extends BaseGameStateListener {
 
     private int buildingDestroyWait;
 
+    private GiveCustomItemsOnJoin.CustomItemGiver spectatorItems;
+
     @EventHandler
     public void onUserChat(UserChatEvent event) {
         if(event.getUser().isInGame()) {
@@ -147,6 +150,8 @@ public class BaseGameListener extends BaseGameStateListener {
         deathKillAndAssistLocale = config.getString("death_kill_and_assist_locale", "death.kill_and_assist");
         deathKillLocale = config.getString("death_kill_locale", "death.kill");
         deathNaturalLocale = config.getString("death_natural_locale", "death.natural");
+
+        spectatorItems = new GiveCustomItemsOnJoin.CustomItemGiver(config.getConfigurationSection("spectator_items"));
     }
 
     @EventHandler
@@ -218,6 +223,7 @@ public class BaseGameListener extends BaseGameStateListener {
             removeUserFromGame(died);
 
             died.setSpectator(true);
+            spectatorItems.giveToUser(died);
         }
     }
 
@@ -262,7 +268,6 @@ public class BaseGameListener extends BaseGameStateListener {
         }
 
         checkVictory(died.getGameGroup(), true);
-        //TODO update spectator inventories
     }
 
     @EventHandler

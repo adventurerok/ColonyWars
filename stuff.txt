@@ -1,12 +1,9 @@
 RECODE BUGS:
- Y No building titles
- Y Buying inv full of pots clears inventory
- Y Walls cost $1600 each
  - spectators don't have player viewer
  Y No death messages
- Y No team name/class in chat
- Y No armor when the game starts
- - Cannon towers/Fortresses don't work
+ N Cannon towers/Fortresses don't work
  - Destroying a building while it is built does not decrement building now counter
  - Good potion / bad potion effect blocking
  - Prevent burning
+ - No Money messages
+ - Player name not changed to team colour

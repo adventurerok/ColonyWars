@@ -69,6 +69,10 @@ public class Building {
         return schematic.isFinished();
     }
 
+    public boolean isRemoved() {
+        return schematic.isRemoved();
+    }
+
     public boolean isProtected() {
         return getConfig() != null && getConfig().getBoolean("protected");
     }

@@ -1,6 +1,7 @@
 package com.ithinkrok.cw.metadata;
 
 import com.ithinkrok.cw.Building;
+import com.ithinkrok.cw.util.CannonTowerHandler;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;
@@ -114,6 +115,9 @@ public class CWTeamStats extends Metadata {
             if(config.contains("revival_rate")) {
                 setRespawnChance(Math.max(respawnChance, config.getInt("revival_rate")), true);
                 churchLocations.add(building.getCenterBlock());
+            }
+            if(config.getBoolean("cannons", false)) {
+                CannonTowerHandler.startCannonTowerTask(team.getGameGroup(), building);
             }
         }
 

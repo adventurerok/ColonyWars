@@ -20,6 +20,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -49,6 +50,10 @@ public class Team implements Listener, Messagable, LanguageLookup, SharedObjectA
         this.gameGroup = gameGroup;
 
         listeners.add(new TeamListener());
+    }
+
+    public void makeEntityRepresentTeam(Entity entity) {
+        gameGroup.getGame().makeEntityRepresentTeam(this, entity);
     }
 
     public Collection<Listener> getListeners() {

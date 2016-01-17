@@ -401,6 +401,10 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         return kits.get(kitName);
     }
 
+    public void makeEntityRepresentTeam(Team team, Entity entity) {
+        entity.setMetadata("team", new FixedMetadataValue(plugin, team.getName()));
+    }
+
     private class GameListener implements Listener {
 
         @EventHandler

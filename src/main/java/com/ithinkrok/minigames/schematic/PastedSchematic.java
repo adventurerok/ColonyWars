@@ -37,6 +37,7 @@ public class PastedSchematic implements SchematicPaster.BoundsChecker {
     private Location centerBlock;
     private BoundingBox bounds;
     private boolean finished;
+    private boolean removed;
     private int rotation;
 
     private GameMap map;
@@ -159,6 +160,12 @@ public class PastedSchematic implements SchematicPaster.BoundsChecker {
         if (buildTask != null && buildTask.getTaskState() == GameTask.TaskState.SCHEDULED) buildTask.cancel();
 
         holograms.forEach(HologramAPI::removeHologram);
+
+        removed = true;
+    }
+
+    public boolean isRemoved() {
+        return removed;
     }
 
     public void remove() {

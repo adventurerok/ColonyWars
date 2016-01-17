@@ -88,7 +88,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
     private String startMapName;
     private String startGameStateName;
 
-    public Game(Plugin plugin) {
+    public Game(MinigamesPlugin plugin) {
         this.plugin = plugin;
 
         persistence = new Persistence(plugin);

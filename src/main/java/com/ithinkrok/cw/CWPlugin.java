@@ -4,6 +4,7 @@ import com.ithinkrok.cw.command.CWCommand;
 import com.ithinkrok.cw.command.GameStateCommand;
 import com.ithinkrok.cw.command.ToggleMoneyMessageCommand;
 import com.ithinkrok.minigames.Game;
+import com.ithinkrok.minigames.MinigamesPlugin;
 import com.ithinkrok.minigames.command.GameCommandHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -12,7 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 /**
  * Created by paul on 31/12/15.
  */
-public class CWPlugin extends JavaPlugin {
+public class CWPlugin extends MinigamesPlugin {
 
     Game minigame;
     GameCommandHandler commandHandler;

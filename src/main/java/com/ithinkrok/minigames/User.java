@@ -799,6 +799,10 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         return entity.getVehicle();
     }
 
+    public LivingEntity getEntity() {
+        return entity;
+    }
+
     private class UserListener implements Listener {
 
         @EventHandler(priority = EventPriority.LOWEST)

@@ -33,6 +33,7 @@ import com.ithinkrok.minigames.util.InvisiblePlayerAttacker;
 import com.ithinkrok.minigames.util.io.*;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -666,6 +667,14 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
             User assist = attacked.getLastAttacker();
             if(assist == attacker) assist = null;
+
+            for(Entity e : attacked.getLocation().getWorld().getEntities()) {
+                if(!(e instanceof Creature)) continue;
+
+                Creature creature = (Creature) e;
+                if(creature.getTarget() == null || creature.getTarget() != attacked.getEntity()) continue;
+                creature.setTarget(null);
+            }
 
             attacked.getGameGroup().userEvent(new UserDeathEvent(attacked, event, attacker, assist));
         }

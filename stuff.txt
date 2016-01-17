@@ -1,6 +1,4 @@
 RECODE BUGS:
- Y spectators don't have player viewer
- Y Prevent dropping custom items
  - joining/leaving games in progress
  - teamchat command, transfer/share command, fix command
  - cannot buy fortress

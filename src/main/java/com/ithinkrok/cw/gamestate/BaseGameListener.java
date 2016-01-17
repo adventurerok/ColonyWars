@@ -316,37 +316,37 @@ public class BaseGameListener extends BaseGameStateListener {
     }
 
     public void checkVictory(GameGroup gameGroup, boolean checkShowdown) {
-//        int nonZombieUsersInGame = 0;
-//
-//        for (User user : gameGroup.getUsers()) {
-//            if (user.isInGame() && user.isPlayer()) ++nonZombieUsersInGame;
-//        }
-//
-//        if (nonZombieUsersInGame == 0) {
-//            gameGroup.changeGameState(aftermathGameState);
-//            return;
-//        }
-//
-//        Set<Team> teamsInGame = new HashSet<>();
-//
-//        for (User user : gameGroup.getUsers()) {
-//            if (!user.isInGame()) continue;
-//
-//            teamsInGame.add(user.getTeam());
-//        }
-//
-//        if (teamsInGame.size() > 1) {
-//            if (!checkShowdown) return;
-//
-//            checkShowdownStart(gameGroup, teamsInGame.size(), nonZombieUsersInGame);
-//            return;
-//        }
-//
-//        Team winner = teamsInGame.iterator().next();
-//        gameGroup.sendLocale(teamWinLocale, winner.getFormattedName());
-//
-//        //TODO add game win and save stats for winning players
-//        gameGroup.changeGameState(aftermathGameState);
+        int nonZombieUsersInGame = 0;
+
+        for (User user : gameGroup.getUsers()) {
+            if (user.isInGame() && user.isPlayer()) ++nonZombieUsersInGame;
+        }
+
+        if (nonZombieUsersInGame == 0) {
+            gameGroup.changeGameState(aftermathGameState);
+            return;
+        }
+
+        Set<Team> teamsInGame = new HashSet<>();
+
+        for (User user : gameGroup.getUsers()) {
+            if (!user.isInGame()) continue;
+
+            teamsInGame.add(user.getTeam());
+        }
+
+        if (teamsInGame.size() > 1) {
+            if (!checkShowdown) return;
+
+            checkShowdownStart(gameGroup, teamsInGame.size(), nonZombieUsersInGame);
+            return;
+        }
+
+        Team winner = teamsInGame.iterator().next();
+        gameGroup.sendLocale(teamWinLocale, winner.getFormattedName());
+
+        //TODO add game win and save stats for winning players
+        gameGroup.changeGameState(aftermathGameState);
     }
 
     protected void checkShowdownStart(GameGroup gameGroup, int teamsInGame, int nonZombieUsersInGame) {

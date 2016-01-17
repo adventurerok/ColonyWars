@@ -102,12 +102,13 @@ public class GameListener extends BaseGameListener {
 
         user.resetUserStats(true);
 
+        //TODO give handbook (will be done from configs)
         customItemGiver.giveToUser(user);
+
+        user.giveColoredArmor(user.getTeam().getArmorColor(), true);
 
         user.setScoreboardHandler(new CWScoreboardHandler(user));
         user.updateScoreboard();
-
-        //TODO give handbook (will be done from configs)
 
         user.sendLocale(teamInfoLocale, user.getTeamIdentifier().getFormattedName());
         user.sendLocale(kitInfoLocale, user.getKit().getFormattedName());

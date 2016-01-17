@@ -1,6 +1,7 @@
 package com.ithinkrok.cw.gamestate;
 
 import com.ithinkrok.cw.metadata.CWTeamStats;
+import com.ithinkrok.cw.metadata.PotionStrengthModifier;
 import com.ithinkrok.cw.scoreboard.CWScoreboardHandler;
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.Kit;
@@ -10,18 +11,23 @@ import com.ithinkrok.minigames.event.game.CountdownFinishedEvent;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.map.MapBlockBurnEvent;
 import com.ithinkrok.minigames.event.map.MapBlockGrowEvent;
+import com.ithinkrok.minigames.event.map.MapPotionSplashEvent;
 import com.ithinkrok.minigames.event.user.game.UserChangeTeamEvent;
 import com.ithinkrok.minigames.listener.GiveCustomItemsOnJoin;
 import com.ithinkrok.minigames.metadata.MapVote;
 import com.ithinkrok.minigames.team.Team;
+import com.ithinkrok.minigames.util.EntityUtils;
 import org.bukkit.Color;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by paul on 05/01/16.
@@ -83,20 +89,7 @@ public class GameListener extends BaseGameListener {
         event.getGameGroup().changeGameState(showdownGameState);
     }
 
-    @EventHandler
-    public void onBlockBurn(MapBlockBurnEvent event) {
-        event.setCancelled(true);
-    }
 
-    @EventHandler
-    public void onBlockSpread(MapBlockGrowEvent event) {
-        if(!event.isSpreadEvent()) return;
-        if(event.getNewState().getType() != Material.FIRE) return;
-
-        event.getSpreadSource().setType(Material.AIR);
-
-        event.setCancelled(true);
-    }
 
     private void setupUser(User user) {
         user.decloak();

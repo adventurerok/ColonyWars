@@ -4,22 +4,18 @@ import com.ithinkrok.cw.Building;
 import com.ithinkrok.cw.event.ShopOpenEvent;
 import com.ithinkrok.cw.metadata.BuildingController;
 import com.ithinkrok.cw.metadata.CWTeamStats;
+import com.ithinkrok.cw.metadata.PotionStrengthModifier;
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
-import com.ithinkrok.minigames.event.map.MapBlockBreakNaturallyEvent;
-import com.ithinkrok.minigames.event.map.MapItemSpawnEvent;
+import com.ithinkrok.minigames.event.map.*;
 import com.ithinkrok.minigames.event.user.state.UserDeathEvent;
 import com.ithinkrok.minigames.event.user.world.*;
 import com.ithinkrok.minigames.inventory.ClickableInventory;
-import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.metadata.Money;
 import com.ithinkrok.minigames.schematic.Facing;
 import com.ithinkrok.minigames.team.Team;
-import com.ithinkrok.minigames.util.ConfigUtils;
-import com.ithinkrok.minigames.util.InventoryUtils;
-import com.ithinkrok.minigames.util.SoundEffect;
-import com.ithinkrok.minigames.util.TreeFeller;
+import com.ithinkrok.minigames.util.*;
 import com.ithinkrok.minigames.util.math.ExpressionCalculator;
 import com.ithinkrok.minigames.util.math.SingleValueVariables;
 import org.bukkit.ChatColor;
@@ -27,8 +23,10 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -37,6 +35,15 @@ import java.util.stream.Collectors;
  * Created by paul on 16/01/16.
  */
 public class BaseGameListener extends BaseGameStateListener {
+
+    private static Map<PotionEffectType, Boolean> GOOD_POTIONS = new HashMap<>();
+
+    static {
+        GOOD_POTIONS.put(PotionEffectType.HEAL, true);
+        GOOD_POTIONS.put(PotionEffectType.HARM, false);
+        GOOD_POTIONS.put(PotionEffectType.INCREASE_DAMAGE, true);
+
+    }
 
     protected String showdownCountdownName;
     protected String showdownGameState;
@@ -239,6 +246,44 @@ public class BaseGameListener extends BaseGameStateListener {
 
         checkVictory(died.getGameGroup(), true);
         //TODO update spectator inventories
+    }
+
+    @EventHandler
+    public void onBlockBurn(MapBlockBurnEvent event) {
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onBlockSpread(MapBlockGrowEvent event) {
+        if(!event.isSpreadEvent()) return;
+        if(event.getNewState().getType() != Material.FIRE) return;
+
+        event.getSpreadSource().setType(Material.AIR);
+
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onPotionSplash(MapPotionSplashEvent event) {
+        if(!event.hasThrowerUser()) return;
+
+        PotionEffectType type = event.getPotion().getEffects().iterator().next().getType();
+        boolean good = GOOD_POTIONS.get(type);
+
+        for(LivingEntity entity : event.getAffected()) {
+            User rep = EntityUtils.getRepresentingUser(event.getThrowerUser(), entity);
+
+            if(rep == null) continue;
+
+            if(Objects.equals(event.getThrowerUser().getTeamIdentifier(), rep.getTeamIdentifier()) != good) {
+                event.setIntensity(entity, 0);
+            } else if(type == PotionEffectType.HEAL) {
+                PotionStrengthModifier psm = PotionStrengthModifier.getOrCreate(rep);
+
+                event.setIntensity(entity, event.getIntensity(entity) * psm.getPotionStrengthModifier());
+                psm.onPotionUsed();
+            }
+        }
     }
 
     private void sendDeathMessage(GameGroup gameGroup, String locale, String ending, Object... args) {

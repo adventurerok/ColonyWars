@@ -273,7 +273,7 @@ public class BaseGameListener extends BaseGameStateListener {
 
     @EventHandler
     public void onUserDamaged(UserDamagedEvent event) {
-        if(event.getUser().isInGame()) event.setCancelled(true);
+        if(!event.getUser().isInGame()) event.setCancelled(true);
     }
 
     @EventHandler

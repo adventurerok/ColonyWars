@@ -213,7 +213,15 @@ public class CWTeamStats extends Metadata {
 
         for(StatsHolder statsHolder : statsHolders) {
             statsHolder.addGameLoss();
+            statsHolder.saveStats();
         }
         statsHolders.clear();
+    }
+
+    public void addGameWin() {
+        for(StatsHolder statsHolder : statsHolders) {
+            statsHolder.addGameWin();
+            statsHolder.saveStats();
+        }
     }
 }

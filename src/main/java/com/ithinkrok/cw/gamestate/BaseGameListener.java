@@ -5,6 +5,7 @@ import com.ithinkrok.cw.event.ShopOpenEvent;
 import com.ithinkrok.cw.metadata.BuildingController;
 import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.cw.metadata.PotionStrengthModifier;
+import com.ithinkrok.cw.metadata.StatsHolder;
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
@@ -211,7 +212,17 @@ public class BaseGameListener extends BaseGameStateListener {
         //TODO remove entity targets on the dead player
 
         displayDeathMessage(event);
-        //TODO kill stats
+
+        User killer = event.getKillerUser();
+        if(killer == null) killer = event.getAssistUser();
+
+        if(killer != null) {
+            StatsHolder killerStats = StatsHolder.getOrCreate(killer);
+            killerStats.addKill();
+        }
+
+        StatsHolder deathStats = StatsHolder.getOrCreate(died);
+        deathStats.addDeath();
 
         Team team = died.getTeam();
         CWTeamStats teamStats = CWTeamStats.getOrCreate(team);
@@ -392,7 +403,9 @@ public class BaseGameListener extends BaseGameStateListener {
         Team winner = teamsInGame.iterator().next();
         gameGroup.sendLocale(teamWinLocale, winner.getFormattedName());
 
-        //TODO add game win and save stats for winning players
+        CWTeamStats winnerStats = CWTeamStats.getOrCreate(winner);
+        winnerStats.addGameWin();
+
         gameGroup.changeGameState(aftermathGameState);
     }
 

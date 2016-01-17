@@ -1,6 +1,7 @@
 package com.ithinkrok.cw.scoreboard;
 
 import com.ithinkrok.cw.metadata.CWTeamStats;
+import com.ithinkrok.cw.metadata.StatsHolder;
 import com.ithinkrok.minigames.team.Team;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.metadata.Money;
@@ -25,6 +26,8 @@ public class CWScoreboardHandler implements ScoreboardHandler {
     private String revivalRateDisplay;
 
     private List<String> oldBuildingNows = new ArrayList<>();
+
+    private int oldMoney = 0;
 
     public CWScoreboardHandler(User user) {
         ConfigurationSection config = user.getSharedObject("colony_wars_scoreboard");
@@ -53,7 +56,16 @@ public class CWScoreboardHandler implements ScoreboardHandler {
         Team team = user.getTeam();
         CWTeamStats buildingStats = CWTeamStats.getOrCreate(team);
 
-        scoreboard.setScore(userBalanceDisplay, Money.getOrCreate(user).getMoney());
+        int userMoney = Money.getOrCreate(user).getMoney();
+        if(userMoney > oldMoney) {
+
+            //A dirty hack that relies on updateScoreboard() being called every time the user's money amount changes
+            StatsHolder statsHolder = StatsHolder.getOrCreate(user);
+            statsHolder.addTotalMoney(userMoney - oldMoney);
+        }
+        oldMoney = userMoney;
+
+        scoreboard.setScore(userBalanceDisplay, userMoney);
         scoreboard.setScore(teamBalanceDisplay, Money.getOrCreate(team).getMoney());
         scoreboard.setScore(buildingNowCountDisplay, buildingStats.getTotalBuildingNowCount());
 

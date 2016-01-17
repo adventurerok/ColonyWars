@@ -2,6 +2,8 @@ package com.ithinkrok.cw.gamestate;
 
 import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.cw.metadata.StatsHolder;
+import com.ithinkrok.minigames.User;
+import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.map.MapCreatureSpawnEvent;
 import com.ithinkrok.minigames.event.map.MapItemSpawnEvent;
 import com.ithinkrok.minigames.event.user.game.UserChangeKitEvent;
@@ -62,5 +64,13 @@ public class BaseGameStateListener implements Listener {
 
         StatsHolder statsHolder = StatsHolder.getOrCreate(event.getUser());
         statsHolder.setLastKit(event.getNewKit().getName());
+    }
+
+    @EventHandler
+    public void onGameStateChange(GameStateChangedEvent event) {
+        for(User user : event.getGameGroup().getUsers()) {
+            StatsHolder statsHolder = StatsHolder.getOrCreate(user);
+            statsHolder.saveStats();
+        }
     }
 }

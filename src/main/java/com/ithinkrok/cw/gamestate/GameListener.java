@@ -2,6 +2,7 @@ package com.ithinkrok.cw.gamestate;
 
 import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.cw.metadata.PotionStrengthModifier;
+import com.ithinkrok.cw.metadata.StatsHolder;
 import com.ithinkrok.cw.scoreboard.CWScoreboardHandler;
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.Kit;
@@ -71,6 +72,8 @@ public class GameListener extends BaseGameListener {
 
     @EventHandler
     public void onGameStateChange(GameStateChangedEvent event) {
+        super.onGameStateChange(event);
+
         if (!event.getNewGameState().isGameStateListener(this)) return;
         if(event.getOldGameState() != null && event.getOldGameState().getName().equals(showdownGameState)) return;
 
@@ -126,7 +129,8 @@ public class GameListener extends BaseGameListener {
         user.sendLocale(teamInfoLocale, user.getTeamIdentifier().getFormattedName());
         user.sendLocale(kitInfoLocale, user.getKit().getFormattedName());
 
-        //TODO add a game to stats
+        StatsHolder statsHolder = StatsHolder.getOrCreate(user);
+        statsHolder.addGame();
     }
 
     private Kit assignUserKit(GameGroup gameGroup) {

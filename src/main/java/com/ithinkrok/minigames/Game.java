@@ -1,9 +1,6 @@
 package com.ithinkrok.minigames;
 
-import com.ithinkrok.minigames.event.map.MapBlockBreakNaturallyEvent;
-import com.ithinkrok.minigames.event.map.MapCreatureSpawnEvent;
-import com.ithinkrok.minigames.event.map.MapItemSpawnEvent;
-import com.ithinkrok.minigames.event.map.MapPotionSplashEvent;
+import com.ithinkrok.minigames.event.map.*;
 import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.event.user.game.UserQuitEvent;
 import com.ithinkrok.minigames.event.user.inventory.UserInventoryClickEvent;
@@ -37,9 +34,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockExpEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -489,6 +484,24 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
                 throw new RuntimeException("Map still registered to old GameGroup");
 
             gameGroup.gameEvent(new MapBlockBreakNaturallyEvent(gameGroup, map, event));
+        }
+
+        @EventHandler
+        public void eventBlockBurn(BlockBurnEvent event) {
+            String mapName = event.getBlock().getWorld().getName();
+            GameGroup gameGroup = mapToGameGroup.get(mapName);
+            GameMap map = gameGroup.getCurrentMap();
+
+            gameGroup.gameEvent(new MapBlockBurnEvent(gameGroup, map, event));
+        }
+
+        @EventHandler
+        public void eventBlockGrow(BlockGrowEvent event) {
+            String mapName = event.getBlock().getWorld().getName();
+            GameGroup gameGroup = mapToGameGroup.get(mapName);
+            GameMap map = gameGroup.getCurrentMap();
+
+            gameGroup.gameEvent(new MapBlockGrowEvent(gameGroup, map, event));
         }
 
         @EventHandler

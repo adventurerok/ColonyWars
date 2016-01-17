@@ -27,8 +27,6 @@ public class CWTeamStats extends Metadata {
 
     private final Team team;
 
-    private ArrayList<StatsHolder> statsHolders = new ArrayList<>();
-
     private HashMap<String, Integer> buildingCounts = new HashMap<>();
     private HashMap<String, Integer> buildingNowCounts = new HashMap<>();
     private HashMap<String, Boolean> hadBuildings = new HashMap<>();
@@ -44,8 +42,6 @@ public class CWTeamStats extends Metadata {
 
     private String respawnChanceLocale;
     private String eliminatedLocale;
-
-    private String lobbyGameState;
 
     public Location getBaseLocation() {
         return baseLocation;
@@ -73,8 +69,6 @@ public class CWTeamStats extends Metadata {
 
         respawnChanceLocale = metadata.getString("respawn_chance_locale", "respawn.chance");
         eliminatedLocale = metadata.getString("team_eliminated_locale", "team.eliminated");
-
-        lobbyGameState = metadata.getString("lobby_gamestate", "lobby");
     }
 
     public Location getSpawnLocation() {
@@ -97,27 +91,7 @@ public class CWTeamStats extends Metadata {
         return integer == null ? 0 : integer;
     }
 
-    public void addUser(User user) {
-        StatsHolder statsHolder = StatsHolder.getOrCreate(user);
 
-        if(statsHolders.contains(statsHolder)) return;
-        statsHolders.add(statsHolder);
-    }
-
-    public void removeUser(User user) {
-        if(!team.getGameGroup().getCurrentGameState().getName().equals(lobbyGameState)) return;
-        StatsHolder statsHolder = StatsHolder.getOrCreate(user);
-
-        statsHolders.remove(statsHolder);
-    }
-
-    public StatsHolder getStatsHolder(User user) {
-        for(StatsHolder holder : statsHolders) {
-            if(holder.getUniqueId().equals(user.getUuid())) return holder;
-        }
-
-        return null;
-    }
 
     public void buildingStarted(Building building) {
         buildingsConstructingNow += 1;
@@ -211,17 +185,8 @@ public class CWTeamStats extends Metadata {
             baseLocation = null;
         }
 
-        for(StatsHolder statsHolder : statsHolders) {
-            statsHolder.addGameLoss();
-            statsHolder.saveStats();
-        }
-        statsHolders.clear();
+        TeamStatsHolderGroup.getOrCreate(team).addGameWin();
     }
 
-    public void addGameWin() {
-        for(StatsHolder statsHolder : statsHolders) {
-            statsHolder.addGameWin();
-            statsHolder.saveStats();
-        }
-    }
+
 }

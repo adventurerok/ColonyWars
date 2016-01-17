@@ -2,6 +2,7 @@ package com.ithinkrok.cw.gamestate;
 
 import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.cw.metadata.StatsHolder;
+import com.ithinkrok.cw.metadata.TeamStatsHolderGroup;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.map.MapCreatureSpawnEvent;
@@ -47,12 +48,12 @@ public class BaseGameStateListener implements Listener {
     @EventHandler
     public void onUserChangeTeam(UserChangeTeamEvent event) {
         if(event.getOldTeam() != null) {
-            CWTeamStats oldStats = CWTeamStats.getOrCreate(event.getOldTeam());
+            TeamStatsHolderGroup oldStats = TeamStatsHolderGroup.getOrCreate(event.getOldTeam());
             oldStats.removeUser(event.getUser());
         }
 
         if(event.getNewTeam() != null) {
-            CWTeamStats newStats = CWTeamStats.getOrCreate(event.getNewTeam());
+            TeamStatsHolderGroup newStats = TeamStatsHolderGroup.getOrCreate(event.getNewTeam());
             newStats.addUser(event.getUser());
 
             StatsHolder statsHolder = StatsHolder.getOrCreate(event.getUser());

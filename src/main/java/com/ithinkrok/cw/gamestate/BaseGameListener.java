@@ -2,10 +2,7 @@ package com.ithinkrok.cw.gamestate;
 
 import com.ithinkrok.cw.Building;
 import com.ithinkrok.cw.event.ShopOpenEvent;
-import com.ithinkrok.cw.metadata.BuildingController;
-import com.ithinkrok.cw.metadata.CWTeamStats;
-import com.ithinkrok.cw.metadata.PotionStrengthModifier;
-import com.ithinkrok.cw.metadata.StatsHolder;
+import com.ithinkrok.cw.metadata.*;
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
@@ -403,7 +400,7 @@ public class BaseGameListener extends BaseGameStateListener {
         Team winner = teamsInGame.iterator().next();
         gameGroup.sendLocale(teamWinLocale, winner.getFormattedName());
 
-        CWTeamStats winnerStats = CWTeamStats.getOrCreate(winner);
+        TeamStatsHolderGroup winnerStats = TeamStatsHolderGroup.getOrCreate(winner);
         winnerStats.addGameWin();
 
         gameGroup.changeGameState(aftermathGameState);

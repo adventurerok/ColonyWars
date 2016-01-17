@@ -9,6 +9,7 @@ import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.map.*;
+import com.ithinkrok.minigames.event.user.state.UserDamagedEvent;
 import com.ithinkrok.minigames.event.user.state.UserDeathEvent;
 import com.ithinkrok.minigames.event.user.world.*;
 import com.ithinkrok.minigames.inventory.ClickableInventory;
@@ -268,6 +269,11 @@ public class BaseGameListener extends BaseGameStateListener {
         }
 
         checkVictory(died.getGameGroup(), true);
+    }
+
+    @EventHandler
+    public void onUserDamaged(UserDamagedEvent event) {
+        if(event.getUser().isInGame()) event.setCancelled(true);
     }
 
     @EventHandler

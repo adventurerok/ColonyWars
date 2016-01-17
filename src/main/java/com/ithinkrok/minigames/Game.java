@@ -1,5 +1,6 @@
 package com.ithinkrok.minigames;
 
+import com.comphenix.protocol.ProtocolLibrary;
 import com.ithinkrok.minigames.event.map.*;
 import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.event.user.game.UserQuitEvent;
@@ -25,6 +26,7 @@ import com.ithinkrok.minigames.team.Team;
 import com.ithinkrok.minigames.team.TeamIdentifier;
 import com.ithinkrok.minigames.user.UserResolver;
 import com.ithinkrok.minigames.util.EntityUtils;
+import com.ithinkrok.minigames.util.InvisiblePlayerAttacker;
 import com.ithinkrok.minigames.util.io.*;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
@@ -85,6 +87,8 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
     public Game(Plugin plugin) {
         this.plugin = plugin;
+
+        InvisiblePlayerAttacker.enablePlayerAttacker(this, plugin, ProtocolLibrary.getProtocolManager());
 
         unloadDefaultWorlds();
     }

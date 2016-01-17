@@ -2,6 +2,8 @@ name: "ColonyWars"
 version: "${project.version}"
 main: "com.ithinkrok.cw.CWPlugin"
 author: "ithinkrok"
+depend: ["HologramAPI", "ProtocolLib"]
+softdepend: ["DisguiseCraft"]
 database: true
 
 permissions:

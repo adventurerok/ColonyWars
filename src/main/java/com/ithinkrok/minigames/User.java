@@ -629,12 +629,8 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
 
     public void giveColoredArmor(Color color, boolean unbreakable) {
         PlayerInventory inv = getInventory();
-        if (color == null) {
-            inv.setHelmet(null);
-            inv.setChestplate(null);
-            inv.setLeggings(null);
-            inv.setBoots(null);
-        } else {
+        if (color == null)  clearArmor();
+        else {
             inv.setHelmet(setUnbreakable(createLeatherArmorItem(Material.LEATHER_HELMET, color), unbreakable));
             inv.setChestplate(setUnbreakable(createLeatherArmorItem(Material.LEATHER_CHESTPLATE, color), unbreakable));
             inv.setLeggings(setUnbreakable(createLeatherArmorItem(Material.LEATHER_LEGGINGS, color), unbreakable));

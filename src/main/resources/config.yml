@@ -575,5 +575,12 @@ custom_items:
     listeners:
       invisible_user_toggle:
         class: "com.ithinkrok.cw.item.InvisibleUserToggle"
+  spectate_chooser:
+    display_name_locale: "spectate_chooser.name"
+    material: "SKULL_ITEM"
+    durability: 3
+    listeners:
+      spectate_chooser:
+        class: "com.ithinkrok.cw.item.SpectateChooser"
 
 listeners: {}

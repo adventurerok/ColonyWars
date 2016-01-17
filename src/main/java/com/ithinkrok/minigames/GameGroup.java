@@ -426,7 +426,12 @@ public class GameGroup
 
     @Override
     public <B extends Metadata> void setMetadata(B metadata) {
-        metadataMap.put(metadata.getMetadataClass(), metadata);
+        Metadata oldMetadata = metadataMap.put(metadata.getMetadataClass(), metadata);
+
+        if(oldMetadata != null && oldMetadata != metadata) {
+            oldMetadata.cancelAllTasks();
+            oldMetadata.removed();
+        }
     }
 
     @Override
@@ -523,7 +528,11 @@ public class GameGroup
             while (iterator.hasNext()) {
                 Metadata metadata = iterator.next();
 
-                if (metadata.removeOnGameStateChange(event)) iterator.remove();
+                if (metadata.removeOnGameStateChange(event)){
+                    metadata.cancelAllTasks();
+                    metadata.removed();
+                    iterator.remove();
+                }
             }
         }
 
@@ -534,7 +543,11 @@ public class GameGroup
             while (iterator.hasNext()) {
                 Metadata metadata = iterator.next();
 
-                if (metadata.removeOnMapChange(event)) iterator.remove();
+                if (metadata.removeOnMapChange(event)){
+                    metadata.cancelAllTasks();
+                    metadata.removed();
+                    iterator.remove();
+                }
             }
         }
     }

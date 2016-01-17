@@ -365,7 +365,12 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
 
     @Override
     public <B extends UserMetadata> void setMetadata(B metadata) {
-        metadataMap.put(metadata.getMetadataClass(), metadata);
+        UserMetadata oldMetadata = metadataMap.put(metadata.getMetadataClass(), metadata);
+
+        if(oldMetadata != null && oldMetadata != metadata) {
+            oldMetadata.cancelAllTasks();
+            oldMetadata.removed();
+        }
     }
 
     @Override
@@ -735,7 +740,11 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
             while (iterator.hasNext()) {
                 UserMetadata metadata = iterator.next();
 
-                if (metadata.removeOnGameStateChange(event)) iterator.remove();
+                if (metadata.removeOnGameStateChange(event)){
+                    metadata.cancelAllTasks();
+                    metadata.removed();
+                    iterator.remove();
+                }
             }
         }
 
@@ -746,7 +755,11 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
             while (iterator.hasNext()) {
                 UserMetadata metadata = iterator.next();
 
-                if (metadata.removeOnMapChange(event)) iterator.remove();
+                if (metadata.removeOnMapChange(event)){
+                    metadata.cancelAllTasks();
+                    metadata.removed();
+                    iterator.remove();
+                }
             }
         }
 

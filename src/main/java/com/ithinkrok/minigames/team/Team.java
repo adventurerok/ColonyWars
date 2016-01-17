@@ -153,7 +153,12 @@ public class Team implements Listener, Messagable, LanguageLookup, SharedObjectA
 
     @Override
     public <B extends Metadata> void setMetadata(B metadata) {
-        metadataMap.put(metadata.getMetadataClass(), metadata);
+        Metadata oldMetadata = metadataMap.put(metadata.getMetadataClass(), metadata);
+
+        if(oldMetadata != null && oldMetadata != metadata) {
+            oldMetadata.cancelAllTasks();
+            oldMetadata.removed();
+        }
     }
 
     @Override
@@ -216,6 +221,8 @@ public class Team implements Listener, Messagable, LanguageLookup, SharedObjectA
                 Metadata metadata = iterator.next();
 
                 if (metadata.removeOnGameStateChange(event)){
+                    metadata.cancelAllTasks();
+                    metadata.removed();
                     iterator.remove();
                 }
             }
@@ -229,6 +236,8 @@ public class Team implements Listener, Messagable, LanguageLookup, SharedObjectA
                 Metadata metadata = iterator.next();
 
                 if (metadata.removeOnMapChange(event)){
+                    metadata.cancelAllTasks();
+                    metadata.removed();
                     iterator.remove();
                 }
             }

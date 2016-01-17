@@ -18,6 +18,7 @@ import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by paul on 17/01/16.
@@ -58,7 +59,8 @@ public class CannonTowerHandler {
             for (Entity e : building.getCenterBlock().getWorld()
                     .getNearbyEntities(building.getCenterBlock(), range, range, range)) {
                 User rep = EntityUtils.getRepresentingUser(gameGroup, e);
-                if (rep == null) continue;
+                if (rep == null || !rep.isInGame() ||
+                        Objects.equals(rep.getTeamIdentifier(), building.getTeamIdentifier())) continue;
 
                 fire = true;
                 break;
@@ -93,10 +95,10 @@ public class CannonTowerHandler {
             Entity entity;
             Vector velocity;
 
-            if(isFire){
+            if (isFire) {
                 velocity = new Vector(dir.getModX(), dir.getModY() - 0.05, dir.getModZ());
                 entity = from.getWorld().spawnEntity(from, EntityType.SMALL_FIREBALL);
-                ((SmallFireball)entity).setDirection(velocity);
+                ((SmallFireball) entity).setDirection(velocity);
             } else {
                 velocity = new Vector(dir.getModX(), dir.getModY() + 0.1, dir.getModZ());
                 entity = from.getWorld().spawnEntity(from, EntityType.ARROW);

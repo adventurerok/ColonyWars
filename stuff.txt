@@ -1,10 +1,11 @@
 RECODE BUGS:
  - joining/leaving games in progress
  - teamchat command, transfer/share command, fix command
- - cannot buy fortress
+ - cannon tower fires when allies are near only
 
 
 LOW PRIORITY / INVESTIGATE:
  - Prevent fire spread
  - (CANNON TOWER) adventurerok burned to death while fighting adventurerok
  - Destroying a building while it is built does not decrement building now counter
+ - eating flicker glitch

@@ -29,6 +29,7 @@ public class Upgradable extends Buyable {
 
     @Override
     public void configure(ConfigurationSection config) {
+        super.configure(config);
         upgradeName = config.getString("upgrade_name");
         upgradeDisplayLang = config.getString("upgrade_display_locale");
 

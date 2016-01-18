@@ -108,7 +108,7 @@ kits:
                     upgrade_name: "cloak"
                     upgrade_display_locale: "cloak.upgrade"
                     max_level: 2
-                    upgrade_cost: "3150+250*regen"
+                    upgrade_cost: "1100+250*cloak"
                     upgrade_item: "cloak"
   peasant:
     listeners:
@@ -652,7 +652,7 @@ custom_items:
     right_timeout:
       ability: "cloaking"
       timer: "array(cloak, 10, 15, 25)"
-      description_locale: "cloak.timout.desc"
+      description_locale: "cloak.timeout.desc"
       finished_locale: "cloak.timeout.finished"
     listeners:
       cloak:

@@ -92,7 +92,7 @@ public class CustomItem implements Identifiable, Listener {
     }
 
     private void configureTimeout(ConfigurationSection config) {
-        timeoutCalculator = new ExpressionCalculator("timer");
+        timeoutCalculator = new ExpressionCalculator(config.getString("timer"));
         timeoutAbility = config.getString("ability", UUID.randomUUID().toString());
         timeoutDescriptionLocale = config.getString("description_locale");
         timeoutFinishedLocale = config.getString("finished_locale");

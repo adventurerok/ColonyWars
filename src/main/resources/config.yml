@@ -57,14 +57,14 @@ kits:
                     upgrade_name: "sharpness"
                     upgrade_display_locale: "scout_sword.upgrade.sharpness"
                     max_level: 2
-                    upgrade_cost: "1100+250*sharpness"
+                    upgrade_cost: "1350+250*sharpness"
                     upgrade_item: "scout_sword"
                 - class: "com.ithinkrok.minigames.inventory.Upgradable"
                   config:
                     upgrade_name: "knockback"
                     upgrade_display_locale: "scout_sword.upgrade.knockback"
                     max_level: 2
-                    upgrade_cost: "1100+250*knockback"
+                    upgrade_cost: "1350+250*knockback"
                     upgrade_item: "scout_sword"
             Church:
               shop:
@@ -108,7 +108,7 @@ kits:
                     upgrade_name: "cloak"
                     upgrade_display_locale: "cloak.upgrade"
                     max_level: 2
-                    upgrade_cost: "1100+250*cloak"
+                    upgrade_cost: "1350+250*cloak"
                     upgrade_item: "cloak"
   peasant:
     listeners:
@@ -130,14 +130,14 @@ kits:
                     upgrade_name: "sharpness"
                     upgrade_display_locale: "scout_sword.upgrade.sharpness"
                     max_level: 2
-                    upgrade_cost: "1100+250*sharpness"
+                    upgrade_cost: "1350+250*sharpness"
                     upgrade_item: "scout_sword"
                 - class: "com.ithinkrok.minigames.inventory.Upgradable"
                   config:
                     upgrade_name: "knockback"
                     upgrade_display_locale: "scout_sword.upgrade.knockback"
                     max_level: 2
-                    upgrade_cost: "1100+250*knockback"
+                    upgrade_cost: "1350+250*knockback"
                     upgrade_item: "scout_sword"
 
 #TODO kits and KitChangeEvent

@@ -1,20 +1,3 @@
-#--LOBBY--
-lobby.chooser.map.name=Map Voter
-lobby.chooser.map.desc=Vote for a map
-lobby.chooser.class.name=Class Chooser
-lobby.chooser.team.name=Team Chooser
-team.name=%s Team
-team.none=None
-team.join.already-member=&cYou are already in the %s &cTeam
-team.join.full=&cThe %s &cTeam is full. Try another
-team.join.success=&6You will be in the %s &6Team in the next game!
-class.join.success=&6You will be a %s &6in the next game!
-lobby.chooser.team.desc=Choose your team
-lobby.chooser.class.desc=Choose your class
-lobby.info.choose-class=&2Source Code\: github.com/adventurerok/Colony-Wars
-lobby.info.map-info=&2Resource pack\: files.ithinkrok.com/CWRP.zip
-lobby.info.not-enough-players=&7Not enough Players Online for Game to start!
-
 #map-descriptions
 maps.canyon.desc=A canyon separates the four teams bases...
 maps.forest_hills.desc=Teams separated by forest and hills.
@@ -57,30 +40,11 @@ minigames.wool.given=&dYou now have the wool. Right click someone to transfer it
 minigames.parcour.winner=&3%s &6has completed a parkour run and will start next game with $%s extra!
 minigames.parcour.capped=&cYou have already earned all the money you can from this parkour run!
 
-#--COUNTDOWNS--
-countdowns.game.warning.minutes=&7Game starting in&6 %s &7Minutes..
-countdowns.game.warning.seconds=&7Game starting in&6 %s &7Seconds..
-countdowns.game.warning.final=&6%s&7!
-countdowns.showdown.warning.minutes=&6&lShowdown starts in %s minutes!
-countdowns.showdown.warning.seconds=&6&lShowdown starts in %s seconds!
-countdowns.showdown.warning.final=&6&lShowdown starts in %s seconds!
-countdowns.showdown.warning.now=&6&lShowdown starts NOW!
-countdowns.lobby.warning.minutes=&e&lGame ending in&c&l %s minutes!
-countdowns.lobby.warning.seconds=&e&lGame ending in&c&l %s seconds!
-countdowns.lobby.warning.final=&e&lGame ending in&c&l %s seconds!
-
 #--GENERAL--
 server.players.join=%s &7joined the server &8[&7%s&8/&7%s&8]
 server.players.quit=%s &7left the server &8[&7%s&8/&7%s&8]
 server.world-unload-failed=Failed to unload old world
 server.welcome=&aWelcome to Colony Wars!
-
-#--GAME--
-#spectators
-spectators.game.in-progress=&4There is already a game in progress!
-spectators.game.wait-next=&6You can play when the current game ends
-spectators.players.chose=&6Choose a player to spectate from your inventory
-spectators.player.name=&dSpectate %s
 
 #enderchest
 ender-chest.found=%s &6found an ender chest!
@@ -116,14 +80,11 @@ cooldowns.explosion.finished=&aThe explosion wand is ready to use again.
 cooldowns.bender.finished=&aThe earth bender is ready to use again.
 cooldowns.healing.finished=&aThe healing scroll is ready to use again.
 cooldowns.wolf.finished=&aThe wolf wand is ready to use again.
-cooldowns.regen.finished=&aYour regeneration ability has cooled down!
-cooldowns.cloak.finished=&aYour cloak ability has cooled down!
 cooldowns.fix.finished=&aYou can now use the fix command again!
 cooldowns.bat.finished=&aYou can now use bat flight again!
 
 cooldowns.default.wait=&cPlease wait for this ability to cool down!
 
-timeouts.cloaking.finished=&cYour cloak has run out!
 timeouts.batting.finished=&cYour bat ability has run out and must recharge!
 timeouts.default.wait=&cYou are already using this ability!
 
@@ -177,60 +138,7 @@ items.vampire-sword.desc=Regenerates health when damage is dealt.
 items.bat-wand.name=Bat Wand
 items.spectator-toggle.name=Show/Hide other spectators
 
-#lore
-lore.cooldown=Cooldown\: %s seconds
-lore.damage=Damage\: %s Hearts
-lore.fire=Fire Duration\: %s seconds
-lore.nausea=Nausea Duration\: %s seconds
-lore.wither=Wither Duration\: %s seconds
-
-lore.timeout.cloak=Invisibility\: %s seconds
 lore.timeout.bat=Bat Disguise\: %s seconds
-
-#money
-money.exchange.too-expensive=&cYou do not have that amount of money
-money.exchange.team-transfer=%s &3transferred &a$%s &eto your team's account!
-money.exchange.user-transfer=%s &3transferred &a$%s &eto %s&e's account!
-money.balance.team.new=&eYour Team's new Balance is\: &a$%s&e!
-money.balance.team.deduct=&c$%s &ewas deducted from your Team's Account!
-money.balance.team.add=&a$%s &ewas added to your Team's Account!
-money.balance.user.new=&eYour new Balance is: &a$%s!
-money.balance.user.deduct=&c$%s &ewas deducted from your Account!
-money.balance.user.add=&a$%s &ewas added to your Account!
-
-#purchase
-purchase.no-slots=&cYou do not have enough free slots in your inventory!
-purchase.no-money=&cYou do not have enough money to purchase this item!
-purchase.team.no-money=&cYour Team and you do not have enough money to purchase this item!
-purchase.cant=&cYou cannot buy this item!
-purchase.team-failed=&ePaid &c$%s &eusing your own money as your team did not have enough!
-
-#game
-game.player.killed=&6%s &6was killed by %s
-game.player.killed.explosion=&6%s &6was blown up by %s
-game.player.killed.shot=&6%s &6was shot by %s
-game.player.killed.fire=&6%s &6was burned to death by %s
-game.player.killed.lightning=&6%s &6was struck by lightning by %s
-
-game.player.died-fighting=&6%s &6died while fighting %s&6!
-game.player.died-fighting.falling=&6%s &6fell to their death while fighting %s&6!
-game.player.died-fighting.explosion=&6%s &6blew up while fighting %s&6!
-game.player.died-fighting.shot=&6%s &6got shot while fighting %s&6!
-# suppress inspection "UnusedProperty"
-game.player.died-fighting.drowned=&6%s &6drowned while fighting %s&6!
-game.player.died-fighting.fire=&6%s &6burned to death while fighting %s&6!
-game.player.died-fighting.lightning=&6%s &6was struck by lightning while fighting %s
-game.player.died-fighting.lava=&6%s &6melted while fighting %s
-
-game.player.death=&6%s &6died!
-game.player.death.falling=&6%s &6fell to their death!
-game.player.death.explosion=&6%s &6blew up!
-game.player.death.shot=&6%s &6was shot to death by a monster!
-# suppress inspection "UnusedProperty"
-game.player.death.drowned=&6%s &6drowned!
-game.player.death.fire=&6%s &6burned to death!
-game.player.death.lightning=&6%s &6was struck by lightning!
-game.player.death.lava=&6%s &6melted in lava!
 
 game.player.respawn=%s &6was revived by the gods!
 game.player.no-respawn=%s &6was not revived!
@@ -262,22 +170,9 @@ commands.test.money=%s added to both you and your team's balance
 commands.test.build-blocks=&eAdded %s %s build blocks to your inventory
 commands.test.base.no-team=&cYour team is null
 commands.test.base.loc=&eBase location\: %s
-commands.gamestate.changed=Changed gamestate to\: %s
-commands.gamestate.invalid=Invalid gamestate!
 commands.countdown.none=There is no countdown at the moment
 commands.shrink.done=Showdown radius decreased by %s
 commands.shrink.bad-size=Bad shrink amount %s
-commands.stats.disabled=Stats are disabled on this server
-commands.stats.none=&cYou have no stats for category %s
-commands.stats.category=&6&lStats for category &3&l%s&6&l\:
-commands.stats.kills=&6Kills\: &3%s
-commands.stats.deaths=&6Deaths\: &3%s
-commands.stats.kd=&6K/D\: &3%s
-commands.stats.wins=&6Wins\: &3%s
-commands.stats.losses=&6Losses\: &3%s
-commands.stats.games=&6Total games\: &3%s
-commands.stats.totalmoney=&6Total gold collected\: &3%s
-commands.stats.score=&6Score\: &3%s
 commands.leaderboard.category=&6&lLeaderboard for category &3&l%s&6&l\:
 commands.leaderboard.listing=&6%s&6: &3%s&6, with a score of &3%s&6!
 commands.leaderboard.bad-count=&cBad count integer.

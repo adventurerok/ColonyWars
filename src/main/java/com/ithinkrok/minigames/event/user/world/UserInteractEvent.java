@@ -2,6 +2,8 @@ package com.ithinkrok.minigames.event.user.world;
 
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.user.UserEvent;
+import com.ithinkrok.minigames.item.CustomItem;
+import com.ithinkrok.minigames.util.InventoryUtils;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
@@ -11,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Created by paul on 01/01/16.
  */
-public abstract class UserInteractEvent extends UserEvent implements Cancellable{
+public abstract class UserInteractEvent extends UserEvent implements Cancellable {
 
     private boolean cooldown = false;
 
@@ -19,24 +21,46 @@ public abstract class UserInteractEvent extends UserEvent implements Cancellable
         super(user);
     }
 
-    public abstract Block getClickedBlock();
-    public abstract Entity getClickedEntity();
-
     public abstract InteractType getInteractType();
 
     public abstract BlockFace getBlockFace();
-    public abstract ItemStack getItem();
 
     public boolean hasBlock() {
         return getClickedBlock() != null;
     }
 
+    public abstract Block getClickedBlock();
+
     public boolean hasEntity() {
         return getClickedEntity() != null;
     }
 
+    public abstract Entity getClickedEntity();
+
+    public boolean hasCustomItem() {
+        return getCustomItem() != null;
+    }
+
+    public CustomItem getCustomItem() {
+        if (!hasItem()) return null;
+
+        int identifier = InventoryUtils.getIdentifier(getItem());
+        if (identifier < 0) return null;
+        return getUserGameGroup().getCustomItem(identifier);
+    }
+
     public boolean hasItem() {
         return getItem() != null;
+    }
+
+    public abstract ItemStack getItem();
+
+    public boolean getStartCooldownAfterAction() {
+        return cooldown;
+    }
+
+    public void setStartCooldownAfterAction(boolean cooldown) {
+        this.cooldown = cooldown;
     }
 
     public enum InteractType {
@@ -60,13 +84,5 @@ public abstract class UserInteractEvent extends UserEvent implements Cancellable
          * If the interaction was physical (e.g. standing on a pressure plate)
          */
         PHYSICAL
-    }
-
-    public boolean getStartCooldownAfterAction() {
-        return cooldown;
-    }
-
-    public void setStartCooldownAfterAction(boolean cooldown) {
-        this.cooldown = cooldown;
     }
 }

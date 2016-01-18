@@ -43,6 +43,12 @@ regen_ability.name=Regen Ability
 regen_ability.upgrade=Regen Ability Upgrade %s
 regen_ability.cooldown=&aYour regeneration ability has cooled down!
 
+cloak.name=Cloak
+cloak.cooldown=&aYour cloak ability has cooled down!
+cloak.timeout.desc=Invisibility\: %s seconds
+cloak.timeout.finished=&cYour cloak has run out!
+cloak.update=Cloak Upgrade %s
+
 invisible_user_toggle.name=Invisible User Toggle
 
 spectate_chooser.name=Spectate Chooser

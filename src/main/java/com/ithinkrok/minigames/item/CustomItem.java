@@ -166,6 +166,18 @@ public class CustomItem implements Identifiable, Listener {
         }
     }
 
+    public double calculateRightClickCooldown(Variables variables) {
+        if(rightClickCooldown == null) return 0;
+
+        return rightClickCooldown.calculate(variables);
+    }
+
+    public double calculateRightClickTimeout(Variables variables) {
+        if(timeoutCalculator == null) return 0;
+
+        return timeoutCalculator.calculate(variables);
+    }
+
     private void startRightClickCooldown(User user) {
         if(rightClickCooldown == null) return;
 

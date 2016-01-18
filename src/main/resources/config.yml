@@ -589,5 +589,25 @@ custom_items:
     listeners:
       spectate_chooser:
         class: "com.ithinkrok.cw.item.SpectateChooser"
+  cloak:
+    display_name_locale: "cloak.name"
+    material: "IRON_LEGGINGS"
+    right_cooldown:
+      ability: "cloak"
+      timer: "25+cloak*10"
+      finished_locale: "cloak.cooldown"
+    right_timeout:
+      ability: "cloaking"
+      timer: "array(cloak, 10, 15, 25)"
+      description_locale: "cloak.timout.desc"
+      finished_locale: "cloak.timeout.finished"
+    listeners:
+      cloak:
+        class: "com.ithinkrok.cw.item.Cloak"
+        config:
+          cloak_effects:
+            SPEED: 2
+          decloak_effects:
+            SPEED: 1
 
 listeners: {}

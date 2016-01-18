@@ -114,8 +114,6 @@ upgrades.bat-flight.name=Bat Flight Upgrade %s
 unlock.bat-flight.message=The MageTower gives you the bat flight ability!
 
 #class-items
-items.peasant-axe.name=Peasant Axe
-items.darkness-sword.name=Darkness Sword
 items.explosion-wand.name=Explosion Wand
 items.flame-sword.name=Flame Sword
 items.ender-wand.name=Ender Wand
@@ -123,20 +121,10 @@ items.lightning-wand.name=Lightning Wand
 items.healing-scroll.name=Healing Scroll
 items.earth-bender.name=Earth Bender
 items.cross.name=Cross
-items.player-compass.name=Player Compass
-items.player-compass.locating=Locating closest player...
-items.player-compass.oriented=Oriented at\: %s
-items.player-compass.no-player=No One
-items.team-compass.name=Team Compass
-items.team-compass.oriented=Oriented at\: %s
-items.regen-ability.name=Regeneration Ability
 items.wolf-wand.name=Wolf Wand
-items.mighty-axe.name=The Mighty Axe
-items.cloak.name=Cloak
 items.vampire-sword.name=Vampire Sword
 items.vampire-sword.desc=Regenerates health when damage is dealt.
 items.bat-wand.name=Bat Wand
-items.spectator-toggle.name=Show/Hide other spectators
 
 lore.timeout.bat=Bat Disguise\: %s seconds
 

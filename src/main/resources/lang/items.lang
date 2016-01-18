@@ -23,8 +23,8 @@ darkness_sword.desc=The Dark Knights Weapon!
 
 general_sword.upgrade=Sword Upgrade %s
 
-mighty_axe.name=Mighty Axe
-mighty_axe.upgrade=Mighty Axe
+mighty_axe.name=The Mighty Axe
+mighty_axe.upgrade=The Mighty Axe
 
 team_compass.name=Team Compass
 team_compass.upgrade=Team Compass
@@ -49,7 +49,9 @@ cloak.timeout.desc=Invisibility\: %s seconds
 cloak.timeout.finished=&cYour cloak has run out!
 cloak.upgrade=Cloak Upgrade %s
 
-invisible_user_toggle.name=Invisible User Toggle
+peasant_axe.name=Peasant Axe
+
+invisible_user_toggle.name=Show/Hide other spectators
 
 spectate_chooser.name=Spectate Chooser
 spectate_chooser.title=Spectate Chooser

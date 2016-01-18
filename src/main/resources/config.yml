@@ -110,6 +110,35 @@ kits:
                     max_level: 2
                     upgrade_cost: "3150+250*regen"
                     upgrade_item: "cloak"
+  peasant:
+    listeners:
+      kit:
+        class: "com.ithinkrok.cw.kit.KitListener"
+        config:
+          buildings:
+            Base:
+              potion_effects:
+                SPEED: 1
+              custom_items:
+                - "peasant_axe"
+            Lumbermill:
+              custom_items:
+                - "scout_sword"
+              shop:
+                - class: "com.ithinkrok.minigames.inventory.Upgradable"
+                  config:
+                    upgrade_name: "sharpness"
+                    upgrade_display_locale: "scout_sword.upgrade.sharpness"
+                    max_level: 2
+                    upgrade_cost: "1100+250*sharpness"
+                    upgrade_item: "scout_sword"
+                - class: "com.ithinkrok.minigames.inventory.Upgradable"
+                  config:
+                    upgrade_name: "knockback"
+                    upgrade_display_locale: "scout_sword.upgrade.knockback"
+                    max_level: 2
+                    upgrade_cost: "1100+250*knockback"
+                    upgrade_item: "scout_sword"
 
 #TODO kits and KitChangeEvent
 
@@ -629,5 +658,10 @@ custom_items:
             SPEED: 2
           decloak_effects:
             SPEED: 1
+  peasant_axe:
+    display_name_locale: "peasant_axe.name"
+    material: "IRON_AXE"
+    enchantments:
+      DIG_SPEED: 2
 
 listeners: {}

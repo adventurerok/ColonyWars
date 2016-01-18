@@ -18,12 +18,12 @@ import org.bukkit.inventory.ItemStack;
  */
 public abstract class Buyable extends ClickableItem {
 
-    private static String teamNoMoneyLocale;
-    private static String userNoMoneyLocale;
-    private static String cannotBuyLocale;
-    private static String userPayTeamLocale;
-    private static String teamDescriptionLocale;
-    private static String userDescriptionLocale;
+    private String teamNoMoneyLocale;
+    private String userNoMoneyLocale;
+    private String cannotBuyLocale;
+    private String userPayTeamLocale;
+    private String teamDescriptionLocale;
+    private String userDescriptionLocale;
     private int cost;
     private boolean team;
 

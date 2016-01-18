@@ -648,6 +648,10 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
                 attacked.getGameGroup().userEvent(new UserDamagedEvent(attacked, event));
             }
 
+            if(attacked.isCloaked()) {
+                attacked.getLocation().getWorld().playSound(attacked.getLocation(), Sound.HURT_FLESH, 1.0f, 1.0f);
+            }
+
             if(attacked.getHeath() - event.getFinalDamage() > 0){
                 if(attacker != null) attacked.setLastAttacker(attacker);
                 return;

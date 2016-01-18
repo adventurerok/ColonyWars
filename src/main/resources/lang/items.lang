@@ -47,7 +47,7 @@ cloak.name=Cloak
 cloak.cooldown=&aYour cloak ability has cooled down!
 cloak.timeout.desc=Invisibility\: %s seconds
 cloak.timeout.finished=&cYour cloak has run out!
-cloak.update=Cloak Upgrade %s
+cloak.upgrade=Cloak Upgrade %s
 
 invisible_user_toggle.name=Invisible User Toggle
 

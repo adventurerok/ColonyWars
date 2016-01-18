@@ -495,6 +495,8 @@ game_states:
           choosable_kits:
             - "general"
             - "scout"
+            - "cloaker"
+            - "peasant"
           showdown_start:
             teams: 2
             players: 4
@@ -556,7 +558,9 @@ custom_items:
         config:
           choosable_kits:
             general: "DIAMOND_SWORD,1,0,General"
-            scout: "COMPASS,1, 0,Scout"
+            cloaker: "IRON_LEGGINGS,1,0,Cloaker"
+            scout: "COMPASS,1,0,Scout"
+            peasant: "IRON_AXE,1,0,Peasant"
   darkness_sword:
     display_name_locale: "darkness_sword.name"
     description_locale: "darkness_sword.desc"

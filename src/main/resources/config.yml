@@ -139,6 +139,26 @@ kits:
                     max_level: 2
                     upgrade_cost: "1350+250*knockback"
                     upgrade_item: "scout_sword"
+  dark_knight:
+    listeners:
+      kit:
+        class: "com.ithinkrok.cw.kit.KitListener"
+        config:
+          buildings:
+            Base:
+              potion_effects:
+                NIGHT_VISION: 1
+            MageTower:
+              custom_items:
+                - "darkness_sword"
+              shop:
+                - class: "com.ithinkrok.minigames.inventory.Upgradable"
+                  config:
+                    upgrade_name: "sword"
+                    upgrade_display_locale: "darkness_sword.upgrade"
+                    max_level: 2
+                    upgrade_cost: "1350+250*sword"
+                    upgrade_item: "darkness_sword"
 
 #TODO kits and KitChangeEvent
 
@@ -497,6 +517,7 @@ game_states:
             - "scout"
             - "cloaker"
             - "peasant"
+            - "dark_knight"
           showdown_start:
             teams: 2
             players: 4
@@ -561,10 +582,12 @@ custom_items:
             cloaker: "IRON_LEGGINGS,1,0,Cloaker"
             scout: "COMPASS,1,0,Scout"
             peasant: "IRON_AXE,1,0,Peasant"
+            dark_knight: "IRON_HELMET,1,0,Dark Knight"
   darkness_sword:
     display_name_locale: "darkness_sword.name"
     description_locale: "darkness_sword.desc"
     material: "IRON_HELMET"
+    upgradable: true
     listeners:
       weapon:
         events: ["attack"]
@@ -576,6 +599,11 @@ custom_items:
               duration: "array(sword, 3, 6, 10)"
             confusion:
               duration: "array(sword, 5, 7, 8)"
+  lightning_wand:
+    display_name_locale: "lightning_wand.name"
+    material: "DIAMOND_LEGGINGS"
+    upgradable: true
+    listeners:
       lightning:
         events: ["attack", "rightClick"]
         class: "com.ithinkrok.cw.item.LightningWand"
@@ -645,6 +673,7 @@ custom_items:
   cloak:
     display_name_locale: "cloak.name"
     material: "IRON_LEGGINGS"
+    upgradable: true
     right_cooldown:
       ability: "cloak"
       timer: "25+cloak*10"

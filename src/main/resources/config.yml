@@ -159,6 +159,43 @@ kits:
                     max_level: 2
                     upgrade_cost: "1350+250*sword"
                     upgrade_item: "darkness_sword"
+  mage:
+    listeners:
+      kit:
+        class: "com.ithinkrok.cw.kit.KitListener"
+        config:
+          buildings:
+            MageTower:
+              custom_items:
+                - "ender_wand"
+                - "lightning_wand"
+              items:
+                harming_potion: "POTION,16,16396"
+                health_potion: "POTION,16,8229"
+              shop:
+                - class: "com.ithinkrok.minigames.inventory.Upgradable"
+                  config:
+                    upgrade_name: "ender"
+                    upgrade_display_locale: "ender_wand.upgrade"
+                    max_level: 2
+                    upgrade_cost: "1350+250*ender"
+                    upgrade_item: "ender_wand"
+                - class: "com.ithinkrok.minigames.inventory.Upgradable"
+                  config:
+                    upgrade_name: "lightning"
+                    upgrade_display_locale: "lightning_wand.upgrade"
+                    max_level: 2
+                    upgrade_cost: "1350+250*lightning"
+                    upgrade_item: "lightning_wand"
+                - class: "com.ithinkrok.minigames.inventory.ItemBuyable"
+                  config:
+                    item: "POTION,32,16396"
+                    cost: 400
+                - class: "com.ithinkrok.minigames.inventory.ItemBuyable"
+                  config:
+                    item: "POTION,32,8229"
+                    cost: 1350
+
 
 #TODO kits and KitChangeEvent
 
@@ -518,6 +555,7 @@ game_states:
             - "cloaker"
             - "peasant"
             - "dark_knight"
+            - "mage"
           showdown_start:
             teams: 2
             players: 4
@@ -583,6 +621,7 @@ custom_items:
             scout: "COMPASS,1,0,Scout"
             peasant: "IRON_AXE,1,0,Peasant"
             dark_knight: "IRON_HELMET,1,0,Dark Knight"
+            mage: "DIAMOND_LEGGINGS,1,0,Mage"
   darkness_sword:
     display_name_locale: "darkness_sword.name"
     description_locale: "darkness_sword.desc"

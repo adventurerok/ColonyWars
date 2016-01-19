@@ -1,6 +1,7 @@
 RECODE BUGS:
  - teamchat command, transfer/share command, fix command, countdown command
  - join message
+ - redo events with new classes
 
 LOW PRIORITY / INVESTIGATE:
  - Prevent fire spread

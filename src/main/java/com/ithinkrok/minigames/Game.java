@@ -468,6 +468,8 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         public void eventPotionSplash(PotionSplashEvent event) {
             String mapName = event.getPotion().getWorld().getName();
             GameGroup gameGroup = mapToGameGroup.get(mapName);
+            if(gameGroup == null) return;
+
             GameMap map = gameGroup.getCurrentMap();
 
             ProjectileSource thrower = event.getPotion().getShooter();
@@ -500,6 +502,8 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
             String mapName = event.getBlock().getWorld().getName();
             GameGroup gameGroup = mapToGameGroup.get(mapName);
+            if(gameGroup == null) return;
+
             GameMap map = gameGroup.getCurrentMap();
             if (!map.getWorld().getName().equals(mapName))
                 throw new RuntimeException("Map still registered to old GameGroup");
@@ -511,6 +515,8 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         public void eventBlockBurn(BlockBurnEvent event) {
             String mapName = event.getBlock().getWorld().getName();
             GameGroup gameGroup = mapToGameGroup.get(mapName);
+            if(gameGroup == null) return;
+
             GameMap map = gameGroup.getCurrentMap();
 
             gameGroup.gameEvent(new MapBlockBurnEvent(gameGroup, map, event));
@@ -520,6 +526,8 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         public void eventBlockGrow(BlockGrowEvent event) {
             String mapName = event.getBlock().getWorld().getName();
             GameGroup gameGroup = mapToGameGroup.get(mapName);
+            if(gameGroup == null) return;
+
             GameMap map = gameGroup.getCurrentMap();
 
             gameGroup.gameEvent(new MapBlockGrowEvent(gameGroup, map, event));
@@ -527,17 +535,15 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
         @EventHandler
         public void eventBlockSpread(BlockSpreadEvent event) {
-            String mapName = event.getBlock().getWorld().getName();
-            GameGroup gameGroup = mapToGameGroup.get(mapName);
-            GameMap map = gameGroup.getCurrentMap();
-
-            gameGroup.gameEvent(new MapBlockGrowEvent(gameGroup, map, event));
+            eventBlockGrow(event);
         }
 
         @EventHandler
         public void eventItemSpawn(ItemSpawnEvent event) {
             String mapName = event.getEntity().getWorld().getName();
             GameGroup gameGroup = mapToGameGroup.get(mapName);
+            if(gameGroup == null) return;
+
             GameMap map = gameGroup.getCurrentMap();
             if (!map.getWorld().getName().equals(mapName))
                 throw new RuntimeException("Map still registered to old GameGroup");
@@ -557,6 +563,8 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         public void eventCreatureSpawn(CreatureSpawnEvent event) {
             String mapName = event.getEntity().getWorld().getName();
             GameGroup gameGroup = mapToGameGroup.get(mapName);
+            if(gameGroup == null) return;
+
             GameMap map = gameGroup.getCurrentMap();
             if (!map.getWorld().getName().equals(mapName))
                 throw new RuntimeException("Map still registered to old GameGroup");

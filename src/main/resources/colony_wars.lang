@@ -107,4 +107,4 @@ user.join.lobby=%s &7joined the lobby &8[&7%s&8/&7%s&8]
 user.quit.spectator=&d%s &dquit spectating the game
 user.join.spectator=&d%s &dstarted spectating the game
 user.quit.game=&4%s &4quit and became a zombie!
-user.join.game=&4%s &4rejoined! (are no longer a zombie)
+user.join.game=&4%s &4rejoined! (is no longer a zombie)

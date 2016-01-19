@@ -51,6 +51,9 @@ public class LobbyListener extends BaseGameStateListener {
         giveOnJoin = new GiveCustomItemsOnJoin.CustomItemGiver(config.getConfigurationSection("give_on_join"));
 
         joinLobbyLocaleStub = config.getString("join_lobby_locale_stub", "lobby.info");
+
+        quitLocale = config.getString("user_quit_lobby_locale", "user.quit.lobby");
+        joinLocale = config.getString("user_join_lobby_locale", "user.join.lobby");
     }
 
 

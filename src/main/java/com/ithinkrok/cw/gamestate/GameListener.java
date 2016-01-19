@@ -163,8 +163,4 @@ public class GameListener extends BaseGameListener {
         Color armorColor = event.getNewTeam() != null ? event.getNewTeam().getArmorColor() : null;
         event.getUser().giveColoredArmor(armorColor, true);
     }
-
-
-
-
 }

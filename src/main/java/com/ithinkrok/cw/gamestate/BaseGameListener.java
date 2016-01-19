@@ -21,6 +21,7 @@ import com.ithinkrok.minigames.team.Team;
 import com.ithinkrok.minigames.util.*;
 import com.ithinkrok.minigames.util.math.ExpressionCalculator;
 import com.ithinkrok.minigames.util.math.SingleValueVariables;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -93,6 +94,9 @@ public class BaseGameListener extends BaseGameStateListener {
     private String deathAssistLocale;
     private String deathNaturalLocale;
 
+    private String spectatorJoinLocale, spectatorQuitLocale;
+    private String inGameJoinLocale, inGameQuitLocale;
+
     private String spectatorJoinLocaleStub;
 
     private int buildingDestroyWait;
@@ -101,12 +105,13 @@ public class BaseGameListener extends BaseGameStateListener {
 
     @MinigamesEventHandler
     public void onUserChat(UserChatEvent event) {
-        if(event.getUser().isInGame()) {
+        if (event.getUser().isInGame()) {
             String kitName = event.getUser().getKitName();
             String teamColor = event.getUser().getTeamIdentifier().getChatColor().toString();
 
-            event.setFormat(teamColor + "<" + ChatColor.DARK_GRAY + "[" + ChatColor.GRAY +  kitName + ChatColor
-                    .DARK_GRAY + "] %s" + teamColor + "> " + ChatColor.WHITE + "%s");
+            event.setFormat(
+                    teamColor + "<" + ChatColor.DARK_GRAY + "[" + ChatColor.GRAY + kitName + ChatColor.DARK_GRAY +
+                            "] %s" + teamColor + "> " + ChatColor.WHITE + "%s");
         } else {
             event.setFormat(ChatColor.LIGHT_PURPLE + "<" + ChatColor.GRAY + "%s" + ChatColor.LIGHT_PURPLE + "> " +
                     ChatColor.WHITE + "%s");
@@ -160,6 +165,12 @@ public class BaseGameListener extends BaseGameStateListener {
         spectatorJoinLocaleStub = config.getString("spectator_join_locale_stub", "spectator.join");
 
         spectatorItems = new GiveCustomItemsOnJoin.CustomItemGiver(config.getConfigurationSection("spectator_items"));
+
+        inGameJoinLocale = config.getString("ingame_user_join_locale", "user.join.game");
+        inGameQuitLocale = config.getString("ingame_user_quit_locale", "user.quit.game");
+
+        spectatorJoinLocale = config.getString("spectator_join_locale", "user.join.spectator");
+        spectatorQuitLocale = config.getString("spectator_quit_locale", "user.quit.spectator");
     }
 
     @MinigamesEventHandler
@@ -213,9 +224,9 @@ public class BaseGameListener extends BaseGameStateListener {
         displayDeathMessage(event);
 
         User killer = event.getKillerUser();
-        if(killer == null) killer = event.getAssistUser();
+        if (killer == null) killer = event.getAssistUser();
 
-        if(killer != null) {
+        if (killer != null) {
             StatsHolder killerStats = StatsHolder.getOrCreate(killer);
             killerStats.addKill();
         }
@@ -255,14 +266,15 @@ public class BaseGameListener extends BaseGameStateListener {
                         event.getAssistUser().getFormattedName());
 
             } else {
-                sendDeathMessage(event.getUserGameGroup(), deathKillLocale, localeEnding, event.getUser()
-                        .getFormattedName(), event.getKillerUser().getFormattedName());
+                sendDeathMessage(event.getUserGameGroup(), deathKillLocale, localeEnding,
+                        event.getUser().getFormattedName(), event.getKillerUser().getFormattedName());
             }
-        } else if(event.hasAssistUser()) {
-            sendDeathMessage(event.getUserGameGroup(), deathAssistLocale, localeEnding, event.getUser()
-                    .getFormattedName(), event.getAssistUser().getFormattedName());
+        } else if (event.hasAssistUser()) {
+            sendDeathMessage(event.getUserGameGroup(), deathAssistLocale, localeEnding,
+                    event.getUser().getFormattedName(), event.getAssistUser().getFormattedName());
         } else {
-            sendDeathMessage(event.getUserGameGroup(), deathNaturalLocale, localeEnding, event.getUser().getFormattedName());
+            sendDeathMessage(event.getUserGameGroup(), deathNaturalLocale, localeEnding,
+                    event.getUser().getFormattedName());
         }
     }
 
@@ -287,82 +299,7 @@ public class BaseGameListener extends BaseGameStateListener {
 
         checkVictory(died.getGameGroup(), true);
 
-        if(!died.isPlayer()) died.removeNonPlayer();
-    }
-
-    @MinigamesEventHandler
-    public void onUserDamaged(UserDamagedEvent event) {
-        if(!event.getUser().isInGame()) event.setCancelled(true);
-    }
-
-    @MinigamesEventHandler
-    public void onUserJoined(UserJoinEvent event) {
-        if(event.getUser().isInGame()) return;
-
-        event.getUser().teleport(event.getUserGameGroup().getCurrentMap().getSpawn());
-        event.getUser().setSpectator(true);
-
-        spectatorItems.giveToUser(event.getUser());
-
-        for(int counter = 0;;++counter) {
-            String message = event.getUserGameGroup().getLocale(spectatorJoinLocaleStub + "." + counter);
-            if(message == null) break;
-
-            event.getUser().sendMessage(message);
-        }
-
-        event.getUser().doInFuture(task -> event.getUser().setSpectator(true), 2);
-    }
-
-    @MinigamesEventHandler
-    public void onUserQuit(UserQuitEvent event) {
-        if(event.getReason() != UserQuitEvent.QuitReason.QUIT_SERVER) return;
-
-        if(!event.getUser().isInGame()) {
-            //TODO save stats
-        } else {
-            event.getUser().becomeEntity(EntityType.ZOMBIE);
-            checkVictory(event.getUser().getGameGroup(), true);
-            event.setRemoveUser(false);
-        }
-    }
-
-    @MinigamesEventHandler
-    public void onBlockBurn(MapBlockBurnEvent event) {
-        event.setCancelled(true);
-    }
-
-    @MinigamesEventHandler
-    public void onBlockSpread(MapBlockGrowEvent event) {
-        if(!event.isSpreadEvent()) return;
-        if(event.getNewState().getType() != Material.FIRE) return;
-
-        event.getSpreadSource().setType(Material.AIR);
-
-        event.setCancelled(true);
-    }
-
-    @MinigamesEventHandler
-    public void onPotionSplash(MapPotionSplashEvent event) {
-        if(!event.hasThrowerUser()) return;
-
-        PotionEffectType type = event.getPotion().getEffects().iterator().next().getType();
-        boolean good = GOOD_POTIONS.get(type);
-
-        for(LivingEntity entity : event.getAffected()) {
-            User rep = EntityUtils.getRepresentingUser(event.getThrowerUser(), entity);
-
-            if(rep == null) continue;
-
-            if(Objects.equals(event.getThrowerUser().getTeamIdentifier(), rep.getTeamIdentifier()) != good) {
-                event.setIntensity(entity, 0);
-            } else if(type == PotionEffectType.HEAL) {
-                PotionStrengthModifier psm = PotionStrengthModifier.getOrCreate(rep);
-
-                event.setIntensity(entity, event.getIntensity(entity) * psm.getPotionStrengthModifier());
-                psm.onPotionUsed();
-            }
-        }
+        if (!died.isPlayer()) died.removeNonPlayer();
     }
 
     private void sendDeathMessage(GameGroup gameGroup, String locale, String ending, Object... args) {
@@ -417,6 +354,81 @@ public class BaseGameListener extends BaseGameStateListener {
         if (teamCheck && playerCheck) return;
 
         gameGroup.startCountdown(showdownCountdownName, showdownCountdownLocaleStub, showdownCountdownSeconds);
+    }
+
+    @MinigamesEventHandler
+    public void onUserDamaged(UserDamagedEvent event) {
+        if (!event.getUser().isInGame()) event.setCancelled(true);
+    }
+
+    @MinigamesEventHandler
+    public void onUserJoined(UserJoinEvent event) {
+        if (event.getUser().isInGame()) return;
+
+        event.getUser().teleport(event.getUserGameGroup().getCurrentMap().getSpawn());
+        event.getUser().setSpectator(true);
+
+        spectatorItems.giveToUser(event.getUser());
+
+        for (int counter = 0; ; ++counter) {
+            String message = event.getUserGameGroup().getLocale(spectatorJoinLocaleStub + "." + counter);
+            if (message == null) break;
+
+            event.getUser().sendMessage(message);
+        }
+
+        event.getUser().doInFuture(task -> event.getUser().setSpectator(true), 2);
+    }
+
+    @MinigamesEventHandler
+    public void onUserQuit(UserQuitEvent event) {
+        if (event.getReason() != UserQuitEvent.QuitReason.QUIT_SERVER) return;
+
+        if (!event.getUser().isInGame()) {
+            //TODO save stats
+        } else {
+            event.getUser().becomeEntity(EntityType.ZOMBIE);
+            checkVictory(event.getUser().getGameGroup(), true);
+            event.setRemoveUser(false);
+        }
+    }
+
+    @MinigamesEventHandler
+    public void onBlockBurn(MapBlockBurnEvent event) {
+        event.setCancelled(true);
+    }
+
+    @MinigamesEventHandler
+    public void onBlockSpread(MapBlockGrowEvent event) {
+        if (!event.isSpreadEvent()) return;
+        if (event.getNewState().getType() != Material.FIRE) return;
+
+        event.getSpreadSource().setType(Material.AIR);
+
+        event.setCancelled(true);
+    }
+
+    @MinigamesEventHandler
+    public void onPotionSplash(MapPotionSplashEvent event) {
+        if (!event.hasThrowerUser()) return;
+
+        PotionEffectType type = event.getPotion().getEffects().iterator().next().getType();
+        boolean good = GOOD_POTIONS.get(type);
+
+        for (LivingEntity entity : event.getAffected()) {
+            User rep = EntityUtils.getRepresentingUser(event.getThrowerUser(), entity);
+
+            if (rep == null) continue;
+
+            if (Objects.equals(event.getThrowerUser().getTeamIdentifier(), rep.getTeamIdentifier()) != good) {
+                event.setIntensity(entity, 0);
+            } else if (type == PotionEffectType.HEAL) {
+                PotionStrengthModifier psm = PotionStrengthModifier.getOrCreate(rep);
+
+                event.setIntensity(entity, event.getIntensity(entity) * psm.getPotionStrengthModifier());
+                psm.onPotionUsed();
+            }
+        }
     }
 
     @MinigamesEventHandler
@@ -540,6 +552,34 @@ public class BaseGameListener extends BaseGameStateListener {
         GoldConfig gold = getGoldConfig(goldShared);
 
         gold.onBlockBreak(event.getBlock(), event.getGameGroup());
+    }
+
+    @Override
+    @MinigamesEventHandler
+    public void sendJoinMessageOnUserJoin(UserJoinEvent event) {
+        String name = event.getUser().getFormattedName();
+        int currentPlayers = event.getUserGameGroup().getUserCount();
+        int maxPlayers = Bukkit.getMaxPlayers();
+
+        if(event.getUser().isInGame()) {
+            event.getUserGameGroup().sendLocale(inGameJoinLocale, name, currentPlayers, maxPlayers);
+        } else {
+            event.getUserGameGroup().sendLocale(spectatorJoinLocale, name, currentPlayers, maxPlayers);
+        }
+    }
+
+    @Override
+    @MinigamesEventHandler
+    public void sendQuitMessageOnUserQuit(UserQuitEvent event) {
+        String name = event.getUser().getFormattedName();
+        int currentPlayers = event.getUserGameGroup().getUserCount();
+        int maxPlayers = Bukkit.getMaxPlayers();
+
+        if(event.getUser().isInGame()) {
+            event.getUserGameGroup().sendLocale(inGameQuitLocale, name, currentPlayers, maxPlayers);
+        } else {
+            event.getUserGameGroup().sendLocale(spectatorQuitLocale, name, currentPlayers, maxPlayers);
+        }
     }
 
     protected static class GoldConfig {

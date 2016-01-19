@@ -14,6 +14,7 @@ import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.event.user.game.UserQuitEvent;
 import com.ithinkrok.minigames.event.user.world.UserDropItemEvent;
 import com.ithinkrok.minigames.util.InventoryUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -35,8 +36,8 @@ public class BaseGameStateListener implements Listener {
     public void onListenerLoaded(ListenerLoadedEvent<?> event) {
         ConfigurationSection config = event.getConfig();
 
-        if(quitLocale == null) quitLocale = config.getString("user_quit_locale");
-        if(joinLocale == null) joinLocale = config.getString("user_join_locale");
+        if(quitLocale == null) quitLocale = config.getString("user_quit_locale", "user.quit");
+        if(joinLocale == null) joinLocale = config.getString("user_join_locale", "user.join");
     }
 
     @MinigamesEventHandler
@@ -87,12 +88,20 @@ public class BaseGameStateListener implements Listener {
 
     @MinigamesEventHandler(priority = MinigamesEventHandler.MONITOR)
     public void sendQuitMessageOnUserQuit(UserQuitEvent event) {
-        event.getUserGameGroup().sendLocale(quitLocale, event.getUser().getFormattedName());
+        String name = event.getUser().getFormattedName();
+        int currentPlayers = event.getUserGameGroup().getUserCount() - 1;
+        int maxPlayers = Bukkit.getMaxPlayers();
+
+        event.getUserGameGroup().sendLocale(quitLocale, name, currentPlayers, maxPlayers);
     }
 
     @MinigamesEventHandler(priority = MinigamesEventHandler.FIRST)
     public void sendJoinMessageOnUserJoin(UserJoinEvent event) {
-        event.getUserGameGroup().sendLocale(joinLocale, event.getUser().getFormattedName());
+        String name = event.getUser().getFormattedName();
+        int currentPlayers = event.getUserGameGroup().getUserCount();
+        int maxPlayers = Bukkit.getMaxPlayers();
+
+        event.getUserGameGroup().sendLocale(joinLocale, name, currentPlayers, maxPlayers);
     }
 
     @MinigamesEventHandler

@@ -1,11 +1,8 @@
 RECODE BUGS:
- - teamchat command, transfer/share command, fix command, countdown command
- - join message/quit message
+ - teamchat command, transfer/share command, fix command
  - Quitting with only zombies on the server
- - Ignore default world events
 
 LOW PRIORITY / INVESTIGATE:
- - Prevent fire spread
  - Destroying a building while it is built does not decrement building now counter
  - eating flicker glitch
  - Zombie tab list names

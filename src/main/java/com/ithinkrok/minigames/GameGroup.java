@@ -275,6 +275,11 @@ public class GameGroup
     public void stopCountdown() {
         if (countdown == null) return;
         countdown.cancel();
+
+        //Remove countdown level from Users
+        for(User user : getUsers()) {
+            user.setXpLevel(0);
+        }
     }
 
     public void startCountdown(String name, String localeStub, int seconds) {

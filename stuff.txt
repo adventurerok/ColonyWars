@@ -3,8 +3,6 @@ RECODE BUGS:
  - join message
  - Quitting with only zombies on the server
  - Ignore default world events
- - Remove level when countdown ends
- - you are already using instead of cooldown
 
 LOW PRIORITY / INVESTIGATE:
  - Prevent fire spread

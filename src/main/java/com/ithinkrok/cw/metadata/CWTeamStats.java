@@ -181,7 +181,9 @@ public class CWTeamStats extends Metadata {
         team.getGameGroup().sendLocale(eliminatedLocale, team.getFormattedName());
 
         if(baseLocation != null) {
-            BuildingController.getOrCreate(team.getGameGroup()).getBuilding(baseLocation).explode();
+            Building base = BuildingController.getOrCreate(team.getGameGroup()).getBuilding(baseLocation);
+            if(base != null) base.explode();
+            else System.out.println("Team " + team.getName() + " missing base for destruction");
             baseLocation = null;
         }
 

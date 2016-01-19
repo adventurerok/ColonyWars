@@ -3,6 +3,7 @@ package com.ithinkrok.cw.gamestate;
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.game.CountdownFinishedEvent;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
@@ -10,16 +11,11 @@ import com.ithinkrok.minigames.event.user.state.UserDamagedEvent;
 import com.ithinkrok.minigames.event.user.state.UserFoodLevelChangeEvent;
 import com.ithinkrok.minigames.event.user.world.*;
 import com.ithinkrok.minigames.listener.GiveCustomItemsOnJoin;
-import com.ithinkrok.minigames.metadata.MapVote;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -43,7 +39,7 @@ public class LobbyListener extends BaseGameStateListener {
 
     private GiveCustomItemsOnJoin.CustomItemGiver giveOnJoin;
 
-    @EventHandler
+    @MinigamesEventHandler
     public void eventListenerLoaded(ListenerLoadedEvent<?> event) {
         ConfigurationSection config = event.getConfig();
 
@@ -68,17 +64,17 @@ public class LobbyListener extends BaseGameStateListener {
         needsMorePlayersLocale = config.getString("needs_more_players_locale");
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void eventBlockBreak(UserBreakBlockEvent event) {
         event.setCancelled(true);
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void eventBlockPlace(UserPlaceBlockEvent event) {
         event.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @MinigamesEventHandler(priority = MinigamesEventHandler.LOW)
     public void eventUserJoin(UserJoinEvent event) {
         userJoinLobby(event.getUser());
 
@@ -121,7 +117,7 @@ public class LobbyListener extends BaseGameStateListener {
         }
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void eventGameStateChanged(GameStateChangedEvent event) {
         if(!event.getNewGameState().isGameStateListener(this)) return;
 
@@ -134,7 +130,7 @@ public class LobbyListener extends BaseGameStateListener {
         }
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void eventCountdownFinished(CountdownFinishedEvent event) {
         if(!event.getCountdown().getName().equals(startCountdownName)) return;
 
@@ -154,22 +150,22 @@ public class LobbyListener extends BaseGameStateListener {
         gameGroup.startCountdown(startCountdownName, startCountdownLocaleStub, startCountdownSeconds);
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void eventUserDropItem(UserDropItemEvent event) {
         event.setCancelled(true);
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void eventUserPickupItem(UserPickupItemEvent event) {
         event.setCancelled(true);
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void eventUserDamaged(UserDamagedEvent event) {
         event.setCancelled(true);
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void eventUserInteract(UserInteractEvent event) {
         if(event.getInteractType() == UserInteractEvent.InteractType.REPRESENTING) return;
         if(event.hasItem() && event.getItem().getType() == Material.WRITTEN_BOOK) return;
@@ -179,7 +175,7 @@ public class LobbyListener extends BaseGameStateListener {
         }
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void eventUserFoodLevelChange(UserFoodLevelChangeEvent event) {
         event.setFoodLevel(20);
     }

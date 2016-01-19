@@ -2,9 +2,9 @@ package com.ithinkrok.cw.scoreboard;
 
 import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.cw.metadata.StatsHolder;
-import com.ithinkrok.minigames.team.Team;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.metadata.Money;
+import com.ithinkrok.minigames.team.Team;
 import com.ithinkrok.minigames.user.scoreboard.ScoreboardDisplay;
 import com.ithinkrok.minigames.user.scoreboard.ScoreboardHandler;
 import org.bukkit.ChatColor;

@@ -1,7 +1,6 @@
 package com.ithinkrok.minigames.inventory;
 
 import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.inventory.Buyable;
 import com.ithinkrok.minigames.inventory.event.BuyablePurchaseEvent;
 import com.ithinkrok.minigames.util.ConfigUtils;
 import org.bukkit.configuration.ConfigurationSection;

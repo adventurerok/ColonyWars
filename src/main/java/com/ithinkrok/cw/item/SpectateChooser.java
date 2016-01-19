@@ -2,6 +2,7 @@ package com.ithinkrok.cw.item;
 
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.inventory.ClickableInventory;
 import com.ithinkrok.minigames.inventory.ClickableItem;
@@ -10,7 +11,6 @@ import com.ithinkrok.minigames.util.InventoryUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -24,7 +24,7 @@ public class SpectateChooser implements Listener {
 
     private String titleLocale;
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onListenerLoaded(ListenerLoadedEvent event) {
         ConfigurationSection config = event.getConfig();
         if(config == null) config = new MemoryConfiguration();
@@ -32,7 +32,7 @@ public class SpectateChooser implements Listener {
         titleLocale = config.getString("title_locale", "spectate_chooser.title");
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onUserInteract(UserInteractEvent event) {
 
         ClickableInventory inv = new ClickableInventory(event.getUserGameGroup().getLocale(titleLocale));

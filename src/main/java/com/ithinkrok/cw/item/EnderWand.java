@@ -1,6 +1,7 @@
 package com.ithinkrok.cw.item;
 
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.util.SoundEffect;
 import com.ithinkrok.minigames.util.math.Calculator;
@@ -8,7 +9,6 @@ import com.ithinkrok.minigames.util.math.ExpressionCalculator;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EnderPearl;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.util.Vector;
 
@@ -20,7 +20,7 @@ public class EnderWand implements Listener {
     private Calculator speedMult;
     private Sound shootSound;
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onListenerLoaded(ListenerLoadedEvent event) {
         ConfigurationSection config = event.getConfig();
 
@@ -28,7 +28,7 @@ public class EnderWand implements Listener {
         shootSound = Sound.valueOf(config.getString("fire_sound", "SHOOT_ARROW"));
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onUserInteract(UserInteractEvent event) {
         EnderPearl pearl = event.getUser().launchProjectile(EnderPearl.class);
 

@@ -1,7 +1,6 @@
 package com.ithinkrok.minigames.metadata;
 
 import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**

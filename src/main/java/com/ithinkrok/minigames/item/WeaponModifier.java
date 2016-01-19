@@ -1,6 +1,7 @@
 package com.ithinkrok.minigames.item;
 
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.user.world.UserAttackEvent;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.item.event.CustomItemLoreCalculateEvent;
@@ -9,7 +10,6 @@ import com.ithinkrok.minigames.util.math.Calculator;
 import com.ithinkrok.minigames.util.math.ExpressionCalculator;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
@@ -35,7 +35,7 @@ public class WeaponModifier implements Listener {
 
     private List<EffectModifier> effectModifiers = new ArrayList<>();
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onListenerEnable(ListenerLoadedEvent event) {
         if (!event.hasConfig()) throw new RuntimeException("A WeaponModifier requires a config");
 
@@ -55,7 +55,7 @@ public class WeaponModifier implements Listener {
         }
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onLoreItemsCalculate(CustomItemLoreCalculateEvent event) {
         LanguageLookup lang = event.getLanguageLookup();
         List<String> lore = event.getLore();
@@ -77,7 +77,7 @@ public class WeaponModifier implements Listener {
     }
 
     @SuppressWarnings("unchecked")
-    @EventHandler
+    @MinigamesEventHandler
     public void onUserAttack(UserAttackEvent attack) {
         if (attack.getInteractType() == UserInteractEvent.InteractType.REPRESENTING) return;
         if (attack.getDamageCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return;

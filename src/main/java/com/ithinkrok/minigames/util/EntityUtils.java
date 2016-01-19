@@ -4,7 +4,10 @@ import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.team.Team;
 import com.ithinkrok.minigames.team.TeamUserResolver;
 import com.ithinkrok.minigames.user.UserResolver;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Tameable;
 import org.bukkit.metadata.MetadataValue;
 
 import java.util.List;

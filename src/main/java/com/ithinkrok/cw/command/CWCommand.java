@@ -1,11 +1,11 @@
 package com.ithinkrok.cw.command;
 
-import com.ithinkrok.minigames.team.Team;
 import com.ithinkrok.minigames.command.Command;
 import com.ithinkrok.minigames.command.CommandSender;
 import com.ithinkrok.minigames.command.GameCommandExecutor;
 import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.metadata.Money;
+import com.ithinkrok.minigames.team.Team;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

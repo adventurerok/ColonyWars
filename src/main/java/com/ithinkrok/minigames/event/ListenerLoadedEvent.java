@@ -1,8 +1,6 @@
 package com.ithinkrok.minigames.event;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 
 /**
  * Created by paul on 02/01/16.

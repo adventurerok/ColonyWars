@@ -3,8 +3,6 @@ package com.ithinkrok.minigames.event.user;
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.MinigamesEvent;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 
 /**
  * Created by paul on 31/12/15.

@@ -2,6 +2,7 @@ package com.ithinkrok.cw.gamestate;
 
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.game.CountdownFinishedEvent;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.user.UserEvent;
@@ -14,12 +15,8 @@ import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.util.Vector;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by paul on 16/01/16.
@@ -32,7 +29,7 @@ public class AftermathListener extends BaseGameStateListener {
 
     private String lobbyGameState;
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<?> event) {
         ConfigurationSection config = event.getConfig();
         if (config == null) config = new MemoryConfiguration();
@@ -44,7 +41,7 @@ public class AftermathListener extends BaseGameStateListener {
         lobbyGameState = config.getString("lobby_gamestate", "lobby");
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onGameStateChanged(GameStateChangedEvent event) {
         if (!event.getNewGameState().isGameStateListener(this)) return;
 
@@ -77,14 +74,14 @@ public class AftermathListener extends BaseGameStateListener {
         event.getGameGroup().bindTaskToCurrentGameState(task);
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onCountdownFinished(CountdownFinishedEvent event) {
         if(!event.getCountdown().getName().equals(aftermathCountdownName)) return;
 
         event.getGameGroup().changeGameState(lobbyGameState);
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onUserEvent(UserEvent event) {
         if(!(event instanceof Cancellable)) return;
 

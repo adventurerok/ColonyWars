@@ -4,9 +4,9 @@ import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.cw.metadata.ShowdownArena;
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.User;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import org.bukkit.Location;
-import org.bukkit.event.EventHandler;
 
 /**
  * Created by paul on 16/01/16.
@@ -24,7 +24,7 @@ public class ShowdownListener extends BaseGameListener {
         return false;
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onGameStateChanged(GameStateChangedEvent event) {
         if(!event.getNewGameState().getName().equals(showdownGameState)) return;
 

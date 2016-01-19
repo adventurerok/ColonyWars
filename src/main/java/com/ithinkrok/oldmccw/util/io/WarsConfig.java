@@ -1,9 +1,9 @@
 package com.ithinkrok.oldmccw.util.io;
 
-import com.ithinkrok.minigames.util.ConfigUtils;
-import com.ithinkrok.oldmccw.enumeration.PlayerClass;
-import com.ithinkrok.oldmccw.data.TeamColor;
 import com.ithinkrok.minigames.util.BoundingBox;
+import com.ithinkrok.minigames.util.ConfigUtils;
+import com.ithinkrok.oldmccw.data.TeamColor;
+import com.ithinkrok.oldmccw.enumeration.PlayerClass;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.util.Vector;

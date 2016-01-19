@@ -5,6 +5,7 @@ import com.google.common.collect.MutableClassToInstanceMap;
 import com.ithinkrok.minigames.database.DatabaseTask;
 import com.ithinkrok.minigames.database.DatabaseTaskRunner;
 import com.ithinkrok.minigames.event.MinigamesEvent;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.game.CountdownFinishedEvent;
 import com.ithinkrok.minigames.event.game.GameEvent;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
@@ -37,9 +38,6 @@ import com.ithinkrok.minigames.util.io.FileLoader;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.Event;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import java.io.File;
@@ -485,7 +483,7 @@ public class GameGroup
 
     private class GameGroupListener implements Listener {
 
-        @EventHandler(priority = EventPriority.LOWEST)
+        @MinigamesEventHandler(priority = MinigamesEventHandler.INTERNAL_FIRST)
         public void eventUserJoin(UserJoinEvent event) {
             if (event.getReason() != UserJoinEvent.JoinReason.JOINED_SERVER) return;
 
@@ -494,7 +492,7 @@ public class GameGroup
             currentMap.teleportUser(event.getUser());
         }
 
-        @EventHandler(priority = EventPriority.MONITOR)
+        @MinigamesEventHandler(priority = MinigamesEventHandler.INTERNAL_LAST)
         public void eventUserQuit(UserQuitEvent event) {
             if (event.getRemoveUser()) {
                 event.getUser().setTeam(null);
@@ -505,7 +503,7 @@ public class GameGroup
             }
         }
 
-        @EventHandler(priority = EventPriority.MONITOR)
+        @MinigamesEventHandler(priority = MinigamesEventHandler.INTERNAL_LAST)
         public void eventCountdownFinished(CountdownFinishedEvent event) {
             if (event.getCountdown().getSecondsRemaining() > 0) return;
             if (event.getCountdown() != countdown) return;
@@ -513,7 +511,7 @@ public class GameGroup
             countdown = null;
         }
 
-        @EventHandler
+        @MinigamesEventHandler
         public void eventBlockBreakNaturally(MapBlockBreakNaturallyEvent event) {
             checkInventoryTethers(event.getBlock().getLocation());
         }
@@ -525,12 +523,12 @@ public class GameGroup
             }
         }
 
-        @EventHandler
+        @MinigamesEventHandler
         public void eventUserBreakBlock(UserBreakBlockEvent event) {
             checkInventoryTethers(event.getBlock().getLocation());
         }
 
-        @EventHandler(priority = EventPriority.LOWEST)
+        @MinigamesEventHandler(priority = MinigamesEventHandler.INTERNAL_FIRST)
         public void eventGameStateChange(GameStateChangedEvent event) {
             Iterator<Metadata> iterator = metadataMap.values().iterator();
 
@@ -545,7 +543,7 @@ public class GameGroup
             }
         }
 
-        @EventHandler(priority = EventPriority.LOWEST)
+        @MinigamesEventHandler(priority = MinigamesEventHandler.INTERNAL_FIRST)
         public void eventMapChange(MapChangedEvent event) {
             Iterator<Metadata> iterator = metadataMap.values().iterator();
 

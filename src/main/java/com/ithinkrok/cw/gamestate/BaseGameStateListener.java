@@ -1,9 +1,9 @@
 package com.ithinkrok.cw.gamestate;
 
-import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.cw.metadata.StatsHolder;
 import com.ithinkrok.cw.metadata.TeamStatsHolderGroup;
 import com.ithinkrok.minigames.User;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.map.MapCreatureSpawnEvent;
 import com.ithinkrok.minigames.event.map.MapItemSpawnEvent;
@@ -12,7 +12,6 @@ import com.ithinkrok.minigames.event.user.game.UserChangeTeamEvent;
 import com.ithinkrok.minigames.event.user.game.UserQuitEvent;
 import com.ithinkrok.minigames.event.user.world.UserDropItemEvent;
 import com.ithinkrok.minigames.util.InventoryUtils;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -26,26 +25,26 @@ public class BaseGameStateListener implements Listener {
 
     protected Random random = new Random();
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onUserDropItem(UserDropItemEvent event) {
         if(InventoryUtils.getIdentifier(event.getItem().getItemStack()) == -1) return;
 
         event.setCancelled(true);
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onCreatureSpawn(MapCreatureSpawnEvent event) {
         if(event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) return;
 
         event.setCancelled(true);
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onItemSpawn(MapItemSpawnEvent event) {
         event.setCancelled(true);
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onUserChangeTeam(UserChangeTeamEvent event) {
         if(event.getOldTeam() != null) {
             TeamStatsHolderGroup oldStats = TeamStatsHolderGroup.getOrCreate(event.getOldTeam());
@@ -61,7 +60,7 @@ public class BaseGameStateListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @MinigamesEventHandler(priority = MinigamesEventHandler.HIGH)
     public void saveStatsOnUserQuit(UserQuitEvent event) {
         StatsHolder statsHolder = StatsHolder.getOrCreate(event.getUser());
 
@@ -72,7 +71,7 @@ public class BaseGameStateListener implements Listener {
         }
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onUserChangeKit(UserChangeKitEvent event) {
         if(event.getNewKit() == null) return;
 
@@ -80,7 +79,7 @@ public class BaseGameStateListener implements Listener {
         statsHolder.setLastKit(event.getNewKit().getName());
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onGameStateChange(GameStateChangedEvent event) {
         for(User user : event.getGameGroup().getUsers()) {
             StatsHolder statsHolder = StatsHolder.getOrCreate(user);

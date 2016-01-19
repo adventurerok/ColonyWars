@@ -1,8 +1,8 @@
 package com.ithinkrok.cw;
 
-import com.ithinkrok.minigames.team.TeamIdentifier;
 import com.ithinkrok.minigames.inventory.ClickableInventory;
 import com.ithinkrok.minigames.schematic.PastedSchematic;
+import com.ithinkrok.minigames.team.TeamIdentifier;
 import com.ithinkrok.minigames.util.ConfigUtils;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;

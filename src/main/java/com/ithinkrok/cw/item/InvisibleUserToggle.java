@@ -1,7 +1,7 @@
 package com.ithinkrok.cw.item;
 
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 /**
@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
  */
 public class InvisibleUserToggle implements Listener {
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onUserInteract(UserInteractEvent event) {
         event.getUser().setShowCloakedUsers(!event.getUser().showCloakedUsers());
 

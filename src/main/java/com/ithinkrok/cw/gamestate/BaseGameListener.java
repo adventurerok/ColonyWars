@@ -6,6 +6,7 @@ import com.ithinkrok.cw.metadata.*;
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.map.*;
 import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.event.user.game.UserQuitEvent;
@@ -27,7 +28,6 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
@@ -99,7 +99,7 @@ public class BaseGameListener extends BaseGameStateListener {
 
     private GiveCustomItemsOnJoin.CustomItemGiver spectatorItems;
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onUserChat(UserChatEvent event) {
         if(event.getUser().isInGame()) {
             String kitName = event.getUser().getKitName();
@@ -113,7 +113,7 @@ public class BaseGameListener extends BaseGameStateListener {
         }
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<?> event) {
         ConfigurationSection config = event.getConfig();
 
@@ -160,7 +160,7 @@ public class BaseGameListener extends BaseGameStateListener {
         spectatorItems = new GiveCustomItemsOnJoin.CustomItemGiver(config.getConfigurationSection("spectator_items"));
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onUserInteractWorld(UserInteractWorldEvent event) {
         if (!event.getUser().isInGame()) {
             event.setCancelled(true);
@@ -195,7 +195,7 @@ public class BaseGameListener extends BaseGameStateListener {
         event.getUser().showInventory(shop, event.getClickedBlock().getLocation());
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onUserDeath(UserDeathEvent event) {
         User died = event.getUser();
 
@@ -288,12 +288,12 @@ public class BaseGameListener extends BaseGameStateListener {
         if(!died.isPlayer()) died.removeNonPlayer();
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onUserDamaged(UserDamagedEvent event) {
         if(!event.getUser().isInGame()) event.setCancelled(true);
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onUserJoined(UserJoinEvent event) {
         if(event.getUser().isInGame()) return;
 
@@ -312,7 +312,7 @@ public class BaseGameListener extends BaseGameStateListener {
         event.getUser().doInFuture(task -> event.getUser().setSpectator(true), 2);
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onUserQuit(UserQuitEvent event) {
         if(event.getReason() != UserQuitEvent.QuitReason.QUIT_SERVER) return;
 
@@ -325,12 +325,12 @@ public class BaseGameListener extends BaseGameStateListener {
         }
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onBlockBurn(MapBlockBurnEvent event) {
         event.setCancelled(true);
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onBlockSpread(MapBlockGrowEvent event) {
         if(!event.isSpreadEvent()) return;
         if(event.getNewState().getType() != Material.FIRE) return;
@@ -340,7 +340,7 @@ public class BaseGameListener extends BaseGameStateListener {
         event.setCancelled(true);
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onPotionSplash(MapPotionSplashEvent event) {
         if(!event.hasThrowerUser()) return;
 
@@ -417,7 +417,7 @@ public class BaseGameListener extends BaseGameStateListener {
         gameGroup.startCountdown(showdownCountdownName, showdownCountdownLocaleStub, showdownCountdownSeconds);
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onUserBreakBlock(UserBreakBlockEvent event) {
         if (!event.getUser().isInGame()) {
             event.setCancelled(true);
@@ -462,7 +462,7 @@ public class BaseGameListener extends BaseGameStateListener {
         return gold;
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onUserPickupItem(UserPickupItemEvent event) {
         if (!event.getUser().isInGame()) {
             event.setCancelled(true);
@@ -492,7 +492,7 @@ public class BaseGameListener extends BaseGameStateListener {
         event.getItem().remove();
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onUserPlaceBlock(UserPlaceBlockEvent event) {
         if (!event.getUser().isInGame()) {
             event.setCancelled(true);
@@ -522,7 +522,7 @@ public class BaseGameListener extends BaseGameStateListener {
     }
 
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onItemSpawn(MapItemSpawnEvent event) {
         ConfigurationSection goldShared = event.getGameGroup().getSharedObject(goldSharedConfig);
         GoldConfig gold = getGoldConfig(goldShared);
@@ -532,7 +532,7 @@ public class BaseGameListener extends BaseGameStateListener {
         }
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onBlockBreakNaturally(MapBlockBreakNaturallyEvent event) {
         ConfigurationSection goldShared = event.getGameGroup().getSharedObject(goldSharedConfig);
         GoldConfig gold = getGoldConfig(goldShared);

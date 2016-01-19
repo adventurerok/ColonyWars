@@ -3,6 +3,7 @@ package com.ithinkrok.minigames;
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.MutableClassToInstanceMap;
 import com.ithinkrok.minigames.command.CommandSender;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.event.user.game.*;
@@ -34,8 +35,6 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.*;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.*;
 import org.bukkit.potion.PotionEffect;
@@ -809,7 +808,7 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
 
     private class UserListener implements Listener {
 
-        @EventHandler(priority = EventPriority.LOWEST)
+        @MinigamesEventHandler(priority = MinigamesEventHandler.INTERNAL_FIRST)
         public void eventInGameChange(UserInGameChangeEvent event) {
             Iterator<UserMetadata> iterator = metadataMap.values().iterator();
 
@@ -820,7 +819,7 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
             }
         }
 
-        @EventHandler(priority = EventPriority.LOWEST)
+        @MinigamesEventHandler(priority = MinigamesEventHandler.INTERNAL_FIRST)
         public void eventGameStateChange(GameStateChangedEvent event) {
             Iterator<UserMetadata> iterator = metadataMap.values().iterator();
 
@@ -835,7 +834,7 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
             }
         }
 
-        @EventHandler(priority = EventPriority.LOWEST)
+        @MinigamesEventHandler(priority = MinigamesEventHandler.INTERNAL_FIRST)
         public void eventMapChange(MapChangedEvent event) {
             Iterator<UserMetadata> iterator = metadataMap.values().iterator();
 
@@ -850,14 +849,14 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
             }
         }
 
-        @EventHandler
+        @MinigamesEventHandler
         public void eventInventoryClick(UserInventoryClickEvent event) {
             if (!isViewingClickableInventory()) return;
 
             getClickableInventory().inventoryClick(event);
         }
 
-        @EventHandler
+        @MinigamesEventHandler
         public void eventUpgrade(UserUpgradeEvent event) {
             PlayerInventory inv = getInventory();
 
@@ -879,14 +878,14 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
             }
         }
 
-        @EventHandler(priority = EventPriority.LOWEST)
+        @MinigamesEventHandler(priority = MinigamesEventHandler.INTERNAL_FIRST)
         public void eventInventoryClose(UserInventoryCloseEvent event) {
             if (!isViewingClickableInventory()) return;
 
             openInventory = null;
         }
 
-        @EventHandler(priority = EventPriority.HIGH)
+        @MinigamesEventHandler(priority = MinigamesEventHandler.HIGH)
         public void eventInteract(UserInteractEvent event) {
             ItemStack item = getInventory().getItemInHand();
             int identifier = InventoryUtils.getIdentifier(item);
@@ -898,7 +897,7 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
             EventExecutor.executeEvent(event, customItem);
         }
 
-        @EventHandler
+        @MinigamesEventHandler
         public void eventAbilityCooldown(UserAbilityCooldownEvent event) {
             for (ItemStack item : getInventory()) {
                 int identifier = InventoryUtils.getIdentifier(item);

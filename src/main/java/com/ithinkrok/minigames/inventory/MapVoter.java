@@ -1,15 +1,13 @@
 package com.ithinkrok.minigames.inventory;
 
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
-import com.ithinkrok.minigames.inventory.ClickableInventory;
-import com.ithinkrok.minigames.inventory.ClickableItem;
 import com.ithinkrok.minigames.inventory.event.UserClickItemEvent;
 import com.ithinkrok.minigames.metadata.MapVote;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
@@ -24,7 +22,7 @@ public class MapVoter implements Listener {
     private Material mapMaterial;
     private String voteLocale, transferLocale, alreadyLocale;
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onListenerEnabled(ListenerLoadedEvent event) {
         ConfigurationSection config = event.getConfig();
 
@@ -37,7 +35,7 @@ public class MapVoter implements Listener {
     }
 
     @SuppressWarnings("unchecked")
-    @EventHandler
+    @MinigamesEventHandler
     public void onInteract(UserInteractEvent event) {
         if (event.getInteractType() != UserInteractEvent.InteractType.RIGHT_CLICK) return;
         event.setCancelled(true);

@@ -2,8 +2,8 @@ package com.ithinkrok.oldmccw.command.executors;
 
 import com.ithinkrok.oldmccw.command.WarsCommandExecutor;
 import com.ithinkrok.oldmccw.command.WarsCommandSender;
-import com.ithinkrok.oldmccw.data.User;
 import com.ithinkrok.oldmccw.data.TeamColor;
+import com.ithinkrok.oldmccw.data.User;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

@@ -1,9 +1,9 @@
 package com.ithinkrok.oldmccw.command;
 
 import com.ithinkrok.oldmccw.data.Team;
+import com.ithinkrok.oldmccw.data.TeamColor;
 import com.ithinkrok.oldmccw.data.User;
 import com.ithinkrok.oldmccw.enumeration.PlayerClass;
-import com.ithinkrok.oldmccw.data.TeamColor;
 import com.ithinkrok.oldmccw.util.item.InventoryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

@@ -1,6 +1,7 @@
 package com.ithinkrok.minigames.item;
 
 import com.ithinkrok.minigames.User;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.user.game.UserAbilityCooldownEvent;
 import com.ithinkrok.minigames.event.user.world.UserAttackEvent;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
@@ -15,10 +16,8 @@ import com.ithinkrok.minigames.util.math.Variables;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,12 +119,12 @@ public class CustomItem implements Identifiable, Listener {
         }
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onUserAttack(UserAttackEvent event) {
         EventExecutor.executeEvent(event, attackActions);
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onAbilityCooldown(UserAbilityCooldownEvent event) {
         if(!event.getAbility().equals(timeoutAbility)) return;
 
@@ -133,7 +132,7 @@ public class CustomItem implements Identifiable, Listener {
         startRightClickCooldown(event.getUser());
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onInteract(UserInteractEvent event) {
         switch(event.getInteractType()) {
             case PHYSICAL:

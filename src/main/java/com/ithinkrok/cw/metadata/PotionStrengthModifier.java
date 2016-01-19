@@ -8,7 +8,6 @@ import com.ithinkrok.minigames.metadata.UserMetadata;
 import com.ithinkrok.minigames.task.GameTask;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
-import org.bukkit.potion.PotionEffectType;
 
 /**
  * Created by paul on 17/01/16.

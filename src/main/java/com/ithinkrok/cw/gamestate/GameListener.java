@@ -1,34 +1,25 @@
 package com.ithinkrok.cw.gamestate;
 
 import com.ithinkrok.cw.metadata.CWTeamStats;
-import com.ithinkrok.cw.metadata.PotionStrengthModifier;
 import com.ithinkrok.cw.metadata.StatsHolder;
 import com.ithinkrok.cw.scoreboard.CWScoreboardHandler;
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.Kit;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.game.CountdownFinishedEvent;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
-import com.ithinkrok.minigames.event.map.MapBlockBurnEvent;
-import com.ithinkrok.minigames.event.map.MapBlockGrowEvent;
-import com.ithinkrok.minigames.event.map.MapPotionSplashEvent;
 import com.ithinkrok.minigames.event.user.game.UserChangeTeamEvent;
 import com.ithinkrok.minigames.listener.GiveCustomItemsOnJoin;
 import com.ithinkrok.minigames.metadata.MapVote;
 import com.ithinkrok.minigames.team.Team;
-import com.ithinkrok.minigames.util.EntityUtils;
 import org.bukkit.Color;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.EventHandler;
-import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by paul on 05/01/16.
@@ -45,7 +36,7 @@ public class GameListener extends BaseGameListener {
 
     private GiveCustomItemsOnJoin.CustomItemGiver customItemGiver;
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<?> event) {
         super.onListenerLoaded(event);
         ConfigurationSection config = event.getConfig();
@@ -70,7 +61,7 @@ public class GameListener extends BaseGameListener {
         if(mapList.size() < 1) throw new RuntimeException("The game requires at least one map!");
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onGameStateChange(GameStateChangedEvent event) {
         super.onGameStateChange(event);
 
@@ -85,7 +76,7 @@ public class GameListener extends BaseGameListener {
         checkVictory(event.getGameGroup(), false);
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onCountdownFinished(CountdownFinishedEvent event) {
         if(!event.getCountdown().getName().equals(showdownCountdownName)) return;
 
@@ -166,7 +157,7 @@ public class GameListener extends BaseGameListener {
         gameGroup.changeMap(winningVote);
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onUserChangeTeam(UserChangeTeamEvent event) {
         super.onUserChangeTeam(event);
         Color armorColor = event.getNewTeam() != null ? event.getNewTeam().getArmorColor() : null;

@@ -1,6 +1,8 @@
 package com.ithinkrok.minigames.command;
 
-import com.ithinkrok.minigames.*;
+import com.ithinkrok.minigames.GameGroup;
+import com.ithinkrok.minigames.Kit;
+import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.lang.Messagable;
 import com.ithinkrok.minigames.team.TeamIdentifier;
 

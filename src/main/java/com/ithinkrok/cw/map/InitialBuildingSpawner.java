@@ -1,14 +1,14 @@
 package com.ithinkrok.cw.map;
 
 import com.ithinkrok.cw.metadata.BuildingController;
-import com.ithinkrok.minigames.team.TeamIdentifier;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.map.GameMap;
+import com.ithinkrok.minigames.team.TeamIdentifier;
 import com.ithinkrok.minigames.util.ConfigUtils;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.util.Vector;
 
@@ -23,14 +23,14 @@ public class InitialBuildingSpawner implements Listener {
 
     private List<InitialBuilding> buildingList = new ArrayList<>();
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onListenerLoaded(ListenerLoadedEvent event) {
         List<ConfigurationSection> buildingConfigs = ConfigUtils.getConfigList(event.getConfig(), "initial_buildings");
 
         buildingList.addAll(buildingConfigs.stream().map(InitialBuilding::new).collect(Collectors.toList()));
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onMapChange(MapChangedEvent event) {
         if(!event.getNewMap().getListeners().contains(this)) return;
 

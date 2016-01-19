@@ -1,9 +1,9 @@
 package com.ithinkrok.oldmccw.lobby;
 
+import com.ithinkrok.minigames.util.BoundingBox;
 import com.ithinkrok.oldmccw.WarsPlugin;
 import com.ithinkrok.oldmccw.data.User;
 import com.ithinkrok.oldmccw.event.*;
-import com.ithinkrok.minigames.util.BoundingBox;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;

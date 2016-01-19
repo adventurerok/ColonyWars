@@ -1,11 +1,11 @@
 package com.ithinkrok.cw.item;
 
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.util.math.Calculator;
 import com.ithinkrok.minigames.util.math.ExpressionCalculator;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -19,7 +19,7 @@ public class PotionAbility implements Listener {
     private Calculator durationCalculator;
     private Calculator levelCalculator;
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onListenerLoaded(ListenerLoadedEvent event) {
         ConfigurationSection config = event.getConfig();
 
@@ -29,7 +29,7 @@ public class PotionAbility implements Listener {
     }
 
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onInteract(UserInteractEvent event) {
         int duration = (int) (durationCalculator.calculate(event.getUser().getUpgradeLevels()) * 20d);
         int amp = (int) levelCalculator.calculate(event.getUser().getUpgradeLevels());

@@ -3,8 +3,7 @@ package com.ithinkrok.cw.metadata;
 import com.ithinkrok.cw.Building;
 import com.ithinkrok.cw.event.BuildingBuiltEvent;
 import com.ithinkrok.minigames.GameGroup;
-import com.ithinkrok.minigames.team.Team;
-import com.ithinkrok.minigames.team.TeamIdentifier;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.map.GameMap;
@@ -15,6 +14,8 @@ import com.ithinkrok.minigames.schematic.SchematicOptions;
 import com.ithinkrok.minigames.schematic.SchematicPaster;
 import com.ithinkrok.minigames.schematic.event.SchematicDestroyedEvent;
 import com.ithinkrok.minigames.schematic.event.SchematicFinishedEvent;
+import com.ithinkrok.minigames.team.Team;
+import com.ithinkrok.minigames.team.TeamIdentifier;
 import com.ithinkrok.minigames.util.BoundingBox;
 import com.ithinkrok.minigames.util.LocationChecker;
 import de.inventivegames.hologram.Hologram;
@@ -22,7 +23,6 @@ import de.inventivegames.hologram.HologramAPI;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import java.util.HashMap;
@@ -60,7 +60,7 @@ public class BuildingController extends Metadata implements Listener, LocationCh
         return true;
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onSchematicFinished(SchematicFinishedEvent event) {
         Building building = buildings.get(event.getSchematic());
         if(building == null) return;
@@ -136,7 +136,7 @@ public class BuildingController extends Metadata implements Listener, LocationCh
         return CWTeamStats.getOrCreate(team);
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onSchematicDestroyed(SchematicDestroyedEvent event) {
         Building building = buildings.remove(event.getSchematic());
         buildingCentres.values().remove(building);

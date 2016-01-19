@@ -1,13 +1,10 @@
 package com.ithinkrok.oldmccw.listener;
 
+import com.ithinkrok.minigames.schematic.Facing;
 import com.ithinkrok.oldmccw.WarsPlugin;
 import com.ithinkrok.oldmccw.command.executors.FixExecutor;
-import com.ithinkrok.oldmccw.data.Building;
-import com.ithinkrok.oldmccw.data.Schematic;
-import com.ithinkrok.oldmccw.data.Team;
-import com.ithinkrok.oldmccw.data.User;
+import com.ithinkrok.oldmccw.data.*;
 import com.ithinkrok.oldmccw.enumeration.GameState;
-import com.ithinkrok.oldmccw.data.TeamColor;
 import com.ithinkrok.oldmccw.event.UserAttackEvent;
 import com.ithinkrok.oldmccw.event.UserAttackedEvent;
 import com.ithinkrok.oldmccw.event.UserInteractWorldEvent;
@@ -15,11 +12,10 @@ import com.ithinkrok.oldmccw.event.UserRightClickEntityEvent;
 import com.ithinkrok.oldmccw.inventory.InventoryHandler;
 import com.ithinkrok.oldmccw.playerclass.PlayerClassHandler;
 import com.ithinkrok.oldmccw.strings.Buildings;
-import com.ithinkrok.oldmccw.util.disguisecraft.Disguises;
 import com.ithinkrok.oldmccw.util.EntityUtils;
 import com.ithinkrok.oldmccw.util.TreeFeller;
-import com.ithinkrok.minigames.schematic.Facing;
 import com.ithinkrok.oldmccw.util.building.SchematicBuilder;
+import com.ithinkrok.oldmccw.util.disguisecraft.Disguises;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;

@@ -4,11 +4,11 @@ import com.ithinkrok.cw.event.BuildingBuiltEvent;
 import com.ithinkrok.cw.event.ShopOpenEvent;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.util.ConfigUtils;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -30,7 +30,7 @@ public class KitListener implements Listener {
 
     private Map<String, BuildingConfig> buildingConfigs = new HashMap<>();
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<User> event) {
         owner = event.getCreator();
 
@@ -43,7 +43,7 @@ public class KitListener implements Listener {
         }
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onShopOpen(ShopOpenEvent event) {
         BuildingConfig config = buildingConfigs.get(event.getBuilding().getBuildingName());
 
@@ -51,7 +51,7 @@ public class KitListener implements Listener {
         config.onShopOpen(event);
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onBuildingBuilt(BuildingBuiltEvent event) {
         BuildingConfig config = buildingConfigs.get(event.getBuilding().getBuildingName());
 

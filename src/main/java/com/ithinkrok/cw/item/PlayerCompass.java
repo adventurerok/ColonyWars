@@ -2,13 +2,13 @@ package com.ithinkrok.cw.item;
 
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import java.util.Objects;
@@ -22,7 +22,7 @@ public class PlayerCompass implements Listener {
 
     private int locatingTime;
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onListenerLoaded(ListenerLoadedEvent event) {
         ConfigurationSection config;
         if (event.hasConfig()) config = event.getConfig();
@@ -37,7 +37,7 @@ public class PlayerCompass implements Listener {
     }
 
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onInteract(UserInteractEvent event) {
         InventoryUtils.setItemName(event.getItem(), event.getUser().getLanguageLookup().getLocale(locatingLocale));
 

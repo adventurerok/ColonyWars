@@ -4,8 +4,6 @@ import com.ithinkrok.minigames.event.MinigamesEvent;
 import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.util.math.Variables;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 
 import java.util.List;
 

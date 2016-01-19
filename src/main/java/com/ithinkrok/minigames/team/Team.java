@@ -5,6 +5,7 @@ import com.google.common.collect.MutableClassToInstanceMap;
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.SharedObjectAccessor;
 import com.ithinkrok.minigames.User;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.lang.LanguageLookup;
@@ -21,11 +22,12 @@ import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -213,7 +215,7 @@ public class Team implements Listener, Messagable, LanguageLookup, SharedObjectA
     private class TeamListener implements Listener {
 
 
-        @EventHandler(priority = EventPriority.LOWEST)
+        @MinigamesEventHandler(priority = MinigamesEventHandler.INTERNAL_FIRST)
         public void eventGameStateChange(GameStateChangedEvent event) {
             Iterator<Metadata> iterator = metadataMap.values().iterator();
 
@@ -228,7 +230,7 @@ public class Team implements Listener, Messagable, LanguageLookup, SharedObjectA
             }
         }
 
-        @EventHandler(priority = EventPriority.LOWEST)
+        @MinigamesEventHandler(priority = MinigamesEventHandler.INTERNAL_FIRST)
         public void eventMapChange(MapChangedEvent event) {
             Iterator<Metadata> iterator = metadataMap.values().iterator();
 

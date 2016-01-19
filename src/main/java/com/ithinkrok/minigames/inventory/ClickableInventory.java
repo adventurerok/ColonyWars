@@ -2,8 +2,8 @@ package com.ithinkrok.minigames.inventory;
 
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.user.inventory.UserInventoryClickEvent;
-import com.ithinkrok.minigames.inventory.event.UserClickItemEvent;
 import com.ithinkrok.minigames.inventory.event.CalculateItemForUserEvent;
+import com.ithinkrok.minigames.inventory.event.UserClickItemEvent;
 import com.ithinkrok.minigames.util.ConfigUtils;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import org.bukkit.configuration.ConfigurationSection;
@@ -11,7 +11,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Constructor;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

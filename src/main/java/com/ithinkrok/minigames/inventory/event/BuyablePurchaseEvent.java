@@ -1,8 +1,8 @@
 package com.ithinkrok.minigames.inventory.event;
 
-import com.ithinkrok.minigames.inventory.Buyable;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.user.UserEvent;
+import com.ithinkrok.minigames.inventory.Buyable;
 import com.ithinkrok.minigames.inventory.ClickableInventory;
 
 /**

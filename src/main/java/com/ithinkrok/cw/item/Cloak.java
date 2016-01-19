@@ -1,13 +1,13 @@
 package com.ithinkrok.cw.item;
 
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.user.game.UserAbilityCooldownEvent;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.task.GameTask;
 import org.bukkit.Effect;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -23,7 +23,7 @@ public class Cloak implements Listener {
     private Map<PotionEffectType, Integer> cloakEffects;
     private Map<PotionEffectType, Integer> decloakEffects;
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onListenerLoaded(ListenerLoadedEvent event) {
         cloakEffects = getEffectsFromConfig(event.getConfig().getConfigurationSection("cloak_effects"));
         decloakEffects = getEffectsFromConfig(event.getConfig().getConfigurationSection("decloak_effects"));
@@ -39,7 +39,7 @@ public class Cloak implements Listener {
         return result;
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onInteract(UserInteractEvent event) {
         event.getUser().cloak();
 
@@ -62,7 +62,7 @@ public class Cloak implements Listener {
         event.setStartCooldownAfterAction(true);
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onTimeout(UserAbilityCooldownEvent event) {
         if (!event.getUser().isInGame()) return;
 

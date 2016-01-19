@@ -2,6 +2,7 @@ package com.ithinkrok.cw.lobbygames;
 
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.user.game.UserTeleportEvent;
 import com.ithinkrok.minigames.event.user.state.UserDamagedEvent;
 import com.ithinkrok.minigames.event.user.world.UserBreakBlockEvent;
@@ -13,7 +14,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -33,7 +33,7 @@ public class SpleefMinigame implements Listener {
     private Map<UUID, Arena> queueLookups = new HashMap<>();
     private Map<UUID, Arena> gameLookups = new HashMap<>();
 
-    @EventHandler
+    @MinigamesEventHandler
     public void configure(ListenerLoadedEvent event) {
         spadeMaterial = Material.matchMaterial(event.getConfig().getString("spade", "IRON_SPADE"));
 
@@ -49,7 +49,7 @@ public class SpleefMinigame implements Listener {
         }
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onUserTeleport(UserTeleportEvent event) {
         Arena arena = gameLookups.get(event.getUser().getUuid());
 
@@ -63,12 +63,12 @@ public class SpleefMinigame implements Listener {
         arena.spleefUserKilled(event.getUser(), false);
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @MinigamesEventHandler(priority = MinigamesEventHandler.HIGH)
     public void onUserBreakBlock(UserBreakBlockEvent event){
         if(event.getBlock().getType() == Material.SNOW_BLOCK) event.setCancelled(false);
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onUserDamaged(UserDamagedEvent event) {
         if(event.getDamageCause() != EntityDamageEvent.DamageCause.LAVA) return;
 
@@ -80,7 +80,7 @@ public class SpleefMinigame implements Listener {
         arena.spleefUserKilled(event.getUser(), true);
     }
 
-    @EventHandler
+    @MinigamesEventHandler
     public void onUserInteractWorld(UserInteractWorldEvent event) {
         if(!event.hasBlock()) return;
 

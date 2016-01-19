@@ -1,7 +1,7 @@
 package com.ithinkrok.minigames.metadata;
 
-import com.ithinkrok.minigames.team.Team;
 import com.ithinkrok.minigames.User;
+import com.ithinkrok.minigames.team.Team;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**

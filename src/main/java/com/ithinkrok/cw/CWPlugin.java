@@ -10,7 +10,6 @@ import com.ithinkrok.minigames.MinigamesPlugin;
 import com.ithinkrok.minigames.command.GameCommandHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 

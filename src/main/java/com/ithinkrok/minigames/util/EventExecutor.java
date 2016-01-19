@@ -31,11 +31,12 @@ public class EventExecutor {
         }
     }
 
-    private static SortedMap<MethodExecutor, Listener> getMethodExecutorMap(MinigamesEvent event, Listener... listeners) {
+    private static SortedMap<MethodExecutor, Listener> getMethodExecutorMap(MinigamesEvent event,
+                                                                            Listener... listeners) {
         SortedMap<MethodExecutor, Listener> map = new TreeMap<>();
 
         for (Listener listener : listeners) {
-            if(listener == null) continue;
+            if (listener == null) continue;
             for (MethodExecutor methodExecutor : getMethodExecutors(listener, event)) {
                 map.put(methodExecutor, listener);
             }
@@ -72,6 +73,16 @@ public class EventExecutor {
         return map;
     }
 
+    private static void addToMethodExecutorMap(MinigamesEvent event, Collection<Listener> listenerGroup,
+                                               SortedMap<MethodExecutor, Listener> map) {
+        for (Listener listener : listenerGroup) {
+            if (listener == null) continue;
+            for (MethodExecutor methodExecutor : getMethodExecutors(listener, event)) {
+                map.put(methodExecutor, listener);
+            }
+        }
+    }
+
     public static void executeEvent(MinigamesEvent event, Collection<Collection<Listener>> listeners) {
         executeListeners(event, getMethodExecutorMap(event, listeners));
     }
@@ -86,17 +97,6 @@ public class EventExecutor {
 
         return map;
     }
-
-    private static void addToMethodExecutorMap(MinigamesEvent event, Collection<Listener> listenerGroup,
-                                               SortedMap<MethodExecutor, Listener> map) {
-        for (Listener listener : listenerGroup) {
-            if(listener == null) continue;
-            for (MethodExecutor methodExecutor : getMethodExecutors(listener, event)) {
-                map.put(methodExecutor, listener);
-            }
-        }
-    }
-
 
     private static class ListenerHandler {
         private Class<? extends Listener> listenerClass;
@@ -156,10 +156,10 @@ public class EventExecutor {
         @Override
         public int compareTo(MethodExecutor o) {
 
-            int priorityCompare = o.method.getAnnotation(MinigamesEventHandler.class).priority() -method.getAnnotation
-                    (MinigamesEventHandler.class).priority();
+            int priorityCompare = method.getAnnotation(MinigamesEventHandler.class).priority() -
+                    o.method.getAnnotation(MinigamesEventHandler.class).priority();
 
-            if(priorityCompare != 0) return priorityCompare;
+            if (priorityCompare != 0) return priorityCompare;
 
             //TODO possible speed improvement here
             return method.toString().compareTo(o.method.toString());

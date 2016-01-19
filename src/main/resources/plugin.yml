@@ -14,6 +14,7 @@ permissions:
       mccw.gamestate: true
       mccw.cw: true
       mccw.tmm.others: true
+      mccw.countdown: true
   mccw.user:
     default: true
     description: "Gives all user command permission"
@@ -52,6 +53,9 @@ permissions:
   mccw.stats:
     description: "Allows use of /stats"
     default: false
+  mccw.countdown:
+    description: "Allows use of /countdown"
+    default: false
 
 commands:
   gamestate:
@@ -70,3 +74,10 @@ commands:
   stats:
     description: "Shows your stats"
     usage: "/<command> [category]"
+  countdown:
+    description: "Modifies countdowns"
+    aliases: ["cdown", "cd", "cdwn"]
+    usage: |
+      /<command> add/set <amount>
+      /<command> finish/cancel
+      /<command> start <name> <seconds> <localestub>

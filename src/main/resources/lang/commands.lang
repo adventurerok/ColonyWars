@@ -18,17 +18,24 @@ command.tmm.change.0=&6Money messages set to NONE
 command.tmm.change.1=&6Money messages set to FILTERED
 command.tmm.change.2=&6Money messages set to ALL
 
-commands.stats.none=&cYou have no stats for category %s
-commands.stats.category=&6&lStats for category &3&l%s&6&l\:
-commands.stats.kills=&6Kills\: &3%s
-commands.stats.deaths=&6Deaths\: &3%s
-commands.stats.kd=&6K/D\: &3%s
-commands.stats.wins=&6Wins\: &3%s
-commands.stats.losses=&6Losses\: &3%s
-commands.stats.games=&6Total games\: &3%s
-commands.stats.totalmoney=&6Total gold collected\: &3%s
-commands.stats.score=&6Score\: &3%s
+command.stats.none=&cYou have no stats for category %s
+command.stats.category=&6&lStats for category &3&l%s&6&l\:
+command.stats.kills=&6Kills\: &3%s
+command.stats.deaths=&6Deaths\: &3%s
+command.stats.kd=&6K/D\: &3%s
+command.stats.wins=&6Wins\: &3%s
+command.stats.losses=&6Losses\: &3%s
+command.stats.games=&6Total games\: &3%s
+command.stats.totalmoney=&6Total gold collected\: &3%s
+command.stats.score=&6Score\: &3%s
 
-commands.leaderboard.category=&6&lLeaderboard for category &3&l%s&6&l\:
-commands.leaderboard.listing=&6%s&6: &3%s&6, with a score of &3%s&6!
-commands.leaderboard.bad-count=&cBad count integer.
+command.leaderboard.category=&6&lLeaderboard for category &3&l%s&6&l\:
+command.leaderboard.listing=&6%s&6: &3%s&6, with a score of &3%s&6!
+command.leaderboard.bad-count=&cBad count integer.
+
+command.countdown.none=&cThere is no countdown at the moment
+command.countdown.started=&aStarted countdown %s for %s seconds
+command.countdown.added=&aAdded %s seconds to the current countdown
+command.countdown.set=&aSet the seconds remaining of the countdown to %s
+command.countdown.finished=&aFinished the current countdown early
+command.countdown.stopped=&aStopped the current countdown

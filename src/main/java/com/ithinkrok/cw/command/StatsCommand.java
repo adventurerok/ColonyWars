@@ -34,7 +34,7 @@ public class StatsCommand implements GameCommandExecutor {
                 add = statsHolder.getStatsChanges();
             } else add = new UserCategoryStats();
             
-            sender.sendLocale("commands.stats.category", category);
+            sender.sendLocale("command.stats.category", category);
 
             int kills = stats.getKills() + add.getKills();
             int deaths = stats.getDeaths() + add.getDeaths();
@@ -51,14 +51,14 @@ public class StatsCommand implements GameCommandExecutor {
 
             String kdText = twoDecimalPlaces.format(kd);
 
-            sender.sendLocaleNoPrefix("commands.stats.kills", kills);
-            sender.sendLocaleNoPrefix("commands.stats.deaths", deaths);
-            sender.sendLocaleNoPrefix("commands.stats.kd", kdText);
-            sender.sendLocaleNoPrefix("commands.stats.wins", gameWins);
-            sender.sendLocaleNoPrefix("commands.stats.losses", gameLosses);
-            sender.sendLocaleNoPrefix("commands.stats.games", games);
-            sender.sendLocaleNoPrefix("commands.stats.totalmoney", totalMoney);
-            sender.sendLocaleNoPrefix("commands.stats.score", score);
+            sender.sendLocaleNoPrefix("command.stats.kills", kills);
+            sender.sendLocaleNoPrefix("command.stats.deaths", deaths);
+            sender.sendLocaleNoPrefix("command.stats.kd", kdText);
+            sender.sendLocaleNoPrefix("command.stats.wins", gameWins);
+            sender.sendLocaleNoPrefix("command.stats.losses", gameLosses);
+            sender.sendLocaleNoPrefix("command.stats.games", games);
+            sender.sendLocaleNoPrefix("command.stats.totalmoney", totalMoney);
+            sender.sendLocaleNoPrefix("command.stats.score", score);
         });
         
         return true;

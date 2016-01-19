@@ -1,6 +1,5 @@
 package com.ithinkrok.minigames.item;
 
-import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.user.world.UserAttackEvent;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
@@ -116,7 +115,7 @@ public class WeaponModifier implements Listener {
 
 
         @SuppressWarnings("unchecked")
-        public <U extends User> void modifyAttack(UserAttackEvent attack) {
+        public void modifyAttack(UserAttackEvent attack) {
             int duration = (int) (durationCalculator.calculate(attack.getUser().getUpgradeLevels()) * TICKS_PER_SECOND);
             int amp = (int) (levelCalculator.calculate(attack.getUser().getUpgradeLevels()) - 1);
 

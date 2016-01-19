@@ -99,3 +99,12 @@ death.natural.void=&6%s &6fell into the void!
 
 score.gain=&6You gained &a%s &6points!
 score.loss=&6You lost &c%s &6points!
+
+user.quit=%s &equit
+user.join=%s &ejoined
+user.quit.lobby=%s &7left the lobby &8[&7%s&8/&7%s&8]
+user.join.lobby=%s &7joined the lobby &8[&7%s&8/&7%s&8]
+user.quit.spectator=&d%s &dquit spectating the game
+user.join.spectator=&d%s &dstarted spectating the game
+user.quit.game=&4%s &4quit and became a zombie!
+user.join.game=&4%s &4rejoined! (are no longer a zombie)

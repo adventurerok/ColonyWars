@@ -3,15 +3,18 @@ package com.ithinkrok.cw.gamestate;
 import com.ithinkrok.cw.metadata.StatsHolder;
 import com.ithinkrok.cw.metadata.TeamStatsHolderGroup;
 import com.ithinkrok.minigames.User;
+import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.map.MapCreatureSpawnEvent;
 import com.ithinkrok.minigames.event.map.MapItemSpawnEvent;
 import com.ithinkrok.minigames.event.user.game.UserChangeKitEvent;
 import com.ithinkrok.minigames.event.user.game.UserChangeTeamEvent;
+import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.event.user.game.UserQuitEvent;
 import com.ithinkrok.minigames.event.user.world.UserDropItemEvent;
 import com.ithinkrok.minigames.util.InventoryUtils;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -24,6 +27,17 @@ import java.util.Random;
 public class BaseGameStateListener implements Listener {
 
     protected Random random = new Random();
+
+    protected String quitLocale;
+    protected String joinLocale;
+
+    @MinigamesEventHandler
+    public void onListenerLoaded(ListenerLoadedEvent<?> event) {
+        ConfigurationSection config = event.getConfig();
+
+        if(quitLocale == null) quitLocale = config.getString("user_quit_locale");
+        if(joinLocale == null) joinLocale = config.getString("user_join_locale");
+    }
 
     @MinigamesEventHandler
     public void onUserDropItem(UserDropItemEvent event) {
@@ -69,6 +83,16 @@ public class BaseGameStateListener implements Listener {
         if(event.getRemoveUser()) {
             statsHolder.setUser(null);
         }
+    }
+
+    @MinigamesEventHandler(priority = MinigamesEventHandler.MONITOR)
+    public void sendQuitMessageOnUserQuit(UserQuitEvent event) {
+        event.getUserGameGroup().sendLocale(quitLocale, event.getUser().getFormattedName());
+    }
+
+    @MinigamesEventHandler(priority = MinigamesEventHandler.FIRST)
+    public void sendJoinMessageOnUserJoin(UserJoinEvent event) {
+        event.getUserGameGroup().sendLocale(joinLocale, event.getUser().getFormattedName());
     }
 
     @MinigamesEventHandler

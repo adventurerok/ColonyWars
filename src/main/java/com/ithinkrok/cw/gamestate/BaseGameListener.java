@@ -115,6 +115,8 @@ public class BaseGameListener extends BaseGameStateListener {
 
     @MinigamesEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<?> event) {
+        super.onListenerLoaded(event);
+
         ConfigurationSection config = event.getConfig();
 
         goldSharedConfig = config.getString("gold_shared_object");

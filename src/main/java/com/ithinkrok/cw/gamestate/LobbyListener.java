@@ -23,8 +23,6 @@ import java.util.Random;
  */
 public class LobbyListener extends BaseGameStateListener {
 
-    private static final Random random = new Random();
-
     private String startCountdownName;
     private String startCountdownLocaleStub;
     private int startCountdownSeconds;
@@ -40,7 +38,8 @@ public class LobbyListener extends BaseGameStateListener {
     private GiveCustomItemsOnJoin.CustomItemGiver giveOnJoin;
 
     @MinigamesEventHandler
-    public void eventListenerLoaded(ListenerLoadedEvent<?> event) {
+    public void onListenerLoaded(ListenerLoadedEvent<?> event) {
+        super.onListenerLoaded(event);
         ConfigurationSection config = event.getConfig();
 
         nextGameState = config.getString("next_gamestate");

@@ -451,7 +451,7 @@ shared_objects:
     trees:
       enabled: true
       item_material: "GOLD_INGOT"
-      item_amount: "1+x+(ln(x)/ln(1.5))-min(sqrt((x^3)/500),x^0.9)"
+      item_amount: "1+x+(ln(x)/ln(1.5))-min(sqrt((pow(x,3))/500),pow(x,0.9))"
       log_materials:
         - "LOG"
         - "LOG_2"

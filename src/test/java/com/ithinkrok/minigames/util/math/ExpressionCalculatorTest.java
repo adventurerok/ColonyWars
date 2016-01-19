@@ -57,6 +57,12 @@ public class ExpressionCalculatorTest {
     }
 
     @Test
+    @DataProvider(value = {"true;true", "false;false"}, splitBy = ";")
+    public void shouldHandleLogicCorrectly(String sum, boolean result) {
+        testBooleanValues(sum, null, result);
+    }
+
+    @Test
     @DataProvider({"x+y,4,5,9"})
     public void shouldHandleVariablesCorrectly(String sum, double x, double y, double result) {
         Variables variables = mock(Variables.class);
@@ -73,5 +79,13 @@ public class ExpressionCalculatorTest {
         double actual = calculator.calculate(variables);
 
         assertThat(actual).isEqualTo(expected, offset(1e-5));
+    }
+
+    private void testBooleanValues(String sum, Variables variables, boolean expected) {
+        ExpressionCalculator calculator = new ExpressionCalculator(sum);
+
+        boolean actual = calculator.calculateBoolean(variables);
+
+        assertThat(actual).isEqualTo(expected);
     }
 }

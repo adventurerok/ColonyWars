@@ -8,4 +8,8 @@ package com.ithinkrok.minigames.util.math;
 public interface Calculator {
 
     double calculate(Variables variables);
+
+    default boolean calculateBoolean(Variables variables) {
+        return (int)(Math.floor(calculate(variables))) != 0;
+    }
 }

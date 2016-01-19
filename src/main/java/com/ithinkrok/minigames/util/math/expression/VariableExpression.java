@@ -15,7 +15,7 @@ public class VariableExpression implements Expression {
 
     @Override
     public double calculate(Variables variables) {
-        return variables.getVariable(variable);
+        return variables != null ? variables.getVariable(variable) : 0;
     }
 
     @Override

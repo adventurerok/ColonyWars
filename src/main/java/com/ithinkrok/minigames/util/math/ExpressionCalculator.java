@@ -21,14 +21,30 @@ public class ExpressionCalculator implements Calculator {
         return opMap.containsKey(check);
     }
 
+    private static int integer(double d) {
+        return (int)Math.floor(d);
+    }
+
     static {
-        opMap.put("^", new OpInfo(numbers -> Math.pow(numbers[0], numbers[1]), false, false, 10, 2, 2));
         opMap.put("/", new OpInfo(numbers -> numbers[0] / numbers[1], false, false, 20, 2, 2));
         opMap.put("*", new OpInfo(numbers -> numbers[0] * numbers[1], false, false, 20, 2, 2));
         opMap.put("%", new OpInfo(numbers -> numbers[0] % numbers[1], false, false, 20, 2, 2));
         opMap.put("+", new OpInfo(numbers -> numbers[0] + numbers[1], false, false, 30, 2, 2));
         opMap.put("-", new OpInfo(numbers -> numbers[0] - numbers[1], false, false, 30, 2, 2));
-        opMap.put("~", new OpInfo(numbers -> -numbers[0], false, false, 40, 1, 1));
+
+        opMap.put("=", new OpInfo(numbers -> (numbers[0] == numbers[1]) ? 1 : 0, false, false, 35, 2, 2));
+        opMap.put("<", new OpInfo(numbers -> (numbers[0] < numbers[1]) ? 1 : 0, false, false, 35, 2, 2));
+        opMap.put(">", new OpInfo(numbers -> (numbers[0] > numbers[1]) ? 1 : 0, false, false, 35, 2, 2));
+
+        //unary minus = '
+        opMap.put("'", new OpInfo(numbers -> -numbers[0], false, false, 5, 1, 1));
+
+        opMap.put("|", new OpInfo(numbers -> integer(numbers[0]) | integer(numbers[1]), false, false, 40, 2, 2));
+        opMap.put("&", new OpInfo(numbers -> integer(numbers[0]) & integer(numbers[1]), false, false, 40, 2, 2));
+        opMap.put("^", new OpInfo(numbers -> integer(numbers[0]) ^ integer(numbers[1]), false, false, 40, 2, 2));
+
+        opMap.put("~", new OpInfo(numbers -> ~integer(numbers[0]), false, false, 5, 1, 1));
+        opMap.put("!", new OpInfo(numbers -> (integer(numbers[0]) == 0) ? 1 : 0, false, false, 5, 1, 1));
 
         opMap.put("sin", new OpInfo(numbers -> Math.sin(numbers[0]), true, false, 0, 1, 1));
         opMap.put("cos", new OpInfo(numbers -> Math.cos(numbers[0]), true, false, 0, 1, 1));
@@ -42,7 +58,7 @@ public class ExpressionCalculator implements Calculator {
         opMap.put("degrees", new OpInfo(numbers -> Math.toDegrees(numbers[0]), true, false, 0, 1, 1));
         opMap.put("radians", new OpInfo(numbers -> Math.toRadians(numbers[0]), true, false, 0, 1, 1));
 
-
+        opMap.put("pow", new OpInfo(numbers -> Math.pow(numbers[0], numbers[1]), true, false, 0, 2, 2));
         opMap.put("sqrt", new OpInfo(numbers -> Math.sqrt(numbers[0]), true, false, 0, 1, 1));
         opMap.put("ln", new OpInfo(numbers -> Math.log(numbers[0]), true, false, 0, 1, 1));
         opMap.put("lg", new OpInfo(numbers -> Math.log(numbers[0]) * 1.44269504089, true, false, 0, 1, 1));
@@ -122,7 +138,7 @@ public class ExpressionCalculator implements Calculator {
                     boolean operator = opMap.containsKey(token) || "(".equals(token) || ",".equals(token);
 
                     if(!"-".equals(token) || valueLast) tokBuf.add(token);
-                    else tokBuf.add("~"); //Unary minus
+                    else tokBuf.add("'"); //Unary minus
                     valueLast = !operator;
             }
 
@@ -179,7 +195,9 @@ public class ExpressionCalculator implements Calculator {
         for (String token : tokens) {
             if ("(".equals(token)) stack.add(null); //Use a null expression as the stack separator
             else if (isNumber(token)) stack.add(new NumberExpression(Double.parseDouble(token)));
-            else if (!opMap.containsKey(token)) stack.add(new VariableExpression(token));
+            else if (!opMap.containsKey(token)){
+                stack.add(variableExpression(token));
+            }
             else {
                 OpInfo op = opMap.get(token);
 
@@ -211,6 +229,23 @@ public class ExpressionCalculator implements Calculator {
         Expression expression = stack.getFirst();
         if (expression.isStatic()) expression = new NumberExpression(expression.calculate(null));
         return expression;
+    }
+
+    private static Expression variableExpression(String token) {
+        switch(token.toLowerCase()) {
+            case "pi":
+                return new NumberExpression(Math.PI);
+            case "tau":
+                return new NumberExpression(Math.PI * 2);
+            case "e":
+                return new NumberExpression(Math.E);
+            case "true":
+                return new NumberExpression(1);
+            case "false":
+                return new NumberExpression(0);
+            default:
+                return new VariableExpression(token);
+        }
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")

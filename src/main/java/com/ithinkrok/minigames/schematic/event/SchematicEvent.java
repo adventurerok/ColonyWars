@@ -1,5 +1,6 @@
 package com.ithinkrok.minigames.schematic.event;
 
+import com.ithinkrok.minigames.event.MinigamesEvent;
 import com.ithinkrok.minigames.schematic.PastedSchematic;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -7,7 +8,7 @@ import org.bukkit.event.HandlerList;
 /**
  * Created by paul on 07/01/16.
  */
-public class SchematicEvent extends Event {
+public class SchematicEvent implements MinigamesEvent {
 
     private final PastedSchematic schematic;
 
@@ -15,10 +16,6 @@ public class SchematicEvent extends Event {
         this.schematic = schematic;
     }
 
-    @Override
-    public HandlerList getHandlers() {
-        return null;
-    }
 
     public PastedSchematic getSchematic() {
         return schematic;

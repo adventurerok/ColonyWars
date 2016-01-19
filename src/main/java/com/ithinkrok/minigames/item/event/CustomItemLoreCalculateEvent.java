@@ -1,5 +1,6 @@
 package com.ithinkrok.minigames.item.event;
 
+import com.ithinkrok.minigames.event.MinigamesEvent;
 import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.util.math.Variables;
@@ -11,7 +12,7 @@ import java.util.List;
 /**
  * Created by paul on 03/01/16.
  */
-public class CustomItemLoreCalculateEvent extends Event{
+public class CustomItemLoreCalculateEvent implements MinigamesEvent{
 
     private final CustomItem customItem;
     private final List<String> lore;
@@ -42,8 +43,4 @@ public class CustomItemLoreCalculateEvent extends Event{
         return variables;
     }
 
-    @Override
-    public HandlerList getHandlers() {
-        return null;
-    }
 }

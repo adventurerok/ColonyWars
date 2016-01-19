@@ -9,7 +9,7 @@ import org.bukkit.event.HandlerList;
  *
  * Called on a listener when it is enabled (but not necessarily before it starts receiving events)
  */
-public class ListenerLoadedEvent<C> extends Event{
+public class ListenerLoadedEvent<C> implements MinigamesEvent {
 
     private final C creator;
     private final ConfigurationSection config;
@@ -29,10 +29,5 @@ public class ListenerLoadedEvent<C> extends Event{
 
     public boolean hasConfig() {
         return getConfig() != null;
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return null;
     }
 }

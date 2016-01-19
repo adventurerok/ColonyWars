@@ -1,11 +1,13 @@
 package com.ithinkrok.minigames.event;
 
-import java.lang.annotation.Documented;
+import java.lang.annotation.*;
 
 /**
  * Created by paul on 19/01/16.
  */
 @Documented
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface MinigamesEventHandler {
 
     int FIRST = 100;

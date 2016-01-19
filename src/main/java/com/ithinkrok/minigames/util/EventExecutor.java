@@ -1,5 +1,7 @@
 package com.ithinkrok.minigames.util;
 
+import com.ithinkrok.minigames.event.MinigamesEvent;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import org.bukkit.event.*;
 
 import java.lang.reflect.Method;
@@ -12,11 +14,11 @@ public class EventExecutor {
 
     private static Map<Class<? extends Listener>, ListenerHandler> listenerHandlerMap = new HashMap<>();
 
-    public static void executeEvent(Event event, Listener... listeners) {
+    public static void executeEvent(MinigamesEvent event, Listener... listeners) {
         executeListeners(event, getMethodExecutorMap(event, listeners));
     }
 
-    private static void executeListeners(Event event, SortedMap<MethodExecutor, Listener> map) {
+    private static void executeListeners(MinigamesEvent event, SortedMap<MethodExecutor, Listener> map) {
         for (Map.Entry<MethodExecutor, Listener> entry : map.entrySet()) {
             try {
                 entry.getKey().execute(entry.getValue(), event);
@@ -27,7 +29,7 @@ public class EventExecutor {
         }
     }
 
-    private static SortedMap<MethodExecutor, Listener> getMethodExecutorMap(Event event, Listener... listeners) {
+    private static SortedMap<MethodExecutor, Listener> getMethodExecutorMap(MinigamesEvent event, Listener... listeners) {
         SortedMap<MethodExecutor, Listener> map = new TreeMap<>();
 
         for (Listener listener : listeners) {
@@ -40,7 +42,7 @@ public class EventExecutor {
         return map;
     }
 
-    private static Collection<MethodExecutor> getMethodExecutors(Listener listener, Event event) {
+    private static Collection<MethodExecutor> getMethodExecutors(Listener listener, MinigamesEvent event) {
         ListenerHandler handler = listenerHandlerMap.get(listener.getClass());
 
         if (handler == null) {
@@ -52,12 +54,12 @@ public class EventExecutor {
     }
 
     @SafeVarargs
-    public static void executeEvent(Event event, Collection<Listener>... listeners) {
+    public static void executeEvent(MinigamesEvent event, Collection<Listener>... listeners) {
         executeListeners(event, getMethodExecutorMap(event, listeners));
     }
 
     @SafeVarargs
-    private static SortedMap<MethodExecutor, Listener> getMethodExecutorMap(Event event,
+    private static SortedMap<MethodExecutor, Listener> getMethodExecutorMap(MinigamesEvent event,
                                                                             Collection<Listener>... listeners) {
         SortedMap<MethodExecutor, Listener> map = new TreeMap<>();
 
@@ -68,11 +70,11 @@ public class EventExecutor {
         return map;
     }
 
-    public static void executeEvent(Event event, Collection<Collection<Listener>> listeners) {
+    public static void executeEvent(MinigamesEvent event, Collection<Collection<Listener>> listeners) {
         executeListeners(event, getMethodExecutorMap(event, listeners));
     }
 
-    private static SortedMap<MethodExecutor, Listener> getMethodExecutorMap(Event event,
+    private static SortedMap<MethodExecutor, Listener> getMethodExecutorMap(MinigamesEvent event,
                                                                             Collection<Collection<Listener>> listeners) {
         SortedMap<MethodExecutor, Listener> map = new TreeMap<>();
 
@@ -83,7 +85,7 @@ public class EventExecutor {
         return map;
     }
 
-    private static void addToMethodExecutorMap(Event event, Collection<Listener> listenerGroup,
+    private static void addToMethodExecutorMap(MinigamesEvent event, Collection<Listener> listenerGroup,
                                                SortedMap<MethodExecutor, Listener> map) {
         for (Listener listener : listenerGroup) {
             if(listener == null) continue;
@@ -97,13 +99,13 @@ public class EventExecutor {
     private static class ListenerHandler {
         private Class<? extends Listener> listenerClass;
 
-        private Map<Class<? extends Event>, List<MethodExecutor>> eventMethodsMap = new HashMap<>();
+        private Map<Class<? extends MinigamesEvent>, List<MethodExecutor>> eventMethodsMap = new HashMap<>();
 
         public ListenerHandler(Class<? extends Listener> listenerClass) {
             this.listenerClass = listenerClass;
         }
 
-        public Collection<MethodExecutor> getMethodExecutors(Event event) {
+        public Collection<MethodExecutor> getMethodExecutors(MinigamesEvent event) {
             List<MethodExecutor> eventMethods = eventMethodsMap.get(event.getClass());
 
             if (eventMethods == null) {
@@ -111,14 +113,14 @@ public class EventExecutor {
 
                 for (Method method : listenerClass.getMethods()) {
                     if (method.getParameterCount() != 1) continue;
-                    if (!method.isAnnotationPresent(EventHandler.class)) continue;
+                    if (!method.isAnnotationPresent(MinigamesEventHandler.class)) continue;
                     if (!method.getParameterTypes()[0].isInstance(event)) continue;
 
                     //Allows the usage of private classes as listeners
                     method.setAccessible(true);
 
                     eventMethods.add(new MethodExecutor(method,
-                            method.getAnnotation(EventHandler.class).ignoreCancelled()));
+                            method.getAnnotation(MinigamesEventHandler.class).ignoreCancelled()));
                 }
 
                 Collections.sort(eventMethods);
@@ -139,7 +141,7 @@ public class EventExecutor {
             this.ignoreCancelled = ignoreCancelled;
         }
 
-        public void execute(Listener listener, Event event) throws EventException {
+        public void execute(Listener listener, MinigamesEvent event) throws EventException {
             if (ignoreCancelled && (event instanceof Cancellable) && ((Cancellable) event).isCancelled()) return;
 
             try {
@@ -151,8 +153,10 @@ public class EventExecutor {
 
         @Override
         public int compareTo(MethodExecutor o) {
-            int priorityCompare = method.getAnnotation(EventHandler.class).priority()
-                    .compareTo(o.method.getAnnotation(EventHandler.class).priority());
+
+            int priorityCompare = o.method.getAnnotation(MinigamesEventHandler.class).priority() -method.getAnnotation
+                    (MinigamesEventHandler.class).priority();
+
             if(priorityCompare != 0) return priorityCompare;
 
             //TODO possible speed improvement here

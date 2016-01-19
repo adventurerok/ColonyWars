@@ -4,6 +4,7 @@ import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.MutableClassToInstanceMap;
 import com.ithinkrok.minigames.database.DatabaseTask;
 import com.ithinkrok.minigames.database.DatabaseTaskRunner;
+import com.ithinkrok.minigames.event.MinigamesEvent;
 import com.ithinkrok.minigames.event.game.CountdownFinishedEvent;
 import com.ithinkrok.minigames.event.game.GameEvent;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
@@ -129,7 +130,7 @@ public class GameGroup
 
         game.setGameGroupForMap(this, newMap.getWorld().getName());
 
-        Event event = new MapChangedEvent(this, oldMap, newMap);
+        MinigamesEvent event = new MapChangedEvent(this, oldMap, newMap);
 
         EventExecutor
                 .executeEvent(event, getListeners(getAllUserListeners(), getAllTeamListeners(), newMap.getListeners()));
@@ -268,7 +269,7 @@ public class GameGroup
 
         gameStateTaskList.cancelAllTasks();
 
-        Event event = new GameStateChangedEvent(this, oldState, newState);
+        MinigamesEvent event = new GameStateChangedEvent(this, oldState, newState);
         EventExecutor.executeEvent(event,
                 getListeners(getAllUserListeners(), getAllTeamListeners(), gameState.getListeners()));
     }

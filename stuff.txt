@@ -2,6 +2,8 @@ RECODE BUGS:
  - teamchat command, transfer/share command, fix command, countdown command
  - join message
  - redo events with new classes
+ - Quitting with only zombies on the server
+ - Ignore default world events
 
 LOW PRIORITY / INVESTIGATE:
  - Prevent fire spread

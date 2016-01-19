@@ -74,8 +74,6 @@ building.upgrade.replace=Replace this %s with a %s
 building.upgrade.failed=We failed to build a %s here. Have the block yourself to find a better place!
 
 #cooldown-finished
-cooldowns.ender.finished=&aThe ender wand is ready to use again.
-cooldowns.lightning.finished=&aThe lightning wand is ready to use again.
 cooldowns.explosion.finished=&aThe explosion wand is ready to use again.
 cooldowns.bender.finished=&aThe earth bender is ready to use again.
 cooldowns.healing.finished=&aThe healing scroll is ready to use again.

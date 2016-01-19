@@ -57,6 +57,14 @@ invisible_user_toggle.name=Show/Hide other spectators
 spectate_chooser.name=Spectate Chooser
 spectate_chooser.title=Spectate Chooser
 
+lightning_wand.name=Lightning Wand
+lightning_wand.upgrade=Lightning Wand Upgrade %s
+lightning_wand.cooldown=&aThe lightning wand is ready to use again.
+
+ender_wand.name=Ender Wand
+ender_wand.upgrade=Ender Wand Upgrade %s
+ender_wand.cooldown=&aThe ender wand is ready to use again.
+
 #ClickableItems
 buyable.team.no_money=&cYour Team and you do not have enough money to purchase this item!
 buyable.user.no_money=&cYou do not have enough money to purchase this item!

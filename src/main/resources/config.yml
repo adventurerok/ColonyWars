@@ -603,6 +603,10 @@ custom_items:
     display_name_locale: "lightning_wand.name"
     material: "DIAMOND_LEGGINGS"
     upgradable: true
+    right_cooldown:
+      ability: "lightning"
+      timer: "50-20*lightning"
+      finished_locale: "lightning_wand.cooldown"
     listeners:
       lightning:
         events: ["attack", "rightClick"]
@@ -610,6 +614,20 @@ custom_items:
         config:
           max_range: 100
           damage_multiplier: 2.8
+  ender_wand:
+    display_name_locale: "ender_wand.name"
+    material: "DIAMOND_CHESTPLATE"
+    upgradable: true
+    right_cooldown:
+      ability: "ender"
+      timer: "45-15*ender"
+      finished_locale: "ender_wand.cooldown"
+    listeners:
+      ender:
+        events: ["rightClick"]
+        class: "com.ithinkrok.cw.item.EnderWand"
+        config:
+          speed: 1.0
   pickaxe:
     material: "DIAMOND_PICKAXE"
   mighty_axe:

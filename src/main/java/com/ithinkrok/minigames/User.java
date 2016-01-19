@@ -558,6 +558,10 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         return item.createWithVariables(gameGroup, upgradeHandler);
     }
 
+    public <T extends Projectile> T launchProjectile(Class<? extends T> projectileClass) {
+        return entity.launchProjectile(projectileClass);
+    }
+
     public UpgradeHandler getUpgradeLevels() {
         return upgradeHandler;
     }

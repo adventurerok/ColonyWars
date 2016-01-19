@@ -74,7 +74,7 @@ public class KitListener implements Listener {
             if (config.contains("items")) {
                 ConfigurationSection items = config.getConfigurationSection("items");
                 itemStackGives.addAll(items.getKeys(false).stream()
-                        .map(unusedName -> ConfigUtils.getItemStack(config, unusedName)).collect(Collectors.toList()));
+                        .map(unusedName -> ConfigUtils.getItemStack(items, unusedName)).collect(Collectors.toList()));
             }
 
             if (config.contains("potion_effects")) {

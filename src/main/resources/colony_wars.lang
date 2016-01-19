@@ -43,8 +43,8 @@ building.shop.desc=&f&oClick to Open
 start_info.team=&6You are playing on the %s &6Team
 start_info.kit=&6You are playing as the class&3 %s
 
-timeouts.default.wait=&cPlease wait for this ability to cool down!
-cooldowns.default.wait=&cYou are already using this ability!
+cooldowns.default.wait=&cPlease wait for this ability to cool down!
+timeouts.default.wait=&cYou are already using this ability!
 
 lore.cooldown=Cooldown\: %s seconds
 

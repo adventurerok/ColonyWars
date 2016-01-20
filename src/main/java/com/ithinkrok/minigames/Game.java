@@ -625,7 +625,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
                 return;
             }
 
-            User target = EntityUtils.getRepresentingUser(attacker, event.getEntity());
+            User target = EntityUtils.getActualUser(attacker, event.getEntity());
             boolean representing = !attacker.equals(EntityUtils.getActualUser(gameGroup, event.getDamager()));
 
             if(target != null && !target.isInGame()) {
@@ -634,7 +634,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
             }
 
             if(attackerTeam.equals(targetTeam)) {
-                if(attacker != target || representing) {
+                if(!(representing && attacker == target)) {
                     event.setCancelled(true);
                     return;
                 }

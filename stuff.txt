@@ -1,6 +1,9 @@
 RECODE BUGS:
- - teamchat command, transfer/share command, fix command
+ - teamchat command, transfer/share command, fix command, leaderboard command
  - Quitting with only zombies on the server
+ - Force showdown timers
+ - Maps
+ - Disable weather (map config)
 
 LOW PRIORITY / INVESTIGATE:
  - Destroying a building while it is built does not decrement building now counter

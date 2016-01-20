@@ -65,6 +65,9 @@ ender_wand.name=Ender Wand
 ender_wand.upgrade=Ender Wand Upgrade %s
 ender_wand.cooldown=&aThe ender wand is ready to use again.
 
+archer_bow.upgrade=Bow Upgrade %s
+archer_sword.upgrade=Sword Upgrade %s
+
 #ClickableItems
 buyable.team.no_money=&cYour Team and you do not have enough money to purchase this item!
 buyable.user.no_money=&cYou do not have enough money to purchase this item!

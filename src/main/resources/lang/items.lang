@@ -75,6 +75,17 @@ wolf_wand.cooldown=&aThe wolf wand is ready to use again.
 warrior_sword.upgrade.sharpness=Sharpness Upgrade %s
 warrior_sword.upgrade.knockback=Knockback Upgrade %s
 
+earth_bender.name=Earth Bender
+earth_bender.upgrade=Earth Bender Upgrade %s
+earth_bender.cooldown=&aThe earth bender is ready to use again.
+
+healing_scroll.name=Healing Scroll
+healing_scroll.upgrade=Healing Scroll Upgrade %s
+healing_scroll.cooldown=&aThe healing scroll is ready to use again.
+
+cross.name=Cross
+cross.upgrade=Cross Upgrade %s
+
 #ClickableItems
 buyable.team.no_money=&cYour Team and you do not have enough money to purchase this item!
 buyable.user.no_money=&cYou do not have enough money to purchase this item!

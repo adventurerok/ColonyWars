@@ -68,8 +68,6 @@ building.upgrade.failed=We failed to build a %s here. Have the block yourself to
 
 #cooldown-finished
 cooldowns.explosion.finished=&aThe explosion wand is ready to use again.
-cooldowns.bender.finished=&aThe earth bender is ready to use again.
-cooldowns.healing.finished=&aThe healing scroll is ready to use again.
 cooldowns.fix.finished=&aYou can now use the fix command again!
 cooldowns.bat.finished=&aYou can now use bat flight again!
 
@@ -81,9 +79,6 @@ timeouts.default.wait=&cYou are already using this ability!
 #class-upgrades
 upgrades.explosion-wand.name=Explosion Wand Upgrade %s
 upgrades.flame-sword.name=Flame Sword Upgrade %s
-upgrades.healing-scroll.name=Healing Scroll Upgrade %s
-upgrades.earth-bender.name=Earth Bender Upgrade %s
-upgrades.cross.name=Cross Upgrade %s
 upgrades.vampire.name=Vampire Sword Upgrade %s
 upgrades.bat-flight.name=Bat Flight Upgrade %s
 

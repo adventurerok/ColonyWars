@@ -854,11 +854,51 @@ custom_items:
     listeners:
       wolf:
         class: "com.ithinkrok.cw.item.WolfWand"
+        events: ["rightClick"]
   warrior_sword:
     material: "IRON_SWORD"
     upgradable: true
     enchantments:
       DAMAGE_ALL: "array(sharpness, 0, 1, 3)"
       KNOCKBACK: "knockback"
+  earth_bender:
+    display_name_locale: "earth_bender.name"
+    material: "GOLD_CHESTPLATE"
+    upgradable: true
+    right_cooldown:
+      ability: "bender"
+      timer: "50-bender*15"
+      finished_locale: "earth_bender.cooldown"
+    listeners:
+      bender:
+        class: "com.ithinkrok.cw.item.EarthBender"
+        config:
+          max_moves: 5
+          spawn_sound: "WITHER_SPAWN,1.0,2.0"
+          knockback_sound: "WITHER_SHOOT,1.0,1.5"
+  healing_scroll:
+    display_name_locale: "healing_scroll.name"
+    material: "DIAMOND_BOOTS"
+    upgradable: true
+    right_cooldown:
+      ability: "healing"
+      timer: "240-healing*90"
+      finished_locale: "healing_scoll.cooldown"
+    listeners:
+      healing:
+        class: "com.ithinkrok.cw.item.HealingScroll"
+        config:
+          effect: "REGENERATION"
+          level: 6
+          duration: 2
+  cross:
+    display_name_locale: "cross.name"
+    material: "GOLD_LEGGINGS"
+    upgradable: true
+    listeners:
+      weapon:
+        class: "com.ithinkrok.minigames.item.WeaponModifier"
+        config:
+          damage: "2+cross"
 
 listeners: {}

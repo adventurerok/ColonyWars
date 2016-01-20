@@ -8,6 +8,8 @@ import com.ithinkrok.minigames.lang.LanguageLookup;
 import com.ithinkrok.minigames.metadata.Money;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import com.ithinkrok.minigames.util.SoundEffect;
+import com.ithinkrok.minigames.util.math.Calculator;
+import com.ithinkrok.minigames.util.math.ExpressionCalculator;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
@@ -24,8 +26,8 @@ public abstract class Buyable extends ClickableItem {
     private String userPayTeamLocale;
     private String teamDescriptionLocale;
     private String userDescriptionLocale;
-    private int cost;
-    private boolean team;
+    private Calculator cost;
+    private Calculator team;
 
     public Buyable(ItemStack baseDisplay) {
         super(baseDisplay);
@@ -33,8 +35,8 @@ public abstract class Buyable extends ClickableItem {
 
     @Override
     public void configure(ConfigurationSection config) {
-        cost = config.getInt("cost");
-        team = config.getBoolean("team");
+        cost = new ExpressionCalculator(config.getString("cost"));
+        team = new ExpressionCalculator(config.getString("team", "false"));
 
         teamNoMoneyLocale = config.getString("team_no_money_locale", "buyable.team.no_money");
         userNoMoneyLocale = config.getString("user_no_money_locale", "buyable.user.no_money");
@@ -58,6 +60,8 @@ public abstract class Buyable extends ClickableItem {
 
         int cost = getCost(event.getUser());
         boolean hasMoney = true;
+
+        boolean team = this.team.calculateBoolean(event.getUser().getUpgradeLevels());
 
         if (team) {
             Money teamMoney = Money.getOrCreate(event.getUser().getTeam());
@@ -83,7 +87,7 @@ public abstract class Buyable extends ClickableItem {
     }
 
     public int getCost(User user) {
-        return cost;
+        return (int) cost.calculate(user.getUpgradeLevels());
     }
 
     @Override
@@ -92,6 +96,8 @@ public abstract class Buyable extends ClickableItem {
         Money teamMoney = null;
 
         int cost = getCost(event.getUser());
+
+        boolean team = this.team.calculateBoolean(event.getUser().getUpgradeLevels());
 
         if (team) {
             teamMoney = Money.getOrCreate(event.getUser().getTeam());
@@ -114,7 +120,7 @@ public abstract class Buyable extends ClickableItem {
 
         if (!onPurchase(purchaseEvent)) return;
 
-        if (team && teamMoney != null) {
+        if (team) {
             int teamAmount = Math.min(cost, teamMoney.getMoney());
             int userAmount = cost - teamAmount;
 
@@ -132,8 +138,8 @@ public abstract class Buyable extends ClickableItem {
 
     public abstract boolean onPurchase(BuyablePurchaseEvent event);
 
-    public boolean buyWithTeamMoney() {
-        return team;
+    public boolean buyWithTeamMoney(User user) {
+        return team.calculateBoolean(user.getUpgradeLevels());
     }
 
 }

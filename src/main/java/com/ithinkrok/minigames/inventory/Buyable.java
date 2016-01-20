@@ -29,6 +29,8 @@ public abstract class Buyable extends ClickableItem {
     private Calculator cost;
     private Calculator team;
 
+    private Calculator canBuy;
+
     public Buyable(ItemStack baseDisplay) {
         super(baseDisplay);
     }
@@ -37,6 +39,7 @@ public abstract class Buyable extends ClickableItem {
     public void configure(ConfigurationSection config) {
         cost = new ExpressionCalculator(config.getString("cost"));
         team = new ExpressionCalculator(config.getString("team", "false"));
+        canBuy = new ExpressionCalculator(config.getString("can_buy", "true"));
 
         teamNoMoneyLocale = config.getString("team_no_money_locale", "buyable.team.no_money");
         userNoMoneyLocale = config.getString("user_no_money_locale", "buyable.user.no_money");
@@ -83,7 +86,7 @@ public abstract class Buyable extends ClickableItem {
     }
 
     public boolean canBuy(BuyablePurchaseEvent event) {
-        return true;
+        return canBuy.calculateBoolean(event.getUser().getUpgradeLevels());
     }
 
     public int getCost(User user) {

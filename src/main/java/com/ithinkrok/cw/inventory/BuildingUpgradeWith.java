@@ -27,6 +27,7 @@ public class BuildingUpgradeWith extends BuildingUpgrade {
 
     @Override
     public boolean canBuy(BuyablePurchaseEvent event) {
+        if(!super.canBuy(event)) return false;
         CWTeamStats teamStats = CWTeamStats.getOrCreate(event.getUser().getTeam());
 
         for(String buildingName : with){

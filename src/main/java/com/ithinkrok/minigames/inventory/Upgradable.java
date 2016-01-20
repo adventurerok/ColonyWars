@@ -70,6 +70,7 @@ public class Upgradable extends Buyable {
 
     @Override
     public boolean canBuy(BuyablePurchaseEvent event) {
+        if(!super.canBuy(event)) return false;
         int level = event.getUser().getUpgradeLevel(upgradeName) + 1;
 
         return minLevel <= level && maxLevel >= level;

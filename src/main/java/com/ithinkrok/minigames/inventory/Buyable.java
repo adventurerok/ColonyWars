@@ -152,6 +152,8 @@ public abstract class Buyable extends ClickableItem {
         }
 
         event.getUser().playSound(event.getUser().getLocation(), new SoundEffect(Sound.BLAZE_HIT, 1.0f, 1.0f));
+
+        event.getUser().redoInventory();
     }
 
     private void doUpgradesOnBuy(User user) {

@@ -753,5 +753,16 @@ custom_items:
     material: "IRON_AXE"
     enchantments:
       DIG_SPEED: 2
+  archer_bow:
+    material: "BOW"
+    upgradable: true
+    enchantments:
+      ARROW_DAMAGE: "array(bow, 0, 1, 3)"
+  archer_sword:
+    material: "WOOD_SWORD"
+    upgradable: true
+    enchantments:
+      DAMAGE_ALL: "sword"
+      KNOCKBACK: "sword*0.5"
 
 listeners: {}

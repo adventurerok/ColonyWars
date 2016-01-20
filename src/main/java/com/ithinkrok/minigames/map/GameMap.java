@@ -21,6 +21,8 @@ import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.util.Vector;
@@ -214,6 +216,14 @@ public class GameMap implements LanguageLookup, ConfigHolder, SchematicPaster.Bo
         }
 
         return true;
+    }
+
+    public Entity spawnEntity(Vector location, EntityType type) {
+        return spawnEntity(getLocation(location), type);
+    }
+
+    public Entity spawnEntity(Location location, EntityType type) {
+        return world.spawnEntity(location, type);
     }
 
     public Location getLocation(Vector location) {

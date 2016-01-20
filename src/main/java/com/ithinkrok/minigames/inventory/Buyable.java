@@ -15,6 +15,9 @@ import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by paul on 08/01/16.
  */
@@ -30,6 +33,8 @@ public abstract class Buyable extends ClickableItem {
     private Calculator team;
 
     private Calculator canBuy;
+
+    private Map<String, Calculator> upgradeOnBuy = new HashMap<>();
 
     public Buyable(ItemStack baseDisplay) {
         super(baseDisplay);
@@ -47,6 +52,14 @@ public abstract class Buyable extends ClickableItem {
         userPayTeamLocale = config.getString("user_pay_team_locale", "buyable.user.pay_team");
         teamDescriptionLocale = config.getString("team_description_locale", "buyable.team.description");
         userDescriptionLocale = config.getString("user_description_locale", "buyable.user.description");
+
+        if(config.contains("upgrade_on_buy")) configureUpgradeOnBuy(config.getConfigurationSection("upgrade_on_buy"));
+    }
+
+    private void configureUpgradeOnBuy(ConfigurationSection config) {
+        for(String upgrade : config.getKeys(false)) {
+            upgradeOnBuy.put(upgrade, new ExpressionCalculator(config.getString(upgrade)));
+        }
     }
 
     @Override
@@ -123,6 +136,8 @@ public abstract class Buyable extends ClickableItem {
 
         if (!onPurchase(purchaseEvent)) return;
 
+        doUpgradesOnBuy(event.getUser());
+
         if (team) {
             int teamAmount = Math.min(cost, teamMoney.getMoney());
             int userAmount = cost - teamAmount;
@@ -137,6 +152,12 @@ public abstract class Buyable extends ClickableItem {
         }
 
         event.getUser().playSound(event.getUser().getLocation(), new SoundEffect(Sound.BLAZE_HIT, 1.0f, 1.0f));
+    }
+
+    private void doUpgradesOnBuy(User user) {
+        for(Map.Entry<String, Calculator> upgrades : upgradeOnBuy.entrySet()) {
+            user.setUpgradeLevel(upgrades.getKey(), (int) upgrades.getValue().calculate(user.getUpgradeLevels()));
+        }
     }
 
     public abstract boolean onPurchase(BuyablePurchaseEvent event);

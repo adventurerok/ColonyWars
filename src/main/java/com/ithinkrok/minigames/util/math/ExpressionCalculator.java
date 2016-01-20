@@ -104,6 +104,10 @@ public class ExpressionCalculator implements Calculator {
     private Expression expression;
 
     public ExpressionCalculator(String expression) {
+        this(expression, true);
+    }
+
+    public ExpressionCalculator(String expression, boolean simplify) {
         List<String> tokens;
 
         try {
@@ -114,7 +118,7 @@ public class ExpressionCalculator implements Calculator {
 
         tokens = toPostfixNotation(tokens);
 
-        this.expression = parsePostfixNotation(tokens);
+        this.expression = parsePostfixNotation(tokens, simplify);
     }
 
     @Override
@@ -196,7 +200,7 @@ public class ExpressionCalculator implements Calculator {
         return output;
     }
 
-    private static Expression parsePostfixNotation(List<String> tokens) {
+    private static Expression parsePostfixNotation(List<String> tokens, boolean simplify) {
         LinkedList<Expression> stack = new LinkedList<>();
 
         for (String token : tokens) {
@@ -223,7 +227,7 @@ public class ExpressionCalculator implements Calculator {
                 else if (count < op.getMinArguments())
                     throw new RuntimeException("Too few arguments for function: " + token);
 
-                stack.add(new OperatorExpression(op, op.isDynamic(), expressions));
+                stack.add(new OperatorExpression(op, op.isDynamic(), simplify, expressions));
             }
         }
 
@@ -234,7 +238,7 @@ public class ExpressionCalculator implements Calculator {
 
 
         Expression expression = stack.getFirst();
-        if (expression.isStatic()) expression = new NumberExpression(expression.calculate(null));
+        if (simplify && expression.isStatic()) expression = new NumberExpression(expression.calculate(null));
         return expression;
     }
 

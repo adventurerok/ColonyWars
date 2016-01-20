@@ -14,8 +14,8 @@ public class OperatorExpression implements Expression {
     private final Operator operator;
     private final boolean dynamic;
 
-    public OperatorExpression(Operator operator, boolean dynamic, List<Expression> expressions) {
-        this(operator, dynamic, toArray(expressions));
+    public OperatorExpression(Operator operator, boolean dynamic, boolean simplify, List<Expression> expressions) {
+        this(operator, dynamic, simplify, toArray(expressions));
     }
 
     private static Expression[] toArray(List<Expression> expressions) {
@@ -23,13 +23,15 @@ public class OperatorExpression implements Expression {
         return expressions.toArray(array);
     }
 
-    public OperatorExpression(Operator operator, boolean dynamic, Expression... expressions) {
+    public OperatorExpression(Operator operator, boolean dynamic, boolean simplify, Expression... expressions) {
         this.dynamic = dynamic;
         subExpressions = expressions;
 
-        for (int i = 0; i < subExpressions.length; ++i) {
-            if (subExpressions[i].isStatic())
-                subExpressions[i] = new NumberExpression(subExpressions[i].calculate(null));
+        if(simplify) {
+            for (int i = 0; i < subExpressions.length; ++i) {
+                if (subExpressions[i].isStatic())
+                    subExpressions[i] = new NumberExpression(subExpressions[i].calculate(null));
+            }
         }
 
         this.operator = operator;

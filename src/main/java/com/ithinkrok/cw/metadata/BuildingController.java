@@ -51,6 +51,13 @@ public class BuildingController extends Metadata implements Listener, LocationCh
     }
 
     @Override
+    public void removed() {
+        for(Building building : buildings.values()) {
+            building.getSchematic().removed();
+        }
+    }
+
+    @Override
     public boolean removeOnGameStateChange(GameStateChangedEvent event) {
         return false;
     }

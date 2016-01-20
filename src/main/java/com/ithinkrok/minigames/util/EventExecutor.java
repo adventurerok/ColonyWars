@@ -155,9 +155,8 @@ public class EventExecutor {
 
         @Override
         public int compareTo(MethodExecutor o) {
-
-            int priorityCompare = method.getAnnotation(MinigamesEventHandler.class).priority() -
-                    o.method.getAnnotation(MinigamesEventHandler.class).priority();
+            int priorityCompare = Integer.compare(method.getAnnotation(MinigamesEventHandler.class).priority(), o
+                    .method.getAnnotation(MinigamesEventHandler.class).priority());
 
             if (priorityCompare != 0) return priorityCompare;
 

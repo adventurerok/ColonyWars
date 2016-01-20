@@ -2,6 +2,7 @@ package com.ithinkrok.minigames.util;
 
 import com.ithinkrok.minigames.event.MinigamesEvent;
 import com.ithinkrok.minigames.event.MinigamesEventHandler;
+import com.tngtech.java.junit.dataprovider.DataProvider;
 import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import org.bukkit.event.Listener;
 import org.junit.Before;
@@ -32,26 +33,42 @@ public class EventExecutorTest {
 
         EventExecutor.executeEvent(event, listener);
 
-        assertThat(listener.doneLow && listener.doneHigh).isTrue();
+        assertThat(listener.doneFirst && listener.doneLow && listener.doneHigh && listener.doneLast).isTrue();
     }
 
     private static class OrderListener implements Listener {
 
+        private boolean doneFirst = false;
         private boolean doneLow = false;
         private boolean doneHigh = false;
+        private boolean doneLast = false;
+
+        @MinigamesEventHandler(priority = MinigamesEventHandler.INTERNAL_FIRST)
+        public void internalFirstFirst(MinigamesEvent event) {
+            assertThat(doneFirst || doneLow || doneHigh || doneLast).isFalse();
+
+            doneFirst = true;
+        }
 
         @MinigamesEventHandler(priority = MinigamesEventHandler.LOW)
-        public void lowFirst(MinigamesEvent event) {
-            assertThat(doneLow || doneHigh).isFalse();
+        public void lowSecond(MinigamesEvent event) {
+            assertThat(doneFirst && !(doneLow || doneHigh || doneLast)).isTrue();
 
             doneLow = true;
         }
 
         @MinigamesEventHandler(priority = MinigamesEventHandler.HIGH)
-        public void highLast(MinigamesEvent event) {
-            assertThat(doneLow && !doneHigh).isTrue();
+        public void highThird(MinigamesEvent event) {
+            assertThat((doneFirst && doneLow) && !(doneHigh || doneLast)).isTrue();
 
             doneHigh = true;
+        }
+
+        @MinigamesEventHandler(priority = MinigamesEventHandler.HIGH)
+        public void internalLastLast(MinigamesEvent event) {
+            assertThat((doneFirst && doneLow && doneHigh) && !doneLast).isTrue();
+
+            doneLast = true;
         }
     }
 }

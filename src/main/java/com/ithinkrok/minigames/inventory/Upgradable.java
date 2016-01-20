@@ -80,8 +80,6 @@ public class Upgradable extends Buyable {
     public boolean onPurchase(BuyablePurchaseEvent event) {
         event.getUser().setUpgradeLevel(upgradeName, event.getUser().getUpgradeLevel(upgradeName) + 1);
 
-        event.getUser().redoInventory();
-
         if (customItem != null && giveItem) {
             CustomItem cust = event.getUserGameGroup().getCustomItem(customItem);
             boolean found = false;

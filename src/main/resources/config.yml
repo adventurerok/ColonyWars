@@ -35,7 +35,7 @@ kits:
                     upgrade_name: "sword"
                     upgrade_display_locale: "general_sword.upgrade"
                     max_level: 2
-                    upgrade_cost: "1100+250*sword"
+                    cost: "1100+250*sword"
                     upgrade_item: "general_sword"
   scout:
     listeners:
@@ -57,14 +57,14 @@ kits:
                     upgrade_name: "sharpness"
                     upgrade_display_locale: "scout_sword.upgrade.sharpness"
                     max_level: 2
-                    upgrade_cost: "1350+250*sharpness"
+                    cost: "1350+250*sharpness"
                     upgrade_item: "scout_sword"
                 - class: "com.ithinkrok.minigames.inventory.Upgradable"
                   config:
                     upgrade_name: "knockback"
                     upgrade_display_locale: "scout_sword.upgrade.knockback"
                     max_level: 2
-                    upgrade_cost: "1350+250*knockback"
+                    cost: "1350+250*knockback"
                     upgrade_item: "scout_sword"
             Church:
               shop:
@@ -73,7 +73,7 @@ kits:
                     upgrade_name: "player_compass"
                     upgrade_display_locale: "player_compass.upgrade"
                     max_level: 1
-                    upgrade_cost: 400
+                    cost: 400
                     upgrade_item: "player_compass"
             Cathedral:
               shop:
@@ -88,7 +88,7 @@ kits:
                     upgrade_name: "regen"
                     upgrade_display_locale: "regen_ability.upgrade"
                     max_level: 1
-                    upgrade_cost: "1350+250*regen"
+                    cost: "1350+250*regen"
                     upgrade_item: "regen_ability"
   cloaker:
     listeners:
@@ -108,7 +108,7 @@ kits:
                     upgrade_name: "cloak"
                     upgrade_display_locale: "cloak.upgrade"
                     max_level: 2
-                    upgrade_cost: "1350+250*cloak"
+                    cost: "1350+250*cloak"
                     upgrade_item: "cloak"
   peasant:
     listeners:
@@ -130,14 +130,14 @@ kits:
                     upgrade_name: "sharpness"
                     upgrade_display_locale: "scout_sword.upgrade.sharpness"
                     max_level: 2
-                    upgrade_cost: "1350+250*sharpness"
+                    cost: "1350+250*sharpness"
                     upgrade_item: "scout_sword"
                 - class: "com.ithinkrok.minigames.inventory.Upgradable"
                   config:
                     upgrade_name: "knockback"
                     upgrade_display_locale: "scout_sword.upgrade.knockback"
                     max_level: 2
-                    upgrade_cost: "1350+250*knockback"
+                    cost: "1350+250*knockback"
                     upgrade_item: "scout_sword"
   dark_knight:
     listeners:
@@ -157,7 +157,7 @@ kits:
                     upgrade_name: "sword"
                     upgrade_display_locale: "darkness_sword.upgrade"
                     max_level: 2
-                    upgrade_cost: "1350+250*sword"
+                    cost: "1350+250*sword"
                     upgrade_item: "darkness_sword"
   mage:
     listeners:
@@ -178,14 +178,14 @@ kits:
                     upgrade_name: "ender"
                     upgrade_display_locale: "ender_wand.upgrade"
                     max_level: 2
-                    upgrade_cost: "1350+250*ender"
+                    cost: "1350+250*ender"
                     upgrade_item: "ender_wand"
                 - class: "com.ithinkrok.minigames.inventory.Upgradable"
                   config:
                     upgrade_name: "lightning"
                     upgrade_display_locale: "lightning_wand.upgrade"
                     max_level: 2
-                    upgrade_cost: "1350+250*lightning"
+                    cost: "1350+250*lightning"
                     upgrade_item: "lightning_wand"
                 - class: "com.ithinkrok.minigames.inventory.ItemBuyable"
                   config:
@@ -403,7 +403,7 @@ schematics:
             upgrade_name: "team_compass"
             upgrade_display_locale: "team_compass.upgrade"
             max_level: 1
-            upgrade_cost: 1000
+            cost: 1000
             upgrade_item: "team_compass"
   Greenhouse:
     file: "schematics/mccw_greenhouse.schematic"
@@ -415,7 +415,7 @@ schematics:
             upgrade_name: "axe"
             upgrade_display_locale: "mighty_axe.upgrade"
             max_level: 1
-            upgrade_cost: 1600
+            cost: 1600
             upgrade_item: "mighty_axe"
   ScoutTower:
     file: "schematics/mccw_scouttower.schematic"

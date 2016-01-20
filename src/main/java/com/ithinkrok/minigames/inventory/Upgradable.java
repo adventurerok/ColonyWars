@@ -19,7 +19,6 @@ public class Upgradable extends Buyable {
     private String upgradeName;
     private String upgradeDisplayLang;
     private int minLevel, maxLevel;
-    private Calculator upgradeCost;
     private String customItem;
     private boolean giveItem = true;
 
@@ -35,7 +34,6 @@ public class Upgradable extends Buyable {
 
         minLevel = config.getInt("min_level", 1);
         maxLevel = config.getInt("max_level", Integer.MAX_VALUE);
-        upgradeCost = new ExpressionCalculator(config.getString("upgrade_cost"));
 
         customItem = config.getString("upgrade_item", null);
         giveItem = config.getBoolean("give_upgrade_item", true);
@@ -69,10 +67,6 @@ public class Upgradable extends Buyable {
         super.onCalculateItem(event);
     }
 
-    @Override
-    public int getCost(User user) {
-        return (int) upgradeCost.calculate(user.getUpgradeLevels());
-    }
 
     @Override
     public boolean canBuy(BuyablePurchaseEvent event) {

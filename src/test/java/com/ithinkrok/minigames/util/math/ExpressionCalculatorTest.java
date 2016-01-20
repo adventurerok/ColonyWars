@@ -21,13 +21,13 @@ import static org.mockito.Mockito.mock;
 public class ExpressionCalculatorTest {
 
     @Test
-    @DataProvider({"64.3,64.3", "2+3,5","2^15,32768", "-(11.3),-11.3"})
+    @DataProvider(value = {"64.3;64.3", "2+3;5","pow(2,15);32768", "-(11.3);-11.3"}, splitBy = ";")
     public void shouldHandleBasicSumsCorrectly(String sum, double result) {
         testValues(sum, null, result);
     }
 
     @Test
-    @DataProvider({"3+2*(7/2+4^3)-75,63", "8/(-4),-2"})
+    @DataProvider(value = {"3+2*(7/2+pow(4,3))-75;63", "8/(-4);-2"}, splitBy = ";")
     public void shouldHandleMoreAdvancedSumsCorrectly(String sum, double result) {
         testValues(sum, null, result);
     }

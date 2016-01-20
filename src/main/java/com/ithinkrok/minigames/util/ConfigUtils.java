@@ -78,6 +78,12 @@ public class ConfigUtils {
         return InventoryUtils.createItemWithNameAndLore(mat, amount, damage, name);
     }
 
+    public static SoundEffect getSoundEffect(ConfigurationSection config, String path) {
+        if(config.isString(path)) return new SoundEffect(config.getString(path));
+        else if(config.isConfigurationSection(path)) return new SoundEffect(config.getConfigurationSection(path));
+        else return null;
+    }
+
     public static List<Vector> getVectorList(ConfigurationSection config, String path) {
         List<Map<?, ?>> list = config.getMapList(path);
 

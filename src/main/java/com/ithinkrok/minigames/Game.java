@@ -29,6 +29,7 @@ import com.ithinkrok.minigames.team.Team;
 import com.ithinkrok.minigames.team.TeamIdentifier;
 import com.ithinkrok.minigames.user.UserResolver;
 import com.ithinkrok.minigames.util.EntityUtils;
+import com.ithinkrok.minigames.util.InventoryUtils;
 import com.ithinkrok.minigames.util.InvisiblePlayerAttacker;
 import com.ithinkrok.minigames.util.io.*;
 import org.bukkit.*;
@@ -589,7 +590,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
             User user = getUser(event.getPlayer().getUniqueId());
             user.getGameGroup().userEvent(new UserInteractWorldEvent(user, event));
 
-            if(event.isCancelled() && event.getItem() != null) event.getPlayer().updateInventory();
+            if(event.isCancelled() && InventoryUtils.isArmor(event.getItem())) event.getPlayer().updateInventory();
         }
 
         @EventHandler

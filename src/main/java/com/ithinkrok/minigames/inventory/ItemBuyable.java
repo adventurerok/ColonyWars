@@ -28,8 +28,8 @@ public class ItemBuyable extends Buyable{
 
         ItemStack purchase = ConfigUtils.getItemStack(config, "item");
         if(purchase != null){
-            this.purchase = purchase;
-            if(baseDisplay != null) baseDisplay = purchase;
+            this.purchase = purchase.clone();
+            if(baseDisplay == null) baseDisplay = purchase.clone();
         }
 
         noSpaceLocale = config.getString("no_inventory_space_locale", "item_buyable.no_space");
@@ -43,7 +43,7 @@ public class ItemBuyable extends Buyable{
     protected boolean giveUserItem(User user, ItemStack purchase) {
         PlayerInventory inv = user.getInventory();
 
-        Map<Integer, ItemStack> failedItems = inv.addItem(purchase);
+        Map<Integer, ItemStack> failedItems = inv.addItem(purchase.clone());
         if(failedItems.isEmpty()) return true;
 
         int removeAmount = purchase.getAmount() - failedItems.get(0).getAmount();

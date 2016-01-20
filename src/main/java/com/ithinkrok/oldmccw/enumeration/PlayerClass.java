@@ -18,7 +18,6 @@ public class PlayerClass {
     private static List<PlayerClass> playerClassList = new ArrayList<>();
 
     static {
-        new PlayerClass("warrior", Material.IRON_SWORD, WarriorClass::new);
         new PlayerClass("priest", Material.GOLD_LEGGINGS, PriestClass::new);
         new PlayerClass("inferno", Material.IRON_CHESTPLATE, InfernoClass::new);
 

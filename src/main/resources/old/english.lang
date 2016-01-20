@@ -55,20 +55,13 @@ showdown.shrinking=&6The showdown arena will now shrink slowly until it is 10x10
 showdown.tele-center=%s &6was teleported back to the center!
 
 #buildings
-building.shop.name=&a%s Shop
-building.shop.hologram=&f&oClick to Open
 building.shop.invalid=&cThat obsidian block does not appear to be a shop.
 building.shop.not-yours=&eThat building does not belong to your team. &lMine this block to destroy it!
 building.shop.not-finished=&cPlease wait until the construction has finished.
-building.unknown=&cUnknown building!
-building.invalid-loc=&cYou cannot build that here!
 building.destroy.invalid=That obsidian block does not appear to be part of a building.
 building.destroy.own-team=&cYou cannot destroy your own team's buildings!
 building.destroy.bases=&cYou cannot destroy other team's bases!
 building.destroyed=&6%s &6destroyed a &3%s &6of team %s&6!
-building.item.desc=Builds a %s when placed!
-building.display.desc=Build a %s!
-building.purchased=%s &3purchased &f%s
 
 building.upgrade.replace=Replace this %s with a %s
 building.upgrade.failed=We failed to build a %s here. Have the block yourself to find a better place!
@@ -77,7 +70,6 @@ building.upgrade.failed=We failed to build a %s here. Have the block yourself to
 cooldowns.explosion.finished=&aThe explosion wand is ready to use again.
 cooldowns.bender.finished=&aThe earth bender is ready to use again.
 cooldowns.healing.finished=&aThe healing scroll is ready to use again.
-cooldowns.wolf.finished=&aThe wolf wand is ready to use again.
 cooldowns.fix.finished=&aYou can now use the fix command again!
 cooldowns.bat.finished=&aYou can now use bat flight again!
 
@@ -87,24 +79,11 @@ timeouts.batting.finished=&cYour bat ability has run out and must recharge!
 timeouts.default.wait=&cYou are already using this ability!
 
 #class-upgrades
-upgrades.sharpness.name=Sharpness Upgrade %s
-upgrades.knockback.name=Knockback Upgrade %s
-upgrades.bow.name=Bow Upgrade %s
-upgrades.wood-sword.name=Sword Upgrade %s
-upgrades.diamond-sword.name=Sword Upgrade %s
-upgrades.arrows.name=Arrow Upgrade %s
-upgrades.arrows2.desc=Gives you 192 arrows. Can be purchased multiple times
-upgrades.darkness-sword.name=Darkness Sword Upgrade %s
 upgrades.explosion-wand.name=Explosion Wand Upgrade %s
 upgrades.flame-sword.name=Flame Sword Upgrade %s
-upgrades.ender-wand.name=Ender Wand Upgrade %s
-upgrades.lightning-wand.name=Lightning Wand Upgrade %s
 upgrades.healing-scroll.name=Healing Scroll Upgrade %s
 upgrades.earth-bender.name=Earth Bender Upgrade %s
 upgrades.cross.name=Cross Upgrade %s
-upgrades.regen-ability.name=Regen Ability Upgrade
-upgrades.wolf-wand.name=Wolf Wand Upgrade %s
-upgrades.cloak.name=Cloak Upgrade %s
 upgrades.vampire.name=Vampire Sword Upgrade %s
 upgrades.bat-flight.name=Bat Flight Upgrade %s
 
@@ -156,7 +135,6 @@ commands.test.money=%s added to both you and your team's balance
 commands.test.build-blocks=&eAdded %s %s build blocks to your inventory
 commands.test.base.no-team=&cYour team is null
 commands.test.base.loc=&eBase location\: %s
-commands.countdown.none=There is no countdown at the moment
 commands.shrink.done=Showdown radius decreased by %s
 commands.shrink.bad-size=Bad shrink amount %s
 commands.leaderboard.category=&6&lLeaderboard for category &3&l%s&6&l\:
@@ -172,7 +150,3 @@ commands.togglemoneymessage.disabled=&6Your money messages are now &cdisabled&6!
 commands.teamcount.invalid=&cInvalid team count
 commands.teamcount.changed=&eTeamcount changed to &3%s&e!
 commands.reload.done=&eReloaded the MCCW config and lang!
-
-#--SCORE--
-score.gain=&6You gained &a%s &6points!
-score.loss=&6You lost &c%s &6points!

@@ -927,6 +927,7 @@ custom_items:
           effect: "REGENERATION"
           level: 6
           duration: 2
+          sound: "FIREWORK_TWINKLE,1.0,1.2"
   cross:
     display_name_locale: "cross.name"
     material: "GOLD_LEGGINGS"

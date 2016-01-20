@@ -4,6 +4,8 @@ import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
+import com.ithinkrok.minigames.util.ConfigUtils;
+import com.ithinkrok.minigames.util.SoundEffect;
 import com.ithinkrok.minigames.util.math.Calculator;
 import com.ithinkrok.minigames.util.math.ExpressionCalculator;
 import org.bukkit.configuration.ConfigurationSection;
@@ -18,6 +20,7 @@ public class HealingScroll implements Listener {
 
     private PotionEffectType potionEffectType;
     private Calculator duration, level;
+    private SoundEffect sound;
 
     @MinigamesEventHandler
     public void onListenerLoaded(ListenerLoadedEvent event) {
@@ -27,6 +30,8 @@ public class HealingScroll implements Listener {
 
         duration = new ExpressionCalculator(config.getString("duration"));
         level = new ExpressionCalculator(config.getString("level"));
+
+        sound = ConfigUtils.getSoundEffect(config, "sound");
 
     }
 
@@ -41,6 +46,7 @@ public class HealingScroll implements Listener {
 
         for(User user : event.getUser().getTeam().getUsers()) {
             user.addPotionEffect(effect, true);
+            user.playSound(user.getLocation(), sound);
         }
 
         event.setStartCooldownAfterAction(true);

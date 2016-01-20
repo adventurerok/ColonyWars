@@ -226,15 +226,17 @@ kits:
                     cost: "1350+250*sword"
                     upgrade_item: "archer_sword"
                 - class: "com.ithinkrok.minigames.inventory.ItemBuyable"
+                  display: "ARROW,1,0,Arrow Upgrade 1"
                   config:
-                    item: "ARROW,64,0,Arrow Upgrade 1"
+                    item: "ARROW,64"
                     cost: 1350
                     can_buy: "arrows<1"
                     upgrade_on_buy:
                       arrows: 1
                 - class: "com.ithinkrok.minigames.inventory.ItemBuyable"
+                  display: "ARROW,1,0,Arrow Upgrade 2"
                   config:
-                    item: "ARROW,192,0,Arrow Upgrade 2"
+                    item: "ARROW,192"
                     cost: 1600
                     can_buy: "arrows>0"
 

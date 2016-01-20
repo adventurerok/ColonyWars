@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -20,7 +21,7 @@ import java.util.Map;
  */
 public class KitChooser implements Listener {
 
-    private Map<String, ItemStack> choosableKits = new HashMap<>();
+    private Map<String, ItemStack> choosableKits = new LinkedHashMap<>();
 
     private String chosenLocale, alreadyLocale, titleLocale;
 

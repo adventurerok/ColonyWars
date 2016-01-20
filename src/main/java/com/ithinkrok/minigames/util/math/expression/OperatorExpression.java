@@ -83,7 +83,13 @@ public class OperatorExpression implements Expression {
         if(operator.isFunction()) {
             result.append(operator.getName()).append('(');
 
+            boolean appendComma = false;
+
             for(Expression expression :  subExpressions) {
+                if(appendComma) {
+                    result.append(',');
+                } else appendComma = true;
+
                 result.append('(').append(expression.toString()).append(')');
             }
             result.append(')');

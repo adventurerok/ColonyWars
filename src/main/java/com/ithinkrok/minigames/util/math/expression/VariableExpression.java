@@ -22,4 +22,25 @@ public class VariableExpression implements Expression {
     public boolean isStatic() {
         return false;
     }
+
+    @Override
+    public String toString() {
+        return variable;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        VariableExpression that = (VariableExpression) o;
+
+        return variable.equals(that.variable);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return variable.hashCode();
+    }
 }

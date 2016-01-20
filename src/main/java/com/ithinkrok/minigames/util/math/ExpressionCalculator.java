@@ -1,9 +1,6 @@
 package com.ithinkrok.minigames.util.math;
 
-import com.ithinkrok.minigames.util.math.expression.Expression;
-import com.ithinkrok.minigames.util.math.expression.NumberExpression;
-import com.ithinkrok.minigames.util.math.expression.OperatorExpression;
-import com.ithinkrok.minigames.util.math.expression.VariableExpression;
+import com.ithinkrok.minigames.util.math.expression.*;
 
 import java.io.IOException;
 import java.io.StreamTokenizer;
@@ -15,10 +12,15 @@ import java.util.*;
  */
 public class ExpressionCalculator implements Calculator {
 
-    private static final Map<String, OpInfo> opMap = new HashMap<>();
+    private static final Map<String, Operator> opMap = new HashMap<>();
 
     public static boolean isOperatorOrFunction(String check) {
         return opMap.containsKey(check);
+    }
+
+    public static void addOperator(String op, Operator.Executor executor, boolean isFunction, boolean isDynamic, int
+            precedence, int minArgs, int maxArgs) {
+        opMap.put(op, new Operator(op, executor, isFunction, isDynamic, precedence, minArgs, maxArgs));
     }
 
     private static int integer(double d) {
@@ -26,54 +28,54 @@ public class ExpressionCalculator implements Calculator {
     }
 
     static {
-        opMap.put("/", new OpInfo(numbers -> numbers[0] / numbers[1], false, false, 20, 2, 2));
-        opMap.put("*", new OpInfo(numbers -> numbers[0] * numbers[1], false, false, 20, 2, 2));
-        opMap.put("%", new OpInfo(numbers -> numbers[0] % numbers[1], false, false, 20, 2, 2));
-        opMap.put("+", new OpInfo(numbers -> numbers[0] + numbers[1], false, false, 30, 2, 2));
-        opMap.put("-", new OpInfo(numbers -> numbers[0] - numbers[1], false, false, 30, 2, 2));
+        addOperator("/", numbers -> numbers[0] / numbers[1], false, false, 20, 2, 2);
+        addOperator("*", numbers -> numbers[0] * numbers[1], false, false, 20, 2, 2);
+        addOperator("%", numbers -> numbers[0] % numbers[1], false, false, 20, 2, 2);
+        addOperator("+", numbers -> numbers[0] + numbers[1], false, false, 30, 2, 2);
+        addOperator("-", numbers -> numbers[0] - numbers[1], false, false, 30, 2, 2);
 
-        opMap.put("=", new OpInfo(numbers -> (numbers[0] == numbers[1]) ? 1 : 0, false, false, 35, 2, 2));
-        opMap.put("<", new OpInfo(numbers -> (numbers[0] < numbers[1]) ? 1 : 0, false, false, 35, 2, 2));
-        opMap.put(">", new OpInfo(numbers -> (numbers[0] > numbers[1]) ? 1 : 0, false, false, 35, 2, 2));
+        addOperator("=", numbers -> (numbers[0] == numbers[1]) ? 1 : 0, false, false, 35, 2, 2);
+        addOperator("<", numbers -> (numbers[0] < numbers[1]) ? 1 : 0, false, false, 35, 2, 2);
+        addOperator(">", numbers -> (numbers[0] > numbers[1]) ? 1 : 0, false, false, 35, 2, 2);
 
         //unary minus = '
-        opMap.put("'", new OpInfo(numbers -> -numbers[0], false, false, 5, 1, 1));
+        addOperator("'", numbers -> -numbers[0], false, false, 5, 1, 1);
 
-        opMap.put("|", new OpInfo(numbers -> integer(numbers[0]) | integer(numbers[1]), false, false, 40, 2, 2));
-        opMap.put("&", new OpInfo(numbers -> integer(numbers[0]) & integer(numbers[1]), false, false, 40, 2, 2));
-        opMap.put("^", new OpInfo(numbers -> integer(numbers[0]) ^ integer(numbers[1]), false, false, 40, 2, 2));
+        addOperator("|", numbers -> integer(numbers[0]) | integer(numbers[1]), false, false, 40, 2, 2);
+        addOperator("&", numbers -> integer(numbers[0]) & integer(numbers[1]), false, false, 40, 2, 2);
+        addOperator("^", numbers -> integer(numbers[0]) ^ integer(numbers[1]), false, false, 40, 2, 2);
 
-        opMap.put("~", new OpInfo(numbers -> ~integer(numbers[0]), false, false, 5, 1, 1));
-        opMap.put("!", new OpInfo(numbers -> (integer(numbers[0]) == 0) ? 1 : 0, false, false, 5, 1, 1));
+        addOperator("~", numbers -> ~integer(numbers[0]), false, false, 5, 1, 1);
+        addOperator("!", numbers -> (integer(numbers[0]) == 0) ? 1 : 0, false, false, 5, 1, 1);
 
-        opMap.put("sin", new OpInfo(numbers -> Math.sin(numbers[0]), true, false, 0, 1, 1));
-        opMap.put("cos", new OpInfo(numbers -> Math.cos(numbers[0]), true, false, 0, 1, 1));
-        opMap.put("tan", new OpInfo(numbers -> Math.tan(numbers[0]), true, false, 0, 1, 1));
+        addOperator("sin", numbers -> Math.sin(numbers[0]), true, false, 0, 1, 1);
+        addOperator("cos", numbers -> Math.cos(numbers[0]), true, false, 0, 1, 1);
+        addOperator("tan", numbers -> Math.tan(numbers[0]), true, false, 0, 1, 1);
 
-        opMap.put("asin", new OpInfo(numbers -> Math.asin(numbers[0]), true, false, 0, 1, 1));
-        opMap.put("acos", new OpInfo(numbers -> Math.acos(numbers[0]), true, false, 0, 1, 1));
-        opMap.put("atan", new OpInfo(numbers -> Math.atan(numbers[0]), true, false, 0, 1, 1));
-        opMap.put("atan2", new OpInfo(numbers -> Math.atan2(numbers[0], numbers[1]), true, false, 0, 2, 2));
+        addOperator("asin", numbers -> Math.asin(numbers[0]), true, false, 0, 1, 1);
+        addOperator("acos", numbers -> Math.acos(numbers[0]), true, false, 0, 1, 1);
+        addOperator("atan", numbers -> Math.atan(numbers[0]), true, false, 0, 1, 1);
+        addOperator("atan2", numbers -> Math.atan2(numbers[0], numbers[1]), true, false, 0, 2, 2);
 
-        opMap.put("degrees", new OpInfo(numbers -> Math.toDegrees(numbers[0]), true, false, 0, 1, 1));
-        opMap.put("radians", new OpInfo(numbers -> Math.toRadians(numbers[0]), true, false, 0, 1, 1));
+        addOperator("degrees", numbers -> Math.toDegrees(numbers[0]), true, false, 0, 1, 1);
+        addOperator("radians", numbers -> Math.toRadians(numbers[0]), true, false, 0, 1, 1);
 
-        opMap.put("pow", new OpInfo(numbers -> Math.pow(numbers[0], numbers[1]), true, false, 0, 2, 2));
-        opMap.put("sqrt", new OpInfo(numbers -> Math.sqrt(numbers[0]), true, false, 0, 1, 1));
-        opMap.put("ln", new OpInfo(numbers -> Math.log(numbers[0]), true, false, 0, 1, 1));
-        opMap.put("lg", new OpInfo(numbers -> Math.log(numbers[0]) * 1.44269504089, true, false, 0, 1, 1));
-        opMap.put("log", new OpInfo(numbers -> Math.log10(numbers[0]), true, false, 0, 1, 1));
-        opMap.put("exp", new OpInfo(numbers -> Math.exp(numbers[0]), true, false, 0, 1, 1));
+        addOperator("pow", numbers -> Math.pow(numbers[0], numbers[1]), true, false, 0, 2, 2);
+        addOperator("sqrt", numbers -> Math.sqrt(numbers[0]), true, false, 0, 1, 1);
+        addOperator("ln", numbers -> Math.log(numbers[0]), true, false, 0, 1, 1);
+        addOperator("lg", numbers -> Math.log(numbers[0]) * 1.44269504089, true, false, 0, 1, 1);
+        addOperator("log", numbers -> Math.log10(numbers[0]), true, false, 0, 1, 1);
+        addOperator("exp", numbers -> Math.exp(numbers[0]), true, false, 0, 1, 1);
 
-        opMap.put("random", new OpInfo(numbers -> Math.random(), true, true, 0, 0, 0));
+        addOperator("random", numbers -> Math.random(), true, true, 0, 0, 0);
 
-        opMap.put("round", new OpInfo(numbers -> Math.round(numbers[0]), true, false, 0, 1, 1));
-        opMap.put("abs", new OpInfo(numbers -> Math.abs(numbers[0]), true, false, 0, 1, 1));
-        opMap.put("floor", new OpInfo(numbers -> Math.floor(numbers[0]), true, false, 0, 1, 1));
-        opMap.put("ceil", new OpInfo(numbers -> Math.ceil(numbers[0]), true, false, 0, 1, 1));
-        opMap.put("expression", new OpInfo(numbers -> numbers[0], true, false, 0, 1, 1));
+        addOperator("round", numbers -> Math.round(numbers[0]), true, false, 0, 1, 1);
+        addOperator("abs", numbers -> Math.abs(numbers[0]), true, false, 0, 1, 1);
+        addOperator("floor", numbers -> Math.floor(numbers[0]), true, false, 0, 1, 1);
+        addOperator("ceil", numbers -> Math.ceil(numbers[0]), true, false, 0, 1, 1);
+        addOperator("expression", numbers -> numbers[0], true, false, 0, 1, 1);
 
-        opMap.put("min", new OpInfo(numbers -> {
+        addOperator("min", numbers -> {
             double min = Double.POSITIVE_INFINITY;
 
             for(double num : numbers){
@@ -81,9 +83,9 @@ public class ExpressionCalculator implements Calculator {
             }
 
             return min;
-        }, true, false, 0, 1, Integer.MAX_VALUE));
+        }, true, false, 0, 1, Integer.MAX_VALUE);
 
-        opMap.put("max", new OpInfo(numbers -> {
+        addOperator("max", numbers -> {
             double min = Double.NEGATIVE_INFINITY;
 
             for(double num : numbers){
@@ -91,12 +93,12 @@ public class ExpressionCalculator implements Calculator {
             }
 
             return min;
-        }, true, false, 0, 1, Integer.MAX_VALUE));
+        }, true, false, 0, 1, Integer.MAX_VALUE);
 
-        opMap.put("array", new OpInfo(numbers ->  {
+        addOperator("array", numbers ->  {
             int index = (int) (numbers[0] + 1);
             return numbers[index];
-        }, true, false, 0, 2, Integer.MAX_VALUE));
+        }, true, false, 0, 2, Integer.MAX_VALUE);
     }
 
     private Expression expression;
@@ -113,6 +115,11 @@ public class ExpressionCalculator implements Calculator {
         tokens = toPostfixNotation(tokens);
 
         this.expression = parsePostfixNotation(tokens);
+    }
+
+    @Override
+    public String toString() {
+        return expression.toString();
     }
 
     private static List<String> tokenize(String s) throws IOException {
@@ -151,9 +158,9 @@ public class ExpressionCalculator implements Calculator {
         List<String> output = new ArrayList<>(tokens.size());
 
         for (String token : tokens) {
-            OpInfo opInfo = opMap.get(token);
-            if (opInfo != null) {
-                while (tokenStack.size() > 0 && lowerPrecedence(opInfo.precedence, tokenStack.getLast())) {
+            Operator operator = opMap.get(token);
+            if (operator != null) {
+                while (tokenStack.size() > 0 && lowerPrecedence(operator.getPrecedence(), tokenStack.getLast())) {
                     output.add(tokenStack.removeLast());
                 }
                 tokenStack.add(token);
@@ -161,7 +168,7 @@ public class ExpressionCalculator implements Calculator {
                 output.add(token);
             } else if ("(".equals(token)) {
                 if (tokenStack.size() > 0 && opMap.containsKey(tokenStack.getLast()) &&
-                        opMap.get(tokenStack.getLast()).isFunction) output.add(token);
+                        opMap.get(tokenStack.getLast()).isFunction()) output.add(token);
                 tokenStack.add(token);
             } else if(",".equals(token)){
                 while (!"(".equals(tokenStack.getLast())) {
@@ -174,7 +181,7 @@ public class ExpressionCalculator implements Calculator {
                 tokenStack.removeLast();
 
                 if (tokenStack.size() > 0 && opMap.containsKey(tokenStack.getLast()) &&
-                        opMap.get(tokenStack.getLast()).isFunction) output.add(tokenStack.removeLast());
+                        opMap.get(tokenStack.getLast()).isFunction()) output.add(tokenStack.removeLast());
             } else output.add(token);
         }
 
@@ -199,12 +206,12 @@ public class ExpressionCalculator implements Calculator {
                 stack.add(variableExpression(token));
             }
             else {
-                OpInfo op = opMap.get(token);
+                Operator op = opMap.get(token);
 
                 LinkedList<Expression> expressions = new LinkedList<>();
 
                 int count;
-                for (count = 0; !stack.isEmpty() && (op.isFunction || count < op.maxArguments); ++count) {
+                for (count = 0; !stack.isEmpty() && (op.isFunction() || count < op.getMaxArguments()); ++count) {
                     Expression expr = stack.removeLast();
                     if (expr == null) {
                         break;
@@ -212,11 +219,11 @@ public class ExpressionCalculator implements Calculator {
                     expressions.addFirst(expr);
                 }
 
-                if (count > op.maxArguments) throw new RuntimeException("Too many arguments for function" + token);
-                else if (count < op.minArguments)
+                if (count > op.getMaxArguments()) throw new RuntimeException("Too many arguments for function" + token);
+                else if (count < op.getMinArguments())
                     throw new RuntimeException("Too few arguments for function: " + token);
 
-                stack.add(new OperatorExpression(op.operator, op.isDynamic, expressions));
+                stack.add(new OperatorExpression(op, op.isDynamic(), expressions));
             }
         }
 
@@ -229,6 +236,22 @@ public class ExpressionCalculator implements Calculator {
         Expression expression = stack.getFirst();
         if (expression.isStatic()) expression = new NumberExpression(expression.calculate(null));
         return expression;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ExpressionCalculator that = (ExpressionCalculator) o;
+
+        return expression.equals(that.expression);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return expression.hashCode();
     }
 
     private static Expression variableExpression(String token) {
@@ -259,11 +282,11 @@ public class ExpressionCalculator implements Calculator {
     }
 
     private static boolean lowerPrecedence(int o1Index, String o2) {
-        OpInfo o2Info = opMap.get(o2);
+        Operator o2Info = opMap.get(o2);
 
         if (o2Info == null) return false;
 
-        return o1Index >= o2Info.precedence;
+        return o1Index >= o2Info.getPrecedence();
     }
 
     @Override
@@ -271,21 +294,4 @@ public class ExpressionCalculator implements Calculator {
         return expression.calculate(variables);
     }
 
-    private static class OpInfo {
-        private final OperatorExpression.Operator operator;
-        private final boolean isFunction, isDynamic;
-        private final int maxArguments;
-        private final int minArguments;
-        private final int precedence;
-
-        public OpInfo(OperatorExpression.Operator operator, boolean isFunction, boolean isDynamic, int precedence, int minArguments,
-                      int maxArguments) {
-            this.operator = operator;
-            this.isFunction = isFunction;
-            this.isDynamic = isDynamic;
-            this.maxArguments = maxArguments;
-            this.minArguments = minArguments;
-            this.precedence = precedence;
-        }
-    }
 }

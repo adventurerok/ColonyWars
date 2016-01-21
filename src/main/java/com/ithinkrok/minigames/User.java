@@ -647,6 +647,15 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         else playerState.setLevel(level);
     }
 
+    public void setExp(double exp) {
+        if(isPlayer()) getPlayer().setExp((float) exp);
+        else playerState.setExp((float) exp);
+    }
+
+    public float getExp() {
+        return isPlayer() ? getPlayer().getExp() : playerState.getExp();
+    }
+
     public void bindTaskToInGame(GameTask task) {
         inGameTaskList.addTask(task);
     }

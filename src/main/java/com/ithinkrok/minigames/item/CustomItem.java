@@ -66,7 +66,7 @@ public class CustomItem implements Identifiable, Listener {
         this.descriptionLocale = config.getString("description_locale", null);
         this.itemMaterial = Material.matchMaterial(config.getString("material"));
         this.durability = config.getInt("durability", 0);
-        this.unbreakable = config.getBoolean("unbreakable", true);
+        this.unbreakable = config.getBoolean("unbreakable", itemMaterial.getMaxDurability() != 0);
         this.replaceOnUpgrade = config.getBoolean("upgradable", false);
 
         if (config.contains("right_cooldown")) configureCooldown(config.getConfigurationSection("right_cooldown"));

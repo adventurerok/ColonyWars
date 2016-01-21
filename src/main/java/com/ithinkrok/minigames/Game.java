@@ -31,13 +31,13 @@ import com.ithinkrok.minigames.user.UserResolver;
 import com.ithinkrok.minigames.util.EntityUtils;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import com.ithinkrok.minigames.util.InvisiblePlayerAttacker;
+import com.ithinkrok.minigames.util.disguise.DCDisguiseController;
+import com.ithinkrok.minigames.util.disguise.DisguiseController;
+import com.ithinkrok.minigames.util.disguise.MinigamesDisguiseController;
 import com.ithinkrok.minigames.util.io.*;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Creature;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -67,6 +67,8 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
     private Plugin plugin;
 
     private GameGroup spawnGameGroup;
+
+    private DisguiseController disguiseController;
 
     private ConfigurationSection config;
 
@@ -98,6 +100,16 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         InvisiblePlayerAttacker.enablePlayerAttacker(this, plugin, ProtocolLibrary.getProtocolManager());
 
         unloadDefaultWorlds();
+
+        setupDisguiseController();
+    }
+
+    private void setupDisguiseController() {
+        if (Bukkit.getPluginManager().getPlugin("DisguiseCraft") != null) {
+            disguiseController = new DCDisguiseController();
+        } else {
+            disguiseController = new MinigamesDisguiseController();
+        }
     }
 
     private void unloadDefaultWorlds() {
@@ -426,6 +438,14 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
     public void makeEntityRepresentTeam(Team team, Entity entity) {
         entity.setMetadata("team", new FixedMetadataValue(plugin, team.getName()));
+    }
+
+    public void disguiseUser(User user, EntityType type) {
+        disguiseController.disguise(user, type);
+    }
+
+    public void unDisguiseUser(User user) {
+        disguiseController.unDisguise(user);
     }
 
     private class GameListener implements Listener {

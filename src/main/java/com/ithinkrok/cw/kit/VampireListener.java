@@ -17,6 +17,7 @@ import com.ithinkrok.minigames.util.math.ExpressionCalculator;
 import com.ithinkrok.oldmccw.strings.Buildings;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffectType;
 
@@ -152,7 +153,7 @@ public class VampireListener implements Listener {
                 user.setFallDistance(0);
 
                 if (!bat) {
-                    //TODO Disguises.disguise(user, EntityType.BAT);
+                    user.disguise(EntityType.BAT);
                     bat = true;
                 }
 
@@ -182,7 +183,7 @@ public class VampireListener implements Listener {
                 if(user.isOnGround()) maxBlocksAboveGround = 0;
 
                 if (bat) {
-                    //TODO Disguises.unDisguise(user);
+                    user.unDisguise();
                     bat = false;
                 }
             }

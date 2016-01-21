@@ -219,6 +219,14 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         gameGroup.userEvent(new UserQuitEvent(this, UserQuitEvent.QuitReason.NON_PLAYER_REMOVED));
     }
 
+    public void disguise(EntityType type) {
+        gameGroup.getGame().disguiseUser(this, type);
+    }
+
+    public void unDisguise() {
+        gameGroup.getGame().unDisguiseUser(this);
+    }
+
     public void setAllowFlight(boolean allowFlight) {
         if (isPlayer()) getPlayer().setAllowFlight(allowFlight);
         else playerState.setAllowFlight(allowFlight);

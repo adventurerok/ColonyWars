@@ -8,6 +8,7 @@ import com.ithinkrok.minigames.util.math.ExpressionCalculator;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Created by paul on 21/01/16.
@@ -34,5 +35,15 @@ public class CustomTNT implements Listener {
 
         event.getUser().createExplosion(loc, power, false, 80);
 
+        //Cancel the event to make sure no block is placed (even though no block is placed anyway)
+        event.setCancelled(true);
+
+        //Decrement the count of the TNT by one
+        //This is required as the spawned TNT makes the block place fail, which causes the item count to not be
+        //decremented
+        ItemStack oneLess = event.getItem().clone();
+        if (oneLess.getAmount() > 1) oneLess.setAmount(oneLess.getAmount() - 1);
+        else oneLess = null;
+        event.getUser().getInventory().setItemInHand(oneLess);
     }
 }

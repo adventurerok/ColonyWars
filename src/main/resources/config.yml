@@ -304,7 +304,39 @@ kits:
                     max_level: 2
                     cost: "1350+250*cross"
                     upgrade_item: "cross"
-
+  inferno:
+    listeners:
+      kit:
+        class: "com.ithinkrok.cw.kit.KitListener"
+        config:
+          buildings:
+            MageTower:
+              custom_items:
+                - "explosion_wand"
+              shop:
+                - class: "com.ithinkrok.minigames.inventory.Upgradable"
+                  config:
+                    upgrade_name: "wand"
+                    upgrade_display_locale: "explosion_wand.upgrade"
+                    max_level: 2
+                    cost: "1350+250*wand"
+                    upgrade_item: "explosion_wand"
+            Blacksmith:
+              custom_items:
+                - "flame_sword"
+              shop:
+                - class: "com.ithinkrok.minigames.inventory.Upgradable"
+                  config:
+                    upgrade_name: "flame"
+                    upgrade_display_locale: "flame_sword.upgrade"
+                    max_level: 2
+                    cost: "1350+250*flame"
+                    upgrade_item: "flame_sword"
+                - class: "com.ithinkrok.minigames.inventory.ItemBuyable"
+                  config:
+                    custom_item: "inferno_tnt"
+                    amount: 16
+                    cost: 1600
 
 #TODO kits and KitChangeEvent
 
@@ -668,6 +700,7 @@ game_states:
             - "archer"
             - "warrior"
             - "priest"
+            - "inferno"
           showdown_start:
             teams: 2
             players: 4
@@ -737,6 +770,7 @@ custom_items:
             archer: "BOW,1,0,Archer"
             warrior: "IRON_SWORD,1,0,Warrior"
             priest: "GOLD_LEGGINGS,1,0,Priest"
+            inferno: "IRON_CHESTPLATE,1,0,Inferno"
   darkness_sword:
     display_name_locale: "darkness_sword.name"
     description_locale: "darkness_sword.desc"
@@ -937,5 +971,39 @@ custom_items:
         class: "com.ithinkrok.minigames.item.WeaponModifier"
         config:
           damage: "2+cross"
+  explosion_wand:
+    display_name_locale: "explosion_wand.name"
+    material: "IRON_CHESTPLATE"
+    upgradable: true
+    right_cooldown:
+      ability: "wand"
+      timer: "25-wand*10"
+      finished_locale: "explosion_wand.cooldown"
+    listeners:
+      explosion:
+        class: "com.ithinkrok.cw.item.ExplosionWand"
+        events: ["rightClick"]
+        config:
+          max_range: 100
+          explosion_power: "2+explosion_power" #Explosion power can be changed for fun using /cw level
+  inferno_tnt:
+    material: "TNT"
+    upgradable: true
+    listeners:
+      tnt:
+        class: "com.ithinkrok.cw.item.CustomTNT"
+        events: ["rightClick"]
+        config:
+          explosion_power: "4+explosion_power"
+  flame_sword:
+    display_name_locale: "flame_sword.name"
+    material: "DIAMOND_HELMET"
+    upgradable: true
+    listeners:
+      weapon:
+        class: "com.ithinkrok.minigames.item.WeaponModifier"
+        config:
+          damage: "1+flame*1.5"
+          fire: "4"
 
 listeners: {}

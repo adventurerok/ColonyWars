@@ -86,6 +86,13 @@ healing_scroll.cooldown=&aThe healing scroll is ready to use again.
 cross.name=Cross
 cross.upgrade=Cross Upgrade %s
 
+explosion_wand.name=Explosion Wand
+explosion_wand.upgrade=Explosion Wand Upgrade %s
+explosion_wand.cooldown=&aThe explosion wand is ready to use again.
+
+flame_sword.name=Flame Sword
+flame_sword.upgrade=Flame Sword Upgrade %s
+
 #ClickableItems
 buyable.team.no_money=&cYour Team and you do not have enough money to purchase this item!
 buyable.user.no_money=&cYou do not have enough money to purchase this item!

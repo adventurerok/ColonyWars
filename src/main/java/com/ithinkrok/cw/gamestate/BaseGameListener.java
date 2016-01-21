@@ -384,9 +384,7 @@ public class BaseGameListener extends BaseGameStateListener {
     public void onUserQuit(UserQuitEvent event) {
         if (event.getReason() != UserQuitEvent.QuitReason.QUIT_SERVER) return;
 
-        if (!event.getUser().isInGame()) {
-            //TODO save stats
-        } else {
+        if(event.getUser().isInGame()) {
             event.getUser().becomeEntity(EntityType.ZOMBIE);
             checkVictory(event.getUser().getGameGroup(), true);
             event.setRemoveUser(false);

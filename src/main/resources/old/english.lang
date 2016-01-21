@@ -68,11 +68,11 @@ building.upgrade.failed=We failed to build a %s here. Have the block yourself to
 
 #cooldown-finished
 cooldowns.fix.finished=&aYou can now use the fix command again!
-cooldowns.bat.finished=&aYou can now use bat flight again!
+cooldowns.bat.finished=
 
 cooldowns.default.wait=&cPlease wait for this ability to cool down!
 
-timeouts.batting.finished=&cYour bat ability has run out and must recharge!
+timeouts.batting.finished=
 timeouts.default.wait=&cYou are already using this ability!
 
 #class-upgrades
@@ -80,23 +80,9 @@ upgrades.vampire.name=Vampire Sword Upgrade %s
 upgrades.bat-flight.name=Bat Flight Upgrade %s
 
 #ability-unlock
-unlock.bat-flight.message=The MageTower gives you the bat flight ability!
+unlock.bat-flight.message=
 
 #class-items
-items.explosion-wand.name=Explosion Wand
-items.flame-sword.name=Flame Sword
-items.ender-wand.name=Ender Wand
-items.lightning-wand.name=Lightning Wand
-items.healing-scroll.name=Healing Scroll
-items.earth-bender.name=Earth Bender
-items.cross.name=Cross
-items.wolf-wand.name=Wolf Wand
-items.vampire-sword.name=Vampire Sword
-items.vampire-sword.desc=Regenerates health when damage is dealt.
-items.bat-wand.name=Bat Wand
-
-lore.timeout.bat=Bat Disguise\: %s seconds
-
 game.player.respawn=%s &6was revived by the gods!
 game.player.no-respawn=%s &6was not revived!
 game.player.all-dead=&6Oh dear. Everyone is dead!

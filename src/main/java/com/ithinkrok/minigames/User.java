@@ -833,6 +833,26 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         return gameGroup.getCurrentMap();
     }
 
+    public boolean isFlying() {
+        return isPlayer() && getPlayer().isFlying();
+    }
+
+    public double getHealth() {
+        return entity.getHealth();
+    }
+
+    public boolean hasPotionEffect(PotionEffectType type) {
+        return entity.hasPotionEffect(type);
+    }
+
+    public void setFallDistance(double fallDistance) {
+        entity.setFallDistance((float) fallDistance);
+    }
+
+    public boolean isOnGround() {
+        return entity.isOnGround();
+    }
+
     private class UserListener implements Listener {
 
         @MinigamesEventHandler(priority = MinigamesEventHandler.INTERNAL_FIRST)

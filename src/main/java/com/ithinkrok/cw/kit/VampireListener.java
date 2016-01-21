@@ -78,9 +78,8 @@ public class VampireListener implements Listener {
 
         if(metadata == null) {
             user.setMetadata(metadata = new VampireMetadata());
+            metadata.start();
         }
-
-        metadata.start();
     }
 
     private class VampireMetadata extends UserMetadata implements GameRunnable {

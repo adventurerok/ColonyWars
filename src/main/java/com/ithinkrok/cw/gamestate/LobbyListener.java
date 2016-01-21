@@ -91,6 +91,8 @@ public class LobbyListener extends BaseGameStateListener {
             return;
         }
 
+        user.unDisguise();
+
         user.setInGame(false);
         if(!user.isPlayer()) return;
 

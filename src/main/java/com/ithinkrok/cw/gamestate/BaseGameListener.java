@@ -221,6 +221,8 @@ public class BaseGameListener extends BaseGameStateListener {
 
         //TODO remove entity targets on the dead player
 
+        event.getUser().unDisguise();
+
         displayDeathMessage(event);
 
         User killer = event.getKillerUser();

@@ -13,6 +13,7 @@ import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.inventory.ClickableInventory;
 import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.lang.LanguageLookup;
+import com.ithinkrok.minigames.map.GameMap;
 import com.ithinkrok.minigames.metadata.MetadataHolder;
 import com.ithinkrok.minigames.metadata.UserMetadata;
 import com.ithinkrok.minigames.task.GameRunnable;
@@ -804,6 +805,23 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
 
     public LivingEntity getEntity() {
         return entity;
+    }
+
+    public TNTPrimed createExplosion(Location loc, float power, boolean fire, int fuseTicks) {
+        TNTPrimed tnt = (TNTPrimed) getMap().spawnEntity(loc, EntityType.PRIMED_TNT);
+
+        makeEntityRepresentUser(tnt);
+
+        tnt.setIsIncendiary(fire);
+        tnt.setYield(power);
+
+        tnt.setFuseTicks(fuseTicks);
+
+        return tnt;
+    }
+
+    public GameMap getMap() {
+        return gameGroup.getCurrentMap();
     }
 
     private class UserListener implements Listener {

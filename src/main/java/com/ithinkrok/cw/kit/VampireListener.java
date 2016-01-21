@@ -14,7 +14,6 @@ import com.ithinkrok.minigames.task.GameRunnable;
 import com.ithinkrok.minigames.task.GameTask;
 import com.ithinkrok.minigames.util.math.Calculator;
 import com.ithinkrok.minigames.util.math.ExpressionCalculator;
-import com.ithinkrok.oldmccw.strings.Buildings;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
@@ -41,11 +40,15 @@ public class VampireListener implements Listener {
 
     String unlockLocale, timeoutLocale, cooldownLocale;
 
+    String unlockBuilding;
+
     @MinigamesEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<User> event) {
         user = event.getCreator();
 
         ConfigurationSection config = event.getConfig();
+
+        unlockBuilding = config.getString("unlock_building");
 
         flightDecreaseAmount = new ExpressionCalculator(config.getString("flight_decrease_amount"));
         limitBlocksAboveGround = config.getDouble("limit_blocks_above_ground");
@@ -115,7 +118,7 @@ public class VampireListener implements Listener {
             if (!mageTower) {
                 CWTeamStats teamStats = CWTeamStats.getOrCreate(user.getTeam());
 
-                if (teamStats.getBuildingCount(Buildings.MAGETOWER) < 1) return;
+                if (teamStats.getBuildingCount(unlockBuilding) < 1) return;
                 mageTower = true;
                 user.setExp(1f);
                 user.sendLocale(unlockLocale);

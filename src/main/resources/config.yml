@@ -342,7 +342,7 @@ kits:
       vampire:
         class: "com.ithinkrok.cw.kit.VampireListener"
         config:
-          flight_unlock_building: "MageTower"
+          unlock_building: "MageTower"
           flight_decrease_amount: "0.01*pow(0.6,bat)*pow(10/9,max(0, bat-1))"
           limit_blocks_above_ground: 10 #If blocks above ground bigger than this
           blocks_above_ground_divisor: 10 #Then multiply flightDecreaseAmount by blocksAboveGround/divisor
@@ -351,6 +351,12 @@ kits:
           flight_loss_on_damage: 0.07
           flight_gain_on_regen: 0.02 # per second
           flight_gain_per_second: 0.02
+    kit:
+      class: "com.ithinkrok.cw.kit.KitListener"
+      config:
+        buildings:
+          MageTower:
+
 
 #TODO kits and KitChangeEvent
 
@@ -1019,5 +1025,20 @@ custom_items:
         config:
           damage: "1+flame*1.5"
           fire: "4"
+  vampire_sword:
+    display_name_locale: "vampire_sword.name"
+    description_locale: "vampire_sword.desc"
+    material: "GOLD_SWORD"
+    upgradable: true
+    enchantments:
+      DAMAGE_ALL: "vampire"
+    listeners:
+      regen:
+        class: "com.ithinkrok.minigames.item.WeaponModifer"
+        config:
+          self_effects:
+            regeneration:
+              duration: 1
+              level: 2
 
 listeners: {}

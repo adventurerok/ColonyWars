@@ -33,7 +33,8 @@ public class WeaponModifier implements Listener {
 
     private Calculator fireCalculator;
 
-    private List<EffectModifier> effectModifiers = new ArrayList<>();
+    private List<EffectModifier> enemyEffects = new ArrayList<>();
+    private List<EffectModifier> selfEffects = new ArrayList<>();
 
     @MinigamesEventHandler
     public void onListenerEnable(ListenerLoadedEvent event) {
@@ -46,12 +47,19 @@ public class WeaponModifier implements Listener {
         if (config.contains("damage")) damageCalculator = new ExpressionCalculator(config.getString("damage"));
         if (config.contains("fire")) fireCalculator = new ExpressionCalculator(config.getString("fire"));
 
-        if (!config.contains("effects")) return;
-        ConfigurationSection effects = config.getConfigurationSection("effects");
+        if (config.contains("effects")) {
+            configureEffects(config.getConfigurationSection("effects"), enemyEffects);
+        }
 
+        if (config.contains("self_effects")) {
+            configureEffects(config.getConfigurationSection("self_effects"), selfEffects);
+        }
+    }
+
+    private void configureEffects(ConfigurationSection effects, List<EffectModifier> list) {
         for (String effectName : effects.getKeys(false)) {
             PotionEffectType effectType = PotionEffectType.getByName(effectName);
-            effectModifiers.add(new EffectModifier(effectType, effects.getConfigurationSection(effectName)));
+            list.add(new EffectModifier(effectType, effects.getConfigurationSection(effectName)));
         }
     }
 
@@ -65,11 +73,13 @@ public class WeaponModifier implements Listener {
         if (fireCalculator != null)
             lore.add(lang.getLocale("weapon_modifier.fire", fireCalculator.calculate(event.getVariables())));
 
-        for (EffectModifier modifier : effectModifiers) {
+        for (EffectModifier modifier : enemyEffects) {
+            if(!modifier.showInLore.calculateBoolean(event.getVariables())) continue;
+
             double duration = ((int) modifier.durationCalculator.calculate(event.getVariables()) * TICKS_PER_SECOND) /
                     TICKS_PER_SECOND;
             int level = (int) modifier.levelCalculator.calculate(event.getVariables());
-            if(duration < 0.05d || level < 1) continue;
+            if (duration < 0.05d || level < 1) continue;
 
             String langName = "weapon_modifier." + modifier.effectType.getName().toLowerCase() + "." + level;
             lore.add(lang.getLocale(langName, duration));
@@ -95,8 +105,12 @@ public class WeaponModifier implements Listener {
             }
         }
 
-        for (EffectModifier effectModifier : effectModifiers) {
-            effectModifier.modifyAttack(attack);
+        for (EffectModifier effectModifier : enemyEffects) {
+            effectModifier.modifyAttack(attack, false);
+        }
+
+        for(EffectModifier effectModifier : selfEffects) {
+            effectModifier.modifyAttack(attack, true);
         }
     }
 
@@ -104,6 +118,7 @@ public class WeaponModifier implements Listener {
         private PotionEffectType effectType;
         private Calculator durationCalculator;
         private Calculator levelCalculator;
+        private Calculator showInLore;
 
         public EffectModifier(PotionEffectType effectType, ConfigurationSection config) {
             this.effectType = effectType;
@@ -111,17 +126,21 @@ public class WeaponModifier implements Listener {
 
             if (!config.contains("level")) levelCalculator = new ExpressionCalculator("1");
             else levelCalculator = new ExpressionCalculator(config.getString("level"));
+
+            showInLore = new ExpressionCalculator(config.getString("show_in_lore", "true"));
         }
 
 
         @SuppressWarnings("unchecked")
-        public void modifyAttack(UserAttackEvent attack) {
+        public void modifyAttack(UserAttackEvent attack, boolean addToAttacker) {
             int duration = (int) (durationCalculator.calculate(attack.getUser().getUpgradeLevels()) * TICKS_PER_SECOND);
             int amp = (int) (levelCalculator.calculate(attack.getUser().getUpgradeLevels()) - 1);
 
             if (duration <= 0 || amp < 0) return;
 
-            if (attack.isAttackingUser() && effectType == PotionEffectType.WITHER) {
+            if(addToAttacker) {
+                attack.getUser().addPotionEffect(new PotionEffect(effectType, duration, amp));
+            } else if (attack.isAttackingUser() && effectType == PotionEffectType.WITHER) {
                 attack.getTargetUser().setWitherTicks(attack.getUser(), duration, amp);
             } else {
                 ((LivingEntity) attack.getClickedEntity()).addPotionEffect(new PotionEffect(effectType, duration, amp));

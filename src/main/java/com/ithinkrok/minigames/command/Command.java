@@ -6,10 +6,7 @@ import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.lang.Messagable;
 import com.ithinkrok.minigames.team.TeamIdentifier;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by paul on 12/01/16.
@@ -169,6 +166,20 @@ public class Command {
 
         sender.sendLocale("command.requires.team_identifier");
         return false;
+    }
+
+    public boolean requireOthersPermission(CommandSender sender, String permission) {
+        User userSender = (sender instanceof User) ? (User) sender : null;
+
+        boolean userCheck = (user != null) && (userSender != null) && (user != userSender);
+        boolean teamCheck = (teamIdentifier != null) && (userSender != null) && (!Objects.equals(teamIdentifier,
+                userSender.getTeamIdentifier()));
+        boolean gameGroupCheck = (gameGroup != null) && (userSender != null) && (!Objects.equals(gameGroup,
+                userSender.getGameGroup()));
+
+        if(!userCheck && !teamCheck && !gameGroupCheck) return true;
+
+        return requirePermission(sender, permission);
     }
 
     public static boolean requirePermission(CommandSender sender, String permission) {

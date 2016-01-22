@@ -53,6 +53,8 @@ public abstract class Money extends UserMetadata {
 
     public abstract boolean subtractMoney(int amount, boolean message);
 
+    public abstract MetadataHolder<? extends Metadata> getOwner();
+
     @Override
     public boolean removeOnInGameChange(UserInGameChangeEvent event) {
         return !event.isInGame();

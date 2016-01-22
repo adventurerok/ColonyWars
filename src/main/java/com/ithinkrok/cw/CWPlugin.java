@@ -34,6 +34,7 @@ public class CWPlugin extends MinigamesPlugin {
         commandHandler.addExecutor(new StatsCommand(), "stats");
         commandHandler.addExecutor(new CountdownCommand(), "countdown");
         commandHandler.addExecutor(new TeamChatCommand(), "teamchat");
+        commandHandler.addExecutor(new TransferCommand(), "transfer");
     }
 
     @Override

@@ -50,5 +50,10 @@ public class TeamMoney extends Money {
         return true;
     }
 
+    @Override
+    public MetadataHolder<? extends Metadata> getOwner() {
+        return team;
+    }
+
 
 }

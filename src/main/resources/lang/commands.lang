@@ -39,3 +39,12 @@ command.countdown.added=&aAdded %s seconds to the current countdown
 command.countdown.set=&aSet the seconds remaining of the countdown to %s
 command.countdown.finished=&aFinished the current countdown early
 command.countdown.stopped=&aStopped the current countdown
+
+command.transfer.not_in_game=&cYou must be in game to use /transfer
+command.transfer.invalid_amount=Invalid transfer amount
+command.transfer.cannot_afford=You cannot afford to transfer that much
+command.transfer.no_target=Please specify valid targets
+command.transfer.single=%s transferred &3%s &6to %s
+command.transfer.multiple=%s &6transferred &3%s &6each to %s
+command.transfer.comma=&6, &a
+command.transfer.team=the team

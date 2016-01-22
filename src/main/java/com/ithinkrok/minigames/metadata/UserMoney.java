@@ -56,4 +56,9 @@ public class UserMoney extends Money {
         return true;
     }
 
+    @Override
+    public MetadataHolder<? extends Metadata> getOwner() {
+        return user;
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.ithinkrok.cw.command;
 
+import com.ithinkrok.minigames.Kit;
 import com.ithinkrok.minigames.command.Command;
 import com.ithinkrok.minigames.command.CommandSender;
 import com.ithinkrok.minigames.command.GameCommandExecutor;
@@ -7,6 +8,7 @@ import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.metadata.Money;
 import com.ithinkrok.minigames.team.Team;
 import com.ithinkrok.minigames.util.InventoryUtils;
+import com.ithinkrok.minigames.util.math.ExpressionCalculator;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -26,6 +28,8 @@ public class CWCommand implements GameCommandExecutor {
         subExecutors.put("building", this::buildingCommand);
         subExecutors.put("team", this::teamCommand);
         subExecutors.put("custom", this::customCommand);
+        subExecutors.put("level", this::levelCommand);
+        subExecutors.put("kit", this::kitCommand);
     }
 
     @Override
@@ -82,7 +86,7 @@ public class CWCommand implements GameCommandExecutor {
 
     private boolean teamCommand(CommandSender sender, Command command) {
         if(!command.requireUser(sender)) return true;
-        if(!command.requireArgumentCount(sender, 1)) return true;
+        if(!command.requireArgumentCount(sender, 1)) return false;
 
         Team team = command.getGameGroup().getTeam(command.getStringArg(0, null));
         if(team == null) {
@@ -98,7 +102,7 @@ public class CWCommand implements GameCommandExecutor {
 
     private boolean customCommand(CommandSender sender, Command command) {
         if(!command.requireUser(sender)) return true;
-        if(!command.requireArgumentCount(sender, 1)) return true;
+        if(!command.requireArgumentCount(sender, 1)) return false;
 
         CustomItem item = command.getUser().getGameGroup().getCustomItem(command.getStringArg(0, null));
         if(item == null) {
@@ -109,6 +113,37 @@ public class CWCommand implements GameCommandExecutor {
         command.getUser().getInventory().addItem(item.createForUser(command.getUser()));
         sender.sendLocale("command.cw.custom.success", command.getUser().getFormattedName(), command.getStringArg(0,
                 null));
+
+        return true;
+    }
+
+    private boolean levelCommand(CommandSender sender, Command command) {
+        if(!command.requireUser(sender)) return true;
+        if(!command.requireArgumentCount(sender, 2)) return false;
+
+        String upgrade = command.getStringArg(0, null);
+        int level = (int) new ExpressionCalculator(command.getStringArg(1, "0")).calculate(command.getUser()
+                .getUpgradeLevels());
+
+        command.getUser().setUpgradeLevel(upgrade, level);
+        sender.sendLocale("command.cw.level.success", command.getUser().getFormattedName(), upgrade, level);
+
+        return true;
+    }
+
+    private boolean kitCommand(CommandSender sender, Command command) {
+        if(!command.requireUser(sender)) return true;
+        if(!command.requireArgumentCount(sender, 1)) return false;
+
+        Kit kit = command.getGameGroup().getKit(command.getStringArg(0, null));
+        if(kit == null) {
+            sender.sendLocale("command.cw.kit.unknown", command.getStringArg(0, null));
+            return true;
+        }
+
+        command.getUser().setKit(kit);
+
+        sender.sendLocale("command.cw.kit.success", command.getUser().getFormattedName(), kit.getFormattedName());
 
         return true;
     }

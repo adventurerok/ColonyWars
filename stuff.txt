@@ -1,13 +1,11 @@
 RECODE BUGS:
- - Members command
  - Quitting with only zombies on the server
  - Force showdown timers
  - Maps
  - Ender chest support
  - Class/map descriptions
  - Lobby minigames (wool, parkour)
- - /cw level, /cw team, /cw kit, /cw rejoin
- - permissions to prevent executing commands as other people
+ - /cw level, /cw kit, /cw rejoin
 
 LOW PRIORITY / INVESTIGATE:
  - Destroying a building while it is built does not decrement building now counter

@@ -43,6 +43,8 @@ permissions:
       mccw.cw.building: true
       mccw.cw.team: true
       mccw.cw.custom: true
+      mccw.cw.level: true
+      mccw.cw.kit: true
   mccw.cw.command:
     description: "Makes the /cw command usable"
     default: false
@@ -57,6 +59,12 @@ permissions:
     default: false
   mccw.cw.custom:
     description: "Allows use of /cw custom"
+    default: false
+  mccw.cw.level:
+    description: "Allows use of /cw level"
+    default: false
+  mccw.cw.kit:
+    description: "Allows use of /cw kit"
     default: false
   mccw.tmm:
     description: "Allows use of /tmm"

@@ -883,7 +883,11 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
                             continue;
                         }
 
-                        teleport(block.getLocation().clone().add(0.5, 2.0, 0.5));
+                        Location teleport = block.getLocation().clone().add(0.5, 2.0, 0.5);
+                        teleport.setPitch(getLocation().getPitch());
+                        teleport.setYaw(getLocation().getYaw());
+
+                        teleport(teleport);
                         setVelocity(new Vector(0, -1, 0));
                         return true;
                     }

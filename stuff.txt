@@ -1,5 +1,5 @@
 RECODE BUGS:
- - leaderboard command, list command
+ - list command
  - Quitting with only zombies on the server
  - Force showdown timers
  - Maps

@@ -479,6 +479,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         @EventHandler
         public void eventWeatherChanged(WeatherChangeEvent event) {
             GameGroup gameGroup = getGameGroup(event.getWorld());
+            if(gameGroup == null) return;
 
             if(gameGroup.getCurrentMap().getInfo().getWeatherEnabled()) return;
             event.setCancelled(true);

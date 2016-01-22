@@ -33,6 +33,7 @@ public class CWPlugin extends MinigamesPlugin {
         commandHandler.addExecutor(new ToggleMoneyMessageCommand(), "togglemoneymessage");
         commandHandler.addExecutor(new StatsCommand(), "stats");
         commandHandler.addExecutor(new CountdownCommand(), "countdown");
+        commandHandler.addExecutor(new TeamChatCommand(), "teamchat");
     }
 
     @Override

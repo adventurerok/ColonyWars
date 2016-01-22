@@ -21,6 +21,7 @@ permissions:
     children:
       mccw.tmm: true
       mccw.stats: true
+      mccw.teamchat: true
   mccw.gamestate:
     description: "Allows use of the /gamestate command"
     default: false
@@ -56,6 +57,9 @@ permissions:
   mccw.countdown:
     description: "Allows use of /countdown"
     default: false
+  mccw.teamchat:
+    description: "Allows use of /teamchat"
+    default: false
 
 commands:
   gamestate:
@@ -81,3 +85,7 @@ commands:
       /<command> add/set <amount>
       /<command> finish/cancel
       /<command> start <name> <seconds> <localestub>
+  teamchat:
+    description: "Allows you to chat privately to your team"
+    aliases: ["tc", "tchat", "teamc"]
+    usage: "/<command>"

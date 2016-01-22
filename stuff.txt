@@ -1,8 +1,11 @@
 RECODE BUGS:
- - list command
+ - Members command
  - Quitting with only zombies on the server
  - Force showdown timers
  - Maps
+ - Ender chest support
+ - Class/map descriptions
+ - Lobby minigames (wool, parkour)
 
 LOW PRIORITY / INVESTIGATE:
  - Destroying a building while it is built does not decrement building now counter

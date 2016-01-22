@@ -25,6 +25,7 @@ permissions:
       mccw.transfer: true
       mccw.fix: true
       mccw.leaderboard: true
+      mccw.list: true
   mccw.gamestate:
     description: "Allows use of the /gamestate command"
     default: false
@@ -69,6 +70,9 @@ permissions:
   mccw.leaderboard:
     description: "Allows use of /leaderboard"
     default: false
+  mccw.list:
+    description: "Allows use of /list"
+    default: false
 
 commands:
   gamestate:
@@ -110,3 +114,7 @@ commands:
     description: "Shows a leaderboard of the top players"
     aliases: ["lb", "leaders", "lboard", "top"]
     usage: "/<command> [amount] [category]"
+  list:
+    description: "Lists who is in the minigame"
+    aliases: ["ls"]
+    usage: "/<command>"

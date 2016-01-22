@@ -37,6 +37,7 @@ public class CWPlugin extends MinigamesPlugin {
         commandHandler.addExecutor(new TransferCommand(), "transfer");
         commandHandler.addExecutor(new FixCommand(), "fix");
         commandHandler.addExecutor(new LeaderboardCommand(), "leaderboard");
+        commandHandler.addExecutor(new ListCommand(), "list");
     }
 
     @Override

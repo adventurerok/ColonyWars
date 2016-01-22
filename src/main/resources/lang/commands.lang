@@ -51,3 +51,8 @@ command.transfer.team=the team
 command.fix.cooldown=&aYou can now use the fix command again
 command.fix.failed=&cYou were teleported to your base as no suitable location was found
 command.fix.success=&aYou were successfully fixed
+
+command.list.title=&6&lPlayers connected to the server &8(&7%s&8/&7%s&8)&6\:
+command.list.line=%s&6\: %s
+command.list.spectator=&dSpectator
+command.list.zombies=&6Additionally there are &3%s &6zombies in the game.

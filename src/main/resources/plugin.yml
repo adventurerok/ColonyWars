@@ -100,6 +100,9 @@ permissions:
   mccw.members.others:
     description: "Allows use of /members for other teams"
     default: false
+  mccw.kill:
+    description: "Shows the defunct kill command in player /help command lists"
+    default: false
 
 commands:
   gamestate:
@@ -158,4 +161,9 @@ commands:
     description: "Shows the members of your team"
     aliases: ["team", "mbrs"]
     permission: "mccw.members"
+    usage: "/<command>"
+  kill:
+    description: "Disabled"
+    aliases: ["suicide"]
+    permission: "mccw.kill"
     usage: "/<command>"

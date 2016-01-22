@@ -34,6 +34,8 @@ public class CooldownHandler {
             return false;
         }
 
+        if(seconds <= 0) return true;
+
         coolingDown.put(ability, timeInFuture(seconds));
 
         GameTask task = user.doInFuture(task1 -> stopCoolDown(ability, coolDownLocale), (int) (seconds * 20));

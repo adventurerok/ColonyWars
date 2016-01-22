@@ -19,6 +19,7 @@ import com.ithinkrok.minigames.metadata.Money;
 import com.ithinkrok.minigames.schematic.Facing;
 import com.ithinkrok.minigames.team.Team;
 import com.ithinkrok.minigames.util.*;
+import com.ithinkrok.minigames.util.math.Calculator;
 import com.ithinkrok.minigames.util.math.ExpressionCalculator;
 import com.ithinkrok.minigames.util.math.SingleValueVariables;
 import org.bukkit.Bukkit;
@@ -103,6 +104,9 @@ public class BaseGameListener extends BaseGameStateListener {
 
     private GiveCustomItemsOnJoin.CustomItemGiver spectatorItems;
 
+    private Calculator enderAmount;
+    private String enderFoundLocale;
+
     @MinigamesEventHandler
     public void onUserChat(UserChatEvent event) {
         if (event.getUser().isInGame()) {
@@ -171,6 +175,9 @@ public class BaseGameListener extends BaseGameStateListener {
 
         spectatorJoinLocale = config.getString("spectator_join_locale", "user.join.spectator");
         spectatorQuitLocale = config.getString("spectator_quit_locale", "user.quit.spectator");
+
+        enderAmount = new ExpressionCalculator(config.getString("ender_amount"));
+        enderFoundLocale = config.getString("ender_found_locale", "ender_chest.found");
     }
 
     @MinigamesEventHandler
@@ -183,29 +190,46 @@ public class BaseGameListener extends BaseGameStateListener {
 
         if (event.getInteractType() != UserInteractEvent.InteractType.RIGHT_CLICK || !event.hasBlock()) return;
 
-        if (event.getClickedBlock().getType() != Material.OBSIDIAN) return;
+        switch(event.getClickedBlock().getType()) {
+            case OBSIDIAN:
+                event.setCancelled(true);
+                BuildingController controller = BuildingController.getOrCreate(event.getUserGameGroup());
 
-        BuildingController controller = BuildingController.getOrCreate(event.getUserGameGroup());
+                Building building = controller.getBuilding(event.getClickedBlock().getLocation());
+                if (building == null) return;
 
-        Building building = controller.getBuilding(event.getClickedBlock().getLocation());
-        if (building == null) return;
+                if (!building.getTeamIdentifier().equals(event.getUser().getTeamIdentifier())) {
+                    event.getUser().sendLocale(buildingNotYoursLocale);
+                    return;
+                }
 
-        if (!building.getTeamIdentifier().equals(event.getUser().getTeamIdentifier())) {
-            event.getUser().sendLocale(buildingNotYoursLocale);
-            return;
+                if (!building.isFinished()) {
+                    event.getUser().sendLocale(buildingNotFinishedLocale);
+                    return;
+                }
+
+                ClickableInventory shop = building.createShop();
+                if (shop == null) shop = new ClickableInventory(building.getBuildingName());
+
+                event.getUserGameGroup().userEvent(new ShopOpenEvent(event.getUser(), building, shop));
+
+                event.getUser().showInventory(shop, event.getClickedBlock().getLocation());
+                return;
+            case ENDER_CHEST:
+                event.setCancelled(true);
+
+                event.getUser().getTeam().sendLocale(enderFoundLocale, event.getUser().getFormattedName());
+
+                int amount = (int) enderAmount.calculate(event.getUser().getUpgradeLevels());
+
+                Money.getOrCreate(event.getUser()).addMoney(amount, true);
+                Money.getOrCreate(event.getUser().getTeam()).addMoney((int) (amount * 2f/3f), true);
+
+                event.getClickedBlock().setType(Material.AIR);
+                return;
         }
 
-        if (!building.isFinished()) {
-            event.getUser().sendLocale(buildingNotFinishedLocale);
-            return;
-        }
 
-        ClickableInventory shop = building.createShop();
-        if (shop == null) shop = new ClickableInventory(building.getBuildingName());
-
-        event.getUserGameGroup().userEvent(new ShopOpenEvent(event.getUser(), building, shop));
-
-        event.getUser().showInventory(shop, event.getClickedBlock().getLocation());
     }
 
     @MinigamesEventHandler

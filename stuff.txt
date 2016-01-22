@@ -2,7 +2,7 @@ RECODE BUGS:
  - Quitting with only zombies on the server
  - Force showdown timers
  - Maps
- - Ender chest support
+ Y Ender chest support
  - Class/map descriptions
  - Lobby minigames (wool, parkour)
 

@@ -751,6 +751,7 @@ game_states:
                 slot: 0
               - name: "invisible_user_toggle"
                 slot: 1
+          ender_amount: "6000+ranInt(9)*3000"
   showdown:
     listeners:
       main:

@@ -31,6 +31,10 @@ public class GameMapInfo {
         return config.getString("description");
     }
 
+    public boolean getWeatherEnabled() {
+        return config.getBoolean("weather_enabled", true);
+    }
+
     public ConfigurationSection getConfig() {
         return config;
     }

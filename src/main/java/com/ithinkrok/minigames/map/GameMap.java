@@ -72,6 +72,10 @@ public class GameMap implements LanguageLookup, ConfigHolder, SchematicPaster.Bo
         pastedSchematics.remove(schematic);
     }
 
+    public GameMapInfo getInfo() {
+        return gameMapInfo;
+    }
+
     private void loadMap() {
 
         String randomWorldName = getRandomWorldName(gameMapInfo.getName());

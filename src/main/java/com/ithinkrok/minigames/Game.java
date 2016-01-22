@@ -46,6 +46,7 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.projectiles.ProjectileSource;
@@ -473,6 +474,14 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
             }
 
             gameGroup.userEvent(new UserJoinEvent(user, UserJoinEvent.JoinReason.JOINED_SERVER));
+        }
+
+        @EventHandler
+        public void eventWeatherChanged(WeatherChangeEvent event) {
+            GameGroup gameGroup = getGameGroup(event.getWorld());
+
+            if(gameGroup.getCurrentMap().getInfo().getWeatherEnabled()) return;
+            event.setCancelled(true);
         }
 
         @EventHandler

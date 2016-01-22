@@ -2,6 +2,8 @@ folder: "mccw_canyon"
 description: "Canyon test for CW Recode"
 environment: "normal"
 
+enable_weather: false
+
 shared_objects:
   spawn_locations:
     red:

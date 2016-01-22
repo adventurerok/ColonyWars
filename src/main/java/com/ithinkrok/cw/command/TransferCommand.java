@@ -36,9 +36,6 @@ public class TransferCommand implements GameCommandExecutor {
         if (amount < 1) {
             if ("all".equalsIgnoreCase(command.getStringArg(0, null))) {
                 amount = userMoney.getMoney();
-            } else {
-                sender.sendLocale("command.transfer.invalid_amount");
-                return true;
             }
         }
 
@@ -75,6 +72,11 @@ public class TransferCommand implements GameCommandExecutor {
 
         //Change amount to the amount to pay for each transferTo member
         amount /= transferTo.size();
+
+        if(amount < 1) {
+            sender.sendLocale("command.transfer.invalid_amount");
+            return true;
+        }
 
         userMoney.subtractMoney(amount * transferTo.size(), true);
 

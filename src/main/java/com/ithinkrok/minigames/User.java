@@ -861,6 +861,39 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         return entity.isOnGround();
     }
 
+    public boolean unstuck(int maxRadius) {
+        Block base = getLocation().add(0, 1, 0).getBlock();
+        Block block;
+
+        for (int radius = 0; radius < maxRadius; ++radius) {
+            for (int x = -radius; x <= radius; ++x) {
+                for (int z = -radius; z <= radius; ++z) {
+                    int state = 0;
+                    for (int y = radius + 1; y >= -radius - 2; --y) {
+                        if (Math.abs(x) < radius && Math.abs(y) + 3 < radius && Math.abs(z) < radius) continue;
+                        block = base.getRelative(x, y, z);
+
+                        boolean air = block.getType().isTransparent() || block.isLiquid();
+                        if (!air && state < 2) {
+                            state = 0;
+                            continue;
+                        } else if (air && state == 2) continue;
+                        else if (state < 3) {
+                            ++state;
+                            continue;
+                        }
+
+                        teleport(block.getLocation().clone().add(0.5, 2.0, 0.5));
+                        setVelocity(new Vector(0, -1, 0));
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
     private class UserListener implements Listener {
 
         @MinigamesEventHandler(priority = MinigamesEventHandler.INTERNAL_FIRST)

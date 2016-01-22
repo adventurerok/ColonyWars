@@ -48,3 +48,7 @@ command.transfer.single=%s &6transferred &3%s &6to %s
 command.transfer.multiple=%s &6transferred &3%s &6each to %s
 command.transfer.comma=&6, &e
 command.transfer.team=the team
+
+command.fix.cooldown=&aYou can now use the fix command again
+command.fix.failed=&cYou were teleported to your base as no suitable location was found
+command.fix.success=&aYou were successfully fixed

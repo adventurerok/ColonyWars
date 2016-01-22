@@ -1,5 +1,6 @@
 package com.ithinkrok.cw.gamestate;
 
+import com.ithinkrok.cw.command.CWCommand;
 import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.cw.metadata.StatsHolder;
 import com.ithinkrok.cw.scoreboard.CWScoreboardHandler;
@@ -84,6 +85,12 @@ public class GameListener extends BaseGameListener {
     }
 
 
+    @MinigamesEventHandler
+    public void onUserRejoin(CWCommand.UserRejoinEvent event) {
+        event.setCancelled(false);
+
+        setupUser(event.getUser());
+    }
 
     private void setupUser(User user) {
         user.decloak();

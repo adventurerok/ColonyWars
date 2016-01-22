@@ -45,6 +45,7 @@ permissions:
       mccw.cw.custom: true
       mccw.cw.level: true
       mccw.cw.kit: true
+      mccw.cw.rejoin: true
   mccw.cw.command:
     description: "Makes the /cw command usable"
     default: false
@@ -65,6 +66,9 @@ permissions:
     default: false
   mccw.cw.kit:
     description: "Allows use of /cw kit"
+    default: false
+  mccw.cw.rejoin:
+    description: "Allows use of /cw rejoin"
     default: false
   mccw.tmm:
     description: "Allows use of /tmm"

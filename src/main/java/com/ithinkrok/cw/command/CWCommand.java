@@ -1,15 +1,18 @@
 package com.ithinkrok.cw.command;
 
 import com.ithinkrok.minigames.Kit;
+import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.command.Command;
 import com.ithinkrok.minigames.command.CommandSender;
 import com.ithinkrok.minigames.command.GameCommandExecutor;
+import com.ithinkrok.minigames.event.user.UserEvent;
 import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.metadata.Money;
 import com.ithinkrok.minigames.team.Team;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import com.ithinkrok.minigames.util.math.ExpressionCalculator;
 import org.bukkit.Material;
+import org.bukkit.event.Cancellable;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -30,6 +33,7 @@ public class CWCommand implements GameCommandExecutor {
         subExecutors.put("custom", this::customCommand);
         subExecutors.put("level", this::levelCommand);
         subExecutors.put("kit", this::kitCommand);
+        subExecutors.put("rejoin", this::rejoinCommand);
     }
 
     @Override
@@ -146,5 +150,37 @@ public class CWCommand implements GameCommandExecutor {
         sender.sendLocale("command.cw.kit.success", command.getUser().getFormattedName(), kit.getFormattedName());
 
         return true;
+    }
+
+    private boolean rejoinCommand(CommandSender sender, Command command) {
+        if(!command.requireUser(sender)) return true;
+
+        UserRejoinEvent event = new UserRejoinEvent(command.getUser());
+        event.setCancelled(true);
+        command.getGameGroup().userEvent(event);
+
+        if(event.isCancelled()) sender.sendLocale("command.cw.rejoin.failure");
+        else sender.sendLocale("command.cw.rejoin.success", command.getUser().getFormattedName());
+
+        return true;
+    }
+
+    public static class UserRejoinEvent extends UserEvent implements Cancellable {
+
+        private boolean cancelled;
+
+        public UserRejoinEvent(User user) {
+            super(user);
+        }
+
+        @Override
+        public boolean isCancelled() {
+            return cancelled;
+        }
+
+        @Override
+        public void setCancelled(boolean cancel) {
+            cancelled = cancel;
+        }
     }
 }

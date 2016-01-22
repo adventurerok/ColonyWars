@@ -16,6 +16,8 @@ command.cw.custom.success=&aGiven %s &athe custom item %s
 command.cw.level.success=%s&a's %s level set to %s
 command.cw.kit.unknown=&cUnknown kit %s
 command.cw.kit.success=%s&a's kit changed to %s
+command.cw.rejoin.failure=Failed to rejoin user
+command.cw.rejoin.success=%s &awas successfully rejoined!
 
 command.tmm.change.0=&6Money messages set to NONE
 command.tmm.change.1=&6Money messages set to FILTERED

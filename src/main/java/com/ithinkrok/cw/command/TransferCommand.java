@@ -11,6 +11,7 @@ import com.ithinkrok.minigames.metadata.Money;
 import com.ithinkrok.minigames.team.Team;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -52,20 +53,16 @@ public class TransferCommand implements GameCommandExecutor {
             transferTo.add(Money.getOrCreate(command.getUser().getTeam()));
         } else {
             for (int index = 1; command.hasArg(index); ++index) {
-                switch (command.getStringArg(index, null)) {
+                String targetName = command.getStringArg(index, null);
+                switch (targetName) {
                     case "team":
                         transferTo.add(Money.getOrCreate(command.getUser().getTeam()));
                         break;
-                    case "all":
-                        for (User user : command.getUser().getTeam().getUsers()) {
-                            transferTo.add(Money.getOrCreate(user));
-                        }
-                        break;
                     default:
                         for (User user : command.getUser().getTeam().getUsers()) {
-                            if (!user.getName().equals(command.getStringArg(index, null))) continue;
+                            if (!"all".equals(targetName) && !user.getName().equals(targetName)) continue;
+                            if(Objects.equals(user, command.getUser())) continue;
                             transferTo.add(Money.getOrCreate(user));
-                            break;
                         }
                 }
             }

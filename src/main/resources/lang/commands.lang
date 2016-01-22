@@ -56,3 +56,8 @@ command.list.title=&6&lPlayers connected to the server &8(&7%s&8/&7%s&8)&6\:
 command.list.line=%s&6\: %s
 command.list.spectator=&dSpectator
 command.list.zombies=&6Additionally there are &3%s &6zombies in the game.
+
+command.members.player_info=&6%s&6\: &3%s&6, Location\: &3%s
+command.members.title=&6&lMembers of your team:
+command.members.near_showdown=%s (Near showdown arena)
+command.members.not_in_game=not in game

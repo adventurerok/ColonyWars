@@ -6,6 +6,8 @@ RECODE BUGS:
  - Ender chest support
  - Class/map descriptions
  - Lobby minigames (wool, parkour)
+ - /cw level, /cw team, /cw kit, /cw rejoin
+ - permissions to prevent executing commands as other people
 
 LOW PRIORITY / INVESTIGATE:
  - Destroying a building while it is built does not decrement building now counter

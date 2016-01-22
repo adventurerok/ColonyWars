@@ -12,6 +12,8 @@ import java.util.*;
  */
 public class ExpressionCalculator implements Calculator {
 
+    private static final Random random = new Random();
+
     private static final Map<String, Operator> opMap = new HashMap<>();
 
     public static boolean isOperatorOrFunction(String check) {
@@ -67,7 +69,8 @@ public class ExpressionCalculator implements Calculator {
         addOperator("log", numbers -> Math.log10(numbers[0]), true, false, 0, 1, 1);
         addOperator("exp", numbers -> Math.exp(numbers[0]), true, false, 0, 1, 1);
 
-        addOperator("random", numbers -> Math.random(), true, true, 0, 0, 0);
+        addOperator("random", numbers -> random.nextDouble(), true, true, 0, 0, 0);
+        addOperator("ranInt", numbers -> random.nextInt((int) numbers[0]), true, true, 0, 1, 1);
 
         addOperator("round", numbers -> Math.round(numbers[0]), true, false, 0, 1, 1);
         addOperator("abs", numbers -> Math.abs(numbers[0]), true, false, 0, 1, 1);

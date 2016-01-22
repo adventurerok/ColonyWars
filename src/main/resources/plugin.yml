@@ -13,8 +13,12 @@ permissions:
     children:
       mccw.gamestate: true
       mccw.cw: true
-      mccw.tmm.others: true
       mccw.countdown: true
+      mccw.tmm.others: true
+      mccw.members.others: true
+      mccw.fix.others: true
+      mccw.teamchat.others: true
+      mccw.transfer.others: true
   mccw.user:
     default: true
     description: "Gives all user command permission"
@@ -26,6 +30,7 @@ permissions:
       mccw.fix: true
       mccw.leaderboard: true
       mccw.list: true
+      mccw.members: true
   mccw.gamestate:
     description: "Allows use of the /gamestate command"
     default: false
@@ -33,10 +38,14 @@ permissions:
     description: "Allows use of all subcommands of /cw"
     default: false
     children:
+      mccw.cw.command: true
       mccw.cw.money: true
       mccw.cw.building: true
       mccw.cw.team: true
       mccw.cw.custom: true
+  mccw.cw.command:
+    description: "Makes the /cw command usable"
+    default: false
   mccw.cw.money:
     description: "Allows use of /cw money"
     default: false
@@ -64,14 +73,32 @@ permissions:
   mccw.teamchat:
     description: "Allows use of /teamchat"
     default: false
+  mccw.teamchat.others:
+    description: "Allows use of /teamchat on other teams"
+    default: false
+  mccw.transfer:
+    description: "Allows use of /transfer"
+    default: false
+  mccw.transfer.others:
+    description: "Allows using /transfer as other players"
+    default: false
   mccw.fix:
     description: "Allows use of /fix"
+    default: false
+  mccw.fix.others:
+    description: "Allows use of /fix on other players"
     default: false
   mccw.leaderboard:
     description: "Allows use of /leaderboard"
     default: false
   mccw.list:
     description: "Allows use of /list"
+    default: false
+  mccw.members:
+    description: "Allows use of /members"
+    default: false
+  mccw.members.others:
+    description: "Allows use of /members for other teams"
     default: false
 
 commands:
@@ -83,17 +110,21 @@ commands:
   colonywars:
     description: "Various CW testing utils"
     aliases: ["cw", "cwars", "wars"]
+    permission: "mccw.cw.command"
     usage: "/<command> <subcommand> [sub command args...]"
   togglemoneymessage:
     description: "Toggles money message status"
     aliases: ["tmm"]
+    permission: "mccw.tmm"
     usage: "/<command> [newstatus]"
   stats:
     description: "Shows your stats"
+    permission: "mccw.stats"
     usage: "/<command> [category]"
   countdown:
     description: "Modifies countdowns"
     aliases: ["cdown", "cd", "cdwn"]
+    permission: "mccw.countdown"
     usage: |
       /<command> add/set <amount>
       /<command> finish/cancel
@@ -101,20 +132,30 @@ commands:
   teamchat:
     description: "Allows you to chat privately to your team"
     aliases: ["tc", "tchat", "teamc"]
+    permission: "mccw.teamchat"
     usage: "/<command>"
   transfer:
     description: "Allows you to transfer/share money with your team and its members"
     aliases: ["tf", "share", "t"]
+    permission: "mccw.transfer"
     usage: "/<command> <amount/all> [targets (team/all/player names)]"
   fix:
     description: "Fixes you if you are stuck"
     aliases: ["unstuck", "fixme"]
+    permission: "mccw.fix"
     usage: "/<command>"
   leaderboard:
     description: "Shows a leaderboard of the top players"
     aliases: ["lb", "leaders", "lboard", "top"]
+    permission: "mccw.leaderboard"
     usage: "/<command> [amount] [category]"
   list:
     description: "Lists who is in the minigame"
     aliases: ["ls"]
+    permission: "mccw.list"
+    usage: "/<command>"
+  members:
+    description: "Shows the members of your team"
+    aliases: ["team", "mbrs"]
+    permission: "mccw.members"
     usage: "/<command>"

@@ -12,7 +12,7 @@ import com.ithinkrok.minigames.command.GameCommandExecutor;
 public class FixCommand implements GameCommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command) {
-        if(!command.requireUser(sender)) return true;
+        if(!command.requireUser(sender) || !command.requireOthersPermission(sender, "mccw.fix.others")) return true;
         if(!command.getUser().isInGame()) return true;
 
         User user = command.getUser();

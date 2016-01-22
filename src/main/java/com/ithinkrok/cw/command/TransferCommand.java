@@ -22,7 +22,8 @@ public class TransferCommand implements GameCommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command) {
-        if (!command.requireUser(sender)) return false;
+        if (!command.requireUser(sender)) return true;
+        if(!command.requireOthersPermission(sender, "mccw.transfer.others")) return true;
         if (!command.requireArgumentCount(sender, 1)) return false;
 
         if (!command.getUser().isInGame()) {

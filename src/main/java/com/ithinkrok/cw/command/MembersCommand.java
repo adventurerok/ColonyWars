@@ -17,6 +17,7 @@ public class MembersCommand implements GameCommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command) {
         if(!command.requireGameGroup(sender) || !command.requireTeamIdentifier(sender)) return true;
+        if(!command.requireOthersPermission(sender, "mccw.members.others")) return true;
 
         Team team = command.getGameGroup().getTeam(command.getTeamIdentifier());
 

@@ -22,6 +22,7 @@ public class TeamChatCommand implements GameCommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command) {
         if (!command.requireUser(sender)) return true;
+        if (!command.requireOthersPermission(sender, "mccw.teamchat.others")) return true;
         if (!command.requireArgumentCount(sender, 1)) return false;
 
         StringBuilder message = new StringBuilder();
@@ -30,7 +31,7 @@ public class TeamChatCommand implements GameCommandExecutor {
             message.append(s);
         }
 
-        TeamIdentifier identifier = command.getUser().getTeamIdentifier();
+        TeamIdentifier identifier = command.getTeamIdentifier();
 
         Set<Player> receivers = new HashSet<>();
 

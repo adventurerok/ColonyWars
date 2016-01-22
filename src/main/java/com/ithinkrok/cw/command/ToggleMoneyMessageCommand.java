@@ -15,7 +15,7 @@ public class ToggleMoneyMessageCommand implements GameCommandExecutor {
     public boolean onCommand(CommandSender sender, Command command) {
         if(!command.requireUser(sender)) return true;
 
-        if(sender != command.getUser() && !Command.requirePermission(sender, "mccw.tmm.others")) return true;
+        if(!command.requireOthersPermission(sender, "mccw.tmm.others")) return true;
 
         int changeTo = command.getIntArg(0, -1);
         if(changeTo > 2 || changeTo < -1) changeTo = -1;

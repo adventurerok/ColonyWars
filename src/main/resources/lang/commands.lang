@@ -31,7 +31,6 @@ command.stats.score=&6Score\: &3%s
 
 command.leaderboard.category=&6&lLeaderboard for category &3&l%s&6&l\:
 command.leaderboard.listing=&6%s&6: &3%s&6, with a score of &3%s&6!
-command.leaderboard.bad-count=&cBad count integer.
 
 command.countdown.none=&cThere is no countdown at the moment
 command.countdown.started=&aStarted countdown %s for %s seconds

@@ -18,6 +18,7 @@ import com.ithinkrok.minigames.team.TeamIdentifier;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -37,26 +38,6 @@ public class StatsHolder extends UserMetadata implements Messagable {
     private int deathScoreModifier;
 
     private String lastKit, lastTeam;
-
-    public String getLastKit() {
-        return lastKit;
-    }
-
-    public String getLastTeam() {
-        return lastTeam;
-    }
-
-    public UUID getUniqueId() {
-        return uniqueId;
-    }
-
-    public void setLastKit(String lastKit) {
-        this.lastKit = lastKit;
-    }
-
-    public void setLastTeam(String lastTeam) {
-        this.lastTeam = lastTeam;
-    }
 
     public StatsHolder(User user) {
         this.user = user;
@@ -86,10 +67,15 @@ public class StatsHolder extends UserMetadata implements Messagable {
         taskRunner.doDatabaseTask(new StatsGet(uuid, category, task));
     }
 
+    public static void getUserCategoryStatsByScore(DatabaseTaskRunner taskRunner, String category, int max,
+                                                   ScoresTask scoresTask) {
+        taskRunner.doDatabaseTask(new StateListByScore(category, max, scoresTask));
+    }
+
     public static StatsHolder getOrCreate(User user) {
         StatsHolder statsHolder = user.getMetadata(StatsHolder.class);
 
-        if(statsHolder == null) {
+        if (statsHolder == null) {
             for (TeamIdentifier identifier : user.getGameGroup().getTeamIdentifiers()) {
                 Team team = user.getGameGroup().getTeam(identifier);
                 TeamStatsHolderGroup teamStats = TeamStatsHolderGroup.getOrCreate(team);
@@ -100,7 +86,7 @@ public class StatsHolder extends UserMetadata implements Messagable {
                 break;
             }
 
-            if(statsHolder == null) statsHolder = new StatsHolder(user);
+            if (statsHolder == null) statsHolder = new StatsHolder(user);
             else statsHolder.setUser(user);
             user.setMetadata(statsHolder);
         }
@@ -110,6 +96,26 @@ public class StatsHolder extends UserMetadata implements Messagable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getLastKit() {
+        return lastKit;
+    }
+
+    public void setLastKit(String lastKit) {
+        this.lastKit = lastKit;
+    }
+
+    public String getLastTeam() {
+        return lastTeam;
+    }
+
+    public void setLastTeam(String lastTeam) {
+        this.lastTeam = lastTeam;
+    }
+
+    public UUID getUniqueId() {
+        return uniqueId;
     }
 
     public String getPlayerName() {
@@ -226,6 +232,35 @@ public class StatsHolder extends UserMetadata implements Messagable {
         void run(UserCategoryStats stats);
     }
 
+    public interface ScoresTask {
+        void run(List<UserCategoryStats> statsByScore);
+    }
+
+    private static class StateListByScore implements DatabaseTask {
+
+        final String category;
+        final int max;
+        final ScoresTask task;
+
+        public StateListByScore(String category, int max, ScoresTask task) {
+            this.category = category;
+            this.max = max;
+            this.task = task;
+        }
+
+        @Override
+        public void run(EbeanServer database) {
+            Query<UserCategoryStats> query = database.find(UserCategoryStats.class);
+
+            query.where().eq("category", category);
+            query.orderBy("score desc");
+
+            query.setMaxRows(max);
+
+            task.run(query.findList());
+        }
+    }
+
     private static class StatsGet implements DatabaseTask {
 
         UUID uuid;
@@ -258,7 +293,7 @@ public class StatsHolder extends UserMetadata implements Messagable {
             Query<UserCategoryStats> query = query(database, uuid, category);
 
             UserCategoryStats result = query.findUnique();
-            if (result != null){
+            if (result != null) {
                 task.run(result);
                 return;
             }

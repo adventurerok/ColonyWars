@@ -24,6 +24,7 @@ permissions:
       mccw.teamchat: true
       mccw.transfer: true
       mccw.fix: true
+      mccw.leaderboard: true
   mccw.gamestate:
     description: "Allows use of the /gamestate command"
     default: false
@@ -65,6 +66,9 @@ permissions:
   mccw.fix:
     description: "Allows use of /fix"
     default: false
+  mccw.leaderboard:
+    description: "Allows use of /leaderboard"
+    default: false
 
 commands:
   gamestate:
@@ -102,3 +106,7 @@ commands:
     description: "Fixes you if you are stuck"
     aliases: ["unstuck", "fixme"]
     usage: "/<command>"
+  leaderboard:
+    description: "Shows a leaderboard of the top players"
+    aliases: ["lb", "leaders", "lboard", "top"]
+    usage: "/<command> [amount] [category]"

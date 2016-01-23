@@ -1,5 +1,6 @@
 package com.ithinkrok.minigames.inventory;
 
+import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
@@ -63,6 +64,10 @@ public class MapVoter implements Listener {
                                 .sendLocale(voteLocale, event.getUser().getFormattedName(), mapName);
                     }
                     event.getUser().setMetadata(new MapVote(event.getUser(), mapName));
+
+                    for(User user : event.getUserGameGroup().getUsers()) {
+                        user.updateScoreboard();
+                    }
                 }
             };
 

@@ -657,6 +657,8 @@ shared_objects:
     team_balance: "scoreboard.team_balance"
     building_now_count: "scoreboard.building_now_count"
     revival_rate: "scoreboard.revival_rate"
+  map_scoreboard:
+    title: "map_scoreboard.title"
   schematic_options:
     progress_hologram: true
     build_speed: 2

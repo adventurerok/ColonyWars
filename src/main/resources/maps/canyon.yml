@@ -1,15 +1,18 @@
 folder: "mccw_canyon"
-description: "Canyon test for CW Recode"
-environment: "normal"
-
+description: "A canyon separates the four teams bases..."
+environment: normal
 enable_weather: false
 
 shared_objects:
-  spawn_locations:
-    red:
-      x: -362
+  showdown:
+    center:
+      x: -178
       y: 95
-      z: -2
+      z: 183
+    size:
+      x: 30
+      z: 30
+  spawn_locations:
     blue:
       x: 8
       y: 95
@@ -22,26 +25,16 @@ shared_objects:
       x: -363
       y: 95
       z: 368
-  showdown:
-    center:
-      x: -178
+    red:
+      x: -362
       y: 95
-      z: 183
-    size:
-      x: 30
-      z: 30
+      z: -2
 
 listeners:
   initial_buildings:
     class: "com.ithinkrok.cw.map.InitialBuildingSpawner"
     config:
       initial_buildings:
-        - building: "Base"
-          team: "red"
-          location:
-            x: -363
-            y: 94
-            z: -3
         - building: "Base"
           team: "blue"
           location:
@@ -60,3 +53,9 @@ listeners:
             x: -364
             y: 94
             z: 369
+        - building: "Base"
+          team: "red"
+          location:
+            x: -363
+            y: 94
+            z: -3

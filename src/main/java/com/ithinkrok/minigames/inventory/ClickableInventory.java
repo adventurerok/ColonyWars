@@ -88,6 +88,7 @@ public class ClickableInventory {
         int identifier = InventoryUtils.getIdentifier(event.getItemInSlot());
 
         ClickableItem item = items.get(identifier);
+        if(item == null) return;
 
         item.onClick(new UserClickItemEvent(event.getUser(), this, item, event.getClickType()));
     }

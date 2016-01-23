@@ -6,8 +6,6 @@ RECODE BUGS:
  - Handbook
  - Prevent changing armor in lobby
  - Shift click bug
- - Start aftermath countdown in aftermath
- - Lobby scoreboard
 
 LOW PRIORITY / INVESTIGATE:
  - Destroying a building while it is built does not decrement building now counter

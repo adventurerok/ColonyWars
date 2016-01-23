@@ -187,7 +187,7 @@ public class CWTeamStats extends Metadata {
             baseLocation = null;
         }
 
-        TeamStatsHolderGroup.getOrCreate(team).addGameWin();
+        TeamStatsHolderGroup.getOrCreate(team).addGameLoss();
     }
 
 

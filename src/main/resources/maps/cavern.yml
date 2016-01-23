@@ -13,54 +13,54 @@ shared_objects:
       x: 30
       z: 30
   spawn_locations:
-    light_blue:
-      x: -157
-      y: 113
-      z: 426
-    purple:
-      x: -18
-      y: 113
-      z: 131
-    red:
-      x: -450
-      y: 136
-      z: -6
-    magenta:
-      x: -418
-      y: 110
-      z: 141
     blue:
       x: -20
-      y: 136
+      y: 135
       z: 424
-    yellow:
-      x: -20
-      y: 136
-      z: -6
-    lime:
-      x: -452
-      y: 113
-      z: 287
+    magenta:
+      x: -418
+      y: 109
+      z: 141
     brown:
       x: -167
-      y: 110
+      y: 109
       z: 26
     orange:
       x: -313
-      y: 113
+      y: 112
       z: -8
-    green:
-      x: -450
-      y: 136
-      z: 424
-    silver:
-      x: -303
-      y: 110
-      z: 392
+    light_blue:
+      x: -157
+      y: 112
+      z: 426
     cyan:
       x: -52
-      y: 110
+      y: 109
       z: 277
+    lime:
+      x: -452
+      y: 112
+      z: 287
+    purple:
+      x: -18
+      y: 112
+      z: 131
+    silver:
+      x: -303
+      y: 109
+      z: 392
+    green:
+      x: -450
+      y: 135
+      z: 424
+    red:
+      x: -450
+      y: 135
+      z: -6
+    yellow:
+      x: -20
+      y: 135
+      z: -6
 
 listeners:
   initial_buildings:

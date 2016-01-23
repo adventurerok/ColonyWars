@@ -1,5 +1,6 @@
 package com.ithinkrok.cw.gamestate;
 
+import com.ithinkrok.cw.scoreboard.MapScoreboardHandler;
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.GameState;
 import com.ithinkrok.minigames.User;
@@ -121,6 +122,9 @@ public class LobbyListener extends BaseGameStateListener {
             user.sendMessage(message);
 
         }
+
+        user.setScoreboardHandler(new MapScoreboardHandler(user));
+        user.updateScoreboard();
     }
 
     @MinigamesEventHandler

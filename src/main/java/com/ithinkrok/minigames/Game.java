@@ -349,7 +349,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
     }
 
     private User createUser(GameGroup gameGroup, Team team, UUID uuid, LivingEntity entity) {
-        User user = new User(this, gameGroup, team, uuid, entity);
+        User user = new User(gameGroup, team, uuid, entity);
 
         usersInServer.put(user.getUuid(), user);
         return user;

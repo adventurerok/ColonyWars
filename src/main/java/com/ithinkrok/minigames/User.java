@@ -62,7 +62,6 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
         SEE_THROUGH.add(Material.STATIONARY_WATER);
     }
 
-    private Game game;
     private GameGroup gameGroup;
     private Team team;
     private Kit kit;
@@ -101,8 +100,7 @@ public class User implements CommandSender, TaskScheduler, Listener, UserResolve
 
     private GameTask revalidateTask;
 
-    public User(Game game, GameGroup gameGroup, Team team, UUID uuid, LivingEntity entity) {
-        this.game = game;
+    public User(GameGroup gameGroup, Team team, UUID uuid, LivingEntity entity) {
         this.gameGroup = gameGroup;
         this.team = team;
         this.uuid = uuid;

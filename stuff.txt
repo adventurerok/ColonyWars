@@ -4,6 +4,11 @@ RECODE BUGS:
  Y Ender chest support
  - Class descriptions
  - Handbook
+ - Prevent changing armor in lobby
+ - Shift click bug
+ - Start aftermath countdown in aftermath
+ - Lobby scoreboard
+ - Stats bug
 
 LOW PRIORITY / INVESTIGATE:
  - Destroying a building while it is built does not decrement building now counter

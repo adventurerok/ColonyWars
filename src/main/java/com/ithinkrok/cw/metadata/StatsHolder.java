@@ -278,7 +278,7 @@ public class StatsHolder extends UserMetadata implements Messagable {
             Query<UserCategoryStats> query = query(database, uuid, category);
 
             UserCategoryStats result = query.findUnique();
-            if (result != null) task.run(result);
+            task.run(result);
         }
     }
 

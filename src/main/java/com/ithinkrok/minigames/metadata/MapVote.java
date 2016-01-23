@@ -80,4 +80,18 @@ public class MapVote extends UserMetadata {
         if(winningMaps.isEmpty()) return null;
         else return winningMaps.get(random.nextInt(winningMaps.size()));
     }
+
+    public static int getVotesForMap(Collection<User> users, String map) {
+        int count = 0;
+
+        for(User user : users) {
+            if(!user.hasMetadata(MapVote.class)) continue;
+
+            MapVote vote = user.getMetadata(MapVote.class);
+
+            if(Objects.equals(vote.mapVote, map)) ++count;
+        }
+
+        return count;
+    }
 }

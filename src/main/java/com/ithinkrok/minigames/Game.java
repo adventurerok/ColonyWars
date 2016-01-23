@@ -470,6 +470,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
                 gameGroup = spawnGameGroup;
                 user = createUser(gameGroup, null, player.getUniqueId(), player);
+                System.out.println(Bukkit.getOfflinePlayer(player.getName()).getUniqueId());
             }
 
             gameGroup.userEvent(new UserJoinEvent(user, UserJoinEvent.JoinReason.JOINED_SERVER));

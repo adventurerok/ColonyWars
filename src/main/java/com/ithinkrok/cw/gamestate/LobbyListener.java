@@ -9,6 +9,7 @@ import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.game.CountdownFinishedEvent;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
+import com.ithinkrok.minigames.event.user.inventory.UserInventoryClickEvent;
 import com.ithinkrok.minigames.event.user.state.UserDamagedEvent;
 import com.ithinkrok.minigames.event.user.state.UserFoodLevelChangeEvent;
 import com.ithinkrok.minigames.event.user.world.*;
@@ -86,6 +87,11 @@ public class LobbyListener extends BaseGameStateListener {
         if(event.getUserGameGroup().hasActiveCountdown()) return;
 
         resetCountdown(event.getUserGameGroup());
+    }
+
+    @MinigamesEventHandler
+    public void eventUserInventoryClick(UserInventoryClickEvent event) {
+        event.setCancelled(true);
     }
 
     private void userJoinLobby(User user) {

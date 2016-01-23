@@ -49,6 +49,12 @@ public class AftermathListener extends BaseGameStateListener {
     public void onGameStateChanged(GameStateChangedEvent event) {
         if (!Objects.equals(event.getNewGameState(), gameState)) return;
 
+
+        //Remove user scoreboards
+        for(User user : event.getGameGroup().getUsers()) {
+            user.setScoreboardHandler(null);
+        }
+
         event.getGameGroup()
                 .startCountdown(aftermathCountdownName, aftermathCountdownLocaleStub, aftermathCountdownSeconds);
 

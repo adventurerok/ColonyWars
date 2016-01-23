@@ -320,6 +320,8 @@ public class BaseGameListener extends BaseGameStateListener {
         died.setDisplayName(died.getName());
         died.setTabListName(died.getName());
 
+        died.setScoreboardHandler(null);
+
         if (team.getUserCount() == 0) {
             CWTeamStats.getOrCreate(team).eliminate();
         }

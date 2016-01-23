@@ -659,6 +659,20 @@ shared_objects:
     revival_rate: "scoreboard.revival_rate"
   map_scoreboard:
     title: "map_scoreboard.title"
+    votable_maps: &votable_maps
+      - "canyon"
+      - "forest_hills"
+      - "cavern"
+      - "hills_and_lakes"
+      - "jungle_valley"
+      - "oasis"
+      - "nether"
+      - "snow_hills"
+      - "jungle_mountain"
+      - "mega_taiga"
+      - "12canyon"
+      - "mesa"
+      - "random"
   schematic_options:
     progress_hologram: true
     build_speed: 2
@@ -716,20 +730,7 @@ game_states:
             destroy_wait: 3
           map_voting:
             random_map: "random"
-            map_list: &votable_maps
-              - "canyon"
-              - "forest_hills"
-              - "cavern"
-              - "hills_and_lakes"
-              - "jungle_valley"
-              - "oasis"
-              - "nether"
-              - "snow_hills"
-              - "jungle_mountain"
-              - "mega_taiga"
-              - "12canyon"
-              - "mesa"
-              - "random"
+            map_list: *votable_maps
           choosable_teams: &choosable_teams
             - "red"
             - "blue"

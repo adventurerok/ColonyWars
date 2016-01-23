@@ -30,7 +30,7 @@ scoreboard.team_balance=&eTeam Balance\:
 scoreboard.building_now_count=&6Building Now\:
 scoreboard.revival_rate=&bRevival Rate\:
 
-map_scoreboard.title=Map Votes
+map_scoreboard.title=&3Map Votes
 
 building.unknown=&Unknown building!
 building.invalid_loc=&cYou cannot build that here!

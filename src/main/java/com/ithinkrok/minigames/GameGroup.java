@@ -368,6 +368,8 @@ public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, Fil
         for (User user : usersInGroup.values()) {
             user.sendMessageNoPrefix(message);
         }
+
+        game.getLogger().info(message);
     }
 
     public String getChatPrefix() {

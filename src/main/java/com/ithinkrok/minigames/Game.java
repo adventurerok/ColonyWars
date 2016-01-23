@@ -55,6 +55,7 @@ import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.logging.Logger;
 
 /**
  * Created by paul on 31/12/15.
@@ -441,6 +442,10 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
     public void unDisguiseUser(User user) {
         disguiseController.unDisguise(user);
+    }
+
+    public Logger getLogger() {
+        return plugin.getLogger();
     }
 
     private class GameListener implements Listener {

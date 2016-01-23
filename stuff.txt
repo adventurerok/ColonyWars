@@ -3,7 +3,6 @@ RECODE BUGS:
  - Force showdown timers
  Y Ender chest support
  - Class descriptions
- - Lobby minigames (wool, parkour)
  - Handbook
 
 LOW PRIORITY / INVESTIGATE:

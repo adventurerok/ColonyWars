@@ -61,3 +61,5 @@ listeners:
           y: 76
           z: 106
           reward: 3000
+  wool:
+    class: "com.ithinkrok.cw.lobbygames.WoolMinigame"

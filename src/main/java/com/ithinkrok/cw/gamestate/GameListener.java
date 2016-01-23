@@ -5,6 +5,7 @@ import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.cw.metadata.StatsHolder;
 import com.ithinkrok.cw.scoreboard.CWScoreboardHandler;
 import com.ithinkrok.minigames.GameGroup;
+import com.ithinkrok.minigames.GameState;
 import com.ithinkrok.minigames.Kit;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
@@ -21,6 +22,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by paul on 05/01/16.
@@ -38,7 +40,7 @@ public class GameListener extends BaseGameListener {
     private GiveCustomItemsOnJoin.CustomItemGiver customItemGiver;
 
     @MinigamesEventHandler
-    public void onListenerLoaded(ListenerLoadedEvent<?> event) {
+    public void onListenerLoaded(ListenerLoadedEvent<GameGroup, GameState> event) {
         super.onListenerLoaded(event);
         ConfigurationSection config = event.getConfig();
 
@@ -66,7 +68,7 @@ public class GameListener extends BaseGameListener {
     public void onGameStateChange(GameStateChangedEvent event) {
         super.onGameStateChange(event);
 
-        if (!event.getNewGameState().isGameStateListener(this)) return;
+        if (!Objects.equals(event.getNewGameState(), gameState)) return;
         if(event.getOldGameState() != null && event.getOldGameState().getName().equals(showdownGameState)) return;
 
         startGame(event.getGameGroup());

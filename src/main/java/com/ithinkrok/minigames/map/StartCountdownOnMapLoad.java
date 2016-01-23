@@ -12,7 +12,7 @@ import org.bukkit.event.Listener;
 public class StartCountdownOnMapLoad implements Listener {
 
     @MinigamesEventHandler
-    public void onListenerEnabled(ListenerLoadedEvent<GameGroup> event) {
+    public void onListenerEnabled(ListenerLoadedEvent<GameGroup, GameMap> event) {
         ConfigurationSection config = event.getConfig();
 
         String name = config.getString("name");

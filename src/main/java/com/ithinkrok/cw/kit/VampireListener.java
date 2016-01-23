@@ -2,6 +2,7 @@ package com.ithinkrok.cw.kit;
 
 import com.ithinkrok.cw.event.BuildingBuiltEvent;
 import com.ithinkrok.cw.metadata.CWTeamStats;
+import com.ithinkrok.minigames.Kit;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.MinigamesEventHandler;
@@ -43,7 +44,7 @@ public class VampireListener implements Listener {
     String unlockBuilding;
 
     @MinigamesEventHandler
-    public void onListenerLoaded(ListenerLoadedEvent<User> event) {
+    public void onListenerLoaded(ListenerLoadedEvent<User, Kit> event) {
         user = event.getCreator();
 
         ConfigurationSection config = event.getConfig();

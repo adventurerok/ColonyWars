@@ -4,6 +4,7 @@ import com.ithinkrok.cw.Building;
 import com.ithinkrok.cw.event.ShopOpenEvent;
 import com.ithinkrok.cw.metadata.*;
 import com.ithinkrok.minigames.GameGroup;
+import com.ithinkrok.minigames.GameState;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.MinigamesEventHandler;
@@ -123,7 +124,7 @@ public class BaseGameListener extends BaseGameStateListener {
     }
 
     @MinigamesEventHandler
-    public void onListenerLoaded(ListenerLoadedEvent<?> event) {
+    public void onListenerLoaded(ListenerLoadedEvent<GameGroup, GameState> event) {
         super.onListenerLoaded(event);
 
         ConfigurationSection config = event.getConfig();

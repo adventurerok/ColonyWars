@@ -35,7 +35,7 @@ public class Kit {
 
         for(ConfigurationSection listenerConfig : listeners) {
             try {
-                result.add(ListenerLoader.loadListener(user, listenerConfig));
+                result.add(ListenerLoader.loadListener(user, this, listenerConfig));
             } catch (Exception e) {
                 System.out.println("Failed to create listener for kit: " + name);
                 e.printStackTrace();

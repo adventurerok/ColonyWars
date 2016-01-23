@@ -1,6 +1,7 @@
 package com.ithinkrok.cw.gamestate;
 
 import com.ithinkrok.minigames.GameGroup;
+import com.ithinkrok.minigames.GameState;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.MinigamesEventHandler;
@@ -16,6 +17,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventPriority;
 
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -38,7 +40,7 @@ public class LobbyListener extends BaseGameStateListener {
     private GiveCustomItemsOnJoin.CustomItemGiver giveOnJoin;
 
     @MinigamesEventHandler
-    public void onListenerLoaded(ListenerLoadedEvent<?> event) {
+    public void onListenerLoaded(ListenerLoadedEvent<GameGroup, GameState> event) {
         super.onListenerLoaded(event);
         ConfigurationSection config = event.getConfig();
 
@@ -123,7 +125,7 @@ public class LobbyListener extends BaseGameStateListener {
 
     @MinigamesEventHandler
     public void eventGameStateChanged(GameStateChangedEvent event) {
-        if(!event.getNewGameState().isGameStateListener(this)) return;
+        if(!Objects.equals(event.getNewGameState(), gameState)) return;
 
         event.getGameGroup().changeMap(lobbyMapName);
 

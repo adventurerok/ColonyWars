@@ -7,18 +7,24 @@ import org.bukkit.configuration.ConfigurationSection;
  *
  * Called on a listener when it is enabled (but not necessarily before it starts receiving events)
  */
-public class ListenerLoadedEvent<C> implements MinigamesEvent {
+public class ListenerLoadedEvent<C, R> implements MinigamesEvent {
 
     private final C creator;
+    private final R representing;
     private final ConfigurationSection config;
 
-    public ListenerLoadedEvent(C creator, ConfigurationSection config) {
+    public ListenerLoadedEvent(C creator, R representing, ConfigurationSection config) {
         this.creator = creator;
+        this.representing = representing;
         this.config = config;
     }
 
     public C getCreator() {
         return creator;
+    }
+
+    public R getRepresenting() {
+        return representing;
     }
 
     public ConfigurationSection getConfig() {

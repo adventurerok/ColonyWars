@@ -2,6 +2,8 @@ package com.ithinkrok.cw.gamestate;
 
 import com.ithinkrok.cw.metadata.StatsHolder;
 import com.ithinkrok.cw.metadata.TeamStatsHolderGroup;
+import com.ithinkrok.minigames.GameGroup;
+import com.ithinkrok.minigames.GameState;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.MinigamesEventHandler;
@@ -32,8 +34,12 @@ public class BaseGameStateListener implements Listener {
     protected String quitLocale;
     protected String joinLocale;
 
+    protected GameState gameState;
+
     @MinigamesEventHandler
-    public void onListenerLoaded(ListenerLoadedEvent<?> event) {
+    public void onListenerLoaded(ListenerLoadedEvent<GameGroup, GameState> event) {
+        gameState = event.getRepresenting();
+
         ConfigurationSection config = event.getConfig();
 
         if(quitLocale == null) quitLocale = config.getString("user_quit_locale", "user.quit");

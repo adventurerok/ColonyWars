@@ -26,7 +26,7 @@ public class KitChooser implements Listener {
     private String chosenLocale, alreadyLocale, titleLocale;
 
     @MinigamesEventHandler
-    public void onListenerLoaded(ListenerLoadedEvent<?> event) {
+    public void onListenerLoaded(ListenerLoadedEvent<?, ?> event) {
         ConfigurationSection config = event.getConfig();
 
         ConfigurationSection kits = config.getConfigurationSection("choosable_kits");

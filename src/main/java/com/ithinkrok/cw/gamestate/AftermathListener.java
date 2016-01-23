@@ -1,5 +1,7 @@
 package com.ithinkrok.cw.gamestate;
 
+import com.ithinkrok.minigames.GameGroup;
+import com.ithinkrok.minigames.GameState;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.MinigamesEventHandler;
@@ -18,6 +20,8 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.util.Vector;
 
+import java.util.Objects;
+
 /**
  * Created by paul on 16/01/16.
  */
@@ -30,7 +34,7 @@ public class AftermathListener extends BaseGameStateListener {
     private String lobbyGameState;
 
     @MinigamesEventHandler
-    public void onListenerLoaded(ListenerLoadedEvent<?> event) {
+    public void onListenerLoaded(ListenerLoadedEvent<GameGroup, GameState> event) {
         ConfigurationSection config = event.getConfig();
         if (config == null) config = new MemoryConfiguration();
 
@@ -43,16 +47,16 @@ public class AftermathListener extends BaseGameStateListener {
 
     @MinigamesEventHandler
     public void onGameStateChanged(GameStateChangedEvent event) {
-        if (!event.getNewGameState().isGameStateListener(this)) return;
+        if (!Objects.equals(event.getNewGameState(), gameState)) return;
 
         event.getGameGroup()
                 .startCountdown(aftermathCountdownName, aftermathCountdownLocaleStub, aftermathCountdownSeconds);
 
         GameTask task = event.getGameGroup().repeatInFuture(t -> {
-            if(t.getRunCount() > 5) t.finish();
+            if (t.getRunCount() > 5) t.finish();
 
-            for(User user : event.getGameGroup().getUsers()) {
-                if(!user.isInGame()) continue;
+            for (User user : event.getGameGroup().getUsers()) {
+                if (!user.isInGame()) continue;
 
                 Location loc = user.getLocation();
 
@@ -63,9 +67,8 @@ public class AftermathListener extends BaseGameStateListener {
 
                 firework.setVelocity(new Vector(0, 0.5f, 0));
                 FireworkMeta meta = firework.getFireworkMeta();
-                meta.addEffect(
-                        FireworkEffect.builder().with(FireworkEffect.Type.BURST).trail(true).withColor(color).withFade(fade)
-                                .build());
+                meta.addEffect(FireworkEffect.builder().with(FireworkEffect.Type.BURST).trail(true).withColor(color)
+                        .withFade(fade).build());
                 firework.setFireworkMeta(meta);
             }
 
@@ -76,14 +79,14 @@ public class AftermathListener extends BaseGameStateListener {
 
     @MinigamesEventHandler
     public void onCountdownFinished(CountdownFinishedEvent event) {
-        if(!event.getCountdown().getName().equals(aftermathCountdownName)) return;
+        if (!event.getCountdown().getName().equals(aftermathCountdownName)) return;
 
         event.getGameGroup().changeGameState(lobbyGameState);
     }
 
     @MinigamesEventHandler
     public void onUserEvent(UserEvent event) {
-        if(!(event instanceof Cancellable)) return;
+        if (!(event instanceof Cancellable)) return;
 
         ((Cancellable) event).setCancelled(true);
     }

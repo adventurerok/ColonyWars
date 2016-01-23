@@ -1,7 +1,10 @@
 package com.ithinkrok.minigames;
 
+import com.ithinkrok.minigames.util.io.ListenerLoader;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -10,9 +13,9 @@ import java.util.Collection;
 public class GameState {
 
     private final String name;
-    private final Collection<Listener> listeners;
+    private final Collection<ConfigurationSection> listeners;
 
-    public GameState(String name, Collection<Listener> listeners) {
+    public GameState(String name, Collection<ConfigurationSection> listeners) {
         this.name = name;
         this.listeners = listeners;
     }
@@ -21,11 +24,22 @@ public class GameState {
         return name;
     }
 
-    public Collection<Listener> getListeners() {
+    public Collection<ConfigurationSection> getListeners() {
         return listeners;
     }
 
-    public boolean isGameStateListener(Listener listener) {
-        return listeners.contains(listener);
+    public Collection<Listener> createListeners(GameGroup gameGroup) {
+        Collection<Listener> result = new ArrayList<>();
+
+        for (ConfigurationSection listenerConfig : listeners) {
+            try {
+                result.add(ListenerLoader.loadListener(gameGroup, this, listenerConfig));
+            } catch (Exception e) {
+                System.out.println("Failed to create listener for gamestate: " + name);
+                e.printStackTrace();
+            }
+        }
+
+        return result;
     }
 }

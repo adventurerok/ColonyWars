@@ -105,14 +105,6 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         setupDisguiseController();
     }
 
-    private void setupDisguiseController() {
-        if (Bukkit.getPluginManager().getPlugin("DisguiseCraft") != null) {
-            disguiseController = new DCDisguiseController();
-        } else {
-            disguiseController = new MinigamesDisguiseController();
-        }
-    }
-
     private void unloadDefaultWorlds() {
         if (Bukkit.getWorlds().size() != 1) System.out.println("You should disable the nether/end worlds to save RAM!");
 
@@ -122,6 +114,14 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
             for (Chunk chunk : world.getLoadedChunks()) {
                 chunk.unload(false, true);
             }
+        }
+    }
+
+    private void setupDisguiseController() {
+        if (Bukkit.getPluginManager().getPlugin("DisguiseCraft") != null) {
+            disguiseController = new DCDisguiseController();
+        } else {
+            disguiseController = new MinigamesDisguiseController();
         }
     }
 
@@ -186,7 +186,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         multipleLanguageLookup = new MultipleLanguageLookup();
         customItemIdentifierMap.clear();
 
-        ConfigParser.parseConfig(this, this, this, "config.yml", config);
+        ConfigParser.parseConfig(this, this, this, this, "config.yml", config);
     }
 
     private void reloadTeamIdentifiers() {
@@ -223,19 +223,14 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
         for (String name : gameStatesConfig.getKeys(false)) {
             ConfigurationSection gameStateConfig = gameStatesConfig.getConfigurationSection(name);
-            List<Listener> listeners = new ArrayList<>();
+            List<ConfigurationSection> listeners = new ArrayList<>();
 
             ConfigurationSection listenersConfig = gameStateConfig.getConfigurationSection("listeners");
 
             for (String listenerName : listenersConfig.getKeys(false)) {
                 ConfigurationSection listenerConfig = listenersConfig.getConfigurationSection(listenerName);
 
-                try {
-                    listeners.add(ListenerLoader.loadListener(this, listenerConfig));
-                } catch (Exception e) {
-                    System.out.println("Failed to create listener: " + listenerName + " for gamestate: " + name);
-                    e.printStackTrace();
-                }
+                listeners.add(listenerConfig);
             }
             gameStates.put(name, new GameState(name, listeners));
         }
@@ -243,7 +238,6 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         startGameStateName = config.getString("start_game_state");
 
     }
-
 
 
     private void reloadKits() {
@@ -479,10 +473,14 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         @EventHandler
         public void eventWeatherChanged(WeatherChangeEvent event) {
             GameGroup gameGroup = getGameGroup(event.getWorld());
-            if(gameGroup == null) return;
+            if (gameGroup == null) return;
 
-            if(gameGroup.getCurrentMap().getInfo().getWeatherEnabled()) return;
+            if (gameGroup.getCurrentMap().getInfo().getWeatherEnabled()) return;
             event.setCancelled(true);
+        }
+
+        private GameGroup getGameGroup(World world) {
+            return mapToGameGroup.get(world.getName());
         }
 
         @EventHandler
@@ -499,13 +497,13 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         public void eventPotionSplash(PotionSplashEvent event) {
             String mapName = event.getPotion().getWorld().getName();
             GameGroup gameGroup = mapToGameGroup.get(mapName);
-            if(gameGroup == null) return;
+            if (gameGroup == null) return;
 
             GameMap map = gameGroup.getCurrentMap();
 
             ProjectileSource thrower = event.getPotion().getShooter();
             User throwerUser = null;
-            if(thrower instanceof Entity) throwerUser = EntityUtils.getRepresentingUser(Game.this, (Entity)thrower);
+            if (thrower instanceof Entity) throwerUser = EntityUtils.getRepresentingUser(Game.this, (Entity) thrower);
 
             gameGroup.gameEvent(new MapPotionSplashEvent(gameGroup, map, event, throwerUser));
         }
@@ -515,9 +513,9 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
             User user = getUser(event.getPlayer().getUniqueId());
 
             Iterator<Player> it = event.getRecipients().iterator();
-            while(it.hasNext()) {
+            while (it.hasNext()) {
                 Player player = it.next();
-                if(user.getUser(player.getUniqueId()) != null) continue;
+                if (user.getUser(player.getUniqueId()) != null) continue;
 
                 it.remove();
             }
@@ -533,7 +531,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
             String mapName = event.getBlock().getWorld().getName();
             GameGroup gameGroup = mapToGameGroup.get(mapName);
-            if(gameGroup == null) return;
+            if (gameGroup == null) return;
 
             GameMap map = gameGroup.getCurrentMap();
             if (!map.getWorld().getName().equals(mapName))
@@ -546,22 +544,11 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         public void eventBlockBurn(BlockBurnEvent event) {
             String mapName = event.getBlock().getWorld().getName();
             GameGroup gameGroup = mapToGameGroup.get(mapName);
-            if(gameGroup == null) return;
+            if (gameGroup == null) return;
 
             GameMap map = gameGroup.getCurrentMap();
 
             gameGroup.gameEvent(new MapBlockBurnEvent(gameGroup, map, event));
-        }
-
-        @EventHandler
-        public void eventBlockGrow(BlockGrowEvent event) {
-            String mapName = event.getBlock().getWorld().getName();
-            GameGroup gameGroup = mapToGameGroup.get(mapName);
-            if(gameGroup == null) return;
-
-            GameMap map = gameGroup.getCurrentMap();
-
-            gameGroup.gameEvent(new MapBlockGrowEvent(gameGroup, map, event));
         }
 
         @EventHandler
@@ -570,10 +557,21 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
         }
 
         @EventHandler
+        public void eventBlockGrow(BlockGrowEvent event) {
+            String mapName = event.getBlock().getWorld().getName();
+            GameGroup gameGroup = mapToGameGroup.get(mapName);
+            if (gameGroup == null) return;
+
+            GameMap map = gameGroup.getCurrentMap();
+
+            gameGroup.gameEvent(new MapBlockGrowEvent(gameGroup, map, event));
+        }
+
+        @EventHandler
         public void eventItemSpawn(ItemSpawnEvent event) {
             String mapName = event.getEntity().getWorld().getName();
             GameGroup gameGroup = mapToGameGroup.get(mapName);
-            if(gameGroup == null) return;
+            if (gameGroup == null) return;
 
             GameMap map = gameGroup.getCurrentMap();
             if (!map.getWorld().getName().equals(mapName))
@@ -586,15 +584,11 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
             return getGameGroup(location.getWorld());
         }
 
-        private GameGroup getGameGroup(World world) {
-            return mapToGameGroup.get(world.getName());
-        }
-
         @EventHandler
         public void eventCreatureSpawn(CreatureSpawnEvent event) {
             String mapName = event.getEntity().getWorld().getName();
             GameGroup gameGroup = mapToGameGroup.get(mapName);
-            if(gameGroup == null) return;
+            if (gameGroup == null) return;
 
             GameMap map = gameGroup.getCurrentMap();
             if (!map.getWorld().getName().equals(mapName))
@@ -620,7 +614,7 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
             User user = getUser(event.getPlayer().getUniqueId());
             user.getGameGroup().userEvent(new UserInteractWorldEvent(user, event));
 
-            if(event.isCancelled() && InventoryUtils.isArmor(event.getItem())) event.getPlayer().updateInventory();
+            if (event.isCancelled() && InventoryUtils.isArmor(event.getItem())) event.getPlayer().updateInventory();
         }
 
         @EventHandler
@@ -644,13 +638,13 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
 
             User attacker = EntityUtils.getRepresentingUser(gameGroup, event.getDamager());
             if (attacker == null) {
-                if(Objects.equals(attackerTeam, targetTeam)) {
+                if (Objects.equals(attackerTeam, targetTeam)) {
                     event.setCancelled(true);
                 }
                 return;
             }
 
-            if(attackerTeam == null) {
+            if (attackerTeam == null) {
                 event.setCancelled(true);
                 return;
             }
@@ -658,13 +652,13 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
             User target = EntityUtils.getActualUser(attacker, event.getEntity());
             boolean representing = !attacker.equals(EntityUtils.getActualUser(gameGroup, event.getDamager()));
 
-            if(target != null && !target.isInGame()) {
+            if (target != null && !target.isInGame()) {
                 event.setCancelled(true);
                 return;
             }
 
-            if(attackerTeam.equals(targetTeam)) {
-                if(!(representing && attacker == target)) {
+            if (attackerTeam.equals(targetTeam)) {
+                if (!(representing && attacker == target)) {
                     event.setCancelled(true);
                     return;
                 }
@@ -687,18 +681,18 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
                 attacked.getGameGroup().userEvent(new UserDamagedEvent(attacked, event));
             }
 
-            if(attacked.isCloaked()) {
+            if (attacked.isCloaked()) {
                 attacked.getLocation().getWorld().playSound(attacked.getLocation(), Sound.HURT_FLESH, 1.0f, 1.0f);
             }
 
-            if(attacked.getHeath() - event.getFinalDamage() > 0){
-                if(attacker != null) attacked.setLastAttacker(attacker);
+            if (attacked.getHeath() - event.getFinalDamage() > 0) {
+                if (attacker != null) attacked.setLastAttacker(attacker);
                 return;
             }
-            if(attacked.isPlayer()) event.setCancelled(true);
+            if (attacked.isPlayer()) event.setCancelled(true);
 
-            if(attacker == null) {
-                switch(event.getCause()) {
+            if (attacker == null) {
+                switch (event.getCause()) {
                     case FIRE_TICK:
                         attacker = attacked.getFireAttacker();
                         break;
@@ -709,13 +703,13 @@ public class Game implements LanguageLookup, TaskScheduler, UserResolver, FileLo
             }
 
             User assist = attacked.getLastAttacker();
-            if(assist == attacker) assist = null;
+            if (assist == attacker) assist = null;
 
-            for(Entity e : attacked.getLocation().getWorld().getEntities()) {
-                if(!(e instanceof Creature)) continue;
+            for (Entity e : attacked.getLocation().getWorld().getEntities()) {
+                if (!(e instanceof Creature)) continue;
 
                 Creature creature = (Creature) e;
-                if(creature.getTarget() == null || creature.getTarget() != attacked.getEntity()) continue;
+                if (creature.getTarget() == null || creature.getTarget() != attacked.getEntity()) continue;
                 creature.setTarget(null);
             }
 

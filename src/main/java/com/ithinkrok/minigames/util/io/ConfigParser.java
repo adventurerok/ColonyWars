@@ -13,20 +13,22 @@ import java.util.List;
  */
 public class ConfigParser {
 
-    private static ConfigHolder holder;
-    private static Object listenerCreator;
     private final FileLoader loader;
+    private final ConfigHolder holder;
+    private final Object listenerCreator;
+    private final Object listenerRepresenting;
     private final List<String> loaded = new ArrayList<>();
 
-    private ConfigParser(FileLoader loader) {
+    private ConfigParser(FileLoader loader, ConfigHolder holder, Object listenerCreator, Object listenerRepresenting) {
         this.loader = loader;
+        this.holder = holder;
+        this.listenerCreator = listenerCreator;
+        this.listenerRepresenting = listenerRepresenting;
     }
 
-    public static void parseConfig(FileLoader loader, ConfigHolder holder, Object listenerCreator, String name,
-                                   ConfigurationSection config) {
-        ConfigParser.holder = holder;
-        ConfigParser.listenerCreator = listenerCreator;
-        ConfigParser parser = new ConfigParser(loader);
+    public static void parseConfig(FileLoader loader, ConfigHolder holder, Object listenerCreator,
+                                   Object listenerRepresenting, String name, ConfigurationSection config) {
+        ConfigParser parser = new ConfigParser(loader, holder, listenerCreator, listenerRepresenting);
 
         parser.load(name, config);
     }
@@ -39,13 +41,13 @@ public class ConfigParser {
         if (config.contains("lang_files")) loadLangFiles(config.getStringList("lang_files"));
         if (config.contains("custom_items")) loadCustomItems(config.getConfigurationSection("custom_items"));
         if (config.contains("listeners")) loadListeners(config.getConfigurationSection("listeners"));
-        if(config.contains("schematics")) loadSchematics(config.getConfigurationSection("schematics"));
+        if (config.contains("schematics")) loadSchematics(config.getConfigurationSection("schematics"));
         if (config.contains("shared_objects")) loadSharedObjects(config.getConfigurationSection("shared_objects"));
         if (config.contains("additional_configs")) loadAdditionalConfigs(config.getStringList("additional_configs"));
     }
 
     private void loadSchematics(ConfigurationSection config) {
-        for(String name : config.getKeys(false)) {
+        for (String name : config.getKeys(false)) {
             ConfigurationSection schemConfig = config.getConfigurationSection(name);
             Schematic schem = new Schematic(name, loader.getDataFolder(), schemConfig);
 
@@ -64,7 +66,7 @@ public class ConfigParser {
             ConfigurationSection listenerConfig = config.getConfigurationSection(name);
 
             try {
-                Listener listener = ListenerLoader.loadListener(listenerCreator, listenerConfig);
+                Listener listener = ListenerLoader.loadListener(listenerCreator, listenerRepresenting, listenerConfig);
                 holder.addListener(name, listener);
             } catch (Exception e) {
                 System.out.println("Failed to load listener: " + name);

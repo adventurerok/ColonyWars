@@ -26,7 +26,7 @@ public class TeamChooser implements Listener {
     private String chosenLocale, fullLocale, alreadyLocale, titleLocale;
 
     @MinigamesEventHandler
-    public void onListenerLoaded(ListenerLoadedEvent<?> event) {
+    public void onListenerLoaded(ListenerLoadedEvent<?, ?> event) {
         ConfigurationSection config = event.getConfig();
 
         choosable = config.getStringList("choosable_teams");

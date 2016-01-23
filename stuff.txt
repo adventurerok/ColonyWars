@@ -5,6 +5,7 @@ RECODE BUGS:
  Y Ender chest support
  - Class/map descriptions
  - Lobby minigames (wool, parkour)
+ - Handbook
 
 LOW PRIORITY / INVESTIGATE:
  - Destroying a building while it is built does not decrement building now counter

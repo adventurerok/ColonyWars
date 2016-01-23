@@ -2,6 +2,7 @@ package com.ithinkrok.cw.kit;
 
 import com.ithinkrok.cw.event.BuildingBuiltEvent;
 import com.ithinkrok.cw.event.ShopOpenEvent;
+import com.ithinkrok.minigames.Kit;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.MinigamesEventHandler;
@@ -31,7 +32,7 @@ public class KitListener implements Listener {
     private Map<String, BuildingConfig> buildingConfigs = new HashMap<>();
 
     @MinigamesEventHandler
-    public void onListenerLoaded(ListenerLoadedEvent<User> event) {
+    public void onListenerLoaded(ListenerLoadedEvent<User, Kit> event) {
         owner = event.getCreator();
 
         ConfigurationSection buildings = event.getConfig().getConfigurationSection("buildings");

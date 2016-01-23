@@ -101,7 +101,7 @@ public class CustomItem implements Identifiable, Listener {
         for (String name : config.getKeys(false)) {
             ConfigurationSection listenerInfo = config.getConfigurationSection(name);
             try {
-                Listener listener = ListenerLoader.loadListener(this, listenerInfo);
+                Listener listener = ListenerLoader.loadListener(this, this, listenerInfo);
 
                 List<String> events = null;
                 if (listenerInfo.contains("events")) events = listenerInfo.getStringList("events");

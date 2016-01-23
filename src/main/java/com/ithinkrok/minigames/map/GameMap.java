@@ -53,27 +53,12 @@ public class GameMap implements LanguageLookup, ConfigHolder, SchematicPaster.Bo
 
     private List<PastedSchematic> pastedSchematics = new ArrayList<>();
 
-    public World getWorld() {
-        return world;
-    }
-
     public GameMap(GameGroup gameGroup, GameMapInfo gameMapInfo) {
         this.gameMapInfo = gameMapInfo;
 
         loadMap();
-        ConfigParser.parseConfig(gameGroup, this, gameGroup, gameMapInfo.getConfigName(), gameMapInfo.getConfig());
-    }
-
-    public void addPastedSchematic(PastedSchematic schematic) {
-        pastedSchematics.add(schematic);
-    }
-
-    public void removePastedSchematic(PastedSchematic schematic) {
-        pastedSchematics.remove(schematic);
-    }
-
-    public GameMapInfo getInfo() {
-        return gameMapInfo;
+        ConfigParser
+                .parseConfig(gameGroup, this, gameGroup, this, gameMapInfo.getConfigName(), gameMapInfo.getConfig());
     }
 
     private void loadMap() {
@@ -83,16 +68,15 @@ public class GameMap implements LanguageLookup, ConfigHolder, SchematicPaster.Bo
         String copyTo = "./" + randomWorldName + "/";
 
         try {
-            DirectoryUtils
-                    .copy(Paths.get(copyFrom), Paths.get(copyTo));
+            DirectoryUtils.copy(Paths.get(copyFrom), Paths.get(copyTo));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         File uid = new File(copyTo, "uid.dat");
-        if(uid.exists()) {
+        if (uid.exists()) {
             boolean deleted = uid.delete();
-            if(!deleted) System.out.println("Could not delete uid.dat for world. This could cause errors");
+            if (!deleted) System.out.println("Could not delete uid.dat for world. This could cause errors");
         }
 
         WorldCreator creator = new WorldCreator(randomWorldName);
@@ -109,9 +93,25 @@ public class GameMap implements LanguageLookup, ConfigHolder, SchematicPaster.Bo
         String randomWorldName;
         do {
             randomWorldName = mapName + "-" + String.format("%04X", count++);
-        } while(Bukkit.getWorld(randomWorldName) != null);
+        } while (Bukkit.getWorld(randomWorldName) != null);
 
         return randomWorldName;
+    }
+
+    public World getWorld() {
+        return world;
+    }
+
+    public void addPastedSchematic(PastedSchematic schematic) {
+        pastedSchematics.add(schematic);
+    }
+
+    public void removePastedSchematic(PastedSchematic schematic) {
+        pastedSchematics.remove(schematic);
+    }
+
+    public GameMapInfo getInfo() {
+        return gameMapInfo;
     }
 
     public CustomItem getCustomItem(String name) {
@@ -215,8 +215,8 @@ public class GameMap implements LanguageLookup, ConfigHolder, SchematicPaster.Bo
 
     @Override
     public boolean canPaste(BoundingBox bounds) {
-        for(PastedSchematic schematic : pastedSchematics) {
-            if(!schematic.canPaste(bounds)) return false;
+        for (PastedSchematic schematic : pastedSchematics) {
+            if (!schematic.canPaste(bounds)) return false;
         }
 
         return true;
@@ -231,7 +231,7 @@ public class GameMap implements LanguageLookup, ConfigHolder, SchematicPaster.Bo
     }
 
     public Location getLocation(Vector location) {
-        if(location == null) return null;
+        if (location == null) return null;
         return new Location(world, location.getX(), location.getY(), location.getZ());
     }
 

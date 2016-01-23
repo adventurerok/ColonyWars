@@ -48,8 +48,7 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Created by paul on 31/12/15.
  */
-public class GameGroup
-        implements LanguageLookup, Messagable, TaskScheduler, FileLoader, SharedObjectAccessor,
+public class GameGroup implements LanguageLookup, Messagable, TaskScheduler, FileLoader, SharedObjectAccessor,
         MetadataHolder<Metadata>, SchematicResolver, TeamUserResolver, DatabaseTaskRunner {
 
     private ConcurrentMap<UUID, User> usersInGroup = new ConcurrentHashMap<>();
@@ -71,6 +70,7 @@ public class GameGroup
 
     private Listener gameGroupListener;
     private List<Listener> defaultAndMapListeners = new ArrayList<>();
+    private List<Listener> gameStateListeners = new ArrayList<>();
 
     private ClassToInstanceMap<Metadata> metadataMap = MutableClassToInstanceMap.create();
 
@@ -113,11 +113,6 @@ public class GameGroup
         changeMap(mapInfo);
     }
 
-    @Override
-    public void doDatabaseTask(DatabaseTask databaseTask) {
-        game.doDatabaseTask(databaseTask);
-    }
-
     public void changeMap(GameMapInfo mapInfo) {
         GameMap oldMap = currentMap;
         GameMap newMap = new GameMap(this, mapInfo);
@@ -141,7 +136,7 @@ public class GameGroup
     @SafeVarargs
     private final Collection<Collection<Listener>> getListeners(Collection<Listener>... extras) {
         Collection<Collection<Listener>> listeners = new ArrayList<>(4);
-        if (gameState != null) listeners.add(gameState.getListeners());
+        if (gameState != null) listeners.add(gameStateListeners);
         listeners.add(defaultAndMapListeners);
         Collections.addAll(listeners, extras);
 
@@ -166,6 +161,11 @@ public class GameGroup
         }
 
         return result;
+    }
+
+    @Override
+    public void doDatabaseTask(DatabaseTask databaseTask) {
+        game.doDatabaseTask(databaseTask);
     }
 
     public GameMap getCurrentMap() {
@@ -253,10 +253,6 @@ public class GameGroup
         changeGameState(gameState);
     }
 
-    public GameState getCurrentGameState() {
-        return gameState;
-    }
-
     @SuppressWarnings("unchecked")
     public void changeGameState(GameState gameState) {
         if (gameState.equals(this.gameState)) return;
@@ -265,11 +261,14 @@ public class GameGroup
         GameState oldState = this.gameState;
         GameState newState = this.gameState = gameState;
 
+        List<Listener> oldListeners = new ArrayList<>(gameStateListeners);
+        gameStateListeners.clear();
+        gameStateListeners.addAll(newState.createListeners(this));
+
         gameStateTaskList.cancelAllTasks();
 
         MinigamesEvent event = new GameStateChangedEvent(this, oldState, newState);
-        EventExecutor.executeEvent(event,
-                getListeners(getAllUserListeners(), getAllTeamListeners(), gameState.getListeners()));
+        EventExecutor.executeEvent(event, getListeners(getAllUserListeners(), getAllTeamListeners(), oldListeners));
     }
 
     public void stopCountdown() {
@@ -277,9 +276,17 @@ public class GameGroup
         countdown.cancel();
 
         //Remove countdown level from Users
-        for(User user : getUsers()) {
+        for (User user : getUsers()) {
             user.setXpLevel(0);
         }
+    }
+
+    public Collection<User> getUsers() {
+        return usersInGroup.values();
+    }
+
+    public GameState getCurrentGameState() {
+        return gameState;
     }
 
     public void startCountdown(String name, String localeStub, int seconds) {
@@ -420,10 +427,6 @@ public class GameGroup
         return getUsers().size();
     }
 
-    public Collection<User> getUsers() {
-        return usersInGroup.values();
-    }
-
     public Kit getKit(String name) {
         return kits.get(name);
     }
@@ -437,7 +440,7 @@ public class GameGroup
     public <B extends Metadata> void setMetadata(B metadata) {
         Metadata oldMetadata = metadataMap.put(metadata.getMetadataClass(), metadata);
 
-        if(oldMetadata != null && oldMetadata != metadata) {
+        if (oldMetadata != null && oldMetadata != metadata) {
             oldMetadata.cancelAllTasks();
             oldMetadata.removed();
         }
@@ -540,7 +543,7 @@ public class GameGroup
             while (iterator.hasNext()) {
                 Metadata metadata = iterator.next();
 
-                if (metadata.removeOnGameStateChange(event)){
+                if (metadata.removeOnGameStateChange(event)) {
                     metadata.cancelAllTasks();
                     metadata.removed();
                     iterator.remove();
@@ -555,7 +558,7 @@ public class GameGroup
             while (iterator.hasNext()) {
                 Metadata metadata = iterator.next();
 
-                if (metadata.removeOnMapChange(event)){
+                if (metadata.removeOnMapChange(event)) {
                     metadata.cancelAllTasks();
                     metadata.removed();
                     iterator.remove();

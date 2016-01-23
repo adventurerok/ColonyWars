@@ -11,7 +11,7 @@ import org.bukkit.event.Listener;
 public class ListenerLoader {
 
     @SuppressWarnings("unchecked")
-    public static Listener loadListener(Object creator, ConfigurationSection listenerConfig) throws Exception {
+    public static <C, R> Listener loadListener(C creator, R representing, ConfigurationSection listenerConfig) throws Exception {
         String className = listenerConfig.getString("class");
 
         Class<? extends Listener> clazz = (Class<? extends Listener>) Class.forName(className);
@@ -21,7 +21,7 @@ public class ListenerLoader {
         ConfigurationSection config = null;
         if (listenerConfig.contains("config")) config = listenerConfig.getConfigurationSection("config");
 
-        EventExecutor.executeEvent(new ListenerLoadedEvent<>(creator, config), listener);
+        EventExecutor.executeEvent(new ListenerLoadedEvent<>(creator, representing, config), listener);
 
         return listener;
 

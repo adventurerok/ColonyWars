@@ -18,7 +18,7 @@ public class LightningWand implements Listener {
     private int maxRange;
 
     @MinigamesEventHandler
-    public void onListenerEnabled(ListenerLoadedEvent<?> event) {
+    public void onListenerEnabled(ListenerLoadedEvent<?, ?> event) {
         maxRange = event.getConfig().getInt("max_range");
         lightingMultiplier = event.getConfig().getDouble("damage_multiplier");
     }

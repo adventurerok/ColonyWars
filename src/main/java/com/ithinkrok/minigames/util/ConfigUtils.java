@@ -17,20 +17,27 @@ import java.util.Map;
  */
 public class ConfigUtils {
 
-    public static Vector getVector(ConfigurationSection config, String path) {
-        return new Vector(config.getDouble(path + ".x"), config.getDouble(path + ".y"), config.getDouble(path + ".z"));
-    }
-
     public static Location getLocation(ConfigurationSection config, World world, String path) {
-        return new Location(world, config.getDouble(path + ".x"), config.getDouble(path + ".y"), config.getDouble
-                (path + ".z"), (float) config.getDouble("yaw"), (float) config.getDouble("pitch"));
+        if (!path.isEmpty()) path = path + ".";
+
+        return new Location(world, config.getDouble(path + "x"), config.getDouble(path + "y"),
+                config.getDouble(path + "z"), (float) config.getDouble(path + "yaw"),
+                (float) config.getDouble(path + "pitch"));
     }
 
     public static BoundingBox getBounds(ConfigurationSection config, String path) {
-        Vector min = getVector(config, path + ".min");
-        Vector max = getVector(config, path + ".max");
+        if (!path.isEmpty()) path = path + ".";
+
+        Vector min = getVector(config, path + "min");
+        Vector max = getVector(config, path + "max");
 
         return new BoundingBox(min, max);
+    }
+
+    public static Vector getVector(ConfigurationSection config, String path) {
+        if (!path.isEmpty()) path = path + ".";
+
+        return new Vector(config.getDouble(path + "x"), config.getDouble(path + "y"), config.getDouble(path + "z"));
     }
 
     @SuppressWarnings("unchecked")
@@ -49,9 +56,9 @@ public class ConfigUtils {
     }
 
     @SuppressWarnings("unchecked")
-    private static ConfigurationSection configFromMap(Map<String, Object> values){
+    private static ConfigurationSection configFromMap(Map<String, Object> values) {
         values.replaceAll((s, o) -> {
-            if(!(o instanceof Map<?, ?>)) return o;
+            if (!(o instanceof Map<?, ?>)) return o;
             return configFromMap((Map<String, Object>) o);
         });
 
@@ -62,10 +69,10 @@ public class ConfigUtils {
     }
 
     public static ItemStack getItemStack(ConfigurationSection config, String path) {
-        if(config.isString(path)) return InventoryUtils.parseItem(config.getString(path));
-        if(!config.isConfigurationSection(path)) return null;
+        if (config.isString(path)) return InventoryUtils.parseItem(config.getString(path));
+        if (!config.isConfigurationSection(path)) return null;
 
-        config = config.getConfigurationSection(path);
+        if(!path.isEmpty()) config = config.getConfigurationSection(path);
 
         Material mat = Material.matchMaterial(config.getString("type"));
         int amount = config.getInt("amount", 1);
@@ -79,8 +86,8 @@ public class ConfigUtils {
     }
 
     public static SoundEffect getSoundEffect(ConfigurationSection config, String path) {
-        if(config.isString(path)) return new SoundEffect(config.getString(path));
-        else if(config.isConfigurationSection(path)) return new SoundEffect(config.getConfigurationSection(path));
+        if (config.isString(path)) return new SoundEffect(config.getString(path));
+        else if (config.isConfigurationSection(path)) return new SoundEffect(config.getConfigurationSection(path));
         else return null;
     }
 

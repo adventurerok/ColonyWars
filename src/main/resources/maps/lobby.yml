@@ -3,7 +3,7 @@ description: "The lobby map for MCCW"
 environment: "normal"
 
 lang_files:
-  - "lang/spleef.lang"
+  - "lang/lobby.lang"
 
 listeners:
   spleef:
@@ -40,3 +40,24 @@ listeners:
               z: 39
           extra_radius: 3
       spade: "IRON_SPADE"
+  parkour:
+    class: "com.ithinkrok.cw.lobbygames.ParkourMinigame"
+    config:
+      max_parkour_money: 6001
+      runs:
+        - x: 349
+          y: 84
+          z: 6
+          reward: 500
+        - x: 426
+          y: 74
+          z: 100
+          reward: 1200
+        - x: 425
+          y: 74
+          z: 100
+          reward: 1200
+        - x: 286
+          y: 76
+          z: 106
+          reward: 3000

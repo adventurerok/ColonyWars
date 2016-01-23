@@ -5,3 +5,6 @@ spleef.queue.need_more=&a%s &eplayers in spleef queue! Need &c%s more to start!
 spleef.winner=%s &6has won a game of spleef!
 spleef.loser=%s &6was eliminated from a spleef game!
 spleef.begin=&6A new spleef game has started!
+
+parkour.capped=&cYou have already earned all the money you can from this parkour run!
+parkour.winner=&3%s &6has completed a parkour run and will start next game with $%s extra!

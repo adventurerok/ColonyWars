@@ -35,6 +35,7 @@ public class AftermathListener extends BaseGameStateListener {
 
     @MinigamesEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<GameGroup, GameState> event) {
+        super.onListenerLoaded(event);
         ConfigurationSection config = event.getConfig();
         if (config == null) config = new MemoryConfiguration();
 

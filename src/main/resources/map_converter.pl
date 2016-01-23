@@ -56,9 +56,6 @@ foreach my $team (keys %$mapConfig) {
 
     foreach my $axis ('x', 'y', 'z') {
         my $value = $teamConfig->{spawn}->{$axis};
-        if($axis eq 'y') {
-            $value++;
-        }
         print "      $axis: $value\n";
     }
 }

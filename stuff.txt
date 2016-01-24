@@ -5,6 +5,12 @@ RECODE BUGS:
  Y Ender chest support
  - Class descriptions
  - Handbook
+ - Priest not getting stuff (but other priest in team did)
+ - Cath rev chance
+ - Lowercase class names
+ - Healing scroll exploit
+ - Scoreboard incorrect revival rate after it goes down
+ - H
 
 LOW PRIORITY / INVESTIGATE:
  - Destroying a building while it is built does not decrement building now counter

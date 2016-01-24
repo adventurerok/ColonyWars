@@ -18,6 +18,7 @@ import com.ithinkrok.minigames.event.user.world.UserDropItemEvent;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
@@ -40,6 +41,7 @@ public class BaseGameStateListener implements Listener {
         gameState = event.getRepresenting();
 
         ConfigurationSection config = event.getConfig();
+        if(config == null) config = new MemoryConfiguration();
 
         if(quitLocale == null) quitLocale = config.getString("user_quit_locale", "user.quit");
         if(joinLocale == null) joinLocale = config.getString("user_join_locale", "user.join");

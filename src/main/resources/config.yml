@@ -918,6 +918,7 @@ custom_items:
     listeners:
       invisible_user_toggle:
         class: "com.ithinkrok.cw.item.InvisibleUserToggle"
+        events: ["rightClick"]
   spectate_chooser:
     display_name_locale: "spectate_chooser.name"
     material: "SKULL_ITEM"
@@ -925,6 +926,7 @@ custom_items:
     listeners:
       spectate_chooser:
         class: "com.ithinkrok.cw.item.SpectateChooser"
+        events: ["rightClick"]
   cloak:
     display_name_locale: "cloak.name"
     material: "IRON_LEGGINGS"
@@ -941,6 +943,7 @@ custom_items:
     listeners:
       cloak:
         class: "com.ithinkrok.cw.item.Cloak"
+        events: ["rightClick"]
         config:
           cloak_effects:
             SPEED: 2
@@ -1006,6 +1009,7 @@ custom_items:
     listeners:
       healing:
         class: "com.ithinkrok.cw.item.HealingScroll"
+        events: ["rightClick"]
         config:
           effect: "REGENERATION"
           level: 6

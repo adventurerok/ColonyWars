@@ -8,6 +8,7 @@ import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.game.CountdownFinishedEvent;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.event.user.UserEvent;
+import com.ithinkrok.minigames.event.user.world.UserChatEvent;
 import com.ithinkrok.minigames.task.GameTask;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -93,7 +94,7 @@ public class AftermathListener extends BaseGameStateListener {
 
     @MinigamesEventHandler
     public void onUserEvent(UserEvent event) {
-        if (!(event instanceof Cancellable)) return;
+        if (!(event instanceof Cancellable) || event instanceof UserChatEvent) return;
 
         ((Cancellable) event).setCancelled(true);
     }

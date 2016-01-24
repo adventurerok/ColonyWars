@@ -36,3 +36,4 @@ Minigames controller:
  - Keeps track of which servers are running which minigames, and commands them
  - Provides stats for all minigames (num players, etc...)
  - Manipulates bungee servers
+ - Records minigame errors

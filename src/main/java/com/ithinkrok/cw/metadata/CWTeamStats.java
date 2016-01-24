@@ -115,8 +115,10 @@ public class CWTeamStats extends Metadata {
         if(config != null) {
             if(config.contains("base")) baseLocation = building.getCenterBlock();
             if(config.contains("revival_rate")) {
-                setRespawnChance(Math.max(respawnChance, config.getInt("revival_rate")), true);
-                churchLocations.add(building.getCenterBlock());
+                addChurchLocation(building.getCenterBlock(), config.getInt("revival_rate"));
+
+                //The baseLocation is only used as a church while a cathedral is building
+                removeChurchLocation(baseLocation);
             }
             if(config.getBoolean("cannons", false)) {
                 CannonTowerHandler.startCannonTowerTask(team.getGameGroup(), building);
@@ -135,9 +137,21 @@ public class CWTeamStats extends Metadata {
     public void buildingRemoved(Building building) {
         buildingCounts.put(building.getBuildingName(), Math.max(getBuildingCount(building.getBuildingName()) - 1, 0));
 
-        if (churchLocations.remove(building.getCenterBlock())) {
+        removeChurchLocation(building.getCenterBlock());
+    }
+
+    public void removeChurchLocation(Location church) {
+        if (churchLocations.remove(church)) {
             if (churchLocations.isEmpty()) setRespawnChance(0, true);
         }
+    }
+
+    public void addChurchLocation(Location church, int minRevivalRate) {
+        churchLocations.add(church);
+
+        if(minRevivalRate <= respawnChance) return;
+
+        setRespawnChance(minRevivalRate, true);
     }
 
     @Override

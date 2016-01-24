@@ -5,8 +5,6 @@ RECODE BUGS:
  - Class descriptions
  - Handbook
  - Priest not getting stuff (but other priest in team did)
- - Cath rev chance
- - Scoreboard incorrect revival rate after it goes down
 
 LOW PRIORITY / INVESTIGATE:
  - Destroying a building while it is built does not decrement building now counter

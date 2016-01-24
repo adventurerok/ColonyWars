@@ -2,6 +2,7 @@ package com.ithinkrok.cw.inventory;
 
 import com.ithinkrok.cw.Building;
 import com.ithinkrok.cw.metadata.BuildingController;
+import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.minigames.inventory.event.BuyablePurchaseEvent;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
@@ -25,6 +26,14 @@ public class BuildingUpgrade extends BuildingBuyable {
         BuildingController controller = BuildingController.getOrCreate(event.getUserGameGroup());
 
         Building old = controller.getBuilding(buildingLoc);
+
+        if(old.getConfig() != null && old.getConfig().getInt("revival_rate") > 0) {
+            CWTeamStats teamStats = CWTeamStats.getOrCreate(event.getUser().getTeam());
+
+            //Add the base location as a church while this one is destroyed
+            teamStats.addChurchLocation(teamStats.getBaseLocation(), 0);
+        }
+
         old.remove();
 
         controller.buildBuilding(buildingName, old.getTeamIdentifier(), buildingLoc, old.getSchematic()

@@ -5,10 +5,12 @@ RECODE BUGS:
  - Class descriptions
  - Handbook
  - Priest not getting stuff (but other priest in team did)
+ - cloaker still cloaked/no speed
+ - weather on oasis
+ - Chat broken in aftermath
 
 LOW PRIORITY / INVESTIGATE:
  - Destroying a building while it is built does not decrement building now counter
- - eating flicker glitch
  - Zombie tab list names
 
 FUTURE:

@@ -8,6 +8,8 @@ lang_files:
   - "lang/items.lang"
   - "lang/commands.lang"
 
+chat_prefix: "&7[&3ColonyWars&7] &e"
+
 # Specifies identifiers for teams to be created
 team_identifiers:
   red:

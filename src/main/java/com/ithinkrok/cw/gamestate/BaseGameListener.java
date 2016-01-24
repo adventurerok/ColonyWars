@@ -111,7 +111,7 @@ public class BaseGameListener extends BaseGameStateListener {
     @MinigamesEventHandler
     public void onUserChat(UserChatEvent event) {
         if (event.getUser().isInGame()) {
-            String kitName = event.getUser().getKitName();
+            String kitName = event.getUser().getKitName().toUpperCase();
             String teamColor = event.getUser().getTeamIdentifier().getChatColor().toString();
 
             event.setFormat(

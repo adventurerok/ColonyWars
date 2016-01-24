@@ -116,7 +116,7 @@
         <outputDirectory>target/classes</outputDirectory>
         <finalName>Colony_Wars</finalName>
         <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
-        <defaultGoal>clean package</defaultGoal>
+        <defaultGoal>clean install</defaultGoal>
 
         <resources>
             <resource>

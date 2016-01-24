@@ -2,12 +2,10 @@ package com.ithinkrok.cw.lobbygames;
 
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.event.user.game.UserQuitEvent;
 import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
-import com.ithinkrok.minigames.map.GameMap;
 import com.ithinkrok.minigames.util.EntityUtils;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;

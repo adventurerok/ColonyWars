@@ -2,7 +2,6 @@ package com.ithinkrok.minigames.util;
 
 import com.ithinkrok.minigames.event.MinigamesEvent;
 import com.ithinkrok.minigames.event.MinigamesEventHandler;
-import com.tngtech.java.junit.dataprovider.DataProvider;
 import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import org.bukkit.event.Listener;
 import org.junit.Before;

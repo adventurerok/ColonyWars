@@ -1,12 +1,9 @@
 package com.ithinkrok.minigames.inventory;
 
-import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.inventory.event.BuyablePurchaseEvent;
 import com.ithinkrok.minigames.inventory.event.CalculateItemForUserEvent;
 import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.util.InventoryUtils;
-import com.ithinkrok.minigames.util.math.Calculator;
-import com.ithinkrok.minigames.util.math.ExpressionCalculator;
 import com.ithinkrok.minigames.util.math.MapVariables;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;

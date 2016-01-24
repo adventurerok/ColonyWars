@@ -17,10 +17,8 @@ import com.ithinkrok.minigames.listener.GiveCustomItemsOnJoin;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.EventPriority;
 
 import java.util.Objects;
-import java.util.Random;
 
 /**
  * Created by paul on 31/12/15.

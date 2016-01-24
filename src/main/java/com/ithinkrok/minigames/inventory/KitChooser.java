@@ -12,7 +12,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

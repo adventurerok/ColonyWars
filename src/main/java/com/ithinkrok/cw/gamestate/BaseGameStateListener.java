@@ -18,7 +18,6 @@ import com.ithinkrok.minigames.event.user.world.UserDropItemEvent;
 import com.ithinkrok.minigames.util.InventoryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 

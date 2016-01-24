@@ -942,7 +942,7 @@ custom_items:
     listeners:
       cloak:
         class: "com.ithinkrok.cw.item.Cloak"
-        events: ["rightClick"]
+        events: ["rightClick", "timeout"]
         config:
           cloak_effects:
             SPEED: 2

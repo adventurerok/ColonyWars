@@ -165,6 +165,8 @@ public class CWTeamStats extends Metadata {
         this.respawnChance = respawnChance;
 
         if(message) team.sendLocale(respawnChanceLocale, respawnChance);
+
+        team.updateUserScoreboards();
     }
 
     public void respawnUser(User died) {

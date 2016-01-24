@@ -2,12 +2,10 @@
 RECODE BUGS:
  - Quitting with only zombies on the server
  - Force showdown timers
- Y Ender chest support
  - Class descriptions
  - Handbook
  - Priest not getting stuff (but other priest in team did)
  - Cath rev chance
- - Lowercase class names
  - Scoreboard incorrect revival rate after it goes down
 
 LOW PRIORITY / INVESTIGATE:

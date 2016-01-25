@@ -18,6 +18,76 @@ team_identifiers:
   yellow:
     dye_color: YELLOW
 
+commands:
+  gamestate:
+    permission: "mccw.gamestate"
+    description: "Changes the GameState of the current GameGroup"
+    aliases: ["gs", "gstate"]
+    usage: "/<command> <gamestate>"
+    class: "com.ithinkrok.cw.command.GameStateCommand"
+  colonywars:
+    description: "Various CW testing utils"
+    aliases: ["cw", "cwars", "wars"]
+    permission: "mccw.cw.command"
+    usage: "/<command> <subcommand> [sub command args...]"
+    class: "com.ithinkrok.cw.command.CWCommand"
+  togglemoneymessage:
+    description: "Toggles money message status"
+    aliases: ["tmm"]
+    permission: "mccw.tmm"
+    usage: "/<command> [newstatus]"
+    class: "com.ithinkrok.cw.command.ToggleMoneyMessageCommand"
+  stats:
+    description: "Shows your stats"
+    permission: "mccw.stats"
+    usage: "/<command> [category]"
+    class: "com.ithinkrok.cw.command.StatsCommand"
+  countdown:
+    description: "Modifies countdowns"
+    aliases: ["cdown", "cd", "cdwn"]
+    permission: "mccw.countdown"
+    usage: |
+      /<command> add/set <amount>
+      /<command> finish/cancel
+      /<command> start <name> <seconds> <localestub>
+    class: "com.ithinkrok.cw.command.CountdownCommand"
+  teamchat:
+    description: "Allows you to chat privately to your team"
+    aliases: ["tc", "tchat", "teamc"]
+    permission: "mccw.teamchat"
+    usage: "/<command>"
+    class: "com.ithinkrok.cw.command.TeamChatCommand"
+  transfer:
+    description: "Allows you to transfer/share money with your team and its members"
+    aliases: ["tf", "share", "t"]
+    permission: "mccw.transfer"
+    usage: "/<command> <amount/all> [targets (team/all/player names)]"
+    class: "com.ithinkrok.cw.command.TransferCommand"
+  fix:
+    description: "Fixes you if you are stuck"
+    aliases: ["unstuck", "fixme"]
+    permission: "mccw.fix"
+    usage: "/<command>"
+    class: "com.ithinkrok.cw.command.FixCommand"
+  leaderboard:
+    description: "Shows a leaderboard of the top players"
+    aliases: ["lb", "leaders", "lboard", "top"]
+    permission: "mccw.leaderboard"
+    usage: "/<command> [amount] [category]"
+    class: "com.ithinkrok.cw.command.LeaderboardCommand"
+  list:
+    description: "Lists who is in the minigame"
+    aliases: ["ls"]
+    permission: "mccw.list"
+    usage: "/<command>"
+    class: "com.ithinkrok.cw.command.ListCommand"
+  members:
+    description: "Shows the members of your team"
+    aliases: ["team", "mbrs"]
+    permission: "mccw.members"
+    usage: "/<command>"
+    class: "com.ithinkrok.cw.command.MembersCommand"
+
 kits:
   general:
     listeners:

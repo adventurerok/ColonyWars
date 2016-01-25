@@ -5,19 +5,25 @@ import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.command.Command;
 import com.ithinkrok.minigames.command.CommandSender;
 import com.ithinkrok.minigames.command.GameCommandExecutor;
+import com.ithinkrok.minigames.event.CommandEvent;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.team.Team;
 import com.ithinkrok.minigames.team.TeamIdentifier;
 import org.bukkit.Location;
+import org.bukkit.event.Listener;
 
 /**
  * Created by paul on 22/01/16.
  */
-public class MembersCommand implements GameCommandExecutor {
+public class MembersCommand implements Listener {
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command) {
-        if(!command.requireGameGroup(sender) || !command.requireTeamIdentifier(sender)) return true;
-        if(!command.requireOthersPermission(sender, "mccw.members.others")) return true;
+    @MinigamesEventHandler
+    public void onCommand(CommandEvent event) {
+        CommandSender sender = event.getCommandSender();
+        Command command = event.getCommand();
+
+        if(!command.requireGameGroup(sender) || !command.requireTeamIdentifier(sender)) return;
+        if(!command.requireOthersPermission(sender, "mccw.members.others")) return;
 
         Team team = command.getGameGroup().getTeam(command.getTeamIdentifier());
 
@@ -54,7 +60,5 @@ public class MembersCommand implements GameCommandExecutor {
             //Send the player a message directly to avoid the chat prefix
             sender.sendLocaleNoPrefix("command.members.player_info", name, kit, nearestBase);
         }
-
-        return true;
     }
 }

@@ -5,6 +5,8 @@ import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.command.Command;
 import com.ithinkrok.minigames.command.CommandSender;
 import com.ithinkrok.minigames.command.GameCommandExecutor;
+import com.ithinkrok.minigames.event.CommandEvent;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.user.UserEvent;
 import com.ithinkrok.minigames.item.CustomItem;
 import com.ithinkrok.minigames.metadata.Money;
@@ -13,6 +15,7 @@ import com.ithinkrok.minigames.util.InventoryUtils;
 import com.ithinkrok.minigames.util.math.ExpressionCalculator;
 import org.bukkit.Material;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -21,7 +24,7 @@ import java.util.Map;
 /**
  * Created by paul on 13/01/16.
  */
-public class CWCommand implements GameCommandExecutor {
+public class CWCommand implements Listener {
 
     private Map<String, GameCommandExecutor> subExecutors = new HashMap<>();
 
@@ -36,20 +39,26 @@ public class CWCommand implements GameCommandExecutor {
         subExecutors.put("rejoin", this::rejoinCommand);
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command) {
-        if(!command.requireArgumentCount(sender, 1)) return false;
+    @MinigamesEventHandler
+    public void onCommand(CommandEvent event) {
+        CommandSender sender = event.getCommandSender();
+        Command command = event.getCommand();
+
+        if(!command.requireArgumentCount(sender, 1)){
+            event.setValidCommand(false);
+            return;
+        }
 
         Command subCommand = command.subCommand();
 
         if(!subExecutors.containsKey(subCommand.getCommand())) {
             sender.sendLocale("command.cw.unknown", subCommand.getCommand());
-            return true;
+            return;
         }
 
-        if(!Command.requirePermission(sender, "command.cw." + subCommand.getCommand())) return true;
+        if(!Command.requirePermission(sender, "command.cw." + subCommand.getCommand())) return;
 
-        return subExecutors.get(subCommand.getCommand()).onCommand(sender, subCommand);
+        event.setValidCommand(subExecutors.get(subCommand.getCommand()).onCommand(sender, subCommand));
     }
 
     private boolean moneyCommand(CommandSender sender, Command command) {

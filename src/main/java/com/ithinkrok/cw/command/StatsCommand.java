@@ -5,19 +5,25 @@ import com.ithinkrok.cw.metadata.StatsHolder;
 import com.ithinkrok.minigames.command.Command;
 import com.ithinkrok.minigames.command.CommandSender;
 import com.ithinkrok.minigames.command.GameCommandExecutor;
+import com.ithinkrok.minigames.event.CommandEvent;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
+import org.bukkit.event.Listener;
 
 import java.text.DecimalFormat;
 
 /**
  * Created by paul on 17/01/16.
  */
-public class StatsCommand implements GameCommandExecutor {
+public class StatsCommand implements Listener {
 
     private static DecimalFormat twoDecimalPlaces = new DecimalFormat("0.00");
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command) {
-        if(!command.requireUser(sender)) return true;
+    @MinigamesEventHandler
+    public void onCommand(CommandEvent event) {
+        CommandSender sender = event.getCommandSender();
+        Command command = event.getCommand();
+
+        if(!command.requireUser(sender)) return;
 
         String category = command.getStringArg(0, "total");
 
@@ -60,7 +66,5 @@ public class StatsCommand implements GameCommandExecutor {
             sender.sendLocaleNoPrefix("command.stats.totalmoney", totalMoney);
             sender.sendLocaleNoPrefix("command.stats.score", score);
         });
-        
-        return true;
     }
 }

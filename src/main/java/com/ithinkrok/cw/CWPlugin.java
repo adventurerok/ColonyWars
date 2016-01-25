@@ -1,6 +1,5 @@
 package com.ithinkrok.cw;
 
-import com.ithinkrok.cw.command.*;
 import com.ithinkrok.cw.database.UserCategoryStats;
 import com.ithinkrok.minigames.Game;
 import com.ithinkrok.minigames.MinigamesPlugin;
@@ -16,7 +15,6 @@ import java.util.List;
 public class CWPlugin extends MinigamesPlugin {
 
     Game minigame;
-    GameCommandHandler commandHandler;
 
     @Override
     public void onEnable() {
@@ -26,29 +24,11 @@ public class CWPlugin extends MinigamesPlugin {
 
         minigame.reloadConfig();
         minigame.registerListeners();
-
-        commandHandler = new GameCommandHandler(minigame);
-        commandHandler.addExecutor(new GameStateCommand(), "gamestate");
-        commandHandler.addExecutor(new CWCommand(), "colonywars");
-        commandHandler.addExecutor(new ToggleMoneyMessageCommand(), "togglemoneymessage");
-        commandHandler.addExecutor(new StatsCommand(), "stats");
-        commandHandler.addExecutor(new CountdownCommand(), "countdown");
-        commandHandler.addExecutor(new TeamChatCommand(), "teamchat");
-        commandHandler.addExecutor(new TransferCommand(), "transfer");
-        commandHandler.addExecutor(new FixCommand(), "fix");
-        commandHandler.addExecutor(new LeaderboardCommand(), "leaderboard");
-        commandHandler.addExecutor(new ListCommand(), "list");
-        commandHandler.addExecutor(new MembersCommand(), "members");
     }
 
     @Override
     public void onDisable() {
         minigame.unload();
-    }
-
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        return commandHandler.onCommand(sender, command, label, args);
     }
 
     @Override

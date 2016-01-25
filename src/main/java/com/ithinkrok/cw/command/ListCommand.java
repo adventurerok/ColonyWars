@@ -4,9 +4,12 @@ import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.command.Command;
 import com.ithinkrok.minigames.command.CommandSender;
 import com.ithinkrok.minigames.command.GameCommandExecutor;
+import com.ithinkrok.minigames.event.CommandEvent;
+import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.team.TeamIdentifier;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -16,10 +19,14 @@ import java.util.Map;
 /**
  * Created by paul on 22/01/16.
  */
-public class ListCommand implements GameCommandExecutor {
-    @Override
-    public boolean onCommand(CommandSender sender, Command command) {
-        if(!command.requireGameGroup(sender)) return true;
+public class ListCommand implements Listener {
+
+    @MinigamesEventHandler
+    public void onCommand(CommandEvent event) {
+        CommandSender sender = event.getCommandSender();
+        Command command = event.getCommand();
+
+        if(!command.requireGameGroup(sender)) return;
 
         Map<TeamIdentifier, List<User>> teams = new LinkedHashMap<>();
 
@@ -63,7 +70,5 @@ public class ListCommand implements GameCommandExecutor {
         if(zombieCount != 0) {
             sender.sendLocaleNoPrefix("command.list.zombies", zombieCount);
         }
-
-        return true;
     }
 }

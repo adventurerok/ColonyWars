@@ -3,9 +3,6 @@ package com.ithinkrok.cw;
 import com.ithinkrok.cw.database.UserCategoryStats;
 import com.ithinkrok.minigames.Game;
 import com.ithinkrok.minigames.MinigamesPlugin;
-import com.ithinkrok.minigames.command.GameCommandHandler;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 
 import java.util.List;
 

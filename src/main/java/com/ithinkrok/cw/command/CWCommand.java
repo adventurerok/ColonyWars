@@ -4,7 +4,6 @@ import com.ithinkrok.minigames.Kit;
 import com.ithinkrok.minigames.User;
 import com.ithinkrok.minigames.command.Command;
 import com.ithinkrok.minigames.command.CommandSender;
-import com.ithinkrok.minigames.command.GameCommandExecutor;
 import com.ithinkrok.minigames.event.CommandEvent;
 import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.user.UserEvent;
@@ -26,7 +25,7 @@ import java.util.Map;
  */
 public class CWCommand implements Listener {
 
-    private Map<String, GameCommandExecutor> subExecutors = new HashMap<>();
+    private Map<String, SubCommandExecutor> subExecutors = new HashMap<>();
 
 
     public CWCommand() {
@@ -191,5 +190,13 @@ public class CWCommand implements Listener {
         public void setCancelled(boolean cancel) {
             cancelled = cancel;
         }
+    }
+
+    /**
+     * Created by paul on 12/01/16.
+     */
+    private interface SubCommandExecutor {
+
+        boolean onCommand(CommandSender sender, Command command);
     }
 }

@@ -1,3 +1,5 @@
+command.help.title=Command List\:
+
 command.requires.game_group=&cThis command requires a GameGroup/User
 command.requires.user=&cThis command requires a User
 command.requires.team_identifier=&cThis command requires a Team

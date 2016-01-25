@@ -25,6 +25,8 @@ Minigames Plugin:
  - Intercepts commands in precommand event, and handles them if gg config requires
  - One specific command lets console execute commands
  - Communicates with the minigames controller
+ - SHOULD KILL GAMEGROUPS AFTER A GAME FINISHES
+ - SHOULD RELOAD CONFIGS FROM DISK EACH TIME GG LOADED
 
  - Config: symlink option, map folder, gamegroup configs folder
 

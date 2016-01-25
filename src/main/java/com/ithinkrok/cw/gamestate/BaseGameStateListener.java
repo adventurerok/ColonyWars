@@ -5,6 +5,7 @@ import com.ithinkrok.cw.metadata.TeamStatsHolderGroup;
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.GameState;
 import com.ithinkrok.minigames.User;
+import com.ithinkrok.minigames.event.CommandEvent;
 import com.ithinkrok.minigames.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
@@ -52,6 +53,15 @@ public class BaseGameStateListener implements Listener {
         if(InventoryUtils.getIdentifier(event.getItem().getItemStack()) == -1) return;
 
         event.setCancelled(true);
+    }
+
+    @MinigamesEventHandler
+    public void onCommand(CommandEvent event) {
+        switch(event.getCommand().getCommand().toLowerCase()) {
+            case "kill":
+            case "suicide":
+                event.setHandled(true);
+        }
     }
 
     @MinigamesEventHandler

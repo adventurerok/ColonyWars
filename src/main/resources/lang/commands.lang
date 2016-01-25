@@ -1,4 +1,6 @@
-command.help.title=Command List\:
+command.help.title=&6Command List\:
+command.help.line=&3%s: &f%s
+command.help.usage=&3%s &6Usage\:\n%s\n&6Description\:\n%s
 
 command.requires.game_group=&cThis command requires a GameGroup/User
 command.requires.user=&cThis command requires a User

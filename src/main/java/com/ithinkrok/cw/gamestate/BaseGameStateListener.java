@@ -42,22 +42,22 @@ public class BaseGameStateListener implements Listener {
         gameState = event.getRepresenting();
 
         ConfigurationSection config = event.getConfig();
-        if(config == null) config = new MemoryConfiguration();
+        if (config == null) config = new MemoryConfiguration();
 
-        if(quitLocale == null) quitLocale = config.getString("user_quit_locale", "user.quit");
-        if(joinLocale == null) joinLocale = config.getString("user_join_locale", "user.join");
+        if (quitLocale == null) quitLocale = config.getString("user_quit_locale", "user.quit");
+        if (joinLocale == null) joinLocale = config.getString("user_join_locale", "user.join");
     }
 
     @MinigamesEventHandler
     public void onUserDropItem(UserDropItemEvent event) {
-        if(InventoryUtils.getIdentifier(event.getItem().getItemStack()) == -1) return;
+        if (InventoryUtils.getIdentifier(event.getItem().getItemStack()) == -1) return;
 
         event.setCancelled(true);
     }
 
     @MinigamesEventHandler
     public void onCommand(CommandEvent event) {
-        switch(event.getCommand().getCommand().toLowerCase()) {
+        switch (event.getCommand().getCommand().toLowerCase()) {
             case "kill":
             case "suicide":
                 event.setHandled(true);
@@ -66,7 +66,7 @@ public class BaseGameStateListener implements Listener {
 
     @MinigamesEventHandler
     public void onCreatureSpawn(MapCreatureSpawnEvent event) {
-        if(event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) return;
+        if (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) return;
 
         event.setCancelled(true);
     }
@@ -78,12 +78,12 @@ public class BaseGameStateListener implements Listener {
 
     @MinigamesEventHandler
     public void onUserChangeTeam(UserChangeTeamEvent event) {
-        if(event.getOldTeam() != null) {
+        if (event.getOldTeam() != null) {
             TeamStatsHolderGroup oldStats = TeamStatsHolderGroup.getOrCreate(event.getOldTeam());
             oldStats.removeUser(event.getUser());
         }
 
-        if(event.getNewTeam() != null) {
+        if (event.getNewTeam() != null) {
             TeamStatsHolderGroup newStats = TeamStatsHolderGroup.getOrCreate(event.getNewTeam());
             newStats.addUser(event.getUser());
 
@@ -98,7 +98,7 @@ public class BaseGameStateListener implements Listener {
 
         statsHolder.saveStats();
 
-        if(event.getRemoveUser()) {
+        if (event.getRemoveUser()) {
             statsHolder.setUser(null);
         }
     }
@@ -123,7 +123,7 @@ public class BaseGameStateListener implements Listener {
 
     @MinigamesEventHandler
     public void onUserChangeKit(UserChangeKitEvent event) {
-        if(event.getNewKit() == null) return;
+        if (event.getNewKit() == null) return;
 
         StatsHolder statsHolder = StatsHolder.getOrCreate(event.getUser());
         statsHolder.setLastKit(event.getNewKit().getName());
@@ -131,7 +131,7 @@ public class BaseGameStateListener implements Listener {
 
     @MinigamesEventHandler
     public void onGameStateChange(GameStateChangedEvent event) {
-        for(User user : event.getGameGroup().getUsers()) {
+        for (User user : event.getGameGroup().getUsers()) {
             StatsHolder statsHolder = StatsHolder.getOrCreate(user);
             statsHolder.saveStats();
         }

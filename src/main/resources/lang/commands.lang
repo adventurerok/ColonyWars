@@ -1,7 +1,10 @@
-command.help.title= &e---- &6Command List\: &e----
+command.help.title= &e---- &6Command List\: &e-- &6Page &c%s&6/&c%s &e----
 command.help.line= &3%s: &f%s
 command.help.usage= &e---- &6%s Usage\: &e----\n%s\n&6Description\: %s
 command.help.unknown=&cUnknown command\: %s
+command.help.invalid_page=&cInvalid page\: %s
+command.help.end=&6End of help pages.
+command.help.next_page=&6 &c/help %s &6to read the next page.
 
 command.requires.game_group=&cThis command requires a GameGroup/User
 command.requires.user=&cThis command requires a User

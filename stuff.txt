@@ -39,3 +39,9 @@ Minigames controller:
  - Provides stats for all minigames (num players, etc...)
  - Manipulates bungee servers
  - Records minigame errors
+
+== New Config Management ==
+ - Have a central config folder for all minigames.
+ - Map config names must begin with minigame prefix.
+ - Plugins specify which gamegroup configs to load in their plugin config.
+ - GameGroup configs located in main config directory.

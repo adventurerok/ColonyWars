@@ -1,6 +1,7 @@
 command.help.title= &e---- &6Command List\: &e----
 command.help.line= &3%s: &f%s
 command.help.usage= &e---- &6%s Usage\: &e----\n%s\n&6Description\: %s
+command.help.unknown=&cUnknown command\: %s
 
 command.requires.game_group=&cThis command requires a GameGroup/User
 command.requires.user=&cThis command requires a User

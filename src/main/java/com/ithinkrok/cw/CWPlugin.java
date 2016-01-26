@@ -11,23 +11,6 @@ import java.util.List;
  */
 public class CWPlugin extends SpecificPlugin {
 
-    Game minigame;
-
-    @Override
-    public void onEnable() {
-        super.onEnable();
-
-        minigame = new Game(this);
-
-        minigame.reloadConfig();
-        minigame.registerListeners();
-    }
-
-    @Override
-    public void onDisable() {
-        minigame.unload();
-    }
-
     @Override
     public List<Class<?>> getDatabaseClasses() {
         List<Class<?>> result = super.getDatabaseClasses();

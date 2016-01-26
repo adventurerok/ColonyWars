@@ -10,7 +10,8 @@ command.requires.game_group=&cThis command requires a GameGroup/User
 command.requires.user=&cThis command requires a User
 command.requires.team_identifier=&cThis command requires a Team
 command.requires.arguments=&cThis command requires at least %s arguments
-command.requires.permission=&cThis command requires the permission &3%s
+command.requires.permission=&cThis command requires the permission &3%s, talk to an admin if you believe you should \
+  have this command.
 
 command.gamestate.unknown=&cUnknown GameState %s
 command.gamestate.changed=&aGameState changed to %s

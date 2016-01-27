@@ -5,6 +5,7 @@ import com.avaje.ebean.Query;
 import com.ithinkrok.cw.database.UserCategoryStats;
 import com.ithinkrok.minigames.GameGroup;
 import com.ithinkrok.minigames.User;
+import com.ithinkrok.minigames.database.DatabaseAccessor;
 import com.ithinkrok.minigames.database.DatabaseTask;
 import com.ithinkrok.minigames.database.DatabaseTaskRunner;
 import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
@@ -55,8 +56,8 @@ public class StatsHolder extends UserMetadata implements Messagable {
         deathScoreModifier = config.getInt("death_score_modifier", -5);
     }
 
-    private static Query<UserCategoryStats> query(EbeanServer database, UUID playerUUID, String category) {
-        Query<UserCategoryStats> query = database.find(UserCategoryStats.class);
+    private static Query<UserCategoryStats> query(DatabaseAccessor accessor, UUID playerUUID, String category) {
+        Query<UserCategoryStats> query = accessor.find(UserCategoryStats.class);
 
         query.where().eq("player_uuid", playerUUID.toString()).eq("category", category);
 
@@ -145,11 +146,6 @@ public class StatsHolder extends UserMetadata implements Messagable {
         else sendLocale("score.loss", -amount);
     }
 
-    @Override
-    public void sendLocale(String locale, Object... args) {
-        if (user != null) user.sendLocale(locale, args);
-    }
-
     public void addGameLoss() {
         statsChanges.setGameLosses(statsChanges.getGameLosses() + 1);
 
@@ -201,6 +197,11 @@ public class StatsHolder extends UserMetadata implements Messagable {
     }
 
     @Override
+    public void sendLocale(String locale, Object... args) {
+        if (user != null) user.sendLocale(locale, args);
+    }
+
+    @Override
     public void sendLocaleNoPrefix(String locale, Object... args) {
         if (user != null) user.sendLocaleNoPrefix(locale, args);
     }
@@ -249,8 +250,9 @@ public class StatsHolder extends UserMetadata implements Messagable {
         }
 
         @Override
-        public void run(EbeanServer database) {
-            Query<UserCategoryStats> query = database.find(UserCategoryStats.class);
+        public void run(DatabaseAccessor accessor) {
+            Query<UserCategoryStats> query =
+                    accessor.find(UserCategoryStats.class);
 
             query.where().eq("category", category);
             query.orderBy("score desc");
@@ -274,8 +276,8 @@ public class StatsHolder extends UserMetadata implements Messagable {
         }
 
         @Override
-        public void run(EbeanServer database) {
-            Query<UserCategoryStats> query = query(database, uuid, category);
+        public void run(DatabaseAccessor accessor) {
+            Query<UserCategoryStats> query = query(accessor, uuid, category);
 
             UserCategoryStats result = query.findUnique();
             task.run(result);
@@ -289,8 +291,8 @@ public class StatsHolder extends UserMetadata implements Messagable {
         }
 
         @Override
-        public void run(EbeanServer database) {
-            Query<UserCategoryStats> query = query(database, uuid, category);
+        public void run(DatabaseAccessor accessor) {
+            Query<UserCategoryStats> query = query(accessor, uuid, category);
 
             UserCategoryStats result = query.findUnique();
             if (result != null) {
@@ -298,12 +300,12 @@ public class StatsHolder extends UserMetadata implements Messagable {
                 return;
             }
 
-            result = database.createEntityBean(UserCategoryStats.class);
+            result = accessor.createEntityBean(UserCategoryStats.class);
 
             result.setPlayerUUID(uuid);
             result.setCategory(category);
 
-            database.save(result);
+            accessor.save(result);
 
             task.run(query.findUnique());
         }
@@ -320,7 +322,7 @@ public class StatsHolder extends UserMetadata implements Messagable {
         }
 
         @Override
-        public void run(EbeanServer database) {
+        public void run(DatabaseAccessor accessor) {
             target.setName(playerName);
             target.setScore(target.getScore() + changes.getScore());
             target.setKills(target.getKills() + changes.getKills());
@@ -330,7 +332,7 @@ public class StatsHolder extends UserMetadata implements Messagable {
             target.setGameLosses(target.getGameLosses() + changes.getGameLosses());
             target.setTotalMoney(target.getTotalMoney() + changes.getTotalMoney());
 
-            database.save(target);
+            accessor.save(target);
         }
     }
 }

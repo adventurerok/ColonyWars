@@ -1,9 +1,9 @@
 package com.ithinkrok.cw.scoreboard;
 
-import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.metadata.MapVote;
-import com.ithinkrok.minigames.user.scoreboard.ScoreboardDisplay;
-import com.ithinkrok.minigames.user.scoreboard.ScoreboardHandler;
+import com.ithinkrok.minigames.base.User;
+import com.ithinkrok.minigames.base.metadata.MapVote;
+import com.ithinkrok.minigames.base.user.scoreboard.ScoreboardDisplay;
+import com.ithinkrok.minigames.base.user.scoreboard.ScoreboardHandler;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;

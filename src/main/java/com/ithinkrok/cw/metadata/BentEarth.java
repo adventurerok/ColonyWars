@@ -1,11 +1,11 @@
 package com.ithinkrok.cw.metadata;
 
-import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
-import com.ithinkrok.minigames.event.game.MapChangedEvent;
-import com.ithinkrok.minigames.event.user.game.UserInGameChangeEvent;
-import com.ithinkrok.minigames.metadata.UserMetadata;
-import com.ithinkrok.minigames.util.SoundEffect;
+import com.ithinkrok.minigames.base.User;
+import com.ithinkrok.minigames.base.event.game.GameStateChangedEvent;
+import com.ithinkrok.minigames.base.event.game.MapChangedEvent;
+import com.ithinkrok.minigames.base.event.user.game.UserInGameChangeEvent;
+import com.ithinkrok.minigames.base.metadata.UserMetadata;
+import com.ithinkrok.minigames.base.util.SoundEffect;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;

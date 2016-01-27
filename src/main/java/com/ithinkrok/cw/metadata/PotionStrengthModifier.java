@@ -1,11 +1,11 @@
 package com.ithinkrok.cw.metadata;
 
-import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
-import com.ithinkrok.minigames.event.game.MapChangedEvent;
-import com.ithinkrok.minigames.event.user.game.UserInGameChangeEvent;
-import com.ithinkrok.minigames.metadata.UserMetadata;
-import com.ithinkrok.minigames.task.GameTask;
+import com.ithinkrok.minigames.base.User;
+import com.ithinkrok.minigames.base.event.game.GameStateChangedEvent;
+import com.ithinkrok.minigames.base.event.game.MapChangedEvent;
+import com.ithinkrok.minigames.base.event.user.game.UserInGameChangeEvent;
+import com.ithinkrok.minigames.base.metadata.UserMetadata;
+import com.ithinkrok.minigames.base.task.GameTask;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 

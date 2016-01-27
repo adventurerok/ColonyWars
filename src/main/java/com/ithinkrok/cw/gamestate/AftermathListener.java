@@ -1,15 +1,15 @@
 package com.ithinkrok.cw.gamestate;
 
-import com.ithinkrok.minigames.GameGroup;
-import com.ithinkrok.minigames.GameState;
-import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.event.ListenerLoadedEvent;
-import com.ithinkrok.minigames.event.MinigamesEventHandler;
-import com.ithinkrok.minigames.event.game.CountdownFinishedEvent;
-import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
-import com.ithinkrok.minigames.event.user.UserEvent;
-import com.ithinkrok.minigames.event.user.world.UserChatEvent;
-import com.ithinkrok.minigames.task.GameTask;
+import com.ithinkrok.minigames.base.GameGroup;
+import com.ithinkrok.minigames.base.GameState;
+import com.ithinkrok.minigames.base.User;
+import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.minigames.base.event.game.CountdownFinishedEvent;
+import com.ithinkrok.minigames.base.event.game.GameStateChangedEvent;
+import com.ithinkrok.minigames.base.event.user.UserEvent;
+import com.ithinkrok.minigames.base.event.user.world.UserChatEvent;
+import com.ithinkrok.minigames.base.task.GameTask;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;

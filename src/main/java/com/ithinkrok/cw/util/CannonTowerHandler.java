@@ -1,10 +1,10 @@
 package com.ithinkrok.cw.util;
 
 import com.ithinkrok.cw.Building;
-import com.ithinkrok.minigames.GameGroup;
-import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.task.GameTask;
-import com.ithinkrok.minigames.util.EntityUtils;
+import com.ithinkrok.minigames.base.GameGroup;
+import com.ithinkrok.minigames.base.User;
+import com.ithinkrok.minigames.base.task.GameTask;
+import com.ithinkrok.minigames.base.util.EntityUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

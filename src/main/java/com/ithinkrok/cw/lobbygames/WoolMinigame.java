@@ -1,12 +1,12 @@
 package com.ithinkrok.cw.lobbygames;
 
-import com.ithinkrok.minigames.GameGroup;
-import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.event.MinigamesEventHandler;
-import com.ithinkrok.minigames.event.user.game.UserJoinEvent;
-import com.ithinkrok.minigames.event.user.game.UserQuitEvent;
-import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
-import com.ithinkrok.minigames.util.EntityUtils;
+import com.ithinkrok.minigames.base.GameGroup;
+import com.ithinkrok.minigames.base.User;
+import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.minigames.base.event.user.game.UserJoinEvent;
+import com.ithinkrok.minigames.base.event.user.game.UserQuitEvent;
+import com.ithinkrok.minigames.base.event.user.world.UserInteractEvent;
+import com.ithinkrok.minigames.base.util.EntityUtils;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

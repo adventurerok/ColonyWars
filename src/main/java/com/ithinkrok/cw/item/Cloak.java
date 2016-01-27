@@ -1,11 +1,11 @@
 package com.ithinkrok.cw.item;
 
-import com.ithinkrok.minigames.event.ListenerLoadedEvent;
-import com.ithinkrok.minigames.event.MinigamesEventHandler;
-import com.ithinkrok.minigames.event.user.game.UserAbilityCooldownEvent;
-import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
-import com.ithinkrok.minigames.item.CustomItem;
-import com.ithinkrok.minigames.task.GameTask;
+import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.minigames.base.event.user.game.UserAbilityCooldownEvent;
+import com.ithinkrok.minigames.base.event.user.world.UserInteractEvent;
+import com.ithinkrok.minigames.base.item.CustomItem;
+import com.ithinkrok.minigames.base.task.GameTask;
 import org.bukkit.Effect;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;

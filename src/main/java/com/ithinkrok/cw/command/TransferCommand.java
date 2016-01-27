@@ -1,15 +1,15 @@
 package com.ithinkrok.cw.command;
 
-import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.command.Command;
-import com.ithinkrok.minigames.command.CommandSender;
-import com.ithinkrok.minigames.event.CommandEvent;
-import com.ithinkrok.minigames.event.MinigamesEventHandler;
-import com.ithinkrok.minigames.lang.LanguageLookup;
-import com.ithinkrok.minigames.metadata.Metadata;
-import com.ithinkrok.minigames.metadata.MetadataHolder;
-import com.ithinkrok.minigames.metadata.Money;
-import com.ithinkrok.minigames.team.Team;
+import com.ithinkrok.minigames.base.User;
+import com.ithinkrok.minigames.base.command.Command;
+import com.ithinkrok.minigames.base.command.CommandSender;
+import com.ithinkrok.minigames.base.event.CommandEvent;
+import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.minigames.base.lang.LanguageLookup;
+import com.ithinkrok.minigames.base.metadata.Metadata;
+import com.ithinkrok.minigames.base.metadata.MetadataHolder;
+import com.ithinkrok.minigames.base.metadata.Money;
+import com.ithinkrok.minigames.base.team.Team;
 import org.bukkit.event.Listener;
 
 import java.util.HashSet;

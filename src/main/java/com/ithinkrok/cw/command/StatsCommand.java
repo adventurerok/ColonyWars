@@ -2,10 +2,10 @@ package com.ithinkrok.cw.command;
 
 import com.ithinkrok.cw.database.UserCategoryStats;
 import com.ithinkrok.cw.metadata.StatsHolder;
-import com.ithinkrok.minigames.command.Command;
-import com.ithinkrok.minigames.command.CommandSender;
-import com.ithinkrok.minigames.event.CommandEvent;
-import com.ithinkrok.minigames.event.MinigamesEventHandler;
+import com.ithinkrok.minigames.base.command.Command;
+import com.ithinkrok.minigames.base.command.CommandSender;
+import com.ithinkrok.minigames.base.event.CommandEvent;
+import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
 import org.bukkit.event.Listener;
 
 import java.text.DecimalFormat;

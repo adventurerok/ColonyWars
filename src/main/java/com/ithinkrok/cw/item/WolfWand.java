@@ -1,7 +1,7 @@
 package com.ithinkrok.cw.item;
 
-import com.ithinkrok.minigames.event.MinigamesEventHandler;
-import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
+import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.minigames.base.event.user.world.UserInteractEvent;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;

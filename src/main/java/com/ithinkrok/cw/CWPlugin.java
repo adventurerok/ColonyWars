@@ -1,8 +1,7 @@
 package com.ithinkrok.cw;
 
 import com.ithinkrok.cw.database.UserCategoryStats;
-import com.ithinkrok.minigames.Game;
-import com.ithinkrok.minigames.SpecificPlugin;
+import com.ithinkrok.minigames.base.SpecificPlugin;
 
 import java.util.List;
 

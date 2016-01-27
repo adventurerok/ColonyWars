@@ -1,4 +1,4 @@
-package com.ithinkrok.minigames.database;
+package com.ithinkrok.minigames.base.database;
 
 import javax.persistence.*;
 import java.util.Date;

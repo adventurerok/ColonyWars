@@ -1,15 +1,15 @@
 package com.ithinkrok.cw.lobbygames;
 
-import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.event.ListenerLoadedEvent;
-import com.ithinkrok.minigames.event.MinigamesEventHandler;
-import com.ithinkrok.minigames.event.user.game.UserTeleportEvent;
-import com.ithinkrok.minigames.event.user.state.UserDamagedEvent;
-import com.ithinkrok.minigames.event.user.world.UserBreakBlockEvent;
-import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
-import com.ithinkrok.minigames.event.user.world.UserInteractWorldEvent;
-import com.ithinkrok.minigames.util.BoundingBox;
-import com.ithinkrok.minigames.util.ConfigUtils;
+import com.ithinkrok.minigames.base.User;
+import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.minigames.base.event.user.game.UserTeleportEvent;
+import com.ithinkrok.minigames.base.event.user.state.UserDamagedEvent;
+import com.ithinkrok.minigames.base.event.user.world.UserBreakBlockEvent;
+import com.ithinkrok.minigames.base.event.user.world.UserInteractEvent;
+import com.ithinkrok.minigames.base.event.user.world.UserInteractWorldEvent;
+import com.ithinkrok.minigames.base.util.BoundingBox;
+import com.ithinkrok.minigames.base.util.ConfigUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;

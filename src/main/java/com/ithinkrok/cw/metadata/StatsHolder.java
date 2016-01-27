@@ -1,21 +1,20 @@
 package com.ithinkrok.cw.metadata;
 
-import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.Query;
 import com.ithinkrok.cw.database.UserCategoryStats;
-import com.ithinkrok.minigames.GameGroup;
-import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.database.DatabaseAccessor;
-import com.ithinkrok.minigames.database.DatabaseTask;
-import com.ithinkrok.minigames.database.DatabaseTaskRunner;
-import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
-import com.ithinkrok.minigames.event.game.MapChangedEvent;
-import com.ithinkrok.minigames.event.user.game.UserInGameChangeEvent;
-import com.ithinkrok.minigames.lang.LanguageLookup;
-import com.ithinkrok.minigames.lang.Messagable;
-import com.ithinkrok.minigames.metadata.UserMetadata;
-import com.ithinkrok.minigames.team.Team;
-import com.ithinkrok.minigames.team.TeamIdentifier;
+import com.ithinkrok.minigames.base.GameGroup;
+import com.ithinkrok.minigames.base.User;
+import com.ithinkrok.minigames.base.database.DatabaseAccessor;
+import com.ithinkrok.minigames.base.database.DatabaseTask;
+import com.ithinkrok.minigames.base.database.DatabaseTaskRunner;
+import com.ithinkrok.minigames.base.event.game.GameStateChangedEvent;
+import com.ithinkrok.minigames.base.event.game.MapChangedEvent;
+import com.ithinkrok.minigames.base.event.user.game.UserInGameChangeEvent;
+import com.ithinkrok.minigames.base.lang.LanguageLookup;
+import com.ithinkrok.minigames.base.lang.Messagable;
+import com.ithinkrok.minigames.base.metadata.UserMetadata;
+import com.ithinkrok.minigames.base.team.Team;
+import com.ithinkrok.minigames.base.team.TeamIdentifier;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 

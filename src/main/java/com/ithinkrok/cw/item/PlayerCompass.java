@@ -1,11 +1,11 @@
 package com.ithinkrok.cw.item;
 
-import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.event.ListenerLoadedEvent;
-import com.ithinkrok.minigames.event.MinigamesEventHandler;
-import com.ithinkrok.minigames.event.user.world.UserInteractEvent;
-import com.ithinkrok.minigames.lang.LanguageLookup;
-import com.ithinkrok.minigames.util.InventoryUtils;
+import com.ithinkrok.minigames.base.User;
+import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.minigames.base.event.user.world.UserInteractEvent;
+import com.ithinkrok.minigames.base.lang.LanguageLookup;
+import com.ithinkrok.minigames.base.util.InventoryUtils;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;

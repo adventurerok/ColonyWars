@@ -1,13 +1,13 @@
 package com.ithinkrok.cw.lobbygames;
 
-import com.ithinkrok.minigames.GameGroup;
-import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.event.ListenerLoadedEvent;
-import com.ithinkrok.minigames.event.MinigamesEventHandler;
-import com.ithinkrok.minigames.event.user.world.UserInteractWorldEvent;
-import com.ithinkrok.minigames.map.GameMap;
-import com.ithinkrok.minigames.metadata.Money;
-import com.ithinkrok.minigames.util.ConfigUtils;
+import com.ithinkrok.minigames.base.GameGroup;
+import com.ithinkrok.minigames.base.User;
+import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.minigames.base.event.user.world.UserInteractWorldEvent;
+import com.ithinkrok.minigames.base.map.GameMap;
+import com.ithinkrok.minigames.base.metadata.Money;
+import com.ithinkrok.minigames.base.util.ConfigUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
 import org.bukkit.util.Vector;

@@ -2,12 +2,12 @@ package com.ithinkrok.cw.metadata;
 
 import com.ithinkrok.cw.Building;
 import com.ithinkrok.cw.util.CannonTowerHandler;
-import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
-import com.ithinkrok.minigames.event.game.MapChangedEvent;
-import com.ithinkrok.minigames.metadata.Metadata;
-import com.ithinkrok.minigames.team.Team;
-import com.ithinkrok.minigames.util.ConfigUtils;
+import com.ithinkrok.minigames.base.User;
+import com.ithinkrok.minigames.base.event.game.GameStateChangedEvent;
+import com.ithinkrok.minigames.base.event.game.MapChangedEvent;
+import com.ithinkrok.minigames.base.metadata.Metadata;
+import com.ithinkrok.minigames.base.team.Team;
+import com.ithinkrok.minigames.base.util.ConfigUtils;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;

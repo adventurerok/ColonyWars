@@ -1,12 +1,12 @@
 package com.ithinkrok.cw.map;
 
 import com.ithinkrok.cw.metadata.BuildingController;
-import com.ithinkrok.minigames.event.ListenerLoadedEvent;
-import com.ithinkrok.minigames.event.MinigamesEventHandler;
-import com.ithinkrok.minigames.event.game.MapChangedEvent;
-import com.ithinkrok.minigames.map.GameMap;
-import com.ithinkrok.minigames.team.TeamIdentifier;
-import com.ithinkrok.minigames.util.ConfigUtils;
+import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.minigames.base.event.game.MapChangedEvent;
+import com.ithinkrok.minigames.base.map.GameMap;
+import com.ithinkrok.minigames.base.team.TeamIdentifier;
+import com.ithinkrok.minigames.base.util.ConfigUtils;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;

@@ -1,10 +1,10 @@
 package com.ithinkrok.cw.command;
 
-import com.ithinkrok.minigames.Countdown;
-import com.ithinkrok.minigames.command.Command;
-import com.ithinkrok.minigames.command.CommandSender;
-import com.ithinkrok.minigames.event.CommandEvent;
-import com.ithinkrok.minigames.event.MinigamesEventHandler;
+import com.ithinkrok.minigames.base.Countdown;
+import com.ithinkrok.minigames.base.command.Command;
+import com.ithinkrok.minigames.base.command.CommandSender;
+import com.ithinkrok.minigames.base.event.CommandEvent;
+import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
 import org.bukkit.event.Listener;
 
 /**

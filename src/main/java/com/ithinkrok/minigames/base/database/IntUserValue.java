@@ -1,4 +1,4 @@
-package com.ithinkrok.minigames.database;
+package com.ithinkrok.minigames.base.database;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -7,8 +7,8 @@ import java.util.Date;
  * Created by paul on 17/01/16.
  */
 @Entity
-@Table(name = "mg_user_doubles")
-public class DoubleUserValue {
+@Table(name = "mg_user_ints")
+public class IntUserValue {
 
     @Id
     private int id;
@@ -20,7 +20,7 @@ public class DoubleUserValue {
     private String property;
 
     @Column
-    private double value;
+    private int value;
 
     @Version
     private Date version;
@@ -49,11 +49,11 @@ public class DoubleUserValue {
         this.property = property;
     }
 
-    public double getValue() {
+    public int getValue() {
         return value;
     }
 
-    public void setValue(double value) {
+    public void setValue(int value) {
         this.value = value;
     }
 

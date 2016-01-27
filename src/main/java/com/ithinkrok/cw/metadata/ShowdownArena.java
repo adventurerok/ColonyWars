@@ -1,13 +1,13 @@
 package com.ithinkrok.cw.metadata;
 
-import com.ithinkrok.minigames.GameGroup;
-import com.ithinkrok.minigames.User;
-import com.ithinkrok.minigames.event.game.GameStateChangedEvent;
-import com.ithinkrok.minigames.event.game.MapChangedEvent;
-import com.ithinkrok.minigames.metadata.Metadata;
-import com.ithinkrok.minigames.task.GameTask;
-import com.ithinkrok.minigames.util.BoundingBox;
-import com.ithinkrok.minigames.util.ConfigUtils;
+import com.ithinkrok.minigames.base.GameGroup;
+import com.ithinkrok.minigames.base.User;
+import com.ithinkrok.minigames.base.event.game.GameStateChangedEvent;
+import com.ithinkrok.minigames.base.event.game.MapChangedEvent;
+import com.ithinkrok.minigames.base.metadata.Metadata;
+import com.ithinkrok.minigames.base.task.GameTask;
+import com.ithinkrok.minigames.base.util.BoundingBox;
+import com.ithinkrok.minigames.base.util.ConfigUtils;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.util.Vector;

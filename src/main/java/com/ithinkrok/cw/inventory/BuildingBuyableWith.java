@@ -1,7 +1,7 @@
 package com.ithinkrok.cw.inventory;
 
 import com.ithinkrok.cw.metadata.CWTeamStats;
-import com.ithinkrok.minigames.inventory.event.BuyablePurchaseEvent;
+import com.ithinkrok.minigames.base.inventory.event.BuyablePurchaseEvent;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 

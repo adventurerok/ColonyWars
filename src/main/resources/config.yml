@@ -1,3 +1,3 @@
 
 gamegroup_configs:
-  colony_wars: "gamegroup/colony_wars.yml"
+  colony_wars: "colony_wars/colony_wars.yml"

@@ -19,20 +19,19 @@ FUTURE:
 
 == New Idea ==
 Minigames Plugin:
- - Base plugin for minigames
- - Provides no commands or permissions
- - Lets other plugins "register" gamegroup configs
- - Intercepts commands in precommand event, and handles them if gg config requires
+ Y Base plugin for minigames
+ Y Lets other plugins "register" gamegroup configs
+ Y Intercepts commands in precommand event, and handles them if gg config requires
  - One specific command lets console execute commands
  - Communicates with the minigames controller
  - SHOULD KILL GAMEGROUPS AFTER A GAME FINISHES
- - SHOULD RELOAD CONFIGS FROM DISK EACH TIME GG LOADED
+ Y SHOULD RELOAD CONFIGS FROM DISK EACH TIME GG LOADED
 
- - Config: symlink option, map folder, gamegroup configs folder
+ Y Config: symlink option, map folder, gamegroup configs folder
 
 Specific Minigame Plugin:
- - Registers one or more gamegroup configs with the base plugin
- - Does not have its commands in its plugin.yml, but does have its permissions
+ Y Registers one or more gamegroup configs with the base plugin
+ Y Does not have its commands in its plugin.yml, but does have its permissions
 
 Minigames controller:
  - Keeps track of which servers are running which minigames, and commands them
@@ -41,7 +40,17 @@ Minigames controller:
  - Records minigame errors
 
 == New Config Management ==
- - Have a central config folder for all minigames.
- - Map config names must begin with minigame prefix.
- - Plugins specify which gamegroup configs to load in their plugin config.
- - GameGroup configs located in main config directory.
+ Y Have a central config folder for all minigames.
+ Y Plugins specify which gamegroup configs to load in their plugin config.
+ Y GameGroup configs located in main config directory.
+
+ [18:15:48 WARN]: java.nio.file.FileAlreadyExistsException: ./lobby-0000
+ [18:15:48 WARN]: 	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:88)
+ [18:15:48 WARN]: 	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+ [18:15:48 WARN]: 	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+ [18:15:48 WARN]: 	at sun.nio.fs.UnixFileSystemProvider.createSymbolicLink(UnixFileSystemProvider.java:457)
+ [18:15:48 WARN]: 	at java.nio.file.Files.createSymbolicLink(Files.java:1043)
+ [18:15:48 WARN]: 	at com.ithinkrok.minigames.map.GameMap.loadMap(GameMap.java:93)
+ [18:15:48 WARN]: 	at com.ithinkrok.minigames.map.GameMap.<init>(GameMap.java:65)
+ [18:15:48 WARN]: 	at com.ithinkrok.minigames.GameGroup.changeMap(GameGroup.java:166)
+ [18:15:48 WARN]: 	at com.ithinkrok.minigames.GameGroup.changeMap(GameGroup.java:143)

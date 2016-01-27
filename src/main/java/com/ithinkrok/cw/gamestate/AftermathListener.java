@@ -89,7 +89,8 @@ public class AftermathListener extends BaseGameStateListener {
     public void onCountdownFinished(CountdownFinishedEvent event) {
         if (!event.getCountdown().getName().equals(aftermathCountdownName)) return;
 
-        event.getGameGroup().changeGameState(lobbyGameState);
+        //event.getGameGroup().changeGameState(lobbyGameState);
+        event.getGameGroup().kill();
     }
 
     @MinigamesEventHandler

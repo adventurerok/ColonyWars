@@ -5,6 +5,7 @@ RECODE BUGS:
  - Class descriptions
  - Handbook
  - Priest not getting stuff (but other priest in team did)
+ - Parkour doesn't give rewards
 
 LOW PRIORITY / INVESTIGATE:
  - Destroying a building while it is built does not decrement building now counter

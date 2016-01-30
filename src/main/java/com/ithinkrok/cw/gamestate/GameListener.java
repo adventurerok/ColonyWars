@@ -66,8 +66,6 @@ public class GameListener extends BaseGameListener {
 
     @MinigamesEventHandler
     public void onGameStateChange(GameStateChangedEvent event) {
-        super.onGameStateChange(event);
-
         if (!Objects.equals(event.getNewGameState(), gameState)) return;
         if(event.getOldGameState() != null && event.getOldGameState().getName().equals(showdownGameState)) return;
 
@@ -168,7 +166,6 @@ public class GameListener extends BaseGameListener {
 
     @MinigamesEventHandler
     public void onUserChangeTeam(UserChangeTeamEvent event) {
-        super.onUserChangeTeam(event);
         Color armorColor = event.getNewTeam() != null ? event.getNewTeam().getArmorColor() : null;
         event.getUser().giveColoredArmor(armorColor, true);
     }

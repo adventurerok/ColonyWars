@@ -8,6 +8,7 @@ import com.ithinkrok.minigames.base.GameState;
 import com.ithinkrok.minigames.base.User;
 import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.minigames.base.event.game.CountdownFinishedEvent;
 import com.ithinkrok.minigames.base.event.map.*;
 import com.ithinkrok.minigames.base.event.user.world.*;
 import com.ithinkrok.minigames.base.util.*;
@@ -42,7 +43,7 @@ import java.util.stream.Collectors;
  */
 public class BaseGameListener extends BaseGameStateListener {
 
-    private static Map<PotionEffectType, Boolean> GOOD_POTIONS = new HashMap<>();
+    private static final Map<PotionEffectType, Boolean> GOOD_POTIONS = new HashMap<>();
 
     static {
         GOOD_POTIONS.put(PotionEffectType.HEAL, true);
@@ -71,7 +72,7 @@ public class BaseGameListener extends BaseGameStateListener {
     protected String showdownCountdownName;
     protected String showdownGameState;
     private String goldSharedConfig;
-    private WeakHashMap<ConfigurationSection, GoldConfig> goldConfigMap = new WeakHashMap<>();
+    private final WeakHashMap<ConfigurationSection, GoldConfig> goldConfigMap = new WeakHashMap<>();
     private String unknownBuildingLocale;
     private String cannotBuildHereLocale;
     private String buildingNotFinishedLocale;
@@ -227,7 +228,6 @@ public class BaseGameListener extends BaseGameStateListener {
                 Money.getOrCreate(event.getUser().getTeam()).addMoney((int) (amount * 2f/3f), true);
 
                 event.getClickedBlock().setType(Material.AIR);
-                return;
         }
 
 
@@ -689,5 +689,12 @@ public class BaseGameListener extends BaseGameStateListener {
             Integer result = teamGold.get(material);
             return result == null ? 0 : result;
         }
+    }
+
+    @MinigamesEventHandler
+    public void onCountdownFinished(CountdownFinishedEvent event) {
+        if(!event.getCountdown().getName().equals(showdownCountdownName)) return;
+
+        event.getGameGroup().changeGameState(showdownGameState);
     }
 }

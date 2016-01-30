@@ -10,9 +10,7 @@ permissions:
     default: "op"
     description: "Gives all admin command permissions"
     children:
-      mccw.gamestate: true
       mccw.cw: true
-      mccw.countdown: true
       mccw.tmm.others: true
       mccw.members.others: true
       mccw.fix.others: true
@@ -30,9 +28,6 @@ permissions:
       mccw.leaderboard: true
       mccw.list: true
       mccw.members: true
-  mccw.gamestate:
-    description: "Allows use of the /gamestate command"
-    default: false
   mccw.cw:
     description: "Allows use of all subcommands of /cw"
     default: false
@@ -77,9 +72,6 @@ permissions:
     default: false
   mccw.stats:
     description: "Allows use of /stats"
-    default: false
-  mccw.countdown:
-    description: "Allows use of /countdown"
     default: false
   mccw.teamchat:
     description: "Allows use of /teamchat"

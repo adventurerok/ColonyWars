@@ -69,10 +69,10 @@ public class BaseGameListener extends BaseGameStateListener {
 
     }
 
-    protected String showdownCountdownName;
+    private final WeakHashMap<ConfigurationSection, GoldConfig> goldConfigMap = new WeakHashMap<>();
+
     protected String showdownGameState;
     private String goldSharedConfig;
-    private final WeakHashMap<ConfigurationSection, GoldConfig> goldConfigMap = new WeakHashMap<>();
     private String unknownBuildingLocale;
     private String cannotBuildHereLocale;
     private String buildingNotFinishedLocale;
@@ -87,10 +87,11 @@ public class BaseGameListener extends BaseGameStateListener {
     private String teamPlayersLeftLocale;
     private String aftermathGameState;
     private String teamWinLocale;
-    private String showdownCountdownLocaleStub;
-    private int showdownCountdownSeconds;
+
     private int showdownStartTeams;
     private int showdownStartPlayers;
+
+    private CountdownConfig showdownCountdown;
 
     private String deathKillAndAssistLocale;
     private String deathKillLocale;
@@ -151,9 +152,8 @@ public class BaseGameListener extends BaseGameStateListener {
 
         aftermathGameState = config.getString("aftermath_gamestate", "aftermath");
 
-        showdownCountdownName = config.getString("showdown_countdown.name", "showdown");
-        showdownCountdownLocaleStub = config.getString("showdown_countdown.locale_stub", "countdowns.showdown");
-        showdownCountdownSeconds = config.getInt("showdown_countdown.seconds", 30);
+        showdownCountdown =
+                ConfigUtils.getCountdown(config, "showdown_countdown", "showdown", 30, "countdowns.showdown");
 
         showdownStartTeams = config.getInt("showdown_start.teams");
         showdownStartPlayers = config.getInt("showdown_start.players");
@@ -183,6 +183,55 @@ public class BaseGameListener extends BaseGameStateListener {
     }
 
     @MinigamesEventHandler
+    public void onItemSpawn(MapItemSpawnEvent event) {
+        ConfigurationSection goldShared = event.getGameGroup().getSharedObject(goldSharedConfig);
+        GoldConfig gold = getGoldConfig(goldShared);
+
+        if (!gold.allowItemPickup(event.getItem().getItemStack().getType())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @Override
+    @MinigamesEventHandler
+    public void sendQuitMessageOnUserQuit(UserQuitEvent event) {
+        String name = event.getUser().getFormattedName();
+        int currentPlayers = event.getUserGameGroup().getUserCount();
+        int maxPlayers = Bukkit.getMaxPlayers();
+
+        if (event.getUser().isInGame()) {
+            event.getUserGameGroup().sendLocale(inGameQuitLocale, name, currentPlayers, maxPlayers);
+        } else {
+            event.getUserGameGroup().sendLocale(spectatorQuitLocale, name, currentPlayers, maxPlayers);
+        }
+    }
+
+    @Override
+    @MinigamesEventHandler
+    public void sendJoinMessageOnUserJoin(UserJoinEvent event) {
+        String name = event.getUser().getFormattedName();
+        int currentPlayers = event.getUserGameGroup().getUserCount();
+        int maxPlayers = Bukkit.getMaxPlayers();
+
+        if (event.getUser().isInGame()) {
+            event.getUserGameGroup().sendLocale(inGameJoinLocale, name, currentPlayers, maxPlayers);
+        } else {
+            event.getUserGameGroup().sendLocale(spectatorJoinLocale, name, currentPlayers, maxPlayers);
+        }
+    }
+
+    private GoldConfig getGoldConfig(ConfigurationSection config) {
+        GoldConfig gold = goldConfigMap.get(config);
+
+        if (gold == null) {
+            gold = new GoldConfig(config);
+            goldConfigMap.put(config, gold);
+        }
+
+        return gold;
+    }
+
+    @MinigamesEventHandler
     public void onUserInteractWorld(UserInteractWorldEvent event) {
         if (!event.getUser().isInGame()) {
             event.setCancelled(true);
@@ -192,7 +241,7 @@ public class BaseGameListener extends BaseGameStateListener {
 
         if (event.getInteractType() != UserInteractEvent.InteractType.RIGHT_CLICK || !event.hasBlock()) return;
 
-        switch(event.getClickedBlock().getType()) {
+        switch (event.getClickedBlock().getType()) {
             case OBSIDIAN:
                 event.setCancelled(true);
                 BuildingController controller = BuildingController.getOrCreate(event.getUserGameGroup());
@@ -225,7 +274,7 @@ public class BaseGameListener extends BaseGameStateListener {
                 int amount = (int) enderAmount.calculate(event.getUser().getUpgradeLevels());
 
                 Money.getOrCreate(event.getUser()).addMoney(amount, true);
-                Money.getOrCreate(event.getUser().getTeam()).addMoney((int) (amount * 2f/3f), true);
+                Money.getOrCreate(event.getUser().getTeam()).addMoney((int) (amount * 2f / 3f), true);
 
                 event.getClickedBlock().setType(Material.AIR);
         }
@@ -375,14 +424,14 @@ public class BaseGameListener extends BaseGameStateListener {
     }
 
     protected void checkShowdownStart(GameGroup gameGroup, int teamsInGame, int nonZombieUsersInGame) {
-        if (gameGroup.hasActiveCountdown(showdownCountdownName)) return;
+        if (gameGroup.hasActiveCountdown(showdownCountdown.getName())) return;
 
         boolean teamCheck = teamsInGame > showdownStartTeams || gameGroup.getTeamIdentifiers().size() < 3;
         boolean playerCheck = nonZombieUsersInGame > showdownStartPlayers;
 
         if (teamCheck && playerCheck) return;
 
-        gameGroup.startCountdown(showdownCountdownName, showdownCountdownLocaleStub, showdownCountdownSeconds);
+        gameGroup.startCountdown(showdownCountdown);
     }
 
     @MinigamesEventHandler
@@ -413,7 +462,7 @@ public class BaseGameListener extends BaseGameStateListener {
     public void onUserQuit(UserQuitEvent event) {
         if (event.getReason() != UserQuitEvent.QuitReason.QUIT_SERVER) return;
 
-        if(event.getUser().isInGame()) {
+        if (event.getUser().isInGame()) {
             event.getUser().becomeEntity(EntityType.ZOMBIE);
             checkVictory(event.getUser().getGameGroup(), true);
             event.setRemoveUser(false);
@@ -492,17 +541,6 @@ public class BaseGameListener extends BaseGameStateListener {
         }
     }
 
-    private GoldConfig getGoldConfig(ConfigurationSection config) {
-        GoldConfig gold = goldConfigMap.get(config);
-
-        if (gold == null) {
-            gold = new GoldConfig(config);
-            goldConfigMap.put(config, gold);
-        }
-
-        return gold;
-    }
-
     @MinigamesEventHandler
     public void onUserPickupItem(UserPickupItemEvent event) {
         if (!event.getUser().isInGame()) {
@@ -562,17 +600,6 @@ public class BaseGameListener extends BaseGameStateListener {
         }
     }
 
-
-    @MinigamesEventHandler
-    public void onItemSpawn(MapItemSpawnEvent event) {
-        ConfigurationSection goldShared = event.getGameGroup().getSharedObject(goldSharedConfig);
-        GoldConfig gold = getGoldConfig(goldShared);
-
-        if (!gold.allowItemPickup(event.getItem().getItemStack().getType())) {
-            event.setCancelled(true);
-        }
-    }
-
     @MinigamesEventHandler
     public void onBlockBreakNaturally(MapBlockBreakNaturallyEvent event) {
         ConfigurationSection goldShared = event.getGameGroup().getSharedObject(goldSharedConfig);
@@ -581,32 +608,11 @@ public class BaseGameListener extends BaseGameStateListener {
         gold.onBlockBreak(event.getBlock(), event.getGameGroup());
     }
 
-    @Override
     @MinigamesEventHandler
-    public void sendJoinMessageOnUserJoin(UserJoinEvent event) {
-        String name = event.getUser().getFormattedName();
-        int currentPlayers = event.getUserGameGroup().getUserCount();
-        int maxPlayers = Bukkit.getMaxPlayers();
+    public void onCountdownFinished(CountdownFinishedEvent event) {
+        if (!event.getCountdown().getName().equals(showdownCountdown.getName())) return;
 
-        if(event.getUser().isInGame()) {
-            event.getUserGameGroup().sendLocale(inGameJoinLocale, name, currentPlayers, maxPlayers);
-        } else {
-            event.getUserGameGroup().sendLocale(spectatorJoinLocale, name, currentPlayers, maxPlayers);
-        }
-    }
-
-    @Override
-    @MinigamesEventHandler
-    public void sendQuitMessageOnUserQuit(UserQuitEvent event) {
-        String name = event.getUser().getFormattedName();
-        int currentPlayers = event.getUserGameGroup().getUserCount();
-        int maxPlayers = Bukkit.getMaxPlayers();
-
-        if(event.getUser().isInGame()) {
-            event.getUserGameGroup().sendLocale(inGameQuitLocale, name, currentPlayers, maxPlayers);
-        } else {
-            event.getUserGameGroup().sendLocale(spectatorQuitLocale, name, currentPlayers, maxPlayers);
-        }
+        event.getGameGroup().changeGameState(showdownGameState);
     }
 
     protected static class GoldConfig {
@@ -689,12 +695,5 @@ public class BaseGameListener extends BaseGameStateListener {
             Integer result = teamGold.get(material);
             return result == null ? 0 : result;
         }
-    }
-
-    @MinigamesEventHandler
-    public void onCountdownFinished(CountdownFinishedEvent event) {
-        if(!event.getCountdown().getName().equals(showdownCountdownName)) return;
-
-        event.getGameGroup().changeGameState(showdownGameState);
     }
 }

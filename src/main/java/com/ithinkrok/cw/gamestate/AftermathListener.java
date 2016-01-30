@@ -10,6 +10,8 @@ import com.ithinkrok.minigames.base.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.base.event.user.UserEvent;
 import com.ithinkrok.minigames.base.event.user.world.UserChatEvent;
 import com.ithinkrok.minigames.base.task.GameTask;
+import com.ithinkrok.minigames.base.util.ConfigUtils;
+import com.ithinkrok.minigames.base.util.CountdownConfig;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
@@ -28,11 +30,7 @@ import java.util.Objects;
  */
 public class AftermathListener extends BaseGameStateListener {
 
-    private String aftermathCountdownName;
-    private String aftermathCountdownLocaleStub;
-    private int aftermathCountdownSeconds;
-
-    private String lobbyGameState;
+    private CountdownConfig countdown;
 
     @MinigamesEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<GameGroup, GameState> event) {
@@ -40,11 +38,8 @@ public class AftermathListener extends BaseGameStateListener {
         ConfigurationSection config = event.getConfig();
         if (config == null) config = new MemoryConfiguration();
 
-        aftermathCountdownName = config.getString("countdown.name", "aftermath");
-        aftermathCountdownLocaleStub = config.getString("countdown.locale_stub", "countdowns.aftermath");
-        aftermathCountdownSeconds = config.getInt("countdown.seconds", 15);
+        countdown = ConfigUtils.getCountdown(config, "countdown", "aftermath", 15, "countdowns.aftermath");
 
-        lobbyGameState = config.getString("lobby_gamestate", "lobby");
     }
 
     @MinigamesEventHandler
@@ -58,7 +53,7 @@ public class AftermathListener extends BaseGameStateListener {
         }
 
         event.getGameGroup()
-                .startCountdown(aftermathCountdownName, aftermathCountdownLocaleStub, aftermathCountdownSeconds);
+                .startCountdown(countdown);
 
         GameTask task = event.getGameGroup().repeatInFuture(t -> {
             if (t.getRunCount() > 5) t.finish();
@@ -87,7 +82,7 @@ public class AftermathListener extends BaseGameStateListener {
 
     @MinigamesEventHandler
     public void onCountdownFinished(CountdownFinishedEvent event) {
-        if (!event.getCountdown().getName().equals(aftermathCountdownName)) return;
+        if (!event.getCountdown().getName().equals(countdown.getName())) return;
 
         //event.getGameGroup().changeGameState(lobbyGameState);
         event.getGameGroup().kill();

@@ -17,7 +17,6 @@ import com.ithinkrok.minigames.base.event.user.game.UserQuitEvent;
 import com.ithinkrok.minigames.base.event.user.state.UserDamagedEvent;
 import com.ithinkrok.minigames.base.event.user.state.UserDeathEvent;
 import com.ithinkrok.minigames.base.inventory.ClickableInventory;
-import com.ithinkrok.minigames.base.listener.GiveCustomItemsOnJoin;
 import com.ithinkrok.minigames.base.metadata.Money;
 import com.ithinkrok.minigames.base.schematic.Facing;
 import com.ithinkrok.minigames.base.team.Team;
@@ -105,7 +104,7 @@ public class BaseGameListener extends BaseGameStateListener {
 
     private int buildingDestroyWait;
 
-    private GiveCustomItemsOnJoin.CustomItemGiver spectatorItems;
+    private CustomItemGiver spectatorItems;
 
     private Calculator enderAmount;
     private String enderFoundLocale;
@@ -170,7 +169,7 @@ public class BaseGameListener extends BaseGameStateListener {
 
         spectatorJoinLocaleStub = config.getString("spectator_join_locale_stub", "spectator.join");
 
-        spectatorItems = new GiveCustomItemsOnJoin.CustomItemGiver(config.getConfigurationSection("spectator_items"));
+        spectatorItems = new CustomItemGiver(config.getConfigurationSection("spectator_items"));
 
         inGameJoinLocale = config.getString("ingame_user_join_locale", "user.join.game");
         inGameQuitLocale = config.getString("ingame_user_quit_locale", "user.quit.game");

@@ -1,6 +1,5 @@
 package com.ithinkrok.cw.gamestate;
 
-import com.ithinkrok.cw.scoreboard.MapScoreboardHandler;
 import com.ithinkrok.minigames.base.GameGroup;
 import com.ithinkrok.minigames.base.GameState;
 import com.ithinkrok.minigames.base.User;
@@ -14,6 +13,7 @@ import com.ithinkrok.minigames.base.event.user.state.UserDamagedEvent;
 import com.ithinkrok.minigames.base.event.user.state.UserFoodLevelChangeEvent;
 import com.ithinkrok.minigames.base.event.user.world.*;
 import com.ithinkrok.minigames.base.listener.GiveCustomItemsOnJoin;
+import com.ithinkrok.minigames.base.scoreboard.MapScoreboardHandler;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;

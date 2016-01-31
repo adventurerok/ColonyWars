@@ -61,18 +61,7 @@ public class AftermathListener extends BaseGameStateListener {
             for (User user : event.getGameGroup().getUsers()) {
                 if (!user.isInGame()) continue;
 
-                Location loc = user.getLocation();
-
-                Firework firework = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
-
-                Color color = Color.fromRGB(random.nextInt(255), random.nextInt(255), random.nextInt(255));
-                Color fade = Color.fromRGB(random.nextInt(255), random.nextInt(255), random.nextInt(255));
-
-                firework.setVelocity(new Vector(0, 0.5f, 0));
-                FireworkMeta meta = firework.getFireworkMeta();
-                meta.addEffect(FireworkEffect.builder().with(FireworkEffect.Type.BURST).trail(true).withColor(color)
-                        .withFade(fade).build());
-                firework.setFireworkMeta(meta);
+                user.launchVictoryFirework();
             }
 
         }, 20, 20);

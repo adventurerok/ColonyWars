@@ -11,19 +11,6 @@ RECODE BUGS:
  - please don't spam other players
  - spectator hunger
 
- RN]:        at java.lang.Thread.run(Thread.java:745)
- [22:15:26 WARN]: Caused by: java.lang.reflect.InvocationTargetException
- [22:15:26 WARN]:        at sun.reflect.GeneratedMethodAccessor237.invoke(Unknown Source)
- [22:15:26 WARN]:        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
- [22:15:26 WARN]:        at java.lang.reflect.Method.invoke(Method.java:497)
- [22:15:26 WARN]:        at com.ithinkrok.minigames.base.util.EventExecutor$MethodExecutor.execute(EventExecutor.java:150)
- [22:15:26 WARN]:        ... 34 more
- [22:15:26 WARN]: Caused by: java.lang.NullPointerException
- [22:15:26 WARN]:        at com.ithinkrok.minigames.base.gamestate.SimpleInGameListener.makeUserSpectator(SimpleInGameListener.java:54)
- [22:15:26 WARN]:        at com.ithinkrok.cw.gamestate.BaseGameListener.onUserDeath(BaseGameListener.java:321)
- [22:15:26 WARN]:        ... 38 more
-
-
   at net.minecraft.server.v1_8_R3.DedicatedServer.B(DedicatedServer.java:374)
 [22:10:33 WARN]:        at net.minecraft.server.v1_8_R3.MinecraftServer.A(MinecraftServer.java:654)
 [22:10:33 WARN]:        at net.minecraft.server.v1_8_R3.MinecraftServer.run(MinecraftServer.java:557)

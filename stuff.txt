@@ -9,7 +9,6 @@ RECODE BUGS:
  - Invisible peeps in lobby
  - Spleef broken
  - please don't spam other players
- - spectator hunger
 
 LOW PRIORITY / INVESTIGATE:
  - Destroying a building while it is built does not decrement building now counter

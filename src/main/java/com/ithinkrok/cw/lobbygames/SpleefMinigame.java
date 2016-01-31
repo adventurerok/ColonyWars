@@ -28,9 +28,9 @@ public class SpleefMinigame implements Listener {
 
     private Material spadeMaterial;
 
-    private Map<Vector, Arena> queueButtons = new HashMap<>();
-    private Map<UUID, Arena> queueLookups = new HashMap<>();
-    private Map<UUID, Arena> gameLookups = new HashMap<>();
+    private final Map<Vector, Arena> queueButtons = new HashMap<>();
+    private final Map<UUID, Arena> queueLookups = new HashMap<>();
+    private final Map<UUID, Arena> gameLookups = new HashMap<>();
 
     @MinigamesEventHandler
     public void configure(ListenerLoadedEvent event) {
@@ -79,7 +79,7 @@ public class SpleefMinigame implements Listener {
         arena.spleefUserKilled(event.getUser(), true);
     }
 
-    @MinigamesEventHandler
+    @MinigamesEventHandler(priority = MinigamesEventHandler.HIGH)
     public void onUserInteractWorld(UserInteractWorldEvent event) {
         if(!event.hasBlock()) return;
 
@@ -97,14 +97,14 @@ public class SpleefMinigame implements Listener {
     }
 
     private class Arena {
-        private List<Vector> queueButtons;
-        private List<Vector> spawnLocations;
-        private Vector exitLocation;
-        private BoundingBox snowBounds;
-        private int extraRadius;
+        private final List<Vector> queueButtons;
+        private final List<Vector> spawnLocations;
+        private final Vector exitLocation;
+        private final BoundingBox snowBounds;
+        private final int extraRadius;
 
-        private List<UUID> usersInSpleef = new ArrayList<>();
-        private LinkedHashSet<UUID> queue = new LinkedHashSet<>();
+        private final List<UUID> usersInSpleef = new ArrayList<>();
+        private final LinkedHashSet<UUID> queue = new LinkedHashSet<>();
 
         public Arena(ConfigurationSection config) {
             queueButtons = ConfigUtils.getVectorList(config, "queue_buttons");
@@ -205,7 +205,7 @@ public class SpleefMinigame implements Listener {
 
             user.setGameMode(GameMode.ADVENTURE);
 
-            user.setFireTicks(null, 0);
+            user.doInFuture(task -> user.setFireTicks(null, 0));
         }
     }
 }

@@ -30,11 +30,9 @@ public class BaseGameStateListener extends SimpleInGameListener {
     protected String quitLocale;
     protected String joinLocale;
 
-    protected GameState gameState;
-
     @MinigamesEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<GameGroup, GameState> event) {
-        gameState = event.getRepresenting();
+        super.onListenerLoaded(event);
 
         ConfigurationSection config = event.getConfig();
         if (config == null) config = new MemoryConfiguration();

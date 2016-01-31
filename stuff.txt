@@ -11,21 +11,6 @@ RECODE BUGS:
  - please don't spam other players
  - spectator hunger
 
-  at net.minecraft.server.v1_8_R3.DedicatedServer.B(DedicatedServer.java:374)
-[22:10:33 WARN]:        at net.minecraft.server.v1_8_R3.MinecraftServer.A(MinecraftServer.java:654)
-[22:10:33 WARN]:        at net.minecraft.server.v1_8_R3.MinecraftServer.run(MinecraftServer.java:557)
-[22:10:33 WARN]:        at java.lang.Thread.run(Thread.java:745)
-[22:10:33 WARN]: Caused by: java.lang.reflect.InvocationTargetException
-[22:10:33 WARN]:        at sun.reflect.GeneratedMethodAccessor127.invoke(Unknown Source)
-[22:10:33 WARN]:        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-[22:10:33 WARN]:        at java.lang.reflect.Method.invoke(Method.java:497)
-[22:10:33 WARN]:        at com.ithinkrok.minigames.base.util.EventExecutor$MethodExecutor.execute(EventExecutor.java:150)
-[22:10:33 WARN]:        ... 12 more
-[22:10:33 WARN]: Caused by: java.lang.NullPointerException
-[22:10:33 WARN]:        at com.ithinkrok.cw.metadata.BuildingController.onSchematicFinished(BuildingController.java:75)
-[22:10:33 WARN]:        ... 16 more
-
-
 LOW PRIORITY / INVESTIGATE:
  - Destroying a building while it is built does not decrement building now counter
  - Zombie tab list names

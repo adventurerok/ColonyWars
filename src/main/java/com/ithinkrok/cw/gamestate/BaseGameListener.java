@@ -10,6 +10,7 @@ import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.base.event.game.CountdownFinishedEvent;
 import com.ithinkrok.minigames.base.event.map.*;
+import com.ithinkrok.minigames.base.event.user.state.UserFoodLevelChangeEvent;
 import com.ithinkrok.minigames.base.event.user.world.*;
 import com.ithinkrok.minigames.base.util.*;
 import com.ithinkrok.minigames.base.event.user.game.UserJoinEvent;
@@ -220,6 +221,11 @@ public class BaseGameListener extends BaseGameStateListener {
         }
 
         return gold;
+    }
+
+    @MinigamesEventHandler
+    public void onUserFoodLevelChange(UserFoodLevelChangeEvent event) {
+        if (!event.getUser().isInGame()) event.setCancelled(true);
     }
 
     @MinigamesEventHandler

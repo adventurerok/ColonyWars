@@ -21,7 +21,7 @@ import java.util.Map;
 public class ParkourMinigame implements Listener {
 
     private int maxParkourMoney;
-    private Map<Vector, Integer> parkourRuns = new HashMap<>();
+    private final Map<Vector, Integer> parkourRuns = new HashMap<>();
 
     @MinigamesEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<GameGroup, GameMap> event) {
@@ -32,7 +32,7 @@ public class ParkourMinigame implements Listener {
         for(ConfigurationSection parkourRun : ConfigUtils.getConfigList(config, "runs")) {
             Vector loc = ConfigUtils.getVector(parkourRun, "");
 
-            parkourRuns.put(loc, config.getInt("reward"));
+            parkourRuns.put(loc, parkourRun.getInt("reward"));
         }
     }
 

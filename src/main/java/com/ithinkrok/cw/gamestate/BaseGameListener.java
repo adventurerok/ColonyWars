@@ -100,11 +100,7 @@ public class BaseGameListener extends BaseGameStateListener {
     private String spectatorJoinLocale, spectatorQuitLocale;
     private String inGameJoinLocale, inGameQuitLocale;
 
-    private String spectatorJoinLocaleStub;
-
     private int buildingDestroyWait;
-
-    private CustomItemGiver spectatorItems;
 
     private Calculator enderAmount;
     private String enderFoundLocale;
@@ -166,10 +162,6 @@ public class BaseGameListener extends BaseGameStateListener {
         deathKillAndAssistLocale = config.getString("death_kill_and_assist_locale", "death.kill_and_assist");
         deathKillLocale = config.getString("death_kill_locale", "death.kill");
         deathNaturalLocale = config.getString("death_natural_locale", "death.natural");
-
-        spectatorJoinLocaleStub = config.getString("spectator_join_locale_stub", "spectator.join");
-
-        spectatorItems = new CustomItemGiver(config.getConfigurationSection("spectator_items"));
 
         inGameJoinLocale = config.getString("ingame_user_join_locale", "user.join.game");
         inGameQuitLocale = config.getString("ingame_user_quit_locale", "user.quit.game");
@@ -326,8 +318,7 @@ public class BaseGameListener extends BaseGameStateListener {
 
             removeUserFromGame(died);
 
-            died.setSpectator(true);
-            spectatorItems.giveToUser(died);
+            makeUserSpectator(died);
         }
     }
 
@@ -436,25 +427,6 @@ public class BaseGameListener extends BaseGameStateListener {
     @MinigamesEventHandler
     public void onUserDamaged(UserDamagedEvent event) {
         if (!event.getUser().isInGame()) event.setCancelled(true);
-    }
-
-    @MinigamesEventHandler
-    public void onUserJoined(UserJoinEvent event) {
-        if (event.getUser().isInGame()) return;
-
-        event.getUser().teleport(event.getUserGameGroup().getCurrentMap().getSpawn());
-        event.getUser().setSpectator(true);
-
-        spectatorItems.giveToUser(event.getUser());
-
-        for (int counter = 0; ; ++counter) {
-            String message = event.getUserGameGroup().getLocale(spectatorJoinLocaleStub + "." + counter);
-            if (message == null) break;
-
-            event.getUser().sendMessage(message);
-        }
-
-        event.getUser().doInFuture(task -> event.getUser().setSpectator(true), 2);
     }
 
     @MinigamesEventHandler

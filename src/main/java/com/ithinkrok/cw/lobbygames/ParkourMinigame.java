@@ -7,7 +7,7 @@ import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.base.event.user.world.UserInteractWorldEvent;
 import com.ithinkrok.minigames.base.map.GameMap;
 import com.ithinkrok.minigames.base.metadata.Money;
-import com.ithinkrok.minigames.base.util.ConfigUtils;
+import com.ithinkrok.msm.common.util.ConfigUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
 import org.bukkit.util.Vector;

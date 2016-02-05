@@ -10,18 +10,12 @@ import com.ithinkrok.minigames.base.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.base.event.user.UserEvent;
 import com.ithinkrok.minigames.base.event.user.world.UserChatEvent;
 import com.ithinkrok.minigames.base.task.GameTask;
-import com.ithinkrok.minigames.base.util.ConfigUtils;
+import com.ithinkrok.minigames.base.util.MinigamesConfigs;
+import com.ithinkrok.msm.common.util.ConfigUtils;
 import com.ithinkrok.minigames.base.util.CountdownConfig;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Firework;
 import org.bukkit.event.Cancellable;
-import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.util.Vector;
 
 import java.util.Objects;
 
@@ -38,7 +32,7 @@ public class AftermathListener extends BaseGameStateListener {
         ConfigurationSection config = event.getConfig();
         if (config == null) config = new MemoryConfiguration();
 
-        countdown = ConfigUtils.getCountdown(config, "countdown", "aftermath", 15, "countdowns.aftermath");
+        countdown = MinigamesConfigs.getCountdown(config, "countdown", "aftermath", 15, "countdowns.aftermath");
 
     }
 
@@ -48,12 +42,11 @@ public class AftermathListener extends BaseGameStateListener {
 
 
         //Remove user scoreboards
-        for(User user : event.getGameGroup().getUsers()) {
+        for (User user : event.getGameGroup().getUsers()) {
             user.setScoreboardHandler(null);
         }
 
-        event.getGameGroup()
-                .startCountdown(countdown);
+        event.getGameGroup().startCountdown(countdown);
 
         GameTask task = event.getGameGroup().repeatInFuture(t -> {
             if (t.getRunCount() > 5) t.finish();

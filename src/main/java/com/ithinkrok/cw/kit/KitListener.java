@@ -7,7 +7,8 @@ import com.ithinkrok.minigames.base.User;
 import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.base.item.CustomItem;
-import com.ithinkrok.minigames.base.util.ConfigUtils;
+import com.ithinkrok.minigames.base.util.MinigamesConfigs;
+import com.ithinkrok.msm.common.util.ConfigUtils;
 import com.ithinkrok.minigames.base.util.InventoryUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
@@ -29,7 +30,7 @@ public class KitListener implements Listener {
 
     private User owner;
 
-    private Map<String, BuildingConfig> buildingConfigs = new HashMap<>();
+    private final Map<String, BuildingConfig> buildingConfigs = new HashMap<>();
 
     @MinigamesEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<User, Kit> event) {
@@ -64,9 +65,9 @@ public class KitListener implements Listener {
 
         private List<ConfigurationSection> extraShopItems = new ArrayList<>();
         private List<String> customItemGives = new ArrayList<>();
-        private List<ItemStack> itemStackGives = new ArrayList<>();
-        private List<PotionEffect> potionEffects = new ArrayList<>();
-        private Map<String, Integer> upgrades = new HashMap<>();
+        private final List<ItemStack> itemStackGives = new ArrayList<>();
+        private final List<PotionEffect> potionEffects = new ArrayList<>();
+        private final Map<String, Integer> upgrades = new HashMap<>();
 
         public BuildingConfig(ConfigurationSection config) {
             if (config.contains("shop")) extraShopItems = ConfigUtils.getConfigList(config, "shop");
@@ -75,7 +76,8 @@ public class KitListener implements Listener {
             if (config.contains("items")) {
                 ConfigurationSection items = config.getConfigurationSection("items");
                 itemStackGives.addAll(items.getKeys(false).stream()
-                        .map(unusedName -> ConfigUtils.getItemStack(items, unusedName)).collect(Collectors.toList()));
+                        .map(unusedName -> MinigamesConfigs.getItemStack(items, unusedName))
+                        .collect(Collectors.toList()));
             }
 
             if (config.contains("potion_effects")) {
@@ -89,10 +91,10 @@ public class KitListener implements Listener {
                 }
             }
 
-            if(config.contains("upgrades")) {
+            if (config.contains("upgrades")) {
                 ConfigurationSection upgrades = config.getConfigurationSection("upgrades");
 
-                for(String upgradeName : upgrades.getKeys(false)) {
+                for (String upgradeName : upgrades.getKeys(false)) {
                     this.upgrades.put(upgradeName, upgrades.getInt(upgradeName));
                 }
             }
@@ -118,8 +120,8 @@ public class KitListener implements Listener {
 
             potionEffects.forEach(user::addPotionEffect);
 
-            for(Map.Entry<String, Integer> upgrade : upgrades.entrySet()) {
-                if(user.getUpgradeLevel(upgrade.getKey()) >= upgrade.getValue()) continue;
+            for (Map.Entry<String, Integer> upgrade : upgrades.entrySet()) {
+                if (user.getUpgradeLevel(upgrade.getKey()) >= upgrade.getValue()) continue;
 
                 user.setUpgradeLevel(upgrade.getKey(), upgrade.getValue());
             }

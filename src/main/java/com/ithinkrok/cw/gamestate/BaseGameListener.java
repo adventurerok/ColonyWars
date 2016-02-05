@@ -24,6 +24,7 @@ import com.ithinkrok.minigames.base.team.Team;
 import com.ithinkrok.minigames.base.util.math.Calculator;
 import com.ithinkrok.minigames.base.util.math.ExpressionCalculator;
 import com.ithinkrok.minigames.base.util.math.SingleValueVariables;
+import com.ithinkrok.msm.common.util.ConfigUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -149,7 +150,7 @@ public class BaseGameListener extends BaseGameStateListener {
         aftermathGameState = config.getString("aftermath_gamestate", "aftermath");
 
         showdownCountdown =
-                ConfigUtils.getCountdown(config, "showdown_countdown", "showdown", 30, "countdowns.showdown");
+                MinigamesConfigs.getCountdown(config, "showdown_countdown", "showdown", 30, "countdowns.showdown");
 
         showdownStartTeams = config.getInt("showdown_start.teams");
         showdownStartPlayers = config.getInt("showdown_start.players");
@@ -610,7 +611,7 @@ public class BaseGameListener extends BaseGameStateListener {
             if (ores != null) {
                 for (String matName : ores.getKeys(false)) {
                     Material material = Material.matchMaterial(matName);
-                    ItemStack item = ConfigUtils.getItemStack(ores, matName);
+                    ItemStack item = MinigamesConfigs.getItemStack(ores, matName);
                     oreBlocks.put(material, item);
                 }
             }

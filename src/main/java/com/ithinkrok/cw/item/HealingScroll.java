@@ -4,7 +4,8 @@ import com.ithinkrok.minigames.base.User;
 import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.base.event.user.world.UserInteractEvent;
-import com.ithinkrok.minigames.base.util.ConfigUtils;
+import com.ithinkrok.minigames.base.util.MinigamesConfigs;
+import com.ithinkrok.msm.common.util.ConfigUtils;
 import com.ithinkrok.minigames.base.util.SoundEffect;
 import com.ithinkrok.minigames.base.util.math.Calculator;
 import com.ithinkrok.minigames.base.util.math.ExpressionCalculator;
@@ -31,7 +32,7 @@ public class HealingScroll implements Listener {
         duration = new ExpressionCalculator(config.getString("duration"));
         level = new ExpressionCalculator(config.getString("level"));
 
-        sound = ConfigUtils.getSoundEffect(config, "sound");
+        sound = MinigamesConfigs.getSoundEffect(config, "sound");
 
     }
 
@@ -40,11 +41,11 @@ public class HealingScroll implements Listener {
         int durationTicks = (int) (duration.calculate(event.getUser().getUpgradeLevels()) * 20);
         int amp = (int) (level.calculate(event.getUser().getUpgradeLevels()) - 1);
 
-        if(amp < 0 || durationTicks < 1) return;
+        if (amp < 0 || durationTicks < 1) return;
 
         PotionEffect effect = new PotionEffect(potionEffectType, durationTicks, amp);
 
-        for(User user : event.getUser().getTeam().getUsers()) {
+        for (User user : event.getUser().getTeam().getUsers()) {
             user.addPotionEffect(effect, true);
             user.playSound(user.getLocation(), sound);
         }

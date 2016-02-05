@@ -9,7 +9,8 @@ import com.ithinkrok.minigames.base.event.user.world.UserBreakBlockEvent;
 import com.ithinkrok.minigames.base.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.base.event.user.world.UserInteractWorldEvent;
 import com.ithinkrok.minigames.base.util.BoundingBox;
-import com.ithinkrok.minigames.base.util.ConfigUtils;
+import com.ithinkrok.minigames.base.util.MinigamesConfigs;
+import com.ithinkrok.msm.common.util.ConfigUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -110,7 +111,7 @@ public class SpleefMinigame implements Listener {
             queueButtons = ConfigUtils.getVectorList(config, "queue_buttons");
             spawnLocations = ConfigUtils.getVectorList(config, "spawn_locations");
             exitLocation = ConfigUtils.getVector(config, "exit_location");
-            snowBounds = ConfigUtils.getBounds(config, "snow");
+            snowBounds = MinigamesConfigs.getBounds(config, "snow");
             extraRadius = config.getInt("extra_radius");
         }
 

@@ -5,7 +5,8 @@ import com.ithinkrok.minigames.base.User;
 import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
 import com.ithinkrok.minigames.base.event.user.world.UserInteractEvent;
-import com.ithinkrok.minigames.base.util.ConfigUtils;
+import com.ithinkrok.minigames.base.util.MinigamesConfigs;
+import com.ithinkrok.msm.common.util.ConfigUtils;
 import com.ithinkrok.minigames.base.util.EntityUtils;
 import com.ithinkrok.minigames.base.util.SoundEffect;
 import com.ithinkrok.minigames.base.util.math.Calculator;
@@ -40,8 +41,8 @@ public class EarthBender implements Listener {
         maxMoves = new ExpressionCalculator(config.getString("max_moves"));
         moveVelocity = new ExpressionCalculator(config.getString("move_velocity", "1"));
 
-        spawn = ConfigUtils.getSoundEffect(config, "spawn_sound");
-        knockback = ConfigUtils.getSoundEffect(config, "knockback_sound");
+        spawn = MinigamesConfigs.getSoundEffect(config, "spawn_sound");
+        knockback = MinigamesConfigs.getSoundEffect(config, "knockback_sound");
     }
 
     @MinigamesEventHandler

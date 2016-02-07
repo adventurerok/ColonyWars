@@ -2,8 +2,8 @@ package com.ithinkrok.cw.command;
 
 import com.ithinkrok.minigames.base.User;
 import com.ithinkrok.minigames.base.command.MinigamesCommand;
-import com.ithinkrok.minigames.base.command.CommandSender;
-import com.ithinkrok.minigames.base.event.CommandEvent;
+import com.ithinkrok.minigames.base.command.MinigamesCommandSender;
+import com.ithinkrok.minigames.base.event.MinigamesCommandEvent;
 import com.ithinkrok.minigames.base.team.TeamIdentifier;
 import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;
@@ -22,8 +22,8 @@ import java.util.Set;
 public class TeamChatCommand implements CustomListener {
 
     @CustomEventHandler
-    public void onCommand(CommandEvent event) {
-        CommandSender sender = event.getCommandSender();
+    public void onCommand(MinigamesCommandEvent event) {
+        MinigamesCommandSender sender = event.getCommandSender();
         MinigamesCommand command = event.getCommand();
 
         if (!command.requireUser(sender)) return;

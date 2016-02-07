@@ -4,8 +4,8 @@ package com.ithinkrok.cw.command;
 import com.ithinkrok.minigames.base.Kit;
 import com.ithinkrok.minigames.base.User;
 import com.ithinkrok.minigames.base.command.MinigamesCommand;
-import com.ithinkrok.minigames.base.command.CommandSender;
-import com.ithinkrok.minigames.base.event.CommandEvent;
+import com.ithinkrok.minigames.base.command.MinigamesCommandSender;
+import com.ithinkrok.minigames.base.event.MinigamesCommandEvent;
 import com.ithinkrok.minigames.base.event.user.UserEvent;
 import com.ithinkrok.minigames.base.item.CustomItem;
 import com.ithinkrok.minigames.base.metadata.Money;
@@ -40,8 +40,8 @@ public class CWCommand implements CustomListener {
     }
 
     @CustomEventHandler
-    public void onCommand(CommandEvent event) {
-        CommandSender sender = event.getCommandSender();
+    public void onCommand(MinigamesCommandEvent event) {
+        MinigamesCommandSender sender = event.getCommandSender();
         MinigamesCommand command = event.getCommand();
 
         if(!command.requireArgumentCount(sender, 1)){
@@ -61,7 +61,7 @@ public class CWCommand implements CustomListener {
         event.setValidCommand(subExecutors.get(subCommand.getCommand()).onCommand(sender, subCommand));
     }
 
-    private boolean moneyCommand(CommandSender sender, MinigamesCommand command) {
+    private boolean moneyCommand(MinigamesCommandSender sender, MinigamesCommand command) {
         if(!command.requireUser(sender)) return true;
 
         int amount = command.getIntArg(0, 10000);
@@ -78,7 +78,7 @@ public class CWCommand implements CustomListener {
         return true;
     }
 
-    private boolean buildingCommand(CommandSender sender, MinigamesCommand command) {
+    private boolean buildingCommand(MinigamesCommandSender sender, MinigamesCommand command) {
         if(!command.requireUser(sender)) return true;
         if(!command.requireArgumentCount(sender, 1)) return true;
 
@@ -97,7 +97,7 @@ public class CWCommand implements CustomListener {
         return true;
     }
 
-    private boolean teamCommand(CommandSender sender, MinigamesCommand command) {
+    private boolean teamCommand(MinigamesCommandSender sender, MinigamesCommand command) {
         if(!command.requireUser(sender)) return true;
         if(!command.requireArgumentCount(sender, 1)) return false;
 
@@ -113,7 +113,7 @@ public class CWCommand implements CustomListener {
         return true;
     }
 
-    private boolean customCommand(CommandSender sender, MinigamesCommand command) {
+    private boolean customCommand(MinigamesCommandSender sender, MinigamesCommand command) {
         if(!command.requireUser(sender)) return true;
         if(!command.requireArgumentCount(sender, 1)) return false;
 
@@ -130,7 +130,7 @@ public class CWCommand implements CustomListener {
         return true;
     }
 
-    private boolean levelCommand(CommandSender sender, MinigamesCommand command) {
+    private boolean levelCommand(MinigamesCommandSender sender, MinigamesCommand command) {
         if(!command.requireUser(sender)) return true;
         if(!command.requireArgumentCount(sender, 2)) return false;
 
@@ -144,7 +144,7 @@ public class CWCommand implements CustomListener {
         return true;
     }
 
-    private boolean kitCommand(CommandSender sender, MinigamesCommand command) {
+    private boolean kitCommand(MinigamesCommandSender sender, MinigamesCommand command) {
         if(!command.requireUser(sender)) return true;
         if(!command.requireArgumentCount(sender, 1)) return false;
 
@@ -161,7 +161,7 @@ public class CWCommand implements CustomListener {
         return true;
     }
 
-    private boolean rejoinCommand(CommandSender sender, MinigamesCommand command) {
+    private boolean rejoinCommand(MinigamesCommandSender sender, MinigamesCommand command) {
         if(!command.requireUser(sender)) return true;
 
         UserRejoinEvent event = new UserRejoinEvent(command.getUser());
@@ -198,6 +198,6 @@ public class CWCommand implements CustomListener {
      */
     private interface SubCommandExecutor {
 
-        boolean onCommand(CommandSender sender, MinigamesCommand command);
+        boolean onCommand(MinigamesCommandSender sender, MinigamesCommand command);
     }
 }

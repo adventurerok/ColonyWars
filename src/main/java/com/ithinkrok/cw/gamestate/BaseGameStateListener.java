@@ -2,7 +2,7 @@ package com.ithinkrok.cw.gamestate;
 
 import com.ithinkrok.minigames.base.GameGroup;
 import com.ithinkrok.minigames.base.GameState;
-import com.ithinkrok.minigames.base.event.CommandEvent;
+import com.ithinkrok.minigames.base.event.MinigamesCommandEvent;
 import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.base.event.map.MapCreatureSpawnEvent;
 import com.ithinkrok.minigames.base.event.map.MapItemSpawnEvent;
@@ -48,7 +48,7 @@ public class BaseGameStateListener extends SimpleInGameListener {
     }
 
     @CustomEventHandler
-    public void onCommand(CommandEvent event) {
+    public void onCommand(MinigamesCommandEvent event) {
         switch (event.getCommand().getCommand().toLowerCase()) {
             case "kill":
             case "suicide":

@@ -2,11 +2,12 @@ package com.ithinkrok.cw.item;
 
 import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
-import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.minigames.base.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.base.team.Team;
 import com.ithinkrok.minigames.base.team.TeamIdentifier;
 import com.ithinkrok.minigames.base.util.InventoryUtils;
+import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
@@ -18,13 +19,13 @@ import java.util.Collection;
 /**
  * Created by paul on 15/01/16.
  */
-public class TeamCompass implements Listener {
+public class TeamCompass implements CustomListener {
 
 
     private String compassNameLocale, compassOrientedLocale;
 
-    @MinigamesEventHandler
-    public void onListenerLoaded(ListenerLoadedEvent event) {
+    @CustomEventHandler
+    public void onListenerLoaded(ListenerLoadedEvent<?, ?> event) {
         ConfigurationSection config;
         if(event.hasConfig()) config = event.getConfig();
         else config = new MemoryConfiguration();
@@ -33,7 +34,7 @@ public class TeamCompass implements Listener {
         compassOrientedLocale = config.getString("compass_oriented_locale", "team_compass.oriented");
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onUserInteract(UserInteractEvent event) {
         Location currentLoc = event.getUser().getCompassTarget();
 

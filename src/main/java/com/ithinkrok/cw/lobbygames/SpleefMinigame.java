@@ -2,7 +2,7 @@ package com.ithinkrok.cw.lobbygames;
 
 import com.ithinkrok.minigames.base.User;
 import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
-import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.minigames.base.event.user.game.UserTeleportEvent;
 import com.ithinkrok.minigames.base.event.user.state.UserDamagedEvent;
 import com.ithinkrok.minigames.base.event.user.world.UserBreakBlockEvent;
@@ -11,6 +11,7 @@ import com.ithinkrok.minigames.base.event.user.world.UserInteractWorldEvent;
 import com.ithinkrok.minigames.base.util.BoundingBox;
 import com.ithinkrok.minigames.base.util.MinigamesConfigs;
 import com.ithinkrok.msm.common.util.ConfigUtils;
+import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -25,7 +26,7 @@ import java.util.*;
 /**
  * Created by paul on 01/01/16.
  */
-public class SpleefMinigame implements Listener {
+public class SpleefMinigame implements CustomListener {
 
     private Material spadeMaterial;
 
@@ -33,8 +34,8 @@ public class SpleefMinigame implements Listener {
     private final Map<UUID, Arena> queueLookups = new HashMap<>();
     private final Map<UUID, Arena> gameLookups = new HashMap<>();
 
-    @MinigamesEventHandler
-    public void configure(ListenerLoadedEvent event) {
+    @CustomEventHandler
+    public void configure(ListenerLoadedEvent<?, ?> event) {
         spadeMaterial = Material.matchMaterial(event.getConfig().getString("spade", "IRON_SPADE"));
 
         ConfigurationSection arenasConfig = event.getConfig().getConfigurationSection("arenas");
@@ -49,7 +50,7 @@ public class SpleefMinigame implements Listener {
         }
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onUserTeleport(UserTeleportEvent event) {
         Arena arena = gameLookups.get(event.getUser().getUuid());
 
@@ -63,12 +64,12 @@ public class SpleefMinigame implements Listener {
         arena.spleefUserKilled(event.getUser(), false);
     }
 
-    @MinigamesEventHandler(priority = MinigamesEventHandler.HIGH)
+    @CustomEventHandler(priority = CustomEventHandler.HIGH)
     public void onUserBreakBlock(UserBreakBlockEvent event){
         if(event.getBlock().getType() == Material.SNOW_BLOCK) event.setCancelled(false);
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onUserDamaged(UserDamagedEvent event) {
         if(event.getDamageCause() != EntityDamageEvent.DamageCause.LAVA) return;
 
@@ -80,7 +81,7 @@ public class SpleefMinigame implements Listener {
         arena.spleefUserKilled(event.getUser(), true);
     }
 
-    @MinigamesEventHandler(priority = MinigamesEventHandler.HIGH)
+    @CustomEventHandler(priority = CustomEventHandler.HIGH)
     public void onUserInteractWorld(UserInteractWorldEvent event) {
         if(!event.hasBlock()) return;
 

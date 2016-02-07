@@ -3,11 +3,12 @@ package com.ithinkrok.cw.lobbygames;
 import com.ithinkrok.minigames.base.GameGroup;
 import com.ithinkrok.minigames.base.User;
 import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
-import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.minigames.base.event.user.world.UserInteractWorldEvent;
 import com.ithinkrok.minigames.base.map.GameMap;
 import com.ithinkrok.minigames.base.metadata.Money;
 import com.ithinkrok.msm.common.util.ConfigUtils;
+import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
 import org.bukkit.util.Vector;
@@ -18,12 +19,12 @@ import java.util.Map;
 /**
  * Created by paul on 23/01/16.
  */
-public class ParkourMinigame implements Listener {
+public class ParkourMinigame implements CustomListener {
 
     private int maxParkourMoney;
     private final Map<Vector, Integer> parkourRuns = new HashMap<>();
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<GameGroup, GameMap> event) {
         ConfigurationSection config = event.getConfig();
 
@@ -36,7 +37,7 @@ public class ParkourMinigame implements Listener {
         }
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onUserInteractWorld(UserInteractWorldEvent event) {
         if(!event.hasBlock()) return;
 

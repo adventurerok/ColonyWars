@@ -2,11 +2,12 @@ package com.ithinkrok.cw.lobbygames;
 
 import com.ithinkrok.minigames.base.GameGroup;
 import com.ithinkrok.minigames.base.User;
-import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.minigames.base.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.base.event.user.game.UserQuitEvent;
 import com.ithinkrok.minigames.base.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.base.util.EntityUtils;
+import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -19,13 +20,13 @@ import java.util.Random;
 /**
  * Created by paul on 23/01/16.
  */
-public class WoolMinigame implements Listener {
+public class WoolMinigame implements CustomListener {
 
     private final Random random = new Random();
 
     private User woolUser;
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onUserJoin(UserJoinEvent event) {
         if (woolUser != null) return;
 
@@ -44,7 +45,7 @@ public class WoolMinigame implements Listener {
         woolUser.getInventory().setHelmet(new ItemStack(Material.WOOL, 1, DyeColor.PINK.getWoolData()));
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onUserQuit(UserQuitEvent event) {
         if (!Objects.equals(woolUser, event.getUser())) return;
 
@@ -70,7 +71,7 @@ public class WoolMinigame implements Listener {
         giveInitialWool();
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onUserInteract(UserInteractEvent event) {
         if (!event.hasEntity()) return;
 

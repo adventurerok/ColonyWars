@@ -7,7 +7,7 @@ import com.ithinkrok.minigames.base.GameGroup;
 import com.ithinkrok.minigames.base.GameState;
 import com.ithinkrok.minigames.base.User;
 import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
-import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.minigames.base.event.game.CountdownFinishedEvent;
 import com.ithinkrok.minigames.base.event.map.*;
 import com.ithinkrok.minigames.base.event.user.state.UserFoodLevelChangeEvent;
@@ -24,7 +24,6 @@ import com.ithinkrok.minigames.base.team.Team;
 import com.ithinkrok.minigames.base.util.math.Calculator;
 import com.ithinkrok.minigames.base.util.math.ExpressionCalculator;
 import com.ithinkrok.minigames.base.util.math.SingleValueVariables;
-import com.ithinkrok.msm.common.util.ConfigUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -107,7 +106,7 @@ public class BaseGameListener extends BaseGameStateListener {
     private Calculator enderAmount;
     private String enderFoundLocale;
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onUserChat(UserChatEvent event) {
         if (event.getUser().isInGame()) {
             String kitName = event.getUser().getKitName().toUpperCase();
@@ -122,7 +121,7 @@ public class BaseGameListener extends BaseGameStateListener {
         }
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<GameGroup, GameState> event) {
         super.onListenerLoaded(event);
 
@@ -175,7 +174,7 @@ public class BaseGameListener extends BaseGameStateListener {
         enderFoundLocale = config.getString("ender_found_locale", "ender_chest.found");
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onItemSpawn(MapItemSpawnEvent event) {
         ConfigurationSection goldShared = event.getGameGroup().getSharedObject(goldSharedConfig);
         GoldConfig gold = getGoldConfig(goldShared);
@@ -186,7 +185,7 @@ public class BaseGameListener extends BaseGameStateListener {
     }
 
     @Override
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void sendQuitMessageOnUserQuit(UserQuitEvent event) {
         String name = event.getUser().getFormattedName();
         int currentPlayers = event.getUserGameGroup().getUserCount();
@@ -200,7 +199,7 @@ public class BaseGameListener extends BaseGameStateListener {
     }
 
     @Override
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void sendJoinMessageOnUserJoin(UserJoinEvent event) {
         String name = event.getUser().getFormattedName();
         int currentPlayers = event.getUserGameGroup().getUserCount();
@@ -224,12 +223,12 @@ public class BaseGameListener extends BaseGameStateListener {
         return gold;
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onUserFoodLevelChange(UserFoodLevelChangeEvent event) {
         if (!event.getUser().isInGame()) event.setCancelled(true);
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onUserInteractWorld(UserInteractWorldEvent event) {
         if (!event.getUser().isInGame()) {
             event.setCancelled(true);
@@ -280,7 +279,7 @@ public class BaseGameListener extends BaseGameStateListener {
 
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onUserDeath(UserDeathEvent event) {
         User died = event.getUser();
 
@@ -431,12 +430,12 @@ public class BaseGameListener extends BaseGameStateListener {
         gameGroup.startCountdown(showdownCountdown);
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onUserDamaged(UserDamagedEvent event) {
         if (!event.getUser().isInGame()) event.setCancelled(true);
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onUserQuit(UserQuitEvent event) {
         if (event.getReason() != UserQuitEvent.QuitReason.QUIT_SERVER) return;
 
@@ -447,12 +446,12 @@ public class BaseGameListener extends BaseGameStateListener {
         }
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onBlockBurn(MapBlockBurnEvent event) {
         event.setCancelled(true);
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onBlockSpread(MapBlockGrowEvent event) {
         if (!event.isSpreadEvent()) return;
         if (event.getNewState().getType() != Material.FIRE) return;
@@ -462,7 +461,7 @@ public class BaseGameListener extends BaseGameStateListener {
         event.setCancelled(true);
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onPotionSplash(MapPotionSplashEvent event) {
         if (!event.hasThrowerUser()) return;
 
@@ -485,7 +484,7 @@ public class BaseGameListener extends BaseGameStateListener {
         }
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onUserBreakBlock(UserBreakBlockEvent event) {
         if (!event.getUser().isInGame()) {
             event.setCancelled(true);
@@ -519,7 +518,7 @@ public class BaseGameListener extends BaseGameStateListener {
         }
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onUserPickupItem(UserPickupItemEvent event) {
         if (!event.getUser().isInGame()) {
             event.setCancelled(true);
@@ -549,7 +548,7 @@ public class BaseGameListener extends BaseGameStateListener {
         event.getItem().remove();
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onUserPlaceBlock(UserPlaceBlockEvent event) {
         if (!event.getUser().isInGame()) {
             event.setCancelled(true);
@@ -578,7 +577,7 @@ public class BaseGameListener extends BaseGameStateListener {
         }
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onBlockBreakNaturally(MapBlockBreakNaturallyEvent event) {
         ConfigurationSection goldShared = event.getGameGroup().getSharedObject(goldSharedConfig);
         GoldConfig gold = getGoldConfig(goldShared);
@@ -586,7 +585,7 @@ public class BaseGameListener extends BaseGameStateListener {
         gold.onBlockBreak(event.getBlock(), event.getGameGroup());
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onCountdownFinished(CountdownFinishedEvent event) {
         if (!event.getCountdown().getName().equals(showdownCountdown.getName())) return;
 

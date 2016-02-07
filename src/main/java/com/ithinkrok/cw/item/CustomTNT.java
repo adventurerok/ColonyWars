@@ -1,10 +1,11 @@
 package com.ithinkrok.cw.item;
 
 import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
-import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.minigames.base.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.base.util.math.Calculator;
 import com.ithinkrok.minigames.base.util.math.ExpressionCalculator;
+import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.Listener;
@@ -13,16 +14,16 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Created by paul on 21/01/16.
  */
-public class CustomTNT implements Listener {
+public class CustomTNT implements CustomListener {
 
     private Calculator explosionPower;
 
-    @MinigamesEventHandler
-    public void onListenerLoaded(ListenerLoadedEvent event) {
+    @CustomEventHandler
+    public void onListenerLoaded(ListenerLoadedEvent<?, ?> event) {
         explosionPower = new ExpressionCalculator(event.getConfig().getString("explosion_power"));
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onInteract(UserInteractEvent event) {
         if (!event.hasBlock()) return;
 

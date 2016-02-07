@@ -1,7 +1,8 @@
 package com.ithinkrok.cw.item;
 
-import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.minigames.base.event.user.world.UserInteractEvent;
+import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
@@ -11,9 +12,9 @@ import org.bukkit.event.Listener;
 /**
  * Created by paul on 20/01/16.
  */
-public class WolfWand implements Listener {
+public class WolfWand implements CustomListener {
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onInteract(UserInteractEvent event) {
         if(!event.hasBlock() || !event.getUser().isPlayer()) return;
 

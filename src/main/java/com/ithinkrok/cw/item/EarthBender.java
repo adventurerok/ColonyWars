@@ -3,18 +3,19 @@ package com.ithinkrok.cw.item;
 import com.ithinkrok.cw.metadata.BentEarth;
 import com.ithinkrok.minigames.base.User;
 import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
-import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.minigames.base.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.base.util.MinigamesConfigs;
-import com.ithinkrok.msm.common.util.ConfigUtils;
 import com.ithinkrok.minigames.base.util.EntityUtils;
 import com.ithinkrok.minigames.base.util.SoundEffect;
 import com.ithinkrok.minigames.base.util.math.Calculator;
 import com.ithinkrok.minigames.base.util.math.ExpressionCalculator;
+import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.LivingEntity;
@@ -29,13 +30,13 @@ import java.util.Objects;
 /**
  * Created by paul on 20/01/16.
  */
-public class EarthBender implements Listener {
+public class EarthBender implements CustomListener {
 
     private Calculator maxMoves, moveVelocity;
     private SoundEffect knockback, spawn;
 
-    @MinigamesEventHandler
-    public void onListenerLoaded(ListenerLoadedEvent event) {
+    @CustomEventHandler
+    public void onListenerLoaded(ListenerLoadedEvent<?, ?> event) {
         ConfigurationSection config = event.getConfig();
 
         maxMoves = new ExpressionCalculator(config.getString("max_moves"));
@@ -45,7 +46,7 @@ public class EarthBender implements Listener {
         knockback = MinigamesConfigs.getSoundEffect(config, "knockback_sound");
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onInteract(UserInteractEvent event) {
         if (event.getInteractType() == UserInteractEvent.InteractType.RIGHT_CLICK) rightClick(event);
         else if (event.getInteractType() == UserInteractEvent.InteractType.LEFT_CLICK) leftClick(event);
@@ -72,7 +73,7 @@ public class EarthBender implements Listener {
                 if (!other.isInGame()) continue;
                 else if (!Objects.equals(event.getUser().getTeamIdentifier(), other.getTeamIdentifier())) {
                     if (other.getEntity() == near) other.setLastAttacker(event.getUser());
-                    ((LivingEntity) near).damage(10, event.getUser().getEntity());
+                    ((Damageable) near).damage(10, event.getUser().getEntity());
                 }
             }
 

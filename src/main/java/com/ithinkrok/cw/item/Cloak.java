@@ -1,11 +1,12 @@
 package com.ithinkrok.cw.item;
 
 import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
-import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.minigames.base.event.user.game.UserAbilityCooldownEvent;
 import com.ithinkrok.minigames.base.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.base.item.CustomItem;
 import com.ithinkrok.minigames.base.task.GameTask;
+import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.Effect;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
@@ -18,13 +19,13 @@ import java.util.Map;
 /**
  * Created by paul on 18/01/16.
  */
-public class Cloak implements Listener {
+public class Cloak implements CustomListener {
 
     private Map<PotionEffectType, Integer> cloakEffects;
     private Map<PotionEffectType, Integer> decloakEffects;
 
-    @MinigamesEventHandler
-    public void onListenerLoaded(ListenerLoadedEvent event) {
+    @CustomEventHandler
+    public void onListenerLoaded(ListenerLoadedEvent<?, ?> event) {
         cloakEffects = getEffectsFromConfig(event.getConfig().getConfigurationSection("cloak_effects"));
         decloakEffects = getEffectsFromConfig(event.getConfig().getConfigurationSection("decloak_effects"));
     }
@@ -39,7 +40,7 @@ public class Cloak implements Listener {
         return result;
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onInteract(UserInteractEvent event) {
         event.getUser().cloak();
 
@@ -62,7 +63,7 @@ public class Cloak implements Listener {
         event.setStartCooldownAfterAction(true);
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onTimeout(UserAbilityCooldownEvent event) {
         if (!event.getUser().isInGame()) return;
 

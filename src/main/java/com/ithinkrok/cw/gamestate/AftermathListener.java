@@ -4,14 +4,13 @@ import com.ithinkrok.minigames.base.GameGroup;
 import com.ithinkrok.minigames.base.GameState;
 import com.ithinkrok.minigames.base.User;
 import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
-import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.minigames.base.event.game.CountdownFinishedEvent;
 import com.ithinkrok.minigames.base.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.base.event.user.UserEvent;
 import com.ithinkrok.minigames.base.event.user.world.UserChatEvent;
 import com.ithinkrok.minigames.base.task.GameTask;
 import com.ithinkrok.minigames.base.util.MinigamesConfigs;
-import com.ithinkrok.msm.common.util.ConfigUtils;
 import com.ithinkrok.minigames.base.util.CountdownConfig;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
@@ -26,7 +25,7 @@ public class AftermathListener extends BaseGameStateListener {
 
     private CountdownConfig countdown;
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<GameGroup, GameState> event) {
         super.onListenerLoaded(event);
         ConfigurationSection config = event.getConfig();
@@ -36,7 +35,7 @@ public class AftermathListener extends BaseGameStateListener {
 
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onGameStateChanged(GameStateChangedEvent event) {
         if (!Objects.equals(event.getNewGameState(), gameState)) return;
 
@@ -62,7 +61,7 @@ public class AftermathListener extends BaseGameStateListener {
         event.getGameGroup().bindTaskToCurrentGameState(task);
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onCountdownFinished(CountdownFinishedEvent event) {
         if (!event.getCountdown().getName().equals(countdown.getName())) return;
 
@@ -70,7 +69,7 @@ public class AftermathListener extends BaseGameStateListener {
         event.getGameGroup().kill();
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onUserEvent(UserEvent event) {
         if (!(event instanceof Cancellable) || event instanceof UserChatEvent) return;
 

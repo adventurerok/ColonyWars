@@ -5,19 +5,19 @@ import com.ithinkrok.cw.metadata.StatsHolder;
 import com.ithinkrok.minigames.base.command.Command;
 import com.ithinkrok.minigames.base.command.CommandSender;
 import com.ithinkrok.minigames.base.event.CommandEvent;
-import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
-import org.bukkit.event.Listener;
+import com.ithinkrok.util.event.CustomEventHandler;
+import com.ithinkrok.util.event.CustomListener;
 
 import java.text.DecimalFormat;
 
 /**
  * Created by paul on 17/01/16.
  */
-public class StatsCommand implements Listener {
+public class StatsCommand implements CustomListener {
 
-    private static DecimalFormat twoDecimalPlaces = new DecimalFormat("0.00");
+    private static final DecimalFormat twoDecimalPlaces = new DecimalFormat("0.00");
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onCommand(CommandEvent event) {
         CommandSender sender = event.getCommandSender();
         Command command = event.getCommand();

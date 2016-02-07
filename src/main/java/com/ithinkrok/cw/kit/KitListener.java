@@ -5,11 +5,12 @@ import com.ithinkrok.cw.event.ShopOpenEvent;
 import com.ithinkrok.minigames.base.Kit;
 import com.ithinkrok.minigames.base.User;
 import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
-import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.minigames.base.item.CustomItem;
 import com.ithinkrok.minigames.base.util.MinigamesConfigs;
 import com.ithinkrok.msm.common.util.ConfigUtils;
 import com.ithinkrok.minigames.base.util.InventoryUtils;
+import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -26,13 +27,13 @@ import java.util.stream.Collectors;
 /**
  * Created by paul on 14/01/16.
  */
-public class KitListener implements Listener {
+public class KitListener implements CustomListener {
 
     private User owner;
 
     private final Map<String, BuildingConfig> buildingConfigs = new HashMap<>();
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<User, Kit> event) {
         owner = event.getCreator();
 
@@ -45,7 +46,7 @@ public class KitListener implements Listener {
         }
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onShopOpen(ShopOpenEvent event) {
         BuildingConfig config = buildingConfigs.get(event.getBuilding().getBuildingName());
 
@@ -53,7 +54,7 @@ public class KitListener implements Listener {
         config.onShopOpen(event);
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onBuildingBuilt(BuildingBuiltEvent event) {
         BuildingConfig config = buildingConfigs.get(event.getBuilding().getBuildingName());
 

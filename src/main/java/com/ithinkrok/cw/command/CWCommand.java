@@ -1,3 +1,4 @@
+
 package com.ithinkrok.cw.command;
 
 import com.ithinkrok.minigames.base.Kit;
@@ -5,13 +6,14 @@ import com.ithinkrok.minigames.base.User;
 import com.ithinkrok.minigames.base.command.Command;
 import com.ithinkrok.minigames.base.command.CommandSender;
 import com.ithinkrok.minigames.base.event.CommandEvent;
-import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.minigames.base.event.user.UserEvent;
 import com.ithinkrok.minigames.base.item.CustomItem;
 import com.ithinkrok.minigames.base.metadata.Money;
 import com.ithinkrok.minigames.base.team.Team;
 import com.ithinkrok.minigames.base.util.InventoryUtils;
 import com.ithinkrok.minigames.base.util.math.ExpressionCalculator;
+import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.Material;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Listener;
@@ -23,9 +25,9 @@ import java.util.Map;
 /**
  * Created by paul on 13/01/16.
  */
-public class CWCommand implements Listener {
+public class CWCommand implements CustomListener {
 
-    private Map<String, SubCommandExecutor> subExecutors = new HashMap<>();
+    private final Map<String, SubCommandExecutor> subExecutors = new HashMap<>();
 
 
     public CWCommand() {
@@ -38,7 +40,7 @@ public class CWCommand implements Listener {
         subExecutors.put("rejoin", this::rejoinCommand);
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onCommand(CommandEvent event) {
         CommandSender sender = event.getCommandSender();
         Command command = event.getCommand();

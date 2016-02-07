@@ -5,7 +5,7 @@ import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.minigames.base.Kit;
 import com.ithinkrok.minigames.base.User;
 import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
-import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.minigames.base.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.base.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.base.event.user.game.UserInGameChangeEvent;
@@ -15,6 +15,7 @@ import com.ithinkrok.minigames.base.task.GameRunnable;
 import com.ithinkrok.minigames.base.task.GameTask;
 import com.ithinkrok.minigames.base.util.math.Calculator;
 import com.ithinkrok.minigames.base.util.math.ExpressionCalculator;
+import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
@@ -24,7 +25,7 @@ import org.bukkit.potion.PotionEffectType;
 /**
  * Created by paul on 21/01/16.
  */
-public class VampireListener implements Listener {
+public class VampireListener implements CustomListener {
 
     User user;
 
@@ -43,7 +44,7 @@ public class VampireListener implements Listener {
 
     String unlockBuilding;
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<User, Kit> event) {
         user = event.getCreator();
 
@@ -68,12 +69,12 @@ public class VampireListener implements Listener {
 
     }
 
-    @MinigamesEventHandler(priority = MinigamesEventHandler.LOW)
+    @CustomEventHandler(priority = CustomEventHandler.LOW)
     public void onUserInteract(UserInteractEvent event) {
         if(event.getUser().isFlying()) event.setCancelled(true);
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onBuildingBuilt(BuildingBuiltEvent event) {
         VampireMetadata metadata = user.getMetadata(VampireMetadata.class);
 

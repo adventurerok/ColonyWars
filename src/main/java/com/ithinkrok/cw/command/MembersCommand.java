@@ -5,18 +5,19 @@ import com.ithinkrok.minigames.base.User;
 import com.ithinkrok.minigames.base.command.Command;
 import com.ithinkrok.minigames.base.command.CommandSender;
 import com.ithinkrok.minigames.base.event.CommandEvent;
-import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.minigames.base.team.Team;
 import com.ithinkrok.minigames.base.team.TeamIdentifier;
+import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.Location;
 import org.bukkit.event.Listener;
 
 /**
  * Created by paul on 22/01/16.
  */
-public class MembersCommand implements Listener {
+public class MembersCommand implements CustomListener {
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onCommand(CommandEvent event) {
         CommandSender sender = event.getCommandSender();
         Command command = event.getCommand();

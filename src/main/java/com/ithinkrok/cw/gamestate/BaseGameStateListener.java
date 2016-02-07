@@ -4,7 +4,7 @@ import com.ithinkrok.minigames.base.GameGroup;
 import com.ithinkrok.minigames.base.GameState;
 import com.ithinkrok.minigames.base.event.CommandEvent;
 import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
-import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.minigames.base.event.map.MapCreatureSpawnEvent;
 import com.ithinkrok.minigames.base.event.map.MapItemSpawnEvent;
 import com.ithinkrok.minigames.base.event.user.game.UserJoinEvent;
@@ -15,7 +15,6 @@ import com.ithinkrok.minigames.base.util.InventoryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import java.util.Random;
@@ -30,7 +29,7 @@ public class BaseGameStateListener extends SimpleInGameListener {
     protected String quitLocale;
     protected String joinLocale;
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<GameGroup, GameState> event) {
         super.onListenerLoaded(event);
 
@@ -41,14 +40,14 @@ public class BaseGameStateListener extends SimpleInGameListener {
         if (joinLocale == null) joinLocale = config.getString("user_join_locale", "user.join");
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onUserDropItem(UserDropItemEvent event) {
         if (InventoryUtils.getIdentifier(event.getItem().getItemStack()) == -1) return;
 
         event.setCancelled(true);
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onCommand(CommandEvent event) {
         switch (event.getCommand().getCommand().toLowerCase()) {
             case "kill":
@@ -57,19 +56,19 @@ public class BaseGameStateListener extends SimpleInGameListener {
         }
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onCreatureSpawn(MapCreatureSpawnEvent event) {
         if (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) return;
 
         event.setCancelled(true);
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onItemSpawn(MapItemSpawnEvent event) {
         event.setCancelled(true);
     }
 
-    @MinigamesEventHandler(priority = MinigamesEventHandler.MONITOR)
+    @CustomEventHandler(priority = CustomEventHandler.MONITOR)
     public void sendQuitMessageOnUserQuit(UserQuitEvent event) {
         String name = event.getUser().getFormattedName();
         int currentPlayers = event.getUserGameGroup().getUserCount() - 1;
@@ -78,7 +77,7 @@ public class BaseGameStateListener extends SimpleInGameListener {
         event.getUserGameGroup().sendLocale(quitLocale, name, currentPlayers, maxPlayers);
     }
 
-    @MinigamesEventHandler(priority = MinigamesEventHandler.FIRST)
+    @CustomEventHandler(priority = CustomEventHandler.FIRST)
     public void sendJoinMessageOnUserJoin(UserJoinEvent event) {
         String name = event.getUser().getFormattedName();
         int currentPlayers = event.getUserGameGroup().getUserCount();

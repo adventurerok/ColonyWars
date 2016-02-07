@@ -3,7 +3,7 @@ package com.ithinkrok.cw.metadata;
 import com.ithinkrok.cw.Building;
 import com.ithinkrok.cw.event.BuildingBuiltEvent;
 import com.ithinkrok.minigames.base.GameGroup;
-import com.ithinkrok.minigames.base.event.MinigamesEventHandler;
+import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.minigames.base.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.base.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.base.map.GameMap;
@@ -18,6 +18,7 @@ import com.ithinkrok.minigames.base.team.Team;
 import com.ithinkrok.minigames.base.team.TeamIdentifier;
 import com.ithinkrok.minigames.base.util.BoundingBox;
 import com.ithinkrok.minigames.base.util.LocationChecker;
+import com.ithinkrok.util.event.CustomListener;
 import de.inventivegames.hologram.Hologram;
 import de.inventivegames.hologram.HologramAPI;
 import org.bukkit.Location;
@@ -30,7 +31,7 @@ import java.util.HashMap;
 /**
  * Created by paul on 08/01/16.
  */
-public class BuildingController extends Metadata implements Listener, LocationChecker, SchematicPaster.BoundsChecker {
+public class BuildingController extends Metadata implements CustomListener, LocationChecker, SchematicPaster.BoundsChecker {
 
     private final GameGroup gameGroup;
 
@@ -131,7 +132,7 @@ public class BuildingController extends Metadata implements Listener, LocationCh
         return CWTeamStats.getOrCreate(team);
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onSchematicFinished(SchematicFinishedEvent event) {
         Building building = buildings.get(event.getSchematic());
         if (building == null || building.getCenterBlock() == null) return;
@@ -153,7 +154,7 @@ public class BuildingController extends Metadata implements Listener, LocationCh
         gameGroup.teamEvent(new BuildingBuiltEvent(team, building));
     }
 
-    @MinigamesEventHandler
+    @CustomEventHandler
     public void onSchematicDestroyed(SchematicDestroyedEvent event) {
         Building building = buildings.remove(event.getSchematic());
         buildingCentres.values().remove(building);

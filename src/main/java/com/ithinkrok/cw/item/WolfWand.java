@@ -1,13 +1,12 @@
 package com.ithinkrok.cw.item;
 
-import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.minigames.base.event.user.world.UserInteractEvent;
+import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Wolf;
-import org.bukkit.event.Listener;
 
 /**
  * Created by paul on 20/01/16.

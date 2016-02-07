@@ -3,11 +3,10 @@ package com.ithinkrok.cw.command;
 import com.ithinkrok.minigames.base.command.Command;
 import com.ithinkrok.minigames.base.command.CommandSender;
 import com.ithinkrok.minigames.base.event.CommandEvent;
-import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.minigames.base.metadata.Money;
 import com.ithinkrok.minigames.base.metadata.UserMoney;
+import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;
-import org.bukkit.event.Listener;
 
 /**
  * Created by paul on 17/01/16.

@@ -3,13 +3,12 @@ package com.ithinkrok.cw.listener;
 import com.ithinkrok.cw.metadata.StatsHolder;
 import com.ithinkrok.cw.metadata.TeamStatsHolderGroup;
 import com.ithinkrok.minigames.base.User;
-import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.minigames.base.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.base.event.user.game.UserChangeKitEvent;
 import com.ithinkrok.minigames.base.event.user.game.UserChangeTeamEvent;
 import com.ithinkrok.minigames.base.event.user.game.UserQuitEvent;
+import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;
-import org.bukkit.event.Listener;
 
 /**
  * Created by paul on 30/01/16.

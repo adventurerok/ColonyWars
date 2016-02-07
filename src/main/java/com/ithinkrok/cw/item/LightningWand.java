@@ -1,13 +1,12 @@
 package com.ithinkrok.cw.item;
 
 import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
-import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.minigames.base.event.user.world.UserAttackEvent;
 import com.ithinkrok.minigames.base.event.user.world.UserInteractEvent;
+import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LightningStrike;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 /**

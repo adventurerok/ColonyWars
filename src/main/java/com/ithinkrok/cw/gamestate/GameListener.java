@@ -5,9 +5,9 @@ import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.cw.metadata.StatsHolder;
 import com.ithinkrok.cw.scoreboard.CWScoreboardHandler;
 import com.ithinkrok.minigames.base.User;
-import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.minigames.base.event.user.game.UserChangeTeamEvent;
 import com.ithinkrok.minigames.base.gamestate.SimpleGameStartListener;
+import com.ithinkrok.util.event.CustomEventHandler;
 import org.bukkit.Color;
 import org.bukkit.GameMode;
 

@@ -1,6 +1,6 @@
 package com.ithinkrok.cw.command;
 
-import com.ithinkrok.minigames.base.command.Command;
+import com.ithinkrok.minigames.base.command.MinigamesCommand;
 import com.ithinkrok.minigames.base.command.CommandSender;
 import com.ithinkrok.minigames.base.event.CommandEvent;
 import com.ithinkrok.minigames.base.metadata.Money;
@@ -16,7 +16,7 @@ public class ToggleMoneyMessageCommand implements CustomListener {
     @CustomEventHandler
     public void onCommand(CommandEvent event) {
         CommandSender sender = event.getCommandSender();
-        Command command = event.getCommand();
+        MinigamesCommand command = event.getCommand();
 
         if(!command.requireUser(sender)) return;
 

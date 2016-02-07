@@ -3,7 +3,7 @@ package com.ithinkrok.cw.command;
 
 import com.ithinkrok.minigames.base.Kit;
 import com.ithinkrok.minigames.base.User;
-import com.ithinkrok.minigames.base.command.Command;
+import com.ithinkrok.minigames.base.command.MinigamesCommand;
 import com.ithinkrok.minigames.base.command.CommandSender;
 import com.ithinkrok.minigames.base.event.CommandEvent;
 import com.ithinkrok.minigames.base.event.user.UserEvent;
@@ -42,26 +42,26 @@ public class CWCommand implements CustomListener {
     @CustomEventHandler
     public void onCommand(CommandEvent event) {
         CommandSender sender = event.getCommandSender();
-        Command command = event.getCommand();
+        MinigamesCommand command = event.getCommand();
 
         if(!command.requireArgumentCount(sender, 1)){
             event.setValidCommand(false);
             return;
         }
 
-        Command subCommand = command.subCommand();
+        MinigamesCommand subCommand = command.subCommand();
 
         if(!subExecutors.containsKey(subCommand.getCommand())) {
             sender.sendLocale("command.cw.unknown", subCommand.getCommand());
             return;
         }
 
-        if(!Command.requirePermission(sender, "command.cw." + subCommand.getCommand())) return;
+        if(!MinigamesCommand.requirePermission(sender, "command.cw." + subCommand.getCommand())) return;
 
         event.setValidCommand(subExecutors.get(subCommand.getCommand()).onCommand(sender, subCommand));
     }
 
-    private boolean moneyCommand(CommandSender sender, Command command) {
+    private boolean moneyCommand(CommandSender sender, MinigamesCommand command) {
         if(!command.requireUser(sender)) return true;
 
         int amount = command.getIntArg(0, 10000);
@@ -78,7 +78,7 @@ public class CWCommand implements CustomListener {
         return true;
     }
 
-    private boolean buildingCommand(CommandSender sender, Command command) {
+    private boolean buildingCommand(CommandSender sender, MinigamesCommand command) {
         if(!command.requireUser(sender)) return true;
         if(!command.requireArgumentCount(sender, 1)) return true;
 
@@ -97,7 +97,7 @@ public class CWCommand implements CustomListener {
         return true;
     }
 
-    private boolean teamCommand(CommandSender sender, Command command) {
+    private boolean teamCommand(CommandSender sender, MinigamesCommand command) {
         if(!command.requireUser(sender)) return true;
         if(!command.requireArgumentCount(sender, 1)) return false;
 
@@ -113,7 +113,7 @@ public class CWCommand implements CustomListener {
         return true;
     }
 
-    private boolean customCommand(CommandSender sender, Command command) {
+    private boolean customCommand(CommandSender sender, MinigamesCommand command) {
         if(!command.requireUser(sender)) return true;
         if(!command.requireArgumentCount(sender, 1)) return false;
 
@@ -130,7 +130,7 @@ public class CWCommand implements CustomListener {
         return true;
     }
 
-    private boolean levelCommand(CommandSender sender, Command command) {
+    private boolean levelCommand(CommandSender sender, MinigamesCommand command) {
         if(!command.requireUser(sender)) return true;
         if(!command.requireArgumentCount(sender, 2)) return false;
 
@@ -144,7 +144,7 @@ public class CWCommand implements CustomListener {
         return true;
     }
 
-    private boolean kitCommand(CommandSender sender, Command command) {
+    private boolean kitCommand(CommandSender sender, MinigamesCommand command) {
         if(!command.requireUser(sender)) return true;
         if(!command.requireArgumentCount(sender, 1)) return false;
 
@@ -161,7 +161,7 @@ public class CWCommand implements CustomListener {
         return true;
     }
 
-    private boolean rejoinCommand(CommandSender sender, Command command) {
+    private boolean rejoinCommand(CommandSender sender, MinigamesCommand command) {
         if(!command.requireUser(sender)) return true;
 
         UserRejoinEvent event = new UserRejoinEvent(command.getUser());
@@ -198,6 +198,6 @@ public class CWCommand implements CustomListener {
      */
     private interface SubCommandExecutor {
 
-        boolean onCommand(CommandSender sender, Command command);
+        boolean onCommand(CommandSender sender, MinigamesCommand command);
     }
 }

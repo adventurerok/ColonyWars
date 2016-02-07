@@ -1,7 +1,7 @@
 package com.ithinkrok.cw.command;
 
 import com.ithinkrok.cw.metadata.StatsHolder;
-import com.ithinkrok.minigames.base.command.Command;
+import com.ithinkrok.minigames.base.command.MinigamesCommand;
 import com.ithinkrok.minigames.base.command.CommandSender;
 import com.ithinkrok.minigames.base.event.CommandEvent;
 import com.ithinkrok.util.event.CustomEventHandler;
@@ -15,7 +15,7 @@ public class LeaderboardCommand implements CustomListener {
     @CustomEventHandler
     public void onCommand(CommandEvent event) {
         CommandSender sender = event.getCommandSender();
-        Command command = event.getCommand();
+        MinigamesCommand command = event.getCommand();
 
         if (!command.requireGameGroup(sender)) return;
 

@@ -1,7 +1,7 @@
 package com.ithinkrok.cw.command;
 
 import com.ithinkrok.minigames.base.User;
-import com.ithinkrok.minigames.base.command.Command;
+import com.ithinkrok.minigames.base.command.MinigamesCommand;
 import com.ithinkrok.minigames.base.command.CommandSender;
 import com.ithinkrok.minigames.base.event.CommandEvent;
 import com.ithinkrok.minigames.base.lang.LanguageLookup;
@@ -25,7 +25,7 @@ public class TransferCommand implements CustomListener {
     @CustomEventHandler
     public void onCommand(CommandEvent event) {
         CommandSender sender = event.getCommandSender();
-        Command command = event.getCommand();
+        MinigamesCommand command = event.getCommand();
 
         if (!command.requireUser(sender)) return;
         if (!command.requireOthersPermission(sender, "mccw.transfer.others")) return;

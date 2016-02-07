@@ -34,7 +34,7 @@ public class TeamChatCommand implements CustomListener {
         }
 
         StringBuilder message = new StringBuilder();
-        for (Object s : command.getDefaultArgs()) {
+        for (Object s : command.getArgs()) {
             if (message.length() != 0) message.append(' ');
             message.append(s);
         }

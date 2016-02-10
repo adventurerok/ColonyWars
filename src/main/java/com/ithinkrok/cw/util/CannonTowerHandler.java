@@ -5,6 +5,7 @@ import com.ithinkrok.minigames.base.GameGroup;
 import com.ithinkrok.minigames.base.User;
 import com.ithinkrok.minigames.base.task.GameTask;
 import com.ithinkrok.minigames.base.util.EntityUtils;
+import com.ithinkrok.util.config.Config;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -25,12 +26,11 @@ import java.util.Objects;
  */
 public class CannonTowerHandler {
 
-    private static BlockFace[] SHOOTING_DIRECTIONS =
+    private static final BlockFace[] SHOOTING_DIRECTIONS =
             new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
 
     public static GameTask startCannonTowerTask(GameGroup gameGroup, Building building) {
-        ConfigurationSection config = gameGroup.getSharedObject("cannon_tower");
-        if (config == null) config = new MemoryConfiguration();
+        Config config = gameGroup.getSharedObjectOrEmpty("cannon_tower");
 
         Material arrowTurret = Material.matchMaterial(config.getString("arrow_turret_material", "SPONGE"));
         Material fireTurret = Material.matchMaterial(config.getString("fire_turret_material", "COAL_ORE"));

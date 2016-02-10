@@ -4,6 +4,7 @@ import com.ithinkrok.minigames.base.inventory.ClickableInventory;
 import com.ithinkrok.minigames.base.schematic.PastedSchematic;
 import com.ithinkrok.minigames.base.team.TeamIdentifier;
 import com.ithinkrok.msm.common.util.ConfigUtils;
+import com.ithinkrok.util.config.Config;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -14,10 +15,10 @@ import java.util.List;
  */
 public class Building {
 
-    private String buildingName;
-    private TeamIdentifier teamIdentifier;
+    private final String buildingName;
+    private final TeamIdentifier teamIdentifier;
 
-    private PastedSchematic schematic;
+    private final PastedSchematic schematic;
 
     public Building(String buildingName, TeamIdentifier teamIdentifier, PastedSchematic schematic) {
         this.buildingName = buildingName;
@@ -25,7 +26,7 @@ public class Building {
         this.schematic = schematic;
     }
 
-    public ConfigurationSection getConfig() {
+    public Config getConfig() {
         return schematic.getConfig();
     }
 
@@ -54,10 +55,10 @@ public class Building {
     }
 
     public ClickableInventory createShop() {
-        ConfigurationSection config = getConfig();
+        Config config = getConfig();
         if(config == null || !config.contains("shop")) return null;
 
-        List<ConfigurationSection> shopItems = ConfigUtils.getConfigList(config, "shop");
+        List<Config> shopItems = config.getConfigList("shop");
 
         ClickableInventory inv = new ClickableInventory(buildingName);
         inv.loadFromConfig(shopItems);

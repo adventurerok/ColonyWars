@@ -2,6 +2,7 @@ package com.ithinkrok.cw.inventory;
 
 import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.minigames.base.inventory.event.BuyablePurchaseEvent;
+import com.ithinkrok.util.config.Config;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
@@ -19,7 +20,7 @@ public class BuildingBuyableWith extends BuildingBuyable {
     }
 
     @Override
-    public void configure(ConfigurationSection config) {
+    public void configure(Config config) {
         with = config.getStringList("with_buildings");
 
         super.configure(config);

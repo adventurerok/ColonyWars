@@ -6,6 +6,7 @@ import com.ithinkrok.minigames.base.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.base.event.user.game.UserInGameChangeEvent;
 import com.ithinkrok.minigames.base.metadata.UserMetadata;
 import com.ithinkrok.minigames.base.task.GameTask;
+import com.ithinkrok.util.config.Config;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 
@@ -16,14 +17,13 @@ public class PotionStrengthModifier extends UserMetadata {
 
     private double potionStrengthModifier = 1.0;
 
-    private double maxModifier;
-    private double minModifier;
-    private double lossOnPotion;
-    private double gainPerInterval;
+    private final double maxModifier;
+    private final double minModifier;
+    private final double lossOnPotion;
+    private final double gainPerInterval;
 
     public PotionStrengthModifier(User user) {
-        ConfigurationSection config = user.getSharedObject("potion_strength_metadata");
-        if (config == null) config = new MemoryConfiguration();
+        Config config = user.getSharedObjectOrEmpty("potion_strength_metadata");
 
         maxModifier = config.getDouble("max_modifier", 1.0);
         minModifier = config.getDouble("min_modifier", 0.5);

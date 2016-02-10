@@ -9,6 +9,7 @@ import com.ithinkrok.minigames.base.util.MinigamesConfigs;
 import com.ithinkrok.minigames.base.util.SoundEffect;
 import com.ithinkrok.minigames.base.util.math.Calculator;
 import com.ithinkrok.minigames.base.util.math.ExpressionCalculator;
+import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.Material;
@@ -36,7 +37,7 @@ public class EarthBender implements CustomListener {
 
     @CustomEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<?, ?> event) {
-        ConfigurationSection config = event.getConfig();
+        Config config = event.getConfig();
 
         maxMoves = new ExpressionCalculator(config.getString("max_moves"));
         moveVelocity = new ExpressionCalculator(config.getString("move_velocity", "1"));

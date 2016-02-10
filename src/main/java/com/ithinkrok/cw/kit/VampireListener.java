@@ -14,6 +14,7 @@ import com.ithinkrok.minigames.base.task.GameRunnable;
 import com.ithinkrok.minigames.base.task.GameTask;
 import com.ithinkrok.minigames.base.util.math.Calculator;
 import com.ithinkrok.minigames.base.util.math.ExpressionCalculator;
+import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.block.Block;
@@ -47,7 +48,7 @@ public class VampireListener implements CustomListener {
     public void onListenerLoaded(ListenerLoadedEvent<User, Kit> event) {
         user = event.getCreator();
 
-        ConfigurationSection config = event.getConfig();
+        Config config = event.getConfig();
 
         unlockBuilding = config.getString("unlock_building");
 

@@ -15,6 +15,7 @@ import com.ithinkrok.minigames.base.lang.Messagable;
 import com.ithinkrok.minigames.base.metadata.UserMetadata;
 import com.ithinkrok.minigames.base.team.Team;
 import com.ithinkrok.minigames.base.team.TeamIdentifier;
+import com.ithinkrok.util.config.Config;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 
@@ -26,16 +27,16 @@ import java.util.UUID;
  */
 public class StatsHolder extends UserMetadata implements Messagable {
 
-    private GameGroup gameGroup;
+    private final GameGroup gameGroup;
     private UserCategoryStats statsChanges = new UserCategoryStats();
-    private String playerName;
+    private final String playerName;
     private User user;
-    private UUID uniqueId;
+    private final UUID uniqueId;
 
-    private int winScoreModifier;
-    private int lossScoreModifier;
-    private int killScoreModifier;
-    private int deathScoreModifier;
+    private final int winScoreModifier;
+    private final int lossScoreModifier;
+    private final int killScoreModifier;
+    private final int deathScoreModifier;
 
     private String lastKit, lastTeam;
 
@@ -46,8 +47,7 @@ public class StatsHolder extends UserMetadata implements Messagable {
         playerName = user.getName();
         uniqueId = user.getUuid();
 
-        ConfigurationSection config = user.getSharedObject("stats_holder_metadata");
-        if (config == null) config = new MemoryConfiguration();
+        Config config = user.getSharedObjectOrEmpty("stats_holder_metadata");
 
         winScoreModifier = config.getInt("win_score_modifier", 50);
         lossScoreModifier = config.getInt("loss_score_modifier", -10);
@@ -312,8 +312,8 @@ public class StatsHolder extends UserMetadata implements Messagable {
 
     private class StatsUpdater implements DatabaseTask {
 
-        private UserCategoryStats target;
-        private UserCategoryStats changes;
+        private final UserCategoryStats target;
+        private final UserCategoryStats changes;
 
         public StatsUpdater(UserCategoryStats target, UserCategoryStats changes) {
             this.target = target;

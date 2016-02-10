@@ -5,6 +5,7 @@ import com.ithinkrok.minigames.base.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.base.util.SoundEffect;
 import com.ithinkrok.minigames.base.util.math.Calculator;
 import com.ithinkrok.minigames.base.util.math.ExpressionCalculator;
+import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.Sound;
@@ -22,7 +23,7 @@ public class EnderWand implements CustomListener {
 
     @CustomEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<?, ?> event) {
-        ConfigurationSection config = event.getConfig();
+        Config config = event.getConfig();
 
         speedMult = new ExpressionCalculator(config.getString("speed"));
         shootSound = Sound.valueOf(config.getString("fire_sound", "SHOOT_ARROW"));

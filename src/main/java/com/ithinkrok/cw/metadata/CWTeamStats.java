@@ -8,6 +8,7 @@ import com.ithinkrok.minigames.base.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.base.metadata.Metadata;
 import com.ithinkrok.minigames.base.team.Team;
 import com.ithinkrok.msm.common.util.ConfigUtils;
+import com.ithinkrok.util.config.Config;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
@@ -27,21 +28,21 @@ public class CWTeamStats extends Metadata {
 
     private final Team team;
 
-    private HashMap<String, Integer> buildingCounts = new HashMap<>();
-    private HashMap<String, Integer> buildingNowCounts = new HashMap<>();
-    private HashMap<String, Boolean> hadBuildings = new HashMap<>();
+    private final HashMap<String, Integer> buildingCounts = new HashMap<>();
+    private final HashMap<String, Integer> buildingNowCounts = new HashMap<>();
+    private final HashMap<String, Boolean> hadBuildings = new HashMap<>();
 
     private int buildingsConstructingNow = 0;
 
-    private List<Location> churchLocations = new ArrayList<>();
+    private final List<Location> churchLocations = new ArrayList<>();
     private int respawnChance;
 
     private Location baseLocation;
 
-    private Location spawnLocation;
+    private final Location spawnLocation;
 
-    private String respawnChanceLocale;
-    private String eliminatedLocale;
+    private final String respawnChanceLocale;
+    private final String eliminatedLocale;
 
     public Location getBaseLocation() {
         return baseLocation;
@@ -58,14 +59,13 @@ public class CWTeamStats extends Metadata {
     public CWTeamStats(Team team) {
         this.team = team;
 
-        ConfigurationSection spawnLocations = team.getSharedObject("spawn_locations");
+        Config spawnLocations = team.getSharedObject("spawn_locations");
 
         Vector spawnLocation = ConfigUtils.getVector(spawnLocations, team.getName());
         this.spawnLocation = new Location(team.getGameGroup().getCurrentMap().getWorld(), spawnLocation.getX(),
                 spawnLocation.getY(), spawnLocation.getZ());
 
-        ConfigurationSection metadata = team.getSharedObject("team_stats_metadata");
-        if(metadata == null) metadata = new MemoryConfiguration();
+        Config metadata = team.getSharedObjectOrEmpty("team_stats_metadata");
 
         respawnChanceLocale = metadata.getString("respawn_chance_locale", "respawn.chance");
         eliminatedLocale = metadata.getString("team_eliminated_locale", "team.eliminated");
@@ -111,7 +111,7 @@ public class CWTeamStats extends Metadata {
         buildingCounts.put(building.getBuildingName(), getBuildingCount(building.getBuildingName()) + 1);
         hadBuildings.put(building.getBuildingName(), true);
 
-        ConfigurationSection config = building.getSchematic().getConfig();
+        Config config = building.getSchematic().getConfig();
         if(config != null) {
             if(config.contains("base")) baseLocation = building.getCenterBlock();
             if(config.contains("revival_rate")) {

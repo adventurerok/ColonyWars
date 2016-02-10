@@ -7,6 +7,7 @@ import com.ithinkrok.minigames.base.metadata.Money;
 import com.ithinkrok.minigames.base.team.Team;
 import com.ithinkrok.minigames.base.user.scoreboard.ScoreboardDisplay;
 import com.ithinkrok.minigames.base.user.scoreboard.ScoreboardHandler;
+import com.ithinkrok.util.config.Config;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -19,18 +20,18 @@ import java.util.Map;
  */
 public class CWScoreboardHandler implements ScoreboardHandler {
 
-    private String displayName;
-    private String userBalanceDisplay;
-    private String teamBalanceDisplay;
-    private String buildingNowCountDisplay;
-    private String revivalRateDisplay;
+    private final String displayName;
+    private final String userBalanceDisplay;
+    private final String teamBalanceDisplay;
+    private final String buildingNowCountDisplay;
+    private final String revivalRateDisplay;
 
-    private List<String> oldBuildingNows = new ArrayList<>();
+    private final List<String> oldBuildingNows = new ArrayList<>();
 
     private int oldMoney = 0;
 
     public CWScoreboardHandler(User user) {
-        ConfigurationSection config = user.getSharedObject("colony_wars_scoreboard");
+        Config config = user.getSharedObject("colony_wars_scoreboard");
 
         String displayNameLocale = config.getString("title");
         displayName = user.getLanguageLookup().getLocale(displayNameLocale);

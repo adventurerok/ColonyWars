@@ -9,6 +9,7 @@ import com.ithinkrok.minigames.base.item.CustomItem;
 import com.ithinkrok.minigames.base.util.InventoryUtils;
 import com.ithinkrok.minigames.base.util.MinigamesConfigs;
 import com.ithinkrok.msm.common.util.ConfigUtils;
+import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.configuration.ConfigurationSection;
@@ -36,10 +37,10 @@ public class KitListener implements CustomListener {
     public void onListenerLoaded(ListenerLoadedEvent<User, Kit> event) {
         owner = event.getCreator();
 
-        ConfigurationSection buildings = event.getConfig().getConfigurationSection("buildings");
+        Config buildings = event.getConfig().getConfigOrNull("buildings");
 
         for (String buildingName : buildings.getKeys(false)) {
-            ConfigurationSection buildingConfig = buildings.getConfigurationSection(buildingName);
+            Config buildingConfig = buildings.getConfigOrNull(buildingName);
 
             buildingConfigs.put(buildingName, new BuildingConfig(buildingConfig));
         }
@@ -63,25 +64,25 @@ public class KitListener implements CustomListener {
 
     private static class BuildingConfig {
 
-        private List<ConfigurationSection> extraShopItems = new ArrayList<>();
+        private List<Config> extraShopItems = new ArrayList<>();
         private List<String> customItemGives = new ArrayList<>();
         private final List<ItemStack> itemStackGives = new ArrayList<>();
         private final List<PotionEffect> potionEffects = new ArrayList<>();
         private final Map<String, Integer> upgrades = new HashMap<>();
 
-        public BuildingConfig(ConfigurationSection config) {
-            if (config.contains("shop")) extraShopItems = ConfigUtils.getConfigList(config, "shop");
+        public BuildingConfig(Config config) {
+            if (config.contains("shop")) extraShopItems = config.getConfigList("shop");
             if (config.contains("custom_items")) customItemGives = config.getStringList("custom_items");
 
             if (config.contains("items")) {
-                ConfigurationSection items = config.getConfigurationSection("items");
+                Config items = config.getConfigOrNull("items");
                 itemStackGives.addAll(items.getKeys(false).stream()
                         .map(unusedName -> MinigamesConfigs.getItemStack(items, unusedName))
                         .collect(Collectors.toList()));
             }
 
             if (config.contains("potion_effects")) {
-                ConfigurationSection potions = config.getConfigurationSection("potion_effects");
+                Config potions = config.getConfigOrNull("potion_effects");
 
                 for (String potionName : potions.getKeys(false)) {
                     PotionEffectType potionEffectType = PotionEffectType.getByName(potionName);
@@ -92,7 +93,7 @@ public class KitListener implements CustomListener {
             }
 
             if (config.contains("upgrades")) {
-                ConfigurationSection upgrades = config.getConfigurationSection("upgrades");
+                Config upgrades = config.getConfigOrNull("upgrades");
 
                 for (String upgradeName : upgrades.getKeys(false)) {
                     this.upgrades.put(upgradeName, upgrades.getInt(upgradeName));

@@ -11,6 +11,7 @@ import com.ithinkrok.minigames.base.event.user.world.UserChatEvent;
 import com.ithinkrok.minigames.base.task.GameTask;
 import com.ithinkrok.minigames.base.util.CountdownConfig;
 import com.ithinkrok.minigames.base.util.MinigamesConfigs;
+import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.event.CustomEventHandler;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
@@ -28,8 +29,7 @@ public class AftermathListener extends BaseGameStateListener {
     @CustomEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<GameGroup, GameState> event) {
         super.onListenerLoaded(event);
-        ConfigurationSection config = event.getConfig();
-        if (config == null) config = new MemoryConfiguration();
+        Config config = event.getConfigOrEmpty();
 
         countdown = MinigamesConfigs.getCountdown(config, "countdown", "aftermath", 15, "countdowns.aftermath");
 

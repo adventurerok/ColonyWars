@@ -5,6 +5,7 @@ import com.ithinkrok.minigames.base.event.user.game.UserAbilityCooldownEvent;
 import com.ithinkrok.minigames.base.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.base.item.CustomItem;
 import com.ithinkrok.minigames.base.task.GameTask;
+import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.Effect;
@@ -25,11 +26,11 @@ public class Cloak implements CustomListener {
 
     @CustomEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<?, ?> event) {
-        cloakEffects = getEffectsFromConfig(event.getConfig().getConfigurationSection("cloak_effects"));
-        decloakEffects = getEffectsFromConfig(event.getConfig().getConfigurationSection("decloak_effects"));
+        cloakEffects = getEffectsFromConfig(event.getConfig().getConfigOrNull("cloak_effects"));
+        decloakEffects = getEffectsFromConfig(event.getConfig().getConfigOrNull("decloak_effects"));
     }
 
-    private Map<PotionEffectType, Integer> getEffectsFromConfig(ConfigurationSection config) {
+    private Map<PotionEffectType, Integer> getEffectsFromConfig(Config config) {
         Map<PotionEffectType, Integer> result = new HashMap<>();
 
         for(String key : config.getKeys(false)) {

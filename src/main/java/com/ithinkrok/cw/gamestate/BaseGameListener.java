@@ -23,6 +23,7 @@ import com.ithinkrok.minigames.base.util.*;
 import com.ithinkrok.minigames.base.util.math.Calculator;
 import com.ithinkrok.minigames.base.util.math.ExpressionCalculator;
 import com.ithinkrok.minigames.base.util.math.SingleValueVariables;
+import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.event.CustomEventHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -69,7 +70,7 @@ public class BaseGameListener extends BaseGameStateListener {
 
     }
 
-    private final WeakHashMap<ConfigurationSection, GoldConfig> goldConfigMap = new WeakHashMap<>();
+    private final WeakHashMap<Config, GoldConfig> goldConfigMap = new WeakHashMap<>();
 
     protected String showdownGameState;
     private String goldSharedConfig;
@@ -125,7 +126,7 @@ public class BaseGameListener extends BaseGameStateListener {
     public void onListenerLoaded(ListenerLoadedEvent<GameGroup, GameState> event) {
         super.onListenerLoaded(event);
 
-        ConfigurationSection config = event.getConfig();
+        Config config = event.getConfig();
 
         goldSharedConfig = config.getString("gold_shared_object");
 
@@ -176,7 +177,7 @@ public class BaseGameListener extends BaseGameStateListener {
 
     @CustomEventHandler
     public void onItemSpawn(MapItemSpawnEvent event) {
-        ConfigurationSection goldShared = event.getGameGroup().getSharedObject(goldSharedConfig);
+        Config goldShared = event.getGameGroup().getSharedObject(goldSharedConfig);
         GoldConfig gold = getGoldConfig(goldShared);
 
         if (!gold.allowItemPickup(event.getItem().getItemStack().getType())) {
@@ -212,7 +213,7 @@ public class BaseGameListener extends BaseGameStateListener {
         }
     }
 
-    private GoldConfig getGoldConfig(ConfigurationSection config) {
+    private GoldConfig getGoldConfig(Config config) {
         GoldConfig gold = goldConfigMap.get(config);
 
         if (gold == null) {
@@ -492,7 +493,7 @@ public class BaseGameListener extends BaseGameStateListener {
         }
 
         if (event.getBlock().getType() != Material.OBSIDIAN) {
-            ConfigurationSection goldShared = event.getUserGameGroup().getSharedObject(goldSharedConfig);
+            Config goldShared = event.getUserGameGroup().getSharedObject(goldSharedConfig);
             GoldConfig gold = getGoldConfig(goldShared);
 
             gold.onBlockBreak(event.getBlock(), event.getUserGameGroup());
@@ -579,7 +580,7 @@ public class BaseGameListener extends BaseGameStateListener {
 
     @CustomEventHandler
     public void onBlockBreakNaturally(MapBlockBreakNaturallyEvent event) {
-        ConfigurationSection goldShared = event.getGameGroup().getSharedObject(goldSharedConfig);
+        Config goldShared = event.getGameGroup().getSharedObject(goldSharedConfig);
         GoldConfig gold = getGoldConfig(goldShared);
 
         gold.onBlockBreak(event.getBlock(), event.getGameGroup());
@@ -593,10 +594,10 @@ public class BaseGameListener extends BaseGameStateListener {
     }
 
     protected static class GoldConfig {
-        HashMap<Material, ItemStack> oreBlocks = new HashMap<>();
+        Map<Material, ItemStack> oreBlocks = new EnumMap<>(Material.class);
 
-        HashMap<Material, Integer> userGold = new HashMap<>();
-        HashMap<Material, Integer> teamGold = new HashMap<>();
+        Map<Material, Integer> userGold = new EnumMap<>(Material.class);
+        Map<Material, Integer> teamGold = new EnumMap<>(Material.class);
 
         boolean treesEnabled;
         Material treeItemMaterial;
@@ -605,8 +606,8 @@ public class BaseGameListener extends BaseGameStateListener {
 
         Sound pickupSound;
 
-        public GoldConfig(ConfigurationSection config) {
-            ConfigurationSection ores = config.getConfigurationSection("ore_blocks");
+        public GoldConfig(Config config) {
+            Config ores = config.getConfigOrNull("ore_blocks");
             if (ores != null) {
                 for (String matName : ores.getKeys(false)) {
                     Material material = Material.matchMaterial(matName);
@@ -615,10 +616,10 @@ public class BaseGameListener extends BaseGameStateListener {
                 }
             }
 
-            ConfigurationSection items = config.getConfigurationSection("items");
+            Config items = config.getConfigOrNull("items");
             for (String matName : items.getKeys(false)) {
                 Material material = Material.matchMaterial(matName);
-                ConfigurationSection matConfig = items.getConfigurationSection(matName);
+                Config matConfig = items.getConfigOrNull(matName);
 
                 userGold.put(material, matConfig.getInt("user"));
                 teamGold.put(material, matConfig.getInt("team"));
@@ -626,7 +627,7 @@ public class BaseGameListener extends BaseGameStateListener {
 
             pickupSound = Sound.valueOf(config.getString("pickup_sound").toUpperCase());
 
-            ConfigurationSection trees = config.getConfigurationSection("trees");
+            Config trees = config.getConfigOrNull("trees");
             treesEnabled = trees != null && trees.getBoolean("enabled");
 
             if (!treesEnabled) return;

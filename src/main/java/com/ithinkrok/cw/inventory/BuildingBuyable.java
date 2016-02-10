@@ -4,6 +4,7 @@ import com.ithinkrok.minigames.base.inventory.ItemBuyable;
 import com.ithinkrok.minigames.base.inventory.event.BuyablePurchaseEvent;
 import com.ithinkrok.minigames.base.inventory.event.CalculateItemForUserEvent;
 import com.ithinkrok.minigames.base.util.InventoryUtils;
+import com.ithinkrok.util.config.Config;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -24,7 +25,7 @@ public class BuildingBuyable extends ItemBuyable {
     }
 
     @Override
-    public void configure(ConfigurationSection config) {
+    public void configure(Config config) {
         super.configure(config);
 
         Material buildBlockMaterial = Material.getMaterial(config.getString("material", "LAPIS_ORE"));

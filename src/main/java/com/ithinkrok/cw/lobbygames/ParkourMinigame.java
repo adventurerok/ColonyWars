@@ -7,6 +7,7 @@ import com.ithinkrok.minigames.base.event.user.world.UserInteractWorldEvent;
 import com.ithinkrok.minigames.base.map.GameMap;
 import com.ithinkrok.minigames.base.metadata.Money;
 import com.ithinkrok.msm.common.util.ConfigUtils;
+import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.configuration.ConfigurationSection;
@@ -25,11 +26,11 @@ public class ParkourMinigame implements CustomListener {
 
     @CustomEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<GameGroup, GameMap> event) {
-        ConfigurationSection config = event.getConfig();
+        Config config = event.getConfig();
 
         maxParkourMoney = config.getInt("max_parkour_money");
 
-        for(ConfigurationSection parkourRun : ConfigUtils.getConfigList(config, "runs")) {
+        for(Config parkourRun : config.getConfigList("runs")) {
             Vector loc = ConfigUtils.getVector(parkourRun, "");
 
             parkourRuns.put(loc, parkourRun.getInt("reward"));

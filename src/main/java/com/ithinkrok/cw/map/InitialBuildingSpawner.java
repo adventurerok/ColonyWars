@@ -6,6 +6,7 @@ import com.ithinkrok.minigames.base.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.base.map.GameMap;
 import com.ithinkrok.minigames.base.team.TeamIdentifier;
 import com.ithinkrok.msm.common.util.ConfigUtils;
+import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.Location;
@@ -25,7 +26,7 @@ public class InitialBuildingSpawner implements CustomListener {
 
     @CustomEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<?, ?> event) {
-        List<ConfigurationSection> buildingConfigs = ConfigUtils.getConfigList(event.getConfig(), "initial_buildings");
+        List<Config> buildingConfigs = event.getConfig().getConfigList("initial_buildings");
 
         buildingList.addAll(buildingConfigs.stream().map(InitialBuilding::new).collect(Collectors.toList()));
     }
@@ -52,7 +53,7 @@ public class InitialBuildingSpawner implements CustomListener {
         private final String buildingName;
         private final int rotation;
 
-        public InitialBuilding(ConfigurationSection config) {
+        public InitialBuilding(Config config) {
             location = ConfigUtils.getVector(config, "location");
             teamName = config.getString("team");
             buildingName = config.getString("building");

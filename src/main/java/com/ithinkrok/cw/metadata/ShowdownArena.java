@@ -8,6 +8,7 @@ import com.ithinkrok.minigames.base.metadata.Metadata;
 import com.ithinkrok.minigames.base.task.GameTask;
 import com.ithinkrok.minigames.base.util.BoundingBox;
 import com.ithinkrok.msm.common.util.ConfigUtils;
+import com.ithinkrok.util.config.Config;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.util.Vector;
@@ -17,22 +18,22 @@ import org.bukkit.util.Vector;
  */
 public class ShowdownArena extends Metadata {
 
-    private GameGroup gameGroup;
+    private final GameGroup gameGroup;
 
     private int radiusX, radiusZ;
-    private Location center;
-    private BoundingBox bounds;
+    private final Location center;
+    private final BoundingBox bounds;
 
-    private int minRadius;
-    private int shrinkStartTime;
-    private int shrinkIntervalTime;
+    private final int minRadius;
+    private final int shrinkStartTime;
+    private final int shrinkIntervalTime;
 
-    private String showdownShrinkingLocale;
+    private final String showdownShrinkingLocale;
 
     public ShowdownArena(GameGroup gameGroup) {
         this.gameGroup = gameGroup;
 
-        ConfigurationSection config = gameGroup.getSharedObject("showdown");
+        Config config = gameGroup.getSharedObject("showdown");
         this.radiusX = config.getInt("size.x");
         this.radiusZ = config.getInt("size.z");
 
@@ -44,7 +45,7 @@ public class ShowdownArena extends Metadata {
 
         this.bounds = new BoundingBox(min, max);
 
-        ConfigurationSection metadata = gameGroup.getSharedObject("showdown_metadata");
+        Config metadata = gameGroup.getSharedObject("showdown_metadata");
 
         minRadius = metadata.getInt("min_radius", 5);
         shrinkStartTime = (int) (metadata.getDouble("shrink_start_time", 180) * 20);

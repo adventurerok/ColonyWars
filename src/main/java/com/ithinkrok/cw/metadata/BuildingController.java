@@ -17,6 +17,7 @@ import com.ithinkrok.minigames.base.team.Team;
 import com.ithinkrok.minigames.base.team.TeamIdentifier;
 import com.ithinkrok.minigames.base.util.BoundingBox;
 import com.ithinkrok.minigames.base.util.LocationChecker;
+import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;
 import de.inventivegames.hologram.Hologram;
@@ -43,8 +44,7 @@ public class BuildingController extends Metadata implements CustomListener, Loca
     public BuildingController(GameGroup gameGroup) {
         this.gameGroup = gameGroup;
 
-        ConfigurationSection config = gameGroup.getSharedObject("building_controller_metadata");
-        if (config == null) config = new MemoryConfiguration();
+        Config config = gameGroup.getSharedObjectOrEmpty("building_controller_metadata");
 
         shopLocale = config.getString("shop_name_locale", "building.shop.name");
         shopInfoLocale = config.getString("shop_description_locale", "building.shop.desc");

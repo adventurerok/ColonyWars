@@ -10,6 +10,7 @@ import com.ithinkrok.minigames.base.event.user.world.UserInteractWorldEvent;
 import com.ithinkrok.minigames.base.util.BoundingBox;
 import com.ithinkrok.minigames.base.util.MinigamesConfigs;
 import com.ithinkrok.msm.common.util.ConfigUtils;
+import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.GameMode;
@@ -37,9 +38,9 @@ public class SpleefMinigame implements CustomListener {
     public void configure(ListenerLoadedEvent<?, ?> event) {
         spadeMaterial = Material.matchMaterial(event.getConfig().getString("spade", "IRON_SPADE"));
 
-        ConfigurationSection arenasConfig = event.getConfig().getConfigurationSection("arenas");
+        Config arenasConfig = event.getConfig().getConfigOrNull("arenas");
         for(String key : arenasConfig.getKeys(false)){
-            ConfigurationSection arenaConfig = arenasConfig.getConfigurationSection(key);
+            Config arenaConfig = arenasConfig.getConfigOrNull(key);
 
             Arena arena = new Arena(arenaConfig);
 
@@ -107,7 +108,7 @@ public class SpleefMinigame implements CustomListener {
         private final List<UUID> usersInSpleef = new ArrayList<>();
         private final LinkedHashSet<UUID> queue = new LinkedHashSet<>();
 
-        public Arena(ConfigurationSection config) {
+        public Arena(Config config) {
             queueButtons = ConfigUtils.getVectorList(config, "queue_buttons");
             spawnLocations = ConfigUtils.getVectorList(config, "spawn_locations");
             exitLocation = ConfigUtils.getVector(config, "exit_location");

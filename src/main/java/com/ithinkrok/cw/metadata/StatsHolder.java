@@ -11,7 +11,7 @@ import com.ithinkrok.minigames.base.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.base.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.base.event.user.game.UserInGameChangeEvent;
 import com.ithinkrok.util.lang.LanguageLookup;
-import com.ithinkrok.minigames.base.lang.Messagable;
+import com.ithinkrok.util.lang.Messagable;
 import com.ithinkrok.minigames.base.metadata.UserMetadata;
 import com.ithinkrok.minigames.base.team.Team;
 import com.ithinkrok.minigames.base.team.TeamIdentifier;

@@ -4,7 +4,7 @@ import com.ithinkrok.minigames.base.User;
 import com.ithinkrok.minigames.base.command.MinigamesCommand;
 import com.ithinkrok.minigames.base.command.MinigamesCommandSender;
 import com.ithinkrok.minigames.base.event.MinigamesCommandEvent;
-import com.ithinkrok.minigames.base.lang.LanguageLookup;
+import com.ithinkrok.util.lang.LanguageLookup;
 import com.ithinkrok.minigames.base.metadata.Metadata;
 import com.ithinkrok.minigames.base.metadata.MetadataHolder;
 import com.ithinkrok.minigames.base.metadata.Money;

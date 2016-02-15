@@ -4,9 +4,7 @@ RECODE BUGS:
  - Force showdown timers
  - Class descriptions
  - Handbook
- - Priest not getting stuff (but other priest in team did)
- - please don't spam other players
- - Can see spectators
+ -
 
 LOW PRIORITY / INVESTIGATE:
  - Zombie tab list names

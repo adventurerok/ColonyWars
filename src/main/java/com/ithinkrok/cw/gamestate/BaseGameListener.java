@@ -8,6 +8,7 @@ import com.ithinkrok.minigames.base.GameState;
 import com.ithinkrok.minigames.base.User;
 import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.base.event.game.CountdownFinishedEvent;
+import com.ithinkrok.minigames.base.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.base.event.map.*;
 import com.ithinkrok.minigames.base.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.base.event.user.game.UserQuitEvent;
@@ -106,6 +107,10 @@ public class BaseGameListener extends BaseGameStateListener {
     private Calculator enderAmount;
     private String enderFoundLocale;
 
+    private String motdGameLocale;
+    private String motdShowdownLocale;
+    private String motdAftermathLocale;
+
     @CustomEventHandler
     public void onUserChat(UserChatEvent event) {
         if (event.getUser().isInGame()) {
@@ -172,6 +177,10 @@ public class BaseGameListener extends BaseGameStateListener {
 
         enderAmount = new ExpressionCalculator(config.getString("ender_amount"));
         enderFoundLocale = config.getString("ender_found_locale", "ender_chest.found");
+
+        motdGameLocale = config.getString("motd.in_game_locale", "motd.cw_game");
+        motdShowdownLocale = config.getString("motd.showdown_locale", "motd.showdown");
+        motdAftermathLocale = config.getString("motd.aftermath_locale", "motd.aftermath");
     }
 
     @CustomEventHandler
@@ -221,6 +230,13 @@ public class BaseGameListener extends BaseGameStateListener {
         }
 
         return gold;
+    }
+
+    @CustomEventHandler
+    public void onGameStateChange(GameStateChangedEvent event) {
+        event.getGameGroup().doInFuture(task -> {
+            updateMotd(event.getGameGroup());
+        });
     }
 
     @CustomEventHandler
@@ -374,6 +390,32 @@ public class BaseGameListener extends BaseGameStateListener {
         checkVictory(died.getGameGroup(), true);
 
         if (!died.isPlayer()) died.removeNonPlayer();
+
+        updateMotd(died.getGameGroup());
+    }
+
+    private void updateMotd(GameGroup gameGroup) {
+        switch(gameGroup.getCurrentGameState().getName()) {
+            case "game":
+                gameGroup.setMotd(gameGroup.getLocale(motdGameLocale, getNonZombieUsersInGame(gameGroup)));
+                return;
+            case "showdown":
+                gameGroup.setMotd(gameGroup.getLocale(motdShowdownLocale));
+                return;
+            case "aftermath":
+                gameGroup.setMotd(gameGroup.getLocale(motdAftermathLocale));
+        }
+    }
+
+    public int getNonZombieUsersInGame(GameGroup gameGroup) {
+        int count = 0;
+
+        for(User user : gameGroup.getUsers()) {
+            if(!user.isInGame() || !user.isPlayer()) continue;
+            ++count;
+        }
+
+        return count;
     }
 
     private void sendDeathMessage(GameGroup gameGroup, String locale, String ending, Object... args) {
@@ -417,6 +459,8 @@ public class BaseGameListener extends BaseGameStateListener {
         winnerStats.addGameWin();
 
         gameGroup.changeGameState(aftermathGameState);
+
+        updateMotd(gameGroup);
     }
 
     protected void checkShowdownStart(GameGroup gameGroup, int teamsInGame, int nonZombieUsersInGame) {
@@ -590,6 +634,8 @@ public class BaseGameListener extends BaseGameStateListener {
         if (!event.getCountdown().getName().equals(showdownCountdown.getName())) return;
 
         event.getGameGroup().changeGameState(showdownGameState);
+
+        updateMotd(event.getGameGroup());
     }
 
     protected static class GoldConfig {

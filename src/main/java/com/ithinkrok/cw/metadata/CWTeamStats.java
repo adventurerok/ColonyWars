@@ -185,7 +185,7 @@ public class CWTeamStats extends Metadata {
 
     public void respawnUser(User died) {
         Location loc;
-        if(churchLocations.size() > 0) loc = churchLocations.get(random.nextInt(churchLocations.size()));
+        if(!churchLocations.isEmpty()) loc = churchLocations.get(random.nextInt(churchLocations.size()));
         else loc = baseLocation;
 
         died.teleport(loc);

@@ -4,7 +4,6 @@ RECODE BUGS:
  - Force showdown timers
  - Class descriptions
  - Handbook
- -
 
 LOW PRIORITY / INVESTIGATE:
  - Zombie tab list names

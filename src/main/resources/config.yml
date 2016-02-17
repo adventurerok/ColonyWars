@@ -1,3 +1,5 @@
 
 gamegroup_configs:
   colony_wars: "colony_wars/colony_wars.yml"
+  2x_colony_wars: "colony_wars/2x_colony_wars.yml"
+  12x_colony_wars: "colony_wars/12x_colony_wars.yml"

@@ -30,7 +30,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
@@ -560,7 +559,7 @@ public class BaseGameListener extends BaseGameStateListener {
 
         event.getBlock().setType(Material.AIR);
 
-        String buildingType = InventoryUtils.getDisplayName(event.getItemPlaced());
+        String buildingType = InventoryUtils.getItemName(event.getItemPlaced());
 
         if (buildingType == null || event.getUserGameGroup().getSchematic(buildingType) == null) {
             event.getUser().sendLocale(unknownBuildingLocale);

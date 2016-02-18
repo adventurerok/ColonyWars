@@ -8,10 +8,8 @@ import com.ithinkrok.minigames.base.metadata.Metadata;
 import com.ithinkrok.minigames.base.task.GameTask;
 import com.ithinkrok.minigames.base.util.BoundingBox;
 import com.ithinkrok.msm.bukkit.util.BukkitConfigUtils;
-import com.ithinkrok.msm.common.util.ConfigUtils;
 import com.ithinkrok.util.config.Config;
 import org.bukkit.Location;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.util.Vector;
 
 /**

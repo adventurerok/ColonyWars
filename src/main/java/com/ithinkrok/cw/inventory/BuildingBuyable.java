@@ -6,7 +6,6 @@ import com.ithinkrok.minigames.base.inventory.event.CalculateItemForUserEvent;
 import com.ithinkrok.minigames.base.util.InventoryUtils;
 import com.ithinkrok.util.config.Config;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 /**

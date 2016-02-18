@@ -7,8 +7,6 @@ import com.ithinkrok.minigames.base.event.user.game.UserInGameChangeEvent;
 import com.ithinkrok.minigames.base.metadata.UserMetadata;
 import com.ithinkrok.minigames.base.task.GameTask;
 import com.ithinkrok.util.config.Config;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.MemoryConfiguration;
 
 /**
  * Created by paul on 17/01/16.

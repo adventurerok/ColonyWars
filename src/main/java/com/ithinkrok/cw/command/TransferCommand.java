@@ -4,13 +4,13 @@ import com.ithinkrok.minigames.base.User;
 import com.ithinkrok.minigames.base.command.MinigamesCommand;
 import com.ithinkrok.minigames.base.command.MinigamesCommandSender;
 import com.ithinkrok.minigames.base.event.MinigamesCommandEvent;
-import com.ithinkrok.util.lang.LanguageLookup;
 import com.ithinkrok.minigames.base.metadata.Metadata;
 import com.ithinkrok.minigames.base.metadata.MetadataHolder;
 import com.ithinkrok.minigames.base.metadata.Money;
 import com.ithinkrok.minigames.base.team.Team;
 import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;
+import com.ithinkrok.util.lang.LanguageLookup;
 
 import java.util.HashSet;
 import java.util.Objects;

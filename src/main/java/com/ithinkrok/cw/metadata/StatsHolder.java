@@ -10,12 +10,12 @@ import com.ithinkrok.minigames.base.database.DatabaseTaskRunner;
 import com.ithinkrok.minigames.base.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.base.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.base.event.user.game.UserInGameChangeEvent;
-import com.ithinkrok.util.lang.LanguageLookup;
-import com.ithinkrok.util.lang.Messagable;
 import com.ithinkrok.minigames.base.metadata.UserMetadata;
 import com.ithinkrok.minigames.base.team.Team;
 import com.ithinkrok.minigames.base.team.TeamIdentifier;
 import com.ithinkrok.util.config.Config;
+import com.ithinkrok.util.lang.LanguageLookup;
+import com.ithinkrok.util.lang.Messagable;
 
 import java.util.List;
 import java.util.UUID;

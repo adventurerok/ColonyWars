@@ -3,10 +3,8 @@ package com.ithinkrok.cw;
 import com.ithinkrok.minigames.base.inventory.ClickableInventory;
 import com.ithinkrok.minigames.base.schematic.PastedSchematic;
 import com.ithinkrok.minigames.base.team.TeamIdentifier;
-import com.ithinkrok.msm.common.util.ConfigUtils;
 import com.ithinkrok.util.config.Config;
 import org.bukkit.Location;
-import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
 

@@ -10,7 +10,6 @@ import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.configuration.ConfigurationSection;
 
 /**
  * Created by paul on 21/01/16.

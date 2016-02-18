@@ -2,8 +2,8 @@ package com.ithinkrok.cw.gamestate;
 
 import com.ithinkrok.minigames.base.GameGroup;
 import com.ithinkrok.minigames.base.GameState;
-import com.ithinkrok.minigames.base.event.MinigamesCommandEvent;
 import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.base.event.MinigamesCommandEvent;
 import com.ithinkrok.minigames.base.event.map.MapCreatureSpawnEvent;
 import com.ithinkrok.minigames.base.event.map.MapItemSpawnEvent;
 import com.ithinkrok.minigames.base.event.user.game.UserJoinEvent;
@@ -14,8 +14,6 @@ import com.ithinkrok.minigames.base.util.InventoryUtils;
 import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.event.CustomEventHandler;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import java.util.Random;

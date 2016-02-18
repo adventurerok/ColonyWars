@@ -9,6 +9,7 @@ import com.ithinkrok.minigames.base.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.base.event.user.world.UserInteractWorldEvent;
 import com.ithinkrok.minigames.base.util.BoundingBox;
 import com.ithinkrok.minigames.base.util.MinigamesConfigs;
+import com.ithinkrok.msm.bukkit.util.BukkitConfigUtils;
 import com.ithinkrok.msm.common.util.ConfigUtils;
 import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.event.CustomEventHandler;
@@ -109,9 +110,9 @@ public class SpleefMinigame implements CustomListener {
         private final LinkedHashSet<UUID> queue = new LinkedHashSet<>();
 
         public Arena(Config config) {
-            queueButtons = ConfigUtils.getVectorList(config, "queue_buttons");
-            spawnLocations = ConfigUtils.getVectorList(config, "spawn_locations");
-            exitLocation = ConfigUtils.getVector(config, "exit_location");
+            queueButtons = BukkitConfigUtils.getVectorList(config, "queue_buttons");
+            spawnLocations = BukkitConfigUtils.getVectorList(config, "spawn_locations");
+            exitLocation = BukkitConfigUtils.getVector(config, "exit_location");
             snowBounds = MinigamesConfigs.getBounds(config, "snow");
             extraRadius = config.getInt("extra_radius");
         }

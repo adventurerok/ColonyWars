@@ -7,6 +7,7 @@ import com.ithinkrok.minigames.base.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.base.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.base.metadata.Metadata;
 import com.ithinkrok.minigames.base.team.Team;
+import com.ithinkrok.msm.bukkit.util.BukkitConfigUtils;
 import com.ithinkrok.msm.common.util.ConfigUtils;
 import com.ithinkrok.util.config.Config;
 import org.bukkit.Location;
@@ -61,7 +62,7 @@ public class CWTeamStats extends Metadata {
 
         Config spawnLocations = team.getSharedObject("spawn_locations");
 
-        Vector spawnLocation = ConfigUtils.getVector(spawnLocations, team.getName());
+        Vector spawnLocation = BukkitConfigUtils.getVector(spawnLocations, team.getName());
         this.spawnLocation = new Location(team.getGameGroup().getCurrentMap().getWorld(), spawnLocation.getX(),
                 spawnLocation.getY(), spawnLocation.getZ());
 

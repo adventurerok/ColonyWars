@@ -7,6 +7,7 @@ import com.ithinkrok.minigames.base.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.base.metadata.Metadata;
 import com.ithinkrok.minigames.base.task.GameTask;
 import com.ithinkrok.minigames.base.util.BoundingBox;
+import com.ithinkrok.msm.bukkit.util.BukkitConfigUtils;
 import com.ithinkrok.msm.common.util.ConfigUtils;
 import com.ithinkrok.util.config.Config;
 import org.bukkit.Location;
@@ -37,7 +38,7 @@ public class ShowdownArena extends Metadata {
         this.radiusX = config.getInt("size.x");
         this.radiusZ = config.getInt("size.z");
 
-        Vector center = ConfigUtils.getVector(config, "center");
+        Vector center = BukkitConfigUtils.getVector(config, "center");
         this.center = gameGroup.getCurrentMap().getLocation(center);
 
         Vector min = center.clone().add(new Vector(-radiusX - 5, 0, -radiusZ - 5));

@@ -3,7 +3,8 @@ RECODE BUGS:
  - Quitting with only zombies on the server
  - Force showdown timers
  - Class descriptions
- - Handbook
+ - /spawn command
+ - signs in schematics
 
 LOW PRIORITY / INVESTIGATE:
  - Zombie tab list names

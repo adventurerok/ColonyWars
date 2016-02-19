@@ -16,6 +16,7 @@ permissions:
       mccw.fix.others: true
       mccw.teamchat.others: true
       mccw.transfer.others: true
+      mccw.spawn.others: true
   mccw.user:
     default: true
     description: "Gives all user command permission"
@@ -28,6 +29,7 @@ permissions:
       mccw.leaderboard: true
       mccw.list: true
       mccw.members: true
+      mccw.spawn: true
   mccw.cw:
     description: "Allows use of all subcommands of /cw"
     default: false
@@ -105,4 +107,10 @@ permissions:
     default: false
   mccw.kill:
     description: "Shows the defunct kill command in player /help command lists"
+    default: false
+  mccw.spawn:
+    description: "Allows use of /spawn"
+    default: false
+  mccw.spawn.others:
+    description: "Allows use of /spawn for other players"
     default: false

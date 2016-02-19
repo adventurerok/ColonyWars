@@ -267,12 +267,12 @@ public class BaseGameListener extends BaseGameStateListener {
                 if (building == null) return;
 
                 if (!building.getTeamIdentifier().equals(event.getUser().getTeamIdentifier())) {
-                    event.getUser().sendLocale(buildingNotYoursLocale);
+                    event.getUser().showAboveHotbarLocale(buildingNotYoursLocale);
                     return;
                 }
 
                 if (!building.isFinished()) {
-                    event.getUser().sendLocale(buildingNotFinishedLocale);
+                    event.getUser().showAboveHotbarLocale(buildingNotFinishedLocale);
                     return;
                 }
 

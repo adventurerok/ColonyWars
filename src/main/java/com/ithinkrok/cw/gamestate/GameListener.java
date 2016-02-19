@@ -43,7 +43,7 @@ public class GameListener extends SimpleGameStartListener {
         StatsHolder statsHolder = StatsHolder.getOrCreate(user);
         statsHolder.addGame();
 
-        user.showTitle(user.getTeam().getFormattedName(), user.getKit().getFormattedName());
+        user.showTitle(user.getTeam().getFormattedName(), user.getKit().getFormattedName(), 20, 20, 20);
     }
 
     @CustomEventHandler

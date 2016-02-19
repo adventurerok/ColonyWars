@@ -1,12 +1,17 @@
 package com.ithinkrok.cw.inventory;
 
+import com.ithinkrok.minigames.base.Kit;
 import com.ithinkrok.minigames.base.inventory.ItemBuyable;
 import com.ithinkrok.minigames.base.inventory.event.BuyablePurchaseEvent;
 import com.ithinkrok.minigames.base.inventory.event.CalculateItemForUserEvent;
+import com.ithinkrok.minigames.base.schematic.Schematic;
 import com.ithinkrok.minigames.base.util.InventoryUtils;
 import com.ithinkrok.util.config.Config;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 /**
  * Created by paul on 10/01/16.
@@ -18,6 +23,8 @@ public class BuildingBuyable extends ItemBuyable {
     protected String displayLoreLocale;
     protected String itemLoreLocale;
     protected String teamPurchaseLocale;
+    protected String usefulForLocale;
+    protected String usefulCommaLocale;
 
     public BuildingBuyable(ItemStack baseDisplay) {
         super(baseDisplay);
@@ -39,6 +46,8 @@ public class BuildingBuyable extends ItemBuyable {
         displayLoreLocale = config.getString("display_lore_locale", "building_buyable.lore.display");
         itemLoreLocale = config.getString("item_lore_locale", "building_buyable.lore.item");
         teamPurchaseLocale = config.getString("team_purchase_locale", "building_buyable.purchase");
+        usefulForLocale = config.getString("useful_for_locale", "building_buyable.useful_for");
+        usefulCommaLocale = config.getString("useful_comma_locale", "building_buyable.useful_comma");
 
     }
 
@@ -48,6 +57,37 @@ public class BuildingBuyable extends ItemBuyable {
 
         String displayLore = event.getUser().getLanguageLookup().getLocale(displayLoreLocale, buildingName);
         display = InventoryUtils.addLore(display, displayLore);
+
+        Schematic schem = event.getUserGameGroup().getSchematic(buildingName);
+
+        List<String> useful = schem.getConfig().getStringList("useful_for");
+
+        if(!useful.isEmpty()) {
+            StringBuilder usefulMessage = new StringBuilder(event.getUserGameGroup().getLocale(usefulForLocale));
+            usefulMessage.append(' ');
+
+            boolean addComma = false;
+
+            for(String kitName : useful) {
+                if(!addComma) addComma = true;
+                else {
+                    usefulMessage.append(event.getUserGameGroup().getLocale(usefulCommaLocale)).append(' ');
+                }
+
+                boolean hasKit = event.getUser().getTeam().hasPlayerOfKit(kitName);
+
+                if(hasKit) {
+                    usefulMessage.append(ChatColor.GREEN);
+                } else {
+                    usefulMessage.append(ChatColor.RED);
+                }
+
+                Kit kit = event.getUserGameGroup().getKit(kitName);
+                usefulMessage.append(kit.getFormattedName());
+            }
+
+            display = InventoryUtils.addLore(display, usefulMessage.toString());
+        }
 
         event.setDisplay(display);
 

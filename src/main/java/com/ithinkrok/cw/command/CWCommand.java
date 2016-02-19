@@ -90,7 +90,14 @@ public class CWCommand implements CustomListener {
 
         int amount = command.getIntArg(1, 16);
 
-        ItemStack item = InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, amount, 0, buildingName);
+        boolean instaBuild = command.getBooleanParam("insta", false) || command.getBooleanParam("i", false);
+
+        ItemStack item;
+        if (!instaBuild) {
+            item = InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, amount, 0, buildingName);
+        } else {
+            item = InventoryUtils.createItemWithNameAndLore(Material.LAPIS_ORE, amount, 0, buildingName, "Instabuild");
+        }
 
         command.getUser().getInventory().addItem(item);
 

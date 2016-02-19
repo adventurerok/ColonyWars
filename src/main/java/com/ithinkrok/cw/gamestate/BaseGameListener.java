@@ -605,6 +605,8 @@ public class BaseGameListener extends BaseGameStateListener {
 
         String buildingType = InventoryUtils.getItemName(event.getItemPlaced());
 
+        boolean instaBuild = InventoryUtils.loreContainsLine(event.getItemPlaced(), "Instabuild");
+
         if (buildingType == null || event.getUserGameGroup().getSchematic(buildingType) == null) {
             event.getUser().sendLocale(unknownBuildingLocale);
             return;
@@ -615,7 +617,7 @@ public class BaseGameListener extends BaseGameStateListener {
         BuildingController controller = BuildingController.getOrCreate(event.getUserGameGroup());
 
         if (!controller.buildBuilding(buildingType, event.getUser().getTeamIdentifier(), event.getBlock().getLocation(),
-                rotation, false)) {
+                rotation, instaBuild)) {
             event.getUser().sendLocale(cannotBuildHereLocale);
             event.setCancelled(true);
         }

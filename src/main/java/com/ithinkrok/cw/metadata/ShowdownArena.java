@@ -115,6 +115,8 @@ public class ShowdownArena extends Metadata {
         if (!user.isInsideVehicle()) user.setVelocity(velocity);
         else user.getVehicle().setVelocity(velocity);
 
+        user.showAboveHotbarLocale("showdown.escape");
+
         return true;
     }
 

@@ -19,6 +19,7 @@ import com.ithinkrok.minigames.base.event.user.world.*;
 import com.ithinkrok.minigames.base.inventory.ClickableInventory;
 import com.ithinkrok.minigames.base.metadata.Money;
 import com.ithinkrok.minigames.base.schematic.Facing;
+import com.ithinkrok.minigames.base.task.TaskScheduler;
 import com.ithinkrok.minigames.base.team.Team;
 import com.ithinkrok.minigames.base.util.*;
 import com.ithinkrok.minigames.base.util.math.Calculator;
@@ -28,6 +29,7 @@ import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.event.CustomEventHandler;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
@@ -478,20 +480,33 @@ public class BaseGameListener extends BaseGameStateListener {
 
     @CustomEventHandler
     public void onUserDamaged(UserDamagedEvent event) {
-        if (!event.getUser().isInGame()) event.setCancelled(true);
+        if (!event.getUser().isInGame()){
+            event.setCancelled(true);
+            return;
+        }
 
-        playBloodEffect(event.getUser().getLocation());
+        if(event.getFinalDamage() < 0.5) return;
+
+        playBloodEffect(event.getUser(), event.getUser().getEntity());
     }
 
-    private void playBloodEffect(Location location) {
+    private void playBloodEffect(TaskScheduler taskScheduler, Entity entity) {
         if(bloodEffect == null) return;
-        bloodEffect.playEffect(location);
+
+        taskScheduler.repeatInFuture(task -> {
+            bloodEffect.playEffect(entity.getLocation().clone().add(0, 0.8, 0));
+
+            if(task.getRunCount() > 3) task.finish();
+        }, 1, 3);
+
     }
 
 
-    @CustomEventHandler
+    @CustomEventHandler(ignoreCancelled = true)
     public void onEntityDamaged(MapEntityDamagedEvent event) {
-        playBloodEffect(event.getEntity().getLocation());
+        if(event.getFinalDamage() < 0.5) return;
+
+        playBloodEffect(event.getGameGroup(), event.getEntity());
     }
 
     @CustomEventHandler

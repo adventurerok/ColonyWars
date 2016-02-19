@@ -3,6 +3,7 @@ package com.ithinkrok.cw.command;
 import com.ithinkrok.minigames.base.User;
 import com.ithinkrok.minigames.base.command.MinigamesCommand;
 import com.ithinkrok.minigames.base.command.MinigamesCommandSender;
+import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.base.event.MinigamesCommandEvent;
 import com.ithinkrok.minigames.base.metadata.Metadata;
 import com.ithinkrok.minigames.base.metadata.MetadataHolder;
@@ -21,6 +22,13 @@ import java.util.Set;
  */
 public class TransferCommand implements CustomListener {
 
+
+    private String defaultTarget;
+
+    @CustomEventHandler
+    public void onListenerLoaded(ListenerLoadedEvent<?, ?> event) {
+        defaultTarget = event.getConfigOrEmpty().getString("default_target");
+    }
 
     @CustomEventHandler
     public void onCommand(MinigamesCommandEvent event) {
@@ -56,21 +64,11 @@ public class TransferCommand implements CustomListener {
         Set<Money> transferTo = new HashSet<>();
 
         if (!command.hasArg(1)) {
-            transferTo.add(Money.getOrCreate(command.getUser().getTeam()));
+            addTransferTarget(command, transferTo, defaultTarget);
         } else {
             for (int index = 1; command.hasArg(index); ++index) {
                 String targetName = command.getStringArg(index, null);
-                switch (targetName) {
-                    case "team":
-                        transferTo.add(Money.getOrCreate(command.getUser().getTeam()));
-                        break;
-                    default:
-                        for (User user : command.getUser().getTeam().getUsers()) {
-                            if (!"all".equals(targetName) && !user.getName().equals(targetName)) continue;
-                            if (Objects.equals(user, command.getUser())) continue;
-                            transferTo.add(Money.getOrCreate(user));
-                        }
-                }
+                addTransferTarget(command, transferTo, targetName);
             }
         }
 
@@ -110,5 +108,19 @@ public class TransferCommand implements CustomListener {
         String locale = transferTo.size() == 1 ? "command.transfer.single" : "command.transfer.multiple";
 
         command.getUser().getTeam().sendLocale(locale, command.getUser().getFormattedName(), amount, receivers);
+    }
+
+    private void addTransferTarget(MinigamesCommand command, Set<Money> transferTo, String targetName) {
+        switch (targetName) {
+            case "team":
+                transferTo.add(Money.getOrCreate(command.getUser().getTeam()));
+                break;
+            default:
+                for (User user : command.getUser().getTeam().getUsers()) {
+                    if (!"all".equals(targetName) && !user.getName().equals(targetName)) continue;
+                    if (Objects.equals(user, command.getUser())) continue;
+                    transferTo.add(Money.getOrCreate(user));
+                }
+        }
     }
 }

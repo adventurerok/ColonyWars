@@ -26,10 +26,7 @@ import com.ithinkrok.minigames.base.util.math.ExpressionCalculator;
 import com.ithinkrok.minigames.base.util.math.SingleValueVariables;
 import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.event.CustomEventHandler;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -111,6 +108,8 @@ public class BaseGameListener extends BaseGameStateListener {
     private String motdShowdownLocale;
     private String motdAftermathLocale;
 
+    private ParticleEffect bloodEffect;
+
     @CustomEventHandler
     public void onUserChat(UserChatEvent event) {
         if (event.getUser().isInGame()) {
@@ -181,6 +180,8 @@ public class BaseGameListener extends BaseGameStateListener {
         motdGameLocale = config.getString("motd.in_game_locale", "motd.cw_game");
         motdShowdownLocale = config.getString("motd.showdown_locale", "motd.showdown");
         motdAftermathLocale = config.getString("motd.aftermath_locale", "motd.aftermath");
+
+        bloodEffect = MinigamesConfigs.getParticleEffect(config, "blood_effect");
     }
 
     @CustomEventHandler
@@ -206,6 +207,7 @@ public class BaseGameListener extends BaseGameStateListener {
             event.getUserGameGroup().sendLocale(spectatorQuitLocale, name, currentPlayers, maxPlayers);
         }
     }
+
 
     @Override
     @CustomEventHandler
@@ -477,6 +479,19 @@ public class BaseGameListener extends BaseGameStateListener {
     @CustomEventHandler
     public void onUserDamaged(UserDamagedEvent event) {
         if (!event.getUser().isInGame()) event.setCancelled(true);
+
+        playBloodEffect(event.getUser().getLocation());
+    }
+
+    private void playBloodEffect(Location location) {
+        if(bloodEffect == null) return;
+        bloodEffect.playEffect(location);
+    }
+
+
+    @CustomEventHandler
+    public void onEntityDamaged(MapEntityDamagedEvent event) {
+        playBloodEffect(event.getEntity().getLocation());
     }
 
     @CustomEventHandler

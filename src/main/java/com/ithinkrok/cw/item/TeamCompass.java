@@ -46,7 +46,11 @@ public class TeamCompass implements CustomListener {
             }
 
             Team team = event.getUserGameGroup().getTeam(identifier);
+            if(team.getUsers().isEmpty()) continue;
+
             CWTeamStats teamStats = CWTeamStats.getOrCreate(team);
+            if(teamStats == null) continue;
+
             if(teamStats.getBaseLocation().equals(currentLoc)) {
                 found = true;
             }

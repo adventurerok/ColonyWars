@@ -1,8 +1,8 @@
 package com.ithinkrok.cw.util;
 
 import com.ithinkrok.cw.Building;
-import com.ithinkrok.minigames.base.GameGroup;
-import com.ithinkrok.minigames.base.User;
+import com.ithinkrok.minigames.api.GameGroup;
+import com.ithinkrok.minigames.api.User;
 import com.ithinkrok.minigames.base.task.GameTask;
 import com.ithinkrok.minigames.base.util.EntityUtils;
 import com.ithinkrok.util.config.Config;

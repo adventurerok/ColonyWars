@@ -2,7 +2,7 @@ package com.ithinkrok.cw.metadata;
 
 import com.ithinkrok.cw.Building;
 import com.ithinkrok.cw.event.BuildingBuiltEvent;
-import com.ithinkrok.minigames.base.GameGroup;
+import com.ithinkrok.minigames.api.GameGroup;
 import com.ithinkrok.minigames.base.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.base.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.base.map.GameMap;
@@ -13,7 +13,7 @@ import com.ithinkrok.minigames.base.schematic.SchematicOptions;
 import com.ithinkrok.minigames.base.schematic.SchematicPaster;
 import com.ithinkrok.minigames.base.schematic.event.SchematicDestroyedEvent;
 import com.ithinkrok.minigames.base.schematic.event.SchematicFinishedEvent;
-import com.ithinkrok.minigames.base.team.Team;
+import com.ithinkrok.minigames.api.Team;
 import com.ithinkrok.minigames.base.team.TeamIdentifier;
 import com.ithinkrok.minigames.base.util.BoundingBox;
 import com.ithinkrok.minigames.base.util.LocationChecker;

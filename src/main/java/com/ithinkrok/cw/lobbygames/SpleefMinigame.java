@@ -1,6 +1,6 @@
 package com.ithinkrok.cw.lobbygames;
 
-import com.ithinkrok.minigames.base.User;
+import com.ithinkrok.minigames.api.User;
 import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.base.event.user.game.UserTeleportEvent;
 import com.ithinkrok.minigames.base.event.user.state.UserDamagedEvent;

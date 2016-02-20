@@ -3,7 +3,7 @@ package com.ithinkrok.cw.item;
 import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.base.event.user.world.UserInteractEvent;
-import com.ithinkrok.minigames.base.team.Team;
+import com.ithinkrok.minigames.api.Team;
 import com.ithinkrok.minigames.base.team.TeamIdentifier;
 import com.ithinkrok.minigames.base.util.InventoryUtils;
 import com.ithinkrok.util.config.Config;

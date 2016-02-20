@@ -2,7 +2,7 @@ package com.ithinkrok.cw.event;
 
 import com.ithinkrok.cw.Building;
 import com.ithinkrok.minigames.base.event.team.TeamEvent;
-import com.ithinkrok.minigames.base.team.Team;
+import com.ithinkrok.minigames.api.Team;
 
 /**
  * Created by paul on 14/01/16.

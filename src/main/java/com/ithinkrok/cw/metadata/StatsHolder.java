@@ -3,6 +3,7 @@ package com.ithinkrok.cw.metadata;
 import com.avaje.ebean.Query;
 import com.ithinkrok.cw.database.UserCategoryStats;
 import com.ithinkrok.minigames.api.GameGroup;
+import com.ithinkrok.minigames.api.database.Database;
 import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.api.database.DatabaseAccessor;
 import com.ithinkrok.minigames.api.database.DatabaseTask;
@@ -213,7 +214,12 @@ public class StatsHolder extends UserMetadata implements Messagable {
         statsChanges = new UserCategoryStats();
 
         gameGroup.doDatabaseTask(new StatsGetOrCreate(uniqueId, "total",
-                stats -> gameGroup.doDatabaseTask(new StatsUpdater(stats, changes))));
+                stats -> {
+                    int newScore = stats.getScore() + changes.getScore();
+                    gameGroup.getDatabase().setUserScore(uniqueId, playerName, gameGroup.getType(), newScore);
+
+                    gameGroup.doDatabaseTask(new StatsUpdater(stats, changes));
+                }));
 
         if (lastKit != null) {
             gameGroup.doDatabaseTask(new StatsGetOrCreate(uniqueId, lastKit,

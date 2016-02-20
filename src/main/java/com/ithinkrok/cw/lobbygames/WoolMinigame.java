@@ -2,9 +2,9 @@ package com.ithinkrok.cw.lobbygames;
 
 import com.ithinkrok.minigames.api.GameGroup;
 import com.ithinkrok.minigames.api.User;
-import com.ithinkrok.minigames.base.event.user.game.UserJoinEvent;
-import com.ithinkrok.minigames.base.event.user.game.UserQuitEvent;
-import com.ithinkrok.minigames.base.event.user.world.UserInteractEvent;
+import com.ithinkrok.minigames.api.event.user.game.UserJoinEvent;
+import com.ithinkrok.minigames.api.event.user.game.UserQuitEvent;
+import com.ithinkrok.minigames.api.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.base.util.EntityUtils;
 import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;

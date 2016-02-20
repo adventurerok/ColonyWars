@@ -1,6 +1,6 @@
 package com.ithinkrok.cw.command;
 
-import com.ithinkrok.minigames.base.event.MinigamesCommandEvent;
+import com.ithinkrok.minigames.api.event.MinigamesCommandEvent;
 import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.Location;

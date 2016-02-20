@@ -1,9 +1,9 @@
 package com.ithinkrok.cw.map;
 
 import com.ithinkrok.cw.metadata.BuildingController;
-import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
-import com.ithinkrok.minigames.base.event.game.MapChangedEvent;
-import com.ithinkrok.minigames.base.map.GameMap;
+import com.ithinkrok.minigames.api.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.api.event.game.MapChangedEvent;
+import com.ithinkrok.minigames.api.map.GameMap;
 import com.ithinkrok.minigames.base.team.TeamIdentifier;
 import com.ithinkrok.msm.bukkit.util.BukkitConfigUtils;
 import com.ithinkrok.util.config.Config;

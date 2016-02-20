@@ -4,7 +4,7 @@ import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.cw.metadata.ShowdownArena;
 import com.ithinkrok.minigames.api.GameGroup;
 import com.ithinkrok.minigames.api.User;
-import com.ithinkrok.minigames.base.event.game.GameStateChangedEvent;
+import com.ithinkrok.minigames.api.event.game.GameStateChangedEvent;
 import com.ithinkrok.util.event.CustomEventHandler;
 import org.bukkit.Location;
 

@@ -1,8 +1,8 @@
 package com.ithinkrok.cw.item;
 
-import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
-import com.ithinkrok.minigames.base.event.user.game.UserAbilityCooldownEvent;
-import com.ithinkrok.minigames.base.event.user.world.UserInteractEvent;
+import com.ithinkrok.minigames.api.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.api.event.user.game.UserAbilityCooldownEvent;
+import com.ithinkrok.minigames.api.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.base.item.CustomItem;
 import com.ithinkrok.minigames.base.task.GameTask;
 import com.ithinkrok.util.config.Config;

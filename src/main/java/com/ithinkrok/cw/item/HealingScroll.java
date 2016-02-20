@@ -1,8 +1,8 @@
 package com.ithinkrok.cw.item;
 
 import com.ithinkrok.minigames.api.User;
-import com.ithinkrok.minigames.base.event.ListenerLoadedEvent;
-import com.ithinkrok.minigames.base.event.user.world.UserInteractEvent;
+import com.ithinkrok.minigames.api.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.api.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.base.util.MinigamesConfigs;
 import com.ithinkrok.minigames.base.util.SoundEffect;
 import com.ithinkrok.minigames.base.util.math.Calculator;

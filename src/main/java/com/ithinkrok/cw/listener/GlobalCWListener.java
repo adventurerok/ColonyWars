@@ -2,7 +2,7 @@ package com.ithinkrok.cw.listener;
 
 import com.ithinkrok.cw.metadata.StatsHolder;
 import com.ithinkrok.cw.metadata.TeamStatsHolderGroup;
-import com.ithinkrok.minigames.api.User;
+import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.api.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.api.event.user.game.UserChangeKitEvent;
 import com.ithinkrok.minigames.api.event.user.game.UserChangeTeamEvent;

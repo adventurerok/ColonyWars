@@ -2,12 +2,12 @@ package com.ithinkrok.cw.kit;
 
 import com.ithinkrok.cw.event.BuildingBuiltEvent;
 import com.ithinkrok.cw.event.ShopOpenEvent;
-import com.ithinkrok.minigames.base.Kit;
-import com.ithinkrok.minigames.api.User;
+import com.ithinkrok.minigames.api.Kit;
+import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.api.event.ListenerLoadedEvent;
-import com.ithinkrok.minigames.base.item.CustomItem;
-import com.ithinkrok.minigames.base.util.InventoryUtils;
-import com.ithinkrok.minigames.base.util.MinigamesConfigs;
+import com.ithinkrok.minigames.api.item.CustomItem;
+import com.ithinkrok.minigames.api.util.InventoryUtils;
+import com.ithinkrok.minigames.api.util.MinigamesConfigs;
 import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;

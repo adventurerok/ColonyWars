@@ -4,8 +4,7 @@ import com.ithinkrok.cw.Building;
 import com.ithinkrok.cw.event.ShopOpenEvent;
 import com.ithinkrok.cw.metadata.*;
 import com.ithinkrok.minigames.api.GameGroup;
-import com.ithinkrok.minigames.api.Team;
-import com.ithinkrok.minigames.api.User;
+import com.ithinkrok.minigames.api.GameState;
 import com.ithinkrok.minigames.api.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.api.event.game.CountdownFinishedEvent;
 import com.ithinkrok.minigames.api.event.game.GameStateChangedEvent;
@@ -16,15 +15,16 @@ import com.ithinkrok.minigames.api.event.user.state.UserDamagedEvent;
 import com.ithinkrok.minigames.api.event.user.state.UserDeathEvent;
 import com.ithinkrok.minigames.api.event.user.state.UserFoodLevelChangeEvent;
 import com.ithinkrok.minigames.api.event.user.world.*;
-import com.ithinkrok.minigames.base.GameState;
-import com.ithinkrok.minigames.base.inventory.ClickableInventory;
-import com.ithinkrok.minigames.base.metadata.Money;
-import com.ithinkrok.minigames.base.schematic.Facing;
-import com.ithinkrok.minigames.base.task.TaskScheduler;
-import com.ithinkrok.minigames.base.util.*;
-import com.ithinkrok.minigames.base.util.math.Calculator;
-import com.ithinkrok.minigames.base.util.math.ExpressionCalculator;
-import com.ithinkrok.minigames.base.util.math.SingleValueVariables;
+import com.ithinkrok.minigames.api.inventory.ClickableInventory;
+import com.ithinkrok.minigames.api.metadata.Money;
+import com.ithinkrok.minigames.api.schematic.Facing;
+import com.ithinkrok.minigames.api.task.TaskScheduler;
+import com.ithinkrok.minigames.api.team.Team;
+import com.ithinkrok.minigames.api.user.User;
+import com.ithinkrok.minigames.api.util.*;
+import com.ithinkrok.minigames.api.util.math.Calculator;
+import com.ithinkrok.minigames.api.util.math.ExpressionCalculator;
+import com.ithinkrok.minigames.api.util.math.SingleValueVariables;
 import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.event.CustomEventHandler;
 import org.bukkit.Bukkit;
@@ -246,6 +246,30 @@ public class BaseGameListener extends BaseGameStateListener {
         });
     }
 
+    private void updateMotd(GameGroup gameGroup) {
+        switch (gameGroup.getCurrentGameState().getName()) {
+            case "game":
+                gameGroup.setMotd(gameGroup.getLocale(motdGameLocale, getNonZombieUsersInGame(gameGroup)));
+                return;
+            case "showdown":
+                gameGroup.setMotd(gameGroup.getLocale(motdShowdownLocale));
+                return;
+            case "aftermath":
+                gameGroup.setMotd(gameGroup.getLocale(motdAftermathLocale));
+        }
+    }
+
+    public int getNonZombieUsersInGame(GameGroup gameGroup) {
+        int count = 0;
+
+        for (User user : gameGroup.getUsers()) {
+            if (!user.isInGame() || !user.isPlayer()) continue;
+            ++count;
+        }
+
+        return count;
+    }
+
     @CustomEventHandler
     public void onUserFoodLevelChange(UserFoodLevelChangeEvent event) {
         if (!event.getUser().isInGame()) event.setCancelled(true);
@@ -401,35 +425,52 @@ public class BaseGameListener extends BaseGameStateListener {
         updateMotd(died.getGameGroup());
     }
 
-    private void updateMotd(GameGroup gameGroup) {
-        switch(gameGroup.getCurrentGameState().getName()) {
-            case "game":
-                gameGroup.setMotd(gameGroup.getLocale(motdGameLocale, getNonZombieUsersInGame(gameGroup)));
-                return;
-            case "showdown":
-                gameGroup.setMotd(gameGroup.getLocale(motdShowdownLocale));
-                return;
-            case "aftermath":
-                gameGroup.setMotd(gameGroup.getLocale(motdAftermathLocale));
-        }
-    }
-
-    public int getNonZombieUsersInGame(GameGroup gameGroup) {
-        int count = 0;
-
-        for(User user : gameGroup.getUsers()) {
-            if(!user.isInGame() || !user.isPlayer()) continue;
-            ++count;
-        }
-
-        return count;
-    }
-
     private void sendDeathMessage(GameGroup gameGroup, String locale, String ending, Object... args) {
         String message = gameGroup.getLocale(locale + ending, args);
         if (message == null) message = gameGroup.getLocale(locale, args);
 
         gameGroup.sendMessage(message);
+    }
+
+    @CustomEventHandler
+    public void onUserDamaged(UserDamagedEvent event) {
+        if (!event.getUser().isInGame()) {
+            event.setCancelled(true);
+            return;
+        }
+
+        if (event.getFinalDamage() < 0.5) return;
+
+        playBloodEffect(event.getUser(), event.getUser().getEntity());
+    }
+
+    private void playBloodEffect(TaskScheduler taskScheduler, Entity entity) {
+        if (bloodEffect == null) return;
+
+        taskScheduler.repeatInFuture(task -> {
+            bloodEffect.playEffect(entity.getLocation().clone().add(0, 0.8, 0));
+
+            if (task.getRunCount() > 3) task.finish();
+        }, 1, 3);
+
+    }
+
+    @CustomEventHandler(ignoreCancelled = true)
+    public void onEntityDamaged(MapEntityDamagedEvent event) {
+        if (event.getFinalDamage() < 0.5) return;
+
+        playBloodEffect(event.getGameGroup(), event.getEntity());
+    }
+
+    @CustomEventHandler
+    public void onUserQuit(UserQuitEvent event) {
+        if (event.getReason() != UserQuitEvent.QuitReason.QUIT_SERVER) return;
+
+        if (event.getUser().isInGame()) {
+            event.getUser().becomeEntity(EntityType.ZOMBIE);
+            checkVictory(event.getUser().getGameGroup(), true);
+            event.setRemoveUser(false);
+        }
     }
 
     public void checkVictory(GameGroup gameGroup, boolean checkShowdown) {
@@ -479,48 +520,6 @@ public class BaseGameListener extends BaseGameStateListener {
         if (teamCheck && playerCheck) return;
 
         gameGroup.startCountdown(showdownCountdown);
-    }
-
-    @CustomEventHandler
-    public void onUserDamaged(UserDamagedEvent event) {
-        if (!event.getUser().isInGame()){
-            event.setCancelled(true);
-            return;
-        }
-
-        if(event.getFinalDamage() < 0.5) return;
-
-        playBloodEffect(event.getUser(), event.getUser().getEntity());
-    }
-
-    private void playBloodEffect(TaskScheduler taskScheduler, Entity entity) {
-        if(bloodEffect == null) return;
-
-        taskScheduler.repeatInFuture(task -> {
-            bloodEffect.playEffect(entity.getLocation().clone().add(0, 0.8, 0));
-
-            if(task.getRunCount() > 3) task.finish();
-        }, 1, 3);
-
-    }
-
-
-    @CustomEventHandler(ignoreCancelled = true)
-    public void onEntityDamaged(MapEntityDamagedEvent event) {
-        if(event.getFinalDamage() < 0.5) return;
-
-        playBloodEffect(event.getGameGroup(), event.getEntity());
-    }
-
-    @CustomEventHandler
-    public void onUserQuit(UserQuitEvent event) {
-        if (event.getReason() != UserQuitEvent.QuitReason.QUIT_SERVER) return;
-
-        if (event.getUser().isInGame()) {
-            event.getUser().becomeEntity(EntityType.ZOMBIE);
-            checkVictory(event.getUser().getGameGroup(), true);
-            event.setRemoveUser(false);
-        }
     }
 
     @CustomEventHandler

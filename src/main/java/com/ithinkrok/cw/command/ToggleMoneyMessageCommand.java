@@ -1,10 +1,10 @@
 package com.ithinkrok.cw.command;
 
-import com.ithinkrok.minigames.base.command.MinigamesCommand;
-import com.ithinkrok.minigames.base.command.MinigamesCommandSender;
+import com.ithinkrok.minigames.api.command.MinigamesCommand;
+import com.ithinkrok.minigames.api.command.MinigamesCommandSender;
 import com.ithinkrok.minigames.api.event.MinigamesCommandEvent;
-import com.ithinkrok.minigames.base.metadata.Money;
-import com.ithinkrok.minigames.base.metadata.UserMoney;
+import com.ithinkrok.minigames.api.metadata.Money;
+import com.ithinkrok.minigames.api.metadata.UserMoney;
 import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;
 

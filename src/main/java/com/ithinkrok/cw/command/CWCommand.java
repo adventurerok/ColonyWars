@@ -1,17 +1,17 @@
 
 package com.ithinkrok.cw.command;
 
-import com.ithinkrok.minigames.base.Kit;
-import com.ithinkrok.minigames.api.User;
-import com.ithinkrok.minigames.base.command.MinigamesCommand;
-import com.ithinkrok.minigames.base.command.MinigamesCommandSender;
+import com.ithinkrok.minigames.api.Kit;
+import com.ithinkrok.minigames.api.user.User;
+import com.ithinkrok.minigames.api.command.MinigamesCommand;
+import com.ithinkrok.minigames.api.command.MinigamesCommandSender;
 import com.ithinkrok.minigames.api.event.MinigamesCommandEvent;
 import com.ithinkrok.minigames.api.event.user.UserEvent;
-import com.ithinkrok.minigames.base.item.CustomItem;
-import com.ithinkrok.minigames.base.metadata.Money;
-import com.ithinkrok.minigames.api.Team;
-import com.ithinkrok.minigames.base.util.InventoryUtils;
-import com.ithinkrok.minigames.base.util.math.ExpressionCalculator;
+import com.ithinkrok.minigames.api.item.CustomItem;
+import com.ithinkrok.minigames.api.metadata.Money;
+import com.ithinkrok.minigames.api.team.Team;
+import com.ithinkrok.minigames.api.util.InventoryUtils;
+import com.ithinkrok.minigames.api.util.math.ExpressionCalculator;
 import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.Material;

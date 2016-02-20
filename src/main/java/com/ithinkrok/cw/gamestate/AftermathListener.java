@@ -1,16 +1,16 @@
 package com.ithinkrok.cw.gamestate;
 
 import com.ithinkrok.minigames.api.GameGroup;
-import com.ithinkrok.minigames.base.GameState;
-import com.ithinkrok.minigames.api.User;
+import com.ithinkrok.minigames.api.GameState;
+import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.api.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.api.event.game.CountdownFinishedEvent;
 import com.ithinkrok.minigames.api.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.api.event.user.UserEvent;
 import com.ithinkrok.minigames.api.event.user.world.UserChatEvent;
-import com.ithinkrok.minigames.base.task.GameTask;
-import com.ithinkrok.minigames.base.util.CountdownConfig;
-import com.ithinkrok.minigames.base.util.MinigamesConfigs;
+import com.ithinkrok.minigames.api.task.GameTask;
+import com.ithinkrok.minigames.api.util.CountdownConfig;
+import com.ithinkrok.minigames.api.util.MinigamesConfigs;
 import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.event.CustomEventHandler;
 import org.bukkit.event.Cancellable;

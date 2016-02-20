@@ -1,7 +1,7 @@
 package com.ithinkrok.cw.gamestate;
 
 import com.ithinkrok.minigames.api.GameGroup;
-import com.ithinkrok.minigames.base.GameState;
+import com.ithinkrok.minigames.api.GameState;
 import com.ithinkrok.minigames.api.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.api.event.MinigamesCommandEvent;
 import com.ithinkrok.minigames.api.event.map.MapCreatureSpawnEvent;
@@ -10,7 +10,7 @@ import com.ithinkrok.minigames.api.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.api.event.user.game.UserQuitEvent;
 import com.ithinkrok.minigames.api.event.user.world.UserDropItemEvent;
 import com.ithinkrok.minigames.base.gamestate.SimpleInGameListener;
-import com.ithinkrok.minigames.base.util.InventoryUtils;
+import com.ithinkrok.minigames.api.util.InventoryUtils;
 import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.event.CustomEventHandler;
 import org.bukkit.Bukkit;

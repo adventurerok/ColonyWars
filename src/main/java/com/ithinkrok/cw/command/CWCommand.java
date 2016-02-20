@@ -8,7 +8,7 @@ import com.ithinkrok.minigames.api.command.MinigamesCommandSender;
 import com.ithinkrok.minigames.api.event.MinigamesCommandEvent;
 import com.ithinkrok.minigames.api.event.user.UserEvent;
 import com.ithinkrok.minigames.api.item.CustomItem;
-import com.ithinkrok.minigames.api.metadata.Money;
+import com.ithinkrok.minigames.util.metadata.Money;
 import com.ithinkrok.minigames.api.team.Team;
 import com.ithinkrok.minigames.api.util.InventoryUtils;
 import com.ithinkrok.minigames.api.util.math.ExpressionCalculator;

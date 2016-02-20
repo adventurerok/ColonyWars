@@ -3,8 +3,8 @@ package com.ithinkrok.cw.command;
 import com.ithinkrok.minigames.api.command.MinigamesCommand;
 import com.ithinkrok.minigames.api.command.MinigamesCommandSender;
 import com.ithinkrok.minigames.api.event.MinigamesCommandEvent;
-import com.ithinkrok.minigames.api.metadata.Money;
-import com.ithinkrok.minigames.api.metadata.UserMoney;
+import com.ithinkrok.minigames.util.metadata.Money;
+import com.ithinkrok.minigames.util.metadata.UserMoney;
 import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;
 

@@ -3,7 +3,7 @@ package com.ithinkrok.cw.inventory;
 import com.ithinkrok.cw.Building;
 import com.ithinkrok.cw.metadata.BuildingController;
 import com.ithinkrok.cw.metadata.CWTeamStats;
-import com.ithinkrok.minigames.api.inventory.event.BuyablePurchaseEvent;
+import com.ithinkrok.minigames.util.inventory.event.BuyablePurchaseEvent;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 

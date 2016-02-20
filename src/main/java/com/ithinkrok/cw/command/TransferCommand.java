@@ -7,7 +7,7 @@ import com.ithinkrok.minigames.api.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.api.event.MinigamesCommandEvent;
 import com.ithinkrok.minigames.api.metadata.Metadata;
 import com.ithinkrok.minigames.api.metadata.MetadataHolder;
-import com.ithinkrok.minigames.api.metadata.Money;
+import com.ithinkrok.minigames.util.metadata.Money;
 import com.ithinkrok.minigames.api.team.Team;
 import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;

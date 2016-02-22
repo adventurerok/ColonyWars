@@ -210,6 +210,7 @@ public class BaseGameListener extends BaseGameStateListener {
         if (event.getUser().isInGame()) {
             event.getUserGameGroup().sendLocale(inGameQuitLocale, name, currentPlayers, maxPlayers);
         } else {
+            if(!event.getUser().isPlayer()) return;
             event.getUserGameGroup().sendLocale(spectatorQuitLocale, name, currentPlayers, maxPlayers);
         }
     }

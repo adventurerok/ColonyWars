@@ -3,6 +3,10 @@ RECODE BUGS:
  - Quitting with only zombies on the server
  - Force showdown timers
  - signs in schematics
+ - says zombies quit spectating
+ - zombie showdown timer not start
+ - remove source code join message
+ - spectate sign broken sometimes
 
 LOW PRIORITY / INVESTIGATE:
  - Zombie tab list names

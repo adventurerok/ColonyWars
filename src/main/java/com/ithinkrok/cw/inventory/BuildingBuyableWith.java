@@ -14,8 +14,8 @@ public class BuildingBuyableWith extends BuildingBuyable {
 
     private List<String> with;
 
-    public BuildingBuyableWith(ItemStack baseDisplay) {
-        super(baseDisplay);
+    public BuildingBuyableWith(ItemStack baseDisplay, int slot) {
+        super(baseDisplay, slot);
     }
 
     @Override

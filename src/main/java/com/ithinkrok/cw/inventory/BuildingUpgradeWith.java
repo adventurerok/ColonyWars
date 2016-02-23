@@ -14,8 +14,8 @@ public class BuildingUpgradeWith extends BuildingUpgrade {
 
     private List<String> with;
 
-    public BuildingUpgradeWith(ItemStack baseDisplay) {
-        super(baseDisplay);
+    public BuildingUpgradeWith(ItemStack baseDisplay, int slot) {
+        super(baseDisplay, slot);
     }
 
     @Override

@@ -26,8 +26,8 @@ public class BuildingBuyable extends ItemBuyable {
     protected String usefulForLocale;
     protected String usefulCommaLocale;
 
-    public BuildingBuyable(ItemStack baseDisplay) {
-        super(baseDisplay);
+    public BuildingBuyable(ItemStack baseDisplay, int slot) {
+        super(baseDisplay, slot);
     }
 
     @Override

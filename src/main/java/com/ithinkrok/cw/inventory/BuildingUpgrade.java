@@ -12,8 +12,8 @@ import org.bukkit.inventory.ItemStack;
  */
 public class BuildingUpgrade extends BuildingBuyable {
 
-    public BuildingUpgrade(ItemStack baseDisplay) {
-        super(baseDisplay);
+    public BuildingUpgrade(ItemStack baseDisplay, int slot) {
+        super(baseDisplay, slot);
     }
 
 

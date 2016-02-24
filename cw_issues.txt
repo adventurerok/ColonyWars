@@ -1,10 +1,7 @@
 == ColonyWars Bugs/Ideas ==
 RECODE BUGS:
- - Quitting with only zombies on the server
  - Force showdown timers
- - signs in schematics
  - zombie showdown timer not start
- - spectate sign broken sometimes
 
 LOW PRIORITY / INVESTIGATE:
  - Zombie tab list names

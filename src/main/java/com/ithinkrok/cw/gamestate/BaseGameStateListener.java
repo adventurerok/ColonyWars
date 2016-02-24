@@ -68,6 +68,8 @@ public class BaseGameStateListener extends SimpleInGameListener {
 
     @CustomEventHandler(priority = CustomEventHandler.MONITOR)
     public void sendQuitMessageOnUserQuit(UserQuitEvent event) {
+        if(event.getReason() == UserQuitEvent.QuitReason.NON_PLAYER_REMOVED) return;
+
         String name = event.getUser().getFormattedName();
         int currentPlayers = event.getUserGameGroup().getUserCount() - 1;
         int maxPlayers = Bukkit.getMaxPlayers();

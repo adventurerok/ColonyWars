@@ -200,7 +200,6 @@ public class BaseGameListener extends BaseGameStateListener {
         }
     }
 
-    @Override
     @CustomEventHandler
     public void sendQuitMessageOnUserQuit(UserQuitEvent event) {
         String name = event.getUser().getFormattedName();
@@ -216,7 +215,6 @@ public class BaseGameListener extends BaseGameStateListener {
     }
 
 
-    @Override
     @CustomEventHandler
     public void sendJoinMessageOnUserJoin(UserJoinEvent event) {
         String name = event.getUser().getFormattedName();

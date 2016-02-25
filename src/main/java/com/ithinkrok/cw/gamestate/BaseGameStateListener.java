@@ -9,7 +9,7 @@ import com.ithinkrok.minigames.api.event.map.MapItemSpawnEvent;
 import com.ithinkrok.minigames.api.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.api.event.user.game.UserQuitEvent;
 import com.ithinkrok.minigames.api.event.user.world.UserDropItemEvent;
-import com.ithinkrok.minigames.base.gamestate.SimpleInGameListener;
+import com.ithinkrok.minigames.util.gamestate.SimpleInGameListener;
 import com.ithinkrok.minigames.api.util.InventoryUtils;
 import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.event.CustomEventHandler;

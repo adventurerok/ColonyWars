@@ -1,6 +1,6 @@
 package com.ithinkrok.cw.gamestate;
 
-import com.ithinkrok.minigames.base.gamestate.SimpleLobbyListener;
+import com.ithinkrok.minigames.util.gamestate.SimpleLobbyListener;
 
 /**
  * Created by paul on 31/12/15.

@@ -25,17 +25,9 @@ public class BaseGameStateListener extends SimpleInGameListener {
 
     protected Random random = new Random();
 
-    protected String quitLocale;
-    protected String joinLocale;
-
     @CustomEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<GameGroup, GameState> event) {
         super.onListenerLoaded(event);
-
-        Config config = event.getConfigOrEmpty();
-
-        if (quitLocale == null) quitLocale = config.getString("user_quit_locale", "user.quit");
-        if (joinLocale == null) joinLocale = config.getString("user_join_locale", "user.join");
     }
 
     @CustomEventHandler
@@ -64,25 +56,5 @@ public class BaseGameStateListener extends SimpleInGameListener {
     @CustomEventHandler
     public void onItemSpawn(MapItemSpawnEvent event) {
         event.setCancelled(true);
-    }
-
-    @CustomEventHandler(priority = CustomEventHandler.MONITOR)
-    public void sendQuitMessageOnUserQuit(UserQuitEvent event) {
-        if(event.getReason() == UserQuitEvent.QuitReason.NON_PLAYER_REMOVED) return;
-
-        String name = event.getUser().getFormattedName();
-        int currentPlayers = event.getUserGameGroup().getUserCount() - 1;
-        int maxPlayers = Bukkit.getMaxPlayers();
-
-        event.getUserGameGroup().sendLocale(quitLocale, name, currentPlayers, maxPlayers);
-    }
-
-    @CustomEventHandler(priority = CustomEventHandler.FIRST)
-    public void sendJoinMessageOnUserJoin(UserJoinEvent event) {
-        String name = event.getUser().getFormattedName();
-        int currentPlayers = event.getUserGameGroup().getUserCount();
-        int maxPlayers = Bukkit.getMaxPlayers();
-
-        event.getUserGameGroup().sendLocale(joinLocale, name, currentPlayers, maxPlayers);
     }
 }

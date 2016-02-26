@@ -1,0 +1,254 @@
+custom_items:
+  darkness_sword:
+    display_name_locale: "darkness_sword.name"
+    description_locale: "darkness_sword.desc"
+    material: "IRON_HELMET"
+    upgradable: true
+    listeners:
+      weapon:
+        events: ["attack"]
+        class: "com.ithinkrok.minigames.util.item.WeaponModifier"
+        config:
+          damage: "array(sword, 1, 2.5, 4)"
+          effects:
+            wither:
+              duration: "array(sword, 3, 6, 10)"
+            confusion:
+              duration: "array(sword, 5, 7, 8)"
+  lightning_wand:
+    display_name_locale: "lightning_wand.name"
+    material: "DIAMOND_LEGGINGS"
+    upgradable: true
+    right_cooldown:
+      ability: "lightning"
+      timer: "50-20*lightning"
+      finished_locale: "lightning_wand.cooldown"
+    listeners:
+      lightning:
+        events: ["attack", "rightClick"]
+        class: "com.ithinkrok.cw.item.LightningWand"
+        config:
+          max_range: 100
+          damage_multiplier: 1.8
+  ender_wand:
+    display_name_locale: "ender_wand.name"
+    material: "DIAMOND_CHESTPLATE"
+    upgradable: true
+    right_cooldown:
+      ability: "ender"
+      timer: "45-15*ender"
+      finished_locale: "ender_wand.cooldown"
+    listeners:
+      ender:
+        events: ["rightClick"]
+        class: "com.ithinkrok.cw.item.EnderWand"
+        config:
+          speed: 1.0
+  pickaxe:
+    material: "DIAMOND_PICKAXE"
+  mighty_axe:
+    display_name_locale: "mighty_axe.name"
+    material: "STONE_AXE"
+  general_sword:
+    material: "DIAMOND_SWORD"
+    upgradable: true
+    enchantments:
+      DAMAGE_ALL: "1*sword"
+      KNOCKBACK: 1
+  team_compass:
+    display_name_locale: "team_compass.name"
+    material: "COMPASS"
+    listeners:
+      team_compass:
+        events: ["rightClick"]
+        class: "com.ithinkrok.cw.item.TeamCompass"
+  player_compass:
+    display_name_locale: "player_compass.name"
+    material: "COMPASS"
+    listeners:
+      team_compass:
+        events: ["rightClick"]
+        class: "com.ithinkrok.minigames.util.item.PlayerCompass"
+  regen_ability:
+    display_name_locale: "regen_ability.name"
+    material: "CHAINMAIL_HELMET"
+    upgradable: true
+    right_cooldown:
+      ability: "regen"
+      timer: "35-regen*10"
+      finished_locale: "regen_ability.cooldown"
+    listeners:
+      regen_ability:
+        class: "com.ithinkrok.cw.item.PotionAbility"
+        events: ["rightClick"]
+        config:
+          potion_effect: "REGENERATION"
+          duration: 10
+          level: "regen*2+1"
+  scout_sword:
+    material: "WOOD_SWORD"
+    upgradable: true
+    enchantments:
+      DAMAGE_ALL: "sharpness"
+      KNOCKBACK: "knockback"
+  invisible_user_toggle:
+    display_name_locale: "invisible_user_toggle.name"
+    material: "IRON_LEGGINGS"
+    listeners:
+      invisible_user_toggle:
+        class: "com.ithinkrok.minigames.util.item.InvisibleUserToggle"
+        events: ["rightClick"]
+  spectate_chooser:
+    display_name_locale: "spectate_chooser.name"
+    material: "SKULL_ITEM"
+    durability: 3
+    listeners:
+      spectate_chooser:
+        class: "com.ithinkrok.minigames.util.item.SpectateChooser"
+        events: ["rightClick"]
+  cloak:
+    display_name_locale: "cloak.name"
+    material: "IRON_LEGGINGS"
+    upgradable: true
+    right_cooldown:
+      ability: "cloak"
+      timer: "25+cloak*10"
+      finished_locale: "cloak.cooldown"
+    right_timeout:
+      ability: "cloaking"
+      timer: "array(cloak, 10, 15, 25)"
+      description_locale: "cloak.timeout.desc"
+      finished_locale: "cloak.timeout.finished"
+    listeners:
+      cloak:
+        class: "com.ithinkrok.cw.item.Cloak"
+        events: ["rightClick", "timeout"]
+        config:
+          cloak_effects:
+            SPEED: 2
+          decloak_effects:
+            SPEED: 1
+  peasant_axe:
+    display_name_locale: "peasant_axe.name"
+    material: "IRON_AXE"
+    enchantments:
+      DIG_SPEED: 2
+  archer_bow:
+    material: "BOW"
+    upgradable: true
+    enchantments:
+      ARROW_DAMAGE: "array(bow, 0, 1, 3)"
+  archer_sword:
+    material: "WOOD_SWORD"
+    upgradable: true
+    enchantments:
+      DAMAGE_ALL: "sword"
+      KNOCKBACK: "sword*0.5"
+  wolf_wand:
+    display_name_locale: "wolf_wand.name"
+    material: "GOLD_HELMET"
+    upgradable: true
+    right_cooldown:
+      ability: "wolf"
+      timer: "120-wolf*30"
+      finished_locale: "wolf_wand.cooldown"
+    listeners:
+      wolf:
+        class: "com.ithinkrok.cw.item.WolfWand"
+        events: ["rightClick"]
+  warrior_sword:
+    material: "IRON_SWORD"
+    upgradable: true
+    enchantments:
+      DAMAGE_ALL: "array(sharpness, 0, 1, 3)"
+      KNOCKBACK: "knockback"
+  earth_bender:
+    display_name_locale: "earth_bender.name"
+    material: "GOLD_CHESTPLATE"
+    upgradable: true
+    right_cooldown:
+      ability: "bender"
+      timer: "50-bender*15"
+      finished_locale: "earth_bender.cooldown"
+    listeners:
+      bender:
+        class: "com.ithinkrok.cw.item.EarthBender"
+        config:
+          max_moves: 5
+          spawn_sound: "WITHER_SPAWN,1.0,2.0"
+          knockback_sound: "WITHER_SHOOT,1.0,1.5"
+  healing_scroll:
+    display_name_locale: "healing_scroll.name"
+    material: "DIAMOND_BOOTS"
+    upgradable: true
+    right_cooldown:
+      ability: "healing"
+      timer: "240-healing*90"
+      finished_locale: "healing_scoll.cooldown"
+    listeners:
+      healing:
+        class: "com.ithinkrok.cw.item.HealingScroll"
+        events: ["rightClick"]
+        config:
+          effect: "REGENERATION"
+          level: 6
+          duration: 2
+          sound: "FIREWORK_TWINKLE,1.0,1.2"
+  cross:
+    display_name_locale: "cross.name"
+    material: "GOLD_LEGGINGS"
+    upgradable: true
+    listeners:
+      weapon:
+        class: "com.ithinkrok.minigames.util.item.WeaponModifier"
+        config:
+          damage: "2+cross"
+  explosion_wand:
+    display_name_locale: "explosion_wand.name"
+    material: "IRON_CHESTPLATE"
+    upgradable: true
+    right_cooldown:
+      ability: "wand"
+      timer: "25-wand*10"
+      finished_locale: "explosion_wand.cooldown"
+    listeners:
+      explosion:
+        class: "com.ithinkrok.cw.item.ExplosionWand"
+        events: ["rightClick"]
+        config:
+          max_range: 100
+          explosion_power: "2+explosion_power" #Explosion power can be changed for fun using /cw level
+  inferno_tnt:
+    material: "TNT"
+    upgradable: true
+    listeners:
+      tnt:
+        class: "com.ithinkrok.cw.item.CustomTNT"
+        events: ["rightClick"]
+        config:
+          explosion_power: "4+explosion_power"
+  flame_sword:
+    display_name_locale: "flame_sword.name"
+    material: "DIAMOND_HELMET"
+    upgradable: true
+    listeners:
+      weapon:
+        class: "com.ithinkrok.minigames.util.item.WeaponModifier"
+        config:
+          damage: "1+flame*1.5"
+          fire: "4"
+  vampire_sword:
+    display_name_locale: "vampire_sword.name"
+    description_locale: "vampire_sword.desc"
+    material: "GOLD_SWORD"
+    upgradable: true
+    enchantments:
+      DAMAGE_ALL: "vampire"
+    listeners:
+      regen:
+        class: "com.ithinkrok.minigames.util.item.WeaponModifier"
+        config:
+          self_effects:
+            regeneration:
+              duration: 1
+              level: 2

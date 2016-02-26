@@ -1,0 +1,61 @@
+folder: "mccw_jungle_valley"
+description: "A jungle valley map"
+environment: normal
+enable_weather: false
+
+shared_objects:
+  showdown:
+    center:
+      x: 116
+      y: 36
+      z: 114
+    size:
+      x: 30
+      z: 30
+  spawn_locations:
+    green:
+      x: 304.5
+      y: 36
+      z: -58.5
+    blue:
+      x: -56.5
+      y: 36
+      z: -73.5
+    yellow:
+      x: -71.5
+      y: 36
+      z: 287.5
+    red:
+      x: 289.5
+      y: 36
+      z: 302.5
+
+listeners:
+  initial_buildings:
+    class: "com.ithinkrok.cw.map.InitialBuildingSpawner"
+    config:
+      initial_buildings:
+        - building: "Base"
+          team: "green"
+          location:
+            x: 305
+            y: 35
+            z: -60
+        - building: "Base"
+          team: "blue"
+          location:
+            x: -58
+            y: 35
+            z: -75
+        - building: "Base"
+          team: "yellow"
+          location:
+            x: -73
+            y: 35
+            z: 288
+        - building: "Base"
+          team: "red"
+          location:
+            x: 290
+            y: 35
+            z: 303

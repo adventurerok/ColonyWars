@@ -1,0 +1,141 @@
+folder: "mccw_12canyon"
+description: "The new 12 teams canyon experience!"
+environment: normal
+enable_weather: false
+
+shared_objects:
+  showdown:
+    center:
+      x: -235
+      y: 115
+      z: 209
+    size:
+      x: 30
+      z: 30
+  spawn_locations:
+    blue:
+      x: -20
+      y: 135
+      z: 424
+    magenta:
+      x: -418
+      y: 109
+      z: 141
+    brown:
+      x: -167
+      y: 109
+      z: 26
+    orange:
+      x: -313
+      y: 112
+      z: -8
+    light_blue:
+      x: -157
+      y: 112
+      z: 426
+    cyan:
+      x: -52
+      y: 109
+      z: 277
+    lime:
+      x: -452
+      y: 112
+      z: 287
+    purple:
+      x: -18
+      y: 112
+      z: 131
+    silver:
+      x: -303
+      y: 109
+      z: 392
+    green:
+      x: -450
+      y: 135
+      z: 424
+    red:
+      x: -450
+      y: 135
+      z: -6
+    yellow:
+      x: -20
+      y: 135
+      z: -6
+
+listeners:
+  initial_buildings:
+    class: "com.ithinkrok.cw.map.InitialBuildingSpawner"
+    config:
+      initial_buildings:
+        - building: "Base"
+          team: "light_blue"
+          location:
+            x: -158
+            y: 112
+            z: 428
+        - building: "Base"
+          team: "orange"
+          location:
+            x: -312
+            y: 111
+            z: -9
+        - building: "Base"
+          team: "brown"
+          location:
+            x: -168
+            y: 108
+            z: 25
+        - building: "Base"
+          team: "green"
+          location:
+            x: -451
+            y: 134
+            z: 425
+        - building: "Base"
+          team: "silver"
+          location:
+            x: -302
+            y: 108
+            z: 393
+        - building: "Base"
+          team: "cyan"
+          location:
+            x: -51
+            y: 108
+            z: 276
+        - building: "Base"
+          team: "yellow"
+          location:
+            x: -19
+            y: 134
+            z: -7
+        - building: "Base"
+          team: "lime"
+          location:
+            x: -453
+            y: 111
+            z: 286
+        - building: "Base"
+          team: "red"
+          location:
+            x: -451
+            y: 134
+            z: -7
+        - building: "Base"
+          team: "blue"
+          location:
+            x: -19
+            y: 134
+            z: 425
+        - building: "Base"
+          team: "magenta"
+          location:
+            x: -419
+            y: 108
+            z: 142
+        - building: "Base"
+          team: "purple"
+          location:
+            x: -17
+            y: 111
+            z: 132

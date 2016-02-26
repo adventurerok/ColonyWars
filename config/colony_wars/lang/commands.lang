@@ -1,0 +1,55 @@
+command.cw.unknown=&cUnknown subcommand %s
+command.cw.building.unknown=&cUnknown building %s
+command.cw.team.unknown=&cUnknown team %s
+command.cw.team.success=%s&a's team changed to %s
+command.cw.custom.unknown=&cUnknown custom item %s
+command.cw.custom.success=&aGiven %s &athe custom item %s
+command.cw.level.success=%s&a's %s level set to %s
+command.cw.kit.unknown=&cUnknown kit %s
+command.cw.kit.success=%s&a's kit changed to %s
+command.cw.rejoin.failure=Failed to rejoin user
+command.cw.rejoin.success=%s &awas successfully rejoined!
+
+command.tmm.change.0=&6Money messages set to NONE
+command.tmm.change.1=&6Money messages set to FILTERED
+command.tmm.change.2=&6Money messages set to ALL
+
+command.stats.none=&cYou have no stats for category %s
+command.stats.category=&6&lStats for category &3&l%s&6&l\:
+command.stats.kills=&6Kills\: &3%s
+command.stats.deaths=&6Deaths\: &3%s
+command.stats.kd=&6K/D\: &3%s
+command.stats.wins=&6Wins\: &3%s
+command.stats.losses=&6Losses\: &3%s
+command.stats.games=&6Total games\: &3%s
+command.stats.totalmoney=&6Total gold collected\: &3%s
+command.stats.score=&6Score\: &3%s
+
+command.leaderboard.category=&6&lLeaderboard for category &3&l%s&6&l\:
+command.leaderboard.listing=&6%s&6: &3%s&6, with a score of &3%s&6!
+
+command.transfer.not_in_game=&cYou must be in game to use /transfer
+command.transfer.invalid_amount=Invalid transfer amount
+command.transfer.cannot_afford=You cannot afford to transfer that much
+command.transfer.no_target=Please specify valid targets
+command.transfer.single=%s &6transferred &3%s &6to %s
+command.transfer.multiple=%s &6transferred &3%s &6each to %s
+command.transfer.comma=&6, &e
+command.transfer.team=the team
+
+command.fix.cooldown=&aYou can now use the fix command again
+command.fix.failed=&cYou were teleported to your base as no suitable location was found
+command.fix.success=&aYou were successfully fixed
+
+command.list.title=&6&lPlayers connected to the server &8(&7%s&8/&7%s&8)&6\:
+command.list.line=%s&6\: %s
+command.list.spectator=&dSpectator
+command.list.zombies=&6Additionally there are &3%s &6zombies in the game.
+
+command.members.player_info=&6%s&6\: &3%s&6, Location\: &3%s
+command.members.title=&6&lMembers of your team:
+command.members.near_showdown=%s (Near showdown arena)
+command.members.not_in_game=not in game
+
+command.spawn.not_lobby=&cThis command can only be used in the lobby
+command.spawn.teleported=&aTeleported you to the lobby spawn

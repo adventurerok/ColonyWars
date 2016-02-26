@@ -1,0 +1,61 @@
+folder: "mccw_hills_and_lakes"
+description: "Hills and lakes..."
+environment: normal
+enable_weather: false
+
+shared_objects:
+  showdown:
+    center:
+      x: -227
+      y: 28
+      z: -242
+    size:
+      x: 30
+      z: 30
+  spawn_locations:
+    yellow:
+      x: -424
+      y: 26
+      z: -45
+    blue:
+      x: -30
+      y: 26
+      z: -439
+    red:
+      x: -30
+      y: 26
+      z: -45
+    green:
+      x: -424
+      y: 26
+      z: -439
+
+listeners:
+  initial_buildings:
+    class: "com.ithinkrok.cw.map.InitialBuildingSpawner"
+    config:
+      initial_buildings:
+        - building: "Base"
+          team: "yellow"
+          location:
+            x: -425
+            y: 25
+            z: -44
+        - building: "Base"
+          team: "blue"
+          location:
+            x: -29
+            y: 25
+            z: -440
+        - building: "Base"
+          team: "red"
+          location:
+            x: -29
+            y: 25
+            z: -44
+        - building: "Base"
+          team: "green"
+          location:
+            x: -425
+            y: 25
+            z: -440

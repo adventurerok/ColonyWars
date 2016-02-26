@@ -1,0 +1,377 @@
+kits:
+  general:
+    description: "Fights with a diamond sword"
+    item: "DIAMOND_SWORD"
+    listeners:
+      kit:
+        class: "com.ithinkrok.cw.kit.KitListener"
+        config:
+          buildings:
+            Blacksmith:
+              custom_items:
+                - "general_sword"
+              shop:
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "sword"
+                    upgrade_display_locale: "general_sword.upgrade"
+                    max_level: 2
+                    cost: "1100+250*sword"
+                    upgrade_item: "general_sword"
+  scout:
+    description: "Runs fast and has a player locator"
+    item: "COMPASS"
+    listeners:
+      kit:
+        class: "com.ithinkrok.cw.kit.KitListener"
+        config:
+          buildings:
+            Base:
+              potion_effects:
+                SPEED: 2
+              upgrades:
+                team_compass: 1 #Prevent buying the team compass
+            Lumbermill:
+              custom_items:
+                - "scout_sword"
+              shop:
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "sharpness"
+                    upgrade_display_locale: "scout_sword.upgrade.sharpness"
+                    max_level: 2
+                    cost: "1350+250*sharpness"
+                    upgrade_item: "scout_sword"
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "knockback"
+                    upgrade_display_locale: "scout_sword.upgrade.knockback"
+                    max_level: 2
+                    cost: "1350+250*knockback"
+                    upgrade_item: "scout_sword"
+            Church:
+              shop:
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config: &player_compass_upgrade
+                    upgrade_name: "player_compass"
+                    upgrade_display_locale: "player_compass.upgrade"
+                    max_level: 1
+                    cost: 400
+                    upgrade_item: "player_compass"
+            Cathedral:
+              shop:
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config: *player_compass_upgrade
+            MageTower:
+              custom_items:
+                - "regen_ability"
+              shop:
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "regen"
+                    upgrade_display_locale: "regen_ability.upgrade"
+                    max_level: 1
+                    cost: "1350+250*regen"
+                    upgrade_item: "regen_ability"
+  cloaker:
+    description: "Can go invisible for short periods of time"
+    item: "IRON_LEGGINGS"
+    listeners:
+      kit:
+        class: "com.ithinkrok.cw.kit.KitListener"
+        config:
+          buildings:
+            Base:
+              potion_effects:
+                JUMP: 4
+                SPEED: 1
+            MageTower:
+              custom_items:
+                - "cloak"
+              shop:
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "cloak"
+                    upgrade_display_locale: "cloak.upgrade"
+                    max_level: 2
+                    cost: "1350+250*cloak"
+                    upgrade_item: "cloak"
+  peasant:
+    description: "Has an enchanted iron axe to get money faster"
+    item: "IRON_AXE"
+    listeners:
+      kit:
+        class: "com.ithinkrok.cw.kit.KitListener"
+        config:
+          buildings:
+            Base:
+              potion_effects:
+                SPEED: 1
+              custom_items:
+                - "peasant_axe"
+            Lumbermill:
+              custom_items:
+                - "scout_sword"
+              shop:
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "sharpness"
+                    upgrade_display_locale: "scout_sword.upgrade.sharpness"
+                    max_level: 2
+                    cost: "1350+250*sharpness"
+                    upgrade_item: "scout_sword"
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "knockback"
+                    upgrade_display_locale: "scout_sword.upgrade.knockback"
+                    max_level: 2
+                    cost: "1350+250*knockback"
+                    upgrade_item: "scout_sword"
+  dark_knight:
+    description: "Wields the darkness sword..."
+    item: "IRON_HELMET"
+    listeners:
+      kit:
+        class: "com.ithinkrok.cw.kit.KitListener"
+        config:
+          buildings:
+            Base:
+              potion_effects:
+                NIGHT_VISION: 1
+            MageTower:
+              custom_items:
+                - "darkness_sword"
+              shop:
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "sword"
+                    upgrade_display_locale: "darkness_sword.upgrade"
+                    max_level: 2
+                    cost: "1350+250*sword"
+                    upgrade_item: "darkness_sword"
+  mage:
+    description: "Can strike lightning and use harming potions"
+    item: "DIAMOND_LEGGINGS"
+    listeners:
+      kit:
+        class: "com.ithinkrok.cw.kit.KitListener"
+        config:
+          buildings:
+            MageTower:
+              custom_items:
+                - "ender_wand"
+                - "lightning_wand"
+              items:
+                harming_potion: "POTION,16,16396"
+                health_potion: "POTION,16,8229"
+              shop:
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "ender"
+                    upgrade_display_locale: "ender_wand.upgrade"
+                    max_level: 2
+                    cost: "1350+250*ender"
+                    upgrade_item: "ender_wand"
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "lightning"
+                    upgrade_display_locale: "lightning_wand.upgrade"
+                    max_level: 2
+                    cost: "1350+250*lightning"
+                    upgrade_item: "lightning_wand"
+                - class: "com.ithinkrok.minigames.util.inventory.ItemBuyable"
+                  config:
+                    item: "POTION,32,16396"
+                    cost: 400
+                - class: "com.ithinkrok.minigames.util.inventory.ItemBuyable"
+                  config:
+                    item: "POTION,32,8229"
+                    cost: 1350
+  archer:
+    description: "Fights with a bow!"
+    item: "BOW"
+    listeners:
+      kit:
+        class: "com.ithinkrok.cw.kit.KitListener"
+        config:
+          buildings:
+            Base:
+              potion_effects:
+                SPEED: 1
+            Lumbermill:
+              custom_items:
+                - "archer_bow"
+                - "archer_sword"
+              items:
+                arrows: "ARROW,32"
+              shop:
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "bow"
+                    upgrade_display_locale: "archer_bow.upgrade"
+                    max_level: 2
+                    cost: "1350+250*bow"
+                    upgrade_item: "archer_bow"
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "sword"
+                    upgrade_display_locale: "archer_sword.upgrade"
+                    max_level: 2
+                    cost: "1350+250*sword"
+                    upgrade_item: "archer_sword"
+                - class: "com.ithinkrok.minigames.util.inventory.ItemBuyable"
+                  display: "ARROW,1,0,Arrow Upgrade 1"
+                  config:
+                    item: "ARROW,64"
+                    cost: 1350
+                    can_buy: "arrows<1"
+                    upgrade_on_buy:
+                      arrows: 1
+                - class: "com.ithinkrok.minigames.util.inventory.ItemBuyable"
+                  display: "ARROW,1,0,Arrow Upgrade 2"
+                  config:
+                    item: "ARROW,192"
+                    cost: 1600
+                    can_buy: "arrows>0"
+  warrior:
+    description: "Summons wolves and fights with an upgradable iron sword"
+    item: "IRON_SWORD"
+    listeners:
+      kit:
+        class: "com.ithinkrok.cw.kit.KitListener"
+        config:
+          buildings:
+            Blacksmith:
+              custom_items:
+                - "warrior_sword"
+                - "wolf_wand"
+              shop:
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "sharpness"
+                    upgrade_display_locale: "warrior_sword.upgrade.sharpness"
+                    max_level: 2
+                    cost: "1350+250*sharpness"
+                    upgrade_item: "warrior_sword"
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "knockback"
+                    upgrade_display_locale: "warrior_sword.upgrade.knockback"
+                    max_level: 2
+                    cost: "1350+250*knockback"
+                    upgrade_item: "warrior_sword"
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "wolf"
+                    upgrade_display_locale: "wolf_wand.upgrade"
+                    max_level: 2
+                    cost: "1350+250*wolf"
+                    upgrade_item: "wolf_wand"
+  priest:
+    description: "Has a healing scroll and earth bender"
+    item: "GOLD_LEGGINGS"
+    listeners:
+      kit:
+        class: "com.ithinkrok.cw.kit.KitListener"
+        config:
+          buildings:
+            Cathedral:
+              custom_items:
+                - "healing_scroll"
+                - "earth_bender"
+                - "cross"
+              shop:
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "healing"
+                    upgrade_display_locale: "healing_scroll.upgrade"
+                    max_level: 2
+                    cost: "1350+250*healing"
+                    upgrade_item: "healing_scroll"
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "bender"
+                    upgrade_display_locale: "earth_bender.upgrade"
+                    max_level: 2
+                    cost: "1350+250*bender"
+                    upgrade_item: "earth_bender"
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "cross"
+                    upgrade_display_locale: "cross.upgrade"
+                    max_level: 2
+                    cost: "1350+250*cross"
+                    upgrade_item: "cross"
+  inferno:
+    description: "Has an explosion wand and TNT"
+    item: "IRON_CHESTPLATE"
+    listeners:
+      kit:
+        class: "com.ithinkrok.cw.kit.KitListener"
+        config:
+          buildings:
+            MageTower:
+              custom_items:
+                - "explosion_wand"
+              shop:
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "wand"
+                    upgrade_display_locale: "explosion_wand.upgrade"
+                    max_level: 2
+                    cost: "1350+250*wand"
+                    upgrade_item: "explosion_wand"
+            Blacksmith:
+              custom_items:
+                - "flame_sword"
+              shop:
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "flame"
+                    upgrade_display_locale: "flame_sword.upgrade"
+                    max_level: 2
+                    cost: "1350+250*flame"
+                    upgrade_item: "flame_sword"
+                - class: "com.ithinkrok.minigames.util.inventory.ItemBuyable"
+                  config:
+                    custom_item: "inferno_tnt"
+                    amount: 16
+                    cost: 1600
+  vampire:
+    description: "Has a bat form that can fly"
+    item: "GOLD_SWORD"
+    listeners:
+      vampire:
+        class: "com.ithinkrok.cw.kit.VampireListener"
+        config:
+          unlock_building: "MageTower"
+          flight_decrease_amount: "0.01*pow(0.6,bat)*pow(10/9,max(0, bat-1))"
+          limit_blocks_above_ground: 10 #If blocks above ground bigger than this
+          blocks_above_ground_divisor: 10 #Then multiply flightDecreaseAmount by blocksAboveGround/divisor
+          fly_speed: 0.05
+          regain_flight_level: 0.2 #Minimum flight level (0 to 1) when flying is allowed again
+          flight_loss_on_damage: 0.07
+          flight_gain_on_regen: 0.02 # per second
+          flight_gain_per_second: 0.02
+      kit:
+        class: "com.ithinkrok.cw.kit.KitListener"
+        config:
+          buildings:
+            MageTower:
+              custom_items:
+                - "vampire_sword"
+              shop:
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  display: "MONSTER_EGG,1,65"
+                  config:
+                    upgrade_name: "bat"
+                    upgrade_display_locale: "bat_flight.upgrade"
+                    max_level: 2
+                    cost: "1350+250*bat"
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "vampire"
+                    upgrade_display_locale: "vampire_sword.upgrade"
+                    max_level: 2
+                    cost: "1350+250*vampire"
+                    upgrade_item: "vampire_sword"

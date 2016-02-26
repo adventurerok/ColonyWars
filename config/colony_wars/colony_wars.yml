@@ -1,0 +1,244 @@
+chat_prefix: "&7[&3ColonyWars&7] &e"
+
+additional_configs:
+  - "colony_wars/config/base.yml"
+
+maps:
+  lobby: "colony_wars/maps/lobby.yml"
+  12canyon: "colony_wars/maps/12canyon.yml"
+  canyon: "colony_wars/maps/canyon.yml"
+  cavern: "colony_wars/maps/cavern.yml"
+  forest_hills: "colony_wars/maps/forest_hills.yml"
+  hills_and_lakes: "colony_wars/maps/hills_and_lakes.yml"
+  jungle_valley: "colony_wars/maps/jungle_valley.yml"
+  jungle_mountain: "colony_wars/maps/jungle_mountain.yml"
+  mega_taiga: "colony_wars/maps/mega_taiga.yml"
+  mesa: "colony_wars/maps/mesa.yml"
+  nether: "colony_wars/maps/nether.yml"
+  oasis: "colony_wars/maps/oasis.yml"
+  snow_hills: "colony_wars/maps/snow_hills.yml"
+
+# Specifies identifiers for teams to be created
+team_identifiers:
+  red:
+    dye_color: RED
+  blue:
+    dye_color: BLUE
+  green:
+    dye_color: GREEN
+  yellow:
+    dye_color: YELLOW
+
+# Specifies default shared objects. Some shared objects are required by certain Java Classes used in the game.
+shared_objects:
+  gold_config:
+    ore_blocks:
+      gold_ore: "GOLD_INGOT,6"
+      quartz_ore: "GOLD_INGOT,6"
+      diamond_ore: "DIAMOND,1"
+    trees:
+      enabled: true
+      item_material: "GOLD_INGOT"
+      item_amount: "1+x+(ln(x)/ln(1.5))-min(sqrt((pow(x,3))/500),pow(x,0.9))"
+      log_materials:
+        - "LOG"
+        - "LOG_2"
+    items:
+      gold_ingot:
+        user: 60
+        team: 40
+      diamond:
+        user: 1200
+        team: 800
+    pickup_sound: "ORB_PICKUP"
+  # Required for UserMoney.java
+  user_money_metadata:
+    remove_gamestate: "aftermath"
+    add_locale: "money.balance.user.add"
+    subtract_locale: "money.balance.user.subtract"
+    new_locale: "money.balance.user.new"
+  # Required for TeamMoney.java
+  team_money_metadata:
+    remove_gamestate: "aftermath"
+    add_locale: "money.balance.team.add"
+    subtract_locale: "money.balance.team.subtract"
+    new_locale: "money.balance.team.new"
+  # Required for CWScoreboardHandler.java
+  colony_wars_scoreboard:
+    title: "scoreboard.title"
+    user_balance: "scoreboard.user_balance"
+    team_balance: "scoreboard.team_balance"
+    building_now_count: "scoreboard.building_now_count"
+    revival_rate: "scoreboard.revival_rate"
+  map_scoreboard:
+    votable_maps: &votable_maps
+      - "canyon"
+      - "forest_hills"
+      - "cavern"
+      - "hills_and_lakes"
+      - "jungle_valley"
+      - "oasis"
+      - "nether"
+      - "snow_hills"
+      - "jungle_mountain"
+      - "mega_taiga"
+      - "12canyon"
+      - "mesa"
+      - "random"
+  schematic_options:
+    progress_hologram: true
+    build_speed: 2
+    center_block_material: "OBSIDIAN"
+    replace_materials:
+      BARRIER: "AIR"
+      DIAMOND_ORE: "GOLD_ORE"
+# Required for User.java
+  user:
+    default_stats:
+      max_health: 20
+      health: 20
+      food_level: 10
+      saturation: 5
+      fly_speed: 0.1
+      walk_speed: 0.2
+      max_hit_delay: 0.7
+  showdown_metadata:
+    min_radius: 5
+    shrink_start_time: 180
+    shrink_interval_time: 20
+    shrink_start_locale: "showdown.shrinking"
+
+game_states:
+  lobby:
+    listeners:
+      main:
+        class: "com.ithinkrok.cw.gamestate.LobbyListener"
+        config:
+          start_countdown:
+            name: "start"
+            locale_stub: "countdowns.start"
+            min_players: 4
+            needs_more_players_locale: "countdowns.start.needs_more_players"
+            seconds: 181
+
+          next_gamestate: "game"
+          lobby_map: "lobby"
+          give_on_join:
+            clear_inventory: true
+            custom_items:
+              - name: "map_voter"
+                slot: 0
+              - name: "team_chooser"
+                slot: 1
+              - name: "class_chooser"
+                slot: 2
+            books:
+              - name: "handbook"
+                slot: 8
+
+  game:
+    listeners:
+      setup:
+        class: "com.ithinkrok.cw.gamestate.GameListener"
+        config:
+          map_voting:
+            random_map: "random"
+            map_list: *votable_maps
+          choosable_teams: &choosable_teams
+            - "red"
+            - "blue"
+            - "green"
+            - "yellow"
+          choosable_kits: &choosable_kits
+            - "general"
+            - "scout"
+            - "cloaker"
+            - "peasant"
+            - "dark_knight"
+            - "mage"
+            - "archer"
+            - "warrior"
+            - "priest"
+            - "inferno"
+            - "vampire"
+          start_items:
+            clear_inventory: true
+            custom_items:
+              - name: "pickaxe"
+                slot: 0
+            books:
+              - name: "handbook"
+                slot: 8
+      main:
+        class: "com.ithinkrok.cw.gamestate.BaseGameListener"
+        config: &base_game_config
+          gold_shared_object: "gold_config"
+          buildings:
+            destroy_wait: 3
+          showdown_start:
+            teams: 2
+            players: 4
+          spectator_items:
+            clear_inventory: true
+            custom_items:
+              - name: "spectate_chooser"
+                slot: 0
+              - name: "invisible_user_toggle"
+                slot: 1
+          ender_amount: "6000+ranInt(9)*3000"
+          blood_effect:
+            effect: "reddust"
+            r: 1
+            g: 0
+            b: 0
+  showdown:
+    listeners:
+      main:
+        class: "com.ithinkrok.cw.gamestate.ShowdownListener"
+        config: *base_game_config
+  aftermath:
+    listeners:
+      main:
+        class: "com.ithinkrok.cw.gamestate.BaseGameStateListener"
+      aftermath:
+        class: "com.ithinkrok.minigames.util.gamestate.SimpleAftermathListener"
+
+# Lobby custom items only
+custom_items:
+  map_voter:
+    display_name_locale: "map_voter.name"
+    description_locale: "map.voter.desc"
+    material: "EMPTY_MAP"
+    listeners:
+      vote:
+        events: ["rightClick"]
+        class: "com.ithinkrok.minigames.util.item.MapVoter"
+        config:
+          votable_maps: *votable_maps
+          map_material: "EMPTY_MAP"
+  team_chooser:
+    display_name_locale: "team_chooser.name"
+    description_locale: "team_chooser.desc"
+    material: "LEATHER_HELMET"
+    listeners:
+      choose:
+        events: ["rightClick"]
+        class: "com.ithinkrok.minigames.util.item.TeamChooser"
+        config:
+          choosable_teams: *choosable_teams
+          chooser_material: "WOOL"
+  class_chooser:
+    display_name_locale: "kit_chooser.name"
+    description_locale: "kit_chooser.desc"
+    material: "WOOD_SWORD"
+    listeners:
+      choose:
+        events: ["rightClick"]
+        class: "com.ithinkrok.minigames.util.item.KitChooser"
+        config:
+          choosable_kits: *choosable_kits
+
+start_game_state: "lobby"
+
+max_players: 40
+default_motd: "Colony wars yay"

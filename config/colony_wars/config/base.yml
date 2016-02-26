@@ -1,0 +1,90 @@
+# The language files that will be used by default
+lang_files:
+  - "colony_wars/lang/colony_wars.lang"
+  - "colony_wars/lang/weapon_modifier.lang"
+  - "colony_wars/lang/items.lang"
+  - "colony_wars/lang/commands.lang"
+
+additional_configs:
+  - "global/global.yml"
+  - "colony_wars/config/schematics.yml"
+  - "colony_wars/config/custom_items.yml"
+  - "colony_wars/config/kits.yml"
+
+books:
+  handbook: "colony_wars/books/handbook.json"
+
+commands:
+  colonywars:
+    description: "Various CW testing utils"
+    aliases: ["cw", "cwars", "wars"]
+    permission: "mccw.cw.command"
+    usage: "/<command> <subcommand> [sub command args...]"
+    class: "com.ithinkrok.cw.command.CWCommand"
+  togglemoneymessage:
+    description: "Toggles money message status"
+    aliases: ["tmm"]
+    permission: "mccw.tmm"
+    usage: "/<command> [newstatus]"
+    class: "com.ithinkrok.cw.command.ToggleMoneyMessageCommand"
+  stats:
+    description: "Shows your stats"
+    permission: "mccw.stats"
+    usage: "/<command> [category]"
+    class: "com.ithinkrok.cw.command.StatsCommand"
+  teamchat:
+    description: "Allows you to chat privately to your team"
+    aliases: ["tc", "tchat", "teamc"]
+    permission: "mccw.teamchat"
+    usage: "/<command>"
+    class: "com.ithinkrok.cw.command.TeamChatCommand"
+  deposit:
+    description: "Deposit money into your team's account"
+    aliases: ["transfer", "t", "tf"]
+    permission: "mccw.transfer"
+    usage: "/<command> <amount>"
+    class: "com.ithinkrok.cw.command.TransferCommand"
+    config:
+      default_target: "team"
+  share:
+    description: "Share money with your team members"
+    permission: "mccw.transfer"
+    usage: "/<command> <amount> [player]"
+    class: "com.ithinkrok.cw.command.TransferCommand"
+    config:
+      default_target: "all"
+  fix:
+    description: "Fixes you if you are stuck"
+    aliases: ["unstuck", "fixme"]
+    permission: "mccw.fix"
+    usage: "/<command>"
+    class: "com.ithinkrok.cw.command.FixCommand"
+  leaderboard:
+    description: "Shows a leaderboard of the top players"
+    aliases: ["lb", "leaders", "lboard", "top"]
+    permission: "mccw.leaderboard"
+    usage: "/<command> [amount] [category]"
+    class: "com.ithinkrok.cw.command.LeaderboardCommand"
+  list:
+    description: "Lists who is in the minigame"
+    aliases: ["ls"]
+    permission: "mccw.list"
+    usage: "/<command>"
+    class: "com.ithinkrok.cw.command.ListCommand"
+  members:
+    description: "Shows the members of your team"
+    aliases: ["team", "mbrs"]
+    permission: "mccw.members"
+    usage: "/<command>"
+    class: "com.ithinkrok.cw.command.MembersCommand"
+  spawn:
+    description: "Teleports you to the lobby spawn"
+    aliases: ["spwn", "home"]
+    permission: "mccw.spawn"
+    others_permission: "mccw.spawn.others"
+    usage: "/<command>"
+    class: "com.ithinkrok.cw.command.SpawnCommand"
+
+listeners:
+  global_cw:
+    class: "com.ithinkrok.cw.listener.GlobalCWListener"

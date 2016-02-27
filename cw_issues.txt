@@ -3,7 +3,6 @@ RECODE BUGS:
  - Force showdown timers
  - zombie showdown timer not start
  - Join equation factor in players not in team
- - Falling + tp = death
 
 LOW PRIORITY / INVESTIGATE:
  - Zombie tab list names

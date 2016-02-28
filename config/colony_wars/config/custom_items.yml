@@ -54,7 +54,7 @@ custom_items:
     upgradable: true
     enchantments:
       DAMAGE_ALL: "1*sword"
-      KNOCKBACK: 1
+      KNOCKBACK: 3
   team_compass:
     display_name_locale: "team_compass.name"
     material: "COMPASS"

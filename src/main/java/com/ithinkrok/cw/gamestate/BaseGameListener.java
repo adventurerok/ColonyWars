@@ -219,7 +219,7 @@ public class BaseGameListener extends BaseGameStateListener {
     public void sendJoinMessageOnUserJoin(UserJoinEvent event) {
         String name = event.getUser().getFormattedName();
         int currentPlayers = event.getUserGameGroup().getUserCount();
-        int maxPlayers = Bukkit.getMaxPlayers();
+        int maxPlayers = event.getUserGameGroup().getMaxPlayers();
 
         if (event.getUser().isInGame()) {
             event.getUserGameGroup().sendLocale(inGameJoinLocale, name, currentPlayers, maxPlayers);

@@ -45,7 +45,7 @@ public class ListCommand implements CustomListener {
         }
 
         sender.sendLocale("command.list.title", command.getGameGroup().getUserCount() - zombieCount,
-                Bukkit.getServer().getMaxPlayers());
+                command.getGameGroup().getMaxPlayers());
 
         for (Map.Entry<TeamIdentifier, List<User>> entry : teams.entrySet()) {
             if (entry.getValue().isEmpty()) continue;

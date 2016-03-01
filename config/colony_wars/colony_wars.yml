@@ -50,7 +50,7 @@ shared_objects:
       diamond:
         user: 1200
         team: 800
-    pickup_sound: "ORB_PICKUP"
+    pickup_sound: "ENTITY_EXPERIENCE_ORB_PICKUP"
   # Required for UserMoney.java
   user_money_metadata:
     remove_gamestate: "aftermath"

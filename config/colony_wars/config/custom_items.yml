@@ -175,8 +175,8 @@ custom_items:
         class: "com.ithinkrok.cw.item.EarthBender"
         config:
           max_moves: 5
-          spawn_sound: "WITHER_SPAWN,1.0,2.0"
-          knockback_sound: "WITHER_SHOOT,1.0,1.5"
+          spawn_sound: "ENTITY_WITHER_SPAWN,1.0,2.0"
+          knockback_sound: "ENTITY_WITHER_SHOOT,1.0,1.5"
   healing_scroll:
     display_name_locale: "healing_scroll.name"
     material: "DIAMOND_BOOTS"
@@ -193,7 +193,7 @@ custom_items:
           effect: "REGENERATION"
           level: 6
           duration: 2
-          sound: "FIREWORK_TWINKLE,1.0,1.2"
+          sound: "ENTITY_FIREWORK_TWINKLE,1.0,1.2"
   cross:
     display_name_locale: "cross.name"
     material: "GOLD_LEGGINGS"

@@ -25,7 +25,7 @@ public class EnderWand implements CustomListener {
         Config config = event.getConfig();
 
         speedMult = new ExpressionCalculator(config.getString("speed"));
-        shootSound = Sound.valueOf(config.getString("fire_sound", "SHOOT_ARROW"));
+        shootSound = Sound.valueOf(config.getString("fire_sound", "ENTITY_ARROW_SHOOT"));
     }
 
     @CustomEventHandler

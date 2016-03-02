@@ -704,7 +704,7 @@ public class BaseGameListener extends BaseGameStateListener {
                 teamGold.put(material, matConfig.getInt("team"));
             }
 
-            pickupSound = Sound.valueOf(config.getString("pickup_sound").toUpperCase());
+            pickupSound = NamedSounds.fromName(config.getString("pickup_sound").toUpperCase());
 
             Config trees = config.getConfigOrNull("trees");
             treesEnabled = trees != null && trees.getBoolean("enabled");

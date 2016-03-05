@@ -38,6 +38,11 @@ team_identifiers:
 
 # Specifies default shared objects. Some shared objects are required by certain Java Classes used in the game.
 shared_objects:
+  start_info:
+    game_state: "lobby"
+  game:
+    max_players: 48
+    default_motd: "Colony wars x12"
   gold_config:
     ore_blocks:
       gold_ore: "GOLD_INGOT,6"
@@ -240,8 +245,3 @@ custom_items:
         class: "com.ithinkrok.minigames.util.item.KitChooser"
         config:
           choosable_kits: *choosable_kits
-
-start_game_state: "lobby"
-
-max_players: 48
-default_motd: "Colony wars x12"

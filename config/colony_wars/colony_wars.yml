@@ -31,6 +31,11 @@ team_identifiers:
 
 # Specifies default shared objects. Some shared objects are required by certain Java Classes used in the game.
 shared_objects:
+  start_info:
+    game_state: "lobby"
+  game:
+    max_players: 40
+    default_motd: "Colony wars yay"
   gold_config:
     ore_blocks:
       gold_ore: "GOLD_INGOT,6"
@@ -238,7 +243,3 @@ custom_items:
         config:
           choosable_kits: *choosable_kits
 
-start_game_state: "lobby"
-
-max_players: 40
-default_motd: "Colony wars yay"

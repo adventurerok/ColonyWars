@@ -321,6 +321,16 @@ public class BaseGameListener extends BaseGameStateListener {
                 Money.getOrCreate(event.getUser().getTeam()).addMoney((int) (amount * 2f / 3f), true);
 
                 event.getClickedBlock().setType(Material.AIR);
+                break;
+            case CHEST:
+            case TRAPPED_CHEST:
+            case FURNACE:
+            case BREWING_STAND:
+            case DISPENSER:
+            case DROPPER:
+            case ANVIL:
+            case ENCHANTMENT_TABLE:
+                event.setCancelled(true);
         }
 
 

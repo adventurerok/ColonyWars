@@ -1,5 +1,3 @@
-chat_prefix: "&7[&3ColonyWars&7] &e"
-
 additional_configs:
   - "colony_wars/config/base.yml"
 
@@ -32,6 +30,7 @@ shared_objects:
   game:
     max_players: 40
     default_motd: "Colony wars yay"
+    chat_prefix: "&7[&3ColonyWars&7] &e"
   gold_config:
     ore_blocks:
       gold_ore: "GOLD_INGOT,6"

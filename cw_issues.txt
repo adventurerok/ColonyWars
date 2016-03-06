@@ -4,5 +4,13 @@ RECODE BUGS:
  - zombie showdown timer not start
  - Join equation factor in players not in team
 
+
+command to mod peoples stats / high scores / values
+Snappy__ score didn't register
+
+ FIX MONDAY
+ newly killed spectators visible (and not set to cloaked), + they can't fly
+ holliee scout glitch
+
 LOW PRIORITY / INVESTIGATE:
  - Zombie tab list names

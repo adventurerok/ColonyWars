@@ -29,18 +29,44 @@ public class CWTeamStats extends Metadata {
     private final HashMap<String, Integer> buildingCounts = new HashMap<>();
     private final HashMap<String, Integer> buildingNowCounts = new HashMap<>();
     private final HashMap<String, Boolean> hadBuildings = new HashMap<>();
-
-    private int buildingsConstructingNow = 0;
-
     private final List<Location> churchLocations = new ArrayList<>();
-    private int respawnChance;
-
-    private Location baseLocation;
-
     private final Location spawnLocation;
-
     private final String respawnChanceLocale;
     private final String eliminatedLocale;
+    private int buildingsConstructingNow = 0;
+    private int respawnChance;
+    private Location baseLocation;
+
+    public CWTeamStats(Team team) {
+        this.team = team;
+
+        Config spawnLocations = team.getSharedObject("spawn_locations");
+
+        Vector spawnLocation = BukkitConfigUtils.getVector(spawnLocations, team.getName());
+        this.spawnLocation =
+                new Location(team.getGameGroup().getCurrentMap().getWorld(), spawnLocation.getX(), spawnLocation.getY(),
+                        spawnLocation.getZ());
+
+        System.out.println(
+                "Team " + team.getName() + " spawnLocation: world=" + this.spawnLocation.getWorld().getName() +
+                        " position=" + spawnLocation);
+
+        Config metadata = team.getSharedObjectOrEmpty("team_stats_metadata");
+
+        respawnChanceLocale = metadata.getString("respawn_chance_locale", "respawn.chance");
+        eliminatedLocale = metadata.getString("team_eliminated_locale", "team.eliminated");
+    }
+
+    public static CWTeamStats getOrCreate(Team team) {
+        CWTeamStats stats = team.getMetadata(CWTeamStats.class);
+
+        if (stats == null) {
+            stats = new CWTeamStats(team);
+            team.setMetadata(stats);
+        }
+
+        return stats;
+    }
 
     public Location getBaseLocation() {
         return baseLocation;
@@ -54,21 +80,6 @@ public class CWTeamStats extends Metadata {
         return buildingNowCounts;
     }
 
-    public CWTeamStats(Team team) {
-        this.team = team;
-
-        Config spawnLocations = team.getSharedObject("spawn_locations");
-
-        Vector spawnLocation = BukkitConfigUtils.getVector(spawnLocations, team.getName());
-        this.spawnLocation = new Location(team.getGameGroup().getCurrentMap().getWorld(), spawnLocation.getX(),
-                spawnLocation.getY(), spawnLocation.getZ());
-
-        Config metadata = team.getSharedObjectOrEmpty("team_stats_metadata");
-
-        respawnChanceLocale = metadata.getString("respawn_chance_locale", "respawn.chance");
-        eliminatedLocale = metadata.getString("team_eliminated_locale", "team.eliminated");
-    }
-
     public Location getSpawnLocation() {
         return spawnLocation;
     }
@@ -76,20 +87,6 @@ public class CWTeamStats extends Metadata {
     public int getTotalBuildingNowCount() {
         return buildingsConstructingNow;
     }
-
-    public int getBuildingCount(String buildingType){
-        Integer integer = buildingCounts.get(buildingType);
-
-        return integer == null ? 0 : integer;
-    }
-
-    public int getBuildingNowCount(String buildingType){
-        Integer integer = buildingNowCounts.get(buildingType);
-
-        return integer == null ? 0 : integer;
-    }
-
-
 
     public void buildingStarted(Building building) {
         buildingsConstructingNow += 1;
@@ -99,26 +96,32 @@ public class CWTeamStats extends Metadata {
         team.updateUserScoreboards();
     }
 
+    public int getBuildingNowCount(String buildingType) {
+        Integer integer = buildingNowCounts.get(buildingType);
+
+        return integer == null ? 0 : integer;
+    }
+
     public void buildingFinished(Building building) {
         buildingsConstructingNow -= 1;
 
         int buildingNowOfType = getBuildingNowCount(building.getBuildingName()) - 1;
-        if(buildingNowOfType > 0) buildingNowCounts.put(building.getBuildingName(), buildingNowOfType);
+        if (buildingNowOfType > 0) buildingNowCounts.put(building.getBuildingName(), buildingNowOfType);
         else buildingNowCounts.remove(building.getBuildingName());
 
         buildingCounts.put(building.getBuildingName(), getBuildingCount(building.getBuildingName()) + 1);
         hadBuildings.put(building.getBuildingName(), true);
 
         Config config = building.getSchematic().getConfig();
-        if(config != null) {
-            if(config.contains("base")) baseLocation = building.getCenterBlock();
-            if(config.contains("revival_rate")) {
+        if (config != null) {
+            if (config.contains("base")) baseLocation = building.getCenterBlock();
+            if (config.contains("revival_rate")) {
                 addChurchLocation(building.getCenterBlock(), config.getInt("revival_rate"));
 
                 //The baseLocation is only used as a church while a cathedral is building
                 removeChurchLocation(baseLocation);
             }
-            if(config.getBoolean("cannons", false)) {
+            if (config.getBoolean("cannons", false)) {
                 CannonTowerHandler.startCannonTowerTask(team.getGameGroup(), building);
             }
         }
@@ -126,7 +129,35 @@ public class CWTeamStats extends Metadata {
         team.updateUserScoreboards();
     }
 
-    public boolean everHadBuilding(String buildingName){
+    public int getBuildingCount(String buildingType) {
+        Integer integer = buildingCounts.get(buildingType);
+
+        return integer == null ? 0 : integer;
+    }
+
+    public void addChurchLocation(Location church, int minRevivalRate) {
+        churchLocations.add(church);
+
+        if (minRevivalRate <= respawnChance) return;
+
+        setRespawnChance(minRevivalRate, true);
+    }
+
+    public void removeChurchLocation(Location church) {
+        if (churchLocations.remove(church)) {
+            if (churchLocations.isEmpty()) setRespawnChance(0, true);
+        }
+    }
+
+    public void setRespawnChance(int respawnChance, boolean message) {
+        this.respawnChance = respawnChance;
+
+        if (message) team.sendLocale(respawnChanceLocale, respawnChance);
+
+        team.updateUserScoreboards();
+    }
+
+    public boolean everHadBuilding(String buildingName) {
         Boolean bool = hadBuildings.get(buildingName);
 
         return bool == null ? false : bool;
@@ -136,20 +167,6 @@ public class CWTeamStats extends Metadata {
         buildingCounts.put(building.getBuildingName(), Math.max(getBuildingCount(building.getBuildingName()) - 1, 0));
 
         removeChurchLocation(building.getCenterBlock());
-    }
-
-    public void removeChurchLocation(Location church) {
-        if (churchLocations.remove(church)) {
-            if (churchLocations.isEmpty()) setRespawnChance(0, true);
-        }
-    }
-
-    public void addChurchLocation(Location church, int minRevivalRate) {
-        churchLocations.add(church);
-
-        if(minRevivalRate <= respawnChance) return;
-
-        setRespawnChance(minRevivalRate, true);
     }
 
     @Override
@@ -162,28 +179,9 @@ public class CWTeamStats extends Metadata {
         return true;
     }
 
-    public static CWTeamStats getOrCreate(Team team) {
-        CWTeamStats stats = team.getMetadata(CWTeamStats.class);
-
-        if(stats == null) {
-            stats = new CWTeamStats(team);
-            team.setMetadata(stats);
-        }
-
-        return stats;
-    }
-
-    public void setRespawnChance(int respawnChance, boolean message) {
-        this.respawnChance = respawnChance;
-
-        if(message) team.sendLocale(respawnChanceLocale, respawnChance);
-
-        team.updateUserScoreboards();
-    }
-
     public void respawnUser(User died) {
         Location loc;
-        if(!churchLocations.isEmpty()) loc = churchLocations.get(random.nextInt(churchLocations.size()));
+        if (!churchLocations.isEmpty()) loc = churchLocations.get(random.nextInt(churchLocations.size()));
         else loc = baseLocation;
 
         died.teleport(loc);
@@ -194,9 +192,9 @@ public class CWTeamStats extends Metadata {
     public void eliminate() {
         team.getGameGroup().sendLocale(eliminatedLocale, team.getFormattedName());
 
-        if(baseLocation != null) {
+        if (baseLocation != null) {
             Building base = BuildingController.getOrCreate(team.getGameGroup()).getBuilding(baseLocation);
-            if(base != null) base.explode();
+            if (base != null) base.explode();
             else System.out.println("Team " + team.getName() + " missing base for destruction");
             baseLocation = null;
         }

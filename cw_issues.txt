@@ -5,12 +5,45 @@ RECODE BUGS:
  - Join equation factor in players not in team
 
 
-command to mod peoples stats / high scores / values
-Snappy__ score didn't register
+ - command to mod peoples stats / high scores / values
+ - Snappy__ score didn't register
+FIX MONDAY
+ - newly killed spectators visible (and not set to cloaked), + they can't fly
+ - holliee scout glitch
+ - Teleport to wrong world issue
 
- FIX MONDAY
- newly killed spectators visible (and not set to cloaked), + they can't fly
- holliee scout glitch
+
+erver thread/INFO]: [ColonyWars] N3ptunHD was eliminated from a spleef game!
+[19:41:12] [Server thread/INFO]: [ColonyWars] Snappy__ has won ava:60)
+[19:41:49] [Server thread/INFO]: Title command successfully executed
+[19:41:49] [Server thread/INFO]: Title command successfully executed
+[19:41:49] [Server thread/INFO]: Title command successfully executed
+[19:41:49] [Server thread/INFO]: Title command successfully executed
+[19:41:49] [Server thread/WARN]: java.lang.RuntimeException: tried to teleport user to another Bukkit world: game_map=mega_taiga-0000, world=cavern-0000
+[19:41:49] [Server thread/WARN]: 	at com.ithinkrok.minigames.base.BaseUser.teleport(BaseUser.java:647)
+[19:41:49] [Server thread/WARN]: 	at com.ithinkrok.cw.gamestate.GameListener.setupUser(GameListener.java:30)
+[19:41:49] [Server thread/WARN]: 	at java.util.concurrent.ConcurrentHashMap$ValuesView.forEach(ConcurrentHashMap.java:4707)
+[19:41:49] [Server thread/WARN]: 	at com.ithinkrok.minigames.util.gamestate.SimpleGameStartListener.onGameStateChange(SimpleGameStartListener.java:80)
+                                    CALLING AN EVENT
+[19:41:49] [Server thread/WARN]: 	at com.ithinkrok.util.event.CustomEventExecutor.executeEvent(CustomEventExecutor.java:81)
+[19:41:49] [Server thread/WARN]: 	at com.ithinkrok.minigames.base.BaseGameGroup.changeGameState(BaseGameGroup.java:336)
+[19:41:49] [Server thread/WARN]: 	at com.ithinkrok.minigames.base.BaseGameGroup.changeGameState(BaseGameGroup.java:288)
+[19:41:49] [Server thread/WARN]: 	at com.ithinkrok.minigames.util.gamestate.SimpleLobbyListener.onCountdownFinished(SimpleLobbyListener.java:226)
+                                    CALLING AN EVENT
+[19:41:49] [Server thread/WARN]: 	at com.ithinkrok.util.event.CustomEventExecutor.executeEvent(CustomEventExecutor.java:81)
+[19:41:49] [Server thread/WARN]: 	at com.ithinkrok.minigames.base.BaseGameGroup.gameEvent(BaseGameGroup.java:504)
+[19:41:49] [Server thread/WARN]: 	at com.ithinkrok.minigames.api.Countdown.lambda$start$0(Countdown.java:60)
+[19:41:49] [Server thread/WARN]: 	at com.ithinkrok.minigames.api.task.GameTask.lambda$schedule$1(GameTask.java:47)
+[19:41:49] [Server thread/WARN]: 	at org.bukkit.craftbukkit.v1_8_R3.scheduler.CraftTask.run(CraftTask.java:71)
+[19:41:49] [Server thread/WARN]: 	at org.bukkit.craftbukkit.v1_8_R3.scheduler.CraftScheduler.mainThreadHeartbeat(CraftScheduler.java:350)
+[19:41:49] [Server thread/WARN]: 	at net.minecraft.server.v1_8_R3.MinecraftServer.B(MinecraftServer.java:723)
+[19:41:49] [Server thread/WARN]: 	at net.minecraft.server.v1_8_R3.DedicatedServer.B(DedicatedServer.java:374)
+[19:41:49] [Server thread/WARN]: 	at net.minecraft.server.v1_8_R3.MinecraftServer.A(MinecraftServer.java:654)
+[19:41:49] [Server thread/WARN]: 	at net.minecraft.server.v1_8_R3.MinecraftServer.run(MinecraftServer.java:557)
+[19:41:49] [Server thread/WARN]: 	at java.lang.Thread.run(Thread.java:745)
+[19:41:49] [Server thread/WA: 50ms
+[19:41:47] [Server thread/INFO]: Item Despawn Rate: 6000
+
 
 LOW PRIORITY / INVESTIGATE:
  - Zombie tab list names

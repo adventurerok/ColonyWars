@@ -11,6 +11,7 @@ import com.ithinkrok.minigames.api.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.api.event.map.*;
 import com.ithinkrok.minigames.api.event.user.game.UserJoinEvent;
 import com.ithinkrok.minigames.api.event.user.game.UserQuitEvent;
+import com.ithinkrok.minigames.api.event.user.inventory.UserInventoryClickEvent;
 import com.ithinkrok.minigames.api.event.user.state.UserDamagedEvent;
 import com.ithinkrok.minigames.api.event.user.state.UserDeathEvent;
 import com.ithinkrok.minigames.api.event.user.state.UserFoodLevelChangeEvent;
@@ -36,6 +37,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
@@ -463,6 +465,13 @@ public class BaseGameListener extends BaseGameStateListener {
             if (task.getRunCount() > 3) task.finish();
         }, 1, 3);
 
+    }
+
+    @CustomEventHandler
+    public void onUserInventoryClick(UserInventoryClickEvent event) {
+        if(event.getSlotType() == InventoryType.SlotType.ARMOR) {
+            event.setCancelled(true);
+        }
     }
 
     @CustomEventHandler(ignoreCancelled = true)

@@ -33,9 +33,9 @@ commands:
     usage: "/<command> [category]"
     class: "com.ithinkrok.cw.command.StatsCommand"
     tab:
-      - start: "*"
+      - pattern: "*"
       #TODO gsm can send lists of tab complete groups (such as ggName) to clients
-        value: ["ithinkrok", "#param2", "#ggName", "#ggType", "#gsmPlayer", "#gsmPlayer:this", "#gsmGame"]
+        values: ["ithinkrok", "#param2", "#ggName", "#ggType", "#gsmPlayer", "#gsmPlayer:this", "#gsmGame"]
 
   teamchat:
     description: "Allows you to chat privately to your team"

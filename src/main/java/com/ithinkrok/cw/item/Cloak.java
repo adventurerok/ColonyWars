@@ -55,7 +55,7 @@ public class Cloak implements CustomListener {
             if (!event.getUser().isCloaked()) task.finish();
 
             event.getUser().getLocation().getWorld().playEffect(event.getUser().getLocation(), Effect.POTION_SWIRL, 0);
-        }, 20, 20);
+        }, 14, 14);
 
         event.getUser().bindTaskToInGame(cloakTask);
 

@@ -1,9 +1,9 @@
 package com.ithinkrok.cw.item;
 
 import com.ithinkrok.cw.metadata.BentEarth;
-import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.api.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.api.event.user.world.UserInteractEvent;
+import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.api.util.EntityUtils;
 import com.ithinkrok.minigames.api.util.MinigamesConfigs;
 import com.ithinkrok.minigames.api.util.SoundEffect;

@@ -2,8 +2,8 @@ package com.ithinkrok.cw.util;
 
 import com.ithinkrok.cw.Building;
 import com.ithinkrok.minigames.api.GameGroup;
-import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.api.task.GameTask;
+import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.api.util.EntityUtils;
 import com.ithinkrok.util.config.Config;
 import org.bukkit.Location;

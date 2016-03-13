@@ -2,11 +2,11 @@ package com.ithinkrok.cw.metadata;
 
 import com.ithinkrok.cw.Building;
 import com.ithinkrok.cw.util.CannonTowerHandler;
-import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.api.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.api.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.api.metadata.Metadata;
 import com.ithinkrok.minigames.api.team.Team;
+import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.msm.bukkit.util.BukkitConfigUtils;
 import com.ithinkrok.util.config.Config;
 import org.bukkit.Location;

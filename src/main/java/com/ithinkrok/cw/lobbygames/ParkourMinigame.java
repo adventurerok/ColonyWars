@@ -1,10 +1,10 @@
 package com.ithinkrok.cw.lobbygames;
 
 import com.ithinkrok.minigames.api.GameGroup;
-import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.api.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.api.event.user.world.UserInteractWorldEvent;
 import com.ithinkrok.minigames.api.map.GameMap;
+import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.util.metadata.Money;
 import com.ithinkrok.msm.bukkit.util.BukkitConfigUtils;
 import com.ithinkrok.util.config.Config;

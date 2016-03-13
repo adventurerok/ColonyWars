@@ -1,10 +1,10 @@
 package com.ithinkrok.cw.metadata;
 
-import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.api.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.api.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.api.event.user.game.UserInGameChangeEvent;
 import com.ithinkrok.minigames.api.metadata.UserMetadata;
+import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.api.util.SoundEffect;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.LivingEntity;

@@ -3,7 +3,9 @@ package com.ithinkrok.cw.metadata;
 import com.ithinkrok.minigames.api.GameGroup;
 import com.ithinkrok.minigames.api.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.api.event.game.MapChangedEvent;
+import com.ithinkrok.minigames.api.event.user.game.UserInGameChangeEvent;
 import com.ithinkrok.minigames.api.metadata.Metadata;
+import com.ithinkrok.minigames.api.metadata.UserMetadata;
 import com.ithinkrok.minigames.api.task.GameTask;
 import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.api.util.BoundingBox;
@@ -78,7 +80,7 @@ public class ShowdownArena extends Metadata {
         gameGroup.bindTaskToCurrentGameState(shrinkTask);
     }
 
-    public void shrinkArena() {
+    private void shrinkArena() {
         if (radiusX == minRadius && radiusZ == minRadius) return;
 
         if (radiusX > minRadius) --radiusX;
@@ -95,8 +97,11 @@ public class ShowdownArena extends Metadata {
         }
     }
 
-    public boolean checkUserMove(User user, Location target) {
-        if (isInBounds(target)) return false;
+    private boolean checkUserMove(User user, Location target) {
+        if (isInBounds(target)){
+            user.removeMetadata(OutsideShowdownTracker.class);
+            return false;
+        }
 
         double xv = 0;
         if (target.getX() > center.getX() + radiusX - 2) xv = -1;
@@ -117,10 +122,25 @@ public class ShowdownArena extends Metadata {
 
         user.showAboveHotbarLocale("showdown.escape");
 
+        OutsideShowdownTracker tracker;
+        if(user.hasMetadata(OutsideShowdownTracker.class)) {
+            tracker = user.getMetadata(OutsideShowdownTracker.class);
+        } else{
+            tracker = new OutsideShowdownTracker();
+            user.setMetadata(tracker);
+        }
+
+        tracker.ticksOutsideShowdown += 5;
+
+        if(tracker.ticksOutsideShowdown > 200) {
+            user.teleport(center);
+            user.removeMetadata(OutsideShowdownTracker.class);
+        }
+
         return true;
     }
 
-    public boolean isInBounds(Location loc) {
+    private boolean isInBounds(Location loc) {
         double xd = Math.abs(loc.getX() - center.getX());
         double zd = Math.abs(loc.getZ() - center.getZ());
 
@@ -135,5 +155,25 @@ public class ShowdownArena extends Metadata {
     @Override
     public boolean removeOnMapChange(MapChangedEvent event) {
         return true;
+    }
+
+    private static class OutsideShowdownTracker extends UserMetadata {
+
+        public int ticksOutsideShowdown = 0;
+
+        @Override
+        public boolean removeOnInGameChange(UserInGameChangeEvent event) {
+            return true;
+        }
+
+        @Override
+        public boolean removeOnGameStateChange(GameStateChangedEvent event) {
+            return true;
+        }
+
+        @Override
+        public boolean removeOnMapChange(MapChangedEvent event) {
+            return true;
+        }
     }
 }

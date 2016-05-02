@@ -9,7 +9,7 @@ custom_items:
         events: ["attack"]
         class: "com.ithinkrok.minigames.util.item.WeaponModifier"
         config:
-          damage: "array(sword, 1, 2.5, 4)"
+          damage: "array(sword, 1.5, 3, 5)"
           effects:
             wither:
               duration: "array(sword, 3, 6, 10)"

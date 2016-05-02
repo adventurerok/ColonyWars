@@ -3,6 +3,7 @@ RECODE BUGS:
  - Force showdown timers
  - zombie showdown timer not start
  - Join equation factor in players not in team
+ - wolf limit
 
 
  - command to mod peoples stats / high scores / values

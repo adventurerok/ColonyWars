@@ -4,6 +4,7 @@ RECODE BUGS:
  - zombie showdown timer not start
  - Join equation factor in players not in team
  - wolf limit
+ - prevent scout tower in showdown
 
 
  - command to mod peoples stats / high scores / values

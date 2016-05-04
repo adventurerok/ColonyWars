@@ -63,3 +63,13 @@ listeners:
           reward: 3000
   wool:
     class: "com.ithinkrok.cw.lobbygames.WoolMinigame"
+  transport:
+    class: "com.ithinkrok.minigames.util.map.TransportListener"
+    config:
+      transports:
+        - bounds:
+            min: "352,69,22"
+            max: "356,100,25"
+          velocity: true
+          func:
+            y: "0.3"

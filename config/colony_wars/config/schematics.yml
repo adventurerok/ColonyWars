@@ -61,7 +61,7 @@ schematics:
               - "Cathedral"
               - "Greenhouse"
   Fortress:
-    file: "colony_wars/schematics/mccw_fortress.schematic"
+    file: "colony_wars/schematics/mccw3_fortress.schematic"
     rotation: 0
     config:
       base: true
@@ -238,7 +238,7 @@ schematics:
             cost: 1600
             upgrade_item: "mighty_axe"
   ScoutTower:
-    file: "colony_wars/schematics/mccw_scouttower.schematic"
+    file: "colony_wars/schematics/mccw3_scouttower.schematic"
     rotation: 2
     upgrades:
       - "CannonTower"
@@ -250,7 +250,7 @@ schematics:
             cost: 2000
             team: true
   CannonTower:
-    file: "colony_wars/schematics/mccw_cannontower.schematic"
+    file: "colony_wars/schematics/mccw3_cannontower.schematic"
     rotation: 2
     config:
       cannons: true

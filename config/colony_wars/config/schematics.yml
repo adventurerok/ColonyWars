@@ -188,8 +188,8 @@ schematics:
         - "inferno"
         - "vampire"
   Church:
-    file: "colony_wars/schematics/mccw_church.schematic"
-    rotation: 3
+    file: "colony_wars/schematics/mccw3_church.schematic"
+    rotation: 1
     upgrades:
       - "Cathedral"
     config:
@@ -205,8 +205,8 @@ schematics:
             item: "POTION,32,16389"
             cost: 1250
   Cathedral:
-    file: "colony_wars/schematics/mccw_cathedral.schematic"
-    rotation: 3
+    file: "colony_wars/schematics/mccw3_cathedral.schematic"
+    rotation: 1
     config:
       revival_rate: 75
       shop:

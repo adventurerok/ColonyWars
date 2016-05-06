@@ -239,7 +239,7 @@ schematics:
             upgrade_item: "mighty_axe"
   ScoutTower:
     file: "colony_wars/schematics/mccw3_scouttower.schematic"
-    rotation: 2
+    rotation: 0
     upgrades:
       - "CannonTower"
     config:
@@ -251,7 +251,7 @@ schematics:
             team: true
   CannonTower:
     file: "colony_wars/schematics/mccw3_cannontower.schematic"
-    rotation: 2
+    rotation: 0
     config:
       cannons: true
   Wall:

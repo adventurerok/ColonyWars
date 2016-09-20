@@ -7,7 +7,7 @@ lang_files:
 
 listeners:
   spleef:
-    class: "com.ithinkrok.cw.lobbygames.SpleefMinigame"
+    class: "com.ithinkrok.minigames.util.lobbygames.SpleefMinigame"
     config:
       arenas:
         arena1:
@@ -62,4 +62,4 @@ listeners:
           z: 106
           reward: 3000
   wool:
-    class: "com.ithinkrok.cw.lobbygames.WoolMinigame"
+    class: "com.ithinkrok.minigames.util.lobbygames.WoolMinigame"

@@ -2,8 +2,8 @@ package com.ithinkrok.cw.item;
 
 import com.ithinkrok.minigames.api.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.api.event.user.world.UserInteractEvent;
-import com.ithinkrok.minigames.api.util.math.Calculator;
-import com.ithinkrok.minigames.api.util.math.ExpressionCalculator;
+import com.ithinkrok.util.math.Calculator;
+import com.ithinkrok.util.math.ExpressionCalculator;
 import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.Location;

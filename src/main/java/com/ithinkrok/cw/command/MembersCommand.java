@@ -40,6 +40,15 @@ public class MembersCommand implements CustomListener {
 
                 for (TeamIdentifier id : command.getGameGroup().getTeamIdentifiers()) {
                     Location loc = CWTeamStats.getOrCreate(command.getGameGroup().getTeam(id)).getBaseLocation();
+
+                    if(other.getLocation() == null) {
+                        System.out.println("MembersCommand other.getLocation() == null");
+                        continue;
+                    } else if(loc == null) {
+                        System.out.println("MembersCommand loc == null");
+                        continue;
+                    }
+
                     double distSquared = loc.distanceSquared(other.getLocation());
 
                     if (distSquared < smallestDistSquared) {

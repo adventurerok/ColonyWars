@@ -53,6 +53,7 @@ schematics:
             building_name: "Fortress"
             cost: 25000
             team: true
+            build_speed: 5
             with_buildings:
               - "Farm"
               - "Lumbermill"

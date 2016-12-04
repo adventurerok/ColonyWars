@@ -70,8 +70,13 @@ public class BuildingController extends Metadata implements CustomListener, Loca
     }
 
     public boolean buildBuilding(String name, TeamIdentifier team, Location location, int rotation, boolean instant,
-                                 boolean force) {
-        SchematicOptions options = createSchematicOptions(team, instant);
+                             boolean force) {
+        return buildBuilding(name, team, location, rotation, instant, force, -1);
+    }
+
+    public boolean buildBuilding(String name, TeamIdentifier team, Location location, int rotation, boolean instant,
+                                 boolean force, int speed) {
+        SchematicOptions options = createSchematicOptions(team, instant, speed);
 
         Schematic schem = gameGroup.getSchematic(name);
         GameMap map = gameGroup.getCurrentMap();
@@ -90,10 +95,11 @@ public class BuildingController extends Metadata implements CustomListener, Loca
         return true;
     }
 
-    private SchematicOptions createSchematicOptions(TeamIdentifier team, boolean instant) {
+    private SchematicOptions createSchematicOptions(TeamIdentifier team, boolean instant, int speed) {
         SchematicOptions options = new SchematicOptions(gameGroup.getSharedObject("schematic_options"));
         options.withOverrideDyeColor(team.getDyeColor());
         options.withMapBoundsCheck(false); //we do our own Map bounds check
+        if(speed > 0) options.withBuildSpeed(speed);
 
         if (instant) options.withBuildSpeed(-1);
 

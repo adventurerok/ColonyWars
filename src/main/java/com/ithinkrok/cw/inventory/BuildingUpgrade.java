@@ -4,6 +4,7 @@ import com.ithinkrok.cw.Building;
 import com.ithinkrok.cw.metadata.BuildingController;
 import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.minigames.util.inventory.event.BuyablePurchaseEvent;
+import com.ithinkrok.util.config.Config;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
@@ -14,6 +15,15 @@ public class BuildingUpgrade extends BuildingBuyable {
 
     public BuildingUpgrade(ItemStack baseDisplay, int slot) {
         super(baseDisplay, slot);
+    }
+
+    private int buildSpeed;
+
+    @Override
+    public void configure(Config config) {
+        super.configure(config);
+
+        buildSpeed = config.getInt("build_speed", -1);
     }
 
 
@@ -37,7 +47,7 @@ public class BuildingUpgrade extends BuildingBuyable {
         old.remove();
 
         controller.buildBuilding(buildingName, old.getTeamIdentifier(), buildingLoc, old.getSchematic()
-                .getRotation(), false, true);
+                .getRotation(), false, true, buildSpeed);
 
         event.getUser().getTeam().sendLocale(teamPurchaseLocale, event.getUser().getFormattedName(), buildingName);
 

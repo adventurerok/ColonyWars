@@ -356,9 +356,9 @@ public class BaseGameListener extends BaseGameStateListener {
         displayDeathMessage(event);
 
         User killer = event.getKillerUser();
-        if (killer == null) killer = event.getAssistUser();
+        if (killer == null || (killer == died && (event.getAssistUser() != null))) killer = event.getAssistUser();
 
-        if (killer != null) {
+        if (killer != null && killer != died) {
             StatsHolder killerStats = StatsHolder.getOrCreate(killer);
             killerStats.addKill();
         }

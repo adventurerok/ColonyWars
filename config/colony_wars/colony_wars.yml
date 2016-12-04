@@ -224,7 +224,7 @@ custom_items:
   team_chooser:
     display_name_locale: "team_chooser.name"
     description_locale: "team_chooser.desc"
-    material: "LEATHER_HELMET"
+    material: "WOOL"
     listeners:
       choose:
         events: ["rightClick"]

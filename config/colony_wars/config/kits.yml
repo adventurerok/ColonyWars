@@ -28,7 +28,7 @@ kits:
           buildings:
             Base:
               potion_effects:
-                SPEED: 2
+                SPEED: 1
               upgrades:
                 team_compass: 1 #Prevent buying the team compass
             Lumbermill:

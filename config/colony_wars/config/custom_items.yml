@@ -209,7 +209,7 @@ custom_items:
     upgradable: true
     right_cooldown:
       ability: "wand"
-      timer: "25-wand*10"
+      timer: "25-wand*9.5"
       finished_locale: "explosion_wand.cooldown"
     listeners:
       explosion:

@@ -37,7 +37,7 @@ public class BuildingUpgrade extends BuildingBuyable {
         old.remove();
 
         controller.buildBuilding(buildingName, old.getTeamIdentifier(), buildingLoc, old.getSchematic()
-                .getRotation(), false);
+                .getRotation(), false, true);
 
         event.getUser().getTeam().sendLocale(teamPurchaseLocale, event.getUser().getFormattedName(), buildingName);
 

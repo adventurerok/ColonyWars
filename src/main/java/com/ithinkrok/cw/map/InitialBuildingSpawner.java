@@ -42,7 +42,7 @@ public class InitialBuildingSpawner implements CustomListener {
             TeamIdentifier identifier = event.getGameGroup().getTeamIdentifier(building.teamName);
             if(identifier == null) continue;
 
-            controller.buildBuilding(building.buildingName, identifier, loc, building.rotation, true);
+            controller.buildBuilding(building.buildingName, identifier, loc, building.rotation, true, true);
         }
     }
 

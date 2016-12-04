@@ -69,14 +69,18 @@ public class BuildingController extends Metadata implements CustomListener, Loca
         return buildingCentres.get(center);
     }
 
-    public boolean buildBuilding(String name, TeamIdentifier team, Location location, int rotation, boolean instant) {
+    public boolean buildBuilding(String name, TeamIdentifier team, Location location, int rotation, boolean instant,
+                                 boolean force) {
         SchematicOptions options = createSchematicOptions(team, instant);
 
         Schematic schem = gameGroup.getSchematic(name);
         GameMap map = gameGroup.getCurrentMap();
 
+        //No bounds checker means the check automatically passes
+        SchematicPaster.BoundsChecker boundsChecker = force ? null : this;
+
         PastedSchematic pasted =
-                SchematicPaster.buildSchematic(schem, map, location, this, gameGroup, gameGroup, rotation, options);
+                SchematicPaster.buildSchematic(schem, map, location, boundsChecker, gameGroup, gameGroup, rotation, options);
 
         if (pasted == null) return false;
 

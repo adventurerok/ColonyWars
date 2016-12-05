@@ -2,6 +2,8 @@ package com.ithinkrok.cw.item;
 
 import com.ithinkrok.minigames.api.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.api.event.user.world.UserInteractEvent;
+import com.ithinkrok.minigames.api.item.event.CustomItemLoreCalculateEvent;
+import com.ithinkrok.util.lang.LanguageLookup;
 import com.ithinkrok.util.math.Calculator;
 import com.ithinkrok.util.math.ExpressionCalculator;
 import com.ithinkrok.util.event.CustomEventHandler;
@@ -9,6 +11,8 @@ import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 /**
  * Created by paul on 21/01/16.
@@ -45,5 +49,15 @@ public class CustomTNT implements CustomListener {
         if (oneLess.getAmount() > 1) oneLess.setAmount(oneLess.getAmount() - 1);
         else oneLess = null;
         event.getUser().getInventory().setItemInHand(oneLess);
+    }
+
+    @CustomEventHandler
+    public void onLoreItemsCalculate(CustomItemLoreCalculateEvent event) {
+        LanguageLookup lang = event.getLanguageLookup();
+        List<String> lore = event.getLore();
+
+        float power = (float) explosionPower.calculate(event.getVariables());
+
+        lore.add(lang.getLocale("explosion_wand.power_lore", power));
     }
 }

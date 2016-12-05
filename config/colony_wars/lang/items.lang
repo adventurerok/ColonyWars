@@ -71,6 +71,7 @@ cross.upgrade=Cross Upgrade %s
 explosion_wand.name=Explosion Wand
 explosion_wand.upgrade=Explosion Wand Upgrade %s
 explosion_wand.cooldown=&aThe explosion wand is ready to use again.
+explosion_wand.power_lore=Explosion Power: %s
 
 flame_sword.name=Flame Sword
 flame_sword.upgrade=Flame Sword Upgrade %s

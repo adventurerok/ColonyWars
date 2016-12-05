@@ -226,7 +226,7 @@ custom_items:
         class: "com.ithinkrok.cw.item.CustomTNT"
         events: ["rightClick"]
         config:
-          explosion_power: "4+explosion_power"
+          explosion_power: "2+explosion_power"
   flame_sword:
     display_name_locale: "flame_sword.name"
     material: "DIAMOND_HELMET"

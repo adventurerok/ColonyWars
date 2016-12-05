@@ -5,6 +5,7 @@ import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.cw.metadata.StatsHolder;
 import com.ithinkrok.cw.scoreboard.CWScoreboardHandler;
 import com.ithinkrok.minigames.api.event.user.game.UserChangeTeamEvent;
+import com.ithinkrok.minigames.api.user.UpgradeHandler;
 import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.util.gamestate.SimpleGameStartListener;
 import com.ithinkrok.util.event.CustomEventHandler;
@@ -28,6 +29,11 @@ public class GameListener extends SimpleGameStartListener {
 
         CWTeamStats teamStats = CWTeamStats.getOrCreate(user.getTeam());
         user.teleport(teamStats.getSpawnLocation());
+
+        //Add team variable lookups
+        UpgradeHandler upgradeLevels = user.getUpgradeLevels();
+        upgradeLevels.addCustomLevelLookup("built", teamStats.getBuildingCountVariablesObject());
+        upgradeLevels.addCustomLevelLookup("building_now", teamStats.getBuildingNowCountVariablesObject());
 
         user.setGameMode(GameMode.SURVIVAL);
         user.setAllowFlight(false);

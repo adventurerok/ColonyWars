@@ -20,6 +20,7 @@ import com.ithinkrok.minigames.api.inventory.ClickableInventory;
 import com.ithinkrok.minigames.api.schematic.Facing;
 import com.ithinkrok.minigames.api.task.TaskScheduler;
 import com.ithinkrok.minigames.api.team.Team;
+import com.ithinkrok.minigames.api.user.UpgradeHandler;
 import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.api.util.*;
 import com.ithinkrok.util.math.Calculator;
@@ -417,6 +418,11 @@ public class BaseGameListener extends BaseGameStateListener {
         Team team = died.getTeam();
 
         died.setInGame(false);
+
+        //Remove team variable lookups
+        UpgradeHandler upgradeLevels = died.getUpgradeLevels();
+        upgradeLevels.removeCustomLevelLookup("built");
+        upgradeLevels.removeCustomLevelLookup("building_now");
 
         died.getGameGroup().sendLocale(teamLostPlayerLocale, team.getFormattedName());
         died.getGameGroup().sendLocale(teamPlayersLeftLocale, team.getUserCount(), team.getFormattedName());

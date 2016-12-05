@@ -9,6 +9,7 @@ import com.ithinkrok.minigames.api.team.Team;
 import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.msm.bukkit.util.BukkitConfigUtils;
 import com.ithinkrok.util.config.Config;
+import com.ithinkrok.util.math.Variables;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
@@ -133,6 +134,14 @@ public class CWTeamStats extends Metadata {
         Integer integer = buildingCounts.get(buildingType);
 
         return integer == null ? 0 : integer;
+    }
+
+    public Variables getBuildingCountVariablesObject() {
+        return name -> buildingCounts.getOrDefault(name, 0);
+    }
+
+    public Variables getBuildingNowCountVariablesObject() {
+        return name -> buildingNowCounts.getOrDefault(name, 0);
     }
 
     public void addChurchLocation(Location church, int minRevivalRate) {

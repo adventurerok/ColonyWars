@@ -317,9 +317,18 @@ kits:
                 - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
                   config:
                     upgrade_name: "wand"
-                    upgrade_display_locale: "explosion_wand.upgrade"
+                    upgrade_display_locale: "explosion_wand.upgrade.cooldown"
                     max_level: 2
-                    cost: "1350+250*wand"
+                    can_buy: "wand+explosion_power<2"
+                    cost: "1350+250*(wand+explosion_power)"
+                    upgrade_item: "explosion_wand"
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "explosion_power"
+                    upgrade_display_locale: "explosion_wand.upgrade.power"
+                    max_level: 2
+                    can_buy: "wand+explosion_power<2"
+                    cost: "1350+250*(explosion_power+wand)"
                     upgrade_item: "explosion_wand"
             Blacksmith:
               custom_items:

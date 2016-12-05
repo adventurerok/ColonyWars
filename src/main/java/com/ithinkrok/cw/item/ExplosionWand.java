@@ -2,6 +2,8 @@ package com.ithinkrok.cw.item;
 
 import com.ithinkrok.minigames.api.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.api.event.user.world.UserInteractEvent;
+import com.ithinkrok.minigames.api.item.event.CustomItemLoreCalculateEvent;
+import com.ithinkrok.util.lang.LanguageLookup;
 import com.ithinkrok.util.math.Calculator;
 import com.ithinkrok.util.math.ExpressionCalculator;
 import com.ithinkrok.util.config.Config;
@@ -10,6 +12,8 @@ import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+
+import java.util.List;
 
 /**
  * Created by paul on 21/01/16.
@@ -42,5 +46,15 @@ public class ExplosionWand implements CustomListener {
                 .createExplosion(loc, (float) explosionPower.calculate(event.getUser().getUpgradeLevels()), false, 0);
 
         event.setStartCooldownAfterAction(true);
+    }
+
+    @CustomEventHandler
+    public void onLoreItemsCalculate(CustomItemLoreCalculateEvent event) {
+        LanguageLookup lang = event.getLanguageLookup();
+        List<String> lore = event.getLore();
+
+        float power = (float) explosionPower.calculate(event.getVariables());
+
+        lore.add(lang.getLocale("explosion_wand.power_lore", power));
     }
 }

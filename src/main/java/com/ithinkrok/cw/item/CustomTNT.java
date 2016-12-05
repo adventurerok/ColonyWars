@@ -50,14 +50,4 @@ public class CustomTNT implements CustomListener {
         else oneLess = null;
         event.getUser().getInventory().setItemInHand(oneLess);
     }
-
-    @CustomEventHandler
-    public void onLoreItemsCalculate(CustomItemLoreCalculateEvent event) {
-        LanguageLookup lang = event.getLanguageLookup();
-        List<String> lore = event.getLore();
-
-        float power = (float) explosionPower.calculate(event.getVariables());
-
-        lore.add(lang.getLocale("explosion_wand.power_lore", power));
-    }
 }

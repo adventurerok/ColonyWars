@@ -85,6 +85,13 @@ bat_flight.unlock=The MageTower gives you the bat flight ability!
 bat_flight.timeout=&cYour bat ability has run out and must recharge!
 bat_flight.cooldown=&aYou can now use bat flight again!
 
+arrowcannon_wand.name=Arrow Turret Wand
+arrowcannon_wand.desc=Spawns arrow turrets
+arrowcannon_wand.cooldown=The arrow turret wand is ready to use again.
+arrowcannon_wand.upgrade=Arrow Turret Wand Upgrade %s
+
+engineer_sword.upgrade=Sword Upgrade %s
+
 #ClickableItems
 building_buyable.lore.display=Build a %s!
 building_buyable.lore.item=Builds a %s when placed!

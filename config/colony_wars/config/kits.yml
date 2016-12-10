@@ -267,6 +267,36 @@ kits:
                     max_level: 2
                     cost: "1350+250*wolf"
                     upgrade_item: "wolf_wand"
+  engineer:
+    description: "Spawns turrets and fights with a stone sword"
+    item: "STONE_SWORD"
+    listeners:
+      kit:
+        class: "com.ithinkrok.cw.kit.KitListener"
+        config:
+          buildings:
+            MageTower:
+              custom_items:
+                - "arrowcannon_wand"
+              shop:
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "arrow_wand"
+                    upgrade_display_locale: "arrowcannon_wand.upgrade"
+                    max_level: 2
+                    cost: "1350+250*arrow_wand"
+                    upgrade_item: "arrowcannon_wand"
+            Blacksmith:
+              custom_items:
+                - "engineer_sword"
+              shop:
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "sword"
+                    upgrade_display_locale: "engineer_sword.upgrade"
+                    max_level: 2
+                    cost: "1350+250*sword"
+                    upgrade_item: "engineer_sword"
   priest:
     description: "Has a healing scroll and earth bender"
     item: "GOLD_LEGGINGS"

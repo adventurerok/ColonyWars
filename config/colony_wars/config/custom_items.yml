@@ -252,3 +252,24 @@ custom_items:
             regeneration:
               duration: 1
               level: 2
+  arrowcannon_wand:
+    display_name_locale: "arrowcannon_wand.name"
+    description_locale: "arrowcannon_wand.desc"
+    material: "STICK"
+    upgradable: true
+    right_cooldown:
+      ability: "arrow_wand"
+      timer: "24-arrow_wand*8"
+      finished_locale: "arrowcannon_wand.cooldown"
+    listeners:
+      wand:
+        class: "com.ithinkrok.cw.item.BuildingWand"
+        events: ["rightClick"]
+        config:
+          building: "ArrowCannon"
+  engineer_sword:
+    material: "STONE_SWORD"
+    upgradable: true
+    enchantments:
+      DAMAGE_ALL: "sword"
+      KNOCKBACK: "1"

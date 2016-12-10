@@ -1,6 +1,8 @@
 package com.ithinkrok.cw.item;
 
+import com.ithinkrok.cw.Building;
 import com.ithinkrok.cw.metadata.BentEarth;
+import com.ithinkrok.cw.metadata.BuildingController;
 import com.ithinkrok.minigames.api.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.api.event.user.world.UserInteractEvent;
 import com.ithinkrok.minigames.api.user.User;
@@ -81,6 +83,8 @@ public class EarthBender implements CustomListener {
 
         List<FallingBlock> fallingBlockList = new ArrayList<>();
 
+        BuildingController controller = BuildingController.getOrCreate(event.getUserGameGroup());
+
         for (int y = -3; y <= 3; ++y) {
             int ys = y * y;
             for (int x = -3; x <= 3; ++x) {
@@ -99,8 +103,20 @@ public class EarthBender implements CustomListener {
                     BlockState oldState = block.getState();
                     block.setType(Material.AIR);
 
+                    Material type = oldState.getType();
+
+                    //Remove buildings and turn cannons to stone
+                    if(type == Material.SPONGE || type == Material.COAL_ORE) {
+                        type = Material.STONE;
+
+                        Building building = controller.getBuilding(block.getLocation());
+                        if(building != null) {
+                            building.remove();
+                        }
+                    }
+
                     FallingBlock falling = block.getWorld()
-                            .spawnFallingBlock(block.getLocation(), oldState.getType(), oldState.getRawData());
+                            .spawnFallingBlock(block.getLocation(), type, oldState.getRawData());
 
                     falling.setVelocity(new Vector(0, 1.5, 0));
                     fallingBlockList.add(falling);

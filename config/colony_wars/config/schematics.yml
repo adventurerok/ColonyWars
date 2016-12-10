@@ -274,5 +274,5 @@ schematics:
     rotation: 0
     config:
       cannons: true
-      center_block: "COAL_BLOCK"
+      center_block: "COAL_ORE"
       hologram: false

@@ -688,8 +688,8 @@ public class BaseGameListener extends BaseGameStateListener {
 
         BuildingController controller = BuildingController.getOrCreate(event.getUserGameGroup());
 
-        if (!controller.buildBuilding(buildingType, event.getUser().getTeamIdentifier(), event.getBlock().getLocation(),
-                                      rotation, instaBuild, false)) {
+        if (controller.buildBuilding(buildingType, event.getUser().getTeamIdentifier(), event.getBlock().getLocation(),
+                                      rotation, instaBuild, false) == null) {
             event.getUser().sendLocale(cannotBuildHereLocale);
             event.setCancelled(true);
         } else {

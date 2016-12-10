@@ -259,7 +259,7 @@ custom_items:
     upgradable: true
     right_cooldown:
       ability: "arrow_wand"
-      timer: "24-arrow_wand*8"
+      timer: "12-arrow_wand*4"
       finished_locale: "arrowcannon_wand.cooldown"
     listeners:
       wand:
@@ -267,6 +267,7 @@ custom_items:
         events: ["rightClick"]
         config:
           building: "ArrowCannon"
+          remove_seconds: "32"
   engineer_sword:
     material: "STONE_SWORD"
     upgradable: true

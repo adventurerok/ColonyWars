@@ -267,8 +267,12 @@ schematics:
     rotation: 0
     config:
       cannons: true
+      center_block: "SPONGE"
+      hologram: false
   FireCannon:
     file: "colony_wars/schematics/mccw_firecannon.schematic"
     rotation: 0
     config:
       cannons: true
+      center_block: "COAL_BLOCK"
+      hologram: false

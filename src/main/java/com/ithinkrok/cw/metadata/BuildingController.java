@@ -23,6 +23,7 @@ import com.ithinkrok.util.event.CustomListener;
 import de.inventivegames.hologram.Hologram;
 import de.inventivegames.hologram.HologramAPI;
 import org.bukkit.Location;
+import org.bukkit.Material;
 
 import java.util.HashMap;
 
@@ -76,9 +77,10 @@ public class BuildingController extends Metadata implements CustomListener, Loca
 
     public boolean buildBuilding(String name, TeamIdentifier team, Location location, int rotation, boolean instant,
                                  boolean force, int speed) {
-        SchematicOptions options = createSchematicOptions(team, instant, speed);
-
         Schematic schem = gameGroup.getSchematic(name);
+
+        SchematicOptions options = createSchematicOptions(team, instant, speed, schem);
+
         GameMap map = gameGroup.getCurrentMap();
 
         //No bounds checker means the check automatically passes
@@ -95,11 +97,15 @@ public class BuildingController extends Metadata implements CustomListener, Loca
         return true;
     }
 
-    private SchematicOptions createSchematicOptions(TeamIdentifier team, boolean instant, int speed) {
+    private SchematicOptions createSchematicOptions(TeamIdentifier team, boolean instant, int speed, Schematic schem) {
         SchematicOptions options = new SchematicOptions(gameGroup.getSharedObject("schematic_options"));
         options.withOverrideDyeColor(team.getDyeColor());
         options.withMapBoundsCheck(false); //we do our own Map bounds check
         if(speed > 0) options.withBuildSpeed(speed);
+
+        if(schem.getConfig() != null && schem.getConfig().contains("center_block")) {
+            options.withCenterBlockType(Material.matchMaterial(schem.getConfig().getString("center_block")));
+        }
 
         if (instant) options.withBuildSpeed(-1);
 
@@ -144,16 +150,18 @@ public class BuildingController extends Metadata implements CustomListener, Loca
         Building building = buildings.get(event.getSchematic());
         if (building == null || building.getCenterBlock() == null) return;
 
-        Location holo1 = building.getCenterBlock().clone().add(0.5d, 2.2d, 0.5d);
-        Hologram hologram1 =
-                HologramAPI.createHologram(holo1, gameGroup.getLocale(shopLocale, building.getBuildingName()));
-        hologram1.spawn();
-        building.getSchematic().addHologram(hologram1);
+        if(building.getConfig() == null || building.getConfig().getBoolean("hologram", true)) {
+            Location holo1 = building.getCenterBlock().clone().add(0.5d, 2.2d, 0.5d);
+            Hologram hologram1 =
+                    HologramAPI.createHologram(holo1, gameGroup.getLocale(shopLocale, building.getBuildingName()));
+            hologram1.spawn();
+            building.getSchematic().addHologram(hologram1);
 
-        Location holo2 = building.getCenterBlock().clone().add(0.5d, 1.9d, 0.5d);
-        Hologram hologram2 = HologramAPI.createHologram(holo2, gameGroup.getLocale(shopInfoLocale));
-        hologram2.spawn();
-        building.getSchematic().addHologram(hologram2);
+            Location holo2 = building.getCenterBlock().clone().add(0.5d, 1.9d, 0.5d);
+            Hologram hologram2 = HologramAPI.createHologram(holo2, gameGroup.getLocale(shopInfoLocale));
+            hologram2.spawn();
+            building.getSchematic().addHologram(hologram2);
+        }
 
         getTeamBuildingStats(building).buildingFinished(building);
 

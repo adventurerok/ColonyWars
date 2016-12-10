@@ -603,7 +603,8 @@ public class BaseGameListener extends BaseGameStateListener {
             return;
         }
 
-        if (event.getBlock().getType() != Material.OBSIDIAN) {
+        Material blockType = event.getBlock().getType();
+        if (blockType != Material.OBSIDIAN && blockType != Material.SPONGE && blockType != Material.COAL_ORE) {
             Config goldShared = event.getUserGameGroup().getSharedObject(goldSharedConfig);
             GoldConfig gold = getGoldConfig(goldShared);
 
@@ -623,10 +624,13 @@ public class BaseGameListener extends BaseGameStateListener {
             event.getUser().sendLocale(cannotDestroyLocale, building.getBuildingName());
             event.setCancelled(true);
         } else {
-            event.getUserGameGroup()
-                    .sendLocale(buildingDestroyedLocale, event.getUser().getFormattedName(), building.getBuildingName(),
-                                building.getTeamIdentifier().getFormattedName());
-            event.getUserGameGroup().doInFuture(task -> building.explode(), buildingDestroyWait);
+            if(blockType == Material.OBSIDIAN) {
+                event.getUserGameGroup().sendLocale(buildingDestroyedLocale, event.getUser().getFormattedName(),
+                                                    building.getBuildingName(), building.getTeamIdentifier().getFormattedName());
+                event.getUserGameGroup().doInFuture(task -> building.explode(), buildingDestroyWait);
+            } else {
+                building.remove();
+            }
         }
     }
 

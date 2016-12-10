@@ -49,3 +49,6 @@ erver thread/INFO]: [ColonyWars] N3ptunHD was eliminated from a spleef game!
 
 LOW PRIORITY / INVESTIGATE:
  - Zombie tab list names
+
+FEATURES:
+ - give part of dead players gold to player that killed them

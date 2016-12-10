@@ -40,6 +40,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
@@ -130,7 +131,7 @@ public class BaseGameListener extends BaseGameStateListener {
                             "] %s" + teamColor + "> " + ChatColor.WHITE + "%s");
         } else {
             event.setFormat(ChatColor.LIGHT_PURPLE + "<" + ChatColor.GRAY + "%s" + ChatColor.LIGHT_PURPLE + "> " +
-                    ChatColor.WHITE + "%s");
+                                    ChatColor.WHITE + "%s");
         }
     }
 
@@ -203,6 +204,17 @@ public class BaseGameListener extends BaseGameStateListener {
         }
     }
 
+    private GoldConfig getGoldConfig(Config config) {
+        GoldConfig gold = goldConfigMap.get(config);
+
+        if (gold == null) {
+            gold = new GoldConfig(config);
+            goldConfigMap.put(config, gold);
+        }
+
+        return gold;
+    }
+
     @CustomEventHandler
     public void sendQuitMessageOnUserQuit(UserQuitEvent event) {
         String name = event.getUser().getFormattedName();
@@ -212,11 +224,10 @@ public class BaseGameListener extends BaseGameStateListener {
         if (event.getUser().isInGame()) {
             event.getUserGameGroup().sendLocale(inGameQuitLocale, name, currentPlayers, maxPlayers);
         } else {
-            if(!event.getUser().isPlayer()) return;
+            if (!event.getUser().isPlayer()) return;
             event.getUserGameGroup().sendLocale(spectatorQuitLocale, name, currentPlayers, maxPlayers);
         }
     }
-
 
     @CustomEventHandler
     public void sendJoinMessageOnUserJoin(UserJoinEvent event) {
@@ -229,17 +240,6 @@ public class BaseGameListener extends BaseGameStateListener {
         } else {
             event.getUserGameGroup().sendLocale(spectatorJoinLocale, name, currentPlayers, maxPlayers);
         }
-    }
-
-    private GoldConfig getGoldConfig(Config config) {
-        GoldConfig gold = goldConfigMap.get(config);
-
-        if (gold == null) {
-            gold = new GoldConfig(config);
-            goldConfigMap.put(config, gold);
-        }
-
-        return gold;
     }
 
     @CustomEventHandler
@@ -350,6 +350,20 @@ public class BaseGameListener extends BaseGameStateListener {
             return;
         }
 
+        Team diedTeam = died.getTeam();
+        CWTeamStats diedTeamStats = CWTeamStats.getOrCreate(diedTeam);
+
+        //remove all their buildings from the buildings in inventories
+        PlayerInventory diedInventory = died.getInventory();
+
+        for (ItemStack itemStack : diedInventory) {
+            if (itemStack == null || itemStack.getType() != Material.LAPIS_ORE) continue;
+
+            String buildingType = itemStack.getItemMeta().getDisplayName();
+
+            diedTeamStats.addBuildingInventoryCount(buildingType, -itemStack.getAmount());
+        }
+
         //TODO remove entity targets on the dead player
 
         event.getUser().unDisguise();
@@ -367,17 +381,14 @@ public class BaseGameListener extends BaseGameStateListener {
         StatsHolder deathStats = StatsHolder.getOrCreate(died);
         deathStats.addDeath();
 
-        Team team = died.getTeam();
-        CWTeamStats teamStats = CWTeamStats.getOrCreate(team);
-
-        boolean respawn = shouldRespawnUser(died, teamStats);
+        boolean respawn = shouldRespawnUser(died, diedTeamStats);
 
         if (respawn) {
             died.getGameGroup().sendLocale(respawnLocale, died.getFormattedName());
 
-            teamStats.setRespawnChance(teamStats.getRespawnChance() - lostRespawnChance, true);
+            diedTeamStats.setRespawnChance(diedTeamStats.getRespawnChance() - lostRespawnChance, true);
 
-            teamStats.respawnUser(died);
+            diedTeamStats.respawnUser(died);
             died.resetUserStats(false);
         } else {
             died.getGameGroup().sendLocale(noRespawnLocale, died.getFormattedName());
@@ -394,19 +405,19 @@ public class BaseGameListener extends BaseGameStateListener {
         if (event.hasKillerUser()) {
             if (event.hasAssistUser()) {
                 sendDeathMessage(event.getUserGameGroup(), deathKillAndAssistLocale, localeEnding,
-                        event.getUser().getFormattedName(), event.getKillerUser().getFormattedName(),
-                        event.getAssistUser().getFormattedName());
+                                 event.getUser().getFormattedName(), event.getKillerUser().getFormattedName(),
+                                 event.getAssistUser().getFormattedName());
 
             } else {
                 sendDeathMessage(event.getUserGameGroup(), deathKillLocale, localeEnding,
-                        event.getUser().getFormattedName(), event.getKillerUser().getFormattedName());
+                                 event.getUser().getFormattedName(), event.getKillerUser().getFormattedName());
             }
         } else if (event.hasAssistUser()) {
             sendDeathMessage(event.getUserGameGroup(), deathAssistLocale, localeEnding,
-                    event.getUser().getFormattedName(), event.getAssistUser().getFormattedName());
+                             event.getUser().getFormattedName(), event.getAssistUser().getFormattedName());
         } else {
             sendDeathMessage(event.getUserGameGroup(), deathNaturalLocale, localeEnding,
-                    event.getUser().getFormattedName());
+                             event.getUser().getFormattedName());
         }
     }
 
@@ -475,7 +486,7 @@ public class BaseGameListener extends BaseGameStateListener {
 
     @CustomEventHandler
     public void onUserInventoryClick(UserInventoryClickEvent event) {
-        if(event.getSlotType() == InventoryType.SlotType.ARMOR) {
+        if (event.getSlotType() == InventoryType.SlotType.ARMOR) {
             event.setCancelled(true);
         }
     }
@@ -614,7 +625,7 @@ public class BaseGameListener extends BaseGameStateListener {
         } else {
             event.getUserGameGroup()
                     .sendLocale(buildingDestroyedLocale, event.getUser().getFormattedName(), building.getBuildingName(),
-                            building.getTeamIdentifier().getFormattedName());
+                                building.getTeamIdentifier().getFormattedName());
             event.getUserGameGroup().doInFuture(task -> building.explode(), buildingDestroyWait);
         }
     }
@@ -674,9 +685,14 @@ public class BaseGameListener extends BaseGameStateListener {
         BuildingController controller = BuildingController.getOrCreate(event.getUserGameGroup());
 
         if (!controller.buildBuilding(buildingType, event.getUser().getTeamIdentifier(), event.getBlock().getLocation(),
-                rotation, instaBuild, false)) {
+                                      rotation, instaBuild, false)) {
             event.getUser().sendLocale(cannotBuildHereLocale);
             event.setCancelled(true);
+        } else {
+
+            //1 building was removed from an inventory
+            CWTeamStats teamStats = CWTeamStats.getOrCreate(event.getUser().getTeam());
+            teamStats.addBuildingInventoryCount(buildingType, -1);
         }
     }
 

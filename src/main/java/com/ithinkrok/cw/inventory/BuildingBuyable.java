@@ -1,5 +1,6 @@
 package com.ithinkrok.cw.inventory;
 
+import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.minigames.api.Kit;
 import com.ithinkrok.minigames.api.inventory.event.CalculateItemForUserEvent;
 import com.ithinkrok.minigames.api.schematic.Schematic;
@@ -104,6 +105,10 @@ public class BuildingBuyable extends ItemBuyable {
         if(!giveUserItem(event.getUser(), item)) return false;
 
         event.getUser().getTeam().sendLocale(teamPurchaseLocale, event.getUser().getFormattedName(), buildingName);
+
+        //Increment team buildings in inventory counter
+        CWTeamStats teamStats = CWTeamStats.getOrCreate(event.getUser().getTeam());
+        teamStats.addBuildingInventoryCount(buildingName, item.getAmount());
 
         return true;
     }

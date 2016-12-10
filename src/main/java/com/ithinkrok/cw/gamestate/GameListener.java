@@ -34,6 +34,9 @@ public class GameListener extends SimpleGameStartListener {
         UpgradeHandler upgradeLevels = user.getUpgradeLevels();
         upgradeLevels.addCustomLevelLookup("built", teamStats.getBuildingCountVariablesObject());
         upgradeLevels.addCustomLevelLookup("building_now", teamStats.getBuildingNowCountVariablesObject());
+        upgradeLevels.addCustomLevelLookup("buildings_in_inv", teamStats.getBuildingInventoryVariablesObject());
+
+        upgradeLevels.addCustomLevelLookup("buildings", teamStats.getTotalBuildingsVariablesObject());
 
         user.setGameMode(GameMode.SURVIVAL);
         user.setAllowFlight(false);

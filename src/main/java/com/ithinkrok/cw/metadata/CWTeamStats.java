@@ -29,6 +29,7 @@ public class CWTeamStats extends Metadata {
 
     private final HashMap<String, Integer> buildingCounts = new HashMap<>();
     private final HashMap<String, Integer> buildingNowCounts = new HashMap<>();
+    private final HashMap<String, Integer> buildingInventoryCounts = new HashMap<>();
     private final HashMap<String, Boolean> hadBuildings = new HashMap<>();
     private final List<Location> churchLocations = new ArrayList<>();
     private final Location spawnLocation;
@@ -46,7 +47,7 @@ public class CWTeamStats extends Metadata {
         Vector spawnLocation = BukkitConfigUtils.getVector(spawnLocations, team.getName());
         this.spawnLocation =
                 new Location(team.getGameGroup().getCurrentMap().getWorld(), spawnLocation.getX(), spawnLocation.getY(),
-                        spawnLocation.getZ());
+                             spawnLocation.getZ());
 
         System.out.println(
                 "Team " + team.getName() + " spawnLocation: world=" + this.spawnLocation.getWorld().getName() +
@@ -136,14 +137,6 @@ public class CWTeamStats extends Metadata {
         return integer == null ? 0 : integer;
     }
 
-    public Variables getBuildingCountVariablesObject() {
-        return name -> buildingCounts.getOrDefault(name, 0);
-    }
-
-    public Variables getBuildingNowCountVariablesObject() {
-        return name -> buildingNowCounts.getOrDefault(name, 0);
-    }
-
     public void addChurchLocation(Location church, int minRevivalRate) {
         churchLocations.add(church);
 
@@ -164,6 +157,33 @@ public class CWTeamStats extends Metadata {
         if (message) team.sendLocale(respawnChanceLocale, respawnChance);
 
         team.updateUserScoreboards();
+    }
+
+    public void addBuildingInventoryCount(String buildingName, int count) {
+        buildingInventoryCounts.put(buildingName, buildingInventoryCounts.getOrDefault(buildingName, 0) + count);
+    }
+
+    public int getBuildingInventoryCount(String buildingName) {
+        return buildingInventoryCounts.getOrDefault(buildingName, 0);
+    }
+
+    public Variables getBuildingInventoryVariablesObject() {
+        return name -> buildingInventoryCounts.getOrDefault(name, 0);
+    }
+
+    public Variables getBuildingCountVariablesObject() {
+        return name -> buildingCounts.getOrDefault(name, 0);
+    }
+
+    public Variables getBuildingNowCountVariablesObject() {
+        return name -> buildingNowCounts.getOrDefault(name, 0);
+    }
+
+    public Variables getTotalBuildingsVariablesObject() {
+        return name -> {
+            return buildingCounts.getOrDefault(name, 0) + buildingNowCounts.getOrDefault(name, 0) +
+                    buildingInventoryCounts.getOrDefault(name, 0);
+        };
     }
 
     public boolean everHadBuilding(String buildingName) {

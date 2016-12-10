@@ -1,5 +1,6 @@
 package com.ithinkrok.cw.gamestate;
 
+import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.minigames.api.GameGroup;
 import com.ithinkrok.minigames.api.GameState;
 import com.ithinkrok.minigames.api.event.ListenerLoadedEvent;
@@ -10,7 +11,9 @@ import com.ithinkrok.minigames.api.event.user.world.UserDropItemEvent;
 import com.ithinkrok.minigames.api.util.InventoryUtils;
 import com.ithinkrok.minigames.util.gamestate.SimpleInGameListener;
 import com.ithinkrok.util.event.CustomEventHandler;
+import org.bukkit.Material;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Random;
 
@@ -28,7 +31,17 @@ public class BaseGameStateListener extends SimpleInGameListener {
 
     @CustomEventHandler
     public void onUserDropItem(UserDropItemEvent event) {
-        if (InventoryUtils.getIdentifier(event.getItem().getItemStack()) == -1) return;
+        ItemStack itemStack = event.getItem().getItemStack();
+        if (InventoryUtils.getIdentifier(itemStack) == -1) {
+            //If the user is in a team and the dropped item was a building, remove it from the team count
+            if (itemStack != null && event.getUser().getTeam() != null && itemStack.getType() == Material.LAPIS_ORE) {
+                CWTeamStats teamStats = CWTeamStats.getOrCreate(event.getUser().getTeam());
+
+                teamStats.addBuildingInventoryCount(itemStack.getItemMeta().getDisplayName(), -itemStack.getAmount());
+            }
+
+            return;
+        }
 
         event.setCancelled(true);
     }

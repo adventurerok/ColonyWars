@@ -160,6 +160,7 @@ schematics:
         - "general"
         - "warrior"
         - "inferno"
+        - "engineer"
       shop:
         - class: "com.ithinkrok.cw.inventory.BuildingBuyable"
           config:
@@ -189,6 +190,7 @@ schematics:
         - "mage"
         - "inferno"
         - "vampire"
+        - "engineer"
   Church:
     file: "colony_wars/schematics/mccw3_church.schematic"
     rotation: 1

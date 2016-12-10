@@ -272,4 +272,4 @@ custom_items:
     upgradable: true
     enchantments:
       DAMAGE_ALL: "sword"
-      KNOCKBACK: "1"
+      KNOCKBACK: "array(sword, 0, 1, 1)"

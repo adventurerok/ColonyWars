@@ -17,11 +17,15 @@ public class BuildingWand implements CustomListener {
 
     private String buildingType;
 
+    private String buildFailLocale;
+
     @CustomEventHandler
     public void onListenerLoaded(ListenerLoadedEvent<?, CustomItem> event) {
         Config config = event.getConfig();
 
         buildingType = config.getString("building");
+
+        buildFailLocale = config.getString("build_fail_locale", "building.invalid_loc");
     }
 
     @CustomEventHandler
@@ -36,6 +40,8 @@ public class BuildingWand implements CustomListener {
 
         if(controller.buildBuilding(buildingType, event.getUser().getTeamIdentifier(), target, 0, false, false)){
             event.setStartCooldownAfterAction(true);
+        } else {
+            event.getUser().showAboveHotbarLocale(buildFailLocale);
         }
     }
 

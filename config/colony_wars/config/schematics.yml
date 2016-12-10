@@ -30,14 +30,14 @@ schematics:
         - class: "com.ithinkrok.cw.inventory.BuildingBuyableWith"
           config:
             building_name: "MageTower"
-            cost: 4000
+            cost: "4000"
             team: true
             with_buildings:
               - "Farm"
         - class: "com.ithinkrok.cw.inventory.BuildingBuyableWith"
           config:
             building_name: "Church"
-            cost: 4000
+            cost: "4000+1000*(@buildings#Church+@buildings#Cathedral)"
             team: true
             with_buildings:
               - "Farm"
@@ -98,7 +98,7 @@ schematics:
         - class: "com.ithinkrok.cw.inventory.BuildingBuyableWith"
           config:
             building_name: "Church"
-            cost: 4000
+            cost: "4000+1000*(@buildings#Church+@buildings#Cathedral)"
             team: true
             with_buildings:
               - "Farm"
@@ -112,7 +112,7 @@ schematics:
         - class: "com.ithinkrok.cw.inventory.BuildingBuyable"
           config:
             building_name: "CannonTower"
-            cost: 4000
+            cost: "4000+500*(@buildings#ScoutTower+@buildings#CannonTower)"
             team: true
   Farm:
     file: "colony_wars/schematics/mccw_farm.schematic"
@@ -164,7 +164,7 @@ schematics:
         - class: "com.ithinkrok.cw.inventory.BuildingBuyable"
           config:
             building_name: "ScoutTower"
-            cost: 2000
+            cost: "2000+250*(@buildings#ScoutTower+@buildings#CannonTower)"
             team: true
         - class: "com.ithinkrok.cw.inventory.BuildingBuyable"
           config:
@@ -175,7 +175,8 @@ schematics:
         - class: "com.ithinkrok.cw.inventory.BuildingBuyable"
           config:
             building_name: "Landmine"
-            cost: 200
+            amount: 5
+            cost: 1000
             team: true
   MageTower:
     file: "colony_wars/schematics/mccw_magetower.schematic"
@@ -248,7 +249,7 @@ schematics:
         - class: "com.ithinkrok.cw.inventory.BuildingUpgrade"
           config:
             building_name: "CannonTower"
-            cost: 2000
+            cost: "2000+250*(@buildings#ScoutTower+@buildings#CannonTower)"
             team: true
   CannonTower:
     file: "colony_wars/schematics/mccw3_cannontower.schematic"

@@ -262,3 +262,13 @@ schematics:
   Landmine:
     file: "colony_wars/schematics/mccw_mine.schematic"
     rotation: 0
+  ArrowCannon:
+    file: "colony_wars/schematics/mccw_arrowcannon.schematic"
+    rotation: 0
+    config:
+      cannons: true
+  FireCannon:
+    file: "colony_wars/schematics/mccw_firecannon.schematic"
+    rotation: 0
+    config:
+      cannons: true

@@ -155,6 +155,7 @@ game_states:
             - "priest"
             - "inferno"
             - "vampire"
+            - "engineer"
           start_items:
             clear_inventory: true
             custom_items:

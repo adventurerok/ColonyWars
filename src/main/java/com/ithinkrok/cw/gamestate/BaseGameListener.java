@@ -66,6 +66,7 @@ public class BaseGameListener extends BaseGameStateListener {
         GOOD_POTIONS.put(PotionEffectType.WATER_BREATHING, true);
         GOOD_POTIONS.put(PotionEffectType.FIRE_RESISTANCE, true);
         GOOD_POTIONS.put(PotionEffectType.DAMAGE_RESISTANCE, true);
+        GOOD_POTIONS.put(PotionEffectType.REGENERATION, true);
 
         GOOD_POTIONS.put(PotionEffectType.HARM, false);
         GOOD_POTIONS.put(PotionEffectType.CONFUSION, false);

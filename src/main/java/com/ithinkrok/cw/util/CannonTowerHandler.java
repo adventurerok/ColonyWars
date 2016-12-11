@@ -13,12 +13,12 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,8 +36,8 @@ public class CannonTowerHandler {
 
         Config config = building.getConfig();
 
-        Config coalConfig = config.getConfigOrEmpty("coal");
-        Config spongeConfig = config.getConfigOrEmpty("sponge");
+        Config coalConfig = config.getConfigOrEmpty("coal_turret");
+        Config spongeConfig = config.getConfigOrEmpty("sponge_turret");
 
         List<Turret> turrets = new ArrayList<>();
 
@@ -103,6 +103,8 @@ public class CannonTowerHandler {
         BlockFace dir;
         TurretType turretType;
         Config config;
+        double horizSpeed = 1;
+        double vertVelo = 0;
 
         public Turret(Location loc, BlockFace dir, TurretType type) {
             this.loc = loc;
@@ -116,6 +118,9 @@ public class CannonTowerHandler {
             this.dir = dir;
             this.turretType = TurretType.valueOf(config.getString("type").toUpperCase());
             this.config = config;
+
+            horizSpeed = config.getDouble("speed_horizontal", 1);
+            vertVelo = config.getDouble("velocity_vertical", 0);
         }
 
         public void fire(GameGroup gameGroup, Building building) {
@@ -126,38 +131,51 @@ public class CannonTowerHandler {
 
             switch (turretType) {
                 case FIRE:
-                    velocity = new Vector(dir.getModX(), dir.getModY() - 0.05, dir.getModZ());
+                    velocity = new Vector(dir.getModX() * horizSpeed, dir.getModY() - 0.05 + vertVelo, dir.getModZ() *
+                            horizSpeed);
                     entity = from.getWorld().spawnEntity(from, EntityType.SMALL_FIREBALL);
                     ((Fireball) entity).setDirection(velocity);
                     break;
                 case ARROW:
-                    velocity = new Vector(dir.getModX(), dir.getModY() + 0.1, dir.getModZ());
+                    velocity = new Vector(dir.getModX() * horizSpeed, dir.getModY() + 0.1 + vertVelo, dir.getModZ()
+                            * horizSpeed);
                     entity = from.getWorld().spawnEntity(from, EntityType.ARROW);
                     break;
                 case POTION:
-                    velocity = new Vector(dir.getModX(), dir.getModY(), dir.getModZ());
+                    velocity = new Vector(dir.getModX() * horizSpeed, dir.getModY() + vertVelo, dir.getModZ() * horizSpeed);
                     entity = from.getWorld().spawnEntity(from, EntityType.SPLASH_POTION);
 
                     ThrownPotion potion = (ThrownPotion) entity;
 
                     int potionId = config.getInt("potion_id");
                     ItemStack potionItem = new ItemStack(Material.POTION, 1, (short) potionId);
-                    potion.setItem(potionItem);
+
+                    PotionMeta potionMeta = (PotionMeta) potionItem.getItemMeta();
+
+                    boolean doneMain = false;
 
                     if (config.contains("effects")) {
-                        Collection<PotionEffect> effects = potion.getEffects();
-                        effects.clear();
 
                         for (Config effectConfig : config.getConfigList("effects")) {
                             PotionEffectType type = PotionEffectType.getByName(effectConfig.getString("name"));
-                            int duration = (int) (effectConfig.getDouble("duration_seconds") / 20d);
-                            int amp = effectConfig.getInt("level") - 1;
+                            int duration = (int) (effectConfig.getDouble("duration_seconds") * 20);
+                            int amp = effectConfig.getInt("level", 1) - 1;
 
-                            effects.add(new PotionEffect(type, duration, amp));
+                            PotionEffect effect = new PotionEffect(type, duration, amp);
+
+                            potionMeta.addCustomEffect(effect, true);
+
+                            if(!doneMain) {
+                                potionMeta.setMainEffect(effect.getType());
+                                doneMain = true;
+                            }
                         }
 
-
                     }
+
+                    potionItem.setItemMeta(potionMeta);
+                    potion.setItem(potionItem);
+
                     break;
                 default:
                     return;

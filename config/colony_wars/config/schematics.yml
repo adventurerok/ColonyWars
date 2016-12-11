@@ -278,5 +278,11 @@ schematics:
       cannons: true
       center_block: "COAL_ORE"
       hologram: false
-      coal_turret_type: "POTION"
-      coal_potion_id: ""
+      coal_turret:
+        type: "POTION"
+        potion_id: 16388
+        velocity_vertical: -0.3
+        effects:
+          - name: "POISON"
+            duration_seconds: 5
+            level: 1

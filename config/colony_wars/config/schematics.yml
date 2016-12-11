@@ -301,7 +301,7 @@ schematics:
       center_block: "COAL_ORE"
       hologram: false
       friendly: true
-      coal_turret:
+      sponge_turret:
         type: "POTION"
         potion_id: 16417
         velocity_vertical: -0.4

@@ -36,8 +36,8 @@ public class CannonTowerHandler {
 
         Config config = building.getConfig();
 
-        Config coalConfig = config.getConfigOrEmpty("coal_turret");
-        Config spongeConfig = config.getConfigOrEmpty("sponge_turret");
+        Config coalConfig = config.getConfigOrNull("coal_turret");
+        Config spongeConfig = config.getConfigOrNull("sponge_turret");
 
         List<Turret> turrets = new ArrayList<>();
 

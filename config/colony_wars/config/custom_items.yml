@@ -274,3 +274,19 @@ custom_items:
     enchantments:
       DAMAGE_ALL: "sword"
       KNOCKBACK: "array(sword, 0, 1, 1)"
+  firecannon_wand:
+    display_name_locale: "firecannon_wand.name"
+    description_locale: "firecannon_wand.desc"
+    material: "IRON_CHESTPLATE"
+    upgradable: true
+    right_cooldown:
+      ability: "fire_wand"
+      timer: "36-fire_wand*12"
+      finished_locale: "firecannon_wand.cooldown"
+    listeners:
+      wand:
+        class: "com.ithinkrok.cw.item.BuildingWand"
+        events: ["rightClick"]
+        config:
+          building: "FireCannon"
+          remove_seconds: "32"

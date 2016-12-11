@@ -12,6 +12,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.SmallFireball;
 import org.bukkit.util.Vector;
 
@@ -28,21 +29,24 @@ public class CannonTowerHandler {
             new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
 
     public static GameTask startCannonTowerTask(GameGroup gameGroup, Building building) {
-        Config config = gameGroup.getSharedObjectOrEmpty("cannon_tower");
+        Material spongeTurret = Material.SPONGE;
+        Material coalTurret = Material.COAL_ORE;
 
-        Material arrowTurret = Material.matchMaterial(config.getString("arrow_turret_material", "SPONGE"));
-        Material fireTurret = Material.matchMaterial(config.getString("fire_turret_material", "COAL_ORE"));
+        Config config = building.getConfig();
+
+        TurretType spongeTurretType = TurretType.valueOf(config.getString("sponge_turret_type", "ARROW").toUpperCase());
+        TurretType coalTurretType = TurretType.valueOf(config.getString("coal_turret_type", "FIRE").toUpperCase());
 
         List<Turret> turrets = new ArrayList<>();
 
         for (Location loc : building.getSchematic().getBuildingBlocks()) {
             Block block = loc.getBlock();
-            if (block.getType() != fireTurret && block.getType() != arrowTurret) continue;
+            if (block.getType() != coalTurret && block.getType() != spongeTurret) continue;
 
             for (BlockFace face : SHOOTING_DIRECTIONS) {
                 if (!block.getRelative(face).isEmpty()) continue;
 
-                turrets.add(new Turret(loc, face, block.getType() == fireTurret));
+                turrets.add(new Turret(loc, face, block.getType() == coalTurret ? coalTurretType : spongeTurretType));
             }
         }
 
@@ -76,15 +80,19 @@ public class CannonTowerHandler {
         return result;
     }
 
+    private enum TurretType {
+        ARROW, FIRE
+    }
+
     private static class Turret {
         Location loc;
         BlockFace dir;
-        boolean isFire;
+        TurretType turretType;
 
-        public Turret(Location loc, BlockFace dir, boolean isFire) {
+        public Turret(Location loc, BlockFace dir, TurretType turretType) {
             this.loc = loc;
             this.dir = dir;
-            this.isFire = isFire;
+            this.turretType = turretType;
         }
 
         public void fire(GameGroup gameGroup, Building building) {
@@ -93,13 +101,18 @@ public class CannonTowerHandler {
             Entity entity;
             Vector velocity;
 
-            if (isFire) {
-                velocity = new Vector(dir.getModX(), dir.getModY() - 0.05, dir.getModZ());
-                entity = from.getWorld().spawnEntity(from, EntityType.SMALL_FIREBALL);
-                ((SmallFireball) entity).setDirection(velocity);
-            } else {
-                velocity = new Vector(dir.getModX(), dir.getModY() + 0.1, dir.getModZ());
-                entity = from.getWorld().spawnEntity(from, EntityType.ARROW);
+            switch (turretType) {
+                case FIRE:
+                    velocity = new Vector(dir.getModX(), dir.getModY() - 0.05, dir.getModZ());
+                    entity = from.getWorld().spawnEntity(from, EntityType.SMALL_FIREBALL);
+                    ((Fireball) entity).setDirection(velocity);
+                    break;
+                case ARROW:
+                    velocity = new Vector(dir.getModX(), dir.getModY() + 0.1, dir.getModZ());
+                    entity = from.getWorld().spawnEntity(from, EntityType.ARROW);
+                    break;
+                default:
+                    return;
             }
             entity.setVelocity(velocity);
             gameGroup.getTeam(building.getTeamIdentifier()).makeEntityRepresentTeam(entity);

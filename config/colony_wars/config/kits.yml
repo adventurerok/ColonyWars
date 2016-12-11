@@ -278,6 +278,7 @@ kits:
             MageTower:
               custom_items:
                 - "arrowcannon_wand"
+                - "firecannon_wand"
               shop:
                 - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
                   config:
@@ -286,6 +287,13 @@ kits:
                     max_level: 2
                     cost: "1350+250*arrow_wand"
                     upgrade_item: "arrowcannon_wand"
+                - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+                  config:
+                    upgrade_name: "fire_wand"
+                    upgrade_display_locale: "firecannon_wand.upgrade"
+                    max_level: 2
+                    cost: "1350+250*fire_wand"
+                    upgrade_item: "firecannon_wand"
             Blacksmith:
               custom_items:
                 - "engineer_sword"

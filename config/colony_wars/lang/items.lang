@@ -90,6 +90,11 @@ arrowcannon_wand.desc=Spawns arrow turrets
 arrowcannon_wand.cooldown=The arrow turret wand is ready to use again.
 arrowcannon_wand.upgrade=Arrow Turret Wand Upgrade %s
 
+firecannon_wand.name=Fire Turret Wand
+firecannon_wand.desc=Spawns fire turrets
+firecannon_wand.cooldown=The fire turret wand is ready to use again.
+firecannon_wand.upgrade=Fire Turret Wand Upgrade %s
+
 engineer_sword.upgrade=Sword Upgrade %s
 
 #ClickableItems

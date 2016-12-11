@@ -278,11 +278,33 @@ schematics:
       cannons: true
       center_block: "COAL_ORE"
       hologram: false
+  PoisonCannon:
+    file: "colony_wars/schematics/mccw_firecannon.schematic"
+    rotation: 0
+    config:
+      cannons: true
+      center_block: "COAL_ORE"
+      hologram: false
       coal_turret:
         type: "POTION"
         potion_id: 16388
-        velocity_vertical: -0.3
+        velocity_vertical: -0.4
         effects:
           - name: "POISON"
             duration_seconds: 5
             level: 1
+  RegenCannon:
+    file: "colony_wars/schematics/mccw_arrowcannon.schematic"
+    rotation: 0
+    config:
+      cannons: true
+      center_block: "COAL_ORE"
+      hologram: false
+      coal_turret:
+        type: "POTION"
+        potion_id: 16417
+        velocity_vertical: -0.4
+        effects:
+          - name: "REGENERATION"
+            duration_seconds: 10
+            level: 2

@@ -277,23 +277,23 @@ kits:
           buildings:
             MageTower:
               custom_items:
-                - "arrowcannon_wand"
-                - "firecannon_wand"
+                - "poisoncannon_wand"
+                - "regencannon_wand"
               shop:
                 - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
                   config:
-                    upgrade_name: "arrow_wand"
-                    upgrade_display_locale: "arrowcannon_wand.upgrade"
+                    upgrade_name: "poison_wand"
+                    upgrade_display_locale: "poisoncannon_wand.upgrade"
                     max_level: 2
-                    cost: "1350+250*arrow_wand"
-                    upgrade_item: "arrowcannon_wand"
+                    cost: "1350+250*poison_wand"
+                    upgrade_item: "poisoncannon_wand"
                 - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
                   config:
-                    upgrade_name: "fire_wand"
-                    upgrade_display_locale: "firecannon_wand.upgrade"
+                    upgrade_name: "regen_wand"
+                    upgrade_display_locale: "regencannon_wand.upgrade"
                     max_level: 2
-                    cost: "1350+250*fire_wand"
-                    upgrade_item: "firecannon_wand"
+                    cost: "1350+250*regen_wand"
+                    upgrade_item: "regencannon_wand"
             Blacksmith:
               custom_items:
                 - "engineer_sword"

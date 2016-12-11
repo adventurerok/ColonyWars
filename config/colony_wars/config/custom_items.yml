@@ -290,3 +290,35 @@ custom_items:
         config:
           building: "FireCannon"
           remove_seconds: "32"
+  poisoncannon_wand:
+    display_name_locale: "poisoncannon_wand.name"
+    description_locale: "poisoncannon_wand.desc"
+    material: "DIAMOND_CHESTPLATE"
+    upgradable: true
+    right_cooldown:
+      ability: "poison_wand"
+      timer: "12-poison_wand*4"
+      finished_locale: "poisoncannon_wand.cooldown"
+    listeners:
+      wand:
+        class: "com.ithinkrok.cw.item.BuildingWand"
+        events: ["rightClick"]
+        config:
+          building: "PoisonCannon"
+          remove_seconds: "32"
+  regencannon_wand:
+    display_name_locale: "regencannon_wand.name"
+    description_locale: "regencannon_wand.desc"
+    material: "STICK"
+    upgradable: true
+    right_cooldown:
+      ability: "regen_wand"
+      timer: "12-regen_wand*4"
+      finished_locale: "regencannon_wand.cooldown"
+    listeners:
+      wand:
+        class: "com.ithinkrok.cw.item.BuildingWand"
+        events: ["rightClick"]
+        config:
+          building: "RegenCannon"
+          remove_seconds: "32"

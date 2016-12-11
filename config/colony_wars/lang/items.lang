@@ -95,6 +95,16 @@ firecannon_wand.desc=Spawns fire turrets
 firecannon_wand.cooldown=The fire turret wand is ready to use again.
 firecannon_wand.upgrade=Fire Turret Wand Upgrade %s
 
+poisoncannon_wand.name=Poison Turret Wand
+poisoncannon_wand.desc=Spawns poison turrets
+poisoncannon_wand.cooldown=The poison turret wand is ready to use again.
+poisoncannon_wand.upgrade=Poison Turret Wand Upgrade %s
+
+regencannon_wand.name=Regen Turret Wand
+regencannon_wand.desc=Spawns regen turrets
+regencannon_wand.cooldown=The regen turret wand is ready to use again.
+regencannon_wand.upgrade=Regen Turret Wand Upgrade %s
+
 engineer_sword.upgrade=Sword Upgrade %s
 
 #ClickableItems

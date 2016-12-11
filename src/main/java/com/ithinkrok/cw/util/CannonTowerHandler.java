@@ -67,6 +67,8 @@ public class CannonTowerHandler {
         int reloadTime = config.getInt("reload_time", 4) * 20;
         int range = config.getInt("range", 35);
 
+        boolean friendly = config.getBoolean("friendly", false);
+
         GameTask result = gameGroup.repeatInFuture(task -> {
             if (building.isRemoved()) task.finish();
 
@@ -75,8 +77,8 @@ public class CannonTowerHandler {
             for (Entity e : building.getCenterBlock().getWorld()
                     .getNearbyEntities(building.getCenterBlock(), range, range, range)) {
                 User rep = EntityUtils.getRepresentingUser(gameGroup, e);
-                if (rep == null || !rep.isInGame() ||
-                        Objects.equals(rep.getTeamIdentifier(), building.getTeamIdentifier())) continue;
+                if (rep == null || !rep.isInGame()) continue;
+                if (Objects.equals(rep.getTeamIdentifier(), building.getTeamIdentifier()) != friendly) continue;
 
                 fire = true;
                 break;
@@ -131,18 +133,19 @@ public class CannonTowerHandler {
 
             switch (turretType) {
                 case FIRE:
-                    velocity = new Vector(dir.getModX() * horizSpeed, dir.getModY() - 0.05 + vertVelo, dir.getModZ() *
-                            horizSpeed);
+                    velocity = new Vector(dir.getModX() * horizSpeed, dir.getModY() - 0.05 + vertVelo,
+                                          dir.getModZ() * horizSpeed);
                     entity = from.getWorld().spawnEntity(from, EntityType.SMALL_FIREBALL);
                     ((Fireball) entity).setDirection(velocity);
                     break;
                 case ARROW:
-                    velocity = new Vector(dir.getModX() * horizSpeed, dir.getModY() + 0.1 + vertVelo, dir.getModZ()
-                            * horizSpeed);
+                    velocity = new Vector(dir.getModX() * horizSpeed, dir.getModY() + 0.1 + vertVelo,
+                                          dir.getModZ() * horizSpeed);
                     entity = from.getWorld().spawnEntity(from, EntityType.ARROW);
                     break;
                 case POTION:
-                    velocity = new Vector(dir.getModX() * horizSpeed, dir.getModY() + vertVelo, dir.getModZ() * horizSpeed);
+                    velocity = new Vector(dir.getModX() * horizSpeed, dir.getModY() + vertVelo,
+                                          dir.getModZ() * horizSpeed);
                     entity = from.getWorld().spawnEntity(from, EntityType.SPLASH_POTION);
 
                     ThrownPotion potion = (ThrownPotion) entity;
@@ -165,7 +168,7 @@ public class CannonTowerHandler {
 
                             potionMeta.addCustomEffect(effect, true);
 
-                            if(!doneMain) {
+                            if (!doneMain) {
                                 potionMeta.setMainEffect(effect.getType());
                                 doneMain = true;
                             }

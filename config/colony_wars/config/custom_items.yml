@@ -297,7 +297,7 @@ custom_items:
     upgradable: true
     right_cooldown:
       ability: "poison_wand"
-      timer: "12-poison_wand*4"
+      timer: "24-poison_wand*8"
       finished_locale: "poisoncannon_wand.cooldown"
     listeners:
       wand:
@@ -313,7 +313,7 @@ custom_items:
     upgradable: true
     right_cooldown:
       ability: "regen_wand"
-      timer: "12-regen_wand*4"
+      timer: "24-regen_wand*8"
       finished_locale: "regencannon_wand.cooldown"
     listeners:
       wand:

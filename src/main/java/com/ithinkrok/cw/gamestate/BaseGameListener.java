@@ -20,6 +20,7 @@ import com.ithinkrok.minigames.api.inventory.ClickableInventory;
 import com.ithinkrok.minigames.api.schematic.Facing;
 import com.ithinkrok.minigames.api.task.TaskScheduler;
 import com.ithinkrok.minigames.api.team.Team;
+import com.ithinkrok.minigames.api.team.TeamIdentifier;
 import com.ithinkrok.minigames.api.user.UpgradeHandler;
 import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.api.util.*;
@@ -575,17 +576,27 @@ public class BaseGameListener extends BaseGameStateListener {
 
     @CustomEventHandler
     public void onPotionSplash(MapPotionSplashEvent event) {
-        if (!event.hasThrowerUser()) return;
+        TeamIdentifier potionTeam;
+
+        //Get the team identifier from the thrower or the potion
+        if (event.hasThrowerUser()) {
+            potionTeam = event.getThrowerUser().getTeamIdentifier();
+        } else {
+            Team team = EntityUtils.getRepresentingTeam(event.getGameGroup(), event.getPotion());
+            if(team != null) {
+                potionTeam = team.getTeamIdentifier();
+            } else return;
+        }
 
         PotionEffectType type = event.getPotion().getEffects().iterator().next().getType();
         boolean good = GOOD_POTIONS.get(type);
 
         for (LivingEntity entity : event.getAffected()) {
-            User rep = EntityUtils.getRepresentingUser(event.getThrowerUser(), entity);
+            User rep = EntityUtils.getRepresentingUser(event.getGameGroup(), entity);
 
             if (rep == null) continue;
 
-            if (Objects.equals(event.getThrowerUser().getTeamIdentifier(), rep.getTeamIdentifier()) != good) {
+            if (Objects.equals(potionTeam, rep.getTeamIdentifier()) != good) {
                 event.setIntensity(entity, 0);
             } else if (type == PotionEffectType.HEAL) {
                 PotionStrengthModifier psm = PotionStrengthModifier.getOrCreate(rep);

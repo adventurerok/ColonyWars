@@ -278,3 +278,5 @@ schematics:
       cannons: true
       center_block: "COAL_ORE"
       hologram: false
+      coal_turret_type: "POTION"
+      coal_potion_id: ""

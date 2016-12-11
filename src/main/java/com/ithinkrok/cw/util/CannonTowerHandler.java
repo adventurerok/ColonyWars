@@ -6,17 +6,19 @@ import com.ithinkrok.minigames.api.task.GameTask;
 import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.api.util.EntityUtils;
 import com.ithinkrok.util.config.Config;
+import com.ithinkrok.util.config.MemoryConfig;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Fireball;
-import org.bukkit.entity.SmallFireball;
+import org.bukkit.entity.*;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,8 +36,8 @@ public class CannonTowerHandler {
 
         Config config = building.getConfig();
 
-        TurretType spongeTurretType = TurretType.valueOf(config.getString("sponge_turret_type", "ARROW").toUpperCase());
-        TurretType coalTurretType = TurretType.valueOf(config.getString("coal_turret_type", "FIRE").toUpperCase());
+        Config coalConfig = config.getConfigOrEmpty("coal");
+        Config spongeConfig = config.getConfigOrEmpty("sponge");
 
         List<Turret> turrets = new ArrayList<>();
 
@@ -46,7 +48,19 @@ public class CannonTowerHandler {
             for (BlockFace face : SHOOTING_DIRECTIONS) {
                 if (!block.getRelative(face).isEmpty()) continue;
 
-                turrets.add(new Turret(loc, face, block.getType() == coalTurret ? coalTurretType : spongeTurretType));
+                if (block.getType() == coalTurret) {
+                    if (coalConfig != null) {
+                        turrets.add(new Turret(loc, face, coalConfig));
+                    } else {
+                        turrets.add(new Turret(loc, face, TurretType.FIRE));
+                    }
+                } else {
+                    if (spongeConfig != null) {
+                        turrets.add(new Turret(loc, face, spongeConfig));
+                    } else {
+                        turrets.add(new Turret(loc, face, TurretType.ARROW));
+                    }
+                }
             }
         }
 
@@ -81,18 +95,27 @@ public class CannonTowerHandler {
     }
 
     private enum TurretType {
-        ARROW, FIRE
+        ARROW, FIRE, POTION
     }
 
     private static class Turret {
         Location loc;
         BlockFace dir;
         TurretType turretType;
+        Config config;
 
-        public Turret(Location loc, BlockFace dir, TurretType turretType) {
+        public Turret(Location loc, BlockFace dir, TurretType type) {
             this.loc = loc;
             this.dir = dir;
-            this.turretType = turretType;
+            this.turretType = type;
+            this.config = new MemoryConfig();
+        }
+
+        public Turret(Location loc, BlockFace dir, Config config) {
+            this.loc = loc;
+            this.dir = dir;
+            this.turretType = TurretType.valueOf(config.getString("type").toUpperCase());
+            this.config = config;
         }
 
         public void fire(GameGroup gameGroup, Building building) {
@@ -110,6 +133,31 @@ public class CannonTowerHandler {
                 case ARROW:
                     velocity = new Vector(dir.getModX(), dir.getModY() + 0.1, dir.getModZ());
                     entity = from.getWorld().spawnEntity(from, EntityType.ARROW);
+                    break;
+                case POTION:
+                    velocity = new Vector(dir.getModX(), dir.getModY(), dir.getModZ());
+                    entity = from.getWorld().spawnEntity(from, EntityType.SPLASH_POTION);
+
+                    ThrownPotion potion = (ThrownPotion) entity;
+
+                    int potionId = config.getInt("potion_id");
+                    ItemStack potionItem = new ItemStack(Material.POTION, 1, (short) potionId);
+                    potion.setItem(potionItem);
+
+                    if (config.contains("effects")) {
+                        Collection<PotionEffect> effects = potion.getEffects();
+                        effects.clear();
+
+                        for (Config effectConfig : config.getConfigList("effects")) {
+                            PotionEffectType type = PotionEffectType.getByName(effectConfig.getString("name"));
+                            int duration = (int) (effectConfig.getDouble("duration_seconds") / 20d);
+                            int amp = effectConfig.getInt("level") - 1;
+
+                            effects.add(new PotionEffect(type, duration, amp));
+                        }
+
+
+                    }
                     break;
                 default:
                     return;

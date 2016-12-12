@@ -160,7 +160,7 @@ custom_items:
     material: "IRON_SWORD"
     upgradable: true
     enchantments:
-      DAMAGE_ALL: "array(sharpness, 0, 1, 3)"
+      DAMAGE_ALL: "array(sharpness, 0, 1, 2)"
       KNOCKBACK: "knockback"
   earth_bender:
     display_name_locale: "earth_bender.name"

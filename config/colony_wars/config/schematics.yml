@@ -293,6 +293,9 @@ schematics:
           - name: "POISON"
             duration_seconds: 5
             level: 2
+          - name: "SLOW"
+            duration_seconds: 8
+            level: 1
   RegenCannon:
     file: "colony_wars/schematics/mccw_arrowcannon.schematic"
     rotation: 0
@@ -309,3 +312,6 @@ schematics:
           - name: "REGENERATION"
             duration_seconds: 10
             level: 2
+          - name: "SATURATION"
+            duration_seconds: 10
+            level: 1

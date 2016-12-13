@@ -48,19 +48,19 @@ schematics:
             team: true
             with_buildings:
               - "Farm"
-        - class: "com.ithinkrok.cw.inventory.BuildingUpgradeWith"
-          config:
-            building_name: "Fortress"
-            cost: 25000
-            team: true
-            build_speed: 5
-            with_buildings:
-              - "Farm"
-              - "Lumbermill"
-              - "Blacksmith"
-              - "MageTower"
-              - "Cathedral"
-              - "Greenhouse"
+#        - class: "com.ithinkrok.cw.inventory.BuildingUpgradeWith"
+#          config:
+#            building_name: "Fortress"
+#            cost: 25000
+#            team: true
+#            build_speed: 5
+#            with_buildings:
+#              - "Farm"
+#              - "Lumbermill"
+#              - "Blacksmith"
+#              - "MageTower"
+#              - "Cathedral"
+#              - "Greenhouse"
   Fortress:
     file: "colony_wars/schematics/mccw3_fortress.schematic"
     rotation: 0
@@ -165,7 +165,7 @@ schematics:
         - class: "com.ithinkrok.cw.inventory.BuildingBuyable"
           config:
             building_name: "ScoutTower"
-            cost: "2000+250*(@buildings#ScoutTower+@buildings#CannonTower)"
+            cost: "2000*floor(pow(1.5, (@buildings#ScoutTower+@buildings#CannonTower)))"
             team: true
         - class: "com.ithinkrok.cw.inventory.BuildingBuyable"
           config:
@@ -251,7 +251,7 @@ schematics:
         - class: "com.ithinkrok.cw.inventory.BuildingUpgrade"
           config:
             building_name: "CannonTower"
-            cost: "2000+250*(@buildings#ScoutTower+@buildings#CannonTower)"
+            cost: "2000*floor(pow(1.5, (@buildings#ScoutTower+@buildings#CannonTower-1)))"
             team: true
   CannonTower:
     file: "colony_wars/schematics/mccw3_cannontower.schematic"

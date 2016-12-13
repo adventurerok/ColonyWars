@@ -83,18 +83,9 @@ shared_objects:
     revival_rate: "scoreboard.revival_rate"
   map_scoreboard:
     votable_maps: &votable_maps
-      - "canyon"
-      - "forest_hills"
       - "cavern"
-      - "hills_and_lakes"
-      - "jungle_valley"
-      - "oasis"
       - "nether"
-      - "snow_hills"
-      - "jungle_mountain"
-      - "mega_taiga"
       - "12canyon"
-      - "mesa"
       - "random"
   schematic_options:
     progress_hologram: true
@@ -176,6 +167,7 @@ game_states:
             - "priest"
             - "inferno"
             - "vampire"
+            - "engineer"
           start_items:
             clear_inventory: true
             custom_items:

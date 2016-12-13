@@ -83,7 +83,6 @@ shared_objects:
       - "hills_and_lakes"
       - "jungle_valley"
       - "oasis"
-      - "nether"
       - "snow_hills"
       - "jungle_mountain"
       - "mega_taiga"

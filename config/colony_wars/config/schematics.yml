@@ -1,6 +1,6 @@
 schematics:
   Base:
-    file: "colony_wars/schematics/mccw2_base.schematic"
+    file: "colony_wars/schematics/nordic_base.schematic"
     rotation: 0
 #    upgrades:
 #      - "Fortress"

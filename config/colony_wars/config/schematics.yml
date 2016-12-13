@@ -2,8 +2,8 @@ schematics:
   Base:
     file: "colony_wars/schematics/mccw2_base.schematic"
     rotation: 0
-    upgrades:
-      - "Fortress"
+#    upgrades:
+#      - "Fortress"
     config:
       base: true
       protected: true

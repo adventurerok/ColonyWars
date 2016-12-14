@@ -153,8 +153,8 @@ schematics:
         - "peasant"
         - "archer"
   Blacksmith:
-    file: "colony_wars/schematics/mccw_blacksmith.schematic"
-    rotation: 3
+    file: "colony_wars/schematics/nordic_blacksmith.schematic"
+    rotation: 0
     config:
       useful_for:
         - "general"
@@ -180,7 +180,7 @@ schematics:
             cost: 1000
             team: true
   MageTower:
-    file: "colony_wars/schematics/mccw_magetower.schematic"
+    file: "colony_wars/schematics/nordic_magetower.schematic"
     rotation: 2
     config:
       useful_for:

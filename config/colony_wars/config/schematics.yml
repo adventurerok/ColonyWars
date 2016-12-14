@@ -145,8 +145,8 @@ schematics:
             cost: 125
 
   Lumbermill:
-    file: "colony_wars/schematics/mccw2_lumbermill.schematic"
-    rotation: 3
+    file: "colony_wars/schematics/nordic_lumbermill.schematic"
+    rotation: 2
     config:
       useful_for:
         - "scout"
@@ -230,7 +230,7 @@ schematics:
             cost: 1000
             upgrade_item: "team_compass"
   Greenhouse:
-    file: "colony_wars/schematics/mccw_greenhouse.schematic"
+    file: "colony_wars/schematics/nordic_greenhouse.schematic"
     rotation: 3
     config:
       shop:
@@ -254,7 +254,7 @@ schematics:
             cost: "2000*floor(pow(1.5, (@buildings#ScoutTower+@buildings#CannonTower-1)))"
             team: true
   CannonTower:
-    file: "colony_wars/schematics/mccw3_cannontower.schematic"
+    file: "colony_wars/schematics/nordic_cannontower.schematic"
     rotation: 0
     config:
       cannons: true

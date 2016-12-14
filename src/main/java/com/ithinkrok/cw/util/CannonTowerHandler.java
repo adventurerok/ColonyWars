@@ -102,6 +102,7 @@ public class CannonTowerHandler {
 
     private static class Turret {
         Location loc;
+        Material material;
         BlockFace dir;
         TurretType turretType;
         Config config;
@@ -113,6 +114,8 @@ public class CannonTowerHandler {
             this.dir = dir;
             this.turretType = type;
             this.config = new MemoryConfig();
+
+            this.material = loc.getBlock().getType();
         }
 
         public Turret(Location loc, BlockFace dir, Config config) {
@@ -123,9 +126,15 @@ public class CannonTowerHandler {
 
             horizSpeed = config.getDouble("speed_horizontal", 1);
             vertVelo = config.getDouble("velocity_vertical", 0);
+
+            this.material = loc.getBlock().getType();
         }
 
         public void fire(GameGroup gameGroup, Building building) {
+            if(loc.getBlock().getType() != material) {
+                return;
+            }
+
             Location from = loc.clone().add(dir.getModX() + 0.5, dir.getModY() + 0.5, dir.getModZ() + 0.5);
 
             Entity entity;

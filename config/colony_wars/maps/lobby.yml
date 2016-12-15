@@ -5,6 +5,13 @@ environment: "normal"
 lang_files:
   - "colony_wars/lang/lobby.lang"
 
+spawn:
+  x: 459.5
+  y: 66.1
+  z: -456.6
+  yaw: 180
+  pitch: 0
+
 listeners:
   spleef:
     class: "com.ithinkrok.minigames.util.lobbygames.SpleefMinigame"

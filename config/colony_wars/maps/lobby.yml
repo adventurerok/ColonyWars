@@ -59,3 +59,22 @@ listeners:
           reward: 3000
   wool:
     class: "com.ithinkrok.minigames.util.lobbygames.WoolMinigame"
+  respawn:
+    class: "com.ithinkrok.minigames.util.map.RespawnZoneListener"
+    config:
+      zones:
+        - bounds:
+            min:
+              x: 389
+              y: 55
+              z: -539
+            max:
+              x: 458
+              y: 101
+              z: -403
+          respawn:
+            x: 447.5
+            y: 71.1
+            z: -514.5
+          damage_causes:
+            - "LAVA"

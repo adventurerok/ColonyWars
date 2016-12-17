@@ -251,7 +251,7 @@ schematics:
         - class: "com.ithinkrok.cw.inventory.BuildingUpgrade"
           config:
             building_name: "CannonTower"
-            cost: "2000*floor(pow(1.5, (@buildings#ScoutTower+@buildings#CannonTower-1)))"
+            cost: "2000*floor(pow(1.5, (@buildings#CannonTower)))"
             team: true
   CannonTower:
     file: "colony_wars/schematics/nordic_cannontower.schematic"

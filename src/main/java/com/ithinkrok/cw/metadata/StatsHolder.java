@@ -189,6 +189,17 @@ public class StatsHolder extends UserMetadata implements Messagable {
     }
 
     @Override
+    public String getMessagePrefix() {
+        if(user != null) return user.getMessagePrefix();
+        else return "";
+    }
+
+    @Override
+    public void sendMessageNoPrefix(Config message) {
+        if(user != null) user.sendMessageNoPrefix(message);
+    }
+
+    @Override
     public void sendMessageNoPrefix(String message) {
         if (user != null) user.sendMessageNoPrefix(message);
     }

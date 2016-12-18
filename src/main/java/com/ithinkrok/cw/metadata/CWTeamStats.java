@@ -213,6 +213,11 @@ public class CWTeamStats extends Metadata {
         if (!churchLocations.isEmpty()) loc = churchLocations.get(random.nextInt(churchLocations.size()));
         else loc = baseLocation;
 
+        //So we don't get tped back to vehicle
+        if(died.getVehicle() != null) {
+            died.getVehicle().eject();
+        }
+
         died.teleport(loc);
 
         died.decloak();

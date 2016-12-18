@@ -19,10 +19,14 @@ public class FixCommand implements CustomListener {
         MinigamesCommandSender sender = event.getCommandSender();
         MinigamesCommand command = event.getCommand();
 
-        if(!command.requireUser(sender) || !command.requireOthersPermission(sender, "mccw.fix.others")) return;
-        if(!command.getUser().isInGame()) return;
-
         User user = command.getUser();
+
+        if(!command.requireUser(sender) || !command.requireOthersPermission(sender, "mccw.fix.others")) return;
+        if(!user.isInGame()){
+            user.fixCloakedUsers();
+            return;
+        }
+
 
         if(user.isInsideVehicle()) return;
 
@@ -35,5 +39,6 @@ public class FixCommand implements CustomListener {
             user.sendLocale("command.fix.failed");
         } else user.sendLocale("command.fix.success");
 
+        user.fixCloakedUsers();
     }
 }

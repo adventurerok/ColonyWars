@@ -115,8 +115,12 @@ schematics:
             cost: "4000+500*(@buildings#ScoutTower+@buildings#CannonTower)"
             team: true
   Farm:
-    file: "colony_wars/schematics/mccw_farm.schematic"
-    rotation: 0
+    file: "colony_wars/schematics/nordic_farm.schematic"
+    rotation: 1
+    offset:
+      x: 0
+      y: 1
+      z: 0
     config:
       shop:
         - class: "com.ithinkrok.minigames.util.inventory.ItemBuyable"
@@ -192,7 +196,7 @@ schematics:
         - "vampire"
         - "engineer"
   Church:
-    file: "colony_wars/schematics/mccw3_church.schematic"
+    file: "colony_wars/schematics/nordic_church.schematic"
     rotation: 1
     upgrades:
       - "Cathedral"
@@ -209,7 +213,11 @@ schematics:
             item: "POTION,32,16389"
             cost: 1250
   Cathedral:
-    file: "colony_wars/schematics/mccw3_cathedral.schematic"
+    file: "colony_wars/schematics/nordic_cathedral.schematic"
+    offset:
+      x: 0
+      y: -1
+      z: 0
     rotation: 1
     config:
       revival_rate: 75
@@ -242,7 +250,7 @@ schematics:
             cost: 1600
             upgrade_item: "mighty_axe"
   ScoutTower:
-    file: "colony_wars/schematics/mccw3_scouttower.schematic"
+    file: "colony_wars/schematics/nordic_scouttower.schematic"
     rotation: 0
     upgrades:
       - "CannonTower"

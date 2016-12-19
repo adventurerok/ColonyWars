@@ -1,0 +1,61 @@
+folder: "mccw_fort"
+description: "Each team has a fort, with bridges connecting them"
+environment: normal
+enable_weather: false
+
+shared_objects:
+  showdown:
+    center:
+      x: -38
+      y: 90
+      z: -128
+    size:
+      x: 34
+      z: 34
+  spawn_locations:
+    blue:
+      x: 102
+      y: 87
+      z: 16
+    green:
+      x: -182
+      y: 87
+      z: 12
+    yellow:
+      x: 106
+      y: 87
+      z: -268
+    red:
+      x: -178
+      y: 87
+      z: -271
+
+listeners:
+  initial_buildings:
+    class: "com.ithinkrok.cw.map.InitialBuildingSpawner"
+    config:
+      initial_buildings:
+        - building: "Base"
+          team: "blue"
+          location:
+            x: 104
+            y: 86
+            z: 16
+        - building: "Base"
+          team: "green"
+          location:
+            x: -182
+            y: 86
+            z: 14
+        - building: "Base"
+          team: "yellow"
+          location:
+            x: 106
+            y: 86
+            z: -270
+        - building: "Base"
+          team: "red"
+          location:
+            x: -180
+            y: 86
+            z: -272

@@ -15,6 +15,7 @@ maps:
   nether: "colony_wars/maps/nether.yml"
   oasis: "colony_wars/maps/oasis.yml"
   snow_hills: "colony_wars/maps/snow_hills.yml"
+  fort: "colony_wars/maps/fort.yml"
 
 # Specifies identifiers for teams to be created
 team_identifiers:
@@ -83,6 +84,7 @@ shared_objects:
       - "mega_taiga"
       - "12canyon"
       - "mesa"
+      - "fort"
       - "random"
   schematic_options:
     progress_hologram: true

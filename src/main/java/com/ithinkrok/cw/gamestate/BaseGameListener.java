@@ -44,7 +44,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffectType;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -121,6 +124,9 @@ public class BaseGameListener extends BaseGameStateListener {
     private String motdAftermathLocale;
 
     private ParticleEffect bloodEffect;
+    private Instant gameStartTime;
+
+    private int minShowdownMinutes;
 
     @CustomEventHandler
     public void onUserChat(UserChatEvent event) {
@@ -194,6 +200,8 @@ public class BaseGameListener extends BaseGameStateListener {
         motdAftermathLocale = config.getString("motd.aftermath_locale", "motd.aftermath");
 
         bloodEffect = MinigamesConfigs.getParticleEffect(config, "blood_effect");
+
+        minShowdownMinutes = config.getInt("showdown_start.min_minutes", 8);
     }
 
     @CustomEventHandler
@@ -207,14 +215,7 @@ public class BaseGameListener extends BaseGameStateListener {
     }
 
     private GoldConfig getGoldConfig(Config config) {
-        GoldConfig gold = goldConfigMap.get(config);
-
-        if (gold == null) {
-            gold = new GoldConfig(config);
-            goldConfigMap.put(config, gold);
-        }
-
-        return gold;
+        return goldConfigMap.computeIfAbsent(config, k -> new GoldConfig(config));
     }
 
     @CustomEventHandler
@@ -249,6 +250,10 @@ public class BaseGameListener extends BaseGameStateListener {
         event.getGameGroup().doInFuture(task -> {
             updateMotd(event.getGameGroup());
         });
+
+        if(event.getNewGameState().getName().equals("game")) {
+            gameStartTime = Instant.now();
+        }
     }
 
     private void updateMotd(GameGroup gameGroup) {
@@ -449,7 +454,7 @@ public class BaseGameListener extends BaseGameStateListener {
             CWTeamStats.getOrCreate(team).eliminate();
         }
 
-        checkVictory(died.getGameGroup(), true);
+        checkVictoryOrShowdown(died.getGameGroup());
 
         if (!died.isPlayer()) died.removeNonPlayer();
 
@@ -506,12 +511,12 @@ public class BaseGameListener extends BaseGameStateListener {
 
         if (event.getUser().isInGame()) {
             event.getUser().becomeEntity(EntityType.ZOMBIE);
-            checkVictory(event.getUser().getGameGroup(), true);
+            checkVictoryOrShowdown(event.getUser().getGameGroup());
             event.setRemoveUser(false);
         }
     }
 
-    public void checkVictory(GameGroup gameGroup, boolean checkShowdown) {
+    public void checkVictoryOrShowdown(GameGroup gameGroup) {
         int nonZombieUsersInGame = 0;
 
         for (User user : gameGroup.getUsers()) {
@@ -532,8 +537,6 @@ public class BaseGameListener extends BaseGameStateListener {
         }
 
         if (teamsInGame.size() > 1) {
-            if (!checkShowdown) return;
-
             checkShowdownStart(gameGroup, teamsInGame.size(), nonZombieUsersInGame);
             return;
         }
@@ -551,6 +554,12 @@ public class BaseGameListener extends BaseGameStateListener {
 
     protected void checkShowdownStart(GameGroup gameGroup, int teamsInGame, int nonZombieUsersInGame) {
         if (gameGroup.hasActiveCountdown(showdownCountdown.getName())) return;
+
+        //Make sure at least minShowdownMinutes have passed
+        if(gameStartTime != null && Instant.now().minus(minShowdownMinutes, ChronoUnit.MINUTES).isBefore
+                (gameStartTime)) {
+            return;
+        }
 
         boolean teamCheck = teamsInGame > showdownStartTeams || gameGroup.getTeamIdentifiers().size() < 3;
         boolean playerCheck = nonZombieUsersInGame > showdownStartPlayers;

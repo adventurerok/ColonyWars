@@ -197,6 +197,7 @@ schematics:
         - "engineer"
   Church:
     file: "colony_wars/schematics/nordic_church.schematic"
+    floor_offset: -1
     rotation: 1
     upgrades:
       - "Cathedral"
@@ -218,6 +219,7 @@ schematics:
       x: 0
       y: -1
       z: 0
+    floor_offset: -1
     rotation: 1
     config:
       revival_rate: 75

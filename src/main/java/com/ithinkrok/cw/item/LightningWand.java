@@ -3,8 +3,11 @@ package com.ithinkrok.cw.item;
 import com.ithinkrok.minigames.api.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.api.event.user.world.UserAttackEvent;
 import com.ithinkrok.minigames.api.event.user.world.UserInteractEvent;
+import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;
+import com.ithinkrok.util.math.Calculator;
+import com.ithinkrok.util.math.ExpressionCalculator;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LightningStrike;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -14,13 +17,15 @@ import org.bukkit.event.entity.EntityDamageEvent;
  */
 public class LightningWand implements CustomListener {
 
-    private double lightingMultiplier;
+    private Calculator lightingMultiplier;
     private int maxRange;
 
     @CustomEventHandler
     public void onListenerEnabled(ListenerLoadedEvent<?, ?> event) {
-        maxRange = event.getConfig().getInt("max_range");
-        lightingMultiplier = event.getConfig().getDouble("damage_multiplier");
+        Config config = event.getConfig();
+
+        maxRange = config.getInt("max_range");
+        lightingMultiplier = new ExpressionCalculator(config.getString("damage_multiplier", "1"));
     }
 
     @CustomEventHandler
@@ -28,7 +33,7 @@ public class LightningWand implements CustomListener {
         if(event.getInteractType() != UserInteractEvent.InteractType.REPRESENTING) return;
 
         if(event.getDamageCause() == EntityDamageEvent.DamageCause.LIGHTNING) {
-            event.setDamage(event.getDamage() * lightingMultiplier);
+            event.setDamage(event.getDamage() * lightingMultiplier.calculate(event.getUser().getUpgradeLevels()));
         }
     }
 

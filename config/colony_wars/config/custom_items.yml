@@ -26,7 +26,7 @@ custom_items:
     listeners:
       lightning:
         events: ["attack", "rightClick"]
-        class: "com.ithinkrok.cw.item.LightningWand"
+        class: "com.ithinkrok.minigames.util.item.LightningWand"
         config:
           max_range: 100
           damage_multiplier: 1.8

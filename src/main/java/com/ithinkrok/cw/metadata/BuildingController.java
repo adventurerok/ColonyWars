@@ -151,16 +151,20 @@ public class BuildingController extends Metadata implements CustomListener, Loca
         if (building == null || building.getCenterBlock() == null) return;
 
         if(building.getConfig() == null || building.getConfig().getBoolean("hologram", true)) {
-            Location holo1 = building.getCenterBlock().clone().add(0.5d, 2.2d, 0.5d);
-            Hologram hologram1 =
-                    HologramAPI.createHologram(holo1, gameGroup.getLocale(shopLocale, building.getBuildingName()));
-            hologram1.spawn();
-            building.getSchematic().addHologram(hologram1);
 
-            Location holo2 = building.getCenterBlock().clone().add(0.5d, 1.9d, 0.5d);
-            Hologram hologram2 = HologramAPI.createHologram(holo2, gameGroup.getLocale(shopInfoLocale));
-            hologram2.spawn();
-            building.getSchematic().addHologram(hologram2);
+            gameGroup.doInFuture(task -> {
+                Location holo1 = building.getCenterBlock().clone().add(0.5d, 1.8d, 0.5d);
+                Hologram hologram1 =
+                        HologramAPI.createHologram(holo1, gameGroup.getLocale(shopLocale, building.getBuildingName()));
+                hologram1.spawn();
+                building.getSchematic().addHologram(hologram1);
+
+                Location holo2 = building.getCenterBlock().clone().add(0.5d, 1.5d, 0.5d);
+                Hologram hologram2 = HologramAPI.createHologram(holo2, gameGroup.getLocale(shopInfoLocale));
+                hologram2.spawn();
+                building.getSchematic().addHologram(hologram2);
+            });
+
         }
 
         getTeamBuildingStats(building).buildingFinished(building);

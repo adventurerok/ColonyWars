@@ -163,7 +163,7 @@ public class BuildingController extends Metadata implements CustomListener, Loca
                 Hologram hologram2 = HologramAPI.createHologram(holo2, gameGroup.getLocale(shopInfoLocale));
                 hologram2.spawn();
                 building.getSchematic().addHologram(hologram2);
-            });
+            }, 10);
 
         }
 

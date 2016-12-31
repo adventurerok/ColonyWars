@@ -45,7 +45,7 @@ public class Cloak implements CustomListener {
 
         CustomItem item = event.getCustomItem();
 
-        int durationTicks = (int) (item.calculateRightClickTimeout(event.getUser().getUpgradeLevels()) * 20);
+        int durationTicks = (int) (item.calculateRightClickTimeout(event.getUser().getUserVariables()) * 20);
 
         for(Map.Entry<PotionEffectType, Integer> e : cloakEffects.entrySet()){
             event.getUser().addPotionEffect(new PotionEffect(e.getKey(), durationTicks, e.getValue()), true);

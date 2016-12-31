@@ -21,7 +21,7 @@ import com.ithinkrok.minigames.api.schematic.Facing;
 import com.ithinkrok.minigames.api.task.TaskScheduler;
 import com.ithinkrok.minigames.api.team.Team;
 import com.ithinkrok.minigames.api.team.TeamIdentifier;
-import com.ithinkrok.minigames.api.user.UpgradeHandler;
+import com.ithinkrok.minigames.api.user.UserVariableHandler;
 import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.api.util.*;
 import com.ithinkrok.util.math.Calculator;
@@ -47,7 +47,6 @@ import org.bukkit.potion.PotionEffectType;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -325,7 +324,7 @@ public class BaseGameListener extends BaseGameStateListener {
 
                 event.getUser().getTeam().sendLocale(enderFoundLocale, event.getUser().getFormattedName());
 
-                int amount = (int) enderAmount.calculate(event.getUser().getUpgradeLevels());
+                int amount = (int) enderAmount.calculate(event.getUser().getUserVariables());
 
                 Money.getOrCreate(event.getUser()).addMoney(amount, true);
                 Money.getOrCreate(event.getUser().getTeam()).addMoney((int) (amount * 2f / 3f), true);
@@ -438,9 +437,9 @@ public class BaseGameListener extends BaseGameStateListener {
         died.setInGame(false);
 
         //Remove team variable lookups
-        UpgradeHandler upgradeLevels = died.getUpgradeLevels();
-        upgradeLevels.removeCustomLevelLookup("built");
-        upgradeLevels.removeCustomLevelLookup("building_now");
+        UserVariableHandler upgradeLevels = died.getUserVariables();
+        upgradeLevels.removeCustomVariableLookup("built");
+        upgradeLevels.removeCustomVariableLookup("building_now");
 
         died.getGameGroup().sendLocale(teamLostPlayerLocale, team.getFormattedName());
         died.getGameGroup().sendLocale(teamPlayersLeftLocale, team.getUserCount(), team.getFormattedName());

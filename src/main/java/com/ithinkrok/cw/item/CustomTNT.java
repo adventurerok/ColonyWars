@@ -2,8 +2,6 @@ package com.ithinkrok.cw.item;
 
 import com.ithinkrok.minigames.api.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.api.event.user.world.UserInteractEvent;
-import com.ithinkrok.minigames.api.item.event.CustomItemLoreCalculateEvent;
-import com.ithinkrok.util.lang.LanguageLookup;
 import com.ithinkrok.util.math.Calculator;
 import com.ithinkrok.util.math.ExpressionCalculator;
 import com.ithinkrok.util.event.CustomEventHandler;
@@ -11,8 +9,6 @@ import com.ithinkrok.util.event.CustomListener;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
 
 /**
  * Created by paul on 21/01/16.
@@ -32,7 +28,7 @@ public class CustomTNT implements CustomListener {
 
         BlockFace mod = event.getBlockFace();
 
-        float power = (float) explosionPower.calculate(event.getUser().getUpgradeLevels());
+        float power = (float) explosionPower.calculate(event.getUser().getUserVariables());
 
         Location loc = event.getClickedBlock().getLocation().clone()
                 .add(mod.getModX() + 0.5, mod.getModY() + 0.5, mod.getModZ() + 0.5);

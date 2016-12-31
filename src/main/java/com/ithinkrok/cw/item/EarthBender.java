@@ -56,7 +56,7 @@ public class EarthBender implements CustomListener {
     private void rightClick(UserInteractEvent event) {
         Block target = event.getUser().rayTraceBlocks(200);
         if (target == null) return;
-        event.getUser().setUpgradeLevel("bending", 0);
+        event.getUser().setUserVariable("bending", 0);
 
         target.getWorld().playSound(target.getLocation(), spawn.getSound(), spawn.getVolume(), spawn.getPitch());
 
@@ -134,14 +134,14 @@ public class EarthBender implements CustomListener {
         BentEarth bentEarth = event.getUser().getMetadata(BentEarth.class);
         if (bentEarth == null) return;
 
-        if (event.getUser().getUpgradeLevel("bending") >=
-                (int) maxMoves.calculate(event.getUser().getUpgradeLevels())) {
+        if (event.getUser().getUserVariable("bending") >=
+                (int) maxMoves.calculate(event.getUser().getUserVariables())) {
             return;
         }
 
         Vector add = event.getUser().getLocation().getDirection();
-        bentEarth.addVelocity(add.multiply(moveVelocity.calculate(event.getUser().getUpgradeLevels())));
+        bentEarth.addVelocity(add.multiply(moveVelocity.calculate(event.getUser().getUserVariables())));
         bentEarth.playKnockSound(event.getUser(), knockback);
-        event.getUser().setUpgradeLevel("bending", event.getUser().getUpgradeLevel("bending") + 1);
+        event.getUser().setUserVariable("bending", event.getUser().getUserVariable("bending") + 1);
     }
 }

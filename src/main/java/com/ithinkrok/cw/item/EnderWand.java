@@ -34,7 +34,7 @@ public class EnderWand implements CustomListener {
         EnderPearl pearl = event.getUser().launchProjectile(EnderPearl.class);
 
         Vector velocity = pearl.getVelocity();
-        velocity.multiply(speedMult.calculate(event.getUser().getUpgradeLevels()));
+        velocity.multiply(speedMult.calculate(event.getUser().getUserVariables()));
 
         pearl.setVelocity(velocity);
 

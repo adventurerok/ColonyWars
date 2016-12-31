@@ -143,9 +143,9 @@ public class CWCommand implements CustomListener {
 
         String upgrade = command.getStringArg(0, null);
         int level = (int) new ExpressionCalculator(command.getStringArg(1, "0")).calculate(command.getUser()
-                .getUpgradeLevels());
+                .getUserVariables());
 
-        command.getUser().setUpgradeLevel(upgrade, level);
+        command.getUser().setUserVariable(upgrade, level);
         sender.sendLocale("command.cw.level.success", command.getUser().getFormattedName(), upgrade, level);
 
         return true;

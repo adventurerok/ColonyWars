@@ -31,8 +31,8 @@ public class PotionAbility implements CustomListener {
 
     @CustomEventHandler
     public void onInteract(UserInteractEvent event) {
-        int duration = (int) (durationCalculator.calculate(event.getUser().getUpgradeLevels()) * 20d);
-        int amp = (int) levelCalculator.calculate(event.getUser().getUpgradeLevels());
+        int duration = (int) (durationCalculator.calculate(event.getUser().getUserVariables()) * 20d);
+        int amp = (int) levelCalculator.calculate(event.getUser().getUserVariables());
         if(amp <= 0 || duration <= 0) return;
 
         PotionEffect effect = new PotionEffect(potionEffectType, duration, amp);

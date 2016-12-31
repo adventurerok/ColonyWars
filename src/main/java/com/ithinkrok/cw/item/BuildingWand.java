@@ -51,7 +51,7 @@ public class BuildingWand implements CustomListener {
         if (building != null) {
             event.setStartCooldownAfterAction(true);
 
-            int removeTicks = (int) (removeTime.calculate(event.getUser().getUpgradeLevels()) * 20);
+            int removeTicks = (int) (removeTime.calculate(event.getUser().getUserVariables()) * 20);
             if(removeTicks > 0) {
                 GameTask task = event.getUserGameGroup().doInFuture(t -> {
                    building.remove();

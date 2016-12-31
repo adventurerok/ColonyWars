@@ -5,7 +5,7 @@ import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.cw.metadata.StatsHolder;
 import com.ithinkrok.cw.scoreboard.CWScoreboardHandler;
 import com.ithinkrok.minigames.api.event.user.game.UserChangeTeamEvent;
-import com.ithinkrok.minigames.api.user.UpgradeHandler;
+import com.ithinkrok.minigames.api.user.UserVariableHandler;
 import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.util.gamestate.SimpleGameStartListener;
 import com.ithinkrok.util.event.CustomEventHandler;
@@ -31,12 +31,12 @@ public class GameListener extends SimpleGameStartListener {
         user.teleport(teamStats.getSpawnLocation());
 
         //Add team variable lookups
-        UpgradeHandler upgradeLevels = user.getUpgradeLevels();
-        upgradeLevels.addCustomLevelLookup("built", teamStats.getBuildingCountVariablesObject());
-        upgradeLevels.addCustomLevelLookup("building_now", teamStats.getBuildingNowCountVariablesObject());
-        upgradeLevels.addCustomLevelLookup("buildings_in_inv", teamStats.getBuildingInventoryVariablesObject());
+        UserVariableHandler upgradeLevels = user.getUserVariables();
+        upgradeLevels.addCustomVariableLookup("built", teamStats.getBuildingCountVariablesObject());
+        upgradeLevels.addCustomVariableLookup("building_now", teamStats.getBuildingNowCountVariablesObject());
+        upgradeLevels.addCustomVariableLookup("buildings_in_inv", teamStats.getBuildingInventoryVariablesObject());
 
-        upgradeLevels.addCustomLevelLookup("buildings", teamStats.getTotalBuildingsVariablesObject());
+        upgradeLevels.addCustomVariableLookup("buildings", teamStats.getTotalBuildingsVariablesObject());
 
         user.setGameMode(GameMode.SURVIVAL);
         user.setAllowFlight(false);

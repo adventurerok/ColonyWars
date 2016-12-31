@@ -205,7 +205,7 @@ public class VampireListener implements CustomListener {
         }
 
         private float flightDecreaseAmount() {
-            double base =  flightDecreaseAmount.calculate(user.getUpgradeLevels());
+            double base =  flightDecreaseAmount.calculate(user.getUserVariables());
 
             if(blocksAboveGround >= limitBlocksAboveGround) base *= (blocksAboveGround / blocksAboveGroundDivisor);
 

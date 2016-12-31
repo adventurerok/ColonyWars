@@ -43,7 +43,7 @@ public class ExplosionWand implements CustomListener {
         loc.add(mod.getModX() + 0.5, mod.getModY() + 0.5, mod.getModZ() + 0.5);
 
         event.getUser()
-                .createExplosion(loc, (float) explosionPower.calculate(event.getUser().getUpgradeLevels()), false, 0);
+                .createExplosion(loc, (float) explosionPower.calculate(event.getUser().getUserVariables()), false, 0);
 
         event.setStartCooldownAfterAction(true);
     }

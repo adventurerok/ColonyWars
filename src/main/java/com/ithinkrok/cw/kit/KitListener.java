@@ -120,9 +120,9 @@ public class KitListener implements CustomListener {
             potionEffects.forEach(user::addPotionEffect);
 
             for (Map.Entry<String, Integer> upgrade : upgrades.entrySet()) {
-                if (user.getUpgradeLevel(upgrade.getKey()) >= upgrade.getValue()) continue;
+                if (user.getUserVariable(upgrade.getKey()) >= upgrade.getValue()) continue;
 
-                user.setUpgradeLevel(upgrade.getKey(), upgrade.getValue());
+                user.setUserVariable(upgrade.getKey(), upgrade.getValue());
             }
         }
     }

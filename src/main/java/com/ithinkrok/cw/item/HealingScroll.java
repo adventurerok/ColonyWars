@@ -37,8 +37,8 @@ public class HealingScroll implements CustomListener {
 
     @CustomEventHandler
     public void onInteract(UserInteractEvent event) {
-        int durationTicks = (int) (duration.calculate(event.getUser().getUpgradeLevels()) * 20);
-        int amp = (int) (level.calculate(event.getUser().getUpgradeLevels()) - 1);
+        int durationTicks = (int) (duration.calculate(event.getUser().getUserVariables()) * 20);
+        int amp = (int) (level.calculate(event.getUser().getUserVariables()) - 1);
 
         if (amp < 0 || durationTicks < 1) return;
 

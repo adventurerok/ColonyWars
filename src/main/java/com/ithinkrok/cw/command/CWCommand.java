@@ -5,7 +5,7 @@ import com.ithinkrok.minigames.api.Kit;
 import com.ithinkrok.minigames.api.command.MinigamesCommand;
 import com.ithinkrok.minigames.api.command.MinigamesCommandSender;
 import com.ithinkrok.minigames.api.event.MinigamesCommandEvent;
-import com.ithinkrok.minigames.api.event.user.UserEvent;
+import com.ithinkrok.minigames.api.event.user.BaseUserEvent;
 import com.ithinkrok.minigames.api.item.CustomItem;
 import com.ithinkrok.minigames.api.team.Team;
 import com.ithinkrok.minigames.api.user.User;
@@ -181,7 +181,7 @@ public class CWCommand implements CustomListener {
         return true;
     }
 
-    public static class UserRejoinEvent extends UserEvent implements Cancellable {
+    public static class UserRejoinEvent extends BaseUserEvent implements Cancellable {
 
         private boolean cancelled;
 

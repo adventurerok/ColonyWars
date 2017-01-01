@@ -220,27 +220,27 @@ public class BaseGameListener extends BaseGameStateListener {
     @CustomEventHandler
     public void sendQuitMessageOnUserQuit(UserQuitEvent event) {
         String name = event.getUser().getFormattedName();
-        int currentPlayers = event.getUserGameGroup().getUserCount();
+        int currentPlayers = event.getGameGroup().getUserCount();
         int maxPlayers = Bukkit.getMaxPlayers();
 
         if (event.getUser().isInGame()) {
-            event.getUserGameGroup().sendLocale(inGameQuitLocale, name, currentPlayers, maxPlayers);
+            event.getGameGroup().sendLocale(inGameQuitLocale, name, currentPlayers, maxPlayers);
         } else {
             if (!event.getUser().isPlayer()) return;
-            event.getUserGameGroup().sendLocale(spectatorQuitLocale, name, currentPlayers, maxPlayers);
+            event.getGameGroup().sendLocale(spectatorQuitLocale, name, currentPlayers, maxPlayers);
         }
     }
 
     @CustomEventHandler
     public void sendJoinMessageOnUserJoin(UserJoinEvent event) {
         String name = event.getUser().getFormattedName();
-        int currentPlayers = event.getUserGameGroup().getUserCount();
-        int maxPlayers = event.getUserGameGroup().getMaxPlayers();
+        int currentPlayers = event.getGameGroup().getUserCount();
+        int maxPlayers = event.getGameGroup().getMaxPlayers();
 
         if (event.getUser().isInGame()) {
-            event.getUserGameGroup().sendLocale(inGameJoinLocale, name, currentPlayers, maxPlayers);
+            event.getGameGroup().sendLocale(inGameJoinLocale, name, currentPlayers, maxPlayers);
         } else {
-            event.getUserGameGroup().sendLocale(spectatorJoinLocale, name, currentPlayers, maxPlayers);
+            event.getGameGroup().sendLocale(spectatorJoinLocale, name, currentPlayers, maxPlayers);
         }
     }
 
@@ -297,7 +297,7 @@ public class BaseGameListener extends BaseGameStateListener {
         switch (event.getClickedBlock().getType()) {
             case OBSIDIAN:
                 event.setCancelled(true);
-                BuildingController controller = BuildingController.getOrCreate(event.getUserGameGroup());
+                BuildingController controller = BuildingController.getOrCreate(event.getGameGroup());
 
                 Building building = controller.getBuilding(event.getClickedBlock().getLocation());
                 if (building == null) return;
@@ -315,7 +315,7 @@ public class BaseGameListener extends BaseGameStateListener {
                 ClickableInventory shop = building.createShop();
                 if (shop == null) shop = new ClickableInventory(building.getBuildingName());
 
-                event.getUserGameGroup().userEvent(new ShopOpenEvent(event.getUser(), building, shop));
+                event.getGameGroup().userEvent(new ShopOpenEvent(event.getUser(), building, shop));
 
                 event.getUser().showInventory(shop, event.getClickedBlock().getLocation());
                 return;
@@ -410,19 +410,19 @@ public class BaseGameListener extends BaseGameStateListener {
 
         if (event.hasKillerUser()) {
             if (event.hasAssistUser()) {
-                sendDeathMessage(event.getUserGameGroup(), deathKillAndAssistLocale, localeEnding,
+                sendDeathMessage(event.getGameGroup(), deathKillAndAssistLocale, localeEnding,
                                  event.getUser().getFormattedName(), event.getKillerUser().getFormattedName(),
                                  event.getAssistUser().getFormattedName());
 
             } else {
-                sendDeathMessage(event.getUserGameGroup(), deathKillLocale, localeEnding,
+                sendDeathMessage(event.getGameGroup(), deathKillLocale, localeEnding,
                                  event.getUser().getFormattedName(), event.getKillerUser().getFormattedName());
             }
         } else if (event.hasAssistUser()) {
-            sendDeathMessage(event.getUserGameGroup(), deathAssistLocale, localeEnding,
+            sendDeathMessage(event.getGameGroup(), deathAssistLocale, localeEnding,
                              event.getUser().getFormattedName(), event.getAssistUser().getFormattedName());
         } else {
-            sendDeathMessage(event.getUserGameGroup(), deathNaturalLocale, localeEnding,
+            sendDeathMessage(event.getGameGroup(), deathNaturalLocale, localeEnding,
                              event.getUser().getFormattedName());
         }
     }
@@ -625,14 +625,14 @@ public class BaseGameListener extends BaseGameStateListener {
 
         Material blockType = event.getBlock().getType();
         if (blockType != Material.OBSIDIAN && blockType != Material.SPONGE && blockType != Material.COAL_ORE) {
-            Config goldShared = event.getUserGameGroup().getSharedObject(goldSharedConfig);
+            Config goldShared = event.getGameGroup().getSharedObject(goldSharedConfig);
             GoldConfig gold = getGoldConfig(goldShared);
 
-            gold.onBlockBreak(event.getBlock(), event.getUserGameGroup());
+            gold.onBlockBreak(event.getBlock(), event.getGameGroup());
             return;
         }
 
-        BuildingController controller = BuildingController.getOrCreate(event.getUserGameGroup());
+        BuildingController controller = BuildingController.getOrCreate(event.getGameGroup());
         Building building = controller.getBuilding(event.getBlock().getLocation());
 
         if (building == null) return;
@@ -645,9 +645,9 @@ public class BaseGameListener extends BaseGameStateListener {
             event.setCancelled(true);
         } else {
             if(blockType == Material.OBSIDIAN) {
-                event.getUserGameGroup().sendLocale(buildingDestroyedLocale, event.getUser().getFormattedName(),
-                                                    building.getBuildingName(), building.getTeamIdentifier().getFormattedName());
-                event.getUserGameGroup().doInFuture(task -> building.explode(), buildingDestroyWait);
+                event.getGameGroup().sendLocale(buildingDestroyedLocale, event.getUser().getFormattedName(),
+                                                building.getBuildingName(), building.getTeamIdentifier().getFormattedName());
+                event.getGameGroup().doInFuture(task -> building.explode(), buildingDestroyWait);
             } else {
                 building.remove();
             }
@@ -661,7 +661,7 @@ public class BaseGameListener extends BaseGameStateListener {
             return;
         }
 
-        GoldConfig goldConfig = getGoldConfig(event.getUserGameGroup().getSharedObject(goldSharedConfig));
+        GoldConfig goldConfig = getGoldConfig(event.getGameGroup().getSharedObject(goldSharedConfig));
         Material material = event.getItem().getItemStack().getType();
 
         event.setCancelled(true);
@@ -699,14 +699,14 @@ public class BaseGameListener extends BaseGameStateListener {
 
         boolean instaBuild = InventoryUtils.loreContainsLine(event.getItemPlaced(), "Instabuild");
 
-        if (buildingType == null || event.getUserGameGroup().getSchematic(buildingType) == null) {
+        if (buildingType == null || event.getGameGroup().getSchematic(buildingType) == null) {
             event.getUser().sendLocale(unknownBuildingLocale);
             return;
         }
 
         int rotation = Facing.getFacing(event.getUser().getLocation().getYaw());
 
-        BuildingController controller = BuildingController.getOrCreate(event.getUserGameGroup());
+        BuildingController controller = BuildingController.getOrCreate(event.getGameGroup());
 
         if (controller.buildBuilding(buildingType, event.getUser().getTeamIdentifier(), event.getBlock().getLocation(),
                                       rotation, instaBuild, false) == null) {

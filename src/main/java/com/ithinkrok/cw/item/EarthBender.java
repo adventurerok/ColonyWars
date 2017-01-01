@@ -83,7 +83,7 @@ public class EarthBender implements CustomListener {
 
         List<FallingBlock> fallingBlockList = new ArrayList<>();
 
-        BuildingController controller = BuildingController.getOrCreate(event.getUserGameGroup());
+        BuildingController controller = BuildingController.getOrCreate(event.getGameGroup());
 
         for (int y = -3; y <= 3; ++y) {
             int ys = y * y;

@@ -59,12 +59,12 @@ public class BuildingBuyable extends ItemBuyable {
         String displayLore = event.getUser().getLanguageLookup().getLocale(displayLoreLocale, buildingName);
         display = InventoryUtils.addLore(display, displayLore);
 
-        Schematic schem = event.getUserGameGroup().getSchematic(buildingName);
+        Schematic schem = event.getGameGroup().getSchematic(buildingName);
 
         List<String> useful = schem.getConfig().getStringList("useful_for");
 
         if(!useful.isEmpty()) {
-            StringBuilder usefulMessage = new StringBuilder(event.getUserGameGroup().getLocale(usefulForLocale));
+            StringBuilder usefulMessage = new StringBuilder(event.getGameGroup().getLocale(usefulForLocale));
             usefulMessage.append(' ');
 
             boolean addComma = false;
@@ -72,7 +72,7 @@ public class BuildingBuyable extends ItemBuyable {
             for(String kitName : useful) {
                 if(!addComma) addComma = true;
                 else {
-                    usefulMessage.append(event.getUserGameGroup().getLocale(usefulCommaLocale)).append(' ');
+                    usefulMessage.append(event.getGameGroup().getLocale(usefulCommaLocale)).append(' ');
                 }
 
                 boolean hasKit = event.getUser().getTeam().hasPlayerOfKit(kitName);
@@ -83,7 +83,7 @@ public class BuildingBuyable extends ItemBuyable {
                     usefulMessage.append(ChatColor.RED);
                 }
 
-                Kit kit = event.getUserGameGroup().getKit(kitName);
+                Kit kit = event.getGameGroup().getKit(kitName);
                 usefulMessage.append(kit.getFormattedName());
             }
 

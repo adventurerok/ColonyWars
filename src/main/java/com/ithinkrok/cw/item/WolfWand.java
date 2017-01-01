@@ -21,7 +21,7 @@ public class WolfWand implements CustomListener {
         BlockFace face = event.getBlockFace();
         target = target.clone().add(face.getModX(), face.getModY(), face.getModZ());
 
-        Wolf wolf = (Wolf) event.getUserGameGroup().getCurrentMap().spawnEntity(target, EntityType.WOLF);
+        Wolf wolf = (Wolf) event.getGameGroup().getCurrentMap().spawnEntity(target, EntityType.WOLF);
         wolf.setCollarColor(event.getUser().getTeamIdentifier().getDyeColor());
         wolf.setOwner(event.getUser().getPlayer());
         wolf.setHealth(wolf.getMaxHealth());

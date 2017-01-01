@@ -33,7 +33,7 @@ public class BuildingUpgrade extends BuildingBuyable {
 
         Location buildingLoc = event.getUser().getInventoryTether();
 
-        BuildingController controller = BuildingController.getOrCreate(event.getUserGameGroup());
+        BuildingController controller = BuildingController.getOrCreate(event.getGameGroup());
 
         Building old = controller.getBuilding(buildingLoc);
 

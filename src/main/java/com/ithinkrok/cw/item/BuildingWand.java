@@ -44,7 +44,7 @@ public class BuildingWand implements CustomListener {
         BlockFace face = event.getBlockFace();
         target = target.clone().add(face.getModX(), face.getModY(), face.getModZ());
 
-        BuildingController controller = BuildingController.getOrCreate(event.getUserGameGroup());
+        BuildingController controller = BuildingController.getOrCreate(event.getGameGroup());
 
         Building building =
                 controller.buildBuilding(buildingType, event.getUser().getTeamIdentifier(), target, 0, false, false);
@@ -53,12 +53,12 @@ public class BuildingWand implements CustomListener {
 
             int removeTicks = (int) (removeTime.calculate(event.getUser().getUserVariables()) * 20);
             if(removeTicks > 0) {
-                GameTask task = event.getUserGameGroup().doInFuture(t -> {
+                GameTask task = event.getGameGroup().doInFuture(t -> {
                    building.remove();
                 }, removeTicks);
 
-                event.getUserGameGroup().bindTaskToCurrentGameState(task);
-                event.getUserGameGroup().bindTaskToCurrentMap(task);
+                event.getGameGroup().bindTaskToCurrentGameState(task);
+                event.getGameGroup().bindTaskToCurrentMap(task);
             }
         } else {
             event.getUser().showAboveHotbarLocale(buildFailLocale);

@@ -34,7 +34,7 @@ public class TeamCompass implements CustomListener {
     public void onUserInteract(UserInteractEvent event) {
         Location currentLoc = event.getUser().getCompassTarget();
 
-        Collection<TeamIdentifier> teamIdentifiers = event.getUserGameGroup().getTeamIdentifiers();
+        Collection<TeamIdentifier> teamIdentifiers = event.getGameGroup().getTeamIdentifiers();
 
         TeamIdentifier nextIdentifier = teamIdentifiers.iterator().next();
         boolean found = false;
@@ -45,7 +45,7 @@ public class TeamCompass implements CustomListener {
                 break;
             }
 
-            Team team = event.getUserGameGroup().getTeam(identifier);
+            Team team = event.getGameGroup().getTeam(identifier);
             if(team.getUsers().isEmpty()) continue;
 
             CWTeamStats teamStats = CWTeamStats.getOrCreate(team);
@@ -56,7 +56,7 @@ public class TeamCompass implements CustomListener {
             }
         }
 
-        Team nextTeam = event.getUserGameGroup().getTeam(nextIdentifier);
+        Team nextTeam = event.getGameGroup().getTeam(nextIdentifier);
         CWTeamStats nextStats = CWTeamStats.getOrCreate(nextTeam);
 
         event.getUser().setCompassTarget(nextStats.getBaseLocation());

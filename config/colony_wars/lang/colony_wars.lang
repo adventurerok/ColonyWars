@@ -9,6 +9,7 @@ countdowns.showdown.minutes=&6&lShowdown starts in %s minutes!
 countdowns.showdown.seconds=&6&lShowdown starts in %s seconds!
 countdowns.showdown.final=&6&lShowdown starts in %s seconds!
 countdowns.showdown.now=&6&lShowdown starts NOW!
+countdowns.showdown.title=&6Prepare to Fight!
 
 scoreboard.title=Colony Wars
 scoreboard.user_balance=&eBalance\:

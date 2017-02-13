@@ -13,6 +13,9 @@ import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.Objects;
 
 /**
  * Created by paul on 15/01/16.
@@ -34,7 +37,13 @@ public class TeamCompass implements CustomListener {
     public void onUserInteract(UserInteractEvent event) {
         Location currentLoc = event.getUser().getCompassTarget();
 
-        Collection<TeamIdentifier> teamIdentifiers = event.getGameGroup().getTeamIdentifiers();
+        Collection<TeamIdentifier> teamIdentifiers = new LinkedList<>(event.getGameGroup().getTeamIdentifiers());
+
+        teamIdentifiers.removeIf(teamIdentifier -> {
+           CWTeamStats teamStats = CWTeamStats.getOrCreate(event.getGameGroup().getTeam(teamIdentifier));
+
+            return teamStats == null || teamStats.getBaseLocation() == null;
+        });
 
         TeamIdentifier nextIdentifier = teamIdentifiers.iterator().next();
         boolean found = false;

@@ -30,7 +30,8 @@ import java.util.HashMap;
 /**
  * Created by paul on 08/01/16.
  */
-public class BuildingController extends Metadata implements CustomListener, LocationChecker, SchematicPaster.BoundsChecker {
+public class BuildingController extends Metadata
+        implements CustomListener, LocationChecker, SchematicPaster.BoundsChecker {
 
     private final GameGroup gameGroup;
 
@@ -71,12 +72,12 @@ public class BuildingController extends Metadata implements CustomListener, Loca
     }
 
     public Building buildBuilding(String name, TeamIdentifier team, Location location, int rotation, boolean instant,
-                             boolean force) {
+                                  boolean force) {
         return buildBuilding(name, team, location, rotation, instant, force, -1);
     }
 
     public Building buildBuilding(String name, TeamIdentifier team, Location location, int rotation, boolean instant,
-                                 boolean force, int speed) {
+                                  boolean force, int speed) {
         Schematic schem = gameGroup.getSchematic(name);
 
         SchematicOptions options = createSchematicOptions(team, instant, speed, schem);
@@ -86,8 +87,8 @@ public class BuildingController extends Metadata implements CustomListener, Loca
         //No bounds checker means the check automatically passes
         SchematicPaster.BoundsChecker boundsChecker = force ? null : this;
 
-        PastedSchematic pasted =
-                SchematicPaster.buildSchematic(schem, map, location, boundsChecker, gameGroup, gameGroup, rotation, options);
+        PastedSchematic pasted = SchematicPaster
+                .buildSchematic(schem, map, location, boundsChecker, gameGroup, gameGroup, rotation, options);
 
         if (pasted == null) return null;
 
@@ -101,9 +102,9 @@ public class BuildingController extends Metadata implements CustomListener, Loca
         SchematicOptions options = new SchematicOptions(gameGroup.getSharedObject("schematic_options"));
         options.withOverrideDyeColor(team.getDyeColor());
         options.withMapBoundsCheck(false); //we do our own Map bounds check
-        if(speed > 0) options.withBuildSpeed(speed);
+        if (speed > 0) options.withBuildSpeed(speed);
 
-        if(schem.getConfig() != null && schem.getConfig().contains("center_block")) {
+        if (schem.getConfig() != null && schem.getConfig().contains("center_block")) {
             options.withCenterBlockType(Material.matchMaterial(schem.getConfig().getString("center_block")));
         }
 
@@ -150,7 +151,7 @@ public class BuildingController extends Metadata implements CustomListener, Loca
         Building building = buildings.get(event.getSchematic());
         if (building == null || building.getCenterBlock() == null) return;
 
-        if(building.getConfig() == null || building.getConfig().getBoolean("hologram", true)) {
+        if (building.getConfig() == null || building.getConfig().getBoolean("hologram", true)) {
 
             gameGroup.doInFuture(task -> {
                 Location holo1 = building.getCenterBlock().clone().add(0.5d, 1.8d, 0.5d);
@@ -178,13 +179,20 @@ public class BuildingController extends Metadata implements CustomListener, Loca
         Building building = buildings.remove(event.getSchematic());
         buildingCentres.values().remove(building);
 
+        if(building == null){
+            System.out.println("Null building destroyed of Type" + event.getSchematic().getName());
+            return;
+        }
+
         getTeamBuildingStats(building).buildingRemoved(building);
     }
 
-    @Override
+
     /**
      * Checks if the location is part of a building
-     */ public boolean check(Location loc) {
+     */
+    @Override
+    public boolean check(Location loc) {
         return gameGroup.getCurrentMap().canPaste(new BoundingBox(loc.toVector(), loc.toVector()));
     }
 

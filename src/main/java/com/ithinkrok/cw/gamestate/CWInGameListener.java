@@ -55,7 +55,7 @@ import java.util.stream.Collectors;
 /**
  * Created by paul on 16/01/16.
  */
-public class BaseGameListener extends SimpleInGameListener {
+public class CWInGameListener extends SimpleInGameListener {
 
     private static final Map<PotionEffectType, Boolean> GOOD_POTIONS = new HashMap<>();
 

@@ -4,7 +4,6 @@ import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.cw.metadata.ShowdownArena;
 import com.ithinkrok.minigames.api.GameGroup;
 import com.ithinkrok.minigames.api.event.game.GameStateChangedEvent;
-import com.ithinkrok.minigames.api.event.user.game.UserTeleportEvent;
 import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.util.event.CustomEventHandler;
 import org.bukkit.Location;
@@ -12,7 +11,7 @@ import org.bukkit.Location;
 /**
  * Created by paul on 16/01/16.
  */
-public class ShowdownListener extends BaseGameListener {
+public class CWShowdownInGameListener extends CWInGameListener {
 
 
     @Override

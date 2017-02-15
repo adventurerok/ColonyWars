@@ -137,7 +137,7 @@ game_states:
   game:
     listeners:
       setup:
-        class: "com.ithinkrok.cw.gamestate.GameListener"
+        class: "com.ithinkrok.cw.gamestate.CWGameStartListener"
         config:
           map_voting:
             random_map: "random"
@@ -174,7 +174,7 @@ game_states:
               - name: "pickaxe"
                 slot: 0
       main:
-        class: "com.ithinkrok.cw.gamestate.BaseGameListener"
+        class: "com.ithinkrok.cw.gamestate.CWInGameListener"
         config: &base_game_config
           gold_shared_object: "gold_config"
           buildings:
@@ -193,7 +193,7 @@ game_states:
   showdown:
     listeners:
       main:
-        class: "com.ithinkrok.cw.gamestate.ShowdownListener"
+        class: "com.ithinkrok.cw.gamestate.CWShowdownInGameListener"
         config: *base_game_config
   aftermath:
     listeners:

@@ -15,7 +15,7 @@ import org.bukkit.GameMode;
 /**
  * Created by paul on 05/01/16.
  */
-public class GameListener extends SimpleGameStartListener {
+public class CWGameStartListener extends SimpleGameStartListener {
 
     @CustomEventHandler
     public void onUserRejoin(CWCommand.UserRejoinEvent event) {

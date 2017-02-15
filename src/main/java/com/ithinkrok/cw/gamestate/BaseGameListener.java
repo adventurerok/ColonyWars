@@ -6,6 +6,7 @@ import com.ithinkrok.cw.metadata.*;
 import com.ithinkrok.minigames.api.GameGroup;
 import com.ithinkrok.minigames.api.GameState;
 import com.ithinkrok.minigames.api.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.api.event.MinigamesCommandEvent;
 import com.ithinkrok.minigames.api.event.game.CountdownFinishedEvent;
 import com.ithinkrok.minigames.api.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.api.event.map.*;
@@ -24,6 +25,7 @@ import com.ithinkrok.minigames.api.team.TeamIdentifier;
 import com.ithinkrok.minigames.api.user.UserVariableHandler;
 import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.api.util.*;
+import com.ithinkrok.minigames.util.gamestate.SimpleInGameListener;
 import com.ithinkrok.util.math.Calculator;
 import com.ithinkrok.util.math.ExpressionCalculator;
 import com.ithinkrok.util.math.SingleValueVariables;
@@ -39,6 +41,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -52,7 +55,7 @@ import java.util.stream.Collectors;
 /**
  * Created by paul on 16/01/16.
  */
-public class BaseGameListener extends BaseGameStateListener {
+public class BaseGameListener extends SimpleInGameListener {
 
     private static final Map<PotionEffectType, Boolean> GOOD_POTIONS = new HashMap<>();
 
@@ -84,6 +87,7 @@ public class BaseGameListener extends BaseGameStateListener {
     private final WeakHashMap<Config, GoldConfig> goldConfigMap = new WeakHashMap<>();
 
     protected String showdownGameState;
+    protected Random random = new Random();
     private String goldSharedConfig;
     private String unknownBuildingLocale;
     private String cannotBuildHereLocale;
@@ -735,6 +739,39 @@ public class BaseGameListener extends BaseGameStateListener {
         event.getGameGroup().changeGameState(showdownGameState);
 
         updateMotd(event.getGameGroup());
+    }
+
+    @CustomEventHandler
+    public void onUserDropItem(UserDropItemEvent event) {
+        ItemStack itemStack = event.getItem().getItemStack();
+        if (InventoryUtils.getIdentifier(itemStack) == -1) {
+            //If the user is in a team and the dropped item was a building, remove it from the team count
+            if (itemStack != null && event.getUser().getTeam() != null && itemStack.getType() == Material.LAPIS_ORE) {
+                CWTeamStats teamStats = CWTeamStats.getOrCreate(event.getUser().getTeam());
+
+                teamStats.addBuildingInventoryCount(itemStack.getItemMeta().getDisplayName(), -itemStack.getAmount());
+            }
+
+            return;
+        }
+
+        event.setCancelled(true);
+    }
+
+    @CustomEventHandler
+    public void onCommand(MinigamesCommandEvent event) {
+        switch (event.getCommand().getCommand().toLowerCase()) {
+            case "kill":
+            case "suicide":
+                event.setHandled(true);
+        }
+    }
+
+    @CustomEventHandler
+    public void onCreatureSpawn(MapCreatureSpawnEvent event) {
+        if (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) return;
+
+        event.setCancelled(true);
     }
 
     protected static class GoldConfig {

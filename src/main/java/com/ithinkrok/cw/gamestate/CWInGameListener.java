@@ -133,13 +133,27 @@ public class CWInGameListener extends SimpleInGameListener {
 
     @CustomEventHandler
     public void onUserChat(UserChatEvent event) {
-        if (event.getUser().isInGame()) {
-            String kitName = event.getUser().getKitName().toUpperCase();
-            String teamColor = event.getUser().getTeamIdentifier().getChatColor().toString();
+        User user = event.getUser();
 
-            event.setFormat(
-                    teamColor + "<" + ChatColor.DARK_GRAY + "[" + ChatColor.GRAY + kitName + ChatColor.DARK_GRAY +
-                            "] %s" + teamColor + "> " + ChatColor.WHITE + "%s");
+        if (user.isInGame()) {
+            boolean isTeamChat = true;
+
+            for (User other : event.getRecipients()) {
+                if (other.isInGame() && !Objects.equals(other.getTeamIdentifier(), user.getTeamIdentifier())) {
+                    isTeamChat = false;
+                    break;
+                }
+            }
+
+            String kitName = user.getKitName().toUpperCase();
+            String teamColor = user.getTeamIdentifier().getChatColor().toString();
+
+            String kitFormat = "";
+            if (isTeamChat) {
+                kitFormat = ChatColor.DARK_GRAY + "[" + ChatColor.GRAY + kitName + ChatColor.DARK_GRAY + "] ";
+            }
+
+            event.setFormat(teamColor + "<" + kitFormat + "%s" + teamColor + "> " + ChatColor.WHITE + "%s");
         } else {
             event.setFormat(ChatColor.LIGHT_PURPLE + "<" + ChatColor.GRAY + "%s" + ChatColor.LIGHT_PURPLE + "> " +
                                     ChatColor.WHITE + "%s");
@@ -254,7 +268,7 @@ public class CWInGameListener extends SimpleInGameListener {
             updateMotd(event.getGameGroup());
         });
 
-        if(event.getNewGameState().getName().equals("game")) {
+        if (event.getNewGameState().getName().equals("game")) {
             gameStartTime = Instant.now();
         }
     }
@@ -423,8 +437,8 @@ public class CWInGameListener extends SimpleInGameListener {
                                  event.getUser().getFormattedName(), event.getKillerUser().getFormattedName());
             }
         } else if (event.hasAssistUser()) {
-            sendDeathMessage(event.getGameGroup(), deathAssistLocale, localeEnding,
-                             event.getUser().getFormattedName(), event.getAssistUser().getFormattedName());
+            sendDeathMessage(event.getGameGroup(), deathAssistLocale, localeEnding, event.getUser().getFormattedName(),
+                             event.getAssistUser().getFormattedName());
         } else {
             sendDeathMessage(event.getGameGroup(), deathNaturalLocale, localeEnding,
                              event.getUser().getFormattedName());
@@ -559,8 +573,8 @@ public class CWInGameListener extends SimpleInGameListener {
         if (gameGroup.hasActiveCountdown(showdownCountdown.getName())) return;
 
         //Make sure at least minShowdownMinutes have passed
-        if(gameStartTime != null && Instant.now().minus(minShowdownMinutes, ChronoUnit.MINUTES).isBefore
-                (gameStartTime)) {
+        if (gameStartTime != null &&
+                Instant.now().minus(minShowdownMinutes, ChronoUnit.MINUTES).isBefore(gameStartTime)) {
             return;
         }
 
@@ -596,7 +610,7 @@ public class CWInGameListener extends SimpleInGameListener {
             potionTeam = event.getThrowerUser().getTeamIdentifier();
         } else {
             Team team = EntityUtils.getRepresentingTeam(event.getGameGroup(), event.getPotion());
-            if(team != null) {
+            if (team != null) {
                 potionTeam = team.getTeamIdentifier();
             } else return;
         }
@@ -648,9 +662,10 @@ public class CWInGameListener extends SimpleInGameListener {
             event.getUser().sendLocale(cannotDestroyLocale, building.getBuildingName());
             event.setCancelled(true);
         } else {
-            if(blockType == Material.OBSIDIAN) {
+            if (blockType == Material.OBSIDIAN) {
                 event.getGameGroup().sendLocale(buildingDestroyedLocale, event.getUser().getFormattedName(),
-                                                building.getBuildingName(), building.getTeamIdentifier().getFormattedName());
+                                                building.getBuildingName(),
+                                                building.getTeamIdentifier().getFormattedName());
                 event.getGameGroup().doInFuture(task -> building.explode(), buildingDestroyWait);
             } else {
                 building.remove();
@@ -713,7 +728,7 @@ public class CWInGameListener extends SimpleInGameListener {
         BuildingController controller = BuildingController.getOrCreate(event.getGameGroup());
 
         if (controller.buildBuilding(buildingType, event.getUser().getTeamIdentifier(), event.getBlock().getLocation(),
-                                      rotation, instaBuild, false) == null) {
+                                     rotation, instaBuild, false) == null) {
             event.getUser().sendLocale(cannotBuildHereLocale);
             event.setCancelled(true);
         } else {

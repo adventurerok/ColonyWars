@@ -112,7 +112,7 @@ game_states:
   lobby:
     listeners:
       main:
-        class: "com.ithinkrok.cw.gamestate.LobbyListener"
+        class: "com.ithinkrok.minigames.util.gamestate.SimpleLobbyListener"
         config:
           start_countdown:
             name: "start"
@@ -186,8 +186,6 @@ game_states:
         config: *base_game_config
   aftermath:
     listeners:
-      main:
-        class: "com.ithinkrok.cw.gamestate.BaseGameStateListener"
       aftermath:
         class: "com.ithinkrok.minigames.util.gamestate.SimpleAftermathListener"
 

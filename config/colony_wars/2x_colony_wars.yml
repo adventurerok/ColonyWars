@@ -117,7 +117,7 @@ game_states:
           start_countdown:
             name: "start"
             locale_stub: "countdowns.start"
-            min_players: 4
+            min_players: 2
             needs_more_players_locale: "countdowns.start.needs_more_players"
             seconds: 181
 

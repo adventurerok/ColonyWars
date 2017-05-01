@@ -16,6 +16,7 @@ maps:
   oasis: "colony_wars/maps/oasis.yml"
   snow_hills: "colony_wars/maps/snow_hills.yml"
   fort: "colony_wars/maps/fort.yml"
+  slavic: "colony_wars/maps/slavic.yml"
 
 # Specifies identifiers for teams to be created
 team_identifiers:
@@ -85,6 +86,7 @@ shared_objects:
       - "12canyon"
       - "mesa"
       - "fort"
+      - "slavic"
       - "random"
   schematic_options:
     progress_hologram: true

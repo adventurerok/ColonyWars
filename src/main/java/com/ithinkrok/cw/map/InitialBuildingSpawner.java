@@ -42,7 +42,8 @@ public class InitialBuildingSpawner implements CustomListener {
             TeamIdentifier identifier = event.getGameGroup().getTeamIdentifier(building.teamName);
             if(identifier == null) continue;
 
-            controller.buildBuilding(building.buildingName, identifier, loc, building.rotation, true, true);
+            controller.buildBuilding(building.buildingName, identifier, loc, building.rotation, building.instant,
+                                     true, building.speed);
         }
     }
 
@@ -51,12 +52,16 @@ public class InitialBuildingSpawner implements CustomListener {
         private final String teamName;
         private final String buildingName;
         private final int rotation;
+        private final boolean instant;
+        private final int speed;
 
         public InitialBuilding(Config config) {
             location = BukkitConfigUtils.getVector(config, "location");
             teamName = config.getString("team");
             buildingName = config.getString("building");
             rotation = config.getInt("rotation", 0);
+            instant = config.getBoolean("instant", false);
+            speed = config.getInt("speed", 5);
         }
     }
 }

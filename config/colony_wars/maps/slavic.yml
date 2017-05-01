@@ -60,3 +60,222 @@ listeners:
             x: 148
             y: 41
             z: 149
+
+schematics:
+  Base:
+    file: "colony_wars/schematics/slavic_base.schematic"
+    rotation: 0
+    offset:
+      x: 0
+      y: 1
+      z: 0
+    config:
+      base: true
+      protected: true
+      shop:
+        - class: "com.ithinkrok.cw.inventory.BuildingBuyable"
+          config:
+            building_name: "Farm"
+            cost: 2000
+            team: true
+        - class: "com.ithinkrok.cw.inventory.BuildingBuyableWith"
+          config:
+            building_name: "Lumbermill"
+            cost: 2000
+            team: true
+            with_buildings:
+              - "Farm"
+        - class: "com.ithinkrok.cw.inventory.BuildingBuyableWith"
+          config:
+            building_name: "Blacksmith"
+            cost: 4000
+            team: true
+            with_buildings:
+              - "Farm"
+        - class: "com.ithinkrok.cw.inventory.BuildingBuyableWith"
+          config:
+            building_name: "MageTower"
+            cost: "4000"
+            team: true
+            with_buildings:
+              - "Farm"
+        - class: "com.ithinkrok.cw.inventory.BuildingBuyableWith"
+          config:
+            building_name: "Church"
+            cost: "4000+1000*(@buildings#Church+@buildings#Cathedral)"
+            team: true
+            with_buildings:
+              - "Farm"
+        - class: "com.ithinkrok.cw.inventory.BuildingBuyableWith"
+          config:
+            building_name: "Greenhouse"
+            cost: 2000
+            team: true
+            with_buildings:
+              - "Farm"
+
+  Farm:
+    file: "colony_wars/schematics/slavic_farm.schematic"
+    rotation: 2
+    offset:
+      x: 0
+      y: 0
+      z: 0
+    config:
+      shop:
+        - class: "com.ithinkrok.minigames.util.inventory.ItemBuyable"
+          config:
+            item: "POTATO_ITEM,5"
+            cost: 15
+        - class: "com.ithinkrok.minigames.util.inventory.ItemBuyable"
+          config:
+            item: "COOKIE,10"
+            cost: 20
+        - class: "com.ithinkrok.minigames.util.inventory.ItemBuyable"
+          config:
+            item: "RAW_BEEF,5"
+            cost: 30
+        - class: "com.ithinkrok.minigames.util.inventory.ItemBuyable"
+          config:
+            item: "BAKED_POTATO,10"
+            cost: 60
+        - class: "com.ithinkrok.minigames.util.inventory.ItemBuyable"
+          config:
+            item: "COOKED_BEEF,10"
+            cost: 100
+        - class: "com.ithinkrok.minigames.util.inventory.ItemBuyable"
+          config:
+            item: "GOLDEN_APPLE,1"
+            cost: 125
+
+  Lumbermill:
+    file: "colony_wars/schematics/slavic_lumbermill.schematic"
+    rotation: 2
+    config:
+      useful_for:
+        - "scout"
+        - "peasant"
+        - "archer"
+
+  Blacksmith:
+    file: "colony_wars/schematics/slavic_blacksmith.schematic"
+    rotation: 2
+    config:
+      useful_for:
+        - "general"
+        - "warrior"
+        - "inferno"
+        - "engineer"
+      shop:
+        - class: "com.ithinkrok.cw.inventory.BuildingBuyable"
+          config:
+            building_name: "ScoutTower"
+            cost: "2000*floor(pow(1.5, (@buildings#ScoutTower+@buildings#CannonTower)))"
+            team: true
+        - class: "com.ithinkrok.cw.inventory.BuildingBuyable"
+          config:
+            building_name: "Wall"
+            amount: 16
+            cost: 1600
+            team: true
+        - class: "com.ithinkrok.cw.inventory.BuildingBuyable"
+          config:
+            building_name: "Landmine"
+            amount: 5
+            cost: 1000
+            team: true
+
+  MageTower:
+    file: "colony_wars/schematics/slavic_magetower.schematic"
+    rotation: 2
+    config:
+      useful_for:
+        - "scout"
+        - "cloaker"
+        - "dark_knight"
+        - "mage"
+        - "inferno"
+        - "vampire"
+        - "engineer"
+
+  Church:
+    file: "colony_wars/schematics/slavic_church.schematic"
+    floor_offset: -1
+    rotation: 1
+    upgrades:
+      - "Cathedral"
+    config:
+      revival_rate: 30
+      shop:
+        - class: "com.ithinkrok.cw.inventory.BuildingUpgrade"
+          config:
+            building_name: "Cathedral"
+            cost: 8000
+            team: true
+        - class: "com.ithinkrok.minigames.util.inventory.ItemBuyable"
+          config:
+            item: "POTION,32,16389"
+            cost: 1250
+
+  Cathedral:
+    file: "colony_wars/schematics/slavic_cathedral.schematic"
+    offset:
+      x: 0
+      y: 0
+      z: 0
+    floor_offset: -1
+    rotation: 1
+    config:
+      revival_rate: 75
+      shop:
+        - class: "com.ithinkrok.minigames.util.inventory.ItemBuyable"
+          config:
+            item: "POTION,32,16389"
+            cost: 500
+        - class: "com.ithinkrok.minigames.util.inventory.ItemBuyable"
+          config:
+            item: "POTION,64,16389"
+            cost: 1100
+        - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+          config:
+            upgrade_name: "team_compass"
+            upgrade_display_locale: "team_compass.upgrade"
+            max_level: 1
+            cost: 1000
+            upgrade_item: "team_compass"
+
+  Greenhouse:
+    file: "colony_wars/schematics/slavic_greenhouse.schematic"
+    rotation: 0
+    config:
+      shop:
+        - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+          config:
+            upgrade_name: "axe"
+            upgrade_display_locale: "mighty_axe.upgrade"
+            max_level: 1
+            cost: 1600
+            upgrade_item: "mighty_axe"
+
+  ScoutTower:
+    file: "colony_wars/schematics/slavic_scouttower.schematic"
+    rotation: 2
+    upgrades:
+      - "CannonTower"
+    config:
+      shop:
+        - class: "com.ithinkrok.cw.inventory.BuildingUpgrade"
+          config:
+            building_name: "CannonTower"
+            cost: "2000*floor(pow(1.5, (@buildings#CannonTower)))"
+            team: true
+
+  CannonTower:
+    file: "colony_wars/schematics/slavic_cannontower.schematic"
+    rotation: 2
+    config:
+      cannons: true
+
+  Wall:
+    file: "colony_wars/schematics/slavic_wall.schematic"
+    rotation: 0

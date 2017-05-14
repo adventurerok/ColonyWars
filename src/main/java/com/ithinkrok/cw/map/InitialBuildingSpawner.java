@@ -61,7 +61,7 @@ public class InitialBuildingSpawner implements CustomListener {
             buildingName = config.getString("building");
             rotation = config.getInt("rotation", 0);
             instant = config.getBoolean("instant", false);
-            speed = config.getInt("speed", 5);
+            speed = config.getInt("speed", 15);
         }
     }
 }

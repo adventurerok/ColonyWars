@@ -298,11 +298,6 @@ public class CWInGameListener extends SimpleInGameListener {
     }
 
     @CustomEventHandler
-    public void onUserFoodLevelChange(UserFoodLevelChangeEvent event) {
-        if (!event.getUser().isInGame()) event.setCancelled(true);
-    }
-
-    @CustomEventHandler
     public void onUserInteractWorld(UserInteractWorldEvent event) {
         if (!event.getUser().isInGame()) {
             event.setCancelled(true);

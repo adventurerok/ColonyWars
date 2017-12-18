@@ -110,6 +110,7 @@ shared_objects:
       fly_speed: 0.1
       walk_speed: 0.2
       max_hit_delay: 0.7
+    use_new_combat: false
   showdown_metadata:
     min_radius: 5
     shrink_start_time: 180

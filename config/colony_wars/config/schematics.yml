@@ -211,7 +211,7 @@ schematics:
             team: true
         - class: "com.ithinkrok.minigames.util.inventory.ItemBuyable"
           config:
-            item: "SPLASH_POTION,32: INSTANT_HEAL"
+            item: "SPLASH_POTION,32: HEAL"
             cost: 1250
   Cathedral:
     file: "colony_wars/schematics/nordic_cathedral.schematic"
@@ -226,11 +226,11 @@ schematics:
       shop:
         - class: "com.ithinkrok.minigames.util.inventory.ItemBuyable"
           config:
-            item: "SPLASH_POTION,32: INSTANT_HEAL"
+            item: "SPLASH_POTION,32: HEAL"
             cost: 500
         - class: "com.ithinkrok.minigames.util.inventory.ItemBuyable"
           config:
-            item: "SPLASH_POTION,64: INSTANT_HEAL"
+            item: "SPLASH_POTION,64: HEAL"
             cost: 1100
         - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
           config:

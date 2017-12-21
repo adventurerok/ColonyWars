@@ -9,6 +9,7 @@ import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;
 
 import java.text.DecimalFormat;
+import java.util.UUID;
 
 /**
  * Created by paul on 17/01/16.
@@ -37,7 +38,7 @@ public class StatsCommand implements CustomListener {
             if(category.equals("total") || category.equals(statsHolder.getLastKit()) || category.equals(statsHolder
                     .getLastTeam())) {
                 add = statsHolder.getStatsChanges();
-            } else add = new UserCategoryStats();
+            } else add = new UserCategoryStats(new UUID(0, 0).toString(), "none");
             
             sender.sendLocale("command.stats.category", category);
 

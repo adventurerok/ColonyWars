@@ -193,8 +193,8 @@ public class UserCategoryStats implements DatabaseObject {
                      "INSERT INTO mccw_stats " +
                              "(player_uuid, category, game_wins, game_losses, kills, deaths, total_money, score, games, " +
                              "name, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW()) ON DUPLICATE KEY UPDATE " +
-                             "game_wins=?, game_losses=?, kills=?, deaths=?, total_money=?, score=?, games=?, version=NOW" +
-                             "();")) {
+                             "game_wins=?, game_losses=?, kills=?, deaths=?, total_money=?, score=?, games=?, name=?," +
+                             " version=NOW();")) {
 
 
             statement.setString(1, playerUUID);

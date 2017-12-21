@@ -259,7 +259,7 @@ public class StatsHolder extends UserMetadata implements Messagable {
         @Override
         public void run(DatabaseAccessor accessor) throws SQLException {
             List<UserCategoryStats> stats =
-                    UserCategoryStats.query(accessor, "WHERE category=? SORT BY score DESC LIMIT " + max, category);
+                    UserCategoryStats.query(accessor, "WHERE category=? ORDER BY score DESC LIMIT " + max, category);
 
             task.run(stats);
         }

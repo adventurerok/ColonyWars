@@ -212,8 +212,6 @@ public class UserCategoryStats implements DatabaseObject {
             }
 
             statement.executeUpdate();
-
-            statement.close();
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.ithinkrok.cw.metadata;
 
-import com.avaje.ebean.Query;
 import com.ithinkrok.cw.database.UserCategoryStats;
 import com.ithinkrok.minigames.api.GameGroup;
 import com.ithinkrok.minigames.api.database.DatabaseAccessor;
@@ -17,6 +16,7 @@ import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.lang.LanguageLookup;
 import com.ithinkrok.util.lang.Messagable;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,16 +26,14 @@ import java.util.UUID;
 public class StatsHolder extends UserMetadata implements Messagable {
 
     private final GameGroup gameGroup;
-    private UserCategoryStats statsChanges = new UserCategoryStats();
     private final String playerName;
-    private User user;
     private final UUID uniqueId;
-
     private final int winScoreModifier;
     private final int lossScoreModifier;
     private final int killScoreModifier;
     private final int deathScoreModifier;
-
+    private UserCategoryStats statsChanges = new UserCategoryStats(new UUID(0, 0).toString(), "none");
+    private User user;
     private String lastKit, lastTeam;
 
     public StatsHolder(User user) {
@@ -51,14 +49,6 @@ public class StatsHolder extends UserMetadata implements Messagable {
         lossScoreModifier = config.getInt("loss_score_modifier", -10);
         killScoreModifier = config.getInt("kill_score_modifier", 10);
         deathScoreModifier = config.getInt("death_score_modifier", -5);
-    }
-
-    private static Query<UserCategoryStats> query(DatabaseAccessor accessor, UUID playerUUID, String category) {
-        Query<UserCategoryStats> query = accessor.find(UserCategoryStats.class);
-
-        query.where().eq("player_uuid", playerUUID.toString()).eq("category", category);
-
-        return query;
     }
 
     public static void getUserCategoryStats(DatabaseTaskRunner taskRunner, UUID uuid, String category, StatsTask task) {
@@ -143,6 +133,21 @@ public class StatsHolder extends UserMetadata implements Messagable {
         else sendLocale("score.loss", -amount);
     }
 
+    @Override
+    public void sendLocale(String locale, Object... args) {
+        if (user != null) user.sendLocale(locale, args);
+    }
+
+    @Override
+    public void sendLocaleNoPrefix(String locale, Object... args) {
+        if (user != null) user.sendLocaleNoPrefix(locale, args);
+    }
+
+    @Override
+    public LanguageLookup getLanguageLookup() {
+        return gameGroup;
+    }
+
     public void addGameLoss() {
         statsChanges.setGameLosses(statsChanges.getGameLosses() + 1);
 
@@ -189,56 +194,45 @@ public class StatsHolder extends UserMetadata implements Messagable {
     }
 
     @Override
-    public String getMessagePrefix() {
-        if(user != null) return user.getMessagePrefix();
-        else return "";
-    }
-
-    @Override
-    public void sendMessageNoPrefix(Config message) {
-        if(user != null) user.sendMessageNoPrefix(message);
-    }
-
-    @Override
     public void sendMessageNoPrefix(String message) {
         if (user != null) user.sendMessageNoPrefix(message);
     }
 
     @Override
-    public void sendLocale(String locale, Object... args) {
-        if (user != null) user.sendLocale(locale, args);
+    public void sendMessageNoPrefix(Config message) {
+        if (user != null) user.sendMessageNoPrefix(message);
     }
 
     @Override
-    public void sendLocaleNoPrefix(String locale, Object... args) {
-        if (user != null) user.sendLocaleNoPrefix(locale, args);
-    }
-
-    @Override
-    public LanguageLookup getLanguageLookup() {
-        return gameGroup;
+    public String getMessagePrefix() {
+        if (user != null) return user.getMessagePrefix();
+        else return "";
     }
 
     public void saveStats() {
         UserCategoryStats changes = statsChanges;
-        statsChanges = new UserCategoryStats();
+        statsChanges = new UserCategoryStats(new UUID(0, 0).toString(), "none");
 
         gameGroup.doDatabaseTask(new StatsGetOrCreate(uniqueId, "total",
-                stats -> {
-                    int newScore = stats.getScore() + changes.getScore();
-                    gameGroup.getDatabase().setUserScore(uniqueId, playerName, gameGroup.getType(), newScore);
+                                                      stats -> {
+                                                          int newScore = stats.getScore() + changes.getScore();
+                                                          gameGroup.getDatabase().setUserScore(uniqueId, playerName,
+                                                                                               gameGroup.getType(),
+                                                                                               newScore);
 
-                    gameGroup.doDatabaseTask(new StatsUpdater(stats, changes));
-                }));
+                                                          gameGroup.doDatabaseTask(new StatsUpdater(stats, changes));
+                                                      }));
 
         if (lastKit != null) {
             gameGroup.doDatabaseTask(new StatsGetOrCreate(uniqueId, lastKit,
-                    stats -> gameGroup.doDatabaseTask(new StatsUpdater(stats, changes))));
+                                                          stats -> gameGroup
+                                                                  .doDatabaseTask(new StatsUpdater(stats, changes))));
         }
 
         if (lastTeam != null) {
             gameGroup.doDatabaseTask(new StatsGetOrCreate(uniqueId, lastTeam,
-                    stats -> gameGroup.doDatabaseTask(new StatsUpdater(stats, changes))));
+                                                          stats -> gameGroup
+                                                                  .doDatabaseTask(new StatsUpdater(stats, changes))));
         }
     }
 
@@ -263,16 +257,11 @@ public class StatsHolder extends UserMetadata implements Messagable {
         }
 
         @Override
-        public void run(DatabaseAccessor accessor) {
-            Query<UserCategoryStats> query =
-                    accessor.find(UserCategoryStats.class);
+        public void run(DatabaseAccessor accessor) throws SQLException {
+            List<UserCategoryStats> stats =
+                    UserCategoryStats.query(accessor, "WHERE category=? SORT BY score DESC LIMIT " + max, category);
 
-            query.where().eq("category", category);
-            query.orderBy("score desc");
-
-            query.setMaxRows(max);
-
-            task.run(query.findList());
+            task.run(stats);
         }
     }
 
@@ -289,10 +278,8 @@ public class StatsHolder extends UserMetadata implements Messagable {
         }
 
         @Override
-        public void run(DatabaseAccessor accessor) {
-            Query<UserCategoryStats> query = query(accessor, uuid, category);
-
-            UserCategoryStats result = query.findUnique();
+        public void run(DatabaseAccessor accessor) throws SQLException {
+            UserCategoryStats result = UserCategoryStats.get(accessor, uuid, category, false);
             task.run(result);
         }
     }
@@ -304,23 +291,9 @@ public class StatsHolder extends UserMetadata implements Messagable {
         }
 
         @Override
-        public void run(DatabaseAccessor accessor) {
-            Query<UserCategoryStats> query = query(accessor, uuid, category);
-
-            UserCategoryStats result = query.findUnique();
-            if (result != null) {
-                task.run(result);
-                return;
-            }
-
-            result = accessor.createEntityBean(UserCategoryStats.class);
-
-            result.setPlayerUUID(uuid);
-            result.setCategory(category);
-
-            accessor.save(result);
-
-            task.run(query.findUnique());
+        public void run(DatabaseAccessor accessor) throws SQLException {
+            UserCategoryStats result = UserCategoryStats.get(accessor, uuid, category, true);
+            task.run(result);
         }
     }
 
@@ -335,7 +308,7 @@ public class StatsHolder extends UserMetadata implements Messagable {
         }
 
         @Override
-        public void run(DatabaseAccessor accessor) {
+        public void run(DatabaseAccessor accessor) throws SQLException {
             target.setName(playerName);
             target.setScore(target.getScore() + changes.getScore());
             target.setKills(target.getKills() + changes.getKills());
@@ -345,7 +318,7 @@ public class StatsHolder extends UserMetadata implements Messagable {
             target.setGameLosses(target.getGameLosses() + changes.getGameLosses());
             target.setTotalMoney(target.getTotalMoney() + changes.getTotalMoney());
 
-            accessor.save(target);
+            target.save(accessor);
         }
     }
 }

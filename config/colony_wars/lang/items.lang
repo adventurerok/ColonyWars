@@ -18,12 +18,6 @@ team_compass.name=Team Compass
 team_compass.upgrade=Team Compass
 team_compass.oriented=Oriented at\: %s Team
 
-player_compass.name=Player Compass
-player_compass.upgrade=Player Compass
-player_compass.locating=Locating closest player...
-player_compass.oriented=Oriented at\: %s
-player_compass.no_player=No One
-
 scout_sword.upgrade.sharpness=Sharpness Upgrade %s
 scout_sword.upgrade.knockback=Knockback Upgrade %s
 

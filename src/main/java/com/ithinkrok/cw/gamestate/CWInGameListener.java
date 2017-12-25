@@ -409,6 +409,7 @@ public class CWInGameListener extends SimpleInGameListener {
 
             diedTeamStats.respawnUser(died);
             died.resetUserStats(false);
+            died.getEntity().setFireTicks(0);
         } else {
             died.getGameGroup().sendLocale(noRespawnLocale, died.getFormattedName());
 

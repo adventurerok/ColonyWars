@@ -156,7 +156,7 @@ public class CWInGameListener extends SimpleInGameListener {
             event.setFormat(teamColor + "<" + kitFormat + "%s" + teamColor + "> " + ChatColor.WHITE + "%s");
         } else {
             event.setFormat(ChatColor.LIGHT_PURPLE + "<" + ChatColor.GRAY + "%s" + ChatColor.LIGHT_PURPLE + "> " +
-                                    ChatColor.WHITE + "%s");
+                            ChatColor.WHITE + "%s");
         }
     }
 
@@ -520,7 +520,8 @@ public class CWInGameListener extends SimpleInGameListener {
 
     @CustomEventHandler
     public void onUserQuit(UserQuitEvent event) {
-        if (event.getReason() != UserQuitEvent.QuitReason.QUIT_SERVER) return;
+        if (event.getReason() != UserQuitEvent.QuitReason.QUIT_SERVER &&
+            event.getReason() != UserQuitEvent.QuitReason.CHANGED_GAMEGROUP) return;
 
         if (event.getUser().isInGame()) {
             event.getUser().becomeEntity(EntityType.ZOMBIE);
@@ -570,7 +571,7 @@ public class CWInGameListener extends SimpleInGameListener {
 
         //Make sure at least minShowdownMinutes have passed
         if (gameStartTime != null &&
-                Instant.now().minus(minShowdownMinutes, ChronoUnit.MINUTES).isBefore(gameStartTime)) {
+            Instant.now().minus(minShowdownMinutes, ChronoUnit.MINUTES).isBefore(gameStartTime)) {
             return;
         }
 

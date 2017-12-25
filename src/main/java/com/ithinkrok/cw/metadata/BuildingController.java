@@ -1,5 +1,6 @@
 package com.ithinkrok.cw.metadata;
 
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.ithinkrok.cw.Building;
 import com.ithinkrok.cw.event.BuildingBuiltEvent;
 import com.ithinkrok.minigames.api.GameGroup;
@@ -16,12 +17,11 @@ import com.ithinkrok.minigames.api.schematic.event.SchematicFinishedEvent;
 import com.ithinkrok.minigames.api.team.Team;
 import com.ithinkrok.minigames.api.team.TeamIdentifier;
 import com.ithinkrok.minigames.api.util.BoundingBox;
+import com.ithinkrok.minigames.api.util.HologramUtils;
 import com.ithinkrok.minigames.api.util.LocationChecker;
 import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.event.CustomEventHandler;
 import com.ithinkrok.util.event.CustomListener;
-import de.inventivegames.hologram.Hologram;
-import de.inventivegames.hologram.HologramAPI;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
@@ -154,16 +154,14 @@ public class BuildingController extends Metadata
         if (building.getConfig() == null || building.getConfig().getBoolean("hologram", true)) {
 
             gameGroup.doInFuture(task -> {
-                Location holo1 = building.getCenterBlock().clone().add(0.5d, 1.8d, 0.5d);
-                Hologram hologram1 =
-                        HologramAPI.createHologram(holo1, gameGroup.getLocale(shopLocale, building.getBuildingName()));
-                hologram1.spawn();
-                building.getSchematic().addHologram(hologram1);
+                Location holoLoc = building.getCenterBlock().clone().add(0.5d, 1.8d, 0.5d);
+                Hologram hologram = HologramUtils.createHologram(holoLoc);
 
-                Location holo2 = building.getCenterBlock().clone().add(0.5d, 1.5d, 0.5d);
-                Hologram hologram2 = HologramAPI.createHologram(holo2, gameGroup.getLocale(shopInfoLocale));
-                hologram2.spawn();
-                building.getSchematic().addHologram(hologram2);
+                hologram.appendTextLine(gameGroup.getLocale(shopLocale, building.getBuildingName()));
+                hologram.appendTextLine(gameGroup.getLocale(shopInfoLocale));
+
+                building.getSchematic().addHologram(hologram);
+
             }, 10);
 
         }

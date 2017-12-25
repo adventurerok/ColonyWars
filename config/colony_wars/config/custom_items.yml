@@ -69,6 +69,8 @@ custom_items:
       team_compass:
         events: ["rightClick"]
         class: "com.ithinkrok.minigames.util.item.PlayerCompass"
+        config:
+          locate_sound: "ENTITY_VEX_CHARGE,0.5,1.4"
   regen_ability:
     display_name_locale: "regen_ability.name"
     material: "CHAINMAIL_HELMET"

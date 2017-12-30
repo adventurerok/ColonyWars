@@ -5,8 +5,10 @@ lang_files:
   - "colony_wars/lang/items.lang"
   - "colony_wars/lang/commands.lang"
 
-additional_configs:
+pre_configs:
   - "global/global.yml"
+
+additional_configs:
   - "colony_wars/config/schematics.yml"
   - "colony_wars/config/custom_items.yml"
   - "colony_wars/config/kits.yml"

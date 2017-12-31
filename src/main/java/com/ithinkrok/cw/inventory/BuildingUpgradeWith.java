@@ -1,6 +1,7 @@
 package com.ithinkrok.cw.inventory;
 
 import com.ithinkrok.cw.metadata.CWTeamStats;
+import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.util.inventory.event.BuyablePurchaseEvent;
 import com.ithinkrok.util.config.Config;
 import org.bukkit.inventory.ItemStack;
@@ -26,9 +27,9 @@ public class BuildingUpgradeWith extends BuildingUpgrade {
     }
 
     @Override
-    public boolean canBuy(BuyablePurchaseEvent event) {
-        if(!super.canBuy(event)) return false;
-        CWTeamStats teamStats = CWTeamStats.getOrCreate(event.getUser().getTeam());
+    public boolean isAvailable(User user) {
+        if(!super.isAvailable(user)) return false;
+        CWTeamStats teamStats = CWTeamStats.getOrCreate(user.getTeam());
 
         for(String buildingName : with){
             if(teamStats.getBuildingCount(buildingName) < 1) return false;

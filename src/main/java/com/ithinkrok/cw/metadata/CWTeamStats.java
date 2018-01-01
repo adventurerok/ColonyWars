@@ -46,7 +46,7 @@ public class CWTeamStats extends Metadata {
 
         Vector spawnLocation = BukkitConfigUtils.getVector(spawnLocations, team.getName());
         this.spawnLocation =
-                new Location(team.getGameGroup().getCurrentMap().getWorld(), spawnLocation.getX(), spawnLocation.getY(),
+                new Location(team.getGameGroup().getCurrentMap().getDefaultWorld(), spawnLocation.getX(), spawnLocation.getY(),
                              spawnLocation.getZ());
 
         System.out.println(

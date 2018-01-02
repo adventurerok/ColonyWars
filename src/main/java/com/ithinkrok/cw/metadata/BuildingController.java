@@ -41,6 +41,7 @@ public class BuildingController extends Metadata
     private final String shopLocale;
     private final String shopInfoLocale;
 
+
     public BuildingController(GameGroup gameGroup) {
         this.gameGroup = gameGroup;
 
@@ -50,6 +51,7 @@ public class BuildingController extends Metadata
         shopInfoLocale = config.getString("shop_description_locale", "building.shop.desc");
     }
 
+
     @Override
     public void removed() {
         for (Building building : buildings.values()) {
@@ -57,24 +59,29 @@ public class BuildingController extends Metadata
         }
     }
 
+
     @Override
     public boolean removeOnGameStateChange(GameStateChangedEvent event) {
         return false;
     }
+
 
     @Override
     public boolean removeOnMapChange(MapChangedEvent event) {
         return true;
     }
 
+
     public Building getBuilding(Location center) {
         return buildingCentres.get(center);
     }
+
 
     public Building buildBuilding(String name, TeamIdentifier team, Location location, int rotation, boolean instant,
                                   boolean force) {
         return buildBuilding(name, team, location, rotation, instant, force, -1);
     }
+
 
     public Building buildBuilding(String name, TeamIdentifier team, Location location, int rotation, boolean instant,
                                   boolean force, int speed) {
@@ -98,6 +105,7 @@ public class BuildingController extends Metadata
         return building;
     }
 
+
     private SchematicOptions createSchematicOptions(TeamIdentifier team, boolean instant, int speed, Schematic schem) {
         SchematicOptions options = new SchematicOptions(gameGroup.getSharedObject("schematic_options"));
         options.withOverrideDyeColor(team.getDyeColor());
@@ -115,6 +123,7 @@ public class BuildingController extends Metadata
         return options;
     }
 
+
     public void addBuilding(Building building) {
         buildings.put(building.getSchematic(), building);
 
@@ -129,6 +138,7 @@ public class BuildingController extends Metadata
         }
     }
 
+
     public static BuildingController getOrCreate(GameGroup gameGroup) {
         BuildingController result = gameGroup.getMetadata(BuildingController.class);
 
@@ -140,11 +150,13 @@ public class BuildingController extends Metadata
         return result;
     }
 
+
     private CWTeamStats getTeamBuildingStats(Building building) {
         Team team = gameGroup.getTeam(building.getTeamIdentifier());
 
         return CWTeamStats.getOrCreate(team);
     }
+
 
     @CustomEventHandler
     public void onSchematicFinished(SchematicFinishedEvent event) {
@@ -172,12 +184,13 @@ public class BuildingController extends Metadata
         gameGroup.teamEvent(new BuildingBuiltEvent(team, building));
     }
 
+
     @CustomEventHandler
     public void onSchematicDestroyed(SchematicDestroyedEvent event) {
         Building building = buildings.remove(event.getSchematic());
         buildingCentres.values().remove(building);
 
-        if(building == null){
+        if (building == null) {
             System.out.println("Null building destroyed of Type" + event.getSchematic().getName());
             return;
         }
@@ -194,20 +207,18 @@ public class BuildingController extends Metadata
         return gameGroup.getCurrentMap().canPaste(new BoundingBox(loc.toVector(), loc.toVector()));
     }
 
+
     @Override
     public boolean canPaste(BoundingBox bounds) {
         GameMap map = gameGroup.getCurrentMap();
 
-        for (int x = bounds.getMin().getBlockX(); x <= bounds.getMax().getBlockX(); ++x) {
-            for (int y = bounds.getMin().getBlockY(); y <= bounds.getMax().getBlockY(); ++y) {
-                for (int z = bounds.getMin().getBlockZ(); z <= bounds.getMax().getBlockZ(); ++z) {
-                    switch (map.getBlock(x, y, z).getType()) {
-                        case BEDROCK:
-                        case BARRIER:
-                            return false;
-                    }
-                }
-            }
+        boolean containsIllegalBlocks = bounds.getBlockPoints()
+                .map(point -> map.getBlock(point).getType())
+                .anyMatch(material -> material == Material.BEDROCK
+                                      || material == Material.BARRIER);
+
+        if(containsIllegalBlocks) {
+            return false;
         }
 
         return map.canPaste(bounds);

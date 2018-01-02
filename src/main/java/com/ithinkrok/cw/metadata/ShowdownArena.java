@@ -4,11 +4,13 @@ import com.ithinkrok.minigames.api.GameGroup;
 import com.ithinkrok.minigames.api.event.game.GameStateChangedEvent;
 import com.ithinkrok.minigames.api.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.api.event.user.game.UserInGameChangeEvent;
+import com.ithinkrok.minigames.api.map.MapPoint;
 import com.ithinkrok.minigames.api.metadata.Metadata;
 import com.ithinkrok.minigames.api.metadata.UserMetadata;
 import com.ithinkrok.minigames.api.task.GameTask;
 import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.api.util.BoundingBox;
+import com.ithinkrok.minigames.api.util.MinigamesConfigs;
 import com.ithinkrok.msm.bukkit.util.BukkitConfigUtils;
 import com.ithinkrok.util.config.Config;
 import org.bukkit.Location;
@@ -38,13 +40,13 @@ public class ShowdownArena extends Metadata {
         this.radiusX = config.getInt("size.x");
         this.radiusZ = config.getInt("size.z");
 
-        Vector center = BukkitConfigUtils.getVector(config, "center");
+        MapPoint center = MinigamesConfigs.getMapPoint(config, "center");
         this.center = gameGroup.getCurrentMap().getLocation(center);
 
-        Vector min = center.clone().add(new Vector(-radiusX - 5, 0, -radiusZ - 5));
-        Vector max = center.clone().add(new Vector(radiusX + 5, 256, radiusZ + 5));
+        MapPoint min = center.add(-radiusX - 5, 0, -radiusZ - 5);
+        MapPoint max = center.add(radiusX + 5, 256, radiusZ + 5);
 
-        this.bounds = new BoundingBox(min, max);
+        this.bounds = new BoundingBox(min.getXYZ(), max.getXYZ());
 
         Config metadata = gameGroup.getSharedObject("showdown_metadata");
 

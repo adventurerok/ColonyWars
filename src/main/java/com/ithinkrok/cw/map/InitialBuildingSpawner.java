@@ -4,7 +4,9 @@ import com.ithinkrok.cw.metadata.BuildingController;
 import com.ithinkrok.minigames.api.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.api.event.game.MapChangedEvent;
 import com.ithinkrok.minigames.api.map.GameMap;
+import com.ithinkrok.minigames.api.map.MapPoint;
 import com.ithinkrok.minigames.api.team.TeamIdentifier;
+import com.ithinkrok.minigames.api.util.MinigamesConfigs;
 import com.ithinkrok.msm.bukkit.util.BukkitConfigUtils;
 import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.event.CustomEventHandler;
@@ -48,7 +50,7 @@ public class InitialBuildingSpawner implements CustomListener {
     }
 
     private static class InitialBuilding {
-        private final Vector location;
+        private final MapPoint location;
         private final String teamName;
         private final String buildingName;
         private final int rotation;
@@ -56,7 +58,7 @@ public class InitialBuildingSpawner implements CustomListener {
         private final int speed;
 
         public InitialBuilding(Config config) {
-            location = BukkitConfigUtils.getVector(config, "location");
+            location = MinigamesConfigs.getMapPoint(config, "location");
             teamName = config.getString("team");
             buildingName = config.getString("building");
             rotation = config.getInt("rotation", 0);

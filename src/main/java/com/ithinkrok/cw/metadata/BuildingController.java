@@ -198,9 +198,9 @@ public class BuildingController extends Metadata
     public boolean canPaste(BoundingBox bounds) {
         GameMap map = gameGroup.getCurrentMap();
 
-        for (int x = bounds.min.getBlockX(); x <= bounds.max.getBlockX(); ++x) {
-            for (int y = bounds.min.getBlockY(); y <= bounds.max.getBlockY(); ++y) {
-                for (int z = bounds.min.getBlockZ(); z <= bounds.max.getBlockZ(); ++z) {
+        for (int x = bounds.getMin().getBlockX(); x <= bounds.getMax().getBlockX(); ++x) {
+            for (int y = bounds.getMin().getBlockY(); y <= bounds.getMax().getBlockY(); ++y) {
+                for (int z = bounds.getMin().getBlockZ(); z <= bounds.getMax().getBlockZ(); ++z) {
                     switch (map.getBlock(x, y, z).getType()) {
                         case BEDROCK:
                         case BARRIER:

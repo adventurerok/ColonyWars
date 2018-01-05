@@ -756,7 +756,7 @@ public class CWInGameListener extends SimpleInGameListener {
     @CustomEventHandler
     public void onUserDropItem(UserDropItemEvent event) {
         ItemStack itemStack = event.getItem().getItemStack();
-        if (InventoryUtils.getIdentifier(itemStack) == -1) {
+        if (InventoryUtils.getIdentifier(itemStack) == null) {
             //If the user is in a team and the dropped item was a building, remove it from the team count
             if (itemStack != null && event.getUser().getTeam() != null && itemStack.getType() == Material.LAPIS_ORE) {
                 CWTeamStats teamStats = CWTeamStats.getOrCreate(event.getUser().getTeam());

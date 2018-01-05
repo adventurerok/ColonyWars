@@ -108,7 +108,7 @@ public class KitListener implements CustomListener {
 
             for (String customItemName : customItemGives) {
                 CustomItem customItem = user.getGameGroup().getCustomItem(customItemName);
-                if (!InventoryUtils.containsIdentifier(inv, customItem.getIdentifier())) {
+                if (!InventoryUtils.containsIdentifier(inv, customItem.getName())) {
                     inv.addItem(customItem.createForUser(user));
                 }
             }

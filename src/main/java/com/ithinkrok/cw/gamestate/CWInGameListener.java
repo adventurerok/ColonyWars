@@ -472,6 +472,8 @@ public class CWInGameListener extends SimpleInGameListener {
         if (!died.isPlayer()) died.removeNonPlayer();
 
         updateMotd(died.getGameGroup());
+
+        died.getGameGroup().getRewarder().giveParticipationReward(died);
     }
 
     private void sendDeathMessage(GameGroup gameGroup, String locale, String ending, Object... args) {

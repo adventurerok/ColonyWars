@@ -38,7 +38,7 @@ public class StatsCommand implements CustomListener {
             if(category.equals("total") || category.equals(statsHolder.getLastKit()) || category.equals(statsHolder
                     .getLastTeam())) {
                 add = statsHolder.getStatsChanges();
-            } else add = new UserCategoryStats(new UUID(0, 0).toString(), "none");
+            } else add = new UserCategoryStats(new UUID(0, 0), "none");
             
             sender.sendLocale("command.stats.category", category);
 

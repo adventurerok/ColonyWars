@@ -32,9 +32,10 @@ public class StatsHolder extends UserMetadata implements Messagable {
     private final int lossScoreModifier;
     private final int killScoreModifier;
     private final int deathScoreModifier;
-    private UserCategoryStats statsChanges = new UserCategoryStats(new UUID(0, 0).toString(), "none");
+    private UserCategoryStats statsChanges = new UserCategoryStats(new UUID(0, 0), "none");
     private User user;
     private String lastKit, lastTeam;
+
 
     public StatsHolder(User user) {
         this.user = user;
@@ -51,14 +52,17 @@ public class StatsHolder extends UserMetadata implements Messagable {
         deathScoreModifier = config.getInt("death_score_modifier", -5);
     }
 
+
     public static void getUserCategoryStats(DatabaseTaskRunner taskRunner, UUID uuid, String category, StatsTask task) {
         taskRunner.doDatabaseTask(new StatsGet(uuid, category, task));
     }
+
 
     public static void getUserCategoryStatsByScore(DatabaseTaskRunner taskRunner, String category, int max,
                                                    ScoresTask scoresTask) {
         taskRunner.doDatabaseTask(new StateListByScore(category, max, scoresTask));
     }
+
 
     public static StatsHolder getOrCreate(User user) {
         StatsHolder statsHolder = user.getMetadata(StatsHolder.class);
@@ -82,47 +86,58 @@ public class StatsHolder extends UserMetadata implements Messagable {
         return statsHolder;
     }
 
+
     public void setUser(User user) {
         this.user = user;
     }
+
 
     public String getLastKit() {
         return lastKit;
     }
 
+
     public void setLastKit(String lastKit) {
         this.lastKit = lastKit;
     }
+
 
     public String getLastTeam() {
         return lastTeam;
     }
 
+
     public void setLastTeam(String lastTeam) {
         this.lastTeam = lastTeam;
     }
+
 
     public UUID getUniqueId() {
         return uniqueId;
     }
 
+
     public String getPlayerName() {
         return playerName;
     }
+
 
     public void addTotalMoney(int amount) {
         statsChanges.setTotalMoney(statsChanges.getTotalMoney() + amount);
     }
 
+
     public UserCategoryStats getStatsChanges() {
         return statsChanges;
     }
+
 
     public void addGameWin() {
         statsChanges.setGameWins(statsChanges.getGameWins() + 1);
 
         addScore(winScoreModifier);
     }
+
 
     private void addScore(int amount) {
         if (amount == 0) return;
@@ -133,20 +148,24 @@ public class StatsHolder extends UserMetadata implements Messagable {
         else sendLocale("score.loss", -amount);
     }
 
+
     @Override
     public void sendLocale(String locale, Object... args) {
         if (user != null) user.sendLocale(locale, args);
     }
+
 
     @Override
     public void sendLocaleNoPrefix(String locale, Object... args) {
         if (user != null) user.sendLocaleNoPrefix(locale, args);
     }
 
+
     @Override
     public LanguageLookup getLanguageLookup() {
         return gameGroup;
     }
+
 
     public void addGameLoss() {
         statsChanges.setGameLosses(statsChanges.getGameLosses() + 1);
@@ -154,10 +173,12 @@ public class StatsHolder extends UserMetadata implements Messagable {
         addScore(lossScoreModifier);
     }
 
+
     public void addGame() {
 
         statsChanges.setGames(statsChanges.getGames() + 1);
     }
+
 
     public void addKill() {
 
@@ -166,6 +187,7 @@ public class StatsHolder extends UserMetadata implements Messagable {
         addScore(killScoreModifier);
     }
 
+
     public void addDeath() {
 
         statsChanges.setDeaths(statsChanges.getDeaths() + 1);
@@ -173,35 +195,42 @@ public class StatsHolder extends UserMetadata implements Messagable {
         addScore(deathScoreModifier);
     }
 
+
     @Override
     public boolean removeOnInGameChange(UserInGameChangeEvent event) {
         return false;
     }
+
 
     @Override
     public boolean removeOnGameStateChange(GameStateChangedEvent event) {
         return false;
     }
 
+
     @Override
     public boolean removeOnMapChange(MapChangedEvent event) {
         return false;
     }
+
 
     @Override
     public void sendMessage(String message) {
         if (user != null) user.sendMessage(message);
     }
 
+
     @Override
     public void sendMessageNoPrefix(String message) {
         if (user != null) user.sendMessageNoPrefix(message);
     }
 
+
     @Override
     public void sendMessageNoPrefix(Config message) {
         if (user != null) user.sendMessageNoPrefix(message);
     }
+
 
     @Override
     public String getMessagePrefix() {
@@ -209,9 +238,10 @@ public class StatsHolder extends UserMetadata implements Messagable {
         else return "";
     }
 
+
     public void saveStats() {
         UserCategoryStats changes = statsChanges;
-        statsChanges = new UserCategoryStats(new UUID(0, 0).toString(), "none");
+        statsChanges = new UserCategoryStats(new UUID(0, 0), "none");
 
         gameGroup.doDatabaseTask(new StatsGetOrCreate(uniqueId, "total",
                                                       stats -> {
@@ -236,11 +266,14 @@ public class StatsHolder extends UserMetadata implements Messagable {
         }
     }
 
+
     public interface StatsTask {
+
         void run(UserCategoryStats stats);
     }
 
     public interface ScoresTask {
+
         void run(List<UserCategoryStats> statsByScore);
     }
 
@@ -250,11 +283,13 @@ public class StatsHolder extends UserMetadata implements Messagable {
         final int max;
         final ScoresTask task;
 
+
         public StateListByScore(String category, int max, ScoresTask task) {
             this.category = category;
             this.max = max;
             this.task = task;
         }
+
 
         @Override
         public void run(DatabaseAccessor accessor) throws SQLException {
@@ -271,11 +306,13 @@ public class StatsHolder extends UserMetadata implements Messagable {
         String category;
         StatsTask task;
 
+
         public StatsGet(UUID uuid, String category, StatsTask task) {
             this.uuid = uuid;
             this.category = category;
             this.task = task;
         }
+
 
         @Override
         public void run(DatabaseAccessor accessor) throws SQLException {
@@ -290,6 +327,7 @@ public class StatsHolder extends UserMetadata implements Messagable {
             super(uuid, category, task);
         }
 
+
         @Override
         public void run(DatabaseAccessor accessor) throws SQLException {
             UserCategoryStats result = UserCategoryStats.get(accessor, uuid, category, true);
@@ -302,10 +340,12 @@ public class StatsHolder extends UserMetadata implements Messagable {
         private final UserCategoryStats target;
         private final UserCategoryStats changes;
 
+
         public StatsUpdater(UserCategoryStats target, UserCategoryStats changes) {
             this.target = target;
             this.changes = changes;
         }
+
 
         @Override
         public void run(DatabaseAccessor accessor) throws SQLException {

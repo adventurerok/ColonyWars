@@ -15,7 +15,6 @@ import com.ithinkrok.minigames.api.event.user.game.UserQuitEvent;
 import com.ithinkrok.minigames.api.event.user.inventory.UserInventoryClickEvent;
 import com.ithinkrok.minigames.api.event.user.state.UserDamagedEvent;
 import com.ithinkrok.minigames.api.event.user.state.UserDeathEvent;
-import com.ithinkrok.minigames.api.event.user.state.UserFoodLevelChangeEvent;
 import com.ithinkrok.minigames.api.event.user.world.*;
 import com.ithinkrok.minigames.api.inventory.ClickableInventory;
 import com.ithinkrok.minigames.api.schematic.Facing;
@@ -452,8 +451,8 @@ public class CWInGameListener extends SimpleInGameListener {
 
         //Remove team variable lookups
         UserVariableHandler upgradeLevels = died.getUserVariables();
-        upgradeLevels.removeCustomVariableLookup("built");
-        upgradeLevels.removeCustomVariableLookup("building_now");
+        upgradeLevels.removeCustomVariableHandler("built");
+        upgradeLevels.removeCustomVariableHandler("building_now");
 
         died.getGameGroup().sendLocale(teamLostPlayerLocale, team.getFormattedName());
         died.getGameGroup().sendLocale(teamPlayersLeftLocale, team.getUserCount(), team.getFormattedName());

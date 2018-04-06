@@ -32,11 +32,11 @@ public class CWGameStartListener extends SimpleGameStartListener {
 
         //Add team variable lookups
         UserVariableHandler upgradeLevels = user.getUserVariables();
-        upgradeLevels.addCustomVariableLookup("built", teamStats.getBuildingCountVariablesObject());
-        upgradeLevels.addCustomVariableLookup("building_now", teamStats.getBuildingNowCountVariablesObject());
-        upgradeLevels.addCustomVariableLookup("buildings_in_inv", teamStats.getBuildingInventoryVariablesObject());
+        upgradeLevels.addCustomVariableHandler("built", teamStats.getBuildingCountVariablesObject());
+        upgradeLevels.addCustomVariableHandler("building_now", teamStats.getBuildingNowCountVariablesObject());
+        upgradeLevels.addCustomVariableHandler("buildings_in_inv", teamStats.getBuildingInventoryVariablesObject());
 
-        upgradeLevels.addCustomVariableLookup("buildings", teamStats.getTotalBuildingsVariablesObject());
+        upgradeLevels.addCustomVariableHandler("buildings", teamStats.getTotalBuildingsVariablesObject());
 
         user.setGameMode(GameMode.SURVIVAL);
         user.setAllowFlight(false);

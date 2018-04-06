@@ -21,6 +21,7 @@ shared_objects:
     items:
       - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
         config:
+          item: "EMPTY_MAP"
           upgrade_name: "@mg#vote_weight"
           upgrade_display_locale: "vote_weight.upgrade"
           max_level: 2

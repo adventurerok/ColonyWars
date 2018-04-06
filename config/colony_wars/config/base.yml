@@ -16,6 +16,18 @@ additional_configs:
 books:
   handbook: "colony_wars/books/handbook.json"
 
+shared_objects:
+  shop:
+    items:
+      - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+        config:
+          upgrade_name: "@mg#vote_weight"
+          upgrade_display_locale: "vote_weight.upgrade"
+          max_level: 2
+          cost: "10000*pow(10, @mg#vote_weight)"
+          currency: "token_copper"
+          purchase_locale: "vote_weight.buy"
+
 commands:
   colonywars:
     description: "Various CW testing utils"

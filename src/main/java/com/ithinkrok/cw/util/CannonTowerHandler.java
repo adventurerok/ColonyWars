@@ -157,9 +157,9 @@ public class CannonTowerHandler {
                 case POTION:
                     velocity = new Vector(dir.getModX() * horizSpeed, dir.getModY() + vertVelo,
                                           dir.getModZ() * horizSpeed);
-                    entity = from.getWorld().spawnEntity(from, EntityType.SPLASH_POTION);
+                    entity = from.getWorld().spawnEntity(from, EntityType.LINGERING_POTION);
 
-                    ThrownPotion potion = (ThrownPotion) entity;
+                    LingeringPotion potion = (LingeringPotion) entity;
 
                     ItemStack potionItem = new ItemStack(Material.SPLASH_POTION, 1);
 

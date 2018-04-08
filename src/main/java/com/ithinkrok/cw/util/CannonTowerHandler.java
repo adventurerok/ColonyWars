@@ -14,8 +14,10 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -159,8 +161,7 @@ public class CannonTowerHandler {
 
                     ThrownPotion potion = (ThrownPotion) entity;
 
-                    int potionId = config.getInt("potion_id");
-                    ItemStack potionItem = new ItemStack(Material.POTION, 1, (short) potionId);
+                    ItemStack potionItem = new ItemStack(Material.SPLASH_POTION, 1);
 
                     PotionMeta potionMeta = (PotionMeta) potionItem.getItemMeta();
 
@@ -173,14 +174,13 @@ public class CannonTowerHandler {
                             int duration = (int) (effectConfig.getDouble("duration_seconds") * 20);
                             int amp = effectConfig.getInt("level", 1) - 1;
 
-                            PotionEffect effect = new PotionEffect(type, duration, amp);
-
-                            potionMeta.addCustomEffect(effect, true);
-
                             if (!doneMain) {
-                                potionMeta.setMainEffect(effect.getType());
+                                potionMeta.setBasePotionData(new PotionData(PotionType.getByEffect(type)));
                                 doneMain = true;
                             }
+
+                            PotionEffect effect = new PotionEffect(type, duration, amp);
+                            potionMeta.addCustomEffect(effect, true);
                         }
 
                     }

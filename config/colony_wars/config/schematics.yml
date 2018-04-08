@@ -297,7 +297,6 @@ schematics:
       hologram: false
       coal_turret:
         type: "POTION"
-        potion_id: 16388
         velocity_vertical: -0.4
         effects:
           - name: "POISON"
@@ -316,7 +315,6 @@ schematics:
       friendly: true
       sponge_turret:
         type: "POTION"
-        potion_id: 16417
         velocity_vertical: -0.4
         effects:
           - name: "REGENERATION"

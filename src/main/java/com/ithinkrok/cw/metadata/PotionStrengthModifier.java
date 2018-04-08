@@ -17,12 +17,14 @@ public class PotionStrengthModifier extends UserMetadata {
 
     private final double maxModifier;
     private final double minModifier;
+    private final double baseModifier;
     private final double lossOnPotion;
     private final double gainPerInterval;
 
     public PotionStrengthModifier(User user) {
         Config config = user.getSharedObjectOrEmpty("potion_strength_metadata");
 
+        baseModifier = config.getDouble("base_modifier", 1.0);
         maxModifier = config.getDouble("max_modifier", 1.0);
         minModifier = config.getDouble("min_modifier", 0.5);
         lossOnPotion = config.getDouble("loss_on_potion", 0.05);
@@ -52,7 +54,7 @@ public class PotionStrengthModifier extends UserMetadata {
     }
 
     public double getPotionStrengthModifier() {
-        return potionStrengthModifier;
+        return potionStrengthModifier * baseModifier;
     }
 
     @Override

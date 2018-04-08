@@ -623,10 +623,11 @@ public class CWInGameListener extends SimpleInGameListener {
 
             if (Objects.equals(potionTeam, rep.getTeamIdentifier()) != good) {
                 event.setIntensity(entity, 0);
-            } else if (type == PotionEffectType.HEAL) {
+            } else if (type.equals(PotionEffectType.HEAL)) {
                 PotionStrengthModifier psm = PotionStrengthModifier.getOrCreate(rep);
 
-                event.setIntensity(entity, 0.1 * event.getIntensity(entity) * psm.getPotionStrengthModifier());
+                double newIntensity = event.getIntensity(entity) * psm.getPotionStrengthModifier();
+                event.setIntensity(entity, newIntensity);
                 psm.onPotionUsed();
             }
         }

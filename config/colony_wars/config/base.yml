@@ -28,6 +28,13 @@ shared_objects:
           cost: "10000*pow(10, @mg#vote_weight)"
           currency: "token_copper"
           purchase_locale: "vote_weight.buy"
+  potion_strength_metadata:
+    base_modifier: 1.0
+    max_modifier: 1.0
+    min_modifier: 0.5
+    loss_on_potion: 0.05
+    update_interval: 0.5 #seconds
+    gain_per_second: 0.10
 
 commands:
   colonywars:

@@ -99,6 +99,10 @@ game_states:
                 slot: 0
               - name: "invisible_user_toggle"
                 slot: 1
+              - name: "team_chooser"
+                slot: 3
+              - name: "class_chooser"
+                slot: 4
           ender_amount: "6000+ranInt(9)*3000"
           blood_effect:
             effect: "reddust"
@@ -133,3 +137,24 @@ custom_items:
       spectate_chooser:
         class: "com.ithinkrok.minigames.util.item.SpectateChooser"
         events: ["rightClick"]
+  team_chooser:
+    display_name_locale: "team_chooser.name"
+    description_locale: "team_chooser.desc"
+    material: "WOOL"
+    listeners:
+      choose:
+        events: ["rightClick"]
+        class: "com.ithinkrok.minigames.util.item.TeamChooser"
+        config:
+          choosable_teams: *choosable_teams
+          chooser_material: "WOOL"
+  class_chooser:
+    display_name_locale: "kit_chooser.name"
+    description_locale: "kit_chooser.desc"
+    material: "WOOD_SWORD"
+    listeners:
+      choose:
+        events: ["rightClick"]
+        class: "com.ithinkrok.minigames.util.item.KitChooser"
+        config:
+          choosable_kits: *choosable_kits

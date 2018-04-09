@@ -444,7 +444,7 @@ public class CWInGameListener extends SimpleInGameListener {
         return user.isPlayer() && random.nextFloat() < (teamStats.getRespawnChance() / 100f);
     }
 
-    private void removeUserFromGame(User died) {
+    protected void removeUserFromGame(User died) {
         Team team = died.getTeam();
 
         died.setInGame(false);
@@ -455,14 +455,14 @@ public class CWInGameListener extends SimpleInGameListener {
         upgradeLevels.removeCustomVariableHandler("building_now");
 
         died.getGameGroup().sendLocale(teamLostPlayerLocale, team.getFormattedName());
-        died.getGameGroup().sendLocale(teamPlayersLeftLocale, team.getUserCount(), team.getFormattedName());
+        died.getGameGroup().sendLocale(teamPlayersLeftLocale, team.getInGameUserCount(), team.getFormattedName());
 
         died.setDisplayName(died.getName());
         died.setTabListName(died.getName());
 
         died.setScoreboardHandler(null);
 
-        if (team.getUserCount() == 0) {
+        if (team.getInGameUserCount() == 0) {
             eliminateTeam(team);
         }
 

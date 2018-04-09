@@ -97,6 +97,11 @@ game_states:
             books:
               - name: "handbook"
                 slot: 8
+          rejoin:
+            min_money: 25000
+            pot_amount: 3
+            church_pots: "SPLASH_POTION,32: HEAL"
+            cathedral_pots: "SPLASH_POTION,64: HEAL"
       main:
         class: "com.ithinkrok.cw.gamestate.CWTutorialGameListener"
         config: &base_game_config

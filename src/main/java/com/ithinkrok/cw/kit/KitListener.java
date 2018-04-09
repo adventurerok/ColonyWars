@@ -2,8 +2,10 @@ package com.ithinkrok.cw.kit;
 
 import com.ithinkrok.cw.event.BuildingBuiltEvent;
 import com.ithinkrok.cw.event.ShopOpenEvent;
+import com.ithinkrok.cw.metadata.CWTeamStats;
 import com.ithinkrok.minigames.api.Kit;
 import com.ithinkrok.minigames.api.event.ListenerLoadedEvent;
+import com.ithinkrok.minigames.api.event.user.game.UserInGameChangeEvent;
 import com.ithinkrok.minigames.api.item.CustomItem;
 import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.api.util.InventoryUtils;
@@ -42,6 +44,8 @@ public class KitListener implements CustomListener {
 
             buildingConfigs.put(buildingName, new BuildingConfig(buildingConfig));
         }
+
+        recheckBuildings();
     }
 
     @CustomEventHandler
@@ -54,10 +58,36 @@ public class KitListener implements CustomListener {
 
     @CustomEventHandler
     public void onBuildingBuilt(BuildingBuiltEvent event) {
-        BuildingConfig config = buildingConfigs.get(event.getBuilding().getBuildingName());
+        String buildingName = event.getBuilding().getBuildingName();
+        applyBuildingBenefits(buildingName);
+    }
+
+    @CustomEventHandler
+    public void onUserInGameChange(UserInGameChangeEvent event) {
+        if(event.getUser().isInGame()) {
+            recheckBuildings();
+        }
+    }
+
+    public void applyBuildingBenefits(String buildingName) {
+        BuildingConfig config = buildingConfigs.get(buildingName);
 
         if (config == null) return;
         config.onBuild(owner);
+    }
+
+
+    public void recheckBuildings() {
+        if(!owner.isInGame() || owner.getTeam() == null) return;
+
+        CWTeamStats teamStats = CWTeamStats.getOrCreate(owner.getTeam());
+
+        for (String building : buildingConfigs.keySet()) {
+            if(teamStats.everHadBuilding(building)) {
+                applyBuildingBenefits(building);
+            }
+        }
+
     }
 
     private static class BuildingConfig {

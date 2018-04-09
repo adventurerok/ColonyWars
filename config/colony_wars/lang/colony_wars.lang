@@ -51,12 +51,14 @@ death.kill_and_assist.entity_explosion=&6%s &6was blown up by %s &6and %s&6!
 death.kill_and_assist.projectile=&6%s &6was shot by %s &6(aided by %s&6)
 death.kill_and_assist.lightning=&6%s &6was struck by lightning by %s &6(aided by %s&6)
 death.kill_and_assist.fire_tick=&6%s &6was burned to death by %s &6and %s&6!
+death.kill_and_assist.suicide=&6%s &6suicided due to %s &6with the help of %s&6!
 
 death.kill=&6%s &6was killed by %s
 death.kill.entity_explosion=&6%s &6was blown up by %s
 death.kill.projectile=&6%s &6was shot by %s
 death.kill.lightning=&6%s &6was struck by lightning by %s
 death.kill.fire_tick=&6%s &6was burned to death by %s
+death.kill.suicide=&6%s &6suicided due to %s !
 
 death.assist=&6%s &6died while fighting %s&6!
 death.assist.entity_explosion=&6%s &6blew up while fighting %s&6!
@@ -68,6 +70,7 @@ death.assist.fire=&6%s &6burned to death while fighting %s&6!
 death.assist.fire_tick=&6%s &6burned to death while fighting %s&6!
 death.assist.lava=&6%s &6melted while fighting %s
 death.assist.void=&6%s &6fell into the void while fighting %s
+death.assist.suicide=&6%s &6suicided with the help of %s
 
 death.natural=&6%s &6died!
 death.natural.entity_explosion=&6%s &6blew up!
@@ -78,6 +81,7 @@ death.natural.fire=&6%s &6burned to death!
 death.natural.fire_tick=&6%s &6burned to death!
 death.natural.lava=&6%s &6melted in lava!
 death.natural.void=&6%s &6fell into the void!
+death.natural.suicide=&6%s &6suicided!
 
 score.gain=&6You gained &a%s &6points!
 score.loss=&6You lost &c%s &6points!

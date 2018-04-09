@@ -17,6 +17,8 @@ permissions:
       mccw.teamchat.others: true
       mccw.transfer.others: true
       mccw.spawn.others: true
+      mccw.kit.others: true
+      mccw.spec.others: true
   mccw.user:
     default: true
     description: "Gives all user command permission"
@@ -30,6 +32,8 @@ permissions:
       mccw.list: true
       mccw.members: true
       mccw.spawn: true
+      mccw.kit: true
+      mccw.spec: true
   mccw.cw:
     description: "Allows use of all subcommands of /cw"
     default: false
@@ -113,4 +117,12 @@ permissions:
     default: false
   mccw.spawn.others:
     description: "Allows use of /spawn for other players"
+    default: false
+  mccw.kit:
+    default: false
+  mccw.kit.others:
+    default: false
+  mccw.spec:
+    default: false
+  mccw.spec.others:
     default: false

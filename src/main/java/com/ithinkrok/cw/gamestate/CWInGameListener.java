@@ -399,7 +399,7 @@ public class CWInGameListener extends SimpleInGameListener {
         StatsHolder deathStats = StatsHolder.getOrCreate(died);
         deathStats.addDeath();
 
-        boolean respawn = shouldRespawnUser(died, diedTeamStats);
+        boolean respawn = (event.getDamage() < 1000) && shouldRespawnUser(died, diedTeamStats);
 
         if (respawn) {
             died.getGameGroup().sendLocale(respawnLocale, died.getFormattedName());
@@ -420,6 +420,10 @@ public class CWInGameListener extends SimpleInGameListener {
 
     private void displayDeathMessage(UserDeathEvent event) {
         String localeEnding = "." + event.getKillCause().toString().toLowerCase();
+
+        if(event.getDamage() > 1000) {
+            localeEnding = ".suicide";
+        }
 
         if (event.hasKillerUser()) {
             if (event.hasAssistUser()) {

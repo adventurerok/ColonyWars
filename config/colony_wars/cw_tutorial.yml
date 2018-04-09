@@ -48,6 +48,20 @@ shared_objects:
     votable_maps: &votable_maps
       - "disable"
 
+commands:
+  spec:
+    aliases: ["kill", "die", "suicide"]
+    description: "Suicide and start spectating"
+    permission: "mccw.spec"
+    usage: "/<command>"
+    class: "com.ithinkrok.cw.command.SpecCommand"
+  kit:
+    aliases: ["class"]
+    description: "Change kit without rejoining"
+    permission: "mccw.kit"
+    usage: "/<command> <kitname>"
+    class: "com.ithinkrok.cw.command.KitCommand"
+
 game_states:
   tutorial:
     listeners:

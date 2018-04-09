@@ -39,6 +39,7 @@ shared_objects:
     max_players: 8
     default_motd: "Colony wars tutorial"
     chat_prefix: "&7[&3ColonyWars&7] &e"
+    accredited: false
   start_info:
     game_state: "tutorial"
     map: "#param1"

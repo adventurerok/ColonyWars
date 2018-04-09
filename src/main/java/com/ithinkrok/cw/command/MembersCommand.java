@@ -29,13 +29,12 @@ public class MembersCommand implements CustomListener {
         sender.sendLocale("command.members.title");
 
         for (User other : team.getUsers()) {
-
             String name = other.getFormattedName();
             String kit = other.getKit() == null ? command.getGameGroup().getLocale("command.members.no_team") :
                     other.getKit().getFormattedName();
 
             String nearestBase = null;
-            if (!command.getGameGroup().getCurrentGameState().getName().equals("lobby")) {
+            if (other.isInGame() && !command.getGameGroup().getCurrentGameState().getName().equals("lobby")) {
                 double smallestDistSquared = 99999999;
 
                 for (TeamIdentifier id : command.getGameGroup().getTeamIdentifiers()) {

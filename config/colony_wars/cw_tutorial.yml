@@ -104,6 +104,7 @@ game_states:
           gold_shared_object: "gold_config"
           buildings:
             destroy_wait: 3
+            min_count: 2
           showdown_start:
             teams: -1
             players: -1

@@ -94,6 +94,7 @@ public class CWInGameListener extends SimpleInGameListener {
     private String buildingNotYoursLocale;
     private String cannotDestroyOwnBuildingLocale;
     private String cannotDestroyLocale;
+    private String cannotDestroyMinLocale;
     private String buildingDestroyedLocale;
     private String respawnLocale;
     private String noRespawnLocale;
@@ -117,6 +118,7 @@ public class CWInGameListener extends SimpleInGameListener {
     private String inGameJoinLocale, inGameQuitLocale;
 
     private int buildingDestroyWait;
+    private int minBuildingDestroyCount;
 
     private Calculator enderAmount;
     private String enderFoundLocale;
@@ -175,6 +177,7 @@ public class CWInGameListener extends SimpleInGameListener {
         cannotDestroyOwnBuildingLocale =
                 config.getString("buildings.destroy_own_team_locale", "building.destroy.own_team");
         cannotDestroyLocale = config.getString("buildings.destroy_protected_locale", "building.destroy.protected");
+        cannotDestroyMinLocale = config.getString("buildings.destroy_below_min_locale", "building.destroy.min");
         buildingDestroyedLocale = config.getString("buildings.destroyed_locale", "building.destroy.success");
 
         respawnLocale = config.getString("respawn_locale", "respawn.success");
@@ -193,6 +196,7 @@ public class CWInGameListener extends SimpleInGameListener {
         showdownStartPlayers = config.getInt("showdown_start.players");
 
         buildingDestroyWait = (int) (config.getDouble("buildings.destroy_wait", 3.0d) * 20d);
+        minBuildingDestroyCount = config.getInt("buildings.min_count", 0);
         lostRespawnChance = config.getInt("lost_respawn_chance", 15);
 
         showdownGameState = config.getString("showdown_gamestate", "showdown");
@@ -664,11 +668,16 @@ public class CWInGameListener extends SimpleInGameListener {
 
         if (building == null) return;
 
+        CWTeamStats teamStats = CWTeamStats.getOrCreate(event.getGameGroup().getTeam(building.getTeamIdentifier()));
+
         if (building.getTeamIdentifier().equals(event.getUser().getTeamIdentifier())) {
             event.getUser().sendLocale(cannotDestroyOwnBuildingLocale);
             event.setCancelled(true);
         } else if (building.isProtected()) {
             event.getUser().sendLocale(cannotDestroyLocale, building.getBuildingName());
+            event.setCancelled(true);
+        } else if(teamStats.getBuildingCount(building.getBuildingName()) < minBuildingDestroyCount) {
+            event.getUser().sendLocale(cannotDestroyMinLocale, building.getBuildingName());
             event.setCancelled(true);
         } else {
             if (blockType == Material.OBSIDIAN) {

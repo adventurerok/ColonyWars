@@ -41,38 +41,56 @@ shared_objects:
     chat_prefix: "&7[&3ColonyWars&7] &e"
   start_info:
     game_state: "tutorial"
+    map: "#param1"
+    backup_map: "canyon"
   map_scoreboard:
     votable_maps: &votable_maps
-      - "random"
+      - "disable"
 
 game_states:
   tutorial:
     listeners:
-      simple_lobby:
-        class: "com.ithinkrok.minigames.util.gamestate.SimpleLobbyListener"
+      setup:
+        class: "com.ithinkrok.cw.gamestate.CWGameStartListener"
         config:
-          start_countdown:
-            name: "start"
-            locale_stub: "countdowns.start"
-            min_players: 2
-            needs_more_players_locale: "countdowns.start.needs_more_players"
-            seconds: 180
-          next_gamestate: "game"
-          lobby_map: "canyon"
-          give_on_join:
+          map_voting:
+            random_map: "random"
+            map_list: *votable_maps
+          choosable_teams: &choosable_teams
+            - "red"
+            - "blue"
+            - "green"
+            - "yellow"
+          choosable_kits: &choosable_kits
+            - "general"
+            - "scout"
+            - "cloaker"
+            - "peasant"
+            - "dark_knight"
+            - "mage"
+            - "archer"
+            - "warrior"
+            - "priest"
+            - "inferno"
+            - "vampire"
+            - "engineer"
+          start_items:
             clear_inventory: true
             custom_items:
-              - name: "map_voter"
+              - name: "pickaxe"
                 slot: 0
+            books:
+              - name: "handbook"
+                slot: 8
       main:
-        class: "com.ithinkrok.cw.gamestate.CWInGameListener"
+        class: "com.ithinkrok.cw.gamestate.CWTutorialGameListener"
         config: &base_game_config
           gold_shared_object: "gold_config"
           buildings:
             destroy_wait: 3
           showdown_start:
-            teams: 2
-            players: 4
+            teams: -1
+            players: -1
           spectator_items:
             clear_inventory: true
             custom_items:

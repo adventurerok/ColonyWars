@@ -4,6 +4,7 @@ additional_configs:
 
 maps:
   lobby: "colony_wars/maps/lobby.yml"
+  old_lobby: "colony_wars/maps/old_lobby.yml"
   12canyon: "colony_wars/maps/12canyon.yml"
   canyon: "colony_wars/maps/canyon.yml"
   cavern: "colony_wars/maps/cavern.yml"
@@ -131,7 +132,9 @@ game_states:
             seconds: 181
 
           next_gamestate: "game"
-          lobby_map: "lobby"
+          lobby_maps:
+            lobby: 0.95
+            old_lobby: 0.05
           give_on_join:
             clear_inventory: true
             custom_items:

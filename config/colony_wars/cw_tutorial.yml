@@ -102,6 +102,8 @@ game_states:
             pot_amount: 3
             church_pots: "SPLASH_POTION,32: HEAL"
             cathedral_pots: "SPLASH_POTION,64: HEAL"
+            farm_food: "COOKED_BEEF,30"
+            greenhouse_axe: "mighty_axe"
       main:
         class: "com.ithinkrok.cw.gamestate.CWTutorialGameListener"
         config: &base_game_config

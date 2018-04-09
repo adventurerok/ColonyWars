@@ -8,6 +8,7 @@ import com.ithinkrok.minigames.api.GameGroup;
 import com.ithinkrok.minigames.api.GameState;
 import com.ithinkrok.minigames.api.event.ListenerLoadedEvent;
 import com.ithinkrok.minigames.api.event.user.game.UserChangeTeamEvent;
+import com.ithinkrok.minigames.api.item.CustomItem;
 import com.ithinkrok.minigames.api.user.UserVariableHandler;
 import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.minigames.api.util.MinigamesConfigs;
@@ -29,6 +30,8 @@ public class CWGameStartListener extends SimpleGameStartListener {
     int rejoinPotAmount;
     ItemStack rejoinChurchPot;
     ItemStack rejoinCathedralPot;
+    ItemStack rejoinFarmFood;
+    String rejoinGreenhouseAxe;
 
     @CustomEventHandler
     @Override
@@ -40,6 +43,8 @@ public class CWGameStartListener extends SimpleGameStartListener {
         rejoinPotAmount = config.getInt("rejoin.pot_amount");
         rejoinChurchPot = MinigamesConfigs.getItemStack(config, "rejoin.church_pots");
         rejoinCathedralPot = MinigamesConfigs.getItemStack(config, "rejoin.cathedral_pots");
+        rejoinFarmFood = MinigamesConfigs.getItemStack(config, "rejoin.farm_food");
+        rejoinGreenhouseAxe = config.getString("rejoin.greenhouse_axe");
     }
 
 
@@ -69,6 +74,16 @@ public class CWGameStartListener extends SimpleGameStartListener {
             for(int count = 0; count < rejoinPotAmount; ++count) {
                 event.getUser().getInventory().addItem(pot.clone());
             }
+        }
+
+        if(rejoinFarmFood != null && teamStats.getBuildingCount("Farm") >= 1) {
+            event.getUser().getInventory().addItem(rejoinFarmFood.clone());
+        }
+
+        if(rejoinGreenhouseAxe != null && teamStats.getBuildingCount("Greenhouse") >= 1) {
+            CustomItem item = event.getGameGroup().getCustomItem(rejoinGreenhouseAxe);
+            ItemStack stack = event.getUser().createCustomItemForUser(item);
+            event.getUser().getInventory().addItem(stack);
         }
     }
 

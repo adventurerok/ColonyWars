@@ -240,6 +240,8 @@ public class StatsHolder extends UserMetadata implements Messagable {
 
 
     public void saveStats() {
+        if(!gameGroup.isAccredited()) return;
+
         UserCategoryStats changes = statsChanges;
         statsChanges = new UserCategoryStats(new UUID(0, 0), "none");
 

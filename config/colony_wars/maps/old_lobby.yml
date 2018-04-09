@@ -1,6 +1,8 @@
 folder: "mccw_oldlobby"
-description: "The lobby map for MCCW"
+description: "The old lobby map for MCCW"
 environment: "normal"
+enable_weather: false
+enable_time: false
 
 lang_files:
   - "colony_wars/lang/lobby.lang"

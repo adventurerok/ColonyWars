@@ -1,5 +1,5 @@
 
-additional_configs:
+pre_configs:
   - "colony_wars/config/base.yml"
 
 lang_files:
@@ -47,6 +47,13 @@ shared_objects:
   map_scoreboard:
     votable_maps: &votable_maps
       - "disable"
+  schematic_options:
+    progress_hologram: true
+    build_speed: 4
+    center_block_material: "OBSIDIAN"
+    replace_materials:
+      BARRIER: "AIR"
+      DIAMOND_ORE: "GOLD_ORE"
 
 commands:
   spec:

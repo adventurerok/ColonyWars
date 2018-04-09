@@ -1,4 +1,4 @@
-folder: "mccw_oldlobby"
+folder: "mccw_lobby_old"
 description: "The old lobby map for MCCW"
 environment: "normal"
 enable_weather: false

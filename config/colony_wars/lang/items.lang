@@ -107,3 +107,6 @@ building_buyable.lore.item=Builds a %s when placed!
 building_buyable.purchase=%s &3purchased &f%s
 building_buyable.useful_for=&7Useful for:
 building_buyable.useful_comma=&7,
+
+rejoiner.name=&6Rejoiner
+rejoiner.desc=&aLets you rejoin the game!

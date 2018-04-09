@@ -104,6 +104,8 @@ game_states:
                 slot: 3
               - name: "class_chooser"
                 slot: 4
+              - name: "rejoiner"
+                slot: 5
           ender_amount: "6000+ranInt(9)*3000"
           blood_effect:
             effect: "reddust"
@@ -159,3 +161,14 @@ custom_items:
         class: "com.ithinkrok.minigames.util.item.KitChooser"
         config:
           choosable_kits: *choosable_kits
+  rejoiner:
+    display_name_locale: "rejoiner.name"
+    description_locale: "rejoiner.desc"
+    material: "TOTEM"
+    right_cooldown:
+      ability: "rejoin"
+      timer: 10
+    listeners:
+      rejoin:
+        events: ["rightClick"]
+        class: "com.ithinkrok.cw.item.Rejoiner"

@@ -33,45 +33,6 @@ shared_objects:
     max_players: 40
     default_motd: "Colony wars yay"
     chat_prefix: "&7[&3ColonyWars&7] &e"
-  gold_config:
-    ore_blocks:
-      gold_ore: "GOLD_INGOT,6"
-      quartz_ore: "GOLD_INGOT,6"
-      diamond_ore: "DIAMOND,1"
-    trees:
-      enabled: true
-      item_material: "GOLD_INGOT"
-      item_amount: "1+x+(ln(x)/ln(1.5))-min(sqrt((pow(x,3))/500),pow(x,0.9))"
-      log_materials:
-        - "LOG"
-        - "LOG_2"
-    items:
-      gold_ingot:
-        user: 60
-        team: 40
-      diamond:
-        user: 1200
-        team: 800
-    pickup_sound: "ENTITY_EXPERIENCE_ORB_PICKUP"
-  # Required for UserMoney.java
-  user_money_metadata:
-    remove_gamestate: "aftermath"
-    add_locale: "money.balance.user.add"
-    subtract_locale: "money.balance.user.subtract"
-    new_locale: "money.balance.user.new"
-  # Required for TeamMoney.java
-  team_money_metadata:
-    remove_gamestate: "aftermath"
-    add_locale: "money.balance.team.add"
-    subtract_locale: "money.balance.team.subtract"
-    new_locale: "money.balance.team.new"
-  # Required for CWScoreboardHandler.java
-  colony_wars_scoreboard:
-    title: "scoreboard.title"
-    user_balance: "scoreboard.user_balance"
-    team_balance: "scoreboard.team_balance"
-    building_now_count: "scoreboard.building_now_count"
-    revival_rate: "scoreboard.revival_rate"
   map_scoreboard:
     votable_maps: &votable_maps
       - "canyon"
@@ -88,28 +49,7 @@ shared_objects:
       - "fort"
       - "slavic"
       - "random"
-  schematic_options:
-    progress_hologram: true
-    build_speed: 2
-    center_block_material: "OBSIDIAN"
-    replace_materials:
-      BARRIER: "AIR"
-      DIAMOND_ORE: "GOLD_ORE"
-# Required for User.java
-  user:
-    default_stats:
-      max_health: 20
-      health: 20
-      food_level: 10
-      saturation: 5
-      fly_speed: 0.1
-      walk_speed: 0.2
-    use_new_combat: false
-  showdown_metadata:
-    min_radius: 5
-    shrink_start_time: 180
-    shrink_interval_time: 20
-    shrink_start_locale: "showdown.shrinking"
+
 
 game_states:
   lobby:

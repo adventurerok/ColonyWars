@@ -36,7 +36,9 @@ team_identifiers:
 
 shared_objects:
   game:
-    chat_prefix: "&7[&7] &e"
+    max_players: 8
+    default_motd: "Colony wars tutorial"
+    chat_prefix: "&7[&3ColonyWars&7] &e"
   start_info:
     game_state: "tutorial"
   map_scoreboard:
@@ -56,7 +58,7 @@ game_states:
             needs_more_players_locale: "countdowns.start.needs_more_players"
             seconds: 180
           next_gamestate: "game"
-          lobby_map: "lobby"
+          lobby_map: "canyon"
           give_on_join:
             clear_inventory: true
             custom_items:

@@ -86,6 +86,7 @@ game_states:
       main:
         class: "com.ithinkrok.cw.gamestate.CWTutorialGameListener"
         config: &base_game_config
+          default_kit: "warrior"
           gold_shared_object: "gold_config"
           buildings:
             destroy_wait: 3

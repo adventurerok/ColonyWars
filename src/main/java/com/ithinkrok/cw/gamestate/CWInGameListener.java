@@ -463,7 +463,7 @@ public class CWInGameListener extends SimpleInGameListener {
         died.setScoreboardHandler(null);
 
         if (team.getUserCount() == 0) {
-            CWTeamStats.getOrCreate(team).eliminate();
+            eliminateTeam(team);
         }
 
         checkVictoryOrShowdown(died.getGameGroup());
@@ -474,6 +474,12 @@ public class CWInGameListener extends SimpleInGameListener {
 
         died.getGameGroup().getRewarder().giveParticipationReward(died);
     }
+
+
+    protected void eliminateTeam(Team team) {
+        CWTeamStats.getOrCreate(team).eliminate();
+    }
+
 
     private void sendDeathMessage(GameGroup gameGroup, String locale, String ending, Object... args) {
         String message = gameGroup.getLocale(locale + ending, args);

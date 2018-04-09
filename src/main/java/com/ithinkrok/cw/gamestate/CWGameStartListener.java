@@ -22,6 +22,8 @@ public class CWGameStartListener extends SimpleGameStartListener {
         event.setCancelled(false);
 
         setupUser(event.getUser());
+
+        event.getGameGroup().sendLocale("user.rejoin", event.getUser().getFormattedName());
     }
 
     protected void setupUser(User user) {

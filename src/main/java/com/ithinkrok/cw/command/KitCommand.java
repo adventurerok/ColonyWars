@@ -28,7 +28,7 @@ public class KitCommand implements CustomListener {
         }
 
         user.setKit(kit);
-        user.sendLocale("command.debug.kit.success");
+        user.sendLocale("command.debug.kit.success", kitName);
     }
 
 }

@@ -91,6 +91,7 @@ score.loss=&6You lost &c%s &6points!
 #spectator join/quit also moved
 user.quit.game=&4%s &4quit and became a zombie!
 user.join.game=&4%s &4rejoined! (is no longer a zombie)
+user.rejoin=&4%s &4rejoined the game!
 
 motd.cw_game=%s players left
 

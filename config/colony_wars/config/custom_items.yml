@@ -204,7 +204,7 @@ custom_items:
       weapon:
         class: "com.ithinkrok.minigames.util.item.WeaponModifier"
         config:
-          damage: "2.5+cross"
+          damage: "(2.5+cross)*0.6"
   explosion_wand:
     display_name_locale: "explosion_wand.name"
     material: "IRON_CHESTPLATE"

@@ -103,8 +103,8 @@ showdown.escape=&cYou cannot escape the showdown!
 
 double_gold.upgrade=&6Double Gold for everyone!
 double_gold.desc=&aDouble gold for everyone in this game only!
-double_gold.buy=&a%s &6has purchased &e&ldouble gold &6for this game!
+double_gold.buy=&a%s &6has purchased &e&ldouble gold &6for this game for everyone!
 
 triple_gold.upgrade=&6Triple Gold for everyone!
 triple_gold.desc=&aTriple gold for everyone in this game only!
-triple_gold.buy=&a%s &6has purchased &e&lTRIPLE GOLD &6for this game!
+triple_gold.buy=&a%s &6has purchased &e&lTRIPLE GOLD &6for this game for everyone!

@@ -705,12 +705,13 @@ public class CWInGameListener extends SimpleInGameListener {
 
         if (goldConfig.allowItemPickup(material)) {
             int amount = event.getItem().getItemStack().getAmount();
+            double mul = event.getGameGroup().getGlobalVariables().getVariable("gold_bonus") + 1;
 
-            int userGold = goldConfig.getUserGold(material) * amount;
+            int userGold = (int) (goldConfig.getUserGold(material) * amount * mul);
             Money userMoney = Money.getOrCreate(event.getUser());
             userMoney.addMoney(userGold, false);
 
-            int teamGold = goldConfig.getTeamGold(material) * amount;
+            int teamGold = (int) (goldConfig.getTeamGold(material) * amount * mul);
             Money teamMoney = Money.getOrCreate(event.getUser().getTeam());
             teamMoney.addMoney(teamGold, false);
 

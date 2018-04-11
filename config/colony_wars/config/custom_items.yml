@@ -4,12 +4,16 @@ custom_items:
     description_locale: "darkness_sword.desc"
     material: "IRON_HELMET"
     upgradable: true
+    attributes:
+      - attribute: "generic.attackDamage"
+        name: "Custom Weapon"
+        slot: "mainhand"
+        amount: "array(sword, 2, 4, 6)"
     listeners:
       weapon:
         events: ["attack"]
         class: "com.ithinkrok.minigames.util.item.WeaponModifier"
         config:
-          damage: "array(sword, 1.5, 2.5, 3.5)"
           effects:
             wither:
               duration: "array(sword, 3, 6, 10)"
@@ -196,15 +200,17 @@ custom_items:
           level: 6
           duration: 2
           sound: "ENTITY_FIREWORK_TWINKLE,1.0,1.2"
+
   cross:
     display_name_locale: "cross.name"
     material: "GOLD_LEGGINGS"
     upgradable: true
-    listeners:
-      weapon:
-        class: "com.ithinkrok.minigames.util.item.WeaponModifier"
-        config:
-          damage: "(2.5+cross)*0.6"
+    attributes:
+      - attribute: "generic.attackDamage"
+        name: "Custom Weapon"
+        slot: "mainhand"
+        amount: "4+(2*cross)"
+
   explosion_wand:
     display_name_locale: "explosion_wand.name"
     material: "IRON_CHESTPLATE"
@@ -233,11 +239,15 @@ custom_items:
     display_name_locale: "flame_sword.name"
     material: "DIAMOND_HELMET"
     upgradable: true
+    attributes:
+      - attribute: "generic.attackDamage"
+        name: "Custom Weapon"
+        slot: "mainhand"
+        amount: "1+(flame*3)"
     listeners:
       weapon:
         class: "com.ithinkrok.minigames.util.item.WeaponModifier"
         config:
-          damage: "1+flame*1.5"
           fire: "4"
   vampire_sword:
     display_name_locale: "vampire_sword.name"

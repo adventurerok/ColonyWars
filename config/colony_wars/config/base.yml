@@ -97,6 +97,15 @@ shared_objects:
         team: 800
     pickup_sound: "ENTITY_EXPERIENCE_ORB_PICKUP"
 
+custom_entities:
+  shopkeeper:
+    type: "VILLAGER"
+    baby: false
+    name: "Shopkeeper"
+    listeners:
+      shop:
+        class: "com.ithinkrok.minigames.util.inventory.MinigamesShop"
+
 commands:
   colonywars:
     description: "Various CW testing utils"

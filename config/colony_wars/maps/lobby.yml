@@ -80,3 +80,9 @@ listeners:
             z: -514.5
           damage_causes:
             - "LAVA"
+  custom_entity:
+    class: "com.ithinkrok.minigames.util.map.CustomEntitySpawner"
+    config:
+      spawns:
+        - pos: "455.5, 67.5, -451.5"
+          type: "shopkeeper"

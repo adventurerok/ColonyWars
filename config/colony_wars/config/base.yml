@@ -28,6 +28,25 @@ shared_objects:
           cost: "10000*pow(10, @mg#vote_weight)"
           currency: "token_copper"
           purchase_locale: "vote_weight.buy"
+      - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+        config:
+          item: "GOLD_INGOT"
+          upgrade_name: "@global#gold_bonus"
+          upgrade_display_locale: "double_gold.upgrade"
+          max_level: 1
+          cost: "2500*pow(2, @global#gold_bonus)"
+          currency: "token_copper"
+          broadcast_locale: "double_gold.buy"
+      - class: "com.ithinkrok.minigames.util.inventory.Upgradable"
+        config:
+          item: "GOLD_INGOT"
+          upgrade_name: "@global#gold_bonus"
+          upgrade_display_locale: "triple_gold.upgrade"
+          min_level: 2
+          max_level: 2
+          cost: "2500*pow(2, @global#gold_bonus)"
+          currency: "token_copper"
+          broadcast_locale: "triple_gold.buy"
   potion_strength_metadata:
     base_modifier: 0.7
     max_modifier: 1.0

@@ -100,3 +100,11 @@ ender_chest.found=%s &6found an ender chest!
 
 showdown.shrinking=&6The showdown arena will now shrink slowly until it is 10x10!
 showdown.escape=&cYou cannot escape the showdown!
+
+double_gold.upgrade=&6Double Gold for everyone!
+double_gold.desc=&aDouble gold for everyone in this game only!
+double_gold.buy=&a%s &6has purchased &e&ldouble gold &6for this game!
+
+triple_gold.upgrade=&6Triple Gold for everyone!
+triple_gold.desc=&aTriple gold for everyone in this game only!
+triple_gold.buy=&a%s &6has purchased &e&lTRIPLE GOLD &6for this game!

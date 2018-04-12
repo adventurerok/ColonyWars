@@ -135,6 +135,9 @@ game_states:
                 slot: 4
               - name: "rejoiner"
                 slot: 5
+              - name: "hub_returner"
+                slot: 8
+
           ender_amount: "6000+ranInt(9)*3000"
           blood_effect:
             effect: "reddust"

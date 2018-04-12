@@ -75,6 +75,8 @@ game_states:
                 slot: 1
               - name: "class_chooser"
                 slot: 2
+              - name: "hub_returner"
+                slot: 8
 
   game:
     listeners:
@@ -121,6 +123,8 @@ game_states:
                 slot: 0
               - name: "invisible_user_toggle"
                 slot: 1
+              - name: "hub_returner"
+                slot: 8
           ender_amount: "6000+ranInt(9)*3000"
   showdown:
     listeners:

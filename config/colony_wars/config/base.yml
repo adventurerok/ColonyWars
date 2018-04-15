@@ -48,7 +48,7 @@ shared_objects:
           currency: "token_copper"
           broadcast_locale: "triple_gold.buy"
   potion_strength_metadata:
-    base_modifier: 0.85
+    base_modifier: 1.0
     max_modifier: 1.0
     min_modifier: 0.5
     loss_on_potion: 0.05

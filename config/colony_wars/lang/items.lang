@@ -72,7 +72,7 @@ flame_sword.name=Flame Sword
 flame_sword.upgrade=Flame Sword Upgrade %s
 
 vampire_sword.name=Vampire Sword
-vampire_sword.desc=Regenerates health when damage is dealt.
+vampire_sword.desc=Gain regeneration upon dealing successful hits.
 
 bat_flight.upgrade=Bat Flight Upgrade %s
 bat_flight.unlock=The MageTower gives you the bat flight ability!

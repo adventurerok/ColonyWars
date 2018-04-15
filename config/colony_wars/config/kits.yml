@@ -397,7 +397,7 @@ kits:
           blocks_above_ground_divisor: 10 #Then multiply flightDecreaseAmount by blocksAboveGround/divisor
           fly_speed: 0.05
           regain_flight_level: 0.2 #Minimum flight level (0 to 1) when flying is allowed again
-          flight_loss_on_damage: 0.07
+          flight_loss_on_damage: 0.1
           flight_gain_on_regen: 0.02 # per second
           flight_gain_per_second: 0.02
       kit:

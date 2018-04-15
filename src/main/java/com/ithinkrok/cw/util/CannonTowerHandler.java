@@ -159,7 +159,7 @@ public class CannonTowerHandler {
                                           dir.getModZ() * horizSpeed);
                     entity = from.getWorld().spawnEntity(from, EntityType.SPLASH_POTION);
 
-                    LingeringPotion potion = (LingeringPotion) entity;
+                    ThrownPotion potion = (ThrownPotion) entity;
 
                     ItemStack potionItem = new ItemStack(Material.SPLASH_POTION, 1);
 

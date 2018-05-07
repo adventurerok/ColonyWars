@@ -14,7 +14,7 @@ import com.ithinkrok.minigames.api.team.TeamIdentifier;
 import com.ithinkrok.minigames.api.user.User;
 import com.ithinkrok.util.config.Config;
 import com.ithinkrok.util.lang.LanguageLookup;
-import com.ithinkrok.util.lang.Messagable;
+import com.ithinkrok.util.lang.PrefixedMessagable;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.UUID;
 /**
  * Created by paul on 17/01/16.
  */
-public class StatsHolder extends UserMetadata implements Messagable {
+public class StatsHolder extends UserMetadata implements PrefixedMessagable {
 
     private final GameGroup gameGroup;
     private final String playerName;

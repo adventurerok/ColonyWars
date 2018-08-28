@@ -47,6 +47,10 @@ shared_objects:
           cost: "2500*pow(2, @global#gold_bonus)"
           currency: "token_copper"
           broadcast_locale: "triple_gold.buy"
+      - class: "com.ithinkrok.minigames.util.inventory.SubInventory"
+        display: "prismarine"
+        config:
+          name_locale: "building.invalid_loc"
   potion_strength_metadata:
     base_modifier: 1.0
     max_modifier: 1.0

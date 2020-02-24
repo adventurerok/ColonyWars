@@ -3,7 +3,10 @@ Reprogramming of popular minecraft mini-game Minecraft Colony Wars. Supports all
 (final means excluding classes that were removed in later versions of the original). Currently has Canyon and
 Forest Hills map recreations, and schematics for all the buildings.
 
-# Information
+The current version operates via [MinigamesBase](https://github.com/adventurerok/MinigamesBase).
+The old version for 1.8, if you wish to look back in the git history, was standalone.
+
+## Old Version Information
 ### Maps
 * **world**: This map is the default lobby for Colony Wars.
 * **canyon**: Recreation of the canyon map from the original
@@ -12,7 +15,7 @@ Forest Hills map recreations, and schematics for all the buildings.
 When the game starts, the selected map will be copied to the "playing" folder, and all players teleported into it.
 The folder should be deleted when the game ends.
 
-# Setup
+## Setup
 ### Compiling
 Compile the project using maven. The plugin jar file will be outputted to target/Colony_Wars.jar.
 

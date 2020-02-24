@@ -15,7 +15,7 @@ The old version for 1.8, if you wish to look back in the git history, was standa
 When the game starts, the selected map will be copied to the "playing" folder, and all players teleported into it.
 The folder should be deleted when the game ends.
 
-## Setup
+### Setup
 ### Compiling
 Compile the project using maven. The plugin jar file will be outputted to target/Colony_Wars.jar.
 
